@@ -17,17 +17,17 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-UnitTest.asynctest('ExpandableFormTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
+
+
 
   // Seems to have stopped working on phantomjs
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
 
     const pMinimal = ExpandableForm.parts().minimal(
-      Form.sketch(function (parts: FormParts) {
+      Form.sketch((parts: FormParts) => {
         return {
           dom: {
             tag: 'div',
@@ -56,7 +56,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
     );
 
     const pExtra = ExpandableForm.parts().extra(
-      Form.sketch(function (parts: FormParts) {
+      Form.sketch((parts: FormParts) => {
         return {
           dom: {
             tag: 'div',
@@ -154,7 +154,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
 
     return me;
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     const helper = TestForm.helper(component);
 
     return [
@@ -185,7 +185,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
       Logger.t(
         'Retrieve the ant field directly and check its value (in minimal)',
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             const field = Form.getField(component, 'form.ant').getOrDie('Could not find field for ant');
             Assertions.assertEq('Checking value', 'first.set', Value.get(field.element()));
           })
@@ -195,14 +195,14 @@ UnitTest.asynctest('ExpandableFormTest', function () {
       Logger.t(
         'Retrieve the bull field directly and check its value (in extra)',
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             const field = Form.getField(component, 'form.bull').getOrDie('Could not find field for bull');
             Assertions.assertEq('Checking value', 'select-b-set', Value.get(field.element()));
           })
         ])
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
 
@@ -261,15 +261,15 @@ UnitTest.asynctest('ExpandableFormTest', function () {
             10000
           ),
 
-          Step.async(function (next, die) {
-            Focus.search(component.element()).fold(function () {
+          Step.async((next, die) => {
+            Focus.search(component.element()).fold(() => {
               die('The focus has not stayed in the form');
             }, next);
           })
         ])
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         ExpandableForm.expandForm(component);
       }),
       UiFinder.sExists(gui.element(), '.expandable-growing'),
@@ -280,7 +280,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
         10000
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         ExpandableForm.collapseForm(component);
       }),
       UiFinder.sExists(gui.element(), '.expandable-shrinking'),
@@ -293,5 +293,5 @@ UnitTest.asynctest('ExpandableFormTest', function () {
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

@@ -13,22 +13,22 @@ export interface ComponentBehaviour {
   list: AlloyBehaviour[];
 }
 
-const getBehaviours = function (spec) {
+const getBehaviours = (spec) => {
   const behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
   const keys = Arr.filter(
     Obj.keys(behaviours),
-    function (k) { return behaviours[k] !== undefined; }
+    (k) => { return behaviours[k] !== undefined; }
   );
-  return Arr.map(keys, function (k) {
+  return Arr.map(keys, (k) => {
     return spec.behaviours[k].me;
   });
 };
 
-const generateFrom = function (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): ComponentBehaviour {
+const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): ComponentBehaviour => {
   return BehaviourBlob.generateFrom(spec, all);
 };
 
-const generate = function (spec): ComponentBehaviour {
+const generate = (spec): ComponentBehaviour => {
   const all = getBehaviours(spec);
   return generateFrom(spec, all);
 };

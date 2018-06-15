@@ -8,13 +8,13 @@ import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeTab = function (tabSpec) {
+  const makeTab = (tabSpec) => {
     return {
       view: tabSpec.view,
       value: tabSpec.value,

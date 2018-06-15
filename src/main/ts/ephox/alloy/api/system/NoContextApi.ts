@@ -3,9 +3,9 @@ import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const NoContextApi = function (getComp?: () => AlloyComponent): AlloySystemApi {
-  const fail = function (event) {
-    return function () {
+const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
+  const fail = (event) => {
+    return () => {
       throw new Error('The component must be in a context to send: ' + event + '\n' +
         AlloyLogger.element(getComp().element()) + ' is not in context.'
       );

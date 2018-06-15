@@ -10,12 +10,12 @@ const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))
 ]);
 
-const receivingConfig = function (rawSpec): NamedConfiguredBehaviour {
+const receivingConfig = (rawSpec): NamedConfiguredBehaviour => {
   const c = receiving(rawSpec);
   return Receiving.config(c);
 };
 
-const receiving = function (rawSpec) {
+const receiving = (rawSpec) => {
   const spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     channels: Objects.wrap(

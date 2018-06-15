@@ -7,7 +7,7 @@ import * as DomModification from '../dom/DomModification';
 import * as AlloyTags from '../ephemera/AlloyTags';
 import { SketchSpec } from '../api/component/SpecTypes';
 
-const toInfo = function (spec): Result<SketchSpec, any> {
+const toInfo = (spec): Result<SketchSpec, any> => {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
       // Note, no children.
@@ -47,11 +47,11 @@ const toInfo = function (spec): Result<SketchSpec, any> {
   ]), spec);
 };
 
-const getUid = function (info) {
+const getUid = (info) => {
   return Objects.wrap(AlloyTags.idAttr(), info.uid());
 };
 
-const toDefinition = function (info) {
+const toDefinition = (info) => {
   const base = {
     tag: info.dom().tag(),
     classes: info.dom().classes(),
@@ -60,27 +60,27 @@ const toDefinition = function (info) {
       info.dom().attributes()
     ),
     styles: info.dom().styles(),
-    domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
+    domChildren: Arr.map(info.components(), (comp) => { return comp.element(); })
   };
 
   return DomDefinition.nu(Merger.deepMerge(base,
-    info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
-    info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
+    info.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
+    info.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
   ));
 };
 
-const toModification = function (info) {
-  return info.domModification().fold(function () {
+const toModification = (info) => {
+  return info.domModification().fold(() => {
     return DomModification.nu({ });
   }, DomModification.nu);
 };
 
 // Probably want to pass info to these at some point.
-const toApis = function (info) {
+const toApis = (info) => {
   return info.apis();
 };
 
-const toEvents = function (info) {
+const toEvents = (info) => {
   return info.events();
 };
 

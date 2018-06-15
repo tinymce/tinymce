@@ -8,15 +8,15 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, failure) => {
+
+
 
   // The purpose of this test is to check that when a component has
   // keying and focusing, that the keying behaviour's focusIn fires
   // after the focusing
   GuiSetup.setup(
-    function (store, doc, body) {
+    (store, doc, body) => {
       const memChild = Memento.record({
         uid: 'child',
         dom: {
@@ -59,12 +59,12 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function () 
         ])
       });
     },
-    function (doc, body, gui, component, store) {
+    (doc, body, gui, component, store) => {
       return [
         GuiSetup.mAddStyles(doc, [
           ':focus { outline: 10px solid green; }'
         ]),
-        Step.sync(function () {
+        Step.sync(() => {
           AlloyTriggers.dispatchFocus(component, component.element());
         }),
         FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),

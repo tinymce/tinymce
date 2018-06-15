@@ -4,9 +4,9 @@ import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { Position } from '@ephox/sugar';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderToolbuttonTest', function () {
+UnitTest.test('BounderToolbuttonTest', () => {
   /* global assert */
-  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());
@@ -16,21 +16,21 @@ UnitTest.test('BounderToolbuttonTest', function () {
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   // We use it for toolbar buttons, like naughty hobbitses, so this test will change (TBIO-2326) because right now it's insane.
-  const chameleonBubble = function (width) {
+  const chameleonBubble = (width) => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
-    const northeast = function () {
+    const northeast = () => {
       return Position(-1, 1);
     };
 
-    const northwest = function () {
+    const northwest = () => {
       return Position(width - 1, 1);
     };
 
-    const southeast = function () {
+    const southeast = () => {
       return Position(-1, -2);
     };
 
-    const southwest = function () {
+    const southwest = () => {
       return Position(width - 1, -2);
     };
 

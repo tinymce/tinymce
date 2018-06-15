@@ -13,12 +13,12 @@ import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDraggingTypes';
-import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
+import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { DraggingState } from '../../dragging/common/DraggingTypes';
 
-const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
+const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.mousedown(), function (component, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.mousedown(), (component, simulatedEvent) => {
       if (simulatedEvent.event().raw().button !== 0) { return; }
       simulatedEvent.stop();
 
@@ -60,13 +60,13 @@ const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingS
         })
       );
 
-      const dragBy = function (delta) {
+      const dragBy = (delta) => {
         DragMovement.dragBy(component, dragConfig, delta);
       };
 
-      const stop = function () {
+      const stop = () => {
         BlockerUtils.discard(blocker);
-        dragConfig.snaps().each(function (snapInfo) {
+        dragConfig.snaps().each((snapInfo) => {
           Snappables.stopDrag(component, snapInfo);
         });
         const target = dragConfig.getTarget()(component.element());
@@ -77,7 +77,7 @@ const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingS
       // 200 ms, then drop
       const delayDrop = DelayedFunction(stop, 200);
 
-      const start = function () {
+      const start = () => {
         BlockerUtils.instigate(component, blocker);
       };
 

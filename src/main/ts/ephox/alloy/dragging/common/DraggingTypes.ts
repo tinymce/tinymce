@@ -2,7 +2,7 @@ import { CoordAdt } from "../../api/data/DragCoord";
 import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PositionCoordinates, SugarEvent, SugarElement } from "../../alien/TypeDefinitions";
+import { SugarPosition, SugarEvent, SugarElement } from "../../alien/TypeDefinitions";
 import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
 import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
@@ -23,7 +23,7 @@ export interface SnapConfigSpec {
 
 export interface SnapConfig {
   sensor: () => CoordAdt;
-  range: () => PositionCoordinates;
+  range: () => SugarPosition;
   output: () => CoordAdt;
   extra: any;
 }

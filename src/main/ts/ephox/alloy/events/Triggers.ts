@@ -11,16 +11,16 @@ const adt = Adt.generate([
   { complete: [ ] }
 ]);
 
-const doTriggerHandler = function (lookup, eventType, rawEvent, target, source, logger) {
+const doTriggerHandler = (lookup, eventType, rawEvent, target, source, logger) => {
   const handler = lookup(eventType, target);
 
   const simulatedEvent = SimulatedEvent.fromSource(rawEvent, source);
 
-  return handler.fold(function () {
+  return handler.fold(() => {
     // No handler, so complete.
     logger.logEventNoHandlers(eventType, target);
     return adt.complete();
-  }, function (handlerInfo) {
+  }, (handlerInfo) => {
     const descHandler = handlerInfo.descHandler();
     const eventHandler = DescribedHandler.getHandler(descHandler);
     eventHandler(simulatedEvent);
@@ -32,11 +32,11 @@ const doTriggerHandler = function (lookup, eventType, rawEvent, target, source, 
     } else if (simulatedEvent.isCut()) {
       logger.logEventCut(eventType, handlerInfo.element(), descHandler.purpose());
       return adt.complete();
-    } else { return Traverse.parent(handlerInfo.element()).fold(function () {
+    } else { return Traverse.parent(handlerInfo.element()).fold(() => {
       logger.logNoParent(eventType, handlerInfo.element(), descHandler.purpose());
       // No parent, so complete.
       return adt.complete();
-    }, function (parent) {
+    }, (parent) => {
       logger.logEventResponse(eventType, handlerInfo.element(), descHandler.purpose());
       // Resume at parent
       return adt.resume(parent);
@@ -45,28 +45,28 @@ const doTriggerHandler = function (lookup, eventType, rawEvent, target, source, 
   });
 };
 
-const doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source, logger) {
-  return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(function () {
+const doTriggerOnUntilStopped = (lookup, eventType, rawEvent, rawTarget, source, logger) => {
+  return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(() => {
     // stopped.
     return true;
-  }, function (parent) {
+  }, (parent) => {
     // Go again.
     return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger);
-  }, function () {
+  }, () => {
     // completed
     return false;
   });
 };
 
-const triggerHandler = function (lookup, eventType, rawEvent, target, logger) {
+const triggerHandler = (lookup, eventType, rawEvent, target, logger) => {
   const source = EventSource.derive(rawEvent, target);
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
 
-const broadcast = function (listeners, rawEvent, logger?) {
+const broadcast = (listeners, rawEvent, logger?) => {
   const simulatedEvent = SimulatedEvent.fromExternal(rawEvent);
 
-  Arr.each(listeners, function (listener) {
+  Arr.each(listeners, (listener) => {
     const descHandler = listener.descHandler();
     const handler = DescribedHandler.getHandler(descHandler);
     handler(simulatedEvent);
@@ -75,12 +75,12 @@ const broadcast = function (listeners, rawEvent, logger?) {
   return simulatedEvent.isStopped();
 };
 
-const triggerUntilStopped = function (lookup, eventType, rawEvent, logger) {
+const triggerUntilStopped = (lookup, eventType, rawEvent, logger) => {
   const rawTarget = rawEvent.target();
   return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
 };
 
-const triggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, logger) {
+const triggerOnUntilStopped = (lookup, eventType, rawEvent, rawTarget, logger) => {
   const source = EventSource.derive(rawEvent, rawTarget);
   return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source, logger);
 };

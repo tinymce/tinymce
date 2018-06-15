@@ -5,20 +5,20 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 
-export default <any> function () {
+export default <any> () => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   // Naive resize handler
-  const resize = function (element, changeX, changeY) {
-    const width = Css.getRaw(element, 'width').map(function (w) {
+  const resize = (element, changeX, changeY) => {
+    const width = Css.getRaw(element, 'width').map((w) => {
       return parseInt(w, 10);
-    }).getOrThunk(function () {
+    }).getOrThunk(() => {
       return Width.get(element);
     });
 
-    const height = Css.getRaw(element, 'height').map(function (h) {
+    const height = Css.getRaw(element, 'height').map((h) => {
       return parseInt(h, 10);
-    }).getOrThunk(function () {
+    }).getOrThunk(() => {
       return Height.get(element);
     });
 

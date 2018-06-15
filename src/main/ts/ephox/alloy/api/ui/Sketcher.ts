@@ -59,12 +59,12 @@ const compositeSchema = ValueSchema.objOfOnly([
 const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
-  const sketch = function (spec) {
+  const sketch = (spec) => {
     return UiSketcher.single(config.name, config.configFields, config.factory, spec);
   };
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
-  const extraApis = Obj.map(config.extraApis, function (f, k) {
+  const extraApis = Obj.map(config.extraApis, (f, k) => {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
@@ -84,7 +84,7 @@ const single = function <S extends SingleSketchSpec, D extends SingleSketchDetai
 const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
-  const sketch = function (spec) {
+  const sketch = (spec) => {
     return UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
   };
 
@@ -92,7 +92,7 @@ const composite = function <S extends CompositeSketchSpec, D extends CompositeSk
   const parts: AlloyParts.GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
-  const extraApis = Obj.map(config.extraApis, function (f, k) {
+  const extraApis = Obj.map(config.extraApis, (f, k) => {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 

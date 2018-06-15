@@ -30,8 +30,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 // TODO: Remove dupe with ExpandableForm
-const runOnExtra = function (detail, operation) {
-  return function (anyComp) {
+const runOnExtra = (detail, operation) => {
+  return (anyComp) => {
     AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
   };
 };
@@ -61,18 +61,18 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             expanded: true,
             onStartShrink (extra) {
               // If the focus is inside the extra part, move the focus to the expander button
-              Focus.search(extra.element()).each(function (_) {
+              Focus.search(extra.element()).each((_) => {
                 const comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
                 Keying.focusIn(comp);
               });
 
-              extra.getSystem().getByUid(detail.uid()).each(function (form) {
+              extra.getSystem().getByUid(detail.uid()).each((form) => {
                 Class.remove(form.element(), detail.markers().expandedClass());
                 Class.add(form.element(), detail.markers().collapsedClass());
               });
             },
             onStartGrow (extra) {
-              extra.getSystem().getByUid(detail.uid()).each(function (form) {
+              extra.getSystem().getByUid(detail.uid()).each((form) => {
                 Class.add(form.element(), detail.markers().expandedClass());
                 Class.remove(form.element(), detail.markers().collapsedClass());
               });

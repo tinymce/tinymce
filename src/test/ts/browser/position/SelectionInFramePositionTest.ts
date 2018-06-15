@@ -10,18 +10,18 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('SelectionInFramePositionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
     }
 
     const frame = Element.fromTag('iframe');
-    const onload = DomEvent.bind(frame, 'load', function () {
+    const onload = DomEvent.bind(frame, 'load', () => {
       onload.unbind();
       Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
     });
@@ -46,22 +46,22 @@ UnitTest.asynctest('SelectionInFramePositionTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const cSetupAnchor = Chain.mapper(function (data) {
+  }, (doc, body, gui, component, store) => {
+    const cSetupAnchor = Chain.mapper((data) => {
       return {
         anchor: 'selection',
         root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
       };
     });
 
-    const cGetWin = Chain.mapper(function (frame) {
+    const cGetWin = Chain.mapper((frame) => {
       return frame.element().dom().contentWindow;
     });
 
-    const cSetPath = function (rawPath) {
+    const cSetPath = (rawPath) => {
       const path = Cursors.path(rawPath);
 
-      return Chain.binder(function (win) {
+      return Chain.binder((win) => {
         const body = Element.fromDom(win.document.body);
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
@@ -71,7 +71,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', function () {
           range.finish(),
           range.foffset()
         );
-        return WindowSelection.getExact(win).fold(function () {
+        return WindowSelection.getExact(win).fold(() => {
           return Result.error('Could not retrieve the set selection');
         }, Result.value);
       });
@@ -93,11 +93,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', function () {
             'Waiting for iframe to load content.',
             [
               Chain.control(
-                Chain.binder(function (data) {
+                Chain.binder((data) => {
                   const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
-                  return SelectorFind.descendant(root, 'p').fold(function () {
+                  return SelectorFind.descendant(root, 'p').fold(() => {
                     return Result.error('Could not find paragraph yet');
-                  }, function (p) {
+                  }, (p) => {
                     return Result.value(data);
                   });
                 }),
@@ -147,11 +147,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', function () {
                 finishPath: [ 13 ],
                 foffset: 0
               }), 'range2'),
-              NamedChain.direct('range2', Chain.binder(function (range2) {
+              NamedChain.direct('range2', Chain.binder((range2) => {
                 const start = range2.start();
                 // NOTE: Safari likes to select the text node.
                 const optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
-                return optElement.map(function (elem) {
+                return optElement.map((elem) => {
                   elem.dom().scrollIntoView();
                   return Scroll.get(
                     Traverse.owner(elem)
@@ -173,5 +173,5 @@ UnitTest.asynctest('SelectionInFramePositionTest', function () {
         ])
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

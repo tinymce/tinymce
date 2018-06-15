@@ -15,7 +15,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as Writer from 'ephox/alloy/frame/Writer';
 import { document } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Css.set(gui.element(), 'direction', 'rtl');
@@ -100,7 +100,7 @@ export default <any> function () {
             }
           },
           events: AlloyEvents.derive([
-            AlloyEvents.run(NativeEvents.mouseover(), function (item) {
+            AlloyEvents.run(NativeEvents.mouseover(), (item) => {
               Attachment.attach(sink, popup);
               Positioning.position(sink, {
                 anchor: 'submenu',
@@ -158,7 +158,7 @@ export default <any> function () {
 
   // Maybe make a component.
   const frame = Element.fromTag('iframe');
-  const onLoad = DomEvent.bind(frame, 'load', function () {
+  const onLoad = DomEvent.bind(frame, 'load', () => {
     onLoad.unbind();
 
     const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';

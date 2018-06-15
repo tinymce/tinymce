@@ -5,12 +5,12 @@ import { CouplingConfig } from './CouplingTypes';
 import BehaviourState from '../common/BehaviourState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const init = function (spec) {
+const init = (spec) => {
   const coupled = { };
 
-  const getOrCreate = function (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): AlloyComponent {
+  const getOrCreate = (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): AlloyComponent => {
     const available = Obj.keys(coupleConfig.others());
-    if (! available) { throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2)); } else { return Objects.readOptFrom(coupled, name).getOrThunk(function () {
+    if (! available) { throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2)); } else { return Objects.readOptFrom(coupled, name).getOrThunk(() => {
       const builder = Objects.readOptFrom(coupleConfig.others(), name).getOrDie(
         'No information found for coupled component: ' + name
       );

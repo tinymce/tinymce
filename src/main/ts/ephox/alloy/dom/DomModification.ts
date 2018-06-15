@@ -16,11 +16,11 @@ const fields = [
 // Maybe we'll need to allow add/remove
 const nu = Struct.immutableBag([ ], fields);
 
-const derive = function (settings) {
+const derive = (settings) => {
   const r = { };
   const keys = Obj.keys(settings);
-  Arr.each(keys, function (key) {
-    settings[key].each(function (v) {
+  Arr.each(keys, (key) => {
+    settings[key].each((v) => {
       r[key] = v;
     });
   });
@@ -28,12 +28,12 @@ const derive = function (settings) {
   return nu(r);
 };
 
-const modToStr = function (mod) {
+const modToStr = (mod) => {
   const raw = modToRaw(mod);
   return Json.stringify(raw, null, 2);
 };
 
-const modToRaw = function (mod) {
+const modToRaw = (mod) => {
   return {
     classes: mod.classes().getOr('<none>'),
     attributes: mod.attributes().getOr('<none>'),
@@ -41,31 +41,31 @@ const modToRaw = function (mod) {
     value: mod.value().getOr('<none>'),
     innerHtml: mod.innerHtml().getOr('<none>'),
     defChildren: mod.defChildren().getOr('<none>'),
-    domChildren: mod.domChildren().fold(function () {
+    domChildren: mod.domChildren().fold(() => {
       return '<none>';
-    }, function (children) {
+    }, (children) => {
       return children.length === 0 ? '0 children, but still specified' : String(children.length);
     })
   };
 };
 
-const clashingOptArrays = function (key, oArr1, oArr2) {
-  return oArr1.fold(function () {
-    return oArr2.fold(function () {
+const clashingOptArrays = (key, oArr1, oArr2) => {
+  return oArr1.fold(() => {
+    return oArr2.fold(() => {
       return { };
-    }, function (arr2) {
+    }, (arr2) => {
       return Objects.wrap(key, arr2);
     });
-  }, function (arr1) {
-    return oArr2.fold(function () {
+  }, (arr1) => {
+    return oArr2.fold(() => {
       return Objects.wrap(key, arr1);
-    }, function (arr2) {
+    }, (arr2) => {
       return Objects.wrap(key, arr2);
     });
   });
 };
 
-const merge = function (defnA, mod) {
+const merge = (defnA, mod) => {
   const raw = Merger.deepMerge(
     {
       tag: defnA.tag(),
@@ -79,14 +79,14 @@ const merge = function (defnA, mod) {
         mod.styles().getOr({})
       )
     },
-    mod.innerHtml().or(defnA.innerHtml()).map(function (innerHtml) {
+    mod.innerHtml().or(defnA.innerHtml()).map((innerHtml) => {
       return Objects.wrap('innerHtml', innerHtml);
     }).getOr({ }),
 
     clashingOptArrays('domChildren', mod.domChildren(), defnA.domChildren()),
     clashingOptArrays('defChildren', mod.defChildren(), defnA.defChildren()),
 
-    mod.value().or(defnA.value()).map(function (value) {
+    mod.value().or(defnA.value()).map((value) => {
       return Objects.wrap('value', value);
     }).getOr({ })
   );

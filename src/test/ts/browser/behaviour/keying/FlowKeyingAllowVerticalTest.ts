@@ -10,10 +10,10 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flow Keying Allow Vertical Test', function (success, failure) {
+UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
-    const item = function (classes, name) {
+  GuiSetup.setup((store, doc, body) => {
+    const item = (classes, name) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -64,7 +64,7 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', function (success, failure
         ]
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const targets = {
       one: { label: 'one', selector: '.one' },
@@ -138,7 +138,7 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', function (success, failure
         'keydown.to.body: 40',
       ])
     ];
-  }, function () {
+  }, () => {
     success();
   }, failure);
 });

@@ -81,7 +81,7 @@ const buttonPart = PartType.required({
   overrides (detail) {
     return {
       action (btn) {
-        btn.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
+        btn.getSystem().getByUid(detail.uid()).each((splitDropdown) => {
           detail.onExecute()(splitDropdown, btn);
         });
       }
@@ -101,7 +101,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     defaults (detail) {
       return {
         onExecute (tmenu, item) {
-          tmenu.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
+          tmenu.getSystem().getByUid(detail.uid()).each((splitDropdown) => {
             detail.onItemExecute()(splitDropdown, tmenu, item);
           });
         }

@@ -4,7 +4,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 
-const builder = function (detail) {
+const builder = (detail) => {
   return {
     dom: detail.dom(),
     components: detail.components(),

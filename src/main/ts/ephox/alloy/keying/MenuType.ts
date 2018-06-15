@@ -17,32 +17,32 @@ const schema = [
   FieldSchema.defaulted('moveOnTab', false)
 ];
 
-const execute = function (component, simulatedEvent, menuConfig) {
-  return menuConfig.focusManager().get(component).bind(function (focused) {
+const execute = (component, simulatedEvent, menuConfig) => {
+  return menuConfig.focusManager().get(component).bind((focused) => {
     return menuConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const focusIn = function (component, menuConfig, simulatedEvent) {
+const focusIn = (component, menuConfig, simulatedEvent) => {
   // Maybe keep selection if it was there before
-  SelectorFind.descendant(component.element(), menuConfig.selector()).each(function (first) {
+  SelectorFind.descendant(component.element(), menuConfig.selector()).each((first) => {
     menuConfig.focusManager().set(component, first);
   });
 };
 
-const moveUp = function (element, focused, info) {
+const moveUp = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-const moveDown = function (element, focused, info) {
+const moveDown = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 
-const fireShiftTab = function (component, simulatedEvent, menuConfig) {
+const fireShiftTab = (component, simulatedEvent, menuConfig) => {
   return menuConfig.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig) : Option.none();
 };
 
-const fireTab = function (component, simulatedEvent, menuConfig) {
+const fireTab = (component, simulatedEvent, menuConfig) => {
   return menuConfig.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig) : Option.none();
 };
 

@@ -6,13 +6,13 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
-UnitTest.asynctest('TransitioningTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TransitioningTest', (success, failure) => {
+
+
 
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -38,7 +38,7 @@ UnitTest.asynctest('TransitioningTest', function () {
       ])
     });
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GuiSetup.mAddStyles(doc, [
         '.transitioning { transition: opacity 1s ease; }',
@@ -49,7 +49,7 @@ UnitTest.asynctest('TransitioningTest', function () {
       ]),
       Assertions.sAssertStructure(
         'Checking initial state',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('alpha'),
@@ -60,7 +60,7 @@ UnitTest.asynctest('TransitioningTest', function () {
         component.element()
       ),
       store.sAssertEq('Checking initial state is empty', [ ]),
-      Step.sync(function () {
+      Step.sync(() => {
         Transitioning.jumpTo(component, 'gamma');
       }),
       store.sAssertEq('Checking finish is added to store', [
@@ -68,7 +68,7 @@ UnitTest.asynctest('TransitioningTest', function () {
       ]),
       Assertions.sAssertStructure(
         'Checking transitioned state to gamma (jump)',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('gamma'),
@@ -80,12 +80,12 @@ UnitTest.asynctest('TransitioningTest', function () {
       ),
       store.sClear,
       Step.wait(0),
-      Step.sync(function () {
+      Step.sync(() => {
         Transitioning.progressTo(component, 'beta');
       }),
       Assertions.sAssertStructure(
         'Checking transitioned state to beta (progress)',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('gamma'),
@@ -104,7 +104,7 @@ UnitTest.asynctest('TransitioningTest', function () {
         100, 3000
       ),
       store.sClear,
-      Step.sync(function () {
+      Step.sync(() => {
         Transitioning.progressTo(component, 'alpha');
       }),
       Waiter.sTryUntil(
@@ -116,5 +116,5 @@ UnitTest.asynctest('TransitioningTest', function () {
         100, 3000
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

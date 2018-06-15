@@ -4,7 +4,7 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
-const mungeItem = function (itemSpec) {
+const mungeItem = (itemSpec) => {
   return Merger.deepMerge(
     itemSpec,
     {
@@ -19,7 +19,7 @@ const markers = {
   itemClass: 'toolbar-item'
 };
 
-const munge = function (spec) {
+const munge = (spec) => {
   return {
     dom: {
       tag: 'div',
@@ -33,12 +33,12 @@ const munge = function (spec) {
   };
 };
 
-const setGroups = function (tb, gs) {
+const setGroups = (tb, gs) => {
   const gps = createGroups(gs);
   Toolbar.setGroups(tb, gps);
 };
 
-const createGroups = function (gs) {
+const createGroups = (gs) => {
   return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 };
 

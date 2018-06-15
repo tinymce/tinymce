@@ -11,13 +11,13 @@ import { document, console } from '@ephox/dom-globals';
 
 import { Option } from '@ephox/katamari';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = function (text) {
+  const makeBack = (text) => {
     return {
       data: TieredMenu.collapseItem(text),
       type: 'item',
@@ -29,7 +29,7 @@ export default <any> function () {
     };
   };
 
-  const makeItem = function (value, text) {
+  const makeItem = (value, text) => {
     return {
       data: {
         value,
@@ -44,7 +44,7 @@ export default <any> function () {
     };
   };
 
-  const makeSeparator = function (text) {
+  const makeSeparator = (text) => {
     return {
       type: 'separator',
       dom: {
@@ -62,7 +62,7 @@ export default <any> function () {
     };
   };
 
-  const makeMenu = function (value, items) {
+  const makeMenu = (value, items) => {
     return {
       value,
       dom: {

@@ -5,23 +5,23 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 
-const emit = function (component: AlloyComponent, event: string): void {
+const emit = (component: AlloyComponent, event: string): void => {
   dispatchWith(component, component.element(), event, { });
 };
 
-const emitWith = function (component: AlloyComponent, event: string, properties: {}): void {
+const emitWith = (component: AlloyComponent, event: string, properties: {}): void => {
   dispatchWith(component, component.element(), event, properties);
 };
 
-const emitExecute = function (component: AlloyComponent): void {
+const emitExecute = (component: AlloyComponent): void => {
   emit(component, SystemEvents.execute());
 };
 
-const dispatch = function (component: AlloyComponent, target: SugarElement, event: string): void {
+const dispatch = (component: AlloyComponent, target: SugarElement, event: string): void => {
   dispatchWith(component, target, event, { });
 };
 
-const dispatchWith = function (component: AlloyComponent, target: SugarElement, event: string, properties: {}): void {
+const dispatchWith = (component: AlloyComponent, target: SugarElement, event: string, properties: {}): void => {
   const data = Merger.deepMerge({
     target
   }, properties);
@@ -32,7 +32,7 @@ const dispatchEvent = function <T extends EventFormat>(component: AlloyComponent
   component.getSystem().triggerEvent(event, target, simulatedEvent.event());
 };
 
-const dispatchFocus = function (component: AlloyComponent, target: SugarElement): void {
+const dispatchFocus = (component: AlloyComponent, target: SugarElement): void => {
   component.getSystem().triggerFocus(target, component.element());
 };
 

@@ -3,7 +3,7 @@ import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
-const make = function () {
+const make = () => {
   return GuiFactory.build(
     Container.sketch({
       containerBehaviours: Behaviour.derive([

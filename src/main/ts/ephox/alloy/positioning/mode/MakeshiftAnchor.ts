@@ -8,10 +8,10 @@ import Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import Anchoring from './Anchoring';
 
-const placement = function (component, posInfo, anchorInfo, origin) {
+const placement = (component, posInfo, anchorInfo, origin) => {
   const anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-  const layouts = anchorInfo.layouts().getOrThunk(function () {
+  const layouts = anchorInfo.layouts().getOrThunk(() => {
     return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
   });
 

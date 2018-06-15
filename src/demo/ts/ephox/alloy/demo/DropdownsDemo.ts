@@ -18,7 +18,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -30,7 +30,7 @@ export default <any> function () {
 
   gui.add(sink);
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -138,7 +138,7 @@ export default <any> function () {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map(function (m) {
+        return Future.pure(menu).map((m) => {
           return TieredMenu.singleData('demo.2.menu', menu);
         });
       }
@@ -177,7 +177,7 @@ export default <any> function () {
         ], DemoRenders.gridItem);
 
         const future = Future.pure(data);
-        return future.map(function (items) {
+        return future.map((items) => {
           const menu = DemoRenders.gridMenu({
             value: 'demo.3.menu',
             items,
@@ -228,7 +228,7 @@ export default <any> function () {
         ], DemoRenders.item);
 
         const future = Future.pure(data);
-        return future.map(function (items) {
+        return future.map((items) => {
           const menu = DemoRenders.menu({
             value: 'demo.4.menu',
             items
@@ -374,7 +374,7 @@ export default <any> function () {
           }
         });
 
-        return future.map(function (f) {
+        return future.map((f) => {
           return TieredMenu.tieredData(f.primary, f.menus, f.expansions);
         });
       }

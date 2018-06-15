@@ -5,14 +5,14 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import * as KeyMatch from '../navigation/KeyMatch';
 import { Option } from '@ephox/katamari';
 
-const doDefaultExecute = function (component, simulatedEvent, focused) {
+const doDefaultExecute = (component, simulatedEvent, focused) => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
   AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
   return Option.some(true);
 };
 
-const defaultExecute = function (component, simulatedEvent, focused) {
+const defaultExecute = (component, simulatedEvent, focused) => {
   return EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE())(simulatedEvent.event()) ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);
 };
 

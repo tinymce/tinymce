@@ -3,11 +3,11 @@ import { Throttler } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 
-const setup = function (streamInfo) {
+const setup = (streamInfo) => {
   const sInfo = streamInfo.stream();
   const throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
 
-  return function (component, simulatedEvent) {
+  return (component, simulatedEvent) => {
     throttler.throttle(component, simulatedEvent);
     if (sInfo.stopEvent()) { simulatedEvent.stop(); }
   };

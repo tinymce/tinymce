@@ -3,13 +3,13 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
-UnitTest.test('DomDefinitionTest', function () {
+UnitTest.test('DomDefinitionTest', () => {
   /* global assert */
   // TODO: Add property based tests.
 
   Logger.sync(
     'Testing definition without any children or childspecs',
-    function () {
+    () => {
       const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
@@ -46,7 +46,7 @@ UnitTest.test('DomDefinitionTest', function () {
 
   Logger.sync(
     'Testing definition without any children or childspecs, but innerHtml',
-    function () {
+    () => {
       const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
@@ -84,7 +84,7 @@ UnitTest.test('DomDefinitionTest', function () {
 
   Logger.sync(
     'Testing definition without any children or childspecs, but value',
-    function () {
+    () => {
       const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
@@ -122,7 +122,7 @@ UnitTest.test('DomDefinitionTest', function () {
 
   Logger.sync(
     'Testing definition with children supplied',
-    function () {
+    () => {
       // TODO: add test
     }
   );

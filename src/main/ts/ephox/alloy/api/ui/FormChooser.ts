@@ -15,14 +15,14 @@ import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = function (detail, components: AlloySpec[], spec, externals): SketchSpec {
-  const findByValue = function (chooser, value) {
+const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
+  const findByValue = (chooser, value) => {
     const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
-    const choiceComps = Arr.map(choices, function (c) {
+    const choiceComps = Arr.map(choices, (c) => {
       return chooser.getSystem().getByDom(c).getOrDie();
     });
 
-    return Arr.find(choiceComps, function (c) {
+    return Arr.find(choiceComps, (c) => {
       return Representing.getValue(c) === value;
     });
   };
@@ -39,13 +39,13 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = func
           selector: '.' + detail.markers().choiceClass(),
           executeOnMove: true,
           getInitial (chooser) {
-            return Highlighting.getHighlighted(chooser).map(function (choice) {
+            return Highlighting.getHighlighted(chooser).map((choice) => {
               return choice.element();
             });
           },
           // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
           execute (chooser, simulatedEvent, focused) {
-            return chooser.getSystem().getByDom(focused).map(function (choice) {
+            return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
             });
@@ -71,7 +71,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = func
           store: {
             mode: 'manual',
             setValue (chooser, value) {
-              findByValue(chooser, value).each(function (choiceWithValue) {
+              findByValue(chooser, value).each((choiceWithValue) => {
                 Highlighting.highlight(chooser, choiceWithValue);
               });
             },

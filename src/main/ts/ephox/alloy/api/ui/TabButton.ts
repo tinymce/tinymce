@@ -11,7 +11,7 @@ import * as Sketcher from './Sketcher';
 import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = function (detail, spec) {
+const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, spec) => {
 
   return {
     uid: detail.uid(),
@@ -45,7 +45,7 @@ const TabButton = Sketcher.single({
   configFields: [
     FieldSchema.defaulted('uid', undefined),
     FieldSchema.strict('value'),
-    FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(function (spec) {
+    FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk((spec) => {
       return {
         attributes: {
           'role': 'tab',

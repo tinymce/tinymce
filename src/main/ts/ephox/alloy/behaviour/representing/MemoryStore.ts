@@ -3,22 +3,22 @@ import { FieldSchema } from '@ephox/boulder';
 import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
 
-const setValue = function (component, repConfig, repState, data) {
+const setValue = (component, repConfig, repState, data) => {
   repState.set(data);
   repConfig.onSetValue()(component, data);
 };
 
-const getValue = function (component, repConfig, repState) {
+const getValue = (component, repConfig, repState) => {
   return repState.get();
 };
 
-const onLoad = function (component, repConfig, repState) {
-  repConfig.store().initialValue().each(function (initVal) {
+const onLoad = (component, repConfig, repState) => {
+  repConfig.store().initialValue().each((initVal) => {
     if (repState.isNotSet()) { repState.set(initVal); }
   });
 };
 
-const onUnload = function (component, repConfig, repState) {
+const onUnload = (component, repConfig, repState) => {
   repState.clear();
 };
 

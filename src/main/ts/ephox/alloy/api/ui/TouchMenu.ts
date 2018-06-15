@@ -29,28 +29,28 @@ import { TransitionProperties } from '../../behaviour/transitioning/Transitionin
 
 type TouchHoverState = (AlloyComponent) => void;
 
-const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail, components, spec, externals) => {
 
   // FIX: Typify
-  const getMenu = function (component: AlloyComponent): any {
+  const getMenu = (component: AlloyComponent): any => {
     const sandbox = Coupling.getCoupled(component, 'sandbox');
     return Sandboxing.getState(sandbox);
   };
 
   const hoveredState: Cell<boolean> = Cell(false);
 
-  const hoverOn = function (component: AlloyComponent): void {
+  const hoverOn = (component: AlloyComponent): void => {
     if (hoveredState.get() === false) {
       forceHoverOn(component);
     }
   };
 
-  const forceHoverOn = function (component: AlloyComponent): void {
+  const forceHoverOn = (component: AlloyComponent): void => {
     detail.onHoverOn()(component);
     hoveredState.set(true);
   };
 
-  const hoverOff = function (component: AlloyComponent): void {
+  const hoverOff = (component: AlloyComponent): void => {
     if (hoveredState.get() === true) {
       detail.onHoverOff()(component);
       hoveredState.set(false);
@@ -85,9 +85,9 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
                       lazySink: DropdownUtils.getSink(hotspot, detail),
                       inlineBehaviours: Behaviour.derive([
                         AddEventsBehaviour.config('execute-for-menu', [
-                          AlloyEvents.runOnExecute(function (c, s) {
+                          AlloyEvents.runOnExecute((c, s) => {
                             const target = s.event().target();
-                            c.getSystem().getByDom(target).each(function (item) {
+                            c.getSystem().getByDom(target).each((item) => {
                               detail.onExecute()(hotspot, c, item, Representing.getValue(item));
                             });
                           })
@@ -102,7 +102,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
                           routes: Transitioning.createBistate(
                             'open',
                             'closed',
-                            detail.menuTransition().map(function (t) {
+                            detail.menuTransition().map((t) => {
                               return Objects.wrap('transition', t) as TransitionProperties;
                             }).getOr({ })
                           ),
@@ -134,17 +134,17 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
 
         AlloyEvents.abort(NativeEvents.contextmenu(), Fun.constant(true)),
 
-        AlloyEvents.run(NativeEvents.touchstart(), function (comp, se) {
+        AlloyEvents.run(NativeEvents.touchstart(), (comp, se) => {
           Toggling.on(comp);
         }),
 
-        AlloyEvents.run(SystemEvents.tap(), function (comp, se) {
+        AlloyEvents.run(SystemEvents.tap(), (comp, se) => {
           detail.onTap()(comp);
         }),
 
         // On longpress, create the menu items to show, and put them in the sandbox.
-        AlloyEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
-          detail.fetch()(component).get(function (items) {
+        AlloyEvents.run(SystemEvents.longpress(), (component, simulatedEvent) => {
+          detail.fetch()(component).get((items) => {
             forceHoverOn(component);
             const iMenu = Menu.sketch(
               Merger.deepMerge(
@@ -165,10 +165,10 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
         //   - if over items, trigger mousemover on item (and hoverOff on button)
         //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
         //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
-        AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.touchmove(), (component, simulatedEvent) => {
           const e = simulatedEvent.event().raw().touches[0];
-          getMenu(component).each(function (iMenu) {
-            ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
+          getMenu(component).each((iMenu) => {
+            ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(() => {
               // No items, so blur everything.
               Highlighting.dehighlightAll(iMenu);
 
@@ -182,7 +182,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
               ) as TouchHoverState;
 
               hoverF(component);
-            }, function (elem) {
+            }, (elem) => {
               AlloyTriggers.dispatchWith(component, elem, NativeEvents.mouseover(), {
                 x: e.clientX,
                 y: e.clientY
@@ -196,9 +196,9 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
         // 1. Trigger execute on any selected item
         // 2. Close the menu
         // 3. Depress the button
-        AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
 
-          getMenu(component).each(function (iMenu) {
+          getMenu(component).each((iMenu) => {
             Highlighting.getHighlighted(iMenu).each(AlloyTriggers.emitExecute);
           });
 
@@ -207,7 +207,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function
           Toggling.off(component);
         }),
 
-        AlloyEvents.runOnDetached(function (component, simulatedEvent) {
+        AlloyEvents.runOnDetached((component, simulatedEvent) => {
           const sandbox = Coupling.getCoupled(component, 'sandbox');
           InlineView.hide(sandbox);
         })

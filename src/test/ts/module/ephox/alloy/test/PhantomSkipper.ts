@@ -1,6 +1,6 @@
 import { navigator } from "@ephox/dom-globals";
 
-const skip = function () {
+const skip = () => {
   return navigator.userAgent.indexOf('PhantomJS') > -1;
 };
 

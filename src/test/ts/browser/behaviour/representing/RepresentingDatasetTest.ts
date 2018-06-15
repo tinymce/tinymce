@@ -9,11 +9,11 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: dataset)', () => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -41,9 +41,9 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
         ])
       })
     );
-  }, function (doc, body, gui, component, store) {
-    const sAssertValue = function (label, expected) {
-      return Step.sync(function () {
+  }, (doc, body, gui, component, store) => {
+    const sAssertValue = (label, expected) => {
+      return Step.sync(() => {
         const v = Representing.getValue(component);
         Assertions.assertEq(label, expected, v);
       });
@@ -52,7 +52,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
     return [
       Assertions.sAssertStructure(
         'Initial value should be "dog"',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
             value: str.is('Dog')
           });
@@ -65,13 +65,13 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'Cat'),
       // Note, Value.set does not actually dispatch the event, so we have to simulate it.
-      Step.sync(function () {
+      Step.sync(() => {
         AlloyTriggers.emit(component, NativeEvents.input());
       }),
 
       sAssertValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Representing.setValue(component, {
           value: 'elephant',
           text: 'Elephant'
@@ -81,7 +81,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
       sAssertValue('Checking represented value after setValue', { value: 'elephant', text: 'Elephant' }),
       Assertions.sAssertStructure(
         'Value should be "Elephant"',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
             value: str.is('Elephant')
           });
@@ -89,5 +89,5 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
         component.element()
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

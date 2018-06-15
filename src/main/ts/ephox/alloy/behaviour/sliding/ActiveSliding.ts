@@ -8,7 +8,7 @@ import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const exhibit = function (base: { }, slideConfig: SlidingConfig/*, slideState */): { } {
+const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
   const expanded = slideConfig.expanded();
 
   return expanded ? DomModification.nu({
@@ -20,9 +20,9 @@ const exhibit = function (base: { }, slideConfig: SlidingConfig/*, slideState */
   });
 };
 
-const events = function (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.EventHandlerConfigRecord {
+const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw();
       // This will fire for all transitions, we're only interested in the dimension completion
       if (raw.propertyName === slideConfig.dimension().property()) {

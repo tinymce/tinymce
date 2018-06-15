@@ -15,12 +15,12 @@ export interface FocusHighlights {
   set: (component: AlloyComponent, element: SugarElement) => void;
 }
 
-const dom = function (): FocusDom {
-  const get = function (component) {
+const dom = (): FocusDom => {
+  const get = (component) => {
     return Focus.search(component.element());
   };
 
-  const set = function (component, focusee) {
+  const set = (component, focusee) => {
     component.getSystem().triggerFocus(focusee, component.element());
   };
 
@@ -30,15 +30,15 @@ const dom = function (): FocusDom {
   };
 };
 
-const highlights = function (): FocusHighlights {
-  const get = function (component) {
-    return Highlighting.getHighlighted(component).map(function (item) {
+const highlights = (): FocusHighlights => {
+  const get = (component) => {
+    return Highlighting.getHighlighted(component).map((item) => {
       return item.element();
     });
   };
 
-  const set = function (component, element) {
-    component.getSystem().getByDom(element).fold(Fun.noop, function (item) {
+  const set = (component, element) => {
+    component.getSystem().getByDom(element).fold(Fun.noop, (item) => {
       Highlighting.highlight(component, item);
     });
   };

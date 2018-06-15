@@ -10,12 +10,12 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flow Keying Skip Element Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
-    const item = function (classes, name) {
+
+
+  GuiSetup.setup((store, doc, body) => {
+    const item = (classes, name) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -65,7 +65,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
         ]
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const targets = {
       one: { label: 'one', selector: '.one' },
@@ -135,7 +135,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () {
+  }, () => {
     success();
   }, failure);
 });

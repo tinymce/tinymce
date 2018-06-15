@@ -1,12 +1,12 @@
 import { Arr, Option, Strings } from '@ephox/katamari';
 
-const markAsBehaviourApi = function (f, apiName, apiFunction) {
+const markAsBehaviourApi = (f, apiName, apiFunction) => {
   const delegate = apiFunction.toString();
   const endIndex = delegate.indexOf(')') + 1;
   const openBracketIndex = delegate.indexOf('(');
   const parameters = delegate.substring(openBracketIndex + 1, endIndex - 1).split(/,\s*/);
 
-  f.toFunctionAnnotation = function () {
+  f.toFunctionAnnotation = () => {
     return {
       name: apiName,
       parameters: cleanParameters(parameters.slice(0, 1).concat(parameters.slice(3)))
@@ -16,19 +16,19 @@ const markAsBehaviourApi = function (f, apiName, apiFunction) {
 };
 
 // Remove any comment (/*) at end of parameter names
-const cleanParameters = function (parameters) {
-  return Arr.map(parameters, function (p) {
+const cleanParameters = (parameters) => {
+  return Arr.map(parameters, (p) => {
     return Strings.endsWith(p, '/*') ? p.substring(0, p.length - '/*'.length) : p;
   });
 };
 
-const markAsExtraApi = function (f, extraName) {
+const markAsExtraApi = (f, extraName) => {
   const delegate = f.toString();
   const endIndex = delegate.indexOf(')') + 1;
   const openBracketIndex = delegate.indexOf('(');
   const parameters = delegate.substring(openBracketIndex + 1, endIndex - 1).split(/,\s*/);
 
-  f.toFunctionAnnotation = function () {
+  f.toFunctionAnnotation = () => {
     return {
       name: extraName,
       parameters: cleanParameters(parameters)
@@ -37,13 +37,13 @@ const markAsExtraApi = function (f, extraName) {
   return f;
 };
 
-const markAsSketchApi = function (f, apiFunction) {
+const markAsSketchApi = (f, apiFunction) => {
   const delegate = apiFunction.toString();
   const endIndex = delegate.indexOf(')') + 1;
   const openBracketIndex = delegate.indexOf('(');
   const parameters = delegate.substring(openBracketIndex + 1, endIndex - 1).split(/,\s*/);
 
-  f.toFunctionAnnotation = function () {
+  f.toFunctionAnnotation = () => {
     return {
       name: 'OVERRIDE',
       parameters: cleanParameters(parameters.slice(1))
@@ -52,7 +52,7 @@ const markAsSketchApi = function (f, apiFunction) {
   return f;
 };
 
-const getAnnotation = function (f) {
+const getAnnotation = (f) => {
   return f.hasOwnProperty('toFunctionAnnotation') ? Option.some(
     f.toFunctionAnnotation()
   ) : Option.none();

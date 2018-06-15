@@ -8,7 +8,7 @@ import * as Origins from '../layout/Origins';
 import Anchoring from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = function (component, posInfo, submenuInfo, origin) {
+const placement = (component, posInfo, submenuInfo, origin) => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
   const layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());

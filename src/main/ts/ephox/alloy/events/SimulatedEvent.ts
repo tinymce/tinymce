@@ -32,16 +32,16 @@ export interface ReceivingEvent extends EventFormat {
   data: () => any;
 }
 
-const fromSource = function (event, source) {
+const fromSource = (event, source) => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
 
-  const stop = function () {
+  const stop = () => {
     stopper.set(true);
   };
 
-  const cut = function () {
+  const cut = () => {
     cutter.set(true);
   };
 
@@ -58,10 +58,10 @@ const fromSource = function (event, source) {
 };
 
 // Events that come from outside of the alloy root (e.g. window scroll)
-const fromExternal = function (event) {
+const fromExternal = (event) => {
   const stopper = Cell(false);
 
-  const stop = function () {
+  const stop = () => {
     stopper.set(true);
   };
 
@@ -77,7 +77,7 @@ const fromExternal = function (event) {
   };
 };
 
-const fromTarget = function (event, target) {
+const fromTarget = (event, target) => {
   const source = Cell(target);
   return fromSource(event, source);
 };

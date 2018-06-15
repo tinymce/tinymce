@@ -3,12 +3,12 @@ import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('MenuPathingTest', function () {
+UnitTest.test('MenuPathingTest', () => {
   /* global assert */
   const actual = MenuPathing.generate({ }, { });
   assert.eq({ }, actual);
 
-  const check = function (label, expected, menus, expansions) {
+  const check = (label, expected, menus, expansions) => {
     const actual = MenuPathing.generate(menus, expansions);
     RawAssertions.assertEq(label, expected, actual);
   };
@@ -47,7 +47,7 @@ UnitTest.test('MenuPathingTest', function () {
 
   Jsc.property(
     '*** No property checking anything for MenuPathing yet',
-    function () {
+    () => {
       return true;
     }
   );

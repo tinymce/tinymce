@@ -24,7 +24,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const behaviours = function (detail: InputDetail) {
+const behaviours = (detail: InputDetail) => {
   return Merger.deepMerge(
     Behaviour.derive([
       Representing.config({
@@ -46,7 +46,7 @@ const behaviours = function (detail: InputDetail) {
         onSetValue: detail.onSetValue()
       }),
       Focusing.config({
-        onFocus: detail.selectOnFocus() === false ? Fun.noop : function (component) {
+        onFocus: detail.selectOnFocus() === false ? Fun.noop : (component) => {
           const input = component.element();
           const value = Value.get(input);
           input.dom().setSelectionRange(0, value.length);
@@ -57,7 +57,7 @@ const behaviours = function (detail: InputDetail) {
   );
 };
 
-const dom = function (detail: InputDetail) {
+const dom = (detail: InputDetail) => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
@@ -66,7 +66,7 @@ const dom = function (detail: InputDetail) {
           key: 'type',
           value: detail.type()
         }
-      ].concat(detail.placeholder().map(function (pc) {
+      ].concat(detail.placeholder().map((pc) => {
         return {
           key: 'placeholder',
           value: pc

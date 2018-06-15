@@ -12,7 +12,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   Debugging.registerInspector('gui', gui);
 

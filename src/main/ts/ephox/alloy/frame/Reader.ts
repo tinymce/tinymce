@@ -2,7 +2,7 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { console } from '@ephox/dom-globals';
 
-const iframeDoc = function (element) {
+const iframeDoc = (element) => {
   const dom = element.dom();
   try {
     const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
@@ -15,11 +15,11 @@ const iframeDoc = function (element) {
   }
 };
 
-const doc = function (element) {
+const doc = (element) => {
   const optDoc = iframeDoc(element);
-  return optDoc.fold(function () {
+  return optDoc.fold(() => {
     return element;
-  }, function (v) {
+  }, (v) => {
     return v;
   });
 };

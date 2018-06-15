@@ -14,7 +14,7 @@ import { SliderDetail } from '../../ui/types/SliderTypes';
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = function (name, action) {
+const edgePart = (name, action) => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides (detail: SliderDetail) {
@@ -24,7 +24,7 @@ const edgePart = function (name, action) {
 
       const mouseEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [ detail ]),
-        AlloyEvents.runActionExtra(NativeEvents.mousemove(), function (l, det) {
+        AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det) => {
           if (det.mouseIsDown().get()) { action (l, det); }
         }, [ detail ])
       ]);
@@ -65,12 +65,12 @@ const thumbPart = PartType.required({
 
 const spectrumPart = PartType.required({
   schema: [
-    FieldSchema.state('mouseIsDown', function () { return Cell(false); })
+    FieldSchema.state('mouseIsDown', () => { return Cell(false); })
   ],
   name: 'spectrum',
   overrides (detail: SliderDetail) {
 
-    const moveToX = function (spectrum, simulatedEvent) {
+    const moveToX = (spectrum, simulatedEvent) => {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
       SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
@@ -82,7 +82,7 @@ const spectrumPart = PartType.required({
 
     const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), moveToX),
-      AlloyEvents.run(NativeEvents.mousemove(), function (spectrum, se) {
+      AlloyEvents.run(NativeEvents.mousemove(), (spectrum, se) => {
         if (detail.mouseIsDown().get()) { moveToX(spectrum, se); }
       })
     ]);

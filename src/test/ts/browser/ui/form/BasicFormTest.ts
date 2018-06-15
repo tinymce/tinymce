@@ -10,9 +10,9 @@ import TestForm from 'ephox/alloy/test/form/TestForm';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-UnitTest.asynctest('Basic Form', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Basic Form', (success, failure) => {
+
+
 
   const formAntSpec = {
     uid: 'input-ant',
@@ -48,9 +48,9 @@ UnitTest.asynctest('Basic Form', function () {
     ]
   };
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
-      Form.sketch(function (parts: FormParts) {
+      Form.sketch((parts: FormParts) => {
         return {
           dom: {
             tag: 'div'
@@ -63,14 +63,14 @@ UnitTest.asynctest('Basic Form', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     const helper = TestForm.helper(component);
 
-    const sAssertDisplay = function (inputText, selectValue) {
-      return Step.sync(function () {
+    const sAssertDisplay = (inputText, selectValue) => {
+      return Step.sync(() => {
         Assertions.assertStructure(
           'Checking that HTML select and text input have right contents',
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
               children: [
                 s.element('div', {
@@ -158,12 +158,12 @@ UnitTest.asynctest('Basic Form', function () {
       Logger.t(
         'Retrieve the bull field directly and check its value',
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
             Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
           })
         ])
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

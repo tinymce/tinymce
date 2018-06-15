@@ -21,10 +21,10 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('getInitialValue'),
   SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
 
-  FieldSchema.state('value', function (spec) { return Cell(spec.min); })
+  FieldSchema.state('value', (spec) => { return Cell(spec.min); })
 ].concat(! isTouch ? [
   // Only add if not on a touch device
-  FieldSchema.state('mouseIsDown', function () { return Cell(false); })
+  FieldSchema.state('mouseIsDown', () => { return Cell(false); })
 ] : [ ]);
 
 export {

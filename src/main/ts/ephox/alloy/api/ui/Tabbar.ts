@@ -10,7 +10,7 @@ import * as Sketcher from './Sketcher';
 import { TabbarSketcher, TabbarDetail, TabbarSpec } from '../../ui/types/TabbarTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {
     'uid': detail.uid(),
     'dom': Merger.deepMerge(
@@ -46,7 +46,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = function (deta
           mode: 'flow',
           getInitial (tabbar) {
             // Restore focus to the previously highlighted tab.
-            return Highlighting.getHighlighted(tabbar).map(function (tab) {
+            return Highlighting.getHighlighted(tabbar).map((tab) => {
               return tab.element();
             });
           },

@@ -19,11 +19,11 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'lockClass' ])
 ]);
 
-const getField = function (comp, detail: FormCoupledInputsDetail, partName) {
+const getField = (comp, detail: FormCoupledInputsDetail, partName) => {
   return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 };
 
-const coupledPart = function (selfName, otherName) {
+const coupledPart = (selfName, otherName) => {
   return PartType.required({
     factory: FormField,
     name: selfName,
@@ -31,9 +31,9 @@ const coupledPart = function (selfName, otherName) {
       return {
         fieldBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('coupled-input-behaviour', [
-            AlloyEvents.run(NativeEvents.input(), function (me) {
-              getField(me, detail, otherName).each(function (other) {
-                AlloyParts.getPart(me, detail, 'lock').each(function (lock) {
+            AlloyEvents.run(NativeEvents.input(), (me) => {
+              getField(me, detail, otherName).each((other) => {
+                AlloyParts.getPart(me, detail, 'lock').each((lock) => {
                   // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
                   if (Toggling.isOn(lock)) { detail.onLockedChange()(me, other, lock); }
                 });

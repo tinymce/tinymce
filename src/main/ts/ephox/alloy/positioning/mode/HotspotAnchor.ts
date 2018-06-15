@@ -8,7 +8,7 @@ import * as Origins from '../layout/Origins';
 import Anchoring from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = function (component, posInfo, anchorInfo, origin) {
+const placement = (component, posInfo, anchorInfo, origin) => {
   const hotspot = anchorInfo.hotspot();
   const anchorBox = Origins.toBox(origin, hotspot.element());
 

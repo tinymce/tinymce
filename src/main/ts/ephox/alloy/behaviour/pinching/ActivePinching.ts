@@ -38,17 +38,17 @@ const mode: DragModeDeltas<PinchDragData> = {
   }
 };
 
-const events = function (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.EventHandlerConfigRecord {
+const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
     // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
     // Note: in testing, it didn't seem to cause problems on Android. Check.
     AlloyEvents.preventDefault(NativeEvents.gesturestart()),
 
-    AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = pinchState.update(mode, simulatedEvent.event());
-      delta.each(function (dlt) {
+      delta.each((dlt) => {
         const multiplier = dlt.deltaDistance() > 0 ? 1 : -1;
         const changeX = multiplier * Math.abs(dlt.deltaX());
         const changeY = multiplier * Math.abs(dlt.deltaY());

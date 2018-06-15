@@ -11,7 +11,7 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = function (detail): SketchSpec {
+const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => {
   return {
     uid: detail.uid(),
     dom: detail.dom(),
@@ -30,7 +30,7 @@ const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = function (d
       SketchBehaviours.get(detail.dataBehaviours())
     ),
     events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+      AlloyEvents.runOnAttached((component, simulatedEvent) => {
         Representing.setValue(component, detail.getInitialValue()());
       })
     ])

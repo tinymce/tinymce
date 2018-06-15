@@ -5,22 +5,22 @@ import EventRegistry from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
-export default <any> function () {
+export default <any> () => {
   const events = EventRegistry();
 
   const components = { };
 
-  const readOrTag = function (component) {
+  const readOrTag = (component) => {
     const elem = component.element();
-    return Tagger.read(elem).fold(function () {
+    return Tagger.read(elem).fold(() => {
       // No existing tag, so add one.
       return Tagger.write('uid-', component.element());
-    }, function (uid) {
+    }, (uid) => {
       return uid;
     });
   };
 
-  const failOnDuplicate = function (component, tagId) {
+  const failOnDuplicate = (component, tagId) => {
     const conflict = components[tagId];
     if (conflict === component) { unregister(component); } else { throw new Error(
       'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
@@ -29,7 +29,7 @@ export default <any> function () {
     }
   };
 
-  const register = function (component) {
+  const register = (component) => {
     const tagId = readOrTag(component);
     if (Objects.hasKey(components, tagId)) { failOnDuplicate(component, tagId); }
     // Component is passed through an an extra argument to all events
@@ -38,22 +38,22 @@ export default <any> function () {
     components[tagId] = component;
   };
 
-  const unregister = function (component) {
-    Tagger.read(component.element()).each(function (tagId) {
+  const unregister = (component) => {
+    Tagger.read(component.element()).each((tagId) => {
       components[tagId] = undefined;
       events.unregisterId(tagId);
     });
   };
 
-  const filter = function (type) {
+  const filter = (type) => {
     return events.filterByType(type);
   };
 
-  const find = function (isAboveRoot, type, target) {
+  const find = (isAboveRoot, type, target) => {
     return events.find(isAboveRoot, type, target);
   };
 
-  const getById = function (id) {
+  const getById = (id) => {
     return Objects.readOpt(id)(components);
   };
 

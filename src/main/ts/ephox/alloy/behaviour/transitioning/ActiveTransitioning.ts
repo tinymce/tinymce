@@ -6,13 +6,13 @@ import { Stateless } from '../../behaviour/common/NoState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = function (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.EventHandlerConfigRecord {
+const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw();
-      TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
-        TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
-          rInfo.transition().each(function (rTransition) {
+      TransitionApis.getCurrentRoute(component, transConfig, transState).each((route) => {
+        TransitionApis.findRoute(component, transConfig, transState, route).each((rInfo) => {
+          rInfo.transition().each((rTransition) => {
             if (raw.propertyName === rTransition.property()) {
               TransitionApis.jumpTo(component, transConfig, transState, route.destination());
               transConfig.onTransition()(component, route);
@@ -22,7 +22,7 @@ const events = function (transConfig: TransitioningConfig, transState: Stateless
       });
     }),
 
-    AlloyEvents.runOnAttached(function (comp, se) {
+    AlloyEvents.runOnAttached((comp, se) => {
       TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
     })
   ]);

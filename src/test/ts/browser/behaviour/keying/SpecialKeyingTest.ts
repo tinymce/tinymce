@@ -7,11 +7,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('SpecialKeyingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -34,8 +34,8 @@ UnitTest.asynctest('SpecialKeyingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const press = function (expected, key, modifiers) {
+  }, (doc, body, gui, component, store) => {
+    const press = (expected, key, modifiers) => {
       return GeneralSteps.sequence([
         store.sClear,
         Keyboard.sKeydown(doc, key, modifiers),
@@ -56,5 +56,5 @@ UnitTest.asynctest('SpecialKeyingTest', function () {
       press('escape', Keys.escape(), { }),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

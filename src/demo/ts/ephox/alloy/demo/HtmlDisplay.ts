@@ -5,11 +5,11 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import { MutationObserver, document } from '@ephox/dom-globals';
 
-const register = Thunk.cached(function (gui) {
+const register = Thunk.cached((gui) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-const section = function (gui, instructions, spec) {
+const section = (gui, instructions, spec) => {
   register(gui);
   const information = Container.sketch({
     dom: {
@@ -51,14 +51,14 @@ const section = function (gui, instructions, spec) {
     ]
   });
 
-  const updateHtml = function () {
-    gui.getByUid(dumpUid).each(function (dumpC) {
+  const updateHtml = () => {
+    gui.getByUid(dumpUid).each((dumpC) => {
       // NOTE: Use Body.body() here for more information.
       TextContent.set(dumpC.element(), Html.getOuter(component.element()));
     });
   };
 
-  const observer = new MutationObserver(function (mutations) {
+  const observer = new MutationObserver((mutations) => {
     updateHtml();
   });
 
@@ -78,7 +78,7 @@ const section = function (gui, instructions, spec) {
 
   gui.add(all);
 
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
       gui.broadcastOn([ 'dismiss.popups' ], {
         target: evt.target()

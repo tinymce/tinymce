@@ -18,7 +18,7 @@ const Invalidating = Behaviour.create({
   extra: {
     // Note, this requires representing to be on the validatee
     validation (validator) {
-      return function (component) {
+      return (component) => {
         const v = Representing.getValue(component);
         return Future.pure(validator(v));
       };

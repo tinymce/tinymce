@@ -26,9 +26,9 @@ export interface ContainerBehaviours {
   [key: string]: any;
 }
 
-const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcessorAdt[] {
+const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] => {
   const owner = _owner !== undefined ? _owner : 'Unknown owner';
-  const fallbackThunk = function () {
+  const fallbackThunk = () => {
     return [
       Fields.output('partUids', { })
     ];
@@ -42,8 +42,8 @@ const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcess
     'parts',
     Arr.flatten([
       Arr.map(partNames, FieldSchema.strict),
-      Arr.map(optPartNames, function (optPart) {
-        return FieldSchema.defaulted(optPart, UiSubstitutes.single(false, function () {
+      Arr.map(optPartNames, (optPart) => {
+        return FieldSchema.defaulted(optPart, UiSubstitutes.single(false, () => {
           throw new Error('The optional part: ' + optPart + ' was not specified in the config, but it was used in components');
         }));
       })
@@ -52,15 +52,15 @@ const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcess
 
   const partUidsSchema = FieldSchema.state(
     'partUids',
-    function (spec) {
+    (spec) => {
       if (! Objects.hasKey(spec, 'parts')) {
         throw new Error(
           'Part uid definition for owner: ' + owner + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
           Json.stringify(spec, null, 2)
         );
       }
-      const uids = Obj.map(spec.parts, function (v, k) {
-        return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
+      const uids = Obj.map(spec.parts, (v, k) => {
+        return Objects.readOptFrom(v, 'uid').getOrThunk(() => {
           return spec.uid + '-' + k;
         });
       });
@@ -71,18 +71,18 @@ const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcess
   return [ partsSchema, partUidsSchema ];
 };
 
-const getPartUidsSchema = function (label, spec): FieldProcessorAdt {
+const getPartUidsSchema = (label, spec): FieldProcessorAdt => {
   return FieldSchema.state(
     'partUids',
-    function (spec) {
+    (spec) => {
       if (! Objects.hasKey(spec, 'parts')) {
         throw new Error(
           'Part uid definition for owner: ' + label + ' requires "parts\nSpec: ' +
           Json.stringify(spec, null, 2)
         );
       }
-      const uids = Obj.map(spec.parts, function (v, k) {
-        return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
+      const uids = Obj.map(spec.parts, (v, k) => {
+        return Objects.readOptFrom(v, 'uid').getOrThunk(() => {
           return spec.uid + '-' + k;
         });
       });
@@ -91,7 +91,7 @@ const getPartUidsSchema = function (label, spec): FieldProcessorAdt {
   );
 };
 
-const base = function (label, partSchemas, partUidsSchemas, spec) {
+const base = (label, partSchemas, partUidsSchemas, spec) => {
   const ps = partSchemas.length > 0 ? [
     FieldSchema.strictObjOf('parts', partSchemas)
   ] : [ ];
@@ -105,7 +105,7 @@ const base = function (label, partSchemas, partUidsSchemas, spec) {
   ]).concat(partUidsSchemas);
 };
 
-const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
+const asRawOrDie = (label, schema, spec, partSchemas, partUidsSchemas) => {
   const baseS = base(label, partSchemas, spec, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
@@ -115,13 +115,13 @@ const asStructOrDie = function <D, S>(label: string, schema: AdtInterface[], spe
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const extend = function (builder, original, nu) {
+const extend = (builder, original, nu) => {
   // Merge all at the moment.
   const newSpec = Merger.deepMerge(original, nu);
   return builder(newSpec);
 };
 
-const addBehaviours = function (original, behaviours) {
+const addBehaviours = (original, behaviours) => {
   return Merger.deepMerge(original, behaviours);
 };
 

@@ -7,7 +7,7 @@ import { SketchSpec } from '../../api/component/SpecTypes';
 import { ContainerDetail, ContainerSketcher, ContainerSpec } from '../../ui/types/ContainerTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = function (detail): SketchSpec {
+const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): SketchSpec => {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(

@@ -7,12 +7,12 @@ import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';
 
 const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction'], []);
-const defaultOr = function (options, key, dephault) {
+const defaultOr = (options, key, dephault) => {
   return options[key] === undefined ? dephault : options[key];
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen (position: fixed)
-const fixed = function (anchor, element, bubble, layouts, overrideOptions) {
+const fixed = (anchor, element, bubble, layouts, overrideOptions) => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -29,8 +29,8 @@ const fixed = function (anchor, element, bubble, layouts, overrideOptions) {
   go(anchorBox, element, bubble, options);
 };
 
-const relative = function (anchorBox, element, bubble, _options) {
-  const defaults = function (_opts) {
+const relative = (anchorBox, element, bubble, _options) => {
+  const defaults = (_opts) => {
     const opts = _opts !== undefined ? _opts : {};
     return reparteeOptions({
       bounds: defaultOr(opts, 'bounds', Boxes.view()),
@@ -45,7 +45,7 @@ const relative = function (anchorBox, element, bubble, _options) {
 };
 
 // This is the old public API. If we ever need full customisability again, this is how to expose it
-const go = function (anchorBox, element, bubble, options) {
+const go = (anchorBox, element, bubble, options) => {
   const decision = Callouts.layout(anchorBox, element, bubble, options);
 
   Callouts.position(element, decision, options);

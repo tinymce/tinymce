@@ -4,9 +4,9 @@ import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderMenuTest', function () {
+UnitTest.test('BounderMenuTest', () => {
   /* global assert */
-  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());

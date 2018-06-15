@@ -2,24 +2,24 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 
 import BehaviourState from '../common/BehaviourState';
 
-const init = function () {
+const init = () => {
   const contents = Cell(Option.none());
 
   const readState = Fun.constant('not-implemented');
 
-  const isOpen = function () {
+  const isOpen = () => {
     return contents.get().isSome();
   };
 
-  const set = function (c) {
+  const set = (c) => {
     contents.set(Option.some(c));
   };
 
-  const get = function (c) {
+  const get = (c) => {
     return contents.get();
   };
 
-  const clear = function () {
+  const clear = () => {
     contents.set(Option.none());
   };
 

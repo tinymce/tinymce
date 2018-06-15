@@ -3,7 +3,7 @@ import { FieldSchema, Objects } from '@ephox/boulder';
 import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
 
-const setValue = function (component, repConfig, repState, data) {
+const setValue = (component, repConfig, repState, data) => {
   // TODO FIX: Rewrite this mode. I don't think it makes any sense.
   const dataKey = repConfig.store().getDataKey();
   repState.set({ });
@@ -11,23 +11,23 @@ const setValue = function (component, repConfig, repState, data) {
   repConfig.onSetValue()(component, data);
 };
 
-const getValue = function (component, repConfig, repState) {
+const getValue = (component, repConfig, repState) => {
   const key = repConfig.store().getDataKey()(component);
   const dataset = repState.get();
-  return Objects.readOptFrom(dataset, key).fold(function () {
+  return Objects.readOptFrom(dataset, key).fold(() => {
     return repConfig.store().getFallbackEntry()(key);
-  }, function (data) {
+  }, (data) => {
     return data;
   });
 };
 
-const onLoad = function (component, repConfig, repState) {
-  repConfig.store().initialValue().each(function (data) {
+const onLoad = (component, repConfig, repState) => {
+  repConfig.store().initialValue().each((data) => {
     setValue(component, repConfig, repState, data);
   });
 };
 
-const onUnload = function (component, repConfig, repState) {
+const onUnload = (component, repConfig, repState) => {
   repState.set({ });
 };
 

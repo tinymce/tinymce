@@ -40,7 +40,7 @@ const init = (): LayeredState => {
     return primary.get().isNone();
   };
 
-  const setContents = function (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory): void {
+  const setContents = (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
     primary.set(Option.some(sPrimary));
     expansions.set(sExpansions);
     menus.set(sMenus);
@@ -51,7 +51,7 @@ const init = (): LayeredState => {
 
   // Given an item, return a list of all menus including the one that it triggered (if there is one)
   const expand = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom(expansions.get(), itemValue).map(function (menu) {
+    return Objects.readOptFrom(expansions.get(), itemValue).map((menu) => {
       const current = Objects.readOptFrom(paths.get(), itemValue).getOr([ ]);
       return [ menu ].concat(current);
     });
@@ -59,7 +59,7 @@ const init = (): LayeredState => {
 
   const collapse = (itemValue: string): Option<string[]> => {
     // Look up which key has the itemValue
-    return Objects.readOptFrom(paths.get(), itemValue).bind(function (path) {
+    return Objects.readOptFrom(paths.get(), itemValue).bind((path) => {
       return path.length > 1 ? Option.some(path.slice(1)) : Option.none();
     });
   };

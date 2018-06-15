@@ -5,11 +5,11 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: memory)', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: memory)', () => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {
         tag: 'span'
@@ -24,11 +24,11 @@ UnitTest.asynctest('RepresentingTest (mode: memory)', function () {
       ])
     });
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       RepresentPipes.sAssertValue('Checking initial value', '1', component),
       RepresentPipes.sSetValue(component, '2'),
       RepresentPipes.sAssertValue('Checking 2nd value', '2', component)
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

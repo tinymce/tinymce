@@ -13,7 +13,7 @@ import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
 import { TieredMenuSketcher, TieredMenuRecord, TieredData, ItemSpec } from '../../ui/types/TieredMenuTypes';
 import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
-const tieredData = function (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData {
+const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => {
   return {
     primary,
     menus,
@@ -21,7 +21,7 @@ const tieredData = function (primary: string, menus: TieredMenuRecord, expansion
   };
 };
 
-const singleData = function (name: string, menu: MenuSpec): TieredData {
+const singleData = (name: string, menu: MenuSpec): TieredData => {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -29,7 +29,7 @@ const singleData = function (name: string, menu: MenuSpec): TieredData {
   };
 };
 
-const collapseItem = function (text: string): ItemSpec {
+const collapseItem = (text: string): ItemSpec => {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text

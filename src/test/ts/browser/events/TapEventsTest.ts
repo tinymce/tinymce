@@ -7,10 +7,10 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
 import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.asynctest('browser events.TapEventsTest', function () {
+UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+
+
 
   const store = TestStore();
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
   const beta = Element.fromText('beta');
   const gamma = Element.fromText('gamma');
 
-  const touches = function (x, y, target) {
+  const touches = (x, y, target) => {
     return {
       raw: Fun.constant({
         touches: [
@@ -35,8 +35,8 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
     };
   };
 
-  const sFireIfReady = function (event, type) {
-    return Step.sync(function () {
+  const sFireIfReady = (event, type) => {
+    return Step.sync(() => {
       monitor.fireIfReady(event, type);
     });
   };
@@ -179,5 +179,5 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
         store.sClear
       ])
     )
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

@@ -26,7 +26,7 @@ const tabsPart = PartType.group({
   name: 'tabs',
   unit: 'tab',
   overrides (barDetail: TabbarDetail, tabSpec) {
-    const dismissTab = function (tabbar, button) {
+    const dismissTab = (tabbar, button) => {
       Highlighting.dehighlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.dismissTab(), {
         tabbar,
@@ -34,7 +34,7 @@ const tabsPart = PartType.group({
       });
     };
 
-    const changeTab = function (tabbar, button) {
+    const changeTab = (tabbar, button) => {
       Highlighting.highlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.changeTab(), {
         tabbar,
@@ -47,7 +47,7 @@ const tabsPart = PartType.group({
         const tabbar = button.getSystem().getByUid(barDetail.uid()).getOrDie();
         const activeButton = Highlighting.isHighlighted(tabbar, button);
 
-        const response = (function () {
+        const response = (() => {
           if (activeButton && barDetail.clickToDismiss()) { return dismissTab; } else if (! activeButton) { return changeTab; } else { return Fun.noop; }
         })();
 

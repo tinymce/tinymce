@@ -8,7 +8,7 @@ const adt = Adt.generate([
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-const attempt = function (candidate, width, height, bounds) {
+const attempt = (candidate, width, height, bounds) => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleLeft = candidate.bubble().left();
@@ -95,15 +95,15 @@ const attempt = function (candidate, width, height, bounds) {
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
+const attempts = (candidates, anchorBox, elementBox, bubbles, bounds) => {
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
-  const attemptBestFit = function (layout, reposition, deltaW, deltaH) {
+  const attemptBestFit = (layout, reposition, deltaW, deltaH) => {
     const next = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     // unwrapping fit only to rewrap seems... silly
-    return attemptLayout.fold(adt.fit, function (newReposition, newDeltaW, newDeltaH) {
+    return attemptLayout.fold(adt.fit, (newReposition, newDeltaW, newDeltaH) => {
       const improved = newDeltaW > deltaW || newDeltaH > deltaH;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
@@ -112,7 +112,7 @@ const attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
     });
   };
 
-  const abc = Arr.foldl(candidates, function (b, a) {
+  const abc = Arr.foldl(candidates, (b, a) => {
     const bestNext = Fun.curry(attemptBestFit, a);
     // unwrapping fit only to rewrap seems... silly
     return b.fold(adt.fit, bestNext);

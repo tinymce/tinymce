@@ -15,12 +15,12 @@ const adt = Adt.generate([
   { fixed: [ 'x', 'y', 'width', 'height' ] }
 ]);
 
-const reposition = function (origin, decision) {
-  return origin.fold(function () {
+const reposition = (origin, decision) => {
+  return origin.fold(() => {
     return Reposition.css('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
-  }, function (x, y) {
+  }, (x, y) => {
     return Reposition.css('absolute', Option.some(decision.x() - x), Option.some(decision.y() - y), Option.none(), Option.none());
-  }, function (x, y, width, height) {
+  }, (x, y, width, height) => {
     const decisionX = decision.x() - x;
     const decisionY = decision.y() - y;
     const decisionWidth = decision.width();
@@ -36,19 +36,19 @@ const reposition = function (origin, decision) {
 
     // wtb adt.match()
     return Direction.cata(decision.direction(),
-      function () {
+      () => {
         // southeast
         return Reposition.css('fixed', left, top, none, none);
       },
-      function () {
+      () => {
         // southwest
         return Reposition.css('fixed', none, top, right, none);
       },
-      function () {
+      () => {
         // northeast
         return Reposition.css('fixed', left, none, none, bottom);
       },
-      function () {
+      () => {
         // northwest
         return Reposition.css('fixed', none, none, right, bottom);
       }
@@ -56,19 +56,19 @@ const reposition = function (origin, decision) {
   });
 };
 
-const toBox = function (origin, element) {
+const toBox = (origin, element) => {
   return OriginsUI.toBox(origin, element);
 };
 
-const viewport = function (origin, bounds) {
+const viewport = (origin, bounds) => {
   return OriginsUI.viewport(origin, bounds);
 };
 
-const translate = function (origin, doc, x, y) {
+const translate = (origin, doc, x, y) => {
   return OriginsUI.translate(origin, doc, x, y);
 };
 
-const cata = function (subject, onNone, onRelative, onFixed) {
+const cata = (subject, onNone, onRelative, onFixed) => {
   return subject.fold(onNone, onRelative, onFixed);
 };
 

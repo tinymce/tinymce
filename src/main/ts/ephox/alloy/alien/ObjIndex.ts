@@ -20,11 +20,11 @@ import { Obj } from '@ephox/katamari';
  * }
  */
 
-const byInnerKey = function (data, tuple) {
+const byInnerKey = (data, tuple) => {
 
 const r = {};
-Obj.each(data, function (detail, key) {
-    Obj.each(detail, function (value, indexKey) {
+Obj.each(data, (detail, key) => {
+    Obj.each(detail, (value, indexKey) => {
       const chain = Objects.readOr(indexKey, [ ])(r);
       r[indexKey] = chain.concat([
         tuple(key, value)

@@ -2,21 +2,21 @@ import { Cell } from '@ephox/katamari';
 
 import BehaviourState from '../common/BehaviourState';
 
-const memory = function () {
+const memory = () => {
   const data = Cell(null);
 
-  const readState = function () {
+  const readState = () => {
     return {
       mode: 'memory',
       value: data.get()
     };
   };
 
-  const isNotSet = function () {
+  const isNotSet = () => {
     return data.get() === null;
   };
 
-  const clear = function () {
+  const clear = () => {
     data.set(null);
   };
 
@@ -29,8 +29,8 @@ const memory = function () {
   });
 };
 
-const manual = function () {
-  const readState = function () {
+const manual = () => {
+  const readState = () => {
 
   };
 
@@ -39,10 +39,10 @@ const manual = function () {
   });
 };
 
-const dataset = function () {
+const dataset = () => {
   const data = Cell({ });
 
-  const readState = function () {
+  const readState = () => {
     return {
       mode: 'dataset',
       dataset: data.get()
@@ -56,7 +56,7 @@ const dataset = function () {
   });
 };
 
-const init = function (spec) {
+const init = (spec) => {
   return spec.store().manager().state(spec);
 };
 

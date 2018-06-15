@@ -11,9 +11,9 @@ import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
+
+
 
   const root = Element.fromTag('div');
   Html.set(root, '<span class="clicker">A</span> and <span class="clicker">B</span>');
@@ -35,7 +35,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
             })
           ]),
           events: AlloyEvents.derive([
-            AlloyEvents.run(NativeEvents.click(), function (component, simulatedEvent) {
+            AlloyEvents.run(NativeEvents.click(), (component, simulatedEvent) => {
               // We have to remove the proxy first, because we are during a proxied event (click)
               connection.unproxy(component);
               connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
@@ -52,7 +52,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
     ]),
     Assertions.sAssertStructure(
       'Checking initial structure ... nothing is selected',
-      ApproxStructure.build(function (s, str, arr) {
+      ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('span', {
@@ -76,7 +76,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
 
     Assertions.sAssertStructure(
       'Checking structure after the first span is clicked',
-      ApproxStructure.build(function (s, str, arr) {
+      ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('span', {
@@ -100,9 +100,9 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
       root
     ),
 
-    Step.sync(function () {
+    Step.sync(() => {
       connection.disengage();
       Remove.remove(root);
     })
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

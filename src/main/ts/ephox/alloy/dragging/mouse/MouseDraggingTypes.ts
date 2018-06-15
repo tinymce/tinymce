@@ -1,9 +1,9 @@
 import { Option } from '@ephox/katamari';
-import { SugarElement, PositionCoordinates, SugarEvent } from '../../alien/TypeDefinitions';
+import { SugarElement, SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 import { DraggingConfig, CommonDraggingConfigSpec } from '../../dragging/common/DraggingTypes';
 
 export interface MouseDraggingConfig extends DraggingConfig {
-  blockerClass: () => string; 
+  blockerClass: () => string;
 }
 
 export interface DragApi {

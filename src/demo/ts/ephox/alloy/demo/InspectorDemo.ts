@@ -13,7 +13,7 @@ import { console } from '@ephox/dom-globals';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 >>>>>>> 09f2757... sketcher-typing: going through type information
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
 
   const body = Body.body();

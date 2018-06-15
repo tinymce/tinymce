@@ -5,12 +5,12 @@ import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('HtmlSelectTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
 
-  const sNoInitialValue = Step.async(function (next, die) {
-    GuiSetup.setup(function (store, doc, body) {
+
+
+  const sNoInitialValue = Step.async((next, die) => {
+    GuiSetup.setup((store, doc, body) => {
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
@@ -22,7 +22,7 @@ UnitTest.asynctest('HtmlSelectTest', function () {
           ]
         })
       );
-    }, function (doc, body, gui, component, store) {
+    }, (doc, body, gui, component, store) => {
       return [
         RepresentPipes.sAssertValue('Checking initial value', 'alpha', component),
         RepresentPipes.sSetValue(component, 'beta'),
@@ -35,8 +35,8 @@ UnitTest.asynctest('HtmlSelectTest', function () {
     }, next, die);
   });
 
-  const sHasInitialValue = Step.async(function (next, die) {
-    GuiSetup.setup(function (store, doc, body) {
+  const sHasInitialValue = Step.async((next, die) => {
+    GuiSetup.setup((store, doc, body) => {
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
@@ -48,7 +48,7 @@ UnitTest.asynctest('HtmlSelectTest', function () {
           ]
         })
       );
-    }, function (doc, body, gui, component, store) {
+    }, (doc, body, gui, component, store) => {
       return [
         RepresentPipes.sAssertValue('Checking initial value', 'gamma', component),
         RepresentPipes.sSetValue(component, 'beta'),
@@ -66,5 +66,5 @@ UnitTest.asynctest('HtmlSelectTest', function () {
   Pipeline.async({}, [
     Logger.t('Scenario: no initial value', sNoInitialValue),
     Logger.t('Scenario: has initial value gamma', sHasInitialValue)
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

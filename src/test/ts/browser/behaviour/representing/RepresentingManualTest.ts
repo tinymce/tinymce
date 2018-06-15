@@ -6,11 +6,11 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: manual)', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: manual)', () => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {
         tag: 'span',
@@ -34,7 +34,7 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', function () {
       ])
     });
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)' ]),
       RepresentPipes.sAssertValue('Checking initial value', 'init-value', component),
@@ -43,5 +43,5 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', function () {
       store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue', 'setValue(new-value)' ]),
       RepresentPipes.sAssertValue('Checking 2nd value', 'new-value', component)
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

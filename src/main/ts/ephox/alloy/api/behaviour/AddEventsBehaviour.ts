@@ -5,7 +5,7 @@ import { Fun } from '@ephox/katamari';
 import { create as createBehaviour, noState, ConfiguredBehaviour, AlloyBehaviour, NamedConfiguredBehaviour } from './Behaviour';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = function (name, eventHandlers): AlloyBehaviour {
+const events = (name, eventHandlers): AlloyBehaviour => {
   const events: EventHandlerConfigRecord = derive(eventHandlers);
 
   return createBehaviour({

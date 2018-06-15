@@ -4,7 +4,7 @@ import * as DragCoord from '../../api/data/DragCoord';
 import * as Presnaps from './Presnaps';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SnapsConfig, SnapConfig, SnapOutput, SnapPin } from '../../dragging/common/DraggingTypes';
-import { PositionCoordinates } from '../../alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import { CoordAdt } from '../../api/data/DragCoord';
 
 // Types of coordinates
@@ -39,23 +39,23 @@ import { CoordAdt } from '../../api/data/DragCoord';
 // that we put on it before we snapped it into place (before dropping). Once it's dropped, the presnap
 // position will go away. It is used to avoid the situation where you can't escape the snap unless you
 // move the mouse really quickly :)
-const getCoords = function (component: AlloyComponent, snapInfo: SnapsConfig, coord: CoordAdt, delta: PositionCoordinates): CoordAdt {
-  return Presnaps.get(component, snapInfo).fold(function () {
+const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: CoordAdt, delta: SugarPosition): CoordAdt => {
+  return Presnaps.get(component, snapInfo).fold(() => {
     return coord;
-  }, function (fixed) {
+  }, (fixed) => {
     // We have a pre-snap position, so we have to apply the delta ourselves
     return DragCoord.fixed(fixed.left() + delta.left(), fixed.top() + delta.top());
   });
 };
 
-const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin): SnapPin {
+const moveOrSnap = (component, snapInfo, coord, delta, scroll, origin): SnapPin => {
   const newCoord = getCoords(component, snapInfo, coord, delta);
   const snap = findSnap(component, snapInfo, newCoord, scroll, origin);
 
   const fixedCoord = DragCoord.asFixed(newCoord, scroll, origin);
   Presnaps.set(component, snapInfo, fixedCoord);
 
-  return snap.fold(function () {
+  return snap.fold(() => {
     return {
       coord: DragCoord.fixed(fixedCoord.left(), fixedCoord.top()),
       extra: Option.none()
@@ -64,7 +64,7 @@ const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin):
     // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
     // presnaps.set(element, 'fixed', newfixed.left(), newfixed.top());
     // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
-  }, function (spanned: SnapOutput) {
+  }, (spanned: SnapOutput) => {
     return {
       coord: spanned.output(),
       extra: spanned.extra()
@@ -72,7 +72,7 @@ const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin):
   });
 };
 
-const stopDrag = function (component: AlloyComponent, snapInfo: SnapsConfig): void {
+const stopDrag = (component: AlloyComponent, snapInfo: SnapsConfig): void => {
   Presnaps.clear(component, snapInfo);
 };
 
@@ -80,12 +80,12 @@ const stopDrag = function (component: AlloyComponent, snapInfo: SnapsConfig): vo
 // y: the absolute position.top of the draggable element
 // deltaX: the amount the mouse has moved horizontally
 // deltaY: the amount the mouse has moved vertically
-const findSnap = function (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): Option<SnapOutput> {
+const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
   const snaps = snapInfo.getSnapPoints()(component);
 
   // HERE
-  return Options.findMap(snaps, function (snap: any) {
+  return Options.findMap(snaps, (snap: any) => {
     const sensor = snap.sensor();
     const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
     return inRange ? Option.some(

@@ -22,7 +22,7 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getRules = function (component, simulatedEvent, executeInfo) {
+const getRules = (component, simulatedEvent, executeInfo) => {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
     KeyRules.rule(
@@ -47,8 +47,8 @@ const getRules = function (component, simulatedEvent, executeInfo) {
   ];
 };
 
-const focusIn = function (component, executeInfo) {
-  return executeInfo.focusIn().bind(function (f) {
+const focusIn = (component, executeInfo) => {
+  return executeInfo.focusIn().bind((f) => {
     return f(component, executeInfo);
   });
 };

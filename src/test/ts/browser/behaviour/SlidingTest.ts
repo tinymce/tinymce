@@ -8,9 +8,9 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
-UnitTest.asynctest('SlidingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SlidingTest', (success, failure) => {
+
+
 
   // Seems to have stopped working on phantomjs
   if (PhantomSkipper.skip()) { return success(); }
@@ -22,7 +22,7 @@ UnitTest.asynctest('SlidingTest', function () {
     '.test-sliding-width-shrinking { transition: opacity 0.9s ease, width 0.6s linear 0.3s, visibility 0s linear 0.9s }'
   ];
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -54,24 +54,24 @@ UnitTest.asynctest('SlidingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
-    const sIsGrowing = Step.sync(function () {
+    const sIsGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
     });
 
-    const sIsShrinking = Step.sync(function () {
+    const sIsShrinking = Step.sync(() => {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
     });
 
-    const sGrowingSteps = function (label) {
+    const sGrowingSteps = (label) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
           store.sAssertEq('On start growing', [ 'onStartGrow' ]),
           Assertions.sAssertStructure(
             'Checking structure',
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('div', {
                 classes: [
                   arr.not('test-sliding-width-shrinking'),
@@ -94,7 +94,7 @@ UnitTest.asynctest('SlidingTest', function () {
             4000
           ),
 
-          Step.sync(function () {
+          Step.sync(() => {
             Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
           }),
 
@@ -104,14 +104,14 @@ UnitTest.asynctest('SlidingTest', function () {
       );
     };
 
-    const sShrinkingSteps = function (label) {
+    const sShrinkingSteps = (label) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
           store.sAssertEq('On start shrinking', [ 'onStartShrink' ]),
           Assertions.sAssertStructure(
             'Checking structure',
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('div', {
                 classes: [
                   arr.has('test-sliding-width-shrinking'),
@@ -134,7 +134,7 @@ UnitTest.asynctest('SlidingTest', function () {
             4000
           ),
 
-          Step.sync(function () {
+          Step.sync(() => {
             Assertions.assertEq('Checking hasGrown = false', false, Sliding.hasGrown(component));
           }),
 
@@ -149,7 +149,7 @@ UnitTest.asynctest('SlidingTest', function () {
 
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [
               arr.has('test-sliding-closed')
@@ -160,37 +160,37 @@ UnitTest.asynctest('SlidingTest', function () {
       ),
 
       store.sClear,
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.grow(component);
       }),
 
       sGrowingSteps('Sliding.grow'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.shrink(component);
       }),
 
       sShrinkingSteps('Sliding.shrink'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.toggleGrow(component);
       }),
 
       sGrowingSteps('Sliding.toggleGrow (from shrunk)'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.toggleGrow(component);
       }),
 
       sShrinkingSteps('Sliding.toggleGrow (from grown)'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.toggleGrow(component);
       }),
 
       sGrowingSteps('Sliding.toggleGrow (from shrunk)'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Sliding.immediateShrink(component);
       }),
 
@@ -198,7 +198,7 @@ UnitTest.asynctest('SlidingTest', function () {
       store.sAssertEq('On start shrinking', [ 'onStartShrink', 'onShrunk' ]),
       Assertions.sAssertStructure(
         'Checking structure of immediate shrink',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [
               arr.not('test-sliding-width-shrinking'),
@@ -214,11 +214,11 @@ UnitTest.asynctest('SlidingTest', function () {
         }),
         component.element()
       ),
-      Step.sync(function () {
+      Step.sync(() => {
         Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
       }),
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

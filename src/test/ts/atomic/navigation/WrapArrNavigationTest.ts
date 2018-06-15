@@ -2,11 +2,11 @@ import * as WrapArrNavigation from 'ephox/alloy/navigation/WrapArrNavigation';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('WrapArrNavigationTest', function () {
-  const genRegularGrid = Jsc.integer(2, 20).generator.flatMap(function (numRows) {
-    return Jsc.integer(2, 20).generator.flatMap(function (numCols) {
+UnitTest.test('WrapArrNavigationTest', () => {
+  const genRegularGrid = Jsc.integer(2, 20).generator.flatMap((numRows) => {
+    return Jsc.integer(2, 20).generator.flatMap((numCols) => {
       const maxIndex = numRows * numCols;
-      return Jsc.integer(0, maxIndex - 1).generator.map(function (index) {
+      return Jsc.integer(0, maxIndex - 1).generator.map((index) => {
         const values = [ ];
         for (let i = 0; i < maxIndex; i++) {
           values[i] = i;
@@ -22,11 +22,11 @@ UnitTest.test('WrapArrNavigationTest', function () {
     });
   });
 
-  const genIrregularGrid = Jsc.integer(2, 3).generator.flatMap(function (numRows) {
-    return Jsc.integer(2, 3).generator.flatMap(function (numCols) {
-      return Jsc.integer(1, numCols - 2).generator.flatMap(function (remainder) {
+  const genIrregularGrid = Jsc.integer(2, 3).generator.flatMap((numRows) => {
+    return Jsc.integer(2, 3).generator.flatMap((numCols) => {
+      return Jsc.integer(1, numCols - 2).generator.flatMap((remainder) => {
         const maxIndex = numRows * numCols + remainder;
-        return Jsc.integer(0, maxIndex - 1).generator.map(function (index) {
+        return Jsc.integer(0, maxIndex - 1).generator.map((index) => {
 
           const values = [ ];
           for (let i = 0; i < maxIndex; i++) {
@@ -57,7 +57,7 @@ UnitTest.test('WrapArrNavigationTest', function () {
   Jsc.property(
     'Regular grid: cycleUp and cycleDown should be symmetric',
     arbRegularGrid,
-    function (arb) {
+    (arb) => {
       const afterDown = WrapArrNavigation.cycleDown(arb.values, arb.index, arb.numRows, arb.numCols).getOrDie('Should be able to cycleDown');
       const afterUp = WrapArrNavigation.cycleUp(arb.values, afterDown, arb.numRows, arb.numCols).getOrDie('Should be able to cycleUp');
       return Jsc.eq(arb.index, afterUp) && afterDown !== arb.index;
@@ -67,7 +67,7 @@ UnitTest.test('WrapArrNavigationTest', function () {
   Jsc.property(
     'Regular grid: cycleLeft and cycleRight should be symmetric',
     arbRegularGrid,
-    function (arb) {
+    (arb) => {
       const afterLeft = WrapArrNavigation.cycleLeft(arb.values, arb.index, arb.numRows, arb.numCols).getOrDie('Should be able to cycleLeft');
       const afterRight = WrapArrNavigation.cycleRight(arb.values, afterLeft, arb.numRows, arb.numCols).getOrDie('Should be able to cycleRight');
       return Jsc.eq(arb.index, afterRight) && afterLeft !== arb.index;
@@ -77,7 +77,7 @@ UnitTest.test('WrapArrNavigationTest', function () {
   Jsc.property(
     'Irregular grid: cycleUp and cycleDown should be symmetric unless on last row',
     arbIrregularGrid,
-    function (arb) {
+    (arb) => {
       const afterDown = WrapArrNavigation.cycleDown(arb.values, arb.index, arb.numRows, arb.numCols).getOrDie('Should be able to cycleDown');
       const afterUp = WrapArrNavigation.cycleUp(arb.values, afterDown, arb.numRows, arb.numCols).getOrDie('Should be able to cycleUp');
       const usedLastRow = afterDown >= arb.lastRowIndex || afterUp >= arb.lastRowIndex;
@@ -88,7 +88,7 @@ UnitTest.test('WrapArrNavigationTest', function () {
   Jsc.property(
     'Irregular grid: cycleLeft and cycleRight should be symmetric unless on last row with one remainder',
     arbIrregularGrid,
-    function (arb) {
+    (arb) => {
       const afterLeft = WrapArrNavigation.cycleLeft(arb.values, arb.index, arb.numRows, arb.numCols).getOrDie('Should be able to cycleLeft');
       const afterRight = WrapArrNavigation.cycleRight(arb.values, afterLeft, arb.numRows, arb.numCols).getOrDie('Should be able to cycleRight');
       return Jsc.eq(arb.index, afterRight) || (arb.index >= arb.lastRowIndex && arb.remainder === 1);

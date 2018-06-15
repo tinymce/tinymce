@@ -6,7 +6,7 @@ import { Merger } from '@ephox/katamari';
 import { TabviewSketcher, TabviewDetail, TabviewSpec } from '../../ui/types/TabviewTypes';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = function (detail, spec) {
+const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, spec) => {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(

@@ -4,19 +4,19 @@ import { Element, Html, Node, Traverse } from '@ephox/sugar';
 import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 import { RawDomSchema } from '../../api/component/SpecTypes';
 
-const getAttrs = function (elem) {
+const getAttrs = (elem) => {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
-  return Arr.foldl(attributes, function (b, attr) {
+  return Arr.foldl(attributes, (b, attr) => {
     // Make class go through the class path. Do not list it as an attribute.
     if (attr.name === 'class') { return b; } else { return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value)); }
   }, {});
 };
 
-const getClasses = function (elem) {
+const getClasses = (elem) => {
   return Array.prototype.slice.call(elem.dom().classList, 0);
 };
 
-const fromHtml = function (html: string): RawDomSchema {
+const fromHtml = (html: string): RawDomSchema => {
   const elem = Element.fromHtml(html);
 
   const children = Traverse.children(elem);
@@ -31,7 +31,7 @@ const fromHtml = function (html: string): RawDomSchema {
   }, contents);
 };
 
-const sketch = function (sketcher, html, config) {
+const sketch = (sketcher, html, config) => {
   return sketcher.sketch(
     Merger.deepMerge({
       dom: fromHtml(html)

@@ -7,7 +7,7 @@ const adt = Adt.generate([
   { northwest: [ ] }
 ]);
 
-const cata = function (subject, southeast, southwest, northeast, northwest) {
+const cata = (subject, southeast, southwest, northeast, northwest) => {
   return subject.fold(southeast, southwest, northeast, northwest);
 };
 

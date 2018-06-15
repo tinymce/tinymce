@@ -7,30 +7,30 @@ import { SugarElement } from '../alien/TypeDefinitions';
 const prefix = AlloyTags.prefix();
 const idAttr = AlloyTags.idAttr();
 
-const write = function (label, elem) {
+const write = (label, elem) => {
   const id = Id.generate(prefix + label);
   Attr.set(elem, idAttr, id);
   return id;
 };
 
-const writeOnly = function (elem, uid) {
+const writeOnly = (elem, uid) => {
   Attr.set(elem, idAttr, uid);
 };
 
-const read = function (elem: SugarElement): Option<any> {
+const read = (elem: SugarElement): Option<any> => {
   const id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
   return Option.from(id);
 };
 
-const find = function (container, id) {
+const find = (container, id) => {
   return SelectorFind.descendant(container, id);
 };
 
-const generate = function (prefix) {
+const generate = (prefix) => {
   return Id.generate(prefix);
 };
 
-const revoke = function (elem) {
+const revoke = (elem) => {
   Attr.remove(elem, idAttr);
 };
 

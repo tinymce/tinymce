@@ -13,14 +13,14 @@ import { SketchSpec } from '../../api/component/SpecTypes';
 import { ExpandableFormSketcher, ExpandableFormDetail, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const runOnExtra = function (detail, operation) {
-  return function (anyComp) {
+const runOnExtra = (detail, operation) => {
+  return (anyComp) => {
     AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
   };
 };
 
-const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = function (detail, components, spec, _externals): SketchSpec {
-  const getParts = function (form) {
+const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = (detail, components, spec, _externals): SketchSpec => {
+  const getParts = (form) => {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };
 
@@ -61,10 +61,10 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
       collapseFormImmediately: runOnExtra(detail, Sliding.immediateShrink),
       expandForm: runOnExtra(detail, Sliding.grow),
       getField (form, key) {
-        return AlloyParts.getPart(form, detail, 'minimal').bind(function (minimal) {
+        return AlloyParts.getPart(form, detail, 'minimal').bind((minimal) => {
           return Form.getField(minimal, key);
-        }).orThunk(function () {
-          return AlloyParts.getPart(form, detail, 'extra').bind(function (extra) {
+        }).orThunk(() => {
+          return AlloyParts.getPart(form, detail, 'extra').bind((extra) => {
             return Form.getField(extra, key);
           });
         });

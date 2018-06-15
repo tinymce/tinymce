@@ -9,15 +9,12 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
-UnitTest.asynctest('SplitToolbarTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     const pPrimary = SplitToolbar.parts().primary({
       dom: {
         tag: 'div',
@@ -71,9 +68,9 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
-    const makeButton = function (itemSpec) {
+    const makeButton = (itemSpec) => {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -82,14 +79,14 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       });
     };
 
-    const sResetWidth = function (px) {
-      return Step.sync(function () {
+    const sResetWidth = (px) => {
+      return Step.sync(() => {
         Css.set(component.element(), 'width', px);
         SplitToolbar.refresh(component);
       });
     };
 
-    const group1 = ApproxStructure.build(function (s, str, arr) {
+    const group1 = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -99,7 +96,7 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       });
     });
 
-    const group2 = ApproxStructure.build(function (s, str, arr) {
+    const group2 = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -109,7 +106,7 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       });
     });
 
-    const group3 = ApproxStructure.build(function (s, str, arr) {
+    const group3 = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -120,7 +117,7 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       });
     });
 
-    const oGroup = ApproxStructure.build(function (s, str, arr) {
+    const oGroup = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -129,10 +126,10 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       });
     });
 
-    const sAssertGroups = function (label, pGroups, oGroups) {
+    const sAssertGroups = (label, pGroups, oGroups) => {
       return Assertions.sAssertStructure(
         label,
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -164,7 +161,7 @@ UnitTest.asynctest('SplitToolbarTest', function () {
         '.test-split-toolbar button.more-button { width: 50px; }'
       ]),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
           { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
           { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
@@ -200,5 +197,5 @@ UnitTest.asynctest('SplitToolbarTest', function () {
       // TODO: Add testing for sliding?
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

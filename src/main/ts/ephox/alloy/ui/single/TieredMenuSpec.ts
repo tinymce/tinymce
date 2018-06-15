@@ -26,9 +26,9 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { LooseSpec } from '../../api/component/SpecTypes';
 
-const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (detail, rawUiSpec) {
-  const buildMenus = function (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> {
-    return Obj.map(menus, function (spec: PartialMenuSpec, name: string) {
+const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
+  const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
+    return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
       const data = Menu.sketch(
         Merger.deepMerge(
           spec,
@@ -64,23 +64,23 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
   };
 
   const toDirectory = (container: AlloyComponent): Record<string, string[]> => {
-    return Obj.map(detail.data().menus(), function (data, menuName) {
-      return Arr.bind(data.items, function (item) {
+    return Obj.map(detail.data().menus(), (data, menuName) => {
+      return Arr.bind(data.items, (item) => {
         return item.type === 'separator' ? [ ] : [ item.data.value ];
       });
     });
   };
 
-  const setActiveMenu = function (container: AlloyComponent, menu: AlloyComponent): void {
+  const setActiveMenu = (container: AlloyComponent, menu: AlloyComponent): void => {
     Highlighting.highlight(container, menu);
-    Highlighting.getHighlighted(menu).orThunk(function () {
+    Highlighting.getHighlighted(menu).orThunk(() => {
       return Highlighting.getFirst(menu);
-    }).each(function (item) {
+    }).each((item) => {
       AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
     });
   };
 
-  const getMenus = function (state: LayeredState, menuValues: string[]): AlloyComponent[] {
+  const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] => {
     return Options.cat(
       Arr.map(menuValues, state.lookupMenu)
     );
@@ -112,7 +112,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
 
   };
 
-  const expandRight = function (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> {
+  const expandRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
       // When expanding, always select the first.
@@ -130,7 +130,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
     });
   };
 
-  const collapseLeft = function (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> {
+  const collapseLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.collapse(value).bind((path) => {
       return updateMenuPath(container, layeredState, path).map((activeMenu) => {
@@ -142,7 +142,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
 
   const updateView = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
-    return layeredState.refresh(value).bind(function (path) {
+    return layeredState.refresh(value).bind((path) => {
       return updateMenuPath(container, layeredState, path);
     });
   };
@@ -164,9 +164,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
   };
 
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>
-  const keyOnItem = function (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler {
-    return function (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> {
-      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers().item()).bind(function (target) {
+  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => {
+    return (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
+      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers().item()).bind((target) => {
         return container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => {
           return f(container, item).map(() => true);
         });
@@ -176,16 +176,16 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
-    AlloyEvents.run<CustomEvent>(MenuEvents.focus(), function (sandbox, simulatedEvent) {
+    AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
       const menu = simulatedEvent.event().menu();
       Highlighting.highlight(sandbox, menu);
     }),
 
-    AlloyEvents.runOnExecute(function (component, simulatedEvent) {
+    AlloyEvents.runOnExecute((component, simulatedEvent) => {
       // Trigger on execute on the targeted element
       // I.e. clicking on menu item
       const target = simulatedEvent.event().target();
-      component.getSystem().getByDom(target).each(function (item) {
+      component.getSystem().getByDom(target).each((item) => {
         const itemValue = getItemValue(item);
 
         // FIX: I don't know if this is doing anything any more. Check.
@@ -203,8 +203,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
     }),
 
     // Open the menu as soon as it is added to the DOM
-    AlloyEvents.runOnAttached(function (container, simulatedEvent) {
-      setup(container).each(function (primary) {
+    AlloyEvents.runOnAttached((container, simulatedEvent) => {
+      setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
 
         if (detail.openImmediately()) {
@@ -216,7 +216,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
   ].concat(detail.navigateOnHover() ? [
     // Hide any irrelevant submenus and expand any submenus based
     // on hovered item
-    AlloyEvents.run<CustomEvent>(ItemEvents.hover(), function (sandbox, simulatedEvent) {
+    AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
       const item = simulatedEvent.event().item();
       updateView(sandbox, item);
       expandRight(sandbox, item);
@@ -224,9 +224,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
     })
   ] : [ ]));
 
-  const collapseMenuApi = function (container) {
-    Highlighting.getHighlighted(container).each(function (currentMenu) {
-      Highlighting.getHighlighted(currentMenu).each(function (currentItem) {
+  const collapseMenuApi = (container) => {
+    Highlighting.getHighlighted(container).each((currentMenu) => {
+      Highlighting.getHighlighted(currentMenu).each((currentItem) => {
         collapseLeft(container, currentItem);
       });
     });
@@ -243,7 +243,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = function (de
           onLeft: keyOnItem(onLeft),
           onEscape: keyOnItem(onEscape),
           focusIn (container, keyInfo) {
-            layeredState.getPrimary().each(function (primary) {
+            layeredState.getPrimary().each((primary) => {
               AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
             });
           }

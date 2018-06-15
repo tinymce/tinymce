@@ -1,6 +1,6 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { PositionCoordinates, AdtInterface } from './TypeDefinitions';
+import { SugarPosition, AdtInterface } from './TypeDefinitions';
 
 export interface CssPositionAdt extends AdtInterface { }
 
@@ -9,39 +9,39 @@ const adt = Adt.generate([
   { absolute: [ 'point', 'scrollLeft', 'scrollTop' ] }
 ]);
 
-const toFixed = function (pos: CssPositionAdt): PositionCoordinates {
+const toFixed = (pos: CssPositionAdt): SugarPosition => {
   // TODO: Use new ADT methods
   return pos.fold(
-    (point: PositionCoordinates) => point,
-    (point: PositionCoordinates, scrollLeft: number, scrollTop: number) => point.translate(-scrollLeft, -scrollTop)
+    (point: SugarPosition) => point,
+    (point: SugarPosition, scrollLeft: number, scrollTop: number) => point.translate(-scrollLeft, -scrollTop)
   );
 };
 
-const toAbsolute = function (pos: CssPositionAdt): PositionCoordinates {
+const toAbsolute = (pos: CssPositionAdt): SugarPosition => {
   return pos.fold(
-    (point: PositionCoordinates) => point,
-    (point: PositionCoordinates, scrollLeft: number, scrollTop: number) => point
+    (point: SugarPosition) => point,
+    (point: SugarPosition, scrollLeft: number, scrollTop: number) => point
   );
 };
 
-const sum = function (points: PositionCoordinates[]): PositionCoordinates {
-  return Arr.foldl(points, function (b, a) {
+const sum = (points: SugarPosition[]): SugarPosition => {
+  return Arr.foldl(points, (b, a) => {
     return b.translate(a.left(), a.top());
   }, Position(0, 0));
 };
 
-const sumAsFixed = function (positions: CssPositionAdt[]): PositionCoordinates {
+const sumAsFixed = (positions: CssPositionAdt[]): SugarPosition => {
   const points = Arr.map(positions, toFixed);
   return sum(points);
 };
 
-const sumAsAbsolute = function (positions: CssPositionAdt[]): PositionCoordinates {
+const sumAsAbsolute = (positions: CssPositionAdt[]): SugarPosition => {
   const points = Arr.map(positions, toAbsolute);
   return sum(points);
 };
 
-const screen: (point: PositionCoordinates) => CssPositionAdt = adt.screen;
-const absolute: (point: PositionCoordinates, sx: number, sy: number) => CssPositionAdt = adt.absolute;
+const screen: (point: SugarPosition) => CssPositionAdt = adt.screen;
+const absolute: (point: SugarPosition, sx: number, sy: number) => CssPositionAdt = adt.absolute;
 
 export {
   sumAsFixed,

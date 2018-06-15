@@ -7,16 +7,16 @@ import { Arr, Fun } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * _start: sets the start position to search at
  */
-const generate = function (xs, f) {
+const generate = (xs, f) => {
 
   const init = {
     len: 0,
     list: []
   };
 
-  const r = Arr.foldl(xs, function (b, a) {
+  const r = Arr.foldl(xs, (b, a) => {
     const value = f(a, b.len);
-    return value.fold(Fun.constant(b), function (v) {
+    return value.fold(Fun.constant(b), (v) => {
       return {
         len: v.finish(),
         list: b.list.concat([v])

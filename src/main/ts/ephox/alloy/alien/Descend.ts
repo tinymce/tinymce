@@ -4,7 +4,7 @@ import { Node, Text, Traverse } from '@ephox/sugar';
 const point = Struct.immutable('element', 'offset');
 
 // NOTE: This only descends once.
-const descendOnce = function (element, offset) {
+const descendOnce = (element, offset) => {
   const children = Traverse.children(element);
   if (children.length === 0) { return point(element, offset); } else if (offset < children.length) { return point(children[offset], 0); } else {
     const last = children[children.length - 1];

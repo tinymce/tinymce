@@ -13,9 +13,9 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
-  const showDialog = function (dialog) {
+  const showDialog = (dialog) => {
     const sink = detail.lazySink()().getOrDie();
     const blocker = sink.getSystem().build(
       Merger.deepMerge(
@@ -32,15 +32,15 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = func
     Keying.focusIn(dialog);
   };
 
-  const hideDialog = function (dialog) {
-    Traverse.parent(dialog.element()).each(function (blockerDom) {
-      dialog.getSystem().getByDom(blockerDom).each(function (blocker) {
+  const hideDialog = (dialog) => {
+    Traverse.parent(dialog.element()).each((blockerDom) => {
+      dialog.getSystem().getByDom(blockerDom).each((blocker) => {
         Attachment.detach(blocker);
       });
     });
   };
 
-  const getDialogBody = function (dialog) {
+  const getDialogBody = (dialog) => {
     return AlloyParts.getPartOrDie(dialog, detail, 'body');
   };
 

@@ -14,9 +14,9 @@ import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('DropdownMenuTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
+
+
 
   const sink = Memento.record(
     Container.sketch({
@@ -28,8 +28,8 @@ UnitTest.asynctest('DropdownMenuTest', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
-    const makeFlow = function (v) {
+  GuiSetup.setup((store, doc, body) => {
+    const makeFlow = (v) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -129,7 +129,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
         },
 
         fetch () {
-          return Future.pure(testData).map(function (d) {
+          return Future.pure(testData).map((d) => {
             return TieredMenu.tieredData(d.primary, d.menus, d.expansions);
           });
         }
@@ -138,7 +138,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
 
     return c;
 
-  }, function (doc, body, gui, dropdown, store) {
+  }, (doc, body, gui, dropdown, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );
@@ -166,9 +166,9 @@ UnitTest.asynctest('DropdownMenuTest', function () {
       widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
     };
 
-    const sTestMenus = function (label, stored, focused, active, background, others) {
+    const sTestMenus = (label, stored, focused, active, background, others) => {
       const sCheckBackground = GeneralSteps.sequence(
-        Arr.bind(background, function (bg) {
+        Arr.bind(background, (bg) => {
           return [
             UiFinder.sExists(gui.element(), bg.selector),
             UiFinder.sNotExists(gui.element(), bg.selector + '.selected-menu')
@@ -177,13 +177,13 @@ UnitTest.asynctest('DropdownMenuTest', function () {
       );
 
       const sCheckActive = GeneralSteps.sequence(
-        Arr.map(active, function (o) {
+        Arr.map(active, (o) => {
           return UiFinder.sExists(gui.element(), o.selector + '.selected-menu');
         })
       );
 
       const sCheckOthers = GeneralSteps.sequence(
-        Arr.map(others, function (o) {
+        Arr.map(others, (o) => {
           return UiFinder.sNotExists(gui.element(), o.selector);
         })
       );
@@ -191,7 +191,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
       return Logger.t(
         label,
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             Assertions.assertEq('Checking all menus are considered', 5, active.concat(background).concat(others).length);
           }),
           store.sAssertEq('checking store', stored),
@@ -207,7 +207,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
 
     // A bit of dupe with DropdownButtonSpecTest
     return [
-      Step.sync(function () {
+      Step.sync(() => {
         Focusing.focus(dropdown);
       }),
 
@@ -452,5 +452,5 @@ UnitTest.asynctest('DropdownMenuTest', function () {
         ]
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

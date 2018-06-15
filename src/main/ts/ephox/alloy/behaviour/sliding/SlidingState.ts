@@ -2,10 +2,10 @@ import { Cell, Fun } from '@ephox/katamari';
 
 import BehaviourState from '../common/BehaviourState';
 
-const init = function (spec) {
+const init = (spec) => {
   const state = Cell(spec.expanded());
 
-  const readState = function () {
+  const readState = () => {
     return 'expanded: ' + state.get();
   };
 

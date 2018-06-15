@@ -13,19 +13,19 @@ import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/Tool
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
 
-const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = function (detail, components, spec, _externals) {
-  const setGroups = function (toolbar, groups) {
-    getGroupContainer(toolbar).fold(function () {
+const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
+  const setGroups = (toolbar, groups) => {
+    getGroupContainer(toolbar).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
       console.error('Toolbar was defined to not be a shell, but no groups container was specified in components');
       throw new Error('Toolbar was defined to not be a shell, but no groups container was specified in components');
-    }, function (container) {
+    }, (container) => {
       Replacing.set(container, groups);
     });
   };
 
-  const getGroupContainer = function (component) {
+  const getGroupContainer = (component) => {
     return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 

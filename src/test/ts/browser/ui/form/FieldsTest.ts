@@ -17,9 +17,9 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { input } from 'ephox/alloy/api/events/NativeEvents';
 import { Attr } from '@ephox/sugar';
 
-UnitTest.asynctest('FieldsTest', function (success, failure) {
+UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = function (choiceSpec) {
+  const renderChoice = (choiceSpec) => {
     return {
       value: choiceSpec.value,
       dom: {
@@ -41,7 +41,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
     components: [ ]
   };
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     const inputA = FormField.sketch({
       uid: 'input-a',
       dom: {
@@ -154,7 +154,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const inputA = component.getSystem().getByUid('input-a').getOrDie();
     const selectB = component.getSystem().getByUid('select-b').getOrDie();
@@ -168,7 +168,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
 
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
-      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build(function (s, str, arr) {
+      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('input', { }),
@@ -177,7 +177,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
         });
       }), inputA.element()),
 
-      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build(function (s, str, arr) {
+      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('label', { }),
@@ -186,7 +186,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
         });
       }), selectB.element()),
 
-      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build(function (s, str, arr) {
+      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('legend', { }),
@@ -199,7 +199,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
 
       RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const val = Representing.getValue(chooserC).getOrDie();
         Assertions.assertEq('Checking chooser-c value', 'choice1', val);
 
@@ -208,11 +208,11 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build(function (s, str, arr) {
+      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, str, arr) => {
         return s.element('span', { children: [ ] });
       }), dataE.element()),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const val = Representing.getValue(dataE);
         Assertions.assertEq('Checking data-e value', 'data-e-init', val);
 
@@ -227,7 +227,7 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
         Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
       }),
 
-      Step.sync(function () {
+      Step.sync(() => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
         },  (comp) => {
@@ -243,5 +243,5 @@ UnitTest.asynctest('FieldsTest', function (success, failure) {
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

@@ -8,14 +8,14 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
-UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
+
+
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Slider.sketch({
         dom: {
@@ -37,13 +37,13 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
         ]
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper(function (elem) {
+    const cGetBounds = Chain.mapper((elem) => {
       return elem.dom().getBoundingClientRect();
     });
 
-    const cGetComponent = Chain.binder(function (elem) {
+    const cGetComponent = Chain.binder((elem) => {
       return component.getSystem().getByDom(elem);
     });
 
@@ -68,7 +68,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
       NamedChain.bundle(Result.value)
     ]);
 
-    const cCheckThumbAtLeft = Chain.op(function (parts) {
+    const cCheckThumbAtLeft = Chain.op((parts) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
@@ -77,7 +77,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
       );
     });
 
-    const cCheckThumbAtRight = Chain.op(function (parts) {
+    const cCheckThumbAtRight = Chain.op((parts) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
@@ -86,27 +86,27 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
       );
     });
 
-    const cCheckThumbPastRight = Chain.op(function (parts) {
+    const cCheckThumbPastRight = Chain.op((parts) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
-    const cCheckThumbBeforeLeft = Chain.op(function (parts) {
+    const cCheckThumbBeforeLeft = Chain.op((parts) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
-    const cCheckValue = function (expected) {
-      return Chain.op(function (parts) {
+    const cCheckValue = (expected) => {
+      return Chain.op((parts) => {
         const v = Representing.getValue(parts.sliderComp);
         RawAssertions.assertEq('Checking slider value', expected, v);
       });
     };
 
-    const sAssertValue = function (label, expected) {
-      return Logger.t(label, Step.sync(function () {
+    const sAssertValue = (label, expected) => {
+      return Logger.t(label, Step.sync(() => {
         RawAssertions.assertEq(label, expected, Representing.getValue(component));
       }));
     };
@@ -134,7 +134,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
         )
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
@@ -147,7 +147,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
         ])
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Slider.resetToMax(component);
       }),
 
@@ -164,7 +164,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
         'Focus the gradient',
         Chain.asStep({}, [
           cGetParts,
-          Chain.op(function (parts) {
+          Chain.op((parts) => {
             Keying.focusIn(parts.sliderComp);
           })
         ])
@@ -207,7 +207,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
       Keyboard.sKeydown(doc, Keys.left(), {}),
       sAssertValue('200 -> 180 (step size)', 180),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
@@ -247,5 +247,5 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
       Keyboard.sKeydown(doc, Keys.right(), {}),
       sAssertValue('Checking that the thumb is now one step further right', 70)
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

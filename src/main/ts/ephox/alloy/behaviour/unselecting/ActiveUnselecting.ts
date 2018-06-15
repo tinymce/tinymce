@@ -6,7 +6,7 @@ import * as DomModification from '../../dom/DomModification';
 import { UnselectingConfig } from '../../behaviour/unselecting/UnselectingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const exhibit = function (base: { }, unselectConfig: UnselectingConfig): { } {
+const exhibit = (base: { }, unselectConfig: UnselectingConfig): { } => {
   return DomModification.nu({
     styles: {
       '-webkit-user-select': 'none',
@@ -20,7 +20,7 @@ const exhibit = function (base: { }, unselectConfig: UnselectingConfig): { } {
   });
 };
 
-const events = function (unselectConfig: UnselectingConfig): AlloyEvents.EventHandlerConfigRecord {
+const events = (unselectConfig: UnselectingConfig): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
     AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
   ]);

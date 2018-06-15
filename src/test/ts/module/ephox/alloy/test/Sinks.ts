@@ -4,7 +4,7 @@ import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
-const fixedSink = function () {
+const fixedSink = () => {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -22,7 +22,7 @@ const fixedSink = function () {
   );
 };
 
-const relativeSink = function () {
+const relativeSink = () => {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -41,7 +41,7 @@ const relativeSink = function () {
   );
 };
 
-const popup = function () {
+const popup = () => {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -57,8 +57,8 @@ const popup = function () {
   );
 };
 
-const isInside = function (sinkComponent, popupComponent) {
-  const isSink = function (el) {
+const isInside = (sinkComponent, popupComponent) => {
+  const isSink = (el) => {
     return Compare.eq(el, sinkComponent.element());
   };
 

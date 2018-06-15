@@ -2,10 +2,10 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 
 import BehaviourState from '../common/BehaviourState';
 
-const flatgrid = function (spec) {
+const flatgrid = (spec) => {
   const dimensions = Cell(Option.none());
 
-  const setGridSize = function (numRows, numColumns) {
+  const setGridSize = (numRows, numColumns) => {
     dimensions.set(
       Option.some({
         numRows: Fun.constant(numRows),
@@ -14,14 +14,14 @@ const flatgrid = function (spec) {
     );
   };
 
-  const getNumRows = function () {
-    return dimensions.get().map(function (d) {
+  const getNumRows = () => {
+    return dimensions.get().map((d) => {
       return d.numRows();
     });
   };
 
-  const getNumColumns = function () {
-    return dimensions.get().map(function (d) {
+  const getNumColumns = () => {
+    return dimensions.get().map((d) => {
       return d.numColumns();
     });
   };
@@ -34,7 +34,7 @@ const flatgrid = function (spec) {
   });
 };
 
-const init = function (spec) {
+const init = (spec) => {
   return spec.state()(spec);
 };
 

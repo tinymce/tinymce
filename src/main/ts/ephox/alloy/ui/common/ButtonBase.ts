@@ -8,21 +8,21 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = function (optAction) {
-  const executeHandler = function (action) {
-    return AlloyEvents.run(SystemEvents.execute(), function (component, simulatedEvent) {
+const events = (optAction) => {
+  const executeHandler = (action) => {
+    return AlloyEvents.run(SystemEvents.execute(), (component, simulatedEvent) => {
       action(component);
       simulatedEvent.stop();
     });
   };
 
-  const onClick = function (component, simulatedEvent) {
+  const onClick = (component, simulatedEvent) => {
     simulatedEvent.stop();
     AlloyTriggers.emitExecute(component);
   };
 
   // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
-  const onMousedown = function (component, simulatedEvent) {
+  const onMousedown = (component, simulatedEvent) => {
     simulatedEvent.cut();
   };
 

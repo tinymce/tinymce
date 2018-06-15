@@ -21,41 +21,41 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = function (component, flowConfig) {
-  return flowConfig.focusManager().get(component).bind(function (elem) {
+const findCurrent = (component, flowConfig) => {
+  return flowConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, flowConfig.selector());
   });
 };
 
-const execute = function (component, simulatedEvent, flowConfig) {
-  return findCurrent(component, flowConfig).bind(function (focused) {
+const execute = (component, simulatedEvent, flowConfig) => {
+  return findCurrent(component, flowConfig).bind((focused) => {
     return flowConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const focusIn = function (component, flowConfig) {
-  flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each(function (first) {
+const focusIn = (component, flowConfig) => {
+  flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each((first) => {
     flowConfig.focusManager().set(component, first);
   });
 };
 
-const moveLeft = function (element, focused, info) {
+const moveLeft = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-const moveRight = function (element, focused, info) {
+const moveRight = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 
-const doMove = function (movement) {
-  return function (component, simulatedEvent, flowConfig) {
-    return movement(component, simulatedEvent, flowConfig).bind(function () {
+const doMove = (movement) => {
+  return (component, simulatedEvent, flowConfig) => {
+    return movement(component, simulatedEvent, flowConfig).bind(() => {
       return flowConfig.executeOnMove() ? execute(component, simulatedEvent, flowConfig) : Option.some(true);
     });
   };
 };
 
-const getRules = function (_component, _se, flowConfig, _flowState) {
+const getRules = (_component, _se, flowConfig, _flowState) => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
   return [

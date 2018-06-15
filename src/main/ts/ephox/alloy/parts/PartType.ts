@@ -43,7 +43,7 @@ const fName = FieldSchema.strict('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
-  FieldPresence.defaultedThunk(function (typeSpec) {
+  FieldPresence.defaultedThunk((typeSpec) => {
     return '<alloy.' + Id.generate(typeSpec.name) + '>';
   }),
   ValueSchema.anyValue()
@@ -74,8 +74,8 @@ const asNamedPart = function <D extends CompositeSketchDetail>(part: PartTypeAdt
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
-const name = function (part: PartTypeAdt): string {
-  const get = function (data) {
+const name = (part: PartTypeAdt): string => {
+  const get = (data) => {
     return data.name();
   };
   return part.fold(get, get, get, get);
@@ -87,7 +87,7 @@ const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): 
 
 const convert = (adtConstructor, partSchema: Processor):
                   (PartialSpec) => PartTypeAdt => {
-  return function (spec) {
+  return (spec) => {
     const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);
     return adtConstructor(data);
   };

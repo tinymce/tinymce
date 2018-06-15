@@ -2,35 +2,37 @@ import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
 import { setTimeout } from '@ephox/dom-globals';
+import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
 
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
+const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
 const offscreen = {
   position: 'absolute',
   left: '-9999px'
 };
 
-const tokenSelector = function () {
+const tokenSelector = (): string => {
   return 'span[id^="ephox-alloy-aria-voice"]';
 };
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
-const create = function (doc, text) {
-  const span = Element.fromTag('span', doc.dom());
+const create = (doc: SugarDocument, text: string): SugarElement => {
+  const span: SugarElement = Element.fromTag('span', doc.dom());
   Attr.set(span, 'role', 'presentation');
   // This stops it saying other things (possibly blank) between transitions.
-  const contents = Element.fromText(text, doc.dom());
+  const contents: SugarElement = Element.fromText(text, doc.dom());
   Insert.append(span, contents);
   return span;
 };
 
-const linkToDescription = function (item, token) {
+const linkToDescription = (item: SugarElement, token: SugarElement): void => {
   const id = Id.generate('ephox-alloy-aria-voice');
   Attr.set(token, 'id', id);
   Attr.set(item, 'aria-describedby', id);
 };
 
-const describe = function (item, description) {
+const describe = (item: SugarElement, description: string): SugarElement => {
   const doc = Traverse.owner(item);
   const token = create(doc, description);
 
@@ -44,8 +46,8 @@ const describe = function (item, description) {
   return token;
 };
 
-const base = function (getAttrs, parent, text) {
-  const doc = Traverse.owner(parent);
+const base = (getAttrs: (string) => { }, parent: SugarElement, text: string): void => {
+  const doc: SugarDocument = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
   const token = create(doc, text);
@@ -58,28 +60,34 @@ const base = function (getAttrs, parent, text) {
   Insert.append(parent, token);
 
   // Remove the token later.
-  setTimeout(function () {
+  setTimeout(() => {
     // If you don't remove this attribute, IE11 speaks the removal
     Attr.remove(token, 'aria-live');
     Remove.remove(token);
   }, 1000);
 };
 
-const speak = Fun.curry(base, function (text) {
+const getSpeakAttrs = (text: string) => {
   return {
     // Make it speak as soon as it is in the DOM (politely)
     'aria-live': 'polite',
     'aria-atomic': 'true',
     'aria-label': text
   };
-});
+}
 
-const shout = Fun.curry(base, Fun.constant({
-  // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
-  'aria-live': 'assertive',
-  'aria-atomic': 'true',
-  'role': 'alert'
-}));
+const getShoutAttrs = (_text) => {
+  return {
+    // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
+    'aria-live': 'assertive',
+    'aria-atomic': 'true',
+    'role': 'alert'
+  };
+}
+
+const speak = (parent: SugarElement, text: string): void => base(getSpeakAttrs, parent, text);
+
+const shout = (parent: SugarElement, text: string): void => base(getShoutAttrs, parent, text);
 
 export {
   describe,

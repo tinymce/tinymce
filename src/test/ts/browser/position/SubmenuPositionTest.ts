@@ -7,11 +7,11 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('SubmenuPositionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     const item = GuiFactory.build(
       Container.sketch({
         dom: {
@@ -51,8 +51,8 @@ UnitTest.asynctest('SubmenuPositionTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const cSetupAnchor = Chain.mapper(function (item) {
+  }, (doc, body, gui, component, store) => {
+    const cSetupAnchor = Chain.mapper((item) => {
       return {
         anchor: 'submenu',
         item
@@ -81,5 +81,5 @@ UnitTest.asynctest('SubmenuPositionTest', function () {
         ])
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

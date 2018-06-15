@@ -9,7 +9,7 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 
-const create = function (cyclicField) {
+const create = (cyclicField) => {
   const schema = [
     FieldSchema.option('onEscape'),
     FieldSchema.option('onEnter'),
@@ -23,8 +23,8 @@ const create = function (cyclicField) {
   ]);
 
   // TODO: Test this
-  const isVisible = function (tabbingConfig, element) {
-    const target = tabbingConfig.visibilitySelector().bind(function (sel) {
+  const isVisible = (tabbingConfig, element) => {
+    const target = tabbingConfig.visibilitySelector().bind((sel) => {
       return SelectorFind.closest(element, sel);
     }).getOr(element);
 
@@ -32,79 +32,79 @@ const create = function (cyclicField) {
     return Height.get(target) > 0;
   };
 
-  const findInitial = function (component, tabbingConfig) {
+  const findInitial = (component, tabbingConfig) => {
     const tabstops = SelectorFilter.descendants(component.element(), tabbingConfig.selector());
-    const visibles = Arr.filter(tabstops, function (elem) {
+    const visibles = Arr.filter(tabstops, (elem) => {
       return isVisible(tabbingConfig, elem);
     });
 
     return Option.from(visibles[tabbingConfig.firstTabstop()]);
   };
 
-  const findCurrent = function (component, tabbingConfig) {
-    return tabbingConfig.focusManager().get(component).bind(function (elem) {
+  const findCurrent = (component, tabbingConfig) => {
+    return tabbingConfig.focusManager().get(component).bind((elem) => {
       return SelectorFind.closest(elem, tabbingConfig.selector());
     });
   };
 
-  const isTabstop = function (tabbingConfig, element) {
+  const isTabstop = (tabbingConfig, element) => {
     return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt()(element);
   };
 
   // Fire an alloy focus on the first visible element that matches the selector
-  const focusIn = function (component, tabbingConfig, tabbingState) {
-    findInitial(component, tabbingConfig).each(function (target) {
+  const focusIn = (component, tabbingConfig, tabbingState) => {
+    findInitial(component, tabbingConfig).each((target) => {
       tabbingConfig.focusManager().set(component, target);
     });
   };
 
-  const goFromTabstop = function (component, tabstops, stopIndex, tabbingConfig, cycle) {
-    return cycle(tabstops, stopIndex, function (elem) {
+  const goFromTabstop = (component, tabstops, stopIndex, tabbingConfig, cycle) => {
+    return cycle(tabstops, stopIndex, (elem) => {
       return isTabstop(tabbingConfig, elem);
-    }).fold(function () {
+    }).fold(() => {
       // Even if there is only one, still capture the event if cycling
       return tabbingConfig.cyclic() ? Option.some(true) : Option.none();
-    }, function (target) {
+    }, (target) => {
       tabbingConfig.focusManager().set(component, target);
       // Kill the event
       return Option.some(true);
     });
   };
 
-  const go = function (component, simulatedEvent, tabbingConfig, cycle) {
+  const go = (component, simulatedEvent, tabbingConfig, cycle) => {
     // 1. Find our current tabstop
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
     const tabstops = SelectorFilter.descendants(component.element(), tabbingConfig.selector());
-    return findCurrent(component, tabbingConfig).bind(function (tabstop) {
+    return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
 
-      return optStopIndex.bind(function (stopIndex) {
+      return optStopIndex.bind((stopIndex) => {
         return goFromTabstop(component, tabstops, stopIndex, tabbingConfig, cycle);
       });
     });
   };
 
-  const goBackwards = function (component, simulatedEvent, tabbingConfig, tabbingState) {
+  const goBackwards = (component, simulatedEvent, tabbingConfig, tabbingState) => {
     const navigate = tabbingConfig.cyclic() ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const goForwards = function (component, simulatedEvent, tabbingConfig, tabbingState) {
+  const goForwards = (component, simulatedEvent, tabbingConfig, tabbingState) => {
     const navigate = tabbingConfig.cyclic() ? ArrNavigation.cycleNext : ArrNavigation.tryNext;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const execute = function (component, simulatedEvent, tabbingConfig, tabbingState) {
-    return tabbingConfig.onEnter().bind(function (f) {
+  const execute = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+    return tabbingConfig.onEnter().bind((f) => {
       return f(component, simulatedEvent);
     });
   };
 
-  const exit = function (component, simulatedEvent, tabbingConfig, tabbingState) {
-    return tabbingConfig.onEscape().bind(function (f) {
+  const exit = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+    return tabbingConfig.onEscape().bind((f) => {
       return f(component, simulatedEvent);
     });
   };

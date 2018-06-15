@@ -4,9 +4,9 @@ import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderCursorTest', function () {
+UnitTest.test('BounderCursorTest', () => {
   /* global assert */
-  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());

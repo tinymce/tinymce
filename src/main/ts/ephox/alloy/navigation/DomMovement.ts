@@ -2,35 +2,35 @@ import { Direction } from '@ephox/sugar';
 
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.
-const useH = function (movement) {
-  return function (component, simulatedEvent, config, state?) {
+const useH = (movement) => {
+  return (component, simulatedEvent, config, state?) => {
     const move = movement(component.element());
     return use(move, component, simulatedEvent, config, state);
   };
 };
 
-const west = function (moveLeft, moveRight) {
+const west = (moveLeft, moveRight) => {
   const movement = Direction.onDirection(moveLeft, moveRight);
   return useH(movement);
 };
 
-const east = function (moveLeft, moveRight) {
+const east = (moveLeft, moveRight) => {
   const movement = Direction.onDirection(moveRight, moveLeft);
   return useH(movement);
 };
 
-const useV = function (move) {
-  return function (component, simulatedEvent, config, state?) {
+const useV = (move) => {
+  return (component, simulatedEvent, config, state?) => {
     return use(move, component, simulatedEvent, config, state);
   };
 };
 
-const use = function (move, component, simulatedEvent, config, state?) {
-  const outcome = config.focusManager().get(component).bind(function (focused) {
+const use = (move, component, simulatedEvent, config, state?) => {
+  const outcome = config.focusManager().get(component).bind((focused) => {
     return move(component.element(), focused, config, state);
   });
 
-  return outcome.map(function (newFocus) {
+  return outcome.map((newFocus) => {
     config.focusManager().set(component, newFocus);
     return true;
   });

@@ -10,14 +10,14 @@ import { console } from '@ephox/dom-globals';
 // to recurse infinitely. Essentially, if the originator of the focus call is the same
 // as the element receiving it, and it wasn't its own target, then stop the focus call
 // and log a warning.
-const isRecursive = function (component: AlloyComponent, originator: SugarElement, target: SugarElement) {
+const isRecursive = (component: AlloyComponent, originator: SugarElement, target: SugarElement) => {
   return Compare.eq(originator, component.element()) &&
     !Compare.eq(originator, target);
 };
 
 export default <any> {
   events: AlloyEvents.derive([
-    AlloyEvents.can(SystemEvents.focus(), function (component, simulatedEvent) {
+    AlloyEvents.can(SystemEvents.focus(), (component, simulatedEvent) => {
       // originator may not always be there. Will need to check this.
       const originator = simulatedEvent.event().originator();
       const target = simulatedEvent.event().target();

@@ -15,40 +15,40 @@ import * as ContainerOffsets from './ContainerOffsets';
 const point = Struct.immutable('element', 'offset');
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = function (element, offset) {
+const descendOnce = (element, offset) => {
   return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 };
 
-const getAnchorSelection = function (win, anchorInfo) {
-  const getSelection = anchorInfo.getSelection().getOrThunk(function () {
-    return function () {
+const getAnchorSelection = (win, anchorInfo) => {
+  const getSelection = anchorInfo.getSelection().getOrThunk(() => {
+    return () => {
       return WindowSelection.getExact(win);
     };
   });
 
-  return getSelection().map(function (sel) {
+  return getSelection().map((sel) => {
     const modStart = descendOnce(sel.start(), sel.soffset());
     const modFinish = descendOnce(sel.finish(), sel.foffset());
     return Selection.range(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
   });
 };
 
-const placement = function (component, posInfo, anchorInfo, origin) {
+const placement = (component, posInfo, anchorInfo, origin) => {
   const win = Traverse.defaultView(anchorInfo.root()).dom();
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
-  const selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
+  const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {
     // This represents the *visual* rectangle of the selection.
-    const optRect = WindowSelection.getFirstRect(win, Selection.exactFromRange(sel)).orThunk(function () {
+    const optRect = WindowSelection.getFirstRect(win, Selection.exactFromRange(sel)).orThunk(() => {
       const x = Element.fromText(Unicode.zeroWidth());
       Insert.before(sel.start(), x);
       // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-      return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map(function (rect) {
+      return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map((rect) => {
         Remove.remove(x);
         return rect;
       });
     });
-    return optRect.map(function (rawRect) {
+    return optRect.map((rawRect) => {
       // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
       const point = CssPosition.screen(
         Position(
@@ -61,16 +61,16 @@ const placement = function (component, posInfo, anchorInfo, origin) {
     });
   });
 
-  return selectionBox.map(function (box) {
+  return selectionBox.map((box) => {
     const points = [ rootPoint, box.point() ];
     const topLeft = Origins.cata(origin,
-      function () {
+      () => {
         return CssPosition.sumAsAbsolute(points);
       },
-      function () {
+      () => {
         return CssPosition.sumAsAbsolute(points);
       },
-      function () {
+      () => {
         return CssPosition.sumAsFixed(points);
       }
     );
@@ -82,17 +82,17 @@ const placement = function (component, posInfo, anchorInfo, origin) {
       box.height()
     );
 
-    const targetElement = getAnchorSelection(win, anchorInfo).bind(function (sel) {
+    const targetElement = getAnchorSelection(win, anchorInfo).bind((sel) => {
       return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
     });
 
-    const layoutsLtr = function () {
+    const layoutsLtr = () => {
       return anchorInfo.showAbove() ?
         [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const layoutsRtl = function () {
+    const layoutsRtl = () => {
       return anchorInfo.showAbove() ?
         [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];

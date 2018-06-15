@@ -12,11 +12,8 @@ import Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-UnitTest.asynctest('TypeaheadSpecTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  GuiSetup.setup(function (store, doc, body) {
+UnitTest.asynctest('TypeaheadSpecTest', (success, failure) => {
+  GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -45,7 +42,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
                 { type: 'item', data: { value: text + '2', text: text + '2' } }
               ]);
 
-              return future.map(function (f) {
+              return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
                   { type: 'separator', text: 'No data', data: {value: '', text: 'No data'} }
@@ -68,7 +65,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
@@ -112,5 +109,5 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
       // Focus should still be in the typeahead.
       steps.sAssertFocusOnTypeahead('Focus after <down>')
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

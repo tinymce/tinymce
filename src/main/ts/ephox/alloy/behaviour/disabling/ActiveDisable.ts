@@ -7,7 +7,7 @@ import * as Behaviour from '../common/Behaviour';
 import * as DisableApis from './DisableApis';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const exhibit = function (base, disableConfig, disableState) {
+const exhibit = (base, disableConfig, disableState) => {
   return DomModification.nu({
     // Do not add the attribute yet, because it will depend on the node name
     // if we use "aria-disabled" or just "disabled"
@@ -15,9 +15,9 @@ const exhibit = function (base, disableConfig, disableState) {
   });
 };
 
-const events = function (disableConfig, disableState) {
+const events = (disableConfig, disableState) => {
   return AlloyEvents.derive([
-    AlloyEvents.abort(SystemEvents.execute(), function (component, simulatedEvent) {
+    AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => {
       return DisableApis.isDisabled(component);
     }),
     Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)

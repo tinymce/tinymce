@@ -9,18 +9,18 @@ import { window } from '@ephox/dom-globals';
  */
 const anchor = Struct.immutable('anchorBox', 'origin');
 
-const fixedOrigin = function () {
+const fixedOrigin = () => {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
 };
 
-const element = function (anchorElement) {
+const element = (anchorElement) => {
   const origin = fixedOrigin();
   const anchorBox = Origins.toBox(origin, anchorElement);
 
   return anchor(anchorBox, origin);
 };
 
-const box = function (anchorBox) {
+const box = (anchorBox) => {
   const origin = fixedOrigin();
 
   return anchor(anchorBox, origin);

@@ -12,7 +12,7 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -133,7 +133,7 @@ export default <any> function () {
       stepSize: 10,
 
       onChange (slider, thumb, value) {
-        const getColor = function (hue) {
+        const getColor = (hue) => {
           if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
 
@@ -142,7 +142,7 @@ export default <any> function () {
 
       // TODO: Remove duplication in demo.
       onInit (slider, thumb, value) {
-        const getColor = function (hue) {
+        const getColor = (hue) => {
           if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
 
@@ -213,7 +213,7 @@ export default <any> function () {
   const platform = PlatformDetection.detect();
   const isTouch = platform.deviceType.isTouch();
 
-  DomEvent.bind(body, 'click', function () {
+  DomEvent.bind(body, 'click', () => {
     if (! isTouch) { Keying.focusIn(slider1); }
   });
 };

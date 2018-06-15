@@ -2,7 +2,7 @@ import BehaviourState from './BehaviourState';
 
 export interface Stateless { }
 
-const init = function () {
+const init = () => {
   return BehaviourState({
     readState () {
       return 'No State required';

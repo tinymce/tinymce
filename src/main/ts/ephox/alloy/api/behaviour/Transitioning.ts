@@ -8,9 +8,9 @@ import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 import { TransitioningBehaviour } from '../../behaviour/transitioning/TransitioningTypes';
 
-const createRoutes = function (routes) {
+const createRoutes = (routes) => {
   const r = { };
-  Obj.each(routes, function (v, k) {
+  Obj.each(routes, (v, k) => {
     const waypoints = k.split('<->');
     r[waypoints[0]] = Objects.wrap(waypoints[1], v);
     r[waypoints[1]] = Objects.wrap(waypoints[0], v);
@@ -18,14 +18,14 @@ const createRoutes = function (routes) {
   return r;
 };
 
-const createBistate = function (first, second, transitions) {
+const createBistate = (first, second, transitions) => {
   return Objects.wrapAll([
     { key: first, value: Objects.wrap(second, transitions) },
     { key: second, value: Objects.wrap(first, transitions) }
   ]);
 };
 
-const createTristate = function (first, second, third, transitions) {
+const createTristate = (first, second, third, transitions) => {
   return Objects.wrapAll([
     {
       key: first,

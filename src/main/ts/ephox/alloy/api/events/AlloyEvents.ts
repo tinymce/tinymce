@@ -84,13 +84,13 @@ const runActionExtra = function <T>(name: string, action: (t: AlloyComponent, u:
 };
 
 const runOnName = function <T extends EventFormat>(name): RunOnName<T> {
-  return function (handler) {
+  return (handler) => {
     return run(name, handler);
   };
 };
 
 const runOnSourceName = function <T extends EventFormat>(name): RunOnSourceName<T> {
-  return function (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): EventHandlerConfig<T> {
+  return (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): EventHandlerConfig<T> => {
     return {
       key: name,
       value: EventHandler.nu({
@@ -103,8 +103,8 @@ const runOnSourceName = function <T extends EventFormat>(name): RunOnSourceName<
 };
 
 const redirectToUid = function <T extends EventFormat>(name, uid): EventHandlerConfig<T> {
-  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
-    component.getSystem().getByUid(uid).each(function (redirectee) {
+  return run(name, (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => {
+    component.getSystem().getByUid(uid).each((redirectee) => {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
     });
   });
@@ -116,22 +116,22 @@ const redirectToPart = function <T>(name, detail, partName): EventHandlerConfig<
 };
 
 const runWithTarget = function <T extends EventFormat>(name, f): EventHandlerConfig<T> {
-  return run(name, function (component, simulatedEvent) {
+  return run(name, (component, simulatedEvent) => {
     const ev: T = simulatedEvent.event();
-    component.getSystem().getByDom(ev.target()).each(function (target) {
+    component.getSystem().getByDom(ev.target()).each((target) => {
       f(component, target, simulatedEvent);
     });
   });
 };
 
 const cutter = function <T>(name): EventHandlerConfig<T> {
-  return run(name, function (component, simulatedEvent) {
+  return run(name, (component, simulatedEvent) => {
     simulatedEvent.cut();
   });
 };
 
 const stopper = function <T>(name): EventHandlerConfig<T> {
-  return run(name, function (component, simulatedEvent) {
+  return run(name, (component, simulatedEvent) => {
     simulatedEvent.stop();
   });
 };

@@ -26,20 +26,20 @@ const path = [
   'alloy/debugging/Debugging'
 ];
 
-const getTrace = function () {
+const getTrace = () => {
   if (debugging === false) { return unknown; }
   const err = new Error();
   if (err.stack !== undefined) {
     const lines = err.stack.split('\n');
-    return Arr.find(lines, function (line) {
-      return line.indexOf('alloy') > 0 && !Arr.exists(path, function (p) { return line.indexOf(p) > -1; });
+    return Arr.find(lines, (line) => {
+      return line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => { return line.indexOf(p) > -1; });
     }).getOr(unknown);
   } else {
     return unknown;
   }
 };
 
-const logHandler = function (label, handlerName, trace) {
+const logHandler = (label, handlerName, trace) => {
   // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
 };
 
@@ -52,8 +52,8 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = function (eventName, initialTarget, f) {
-  const logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (function () {
+const monitorEvent = (eventName, initialTarget, f) => {
+  const logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (() => {
     const sequence = [ ];
 
     return {
@@ -77,7 +77,7 @@ const monitorEvent = function (eventName, initialTarget, f) {
         console.log(eventName, {
           event: eventName,
           target: initialTarget.dom(),
-          sequence: Arr.map(sequence, function (s) {
+          sequence: Arr.map(sequence, (s) => {
             if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
           })
         });
@@ -90,8 +90,8 @@ const monitorEvent = function (eventName, initialTarget, f) {
   return output;
 };
 
-const inspectorInfo = function (comp) {
-  const go = function (c) {
+const inspectorInfo = (comp) => {
+  const go = (c) => {
     const cSpec = c.spec();
 
     return {
@@ -100,10 +100,10 @@ const inspectorInfo = function (comp) {
       '(element)': AlloyLogger.element(c.element()),
       '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
       '(components)': Arr.map(c.components(), go),
-      '(bound.events)': Obj.mapToArray(c.events(), function (v, k) {
+      '(bound.events)': Obj.mapToArray(c.events(), (v, k) => {
         return [ k ];
       }).join(', '),
-      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, function (v, k) {
+      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => {
         return v === undefined ? '--revoked--' : {
           'config': v.configAsRaw(),
           'original-config': v.initialConfig,
@@ -116,7 +116,7 @@ const inspectorInfo = function (comp) {
   return go(comp);
 };
 
-const getOrInitConnection = function () {
+const getOrInitConnection = () => {
   // The format of the global is going to be:
   // lookup(uid) -> Option { name => data }
   // systems: Set AlloyRoots
@@ -126,9 +126,9 @@ const getOrInitConnection = function () {
       lookup (uid) {
         const systems = window[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
-        return Options.findMap(connections, function (conn) {
+        return Options.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOption().map(function (comp) {
+          return connGui.getByUid(uid).toOption().map((comp) => {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
           });
         });
@@ -138,7 +138,7 @@ const getOrInitConnection = function () {
   }
 };
 
-const registerInspector = function (name, gui) {
+const registerInspector = (name, gui) => {
   const connection = getOrInitConnection();
   connection.systems[name] = gui;
 };

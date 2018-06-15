@@ -13,15 +13,15 @@ import * as Sketcher from './Sketcher';
 import { TabSectionSketcher, TabSectionDetail, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = function (detail, components, spec, externals) {
-  const changeTab = function (button) {
+const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
+  const changeTab = (button) => {
     const tabValue = Representing.getValue(button);
-    AlloyParts.getPart(button, detail, 'tabview').each(function (tabview) {
-      const tabWithValue = Arr.find(detail.tabs(), function (t) {
+    AlloyParts.getPart(button, detail, 'tabview').each((tabview) => {
+      const tabWithValue = Arr.find(detail.tabs(), (t) => {
         return t.value === tabValue;
       });
 
-      tabWithValue.each(function (tabData) {
+      tabWithValue.each((tabData) => {
         const panel = tabData.view();
 
         // Update the tabview to refer to the current tab.
@@ -42,9 +42,9 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = functi
       Arr.flatten([
 
         detail.selectFirst() ? [
-          AlloyEvents.runOnAttached(function (section, simulatedEvent) {
-            AlloyParts.getPart(section, detail, 'tabbar').each(function (tabbar) {
-              Highlighting.getFirst(tabbar).each(function (button) {
+          AlloyEvents.runOnAttached((section, simulatedEvent) => {
+            AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
+              Highlighting.getFirst(tabbar).each((button) => {
                 Highlighting.highlight(tabbar, button);
                 changeTab(button);
               });
@@ -53,11 +53,11 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = functi
         ] : [ ],
 
         [
-          AlloyEvents.run(SystemEvents.changeTab(), function (section, simulatedEvent) {
+          AlloyEvents.run(SystemEvents.changeTab(), (section, simulatedEvent) => {
             const button = simulatedEvent.event().button();
             changeTab(button);
           }),
-          AlloyEvents.run(SystemEvents.dismissTab(), function (section, simulatedEvent) {
+          AlloyEvents.run(SystemEvents.dismissTab(), (section, simulatedEvent) => {
             const button = simulatedEvent.event().button();
             detail.onDismissTab()(section, button);
           })
@@ -67,7 +67,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = functi
 
     apis: {
       getViewItems (section) {
-        return AlloyParts.getPart(section, detail, 'tabview').map(function (tabview) {
+        return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => {
           return Replacing.contents(tabview);
         }).getOr([ ]);
       }

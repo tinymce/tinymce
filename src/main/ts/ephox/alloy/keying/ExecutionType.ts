@@ -17,11 +17,11 @@ const schema = [
   FieldSchema.defaulted('useDown', false)
 ];
 
-const execute = function (component, simulatedEvent, executeConfig, executeState) {
+const execute = (component, simulatedEvent, executeConfig, executeState) => {
   return executeConfig.execute()(component, simulatedEvent, component.element());
 };
 
-const getRules = function (component, simulatedEvent, executeConfig, executeState) {
+const getRules = (component, simulatedEvent, executeConfig, executeState) => {
   const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
   const enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
   const downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];

@@ -9,7 +9,7 @@ import { ReplacingConfig } from '../../behaviour/replacing/ReplacingTypes';
 import { Stateless } from '../../behaviour/common/NoState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
-const set = function (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void {
+const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   Attachment.detachChildren(component);
 
   // NOTE: we may want to create a behaviour which allows you to switch
@@ -18,29 +18,29 @@ const set = function (component: AlloyComponent, replaceConfig: ReplacingConfig,
   AriaFocus.preserve(() => {
     const children = Arr.map(data, component.getSystem().build);
 
-    Arr.each(children, function (l) {
+    Arr.each(children, (l) => {
       Attachment.attach(component, l);
     });
   }, component.element());
 };
 
-const insert = function (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void {
+const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
   const child = component.getSystem().build(childSpec);
   Attachment.attachWith(component, child, insertion);
 };
 
-const append = function (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, appendee: AlloySpec): void {
+const append = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, appendee: AlloySpec): void => {
   insert(component, replaceConfig, Insert.append, appendee);
 };
 
-const prepend = function (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, prependee: AlloySpec): void {
+const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, prependee: AlloySpec): void => {
   insert(component, replaceConfig, Insert.prepend, prependee);
 };
 
 // NOTE: Removee is going to be a component, not a spec.
-const remove = function (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void{
+const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void => {
   const children = contents(component, replaceConfig);
-  const foundChild = Arr.find(children, function (child) {
+  const foundChild = Arr.find(children, (child) => {
     return Compare.eq(removee.element(), child.element());
   });
 
@@ -48,7 +48,7 @@ const remove = function (component: AlloyComponent, replaceConfig: ReplacingConf
 };
 
 // TODO: Rename
-const contents = function (component: AlloyComponent, replaceConfig: ReplacingConfig/*, replaceState */): AlloyComponent[] {
+const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, replaceState */): AlloyComponent[] => {
   return component.components();
 };
 

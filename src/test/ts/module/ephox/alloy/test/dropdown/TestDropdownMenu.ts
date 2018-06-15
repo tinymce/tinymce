@@ -5,7 +5,7 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 
-const renderMenu = function (spec) {
+const renderMenu = (spec) => {
   return {
     dom: {
       tag: 'ol',
@@ -21,7 +21,7 @@ const renderMenu = function (spec) {
   };
 };
 
-const renderItem = function (spec) {
+const renderItem = (spec) => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -51,7 +51,7 @@ const renderItem = function (spec) {
   };
 };
 
-const part = function (store) {
+const part = (store) => {
   return {
     dom: {
       tag: 'div'
@@ -64,8 +64,8 @@ const part = function (store) {
   };
 };
 
-const mStoreMenuUid = function (component) {
-  return Step.stateful(function (value, next, die) {
+const mStoreMenuUid = (component) => {
+  return Step.stateful((value, next, die) => {
     const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
     const uid = Attr.get(menu, 'data-alloy-id');
     next(
@@ -74,12 +74,12 @@ const mStoreMenuUid = function (component) {
   });
 };
 
-const mWaitForNewMenu = function (component) {
-  return Step.stateful(function (value, next, die) {
+const mWaitForNewMenu = (component) => {
+  return Step.stateful((value, next, die) => {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
-      Step.sync(function () {
-        SelectorFind.descendant(component.element(), '.menu').filter(function (menu) {
+      Step.sync(() => {
+        SelectorFind.descendant(component.element(), '.menu').filter((menu) => {
           const uid = Attr.get(menu, 'data-alloy-id');
           return value.menuUid !== uid;
         }).getOrDie('New menu has not appeared');

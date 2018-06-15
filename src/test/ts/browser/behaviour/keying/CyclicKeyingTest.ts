@@ -10,12 +10,12 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Cyclic Keying Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
-    const makeButton = function (v, t) {
+
+
+  GuiSetup.setup((store, doc, body) => {
+    const makeButton = (v, t) => {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
         action: store.adder(v + '.clicked'),
@@ -66,10 +66,10 @@ UnitTest.asynctest('Cyclic Keying Test', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GuiSetup.mSetupKeyLogger(body),
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
       FocusTools.sTryOnSelector(
@@ -119,7 +119,7 @@ UnitTest.asynctest('Cyclic Keying Test', function () {
       ),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () {
+  }, () => {
     success();
   }, failure);
 });

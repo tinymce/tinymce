@@ -1,13 +1,13 @@
 import * as Overflows from 'ephox/alloy/toolbar/Overflows';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('OverflowTest', function () {
+UnitTest.test('OverflowTest', () => {
   /* global assert */
-  const len = function (unit) {
+  const len = (unit) => {
     return unit.length;
   };
 
-  const check = function (expectedWithin, expectedExtra, total, input, overflower) {
+  const check = (expectedWithin, expectedExtra, total, input, overflower) => {
     const actual = Overflows.partition(total, input, len, overflower);
     assert.eq(expectedWithin, actual.within());
     assert.eq(expectedExtra, actual.extra());

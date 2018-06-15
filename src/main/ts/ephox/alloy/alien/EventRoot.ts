@@ -1,6 +1,6 @@
 import { Compare } from '@ephox/sugar';
 
-const isSource = function (component, simulatedEvent) {
+const isSource = (component, simulatedEvent) => {
   return Compare.eq(component.element(), simulatedEvent.event().target());
 };
 

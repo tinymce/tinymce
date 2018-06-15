@@ -10,24 +10,24 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
 
-  const manager = function (prefix) {
+
+
+  const manager = (prefix) => {
     let active = '';
 
-    const set = function (component, focusee) {
+    const set = (component, focusee) => {
       active = Attr.get(focusee, 'class');
     };
 
-    const get = function (component) {
+    const get = (component) => {
       return SelectorFind.descendant(component.element(), '.' + active);
     };
 
     // Test only method
-    const sAssert = function (label, expected) {
-      return Step.sync(function () {
+    const sAssert = (label, expected) => {
+      return Step.sync(() => {
         Assertions.assertEq(prefix + ' ' + label, expected, active);
       });
     };
@@ -39,8 +39,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function 
     };
   };
 
-  const makeItems = function (tag, prefix, haveTabstop, firstNum) {
-    return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], function (num) {
+  const makeItems = (tag, prefix, haveTabstop, firstNum) => {
+    return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], (num) => {
       return {
         dom: {
           tag,
@@ -165,7 +165,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function 
   });
 
   GuiSetup.setup(
-    function (store, doc, body) {
+    (store, doc, body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div',
@@ -186,25 +186,25 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function 
       });
     },
 
-    function (doc, body, gui, component, store) {
+    (doc, body, gui, component, store) => {
 
-      const sFocusStillUnmoved = function (label) {
+      const sFocusStillUnmoved = (label) => {
         return Logger.t(
           label,
           FocusTools.sTryOnSelector('Focus always stays on outer container', doc, '.container')
         );
       };
 
-      const sFocusIn = function (component) {
-        return Step.sync(function () {
+      const sFocusIn = (component) => {
+        return Step.sync(() => {
           Keying.focusIn(component);
         });
       };
 
-      const sKeyInside = function (comp, selector, key, modifiers) {
+      const sKeyInside = (comp, selector, key, modifiers) => {
         return Chain.asStep(comp.element(), [
           UiFinder.cFindIn(selector),
-          Chain.op(function (inside) {
+          Chain.op((inside) => {
             Keyboard.keydown(key, modifiers, inside);
           })
         ]);
@@ -217,7 +217,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function 
       const matrix = memMatrix.get(component);
       const menu = memMenu.get(component);
 
-      const sTestKeying = function (label, comp, manager, keyName) {
+      const sTestKeying = (label, comp, manager, keyName) => {
         return Logger.t(
           label + ' Keying',
           GeneralSteps.sequence([
@@ -236,7 +236,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function 
       return [
         Logger.t(
           'Initial focus on container',
-          Step.sync(function () {
+          Step.sync(() => {
             Focus.focus(component.element());
           })
         ),

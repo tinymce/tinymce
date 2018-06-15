@@ -16,15 +16,15 @@ import { SketchSpec, LooseSpec, AlloySpec } from '../../api/component/SpecTypes'
 import { DropdownSketcher, DropdownDetail, DropdownSpec } from '../../ui/types/DropdownTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = function (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec {
-  const switchToMenu = function (sandbox) {
-    Composing.getCurrent(sandbox).each(function (current) {
+const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
+  const switchToMenu = (sandbox) => {
+    Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  const action = function (component) {
+  const action = (component) => {
     const anchor = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);

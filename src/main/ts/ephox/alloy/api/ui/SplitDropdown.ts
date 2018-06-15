@@ -17,22 +17,22 @@ import * as Sketcher from './Sketcher';
 import { SplitDropdownSketcher, SplitDropdownDetail, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 
-  const switchToMenu = function (sandbox) {
-    Composing.getCurrent(sandbox).each(function (current) {
+  const switchToMenu = (sandbox) => {
+    Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  const action = function (component) {
+  const action = (component) => {
     const anchor = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
 
-  const executeOnButton = function (comp) {
+  const executeOnButton = (comp) => {
     const button = AlloyParts.getPartOrDie(comp, detail, 'button');
     AlloyTriggers.emitExecute(button);
     return Option.some(true);

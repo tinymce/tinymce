@@ -10,9 +10,9 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('DisablingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DisablingTest', (success, failure) => {
+
+
 
   const subject = Memento.record(
     Button.sketch({
@@ -28,7 +28,7 @@ UnitTest.asynctest('DisablingTest', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -39,10 +39,10 @@ UnitTest.asynctest('DisablingTest', function () {
         ])
       }
     ));
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [
-      Chain.mapper(function () {
+      Chain.mapper(() => {
         return subject.get(component).element();
       }),
       Mouse.cClick
@@ -52,7 +52,7 @@ UnitTest.asynctest('DisablingTest', function () {
     return [
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.is('disabled')
@@ -65,7 +65,7 @@ UnitTest.asynctest('DisablingTest', function () {
       Logger.t(
         'Clicking on disabled button field should not fire event',
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
             Focus.focus(button.element());
           }),
@@ -76,14 +76,14 @@ UnitTest.asynctest('DisablingTest', function () {
 
       Logger.t(
         'Re-enable button',
-        Step.sync(function () {
+        Step.sync(() => {
           Disabling.enable(button);
         })
       ),
 
       Assertions.sAssertStructure(
         'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.none()
@@ -96,7 +96,7 @@ UnitTest.asynctest('DisablingTest', function () {
       Logger.t(
         'Clicking on enabled button field *should* fire event',
         GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             // TODO: Maybe replace with an alloy focus call
             Focus.focus(button.element());
           }),
@@ -106,5 +106,5 @@ UnitTest.asynctest('DisablingTest', function () {
       )
 
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

@@ -21,12 +21,12 @@ const nu = Struct.immutableBag([ 'tag' ], [
   'defChildren'
 ]);
 
-const defToStr = function (defn) {
+const defToStr = (defn) => {
   const raw = defToRaw(defn);
   return Json.stringify(raw, null, 2);
 };
 
-const defToRaw = function (defn) {
+const defToRaw = (defn) => {
   return {
     tag: defn.tag(),
     classes: defn.classes().getOr([ ]),
@@ -35,9 +35,9 @@ const defToRaw = function (defn) {
     value: defn.value().getOr('<none>'),
     innerHtml: defn.innerHtml().getOr('<none>'),
     defChildren: defn.defChildren().getOr('<none>'),
-    domChildren: defn.domChildren().fold(function () {
+    domChildren: defn.domChildren().fold(() => {
       return '<none>';
-    }, function (children) {
+    }, (children) => {
       return children.length === 0 ? '0 children, but still specified' : String(children.length);
     })
   };

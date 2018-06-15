@@ -10,9 +10,9 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure) => {
+
+
 
   const gui = Gui.takeover(
     GuiFactory.build(
@@ -38,7 +38,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
     components: [
       Container.sketch({
         events: AlloyEvents.derive([
-          AlloyEvents.runOnAttached(function (comp, simulatedEvent) {
+          AlloyEvents.runOnAttached((comp, simulatedEvent) => {
             simulatedEvent.stop();
             const parent = Traverse.parent(comp.element()).getOrDie(
               'At attachedToDom, a DOM parent must exist'
@@ -46,7 +46,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
             store.adder('attached-to:' + Attr.get(parent, 'class'))();
           }),
 
-          AlloyEvents.runOnDetached(function (comp, simulatedEvent) {
+          AlloyEvents.runOnDetached((comp, simulatedEvent) => {
             simulatedEvent.stop();
             const parent = Traverse.parent(comp.element()).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
@@ -54,7 +54,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
             store.adder('detached-from:' + Attr.get(parent, 'class'))();
           }),
 
-          AlloyEvents.run(SystemEvents.systemInit(), function (comp, simulatedEvent) {
+          AlloyEvents.run(SystemEvents.systemInit(), (comp, simulatedEvent) => {
             if (EventRoot.isSource(comp, simulatedEvent)) {
               simulatedEvent.stop();
               store.adder('init')();
@@ -66,7 +66,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
   });
 
   Pipeline.async({}, [
-    Step.sync(function () {
+    Step.sync(() => {
       RawAssertions.assertEq(
         'Checking that the component has no size',
         0,
@@ -76,14 +76,14 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
 
     store.sAssertEq('Nothing has fired yet', [ ]),
 
-    Step.sync(function () {
+    Step.sync(() => {
       gui.add(wrapper);
       store.assertEq('After adding to system, init should have fired', [ 'init' ]);
     }),
 
     Step.wait(500),
 
-    Step.sync(function () {
+    Step.sync(() => {
       RawAssertions.assertEq(
         'Even though added to system, not added to DOM yet so still size 0',
         0,
@@ -93,11 +93,11 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
     store.sAssertEq('After adding to system and waiting, still only init should have fired', [ 'init' ]),
     store.sClear,
 
-    Step.sync(function () {
+    Step.sync(() => {
       Attachment.attachSystem(Body.body(), gui);
     }),
 
-    Step.sync(function () {
+    Step.sync(() => {
       RawAssertions.assertEq(
         'Now added to the DOM, so should have size 100',
         100,
@@ -108,10 +108,10 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
     store.sAssertEq('After adding to the DOM, should have fired attached', [ 'attached-to:main-container' ]),
     store.sClear,
 
-    Step.sync(function () {
+    Step.sync(() => {
       Attachment.detachSystem(gui);
     }),
 
     store.sAssertEq('After detaching from the DOM, should have fired detached', [ 'detached-from:main-container' ])
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

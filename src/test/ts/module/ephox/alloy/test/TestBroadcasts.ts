@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
 
-const dismiss = function (gui, element) {
+const dismiss = (gui, element) => {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -8,22 +8,22 @@ const dismiss = function (gui, element) {
   });
 };
 
-const sDismiss = function (label, gui, element) {
+const sDismiss = (label, gui, element) => {
   return Logger.t(
     'Broadcast dimiss: ' + label,
     GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         dismiss(gui, element);
       })
     ])
   );
 };
 
-const sDismissOn = function (label, gui, selector) {
+const sDismissOn = (label, gui, selector) => {
   return Logger.t(
     'Broadcast dimiss: ' + label,
     GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         const item = UiFinder.findIn(gui.element(), selector).getOrDie(
           new Error('Could not find the item (' + selector + ') for dispatching dismiss')
         );

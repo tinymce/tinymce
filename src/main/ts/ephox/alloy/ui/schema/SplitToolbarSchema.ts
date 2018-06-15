@@ -12,7 +12,7 @@ import { SplitToolbarDetail } from 'ephox/alloy/ui/types/SplitToolbarTypes';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
-  FieldSchema.state('builtGroups', function () {
+  FieldSchema.state('builtGroups', () => {
     return Cell([ ]);
   })
 ]);

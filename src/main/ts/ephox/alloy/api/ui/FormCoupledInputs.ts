@@ -10,7 +10,7 @@ import { SketchSpec } from '../../api/component/SpecTypes';
 import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from 'ephox/alloy/ui/types/FormCoupledInputsTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = function (detail, components, spec, externals): SketchSpec {
+const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {
     uid: detail.uid(),
     dom: detail.dom(),

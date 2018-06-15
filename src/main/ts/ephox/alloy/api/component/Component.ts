@@ -15,8 +15,8 @@ import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
-const build = function (spec: SimpleOrSketchSpec): AlloyComponent {
-  const getMe = function () {
+const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
+  const getMe = () => {
     return me;
   };
 
@@ -54,44 +54,44 @@ const build = function (spec: SimpleOrSketchSpec): AlloyComponent {
 
   const subcomponents = Cell(info.components());
 
-  const connect = function (newApi) {
+  const connect = (newApi) => {
     systemApi.set(newApi);
   };
 
-  const disconnect = function () {
+  const disconnect = () => {
     systemApi.set(NoContextApi(getMe));
   };
 
-  const syncComponents = function () {
+  const syncComponents = () => {
     // Update the component list with the current children
     const children = Traverse.children(item);
-    const subs = Arr.bind(children, function (child) {
+    const subs = Arr.bind(children, (child) => {
 
-      return systemApi.get().getByDom(child).fold(function () {
+      return systemApi.get().getByDom(child).fold(() => {
         // INVESTIGATE: Not sure about how to handle text nodes here.
         return [ ];
-      }, function (c) {
+      }, (c) => {
         return [ c ];
       });
     });
     subcomponents.set(subs);
   };
 
-  const config = function (behaviour) {
+  const config = (behaviour) => {
     if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
     const b = bData;
-    const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {
+    const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
     };
     return f();
   };
 
-  const hasConfigured = function (behaviour) {
+  const hasConfigured = (behaviour) => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 
-  const readState = function (behaviourName) {
-    return bData[behaviourName]().map(function (b) {
+  const readState = (behaviourName) => {
+    return bData[behaviourName]().map((b) => {
       return b.state.readState();
     }).getOr('not enabled');
   };

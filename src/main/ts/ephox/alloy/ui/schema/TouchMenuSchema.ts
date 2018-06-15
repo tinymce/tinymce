@@ -11,7 +11,7 @@ import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
 
-const anchorAtCentre = function (component) {
+const anchorAtCentre = (component) => {
   const pos = Location.absolute(component.element());
   const w = Width.get(component.element());
   const h = Height.get(component.element());

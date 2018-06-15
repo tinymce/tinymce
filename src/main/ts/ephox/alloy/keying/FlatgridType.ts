@@ -21,27 +21,27 @@ const schema = [
   Fields.initSize()
 ];
 
-const focusIn = function (component, gridConfig, gridState) {
-  SelectorFind.descendant(component.element(), gridConfig.selector()).each(function (first) {
+const focusIn = (component, gridConfig, gridState) => {
+  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first) => {
     gridConfig.focusManager().set(component, first);
   });
 };
 
-const findCurrent = function (component, gridConfig) {
-  return gridConfig.focusManager().get(component).bind(function (elem) {
+const findCurrent = (component, gridConfig) => {
+  return gridConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, gridConfig.selector());
   });
 };
 
-const execute = function (component, simulatedEvent, gridConfig, gridState) {
-  return findCurrent(component, gridConfig).bind(function (focused) {
+const execute = (component, simulatedEvent, gridConfig, gridState) => {
+  return findCurrent(component, gridConfig).bind((focused) => {
     return gridConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const doMove = function (cycle) {
-  return function (element, focused, gridConfig, gridState) {
-    return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind(function (identified) {
+const doMove = (cycle) => {
+  return (element, focused, gridConfig, gridState) => {
+    return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind((identified) => {
       return cycle(
         identified.candidates(),
         identified.index(),
@@ -52,11 +52,11 @@ const doMove = function (cycle) {
   };
 };
 
-const handleTab = function (component, simulatedEvent, gridConfig, gridState) {
+const handleTab = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.captureTab() ? Option.some(true) : Option.none();
 };
 
-const doEscape = function (component, simulatedEvent, gridConfig, gridState) {
+const doEscape = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.onEscape()(component, simulatedEvent);
 };
 

@@ -10,14 +10,14 @@ import * as Bounder from './Bounder';
  * in case we decide to bring back the flexibility of working with non-standard positioning.
  */
 
-const elementSize = function (p) {
+const elementSize = (p) => {
   return {
     width: Fun.constant(Width.getOuter(p)),
     height: Fun.constant(Height.getOuter(p))
   };
 };
 
-const layout = function (anchorBox, element, bubbles, options) {
+const layout = (anchorBox, element, bubbles, options) => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
 
@@ -25,7 +25,7 @@ const layout = function (anchorBox, element, bubbles, options) {
   return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
 };
 
-const setClasses = function (element, decision) {
+const setClasses = (element, decision) => {
   Classes.remove(element, Anchors.all());
   Classes.add(element, decision.classes());
 };
@@ -36,15 +36,15 @@ const setClasses = function (element, decision) {
  *
  * There are a few cases where we specifically don't want a max-height, which is why it's optional.
  */
-const setHeight = function (element, decision, options) {
+const setHeight = (element, decision, options) => {
   // The old API enforced MaxHeight.anchored() for fixed position. That no longer seems necessary.
   const maxHeightFunction = options.maxHeightFunction();
 
   maxHeightFunction(element, decision.maxHeight());
 };
 
-const position = function (element, decision, options) {
-  const addPx = function (num) { return num + 'px'; };
+const position = (element, decision, options) => {
+  const addPx = (num) => { return num + 'px'; };
 
   const newPosition = Origins.reposition(options.origin(), decision);
   Css.setOptions(element, {

@@ -20,7 +20,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -28,7 +28,7 @@ export default <any> function () {
 
   const sink = DemoSink.make();
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -117,7 +117,7 @@ export default <any> function () {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run(NativeEvents.contextmenu(), function (component, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event().kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
@@ -150,7 +150,7 @@ export default <any> function () {
 
           inputBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('adhoc-show-popup', [
-              AlloyEvents.run(NativeEvents.focusin(), function (input) {
+              AlloyEvents.run(NativeEvents.focusin(), (input) => {
                 const emptyAnchor = {
                   anchor: 'submenu',
                   item: input

@@ -33,7 +33,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.state('previewing', function () {
+  FieldSchema.state('previewing', () => {
     return Cell(true);
   })
 ].concat(
@@ -51,12 +51,12 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         fakeFocus: true,
         onHighlight (menu: AlloyComponent, item: AlloyComponent) {
           if (! detail.previewing().get()) {
-            menu.getSystem().getByUid(detail.uid()).each(function (input) {
+            menu.getSystem().getByUid(detail.uid()).each((input) => {
               Representing.setValueFrom(input, item);
             });
           } else {
             // Highlight the rest of the text so that the user types over it.
-            menu.getSystem().getByUid(detail.uid()).each(function (input) {
+            menu.getSystem().getByUid(detail.uid()).each((input) => {
               const currentValue = Representing.getValue(input).text;
               const nextValue = Representing.getValue(item);
               if (Strings.startsWith(nextValue.text, currentValue)) {
@@ -89,7 +89,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         },
 
         onHover (menu: AlloyComponent, item: AlloyComponent) {
-          menu.getSystem().getByUid(detail.uid()).each(function (input) {
+          menu.getSystem().getByUid(detail.uid()).each((input) => {
             Representing.setValueFrom(input, item);
           });
         }

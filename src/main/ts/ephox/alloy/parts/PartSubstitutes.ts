@@ -6,7 +6,7 @@ import * as PartType from './PartType';
 import { PartTypeAdt } from './PartType';
 import { Substitutions } from './AlloyParts';
 
-const combine: any = function (detail, data, partSpec, partValidated) {
+const combine: any = (detail, data, partSpec, partValidated) => {
   const spec = partSpec;
   return Merger.deepMerge(
     data.defaults()(detail, partSpec, partValidated),
@@ -19,15 +19,15 @@ const combine: any = function (detail, data, partSpec, partValidated) {
   );
 };
 
-const subs = function (owner, detail, parts: PartTypeAdt[]): Substitutions {
+const subs = (owner, detail, parts: PartTypeAdt[]): Substitutions => {
   const internals = { };
   const externals = { };
 
-  Arr.each(parts, function (part) {
+  Arr.each(parts, (part) => {
     part.fold(
       // Internal
-      function (data) {
-        internals[data.pname()] = UiSubstitutes.single(true, function (detail, partSpec, partValidated) {
+      (data) => {
+        internals[data.pname()] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => {
           return data.factory().sketch(
             combine(detail, data, partSpec, partValidated)
           );
@@ -35,7 +35,7 @@ const subs = function (owner, detail, parts: PartTypeAdt[]): Substitutions {
       },
 
       // External
-      function (data) {
+      (data) => {
         const partSpec = detail.parts()[data.name()]();
         externals[data.name()] = Fun.constant(
           combine(detail, data, partSpec[PartType.original()]()) // This is missing partValidated
@@ -44,8 +44,8 @@ const subs = function (owner, detail, parts: PartTypeAdt[]): Substitutions {
       },
 
       // Optional
-      function (data) {
-        internals[data.pname()] = UiSubstitutes.single(false, function (detail, partSpec, partValidated) {
+      (data) => {
+        internals[data.pname()] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => {
           return data.factory().sketch(
             combine(detail, data, partSpec, partValidated)
           );
@@ -53,10 +53,10 @@ const subs = function (owner, detail, parts: PartTypeAdt[]): Substitutions {
       },
 
       // Group
-      function (data) {
-        internals[data.pname()] = UiSubstitutes.multiple(true, function (detail, _partSpec, _partValidated) {
+      (data) => {
+        internals[data.pname()] = UiSubstitutes.multiple(true, (detail, _partSpec, _partValidated) => {
           const units = detail[data.name()]();
-          return Arr.map(units, function (u) {
+          return Arr.map(units, (u) => {
             // Group multiples do not take the uid because there is more than one.
             return data.factory().sketch(
               Merger.deepMerge(

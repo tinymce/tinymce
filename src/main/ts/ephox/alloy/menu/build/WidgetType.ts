@@ -16,19 +16,19 @@ import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const builder = function (info) {
+const builder = (info) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), info, WidgetParts.parts());
   const components = AlloyParts.components(WidgetParts.owner(), info, subs.internals());
 
-  const focusWidget = function (component) {
-    return AlloyParts.getPart(component, info, 'widget').map(function (widget) {
+  const focusWidget = (component) => {
+    return AlloyParts.getPart(component, info, 'widget').map((widget) => {
       Keying.focusIn(widget);
       return widget;
     });
   };
 
-  const onHorizontalArrow = function (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
-    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (function () {
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (() => {
       if (info.autofocus()) {
         simulatedEvent.setSource(component.element());
         return Option.none();
@@ -43,15 +43,15 @@ const builder = function (info) {
     components,
     domModification: info.domModification(),
     events: AlloyEvents.derive([
-      AlloyEvents.runOnExecute(function (component, simulatedEvent) {
-        focusWidget(component).each(function (widget) {
+      AlloyEvents.runOnExecute((component, simulatedEvent) => {
+        focusWidget(component).each((widget) => {
           simulatedEvent.stop();
         });
       }),
 
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
-      AlloyEvents.run(SystemEvents.focusItem(), function (component, simulatedEvent) {
+      AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
         if (info.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
@@ -70,7 +70,7 @@ const builder = function (info) {
       Keying.config({
         mode: 'special',
         // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
-        focusIn: info.autofocus() ? function (component) {
+        focusIn: info.autofocus() ? (component) => {
           focusWidget(component);
         } : Behaviour.revoke(),
         onLeft: onHorizontalArrow,

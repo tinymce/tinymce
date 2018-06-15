@@ -4,8 +4,8 @@ import * as PositionArray from '../alien/PositionArray';
 
 const output = Struct.immutable('within', 'extra', 'withinWidth');
 
-const apportion = function (units, total, len) {
-  const parray = PositionArray.generate(units, function (unit, current) {
+const apportion = (units, total, len) => {
+  const parray = PositionArray.generate(units, (unit, current) => {
     const width = len(unit);
     return Option.some({
       element: Fun.constant(unit),
@@ -15,11 +15,11 @@ const apportion = function (units, total, len) {
     });
   });
 
-  const within = Arr.filter(parray, function (unit) {
+  const within = Arr.filter(parray, (unit) => {
     return unit.finish() <= total;
   });
 
-  const withinWidth = Arr.foldr(within, function (acc, el) {
+  const withinWidth = Arr.foldr(within, (acc, el) => {
     return acc + el.width();
   }, 0);
 
@@ -31,34 +31,34 @@ const apportion = function (units, total, len) {
   };
 };
 
-const toUnit = function (parray) {
-  return Arr.map(parray, function (unit) {
+const toUnit = (parray) => {
+  return Arr.map(parray, (unit) => {
     return unit.element();
   });
 };
 
-const fitLast = function (within, extra, withinWidth) {
+const fitLast = (within, extra, withinWidth) => {
   const fits = toUnit(within.concat(extra));
   return output(fits, [], withinWidth);
 };
 
-const overflow = function (within, extra, overflower, withinWidth) {
+const overflow = (within, extra, overflower, withinWidth) => {
   const fits = toUnit(within).concat([ overflower ]);
   return output(fits, toUnit(extra), withinWidth);
 };
 
-const fitAll = function (within, extra, withinWidth) {
+const fitAll = (within, extra, withinWidth) => {
   return output(toUnit(within), [], withinWidth);
 };
 
-const tryFit = function (total, units, len) {
+const tryFit = (total, units, len) => {
   const divide = apportion(units, total, len);
   return divide.extra().length === 0 ? Option.some(divide) : Option.none();
 };
 
-const partition = function (total, units, len, overflower) {
+const partition = (total, units, len, overflower) => {
   // Firstly, we try without the overflower.
-  const divide = tryFit(total, units, len).getOrThunk(function () {
+  const divide = tryFit(total, units, len).getOrThunk(() => {
     // If that doesn't work, overflow
     return apportion(units, total - len(overflower), len);
   });

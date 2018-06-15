@@ -11,7 +11,7 @@ import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from 'ephox/alloy/ui/types/ButtonTypes';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = function (detail): SketchSpec {
+const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action());
 
   const optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));
@@ -35,9 +35,9 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = function (detail)
     ),
     domModification: {
       attributes: Merger.deepMerge(
-        optType.fold(function () {
+        optType.fold(() => {
           return optTag.is('button') ? { type: 'button' } : { };
-        }, function (t) {
+        }, (t) => {
           return { };
         }),
         {

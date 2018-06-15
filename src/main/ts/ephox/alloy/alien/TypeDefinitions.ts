@@ -16,6 +16,10 @@ export interface SugarElement {
   dom: () => HTMLElement;
 }
 
+export interface SugarDocument {
+  dom: () => HTMLDocument;
+}
+
 // Sugar Event
 export interface SugarEvent extends EventFormat {
   kill: () => void;
@@ -28,10 +32,10 @@ export interface SugarEvent extends EventFormat {
 }
 
 // Sugar Position
-export interface PositionCoordinates {
+export interface SugarPosition {
   left: () => number;
   top: () => number;
-  translate: (x: number, y: number) => PositionCoordinates;
+  translate: (x: number, y: number) => SugarPosition;
 }
 
 // Fun.constant, Rather than => T, we will have explicit return types

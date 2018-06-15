@@ -14,9 +14,9 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('SplitDropdown List', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SplitDropdown List', (success, failure) => {
+
+
 
   const sink = Memento.record(
     Container.sketch({
@@ -28,7 +28,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     const c = GuiFactory.build(
       SplitDropdown.sketch({
         dom: {
@@ -105,7 +105,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
             { type: 'item', data: { value: 'beta', text: 'Beta' } }
           ]);
 
-          return future.map(function (f) {
+          return future.map((f) => {
             const menu = TestDropdownMenu.renderMenu({
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
@@ -118,7 +118,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
 
     return c;
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );
@@ -126,7 +126,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
     return [
       Assertions.sAssertStructure(
         'Check basic initial structure',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('span', {
             attrs: {
               role: str.is('presentation')
@@ -198,5 +198,5 @@ UnitTest.asynctest('SplitDropdown List', function () {
       UiFinder.sNotExists(gui.element(), '[role="menu"]'),
       store.sClear
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

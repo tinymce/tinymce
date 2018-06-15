@@ -7,9 +7,9 @@ import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 import TestStore from 'ephox/alloy/test/TestStore';
 import { document, window } from '@ephox/dom-globals';
 
-UnitTest.asynctest('GuiEventsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('GuiEventsTest', (success, failure) => {
+
+
 
   const page = DomRender.renderToDom(
     DomDefinition.nu({
@@ -55,13 +55,13 @@ UnitTest.asynctest('GuiEventsTest', function () {
 
   const store = TestStore();
 
-  const triggerEvent = function (eventName, event) {
+  const triggerEvent = (eventName, event) => {
     const target = event.target();
     const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
   };
 
-  const broadcastEvent = function (eventName, event) {
+  const broadcastEvent = (eventName, event) => {
     store.adder({ broadcastEventName: eventName })();
   };
 
@@ -155,7 +155,7 @@ UnitTest.asynctest('GuiEventsTest', function () {
     store.sClear
   ]);
 
-  const sTestMouseOperation = function (eventName, op) {
+  const sTestMouseOperation = (eventName, op) => {
     return GeneralSteps.sequence([
       Chain.asStep(page, [ op ]),
       store.sAssertEq(
@@ -170,7 +170,7 @@ UnitTest.asynctest('GuiEventsTest', function () {
 
   const sTestWindowScroll = GeneralSteps.sequence([
     store.sClear,
-    Step.sync(function () {
+    Step.sync(() => {
       Css.set(page, 'margin-top', '2000px');
       window.scrollTo(0, 1000);
     }),
@@ -181,7 +181,7 @@ UnitTest.asynctest('GuiEventsTest', function () {
       100,
       1000
     ),
-    Step.sync(function () {
+    Step.sync(() => {
       Css.remove(page, 'margin-top');
       window.scrollTo(0, 0);
     }),
@@ -189,7 +189,7 @@ UnitTest.asynctest('GuiEventsTest', function () {
   ]);
 
   const sTestUnbind = GeneralSteps.sequence([
-    Step.sync(function () {
+    Step.sync(() => {
       gui.unbind();
     }),
 
@@ -248,7 +248,7 @@ UnitTest.asynctest('GuiEventsTest', function () {
     sTestWindowScroll,
 
     sTestUnbind
-  ], function () {
+  ], () => {
     Remove.remove(page);
     success();
   }, failure);

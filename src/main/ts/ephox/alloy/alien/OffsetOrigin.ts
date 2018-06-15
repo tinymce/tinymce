@@ -5,17 +5,17 @@ import { Element, Insert, Location, Position, Remove, Traverse } from '@ephox/su
  * means that the absolute coordinates can be obtained by adding the origin
  * to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = function (element, scroll) {
-  return Traverse.offsetParent(element).orThunk(function () {
+const getOrigin = (element, scroll) => {
+  return Traverse.offsetParent(element).orThunk(() => {
     const marker = Element.fromTag('span');
     Insert.before(element, marker);
     const offsetParent = Traverse.offsetParent(marker);
     Remove.remove(marker);
     return offsetParent;
-  }).map(function (offsetP) {
+  }).map((offsetP) => {
     const loc = Location.absolute(offsetP);
     return loc.translate(-scroll.left(), -scroll.top());
-  }).getOrThunk(function () {
+  }).getOrThunk(() => {
     return Position(0, 0);
   });
 };

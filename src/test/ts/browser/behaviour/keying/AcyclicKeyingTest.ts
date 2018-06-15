@@ -9,13 +9,13 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', (success, failure) => {
+
+
 
   // This test will wrap an acyclic section inside a cyclic section, both with enter handlers
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -44,7 +44,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function 
               tag: 'div',
               classes: [ 'acyclic-container' ]
             },
-            components: Arr.map([ 'alpha', 'beta', 'gamma' ], function (n) {
+            components: Arr.map([ 'alpha', 'beta', 'gamma' ], (n) => {
               return {
                 dom: {
                   tag: 'div',
@@ -93,10 +93,10 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function 
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GuiSetup.mSetupKeyLogger(body),
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
 
@@ -150,7 +150,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function 
       store.sClear,
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () {
+  }, () => {
     success();
   }, failure);
 });

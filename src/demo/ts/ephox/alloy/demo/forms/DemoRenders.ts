@@ -38,7 +38,7 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const demoChoiceRender = function (choice) {
+const demoChoiceRender = (choice) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choice);
   return {
     dom: DomFactory.fromHtml(
@@ -47,7 +47,7 @@ const demoChoiceRender = function (choice) {
   };
 };
 
-const demoSeparatorRender = function (spec) {
+const demoSeparatorRender = (spec) => {
   return {
     type: spec.type,
     dom: {
@@ -62,7 +62,7 @@ const demoSeparatorRender = function (spec) {
   };
 };
 
-const demoItemRender = function (item) {
+const demoItemRender = (item) => {
   if (item.type === 'widget') { return demoWidgetItemRender(item); } else if (item.type === 'separator') { return demoSeparatorRender(item); }
   const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, item);
   return {
@@ -73,7 +73,7 @@ const demoItemRender = function (item) {
   };
 };
 
-const demoGridItemRender = function (item) {
+const demoGridItemRender = (item) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, item);
   return {
     type: spec.type,
@@ -92,7 +92,7 @@ const demoGridItemRender = function (item) {
   };
 };
 
-const demoWidgetItemRender = function (item) {
+const demoWidgetItemRender = (item) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, item);
   return {
     type: spec.type,
@@ -108,7 +108,7 @@ const demoWidgetItemRender = function (item) {
   };
 };
 
-const demoGridMenuRender = function (menu) {
+const demoGridMenuRender = (menu) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menu);
   return {
     movement: {
@@ -132,7 +132,7 @@ const demoGridMenuRender = function (menu) {
   };
 };
 
-const demoMenuRender = function (menu) {
+const demoMenuRender = (menu) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menu);
   return {
     dom: {
@@ -149,7 +149,7 @@ const demoMenuRender = function (menu) {
   };
 };
 
-const demoOrbRender = function (orb) {
+const demoOrbRender = (orb) => {
   const spec = orb;
   return {
     type: 'item',
@@ -170,7 +170,7 @@ const demoOrbRender = function (orb) {
   };
 };
 
-const demoToolbarItemRender = function (item) {
+const demoToolbarItemRender = (item) => {
   const spec = item;
   return {
     dom: {
@@ -181,7 +181,7 @@ const demoToolbarItemRender = function (item) {
   };
 };
 
-const demoToolbarGroupRender = function (group) {
+const demoToolbarGroupRender = (group) => {
   const spec = group;
   return {
     dom: {

@@ -6,7 +6,7 @@ import { FocusingConfig } from '../../behaviour/focusing/FocusingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
 // TODO: DomModification types
-const exhibit = function (base: { }, focusConfig: FocusingConfig): any {
+const exhibit = (base: { }, focusConfig: FocusingConfig): any => {
   if (focusConfig.ignore()) { return DomModification.nu({ }); } else { return DomModification.nu({
     attributes: {
       tabindex: '-1'
@@ -15,9 +15,9 @@ const exhibit = function (base: { }, focusConfig: FocusingConfig): any {
   }
 };
 
-const events = function (focusConfig: FocusingConfig) : AlloyEvents.EventHandlerConfigRecord {
+const events = (focusConfig: FocusingConfig) : AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
+    AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
       FocusApis.focus(component, focusConfig);
       simulatedEvent.stop();
     })

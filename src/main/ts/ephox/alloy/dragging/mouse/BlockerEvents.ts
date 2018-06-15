@@ -4,7 +4,7 @@ import { DragApi } from '../../dragging/mouse/MouseDraggingTypes';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const init = function (dragApi: DragApi): AlloyEvents.EventHandlerConfigRecord {
+const init = (dragApi: DragApi): AlloyEvents.EventHandlerConfigRecord => {
   return AlloyEvents.derive([
     // When the user clicks on the blocker, something has probably gone slightly
     // wrong, so we'll just drop for safety. The blocker should really only
@@ -16,7 +16,7 @@ const init = function (dragApi: DragApi): AlloyEvents.EventHandlerConfigRecord {
 
     // As the user moves the mouse around (while pressed down), we move the
     // component around
-    AlloyEvents.run(NativeEvents.mousemove(), function (comp, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.mousemove(), (comp, simulatedEvent) => {
       dragApi.move(simulatedEvent.event());
     }),
 

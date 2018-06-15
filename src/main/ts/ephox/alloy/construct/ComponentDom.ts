@@ -6,15 +6,15 @@ import * as ObjIndex from '../alien/ObjIndex';
 import * as DomModification from '../dom/DomModification';
 import { DomDefinition } from '../dom/DomDefinition';
 
-const behaviourDom = function (name, modification) {
+const behaviourDom = (name, modification) => {
   return {
     name: Fun.constant(name),
     modification
   };
 };
 
-const concat = function (chain, aspect) {
-  const values = Arr.bind(chain, function (c) {
+const concat = (chain, aspect) => {
+  const values = Arr.bind(chain, (c) => {
     return c.modification().getOr([ ]);
   });
   return Result.value(
@@ -22,36 +22,36 @@ const concat = function (chain, aspect) {
   );
 };
 
-const onlyOne = function (chain, aspect, order) {
+const onlyOne = (chain, aspect, order) => {
   if (chain.length > 1) { return Result.error(
     'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
-      Json.stringify(Arr.map(chain, function (b) { return b.name(); })) + '. At this stage, this ' +
+      Json.stringify(Arr.map(chain, (b) => { return b.name(); })) + '. At this stage, this ' +
       'is not supported. Future releases might provide strategies for resolving this.'
   );
   } else if (chain.length === 0) { return Result.value({ }); } else { return Result.value(
-    chain[0].modification().fold(function () {
+    chain[0].modification().fold(() => {
       return { };
-    }, function (m) {
+    }, (m) => {
       return Objects.wrap(aspect, m);
     })
   );
        }
 };
 
-const duplicate = function (aspect, k, obj, behaviours) {
+const duplicate = (aspect, k, obj, behaviours) => {
   return Result.error('Mulitple behaviours have tried to change the _' + k + '_ "' + aspect + '"' +
-    '. The guilty behaviours are: ' + Json.stringify(Arr.bind(behaviours, function (b) {
+    '. The guilty behaviours are: ' + Json.stringify(Arr.bind(behaviours, (b) => {
       return b.modification().getOr({})[k] !== undefined ? [ b.name() ] : [ ];
     }), null, 2) + '. This is not currently supported.'
   );
 };
 
-const safeMerge = function (chain, aspect) {
+const safeMerge = (chain, aspect) => {
   // return unsafeMerge(chain, aspect);
-  const y = Arr.foldl(chain, function (acc, c) {
+  const y = Arr.foldl(chain, (acc, c) => {
     const obj = c.modification().getOr({});
-    return acc.bind(function (accRest) {
-      const parts = Obj.mapToArray(obj, function (v, k) {
+    return acc.bind((accRest) => {
+      const parts = Obj.mapToArray(obj, (v, k) => {
         return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) :
           Result.value(Objects.wrap(k, v));
       });
@@ -59,7 +59,7 @@ const safeMerge = function (chain, aspect) {
     });
   }, Result.value({}));
 
-  return y.map(function (yValue) {
+  return y.map((yValue) => {
     return Objects.wrap(aspect, yValue);
   });
 };
@@ -77,30 +77,30 @@ const mergeTypes = {
   value: onlyOne
 };
 
-const combine = function (info, baseMod, behaviours, base): Result<DomDefinition, any> {
+const combine = (info, baseMod, behaviours, base): Result<DomDefinition, any> => {
   // Get the Behaviour DOM modifications
   const behaviourDoms = Merger.deepMerge({ }, baseMod);
-  Arr.each(behaviours, function (behaviour) {
+  Arr.each(behaviours, (behaviour) => {
     behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
   });
 
   const byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
 
-  const usedAspect = Obj.map(byAspect, function (values, aspect) {
-    return Arr.bind(values, function (value) {
-      return value.modification().fold(function () {
+  const usedAspect = Obj.map(byAspect, (values, aspect) => {
+    return Arr.bind(values, (value) => {
+      return value.modification().fold(() => {
         return [ ];
-      }, function (v) {
+      }, (v) => {
         return [ value ];
       });
     });
   });
 
-  const modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
-    return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
+  const modifications = Obj.mapToArray(usedAspect, (values, aspect) => {
+    return Objects.readOptFrom(mergeTypes, aspect).fold(() => {
       return Result.error('Unknown field type: ' + aspect);
-    }, function (merger) {
+    }, (merger) => {
       return merger(values, aspect);
     });
   });

@@ -1,12 +1,12 @@
 import { Assertions, Chain, Logger, UiFinder } from '@ephox/agar';
 import { Css, Width } from '@ephox/sugar';
 
-const sSameWidth = function (label, gui, dropdown, menuSelector) {
+const sSameWidth = (label, gui, dropdown, menuSelector) => {
   return Logger.t(
     label + '\nChecking that the hotspot width is passed onto the menu width',
     Chain.asStep(gui.element(), [
       UiFinder.cFindIn(menuSelector),
-      Chain.op(function (menu) {
+      Chain.op((menu) => {
         const dropdownWidth = Width.get(dropdown.element());
         const menuWidth = parseInt(
           Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),

@@ -10,24 +10,24 @@ import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfigSpec, TouchDraggingConfig } from '../../dragging/touch/TouchDraggingTypes';
 import { DraggingState } from '../../dragging/common/DraggingTypes';
-import { PositionCoordinates } from '../../alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
-const handlers = function (dragConfig: TouchDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
+const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.EventHandlerConfigRecord => {
 
   return AlloyEvents.derive([
     AlloyEvents.stopper(NativeEvents.touchstart()),
 
-    AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = dragState.update(TouchData, simulatedEvent.event());
-      delta.each(function (dlt) {
+      delta.each((dlt) => {
         DragMovement.dragBy(component, dragConfig, dlt);
       });
     }),
 
-    AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
-      dragConfig.snaps().each(function (snapInfo) {
+    AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
+      dragConfig.snaps().each((snapInfo) => {
         Snappables.stopDrag(component, snapInfo);
       });
       const target = dragConfig.getTarget()(component.element());

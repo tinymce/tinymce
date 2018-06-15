@@ -7,7 +7,7 @@ import { Merger } from '@ephox/katamari';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
 
-const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = function (detail, components, spec, _externals) {
+const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, spec, _externals) => {
   return Merger.deepMerge(
     {
       dom: {

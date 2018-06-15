@@ -15,10 +15,10 @@ import * as Sketcher from './Sketcher';
 import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = function (detail, spec): SketchSpec {
-  const isPartOfRelated = function (container, queryElem) {
+const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
+  const isPartOfRelated = (container, queryElem) => {
     const related = detail.getRelated()(container);
-    return related.exists(function (rel) {
+    return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
   };

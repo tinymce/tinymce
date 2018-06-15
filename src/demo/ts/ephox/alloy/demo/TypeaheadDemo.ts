@@ -11,7 +11,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -50,7 +50,7 @@ export default <any> function () {
     'zebra'
   ];
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -79,7 +79,7 @@ export default <any> function () {
       fetch (input) {
         const text = Value.get(input.element());
         console.log('text', text);
-        const matching = Arr.bind(dataset, function (d) {
+        const matching = Arr.bind(dataset, (d) => {
           const index = d.indexOf(text.toLowerCase());
           if (index > -1) {
             const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
@@ -95,7 +95,7 @@ export default <any> function () {
         ];
 
         const future = Future.pure(matches.slice(0, 5));
-        return future.map(function (items) {
+        return future.map((items) => {
           const menu = DemoRenders.menu({
             value: 'blah.value',
             items: Arr.map(items, DemoRenders.item)

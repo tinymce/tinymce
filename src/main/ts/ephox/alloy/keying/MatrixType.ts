@@ -24,41 +24,41 @@ const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
-const focusIn = function (component, matrixConfig) {
-  const focused = matrixConfig.previousSelector()(component).orThunk(function () {
+const focusIn = (component, matrixConfig) => {
+  const focused = matrixConfig.previousSelector()(component).orThunk(() => {
     const selectors = matrixConfig.selectors();
     return SelectorFind.descendant(component.element(), selectors.cell());
   });
 
-  focused.each(function (cell) {
+  focused.each((cell) => {
     matrixConfig.focusManager().set(component, cell);
   });
 };
 
-const execute = function (component, simulatedEvent, matrixConfig) {
-  return Focus.search(component.element()).bind(function (focused) {
+const execute = (component, simulatedEvent, matrixConfig) => {
+  return Focus.search(component.element()).bind((focused) => {
     return matrixConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const toMatrix = function (rows, matrixConfig) {
-  return Arr.map(rows, function (row) {
+const toMatrix = (rows, matrixConfig) => {
+  return Arr.map(rows, (row) => {
     return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
   });
 };
 
-const doMove = function (ifCycle, ifMove) {
-  return function (element, focused, matrixConfig) {
+const doMove = (ifCycle, ifMove) => {
+  return (element, focused, matrixConfig) => {
     const move = matrixConfig.cycles() ? ifCycle : ifMove;
-    return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind(function (inRow) {
+    return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind((inRow) => {
       const cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors().cell());
 
-      return DomPinpoint.findIndex(cellsInRow, focused).bind(function (colIndex) {
+      return DomPinpoint.findIndex(cellsInRow, focused).bind((colIndex) => {
         const allRows = SelectorFilter.descendants(element, matrixConfig.selectors().row());
-        return DomPinpoint.findIndex(allRows, inRow).bind(function (rowIndex) {
+        return DomPinpoint.findIndex(allRows, inRow).bind((rowIndex) => {
           // Now, make the matrix.
           const matrix = toMatrix(allRows, matrixConfig);
-          return move(matrix, rowIndex, colIndex).map(function (next) {
+          return move(matrix, rowIndex, colIndex).map((next) => {
             return next.cell();
           });
         });

@@ -24,7 +24,7 @@ const itemSchema = ValueSchema.choose(
   }
 );
 
-const configureGrid = function (detail: MenuDetail, movementInfo: MenuMovement) {
+const configureGrid = (detail: MenuDetail, movementInfo: MenuMovement) => {
   return {
     mode: 'flatgrid',
     selector: '.' + detail.markers().item(),
@@ -36,7 +36,7 @@ const configureGrid = function (detail: MenuDetail, movementInfo: MenuMovement) 
   };
 };
 
-const configureMenu = function (detail: MenuDetail, movementInfo: MenuMovement) {
+const configureMenu = (detail: MenuDetail, movementInfo: MenuMovement) => {
   return {
     mode: 'menu',
     selector: '.' + detail.markers().item(),

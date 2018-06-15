@@ -10,7 +10,7 @@ import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default <any> () => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -20,7 +20,7 @@ export default <any> function () {
 
   gui.add(sink);
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 

@@ -37,7 +37,7 @@ export interface AlloyBehaviourConfig {
   state?: {};
 }
 
-const derive = function (capabilities): AlloyBehaviourRecord {
+const derive = (capabilities): AlloyBehaviourRecord => {
   return Objects.wrapAll(capabilities);
 };
 
@@ -50,7 +50,7 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const create = function (data: AlloyBehaviourConfig): AlloyBehaviour {
+const create = (data: AlloyBehaviourConfig): AlloyBehaviour => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
@@ -65,7 +65,7 @@ const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const createModes = function (data): AlloyBehaviour {
+const createModes = (data): AlloyBehaviour => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return Behaviour.createModes(
     ValueSchema.choose(value.branchKey, value.branches),

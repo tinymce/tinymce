@@ -21,13 +21,13 @@ export default <any> [
     'property', {
       width: [
         Fields.output('property', 'width'),
-        Fields.output('getDimension', function (elem) {
+        Fields.output('getDimension', (elem) => {
           return Width.get(elem) + 'px';
         })
       ],
       height: [
         Fields.output('property', 'height'),
-        Fields.output('getDimension', function (elem) {
+        Fields.output('getDimension', (elem) => {
           return Height.get(elem) + 'px';
         })
       ]

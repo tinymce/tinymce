@@ -6,11 +6,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('UnselectingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UnselectingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([
@@ -19,12 +19,12 @@ UnitTest.asynctest('UnselectingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       // TODO: Add behaviour testing. Probably webdriver tests.
       Assertions.sAssertStructure(
         'Check initial unselecting values',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             styles: {
               /* Browser dependent
@@ -42,5 +42,5 @@ UnitTest.asynctest('UnselectingTest', function () {
         component.element()
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

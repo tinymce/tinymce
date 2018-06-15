@@ -8,8 +8,8 @@ import * as FocusManagers from '../api/focus/FocusManagers';
 import * as Fields from '../data/Fields';
 import * as KeyRules from '../navigation/KeyRules';
 
-const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
-  const schema = function () {
+const typical = (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) => {
+  const schema = () => {
     return infoSchema.concat([
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),
       Fields.output('handler', me),
@@ -17,25 +17,25 @@ const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, o
     ]);
   };
 
-  const processKey = function (component, simulatedEvent, keyingConfig, keyingState) {
+  const processKey = (component, simulatedEvent, keyingConfig, keyingState) => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    return KeyRules.choose(rules, simulatedEvent.event()).bind(function (rule) {
+    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
       return rule(component, simulatedEvent, keyingConfig, keyingState);
     });
   };
 
-  const toEvents = function (keyingConfig, keyingState) {
+  const toEvents = (keyingConfig, keyingState) => {
     const otherEvents = getEvents(keyingConfig, keyingState);
     const keyEvents = AlloyEvents.derive(
-      optFocusIn.map(function (focusIn) {
-        return AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
+      optFocusIn.map((focusIn) => {
+        return AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
           focusIn(component, keyingConfig, keyingState, simulatedEvent);
           simulatedEvent.stop();
         });
       }).toArray().concat([
-        AlloyEvents.run(NativeEvents.keydown(), function (component, simulatedEvent) {
-          processKey(component, simulatedEvent, keyingConfig, keyingState).each(function (_) {
+        AlloyEvents.run(NativeEvents.keydown(), (component, simulatedEvent) => {
+          processKey(component, simulatedEvent, keyingConfig, keyingState).each((_) => {
             simulatedEvent.stop();
           });
         })

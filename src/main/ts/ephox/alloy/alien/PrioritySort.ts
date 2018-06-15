@@ -1,10 +1,10 @@
 import { JSON as Json } from '@ephox/sand';
 import { Result } from '@ephox/katamari';
 
-const sortKeys = function (label, keyName, array, order) {
+const sortKeys = (label, keyName, array, order) => {
   const sliced = array.slice(0);
   try {
-    const sorted = sliced.sort(function (a, b) {
+    const sorted = sliced.sort((a, b) => {
       const aKey = a[keyName]();
       const bKey = b[keyName]();
       const aIndex = order.indexOf(aKey);

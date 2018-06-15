@@ -9,46 +9,46 @@ import SpotInfo from '../view/SpotInfo';
  */
 
 // display element to the right, left edge against the right of the menu
-const east = function (anchor) {
+const east = (anchor) => {
   return anchor.x() + anchor.width();
 };
 
 // display element to the left, right edge against the left of the menu
-const west = function (anchor, element) {
+const west = (anchor, element) => {
   return anchor.x() - element.width();
 };
 
 // display element pointing up, bottom edge against the bottom of the menu (usually to one side)
-const north = function (anchor, element) {
+const north = (anchor, element) => {
   return anchor.y() - element.height() + anchor.height();
 };
 
 // display element pointing down, top edge against the top of the menu (usually to one side)
-const south = function (anchor) {
+const south = (anchor) => {
   return anchor.y();
 };
 
-const southeast = function (anchor, element, bubbles) {
+const southeast = (anchor, element, bubbles) => {
   return SpotInfo(east(anchor), south(anchor), bubbles.southeast(), Direction.southeast(), [ Anchors.south(), Anchors.east() ], 'link-layout-se');
 };
 
-const southwest = function (anchor, element, bubbles) {
+const southwest = (anchor, element, bubbles) => {
   return SpotInfo(west(anchor, element), south(anchor), bubbles.southwest(), Direction.southwest(), [ Anchors.south(), Anchors.west() ], 'link-layout-sw');
 };
 
-const northeast = function (anchor, element, bubbles) {
+const northeast = (anchor, element, bubbles) => {
   return SpotInfo(east(anchor), north(anchor, element), bubbles.northeast(), Direction.northeast(), [ Anchors.north(), Anchors.east() ], 'link-layout-ne');
 };
 
-const northwest = function (anchor, element, bubbles) {
+const northwest = (anchor, element, bubbles) => {
   return SpotInfo(west(anchor, element), north(anchor, element), bubbles.northwest(), Direction.northwest(), [ Anchors.north(), Anchors.west() ], 'link-layout-nw');
 };
 
-const all = function () {
+const all = () => {
   return [ southeast, southwest, northeast, northwest ];
 };
 
-const allRtl = function () {
+const allRtl = () => {
   return [ southwest, southeast, northwest, northeast ];
 };
 

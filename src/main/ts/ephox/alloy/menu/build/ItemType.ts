@@ -13,7 +13,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
 
-const builder = function (info) {
+const builder = (info) => {
   return {
     dom: Merger.deepMerge(
       info.dom(),
@@ -25,7 +25,7 @@ const builder = function (info) {
     ),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
-        info.toggling().fold(Toggling.revoke, function (tConfig) {
+        info.toggling().fold(Toggling.revoke, (tConfig) => {
           return Toggling.config(
             Merger.deepMerge({
               aria: {

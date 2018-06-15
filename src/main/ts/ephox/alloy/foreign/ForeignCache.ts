@@ -10,9 +10,9 @@ import BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
 import { SketchSpec } from '../api/component/SpecTypes';
 
-export default function () {
-  const getEvents = function (elem, spec: SketchSpec) {
-    const evts = DomState.getOrCreate(elem, function () {
+export default () => {
+  const getEvents = (elem, spec: SketchSpec) => {
+    const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = ValueSchema.asStructOrDie('foreign.cache.configuration', ValueSchema.objOfOnly([

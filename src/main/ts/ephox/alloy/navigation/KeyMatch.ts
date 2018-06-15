@@ -1,30 +1,30 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-const inSet = function (keys) {
-  return function (event) {
+const inSet = (keys) => {
+  return (event) => {
     return Arr.contains(keys, event.raw().which);
   };
 };
 
-const and = function (preds) {
-  return function (event) {
-    return Arr.forall(preds, function (pred) {
+const and = (preds) => {
+  return (event) => {
+    return Arr.forall(preds, (pred) => {
       return pred(event);
     });
   };
 };
 
-const is = function (key) {
-  return function (event) {
+const is = (key) => {
+  return (event) => {
     return event.raw().which === key;
   };
 };
 
-const isShift = function (event) {
+const isShift = (event) => {
   return event.raw().shiftKey === true;
 };
 
-const isControl = function (event) {
+const isControl = (event) => {
   return event.raw().ctrlKey === true;
 };
 
