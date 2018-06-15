@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
@@ -17,6 +17,11 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   const monitor = TapEvent.monitor({
     triggerEvent (name) {
       store.adder(name)();
+      return true;
+    },
+    broadcastEvent: (name) => {
+      store.adder('broadcast: ' + name)();
+      return true;
     }
   });
 

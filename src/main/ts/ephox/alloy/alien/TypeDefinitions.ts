@@ -16,6 +16,10 @@ export interface SugarElement {
   dom: () => HTMLElement;
 }
 
+export interface SugarListener {
+  unbind: () => void;
+}
+
 export interface SugarDocument {
   dom: () => HTMLDocument;
 }

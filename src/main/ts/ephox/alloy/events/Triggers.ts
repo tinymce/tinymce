@@ -93,7 +93,7 @@ const triggerUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: E
   return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
 };
 
-const triggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, logger: DebuggerLogger) => {
+const triggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, logger: DebuggerLogger): boolean => {
   const source = EventSource.derive(rawEvent, rawTarget);
   return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source, logger);
 };

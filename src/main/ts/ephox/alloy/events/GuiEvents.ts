@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Node, Traverse } from '@ephox/sugar';
@@ -6,24 +6,33 @@ import { DomEvent, Node, Traverse } from '@ephox/sugar';
 import Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { setTimeout } from '@ephox/dom-globals';
 
-const isDangerous = (event) => {
+import { SugarEvent, SugarElement, SugarListener } from '../alien/TypeDefinitions';
+import { setTimeout } from '@ephox/dom-globals';
+import { EventFormat } from 'ephox/alloy/events/SimulatedEvent';
+
+const isDangerous = (event: SugarEvent): boolean => {
   // Will trigger the Back button in the browser
-  return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
+  const keyEv = event.raw() as KeyboardEvent;
+  return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
 };
 
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
+const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
-const settingsSchema = ValueSchema.objOfOnly([
+export interface GuiEventSettings {
+  triggerEvent: (eventName: string, event: EventFormat) => boolean;
+  broadcastEvent: (eventName: string, event: EventFormat) => boolean;
+  stopBackspace?: boolean;
+}
+
+const settingsSchema: Processor = ValueSchema.objOfOnly([
   // triggerEvent(eventName, event)
   FieldSchema.strictFunction('triggerEvent'),
   FieldSchema.strictFunction('broadcastEvent'),
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-const bindFocus = (container, handler) => {
+const bindFocus = (container: SugarElement, handler: (SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -32,7 +41,7 @@ const bindFocus = (container, handler) => {
   }
 };
 
-const bindBlur = (container, handler) => {
+const bindBlur = (container: SugarElement, handler: (SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
@@ -41,8 +50,8 @@ const bindBlur = (container, handler) => {
   }
 };
 
-const setup = (container, rawSettings) => {
-  const settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
+const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void } => {
+  const settings: GuiEventSettings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
   const pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
     'touchstart',
@@ -93,14 +102,14 @@ const setup = (container, rawSettings) => {
     // Prevent default of backspace when not in input fields.
     const stopped = settings.triggerEvent('keydown', event);
     if (stopped) { event.kill(); } else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
-  });
+  }) as SugarListener;
 
-  const onFocusIn = bindFocus(container, (event) => {
+  const onFocusIn = bindFocus(container, (event: SugarEvent) => {
     const stopped = settings.triggerEvent('focusin', event);
     if (stopped) { event.kill(); }
   });
 
-  const onFocusOut = bindBlur(container, (event) => {
+  const onFocusOut = bindBlur(container, (event: SugarEvent) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) { event.kill(); }
 
@@ -113,12 +122,12 @@ const setup = (container, rawSettings) => {
   });
 
   const defaultView = Traverse.defaultView(container);
-  const onWindowScroll = DomEvent.bind(defaultView, 'scroll', (event) => {
+  const onWindowScroll = DomEvent.bind(defaultView, 'scroll', (event: SugarEvent) => {
     const stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
     if (stopped) { event.kill(); }
-  });
+  }) as SugarListener;
 
-  const unbind = () => {
+  const unbind = (): void => {
     Arr.each(simpleEvents, (e) => {
       e.unbind();
     });

@@ -62,7 +62,7 @@ const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>)
 };
 
 // Events that come from outside of the alloy root (e.g. window scroll)
-const fromExternal = (event) => {
+const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const stop = () => {
@@ -76,12 +76,12 @@ const fromExternal = (event) => {
     isCut: Fun.constant(false),
     event: Fun.constant(event),
     // Nor do targets really
-    setTarget: Fun.die('Cannot set target of a broadcasted event'),
-    getTarget: Fun.die('Cannot get target of a broadcasted event')
+    setSource: Fun.die('Cannot set source of a broadcasted event'),
+    getSource: Fun.die('Cannot get source of a broadcasted event')
   };
 };
 
-const fromTarget = (event, target) => {
+const fromTarget = <T extends EventFormat>(event: T, target: SugarElement): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };

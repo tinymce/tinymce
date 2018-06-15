@@ -5,38 +5,47 @@ import { Compare } from '@ephox/sugar';
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
+import { SugarEvent, SugarElement } from '../alien/TypeDefinitions';
+import { GuiEventSettings } from './GuiEvents';
 
 const SIGNIFICANT_MOVE = 5;
 
 const LONGPRESS_DELAY = 400;
 
-const getTouch = (event) => {
-  if (event.raw().touches === undefined || event.raw().touches.length !== 1) { return Option.none(); }
-  return Option.some(event.raw().touches[0]);
+const getTouch = (event: SugarEvent): Option<Touch> => {
+  const raw = event.raw() as TouchEvent;
+  if (raw.touches === undefined || raw.touches.length !== 1) { return Option.none(); }
+  return Option.some(raw.touches[0]);
 };
 
 // Check to see if the touch has changed a *significant* amount
-const isFarEnough = (touch, data) => {
+const isFarEnough = (touch: Touch, data: TouchHistoryData) => {
   const distX = Math.abs(touch.clientX - data.x());
   const distY = Math.abs(touch.clientY - data.y());
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
-const monitor = (settings) => {
+export interface TouchHistoryData {
+  x: () => number;
+  y: () => number;
+  target: () => SugarElement;
+}
+
+const monitor = (settings: GuiEventSettings) => {
   /* A tap event is a combination of touchstart and touchend on the same element
    * without a *significant* touchmove in between.
    */
 
   // Need a return value, so can't use Singleton.value;
-  const startData = Cell(Option.none());
+  const startData: Cell<Option<TouchHistoryData>> = Cell(Option.none());
 
-  const longpress = DelayedFunction((event) => {
+  const longpress = DelayedFunction((event: SugarEvent) => {
     // Stop longpress firing a tap
     startData.set(Option.none());
     settings.triggerEvent(SystemEvents.longpress(), event);
   }, LONGPRESS_DELAY);
 
-  const handleTouchstart = (event) => {
+  const handleTouchstart = (event: SugarEvent): Option<boolean> => {
     getTouch(event).each((touch) => {
       longpress.cancel();
 
@@ -52,7 +61,7 @@ const monitor = (settings) => {
     return Option.none();
   };
 
-  const handleTouchmove = (event) => {
+  const handleTouchmove = (event): Option<boolean> => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {
@@ -62,7 +71,7 @@ const monitor = (settings) => {
     return Option.none();
   };
 
-  const handleTouchend = (event) => {
+  const handleTouchend = (event): Option<boolean> => {
     longpress.cancel();
 
     const isSame = (data) => {
@@ -80,8 +89,8 @@ const monitor = (settings) => {
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = (event, type): Option<any> => {
-    return Objects.readOptFrom(handlers, type).bind((handler) => {
+  const fireIfReady = (event: SugarEvent, type: string): Option<boolean> => {
+    return Objects.readOptFrom(handlers, type).bind((handler: (SugarEvent) => Option<boolean>): Option<boolean> => {
       return handler(event);
     });
   };
