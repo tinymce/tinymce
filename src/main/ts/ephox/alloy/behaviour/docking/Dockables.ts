@@ -4,9 +4,10 @@ import { Attr, Class, Css, Height, Location, Width } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import * as DragCoord from '../../api/data/DragCoord';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DockingContext, ViewportBox, DockingConfig } from '../../behaviour/docking/DockingTypes';
+import { DockingContext, DockingConfig } from '../../behaviour/docking/DockingTypes';
 import { SugarElement, SugarPosition } from '../../alien/TypeDefinitions';
 import { Origins } from '../../positioning/layout/Origins';
+import { Bounds } from '../../alien/Boxes';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
   Class.add(component.element(), contextualInfo.transitionClass());
@@ -20,11 +21,11 @@ const disappear = (component: AlloyComponent, contextualInfo: DockingContext): v
   Class.add(component.element(), contextualInfo.fadeOutClass());
 };
 
-const isPartiallyVisible = (box: ViewportBox, viewport: ViewportBox): boolean => {
+const isPartiallyVisible = (box: Bounds, viewport: Bounds): boolean => {
   return box.y() < viewport.bottom() && box.bottom() > viewport.y();
 };
 
-const isCompletelyVisible = (box: ViewportBox, viewport: ViewportBox): boolean => {
+const isCompletelyVisible = (box: Bounds, viewport: Bounds): boolean => {
   return box.y() >= viewport.y() && box.bottom() <= viewport.bottom();
 };
 
@@ -34,7 +35,7 @@ const getAttr = (elem: SugarElement, attr: string): Option<number> => {
   ) : Option.none();
 };
 
-const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<ViewportBox> => {
+const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<Bounds> => {
   const elem = component.element();
   return getAttr(elem, dockInfo.leftAttr()).bind((left) => {
     return getAttr(elem, dockInfo.topAttr()).map((top) => {
@@ -58,7 +59,7 @@ const clearPrior = (component: AlloyComponent, dockInfo: DockingConfig): void =>
   Attr.remove(elem, dockInfo.topAttr());
 };
 
-const morphToAbsolute = (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox): Option<DragCoord.CoordAdt> => {
+const morphToAbsolute = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Bounds): Option<DragCoord.CoordAdt> => {
   return getPrior(component, dockInfo).bind((box) => {
     if (isCompletelyVisible(box, viewport)) {
       // Revert it back to absolute
@@ -72,7 +73,7 @@ const morphToAbsolute = (component: AlloyComponent, dockInfo: DockingConfig, vie
   });
 };
 
-const morphToFixed = (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {
+const morphToFixed = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {
   const loc = Location.absolute(component.element());
   const box = Boxes.bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
   if (! isCompletelyVisible(box, viewport)) {
@@ -92,7 +93,7 @@ const morphToFixed = (component: AlloyComponent, dockInfo: DockingConfig, viewpo
   }
 };
 
-const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {
+const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Bounds, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {
   const isDocked = Css.getRaw(component.element(), 'position').is('fixed');
   return isDocked ? morphToAbsolute(component, dockInfo, viewport) : morphToFixed(component, dockInfo, viewport, scroll, origin);
 };

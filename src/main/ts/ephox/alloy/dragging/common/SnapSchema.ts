@@ -3,10 +3,10 @@ import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
-import { ViewportBox } from '../../behaviour/docking/DockingTypes';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
 import { window } from '@ephox/dom-globals';
 
-const defaultLazyViewport = (): ViewportBox => {
+const defaultLazyViewport = (): Bounds => {
   const scroll = Scroll.get();
 
   return {
@@ -14,7 +14,8 @@ const defaultLazyViewport = (): ViewportBox => {
     y: scroll.top,
     width: Fun.constant(window.innerWidth),
     height: Fun.constant(window.innerHeight),
-    bottom: Fun.constant(scroll.top + window.innerHeight)
+    bottom: Fun.constant(scroll.top + window.innerHeight),
+    right: Fun.constant(scroll.left + window.innerWidth)
   };
 };
 

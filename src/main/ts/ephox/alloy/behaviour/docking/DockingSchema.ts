@@ -3,7 +3,7 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Scroll } from '@ephox/sugar';
 import { window } from '@ephox/dom-globals';
 
-const defaultLazyViewport = (_component) => {
+const defaultLazyViewport = (_component): Boxes.Bounds => {
   const scroll = Scroll.get();
   return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
 };
