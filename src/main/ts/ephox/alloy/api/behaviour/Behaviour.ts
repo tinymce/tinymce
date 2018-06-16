@@ -1,8 +1,12 @@
 import { FieldProcessorAdt, FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
-import { NoState } from 'ephox/alloy/behaviour/common/BehaviourState';
+import { NoState, BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
+import { BehaviourConfigAndState } from 'ephox/alloy/behaviour/common/BehaviourBlob';
+import { DomModification } from 'ephox/alloy/dom/DomModification';
+import { CustomDetail } from 'ephox/alloy/construct/CustomDefinition';
+import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
 
 export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour>;
 
@@ -13,7 +17,10 @@ export interface NamedConfiguredBehaviour {
 
 export interface AlloyBehaviour {
   config: (spec: any) => NamedConfiguredBehaviour;
-  exhibit: (info: any, base: any) => {};
+  exhibit: (
+    info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
+    base: DomDefinitionDetail
+  ) => DomModification;
   handlers: (info: any) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };

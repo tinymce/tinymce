@@ -1,8 +1,32 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Struct } from '@ephox/katamari';
+import { Arr, Merger, Obj, Struct, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import * as DomDefinition from './DomDefinition';
+// classes: mod.classes().getOr('<none>'),
+//     attributes: mod.attributes().getOr('<none>'),
+//     styles: mod.styles().getOr('<none>'),
+//     value: mod.value().getOr('<none>'),
+//     innerHtml: mod.innerHtml().getOr('<none>'),
+//     defChildren: mod.defChildren().getOr('<none>'),
+//     domChildren: mod.domChildren().fold(() => {
+//       return '<none>';
+//     }, (children) => {
+//       return children.length === 0 ? '0 children, but still specified' : String(children.length);
+//     })
+
+
+import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
+import { SugarElement } from 'ephox/alloy/api/Main';
+
+export interface DomModification {
+  classes(): Option<string[]>;
+  attributes(): Option<Record<string, string>>;
+  styles(): Option<Record<string, string>>;
+  value(): Option<any>;
+  innerHtml(): Option<string>;
+  defChildren(): Option<DomDefinitionDetail[]>;
+  domChildren(): Option<SugarElement[]>;
+}
 
 const fields = [
   'classes',
@@ -14,9 +38,9 @@ const fields = [
   'domChildren'
 ];
 // Maybe we'll need to allow add/remove
-const nu = Struct.immutableBag([ ], fields);
+const nu = Struct.immutableBag([ ], fields) as (s) => DomModification;
 
-const derive = (settings) => {
+const derive = (settings): DomModification => {
   const r = { };
   const keys = Obj.keys(settings);
   Arr.each(keys, (key) => {
@@ -28,7 +52,7 @@ const derive = (settings) => {
   return nu(r);
 };
 
-const modToStr = (mod) => {
+const modToStr = (mod: DomModification): string => {
   const raw = modToRaw(mod);
   return Json.stringify(raw, null, 2);
 };
@@ -49,7 +73,8 @@ const modToRaw = (mod) => {
   };
 };
 
-const clashingOptArrays = (key, oArr1, oArr2) => {
+// Ensure that both defChildren and domChildren are not specified.
+const clashingOptArrays = (key: string, oArr1: Option<Array<any>>, oArr2: Option<Array<any>>): Record<string, Array<any>> => {
   return oArr1.fold(() => {
     return oArr2.fold(() => {
       return { };
@@ -65,7 +90,7 @@ const clashingOptArrays = (key, oArr1, oArr2) => {
   });
 };
 
-const merge = (defnA, mod) => {
+const merge = (defnA: DomDefinitionDetail, mod) => {
   const raw = Merger.deepMerge(
     {
       tag: defnA.tag(),
@@ -91,7 +116,7 @@ const merge = (defnA, mod) => {
     }).getOr({ })
   );
 
-  return DomDefinition.nu(raw);
+  return NuDefinition(raw);
 };
 
 export {

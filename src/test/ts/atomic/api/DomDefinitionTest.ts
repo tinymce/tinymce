@@ -39,7 +39,8 @@ UnitTest.test('DomDefinitionTest', () => {
         defChildren: '<none>',
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
-        DomModification.merge(definition, addStyles)
+        // "as any" used because I'm not using real elements when testing
+        DomModification.merge(definition, addStyles) as any
       ));
     }
   );
@@ -77,7 +78,7 @@ UnitTest.test('DomDefinitionTest', () => {
         defChildren: '<none>',
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
-        DomModification.merge(definition, addInnerHtml)
+        DomModification.merge(definition, addInnerHtml) as any
       ));
     }
   );
@@ -115,7 +116,7 @@ UnitTest.test('DomDefinitionTest', () => {
         defChildren: '<none>',
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
-        DomModification.merge(definition, addValue)
+        DomModification.merge(definition, addValue) as any
       ));
     }
   );

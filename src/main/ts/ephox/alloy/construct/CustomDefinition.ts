@@ -2,8 +2,8 @@ import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder
 import { Arr, Fun, Merger, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
-import { DomDefinition, nu as NuDefinition } from '../dom/DomDefinition';
-import * as DomModification from '../dom/DomModification'
+import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
+import { DomModification, nu as NuModification } from '../dom/DomModification'
 ;
 import * as AlloyTags from '../ephemera/AlloyTags';
 import { SketchSpec, SimpleSpec, SimpleOrSketchSpec, RawDomSchema, StructDomSchema } from '../api/component/SpecTypes';
@@ -68,7 +68,7 @@ const getUid = (detail: CustomDetail): Record<string, string> => {
   return Objects.wrap(AlloyTags.idAttr(), detail.uid());
 };
 
-const toDefinition = (detail: CustomDetail): DomDefinition => {
+const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
   const base = {
     tag: detail.dom().tag(),
     classes: detail.dom().classes(),
@@ -86,10 +86,10 @@ const toDefinition = (detail: CustomDetail): DomDefinition => {
   ));
 };
 
-const toModification = (detail: CustomDetail) => {
+const toModification = (detail: CustomDetail): DomModification => {
   return detail.domModification().fold(() => {
-    return DomModification.nu({ });
-  }, DomModification.nu);
+    return NuModification({ });
+  }, NuModification);
 };
 
 // Probably want to pass info to these at some point.

@@ -15,6 +15,34 @@ import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
+import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
+
+// This is probably far too complicated. I think DomModification is probably
+// questionable as a concept. Maybe it should be deprecated.
+const getDomDefinition = (
+  info: CustomDefinition.CustomDetail,
+  bList: AlloyBehaviour[],
+  bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
+) => {
+  const definition = CustomDefinition.toDefinition(info);
+  const baseModification = {
+    'alloy.base.modification': CustomDefinition.toModification(info)
+  };
+  const modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
+  return DomModification.merge(definition, modification);
+}
+
+const getEvents = (
+  info: CustomDefinition.CustomDetail,
+  bList: AlloyBehaviour[],
+  bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
+) => {
+  const baseEvents = {
+    'alloy.base.behaviour': CustomDefinition.toEvents(info)
+  };
+  return ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
+}
 
 const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   const getMe = () => {
@@ -23,7 +51,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
 
   const systemApi = Cell(NoContextApi(getMe));
 
-  const info = ValueSchema.getOrDie(CustomDefinition.toInfo(Merger.deepMerge(
+  const info: CustomDefinition.CustomDetail = ValueSchema.getOrDie(CustomDefinition.toInfo(Merger.deepMerge(
     spec,
     {behaviours: undefined}
   )));
@@ -37,23 +65,9 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   const bList = BehaviourBlob.getBehaviours(bBlob);
   const bData = BehaviourBlob.getData(bBlob);
 
-  const definition = CustomDefinition.toDefinition(info);
-
-  const baseModification = {
-    'alloy.base.modification': CustomDefinition.toModification(info)
-  };
-
-  const modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
-
-  const modDefinition = DomModification.merge(definition, modification);
-
+  const modDefinition = getDomDefinition(info, bList, bData);
   const item = DomRender.renderToDom(modDefinition);
-
-  const baseEvents = {
-    'alloy.base.behaviour': CustomDefinition.toEvents(info)
-  };
-
-  const events = ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
+  const events = getEvents(info, bList, bData);
 
   const subcomponents = Cell(info.components());
 
