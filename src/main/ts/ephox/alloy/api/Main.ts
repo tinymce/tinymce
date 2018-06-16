@@ -1,6 +1,6 @@
 import * as EventRoot from '../alien/EventRoot';
 import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
-import BehaviourState from '../behaviour/common/BehaviourState';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator';

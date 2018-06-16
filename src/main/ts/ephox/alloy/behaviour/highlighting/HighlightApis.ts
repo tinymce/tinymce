@@ -4,7 +4,7 @@ import { Class, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 const dehighlightAll = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void => {

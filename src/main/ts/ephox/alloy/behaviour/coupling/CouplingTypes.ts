@@ -4,6 +4,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloySpec } from '../../api/component/SpecTypes';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
 
 
 export interface CouplingBehaviour extends Behaviour.AlloyBehaviour {
@@ -15,7 +16,7 @@ export interface CouplingConfigSpec {
   others: { [key: string]: (comp: AlloyComponent) => AlloySpec };
 }
 
-export interface CouplingState {
+export interface CouplingState extends BehaviourState {
   getOrCreate: (component: AlloyComponent, coupleConfig: CouplingConfig, name: string) => AlloyComponent;
 }
 

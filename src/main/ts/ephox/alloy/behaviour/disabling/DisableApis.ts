@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Attr, Class, Node } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { DisableConfig } from '../../behaviour/disabling/DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"

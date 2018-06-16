@@ -1,7 +1,7 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 

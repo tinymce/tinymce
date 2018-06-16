@@ -6,7 +6,7 @@ import * as Attachment from '../../api/system/Attachment';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { ReplacingConfig } from '../../behaviour/replacing/ReplacingTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {

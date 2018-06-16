@@ -3,7 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
-import * as NoState from '../behaviour/common/NoState';
+import { NoState } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';

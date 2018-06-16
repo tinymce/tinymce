@@ -4,6 +4,7 @@ import { Arr, Obj } from '@ephox/katamari';
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { AlloyBehaviour, ConfiguredBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { BehaviourData } from '../../behaviour/common/BehaviourBlob';
 
 export interface ComponentBehaviour {
   data: {
@@ -28,11 +29,11 @@ const getBehaviours = (spec): AlloyBehaviour[] => {
   });
 };
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): ComponentBehaviour => {
+const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): BehaviourData => {
   return BehaviourBlob.generateFrom(spec, all);
 };
 
-const generate = (spec): ComponentBehaviour => {
+const generate = (spec: SimpleOrSketchSpec): BehaviourData => {
   const all = getBehaviours(spec);
   return generateFrom(spec, all);
 };

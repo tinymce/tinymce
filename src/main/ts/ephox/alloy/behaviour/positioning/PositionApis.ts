@@ -8,7 +8,7 @@ import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { window } from '@ephox/dom-globals';

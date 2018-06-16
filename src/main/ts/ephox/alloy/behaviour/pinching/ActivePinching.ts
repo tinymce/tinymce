@@ -3,7 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pinching/PinchingTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { DraggingState, DragModeDeltas } from '../../dragging/common/DraggingTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 

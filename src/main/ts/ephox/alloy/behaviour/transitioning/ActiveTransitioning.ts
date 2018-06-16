@@ -2,7 +2,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as TransitionApis from './TransitionApis';
 import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 

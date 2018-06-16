@@ -4,7 +4,7 @@ import { Body, Class, Html } from '@ephox/sugar';
 import * as AriaVoice from '../../alien/AriaVoice';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 
 const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/*, invalidState */): void => {
   const elem = invalidConfig.getRoot()(component).getOr(component.element());

@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
 
 export interface TransitionRoute {

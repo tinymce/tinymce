@@ -1,7 +1,7 @@
 import  * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from "../../api/component/ComponentApi";
-import { Stateless } from "../../behaviour/common/NoState";
+import { Stateless } from "../../behaviour/common/BehaviourState";
 
 export interface DisableBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: DisableConfigSpec) =>  Behaviour.NamedConfiguredBehaviour;

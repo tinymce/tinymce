@@ -1,6 +1,6 @@
 import { Fun, Option } from '@ephox/katamari';
 
-import BehaviourState from '../../behaviour/common/BehaviourState';
+import { BehaviourState, nuState } from '../../behaviour/common/BehaviourState';
 import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 
@@ -36,7 +36,7 @@ const init = () => {
 
   const readState = Fun.constant({ });
 
-  return BehaviourState({
+  return nuState({
     readState,
     reset,
     update

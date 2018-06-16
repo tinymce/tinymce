@@ -1,6 +1,6 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import BehaviourState from '../common/BehaviourState';
+import { BehaviourState, nuState } from '../common/BehaviourState';
 
 const flatgrid = (spec) => {
   const dimensions = Cell(Option.none());
@@ -26,7 +26,7 @@ const flatgrid = (spec) => {
     });
   };
 
-  return BehaviourState({
+  return nuState({
     readState: Fun.constant({ }),
     setGridSize,
     getNumRows,

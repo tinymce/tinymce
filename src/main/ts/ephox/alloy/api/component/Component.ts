@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Merger, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Merger, Type, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { Traverse } from '@ephox/sugar';
 
@@ -14,6 +14,7 @@ import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
 
 const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   const getMe = () => {
@@ -79,7 +80,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     subcomponents.set(subs);
   };
 
-  const config = (behaviour) => {
+  const config = (behaviour: AlloyBehaviour) => {
     if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
@@ -88,11 +89,12 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     return f();
   };
 
-  const hasConfigured = (behaviour) => {
+  const hasConfigured = (behaviour: AlloyBehaviour): boolean => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 
-  const readState = (behaviourName) => {
+  // TYPIFY: any -> some basic state information
+  const readState = (behaviourName): Option<any> => {
     return bData[behaviourName]().map((b) => {
       return b.state.readState();
     }).getOr('not enabled');

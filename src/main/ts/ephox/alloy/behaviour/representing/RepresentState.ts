@@ -1,6 +1,6 @@
 import { Cell } from '@ephox/katamari';
 
-import BehaviourState from '../common/BehaviourState';
+import { BehaviourState, nuState } from '../common/BehaviourState';
 
 const memory = () => {
   const data = Cell(null);
@@ -20,7 +20,7 @@ const memory = () => {
     data.set(null);
   };
 
-  return BehaviourState({
+  return nuState({
     set: data.set,
     get: data.get,
     isNotSet,
@@ -34,7 +34,7 @@ const manual = () => {
 
   };
 
-  return BehaviourState({
+  return nuState({
     readState
   });
 };
@@ -49,7 +49,7 @@ const dataset = () => {
     };
   };
 
-  return BehaviourState({
+  return nuState({
     readState,
     set: data.set,
     get: data.get

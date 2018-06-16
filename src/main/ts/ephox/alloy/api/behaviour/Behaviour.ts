@@ -2,7 +2,7 @@ import { FieldProcessorAdt, FieldSchema, Objects, Processor, ValueSchema } from 
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
-import * as NoState from '../../behaviour/common/NoState';
+import { NoState } from 'ephox/alloy/behaviour/common/BehaviourState';
 
 export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour>;
 
@@ -46,8 +46,8 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
-  FieldSchema.defaulted('extra', { }),
-  FieldSchema.defaulted('state', NoState)
+  FieldSchema.defaulted('state', NoState),
+  FieldSchema.defaulted('extra', { })
 ]);
 
 const create = (data: AlloyBehaviourConfig): AlloyBehaviour => {
@@ -71,8 +71,8 @@ const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
-  FieldSchema.defaulted('extra', { }),
-  FieldSchema.defaulted('state', NoState)
+  FieldSchema.defaulted('state', NoState),
+  FieldSchema.defaulted('extra', { })
 ]);
 
 const createModes = (data: BehaviourModeSpec): AlloyBehaviour => {
@@ -87,7 +87,6 @@ const revoke = Fun.constant(undefined) as () => undefined;
 const noActive = Fun.constant({ }) as () => {};
 const noApis = Fun.constant({ }) as () => {};
 const noExtra = Fun.constant({ }) as () => {};
-const noState = Fun.constant(NoState) as () => {};
 
 export {
   derive,
@@ -95,7 +94,6 @@ export {
   noActive,
   noApis,
   noExtra,
-  noState,
   create,
   createModes
 };

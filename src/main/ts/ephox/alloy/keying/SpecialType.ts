@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import Keys from '../alien/Keys';
-import * as NoState from '../behaviour/common/NoState';
+import { NoState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';

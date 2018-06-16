@@ -5,7 +5,7 @@ import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
 import * as ToggleApis from './ToggleApis';
 import { TogglingConfig } from '../../behaviour/toggling/TogglingTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { EventFormat } from '../../events/SimulatedEvent';
 
 const exhibit = (base: { }, toggleConfig: TogglingConfig, toggleState: Stateless): { } => {

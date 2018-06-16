@@ -1,6 +1,6 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import BehaviourState from '../common/BehaviourState';
+import { BehaviourState, nuState } from '../common/BehaviourState';
 
 const init = () => {
   const contents = Cell(Option.none());
@@ -23,7 +23,7 @@ const init = () => {
     contents.set(Option.none());
   };
 
-  return BehaviourState({
+  return nuState({
     readState,
     isOpen,
     clear,
