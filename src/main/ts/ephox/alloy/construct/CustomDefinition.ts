@@ -8,7 +8,8 @@ import { DomModification, nu as NuModification } from '../dom/DomModification'
 import * as AlloyTags from '../ephemera/AlloyTags';
 import { SketchSpec, SimpleSpec, SimpleOrSketchSpec, RawDomSchema, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { EventHandlerConfigRecord } from 'ephox/alloy/api/events/AlloyEvents';
+import { EventHandlerConfigRecord, AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
+import { EventFormat } from '../events/SimulatedEvent';
 
 export interface CustomDetail {
   dom: () => StructDomSchema;
@@ -93,11 +94,11 @@ const toModification = (detail: CustomDetail): DomModification => {
 };
 
 // Probably want to pass info to these at some point.
-const toApis = (info) => {
+const toApis = (info: CustomDetail): Record<string, Function> => {
   return info.apis();
 };
 
-const toEvents = (info) => {
+const toEvents = (info: CustomDetail): EventHandlerConfigRecord => {
   return info.events();
 };
 

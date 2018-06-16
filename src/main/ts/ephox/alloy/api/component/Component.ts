@@ -17,6 +17,8 @@ import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
 import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
+import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
+import { AlloySystemApi } from 'ephox/alloy/api/system/SystemApi';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
@@ -24,7 +26,7 @@ const getDomDefinition = (
   info: CustomDefinition.CustomDetail,
   bList: AlloyBehaviour[],
   bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
-) => {
+): DomDefinitionDetail => {
   const definition = CustomDefinition.toDefinition(info);
   const baseModification = {
     'alloy.base.modification': CustomDefinition.toModification(info)
@@ -37,7 +39,7 @@ const getEvents = (
   info: CustomDefinition.CustomDetail,
   bList: AlloyBehaviour[],
   bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
-) => {
+): Record<string, Function> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
   };
@@ -71,15 +73,15 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
 
   const subcomponents = Cell(info.components());
 
-  const connect = (newApi) => {
+  const connect = (newApi: AlloySystemApi): void => {
     systemApi.set(newApi);
   };
 
-  const disconnect = () => {
+  const disconnect = (): void => {
     systemApi.set(NoContextApi(getMe));
   };
 
-  const syncComponents = () => {
+  const syncComponents = (): void => {
     // Update the component list with the current children
     const children = Traverse.children(item);
     const subs = Arr.bind(children, (child) => {
@@ -94,7 +96,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     subcomponents.set(subs);
   };
 
-  const config = (behaviour: AlloyBehaviour) => {
+  const config = (behaviour: AlloyBehaviour): Record<string, any> => {
     if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
@@ -108,7 +110,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   };
 
   // TYPIFY: any -> some basic state information
-  const readState = (behaviourName): Option<any> => {
+  const readState = (behaviourName: string): Option<any> => {
     return bData[behaviourName]().map((b) => {
       return b.state.readState();
     }).getOr('not enabled');

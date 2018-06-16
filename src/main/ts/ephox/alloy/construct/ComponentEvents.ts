@@ -43,7 +43,7 @@ const groupByEvents = (info, behaviours, base) => {
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };
 
-const combine = (info, eventOrder, behaviours, base): Result<{[key: string]: { [key: string]: (any) => any}}, any> => {
+const combine = (info, eventOrder, behaviours, base): Result<Record<string, Function>,any> => {
   const byEventName = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
