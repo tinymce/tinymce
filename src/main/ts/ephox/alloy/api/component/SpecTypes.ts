@@ -3,6 +3,7 @@ import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
 import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
+import { Option } from '@ephox/katamari';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 
@@ -17,6 +18,15 @@ export interface OptionalDomSchema {
   styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
+}
+
+export interface StructDomSchema {
+  tag: () => string;
+  attributes: () => Record<string, any>;
+  styles: () => Record<string, string>;
+  classes: () => string[];
+  value: () => Option<any>;
+  innerHtml: () => Option<string>;
 }
 
 export interface RawDomSchema extends OptionalDomSchema {

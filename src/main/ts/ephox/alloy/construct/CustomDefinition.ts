@@ -2,12 +2,29 @@ import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder
 import { Arr, Fun, Merger, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
-import * as DomDefinition from '../dom/DomDefinition';
-import * as DomModification from '../dom/DomModification';
+import { DomDefinition, nu as NuDefinition } from '../dom/DomDefinition';
+import * as DomModification from '../dom/DomModification'
+;
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { SketchSpec } from '../api/component/SpecTypes';
+import { SketchSpec, SimpleSpec, SimpleOrSketchSpec, RawDomSchema, StructDomSchema } from '../api/component/SpecTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { EventHandlerConfigRecord } from 'ephox/alloy/api/events/AlloyEvents';
 
-const toInfo = (spec): Result<SketchSpec, any> => {
+export interface CustomDetail {
+  dom: () => StructDomSchema;
+  // By this stage, the components are built.
+  components: () => AlloyComponent[];
+  uid: () => string;
+  events: () => EventHandlerConfigRecord;
+  apis: () => Record<string, Function>;
+  eventOrder: () => Record<string, string[]>;
+  // TYPIFY
+  domModification: () => any;
+  originalSpec: () => SimpleOrSketchSpec;
+  'debug.sketcher': () => string;
+}
+
+const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
       // Note, no children.
@@ -47,30 +64,30 @@ const toInfo = (spec): Result<SketchSpec, any> => {
   ]), spec);
 };
 
-const getUid = (info) => {
-  return Objects.wrap(AlloyTags.idAttr(), info.uid());
+const getUid = (detail: CustomDetail): Record<string, string> => {
+  return Objects.wrap(AlloyTags.idAttr(), detail.uid());
 };
 
-const toDefinition = (info) => {
+const toDefinition = (detail: CustomDetail): DomDefinition => {
   const base = {
-    tag: info.dom().tag(),
-    classes: info.dom().classes(),
+    tag: detail.dom().tag(),
+    classes: detail.dom().classes(),
     attributes: Merger.deepMerge(
-      getUid(info),
-      info.dom().attributes()
+      getUid(detail),
+      detail.dom().attributes()
     ),
-    styles: info.dom().styles(),
-    domChildren: Arr.map(info.components(), (comp) => { return comp.element(); })
+    styles: detail.dom().styles(),
+    domChildren: Arr.map(detail.components(), (comp) => { return comp.element(); })
   };
 
-  return DomDefinition.nu(Merger.deepMerge(base,
-    info.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
-    info.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
+  return NuDefinition(Merger.deepMerge(base,
+    detail.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
+    detail.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
   ));
 };
 
-const toModification = (info) => {
-  return info.domModification().fold(() => {
+const toModification = (detail: CustomDetail) => {
+  return detail.domModification().fold(() => {
     return DomModification.nu({ });
   }, DomModification.nu);
 };

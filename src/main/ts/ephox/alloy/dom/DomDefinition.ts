@@ -2,6 +2,7 @@ import { JSON as Json } from '@ephox/sand';
 import { Struct, Option } from '@ephox/katamari';
 
 export interface DomDefinition {
+  tag(): string;
   attributes(): Option<{}>;
   classes(): Option<string[]>;
   styles(): Option<{}>;
@@ -19,7 +20,7 @@ const nu = Struct.immutableBag([ 'tag' ], [
   'innerHtml',
   'domChildren',
   'defChildren'
-]);
+]) as (s) => DomDefinition;
 
 const defToStr = (defn) => {
   const raw = defToRaw(defn);
