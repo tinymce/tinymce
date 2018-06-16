@@ -1,8 +1,8 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
-import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+import { AlloyBehaviour, ConfiguredBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 export interface ComponentBehaviour {
@@ -13,14 +13,18 @@ export interface ComponentBehaviour {
   list: AlloyBehaviour[];
 }
 
-const getBehaviours = (spec) => {
-  const behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
+type BehaviourName = string;
+
+// This goes through the list of behaviours defined for a particular spec (removing anyhing
+// that has been revoked), and returns the BehaviourType (e.g. Sliding)
+const getBehaviours = (spec): AlloyBehaviour[] => {
+  const behaviours: AlloyBehaviourRecord = Objects.readOptFrom(spec, 'behaviours').getOr({ });
   const keys = Arr.filter(
     Obj.keys(behaviours),
-    (k) => { return behaviours[k] !== undefined; }
+    (k: BehaviourName) => { return behaviours[k] !== undefined; }
   );
   return Arr.map(keys, (k) => {
-    return spec.behaviours[k].me;
+    return behaviours[k].me;
   });
 };
 

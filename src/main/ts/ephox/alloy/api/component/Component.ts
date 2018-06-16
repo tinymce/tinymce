@@ -3,7 +3,7 @@ import { Arr, Cell, Fun, Merger, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { Traverse } from '@ephox/sugar';
 
-import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import * as ComponentDom from '../../construct/ComponentDom';
 import * as ComponentEvents from '../../construct/ComponentEvents';
 import * as CustomDefinition from '../../construct/CustomDefinition';
@@ -26,6 +26,8 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     spec,
     {behaviours: undefined}
   )));
+
+  // FIX: this comment is outdated.
 
   // The behaviour configuration is put into info.behaviours(). For everything else,
   // we just need the list of static behaviours that this component cares about. The behaviour info

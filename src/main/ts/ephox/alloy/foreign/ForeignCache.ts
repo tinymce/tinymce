@@ -6,7 +6,7 @@ import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import BehaviourBlob from '../behaviour/common/BehaviourBlob';
+import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
 import { SketchSpec } from '../api/component/SpecTypes';
 import { SugarElement } from 'ephox/alloy/api/Main';
