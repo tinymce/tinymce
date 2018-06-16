@@ -9,6 +9,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Dockables from './Dockables';
 import { DockingConfig } from '../../behaviour/docking/DockingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
+import { Bounds } from '../../alien/Boxes';
 
 const events = (dockInfo: DockingConfig) => {
   return AlloyEvents.derive([
@@ -28,7 +29,7 @@ const events = (dockInfo: DockingConfig) => {
       dockInfo.contextual().each((contextInfo) => {
         // Make the dockable component disappear if the context is outside the viewport
         contextInfo.lazyContext()(component).each((elem) => {
-          const box = Boxes.box(elem);
+          const box: Bounds = Boxes.box(elem);
           const isVisible = Dockables.isPartiallyVisible(box, viewport);
           const method = isVisible ? Dockables.appear : Dockables.disappear;
           method(component, contextInfo);
