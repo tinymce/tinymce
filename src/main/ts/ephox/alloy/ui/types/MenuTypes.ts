@@ -5,12 +5,12 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
-import { KeyingConfig } from '../../api/behaviour/Keying';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { MenuConfigSpec } from 'ephox/alloy/keying/KeyingModeTypes';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {
-  config: () => (detail: MenuDetail, movement: MenuMovement) => KeyingConfig;
+  config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
   moveOnTab: () => boolean;
   initSize?: () => {
     numColumns: () => number;

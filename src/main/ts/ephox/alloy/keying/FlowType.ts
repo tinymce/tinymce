@@ -10,6 +10,9 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { FlowConfig } from 'ephox/alloy/keying/KeyingModeTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -21,7 +24,7 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component, flowConfig) => {
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<SugarElement> => {
   return flowConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, flowConfig.selector());
   });

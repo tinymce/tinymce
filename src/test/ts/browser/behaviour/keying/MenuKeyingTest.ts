@@ -38,8 +38,8 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
           Keying.config({
             mode: 'menu',
             selector: '.test-item',
-            onRight: store.adderH('detected.right'),
-            onLeft:  store.adderH('detected.left'),
+            // onRight: store.adderH('detected.right'),
+            // onLeft:  store.adderH('detected.left'),
             moveOnTab: true
           })
         ]),

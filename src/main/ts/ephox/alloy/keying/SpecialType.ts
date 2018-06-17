@@ -22,34 +22,34 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getRules = (component, simulatedEvent, executeInfo) => {
+const getRules = (component, simulatedEvent, specialInfo) => {
   return [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), executeInfo.onEnter()
+      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onEnter()
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), executeInfo.onShiftEnter()
+      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onShiftEnter()
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), executeInfo.onShiftTab()
+      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onShiftTab()
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), executeInfo.onTab()
+      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onTab()
     ),
 
-    KeyRules.rule(KeyMatch.inSet(Keys.UP()), executeInfo.onUp()),
-    KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), executeInfo.onDown()),
-    KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), executeInfo.onLeft()),
-    KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), executeInfo.onRight()),
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), executeInfo.onEscape())
+    KeyRules.rule(KeyMatch.inSet(Keys.UP()), specialInfo.onUp()),
+    KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), specialInfo.onDown()),
+    KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), specialInfo.onLeft()),
+    KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), specialInfo.onRight()),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), specialInfo.onEscape())
   ];
 };
 
-const focusIn = (component, executeInfo) => {
-  return executeInfo.focusIn().bind((f) => {
-    return f(component, executeInfo);
+const focusIn = (component, specialInfo) => {
+  return specialInfo.focusIn().bind((f) => {
+    return f(component, specialInfo);
   });
 };
 

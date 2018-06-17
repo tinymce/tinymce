@@ -23,7 +23,7 @@ const execute = (component, simulatedEvent, menuConfig) => {
   });
 };
 
-const focusIn = (component, menuConfig, simulatedEvent) => {
+const focusIn = (component, menuConfig) => {
   // Maybe keep selection if it was there before
   SelectorFind.descendant(component.element(), menuConfig.selector()).each((first) => {
     menuConfig.focusManager().set(component, first);

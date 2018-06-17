@@ -52,7 +52,7 @@ const create = (cyclicField) => {
   };
 
   // Fire an alloy focus on the first visible element that matches the selector
-  const focusIn = (component, tabbingConfig, tabbingState) => {
+  const focusIn = (component, tabbingConfig) => {
     findInitial(component, tabbingConfig).each((target) => {
       tabbingConfig.focusManager().set(component, target);
     });

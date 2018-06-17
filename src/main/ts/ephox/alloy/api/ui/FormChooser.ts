@@ -48,7 +48,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
-            });
+            }).toOption().map(_ => true);
           }
         }),
 

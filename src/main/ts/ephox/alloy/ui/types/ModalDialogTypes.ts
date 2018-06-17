@@ -6,6 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -16,7 +17,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   // FIX: Keying.cyclic
   onExecute: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  useTabstopAt: () => (comp: AlloyComponent) => boolean;
+  useTabstopAt: () => (elem: SugarElement) => boolean;
 
   lazySink: () => () => Result<AlloyComponent, Error>;
   dragBlockClass: () => Option<string>;
