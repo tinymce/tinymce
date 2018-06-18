@@ -91,7 +91,10 @@ function onSubmitRowForm(editor: Editor, rows: HTMLElement[], oldData: FormData,
     }
   }
 
-  Helpers.updateStyleField(editor, evt);
+  if (hasAdvancedRowTab(editor)) {
+    Helpers.syncAdvancedStyleFields(editor, evt);
+  }
+
   const data: FormData = evt.control.rootControl.toJSON();
 
   editor.undoManager.transact(function () {

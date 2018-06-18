@@ -85,7 +85,9 @@ const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
     }
   }
 
-  Helpers.updateStyleField(editor, evt);
+  if (hasAdvancedCellTab(editor)) {
+    Helpers.syncAdvancedStyleFields(editor, evt);
+  }
   data = evt.control.rootControl.toJSON();
 
   editor.undoManager.transact(function () {

@@ -46,27 +46,44 @@ const buildListItems = function (inputList, itemCallback, startItems?) {
   return appendItems(inputList, startItems || []);
 };
 
+function styleFieldHasFocus(e) {
+  return e.control.rootControl.find('#style')[0].getEl().isEqualNode(document.activeElement);
+}
+
+const syncAdvancedStyleFields = function (editor, evt) {
+  if (styleFieldHasFocus(evt)) {
+    updateAdvancedFields(editor, evt);
+  } else {
+    updateStyleField(editor, evt);
+  }
+};
+
 const updateStyleField = function (editor, evt) {
   const dom = editor.dom;
   const rootControl = evt.control.rootControl;
   const data = rootControl.toJSON();
   const css = dom.parseStyle(data.style);
 
-  if (evt.control.name() === 'style') {
-    rootControl.find('#borderStyle').value(css['border-style'] || '')[0].fire('select');
-    rootControl.find('#borderColor').value(css['border-color'] || '')[0].fire('change');
-    rootControl.find('#backgroundColor').value(css['background-color'] || '')[0].fire('change');
-    rootControl.find('#width').value(css.width || '').fire('change');
-    rootControl.find('#height').value(css.height || '').fire('change');
-  } else {
-    css['border-style'] = data.borderStyle;
-    css['border-color'] = data.borderColor;
-    css['background-color'] = data.backgroundColor;
-    css.width = data.width ? Util.addSizeSuffix(data.width) : '';
-    css.height = data.height ? Util.addSizeSuffix(data.height) : '';
-  }
+  css['border-style'] = data.borderStyle;
+  css['border-color'] = data.borderColor;
+  css['background-color'] = data.backgroundColor;
+  css.width = data.width ? Util.addSizeSuffix(data.width) : '';
+  css.height = data.height ? Util.addSizeSuffix(data.height) : '';
 
   rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+};
+
+const updateAdvancedFields = function (editor, evt) {
+  const dom = editor.dom;
+  const rootControl = evt.control.rootControl;
+  const data = rootControl.toJSON();
+  const css = dom.parseStyle(data.style);
+
+  rootControl.find('#borderStyle').value(css['border-style'] || '');
+  rootControl.find('#borderColor').value(css['border-color'] || '');
+  rootControl.find('#backgroundColor').value(css['background-color'] || '');
+  rootControl.find('#width').value(css.width || '');
+  rootControl.find('#height').value(css.height || '');
 };
 
 const extractAdvancedStyles = function (dom: DOMUtils, elm): Node {
@@ -115,9 +132,9 @@ const createStyleForm = function (editor: Editor) {
       {
         label: 'Style',
         name: 'style',
-        type: 'textbox'
+        type: 'textbox',
+        onchange: Fun.curry(updateAdvancedFields, editor)
       },
-
       {
         type: 'form',
         padding: 0,
@@ -171,5 +188,7 @@ export default {
   createStyleForm,
   buildListItems,
   updateStyleField,
-  extractAdvancedStyles
+  extractAdvancedStyles,
+  updateAdvancedFields,
+  syncAdvancedStyleFields
 };
