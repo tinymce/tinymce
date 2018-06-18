@@ -5,11 +5,12 @@ import { TransitioningConfig } from '../../behaviour/transitioning/Transitioning
 import { Stateless } from '../../behaviour/common/BehaviourState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
 const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
-      const raw = simulatedEvent.event().raw();
+    AlloyEvents.run<SugarEvent>(NativeEvents.transitionend(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw() as TransitionEvent;
       TransitionApis.getCurrentRoute(component, transConfig, transState).each((route) => {
         TransitionApis.findRoute(component, transConfig, transState, route).each((rInfo) => {
           rInfo.transition().each((rTransition) => {

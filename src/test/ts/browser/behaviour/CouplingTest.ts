@@ -8,7 +8,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import StepUtils from 'ephox/alloy/test/StepUtils';
+import * as StepUtils from 'ephox/alloy/test/StepUtils';
 
 UnitTest.asynctest('CouplingTest', (success, failure) => {
 

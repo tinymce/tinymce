@@ -14,10 +14,11 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
+import * as DemoRenders from './forms/DemoRenders';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {
@@ -117,7 +118,7 @@ export default (): void => {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run(NativeEvents.contextmenu(), (component, simulatedEvent) => {
+        AlloyEvents.run<SugarEvent>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event().kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',

@@ -12,11 +12,11 @@ import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
-import { document, console } from '@ephox/dom-globals';
+import * as DemoRenders from './forms/DemoRenders';
+import { document } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();

@@ -4,7 +4,7 @@ import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import DropdownSchema from '../../ui/schema/DropdownSchema';
+import * as DropdownSchema from '../../ui/schema/DropdownSchema';
 import { DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';

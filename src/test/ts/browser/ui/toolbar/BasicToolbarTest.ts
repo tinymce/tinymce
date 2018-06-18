@@ -6,7 +6,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
+import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {

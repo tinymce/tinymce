@@ -3,8 +3,8 @@ import { Result } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
-import ChainUtils from 'ephox/alloy/test/ChainUtils';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
 const cAddPopupToSink = (sinkName) => {
   return NamedChain.bundle((data) => {
@@ -61,7 +61,7 @@ const cScrollDown = (componentName, amount) => {
   );
 };
 
-export default <any> {
+export {
   cTestSink,
   cScrollDown
 };

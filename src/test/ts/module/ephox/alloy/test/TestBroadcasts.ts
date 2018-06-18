@@ -34,7 +34,7 @@ const sDismissOn = (label, gui, selector) => {
   );
 };
 
-export default <any> {
+export {
   sDismissOn,
   sDismiss
 };

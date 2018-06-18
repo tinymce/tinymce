@@ -2,7 +2,7 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
 import * as Fields from '../data/Fields';
 import * as DomMovement from '../navigation/DomMovement';

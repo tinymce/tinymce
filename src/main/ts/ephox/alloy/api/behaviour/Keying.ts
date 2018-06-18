@@ -1,5 +1,5 @@
 import * as Behaviour from './Behaviour';
-import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
+import * as KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
 import { SugarElement } from '../../alien/TypeDefinitions';

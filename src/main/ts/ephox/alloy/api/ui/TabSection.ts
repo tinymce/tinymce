@@ -12,6 +12,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { TabSectionSketcher, TabSectionDetail, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { AlloyChangeTabEvent, AlloyDismissTabEvent } from '../events/SystemEvents';
 
 const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
   const changeTab = (button) => {
@@ -53,11 +54,11 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
         ] : [ ],
 
         [
-          AlloyEvents.run(SystemEvents.changeTab(), (section, simulatedEvent) => {
+          AlloyEvents.run<AlloyChangeTabEvent>(SystemEvents.changeTab(), (section, simulatedEvent) => {
             const button = simulatedEvent.event().button();
             changeTab(button);
           }),
-          AlloyEvents.run(SystemEvents.dismissTab(), (section, simulatedEvent) => {
+          AlloyEvents.run<AlloyDismissTabEvent>(SystemEvents.dismissTab(), (section, simulatedEvent) => {
             const button = simulatedEvent.event().button();
             detail.onDismissTab()(section, button);
           })

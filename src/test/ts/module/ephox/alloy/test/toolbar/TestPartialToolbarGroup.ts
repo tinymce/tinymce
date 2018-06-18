@@ -15,7 +15,7 @@ const mungeItem = (itemSpec) => {
   );
 };
 
-const markers = {
+const itemMarkers = {
   itemClass: 'toolbar-item'
 };
 
@@ -29,7 +29,7 @@ const munge = (spec) => {
       ToolbarGroup.parts().items({ })
     ],
     items: Arr.map(spec.items, mungeItem),
-    markers
+    markers: itemMarkers
   };
 };
 
@@ -42,8 +42,10 @@ const createGroups = (gs) => {
   return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 };
 
-export default <any> {
-  markers: Fun.constant(markers),
+const markers = () => itemMarkers;
+
+export {
+  markers,
   munge,
   setGroups,
   createGroups

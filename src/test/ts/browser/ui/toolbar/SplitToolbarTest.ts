@@ -6,8 +6,8 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
+import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is

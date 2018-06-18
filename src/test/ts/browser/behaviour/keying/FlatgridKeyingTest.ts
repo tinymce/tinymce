@@ -9,7 +9,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
 

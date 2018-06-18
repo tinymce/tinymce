@@ -3,7 +3,7 @@ import { Arr, Fun, Merger, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
-import PrioritySort from '../alien/PrioritySort';
+import * as PrioritySort from '../alien/PrioritySort';
 import * as DescribedHandler from '../events/DescribedHandler';
 import * as EventHandler from './EventHandler';
 

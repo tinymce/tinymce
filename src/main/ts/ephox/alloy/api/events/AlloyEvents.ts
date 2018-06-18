@@ -30,7 +30,7 @@ export type EventAbortHandler<T extends EventFormat> = (comp: AlloyComponent, se
 
 export type EventCanHandler<T extends EventFormat> = (comp: AlloyComponent, se: SimulatedEvent<T>) => boolean;
 
-const derive = (configs: Array<AlloyEventKeyAndHandler<any>>): AlloyEventRecord => {
+const derive = <A extends EventFormat>(configs: Array<AlloyEventKeyAndHandler<A>>): AlloyEventRecord => {
   return Objects.wrapAll(configs) as AlloyEventRecord;
 };
 

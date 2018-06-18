@@ -22,7 +22,7 @@ export interface GeneralDefinitionDetail<EC, DC> {
   attributes(): Option<Record<string, any>>;
   classes(): Option<string[]>;
   styles(): Option<Record<string, string>>;
-  value(): Option<any>;
+  value(): Option<string>;
   innerHtml(): Option<string>;
   domChildren(): Option<EC>;
   defChildren(): Option<DC>;

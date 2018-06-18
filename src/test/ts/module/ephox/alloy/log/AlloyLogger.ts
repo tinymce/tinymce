@@ -3,6 +3,6 @@ const element = (elem) => {
   return elem;
 };
 
-export default {
+export {
   element
 };

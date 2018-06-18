@@ -7,6 +7,7 @@ import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
 const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
   const expanded = slideConfig.expanded();
@@ -22,8 +23,8 @@ const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } =>
 
 const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
-      const raw = simulatedEvent.event().raw();
+    AlloyEvents.run<SugarEvent>(NativeEvents.transitionend(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw() as TransitionEvent;
       // This will fire for all transitions, we're only interested in the dimension completion
       if (raw.propertyName === slideConfig.dimension().property()) {
         SlidingApis.disableTransitions(component, slideConfig); // disable transitions immediately (Safari animates the dimension removal below)

@@ -13,6 +13,6 @@ const onEscape = (anchor, sandbox) => {
   return Option.some(true);
 };
 
-export default <any> {
+export {
   onEscape
 };

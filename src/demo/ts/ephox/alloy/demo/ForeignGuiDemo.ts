@@ -10,7 +10,9 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as Frames from './frames/Frames';
+import { SugarEvent } from 'ephox/alloy/api/Main';
 import { document } from '@ephox/dom-globals';
+
 
 const resize = (element, changeX, changeY) => {
   document.querySelector('h2').innerHTML = 'resizing';
@@ -86,7 +88,7 @@ export default (): void => {
             ]),
 
             events: AlloyEvents.derive([
-              AlloyEvents.run(NativeEvents.click(), (component, simulatedEvent) => {
+              AlloyEvents.run<SugarEvent>(NativeEvents.click(), (component, simulatedEvent) => {
                 // We have to remove the proxy first, because we are during a proxied event (click)
                 connection.unproxy(component);
                 connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());

@@ -16,7 +16,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import DemoRenders from './DemoRenders';
+import * as DemoRenders from './DemoRenders';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => {
@@ -232,7 +232,7 @@ const typeaheadMunger = (spec): SketchSpec => {
   });
 };
 
-export default {
+export {
   textMunger,
   selectMunger,
   chooserMunger,

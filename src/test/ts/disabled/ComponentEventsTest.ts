@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
 import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
 import * as EventHandler from 'ephox/alloy/construct/EventHandler';
-import ResultAssertions from 'ephox/alloy/test/ResultAssertions';
+import * as ResultAssertions from 'ephox/alloy/test/ResultAssertions';
 import TestStore from 'ephox/alloy/test/TestStore';
 
 UnitTest.test('ComponentEventsTest', () => {

@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -19,7 +19,7 @@ const onLoad = (component, repConfig, repState) => {
   });
 };
 
-export default <any> [
+export default [
   FieldSchema.strict('getValue'),
   FieldSchema.defaulted('setValue', Fun.noop),
   FieldSchema.option('initialValue'),

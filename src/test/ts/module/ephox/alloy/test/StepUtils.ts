@@ -35,7 +35,7 @@ const sAssertFailContains = (label, expected, f) => {
   );
 };
 
-export default <any> {
+export {
   sAssertFailIs,
   sAssertFailContains
 };

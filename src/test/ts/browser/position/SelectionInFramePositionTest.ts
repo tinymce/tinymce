@@ -4,10 +4,10 @@ import { Option, Result } from '@ephox/katamari';
 import { Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, WindowSelection } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 

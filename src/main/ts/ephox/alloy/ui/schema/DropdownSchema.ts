@@ -40,7 +40,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 ]);
 
 const name = () => 'Dropdown';
-export default <any> {
+export {
   name,
   schema,
   parts

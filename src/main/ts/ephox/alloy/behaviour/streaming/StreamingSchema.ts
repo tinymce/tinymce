@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Throttler } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -13,7 +13,7 @@ const setup = (streamInfo) => {
   };
 };
 
-export default <any> [
+export default [
   FieldSchema.strictOf('stream', ValueSchema.choose(
     'mode',
     {

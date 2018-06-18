@@ -29,6 +29,6 @@ const helper = (component) => {
   };
 };
 
-export default <any> {
+export {
   helper
 };

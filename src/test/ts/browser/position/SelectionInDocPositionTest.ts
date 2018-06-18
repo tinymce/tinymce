@@ -4,10 +4,10 @@ import { Option, Result } from '@ephox/katamari';
 import { Css, Element, Html } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 

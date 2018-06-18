@@ -16,6 +16,6 @@ const startsWith = (str: string, prefix: string): boolean => {
   return checkRange(str, prefix, 0);
 };
 
-export default {
+export {
   startsWith
 };

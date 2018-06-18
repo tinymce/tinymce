@@ -3,7 +3,7 @@ import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as KeyMatch from '../navigation/KeyMatch';

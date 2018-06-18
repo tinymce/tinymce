@@ -4,11 +4,11 @@ export interface BehaviourState {
   readState: () => any;
 }
 
-export interface BehaviourStateInitialiser {
-  init: (config: any) => BehaviourState;
+export interface BehaviourStateInitialiser<C> {
+  init: (config: C) => BehaviourState;
 }
 
-const NoState: BehaviourStateInitialiser = {
+const NoState: BehaviourStateInitialiser<any> = {
   init: () => {
     return nu({
       readState () {

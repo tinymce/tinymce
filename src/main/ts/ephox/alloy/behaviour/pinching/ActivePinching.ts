@@ -44,7 +44,7 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
     // Note: in testing, it didn't seem to cause problems on Android. Check.
     AlloyEvents.preventDefault(NativeEvents.gesturestart()),
 
-    AlloyEvents.run(NativeEvents.touchmove(), (component, simulatedEvent) => {
+    AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = pinchState.update(mode, simulatedEvent.event());
@@ -62,6 +62,6 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
   ]);
 };
 
-export default <any> {
+export {
   events
 };

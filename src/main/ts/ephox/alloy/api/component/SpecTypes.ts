@@ -22,7 +22,7 @@ export interface StructDomSchema {
   attributes: () => Record<string, any>;
   styles: () => Record<string, string>;
   classes: () => string[];
-  value: () => Option<any>;
+  value: () => Option<string>;
   innerHtml: () => Option<string>;
 }
 

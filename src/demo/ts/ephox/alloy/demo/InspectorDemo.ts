@@ -6,12 +6,11 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-<<<<<<< HEAD
+
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { console } from '@ephox/dom-globals';
-=======
+
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
->>>>>>> 09f2757... sketcher-typing: going through type information
 
 export default (): void => {
   const gui = Gui.create();

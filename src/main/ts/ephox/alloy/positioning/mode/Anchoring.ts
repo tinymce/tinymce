@@ -1,6 +1,6 @@
 import { Contracts } from '@ephox/katamari';
 
-export default <any> Contracts.exactly([
+export default Contracts.exactly([
   'anchorBox',
   'bubble',
   'overrides',

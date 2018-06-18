@@ -12,7 +12,7 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 

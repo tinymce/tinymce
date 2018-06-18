@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Node, Traverse } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
 

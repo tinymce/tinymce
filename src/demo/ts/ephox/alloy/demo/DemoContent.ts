@@ -6,6 +6,6 @@ const generate = (num) => {
   return s;
 };
 
-export default <any> {
+export {
   generate
 };

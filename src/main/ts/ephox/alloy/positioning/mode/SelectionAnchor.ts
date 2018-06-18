@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
 import { Direction, Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
@@ -111,7 +111,7 @@ const placement = (component, posInfo, anchorInfo, origin) => {
   });
 };
 
-export default <any> [
+export default [
   FieldSchema.option('getSelection'),
   FieldSchema.strict('root'),
   FieldSchema.option('bubble'),

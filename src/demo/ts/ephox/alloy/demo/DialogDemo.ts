@@ -6,8 +6,8 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {

@@ -6,7 +6,7 @@ import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
 
 export default (): void => {

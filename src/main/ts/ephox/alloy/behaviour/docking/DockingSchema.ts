@@ -8,7 +8,7 @@ const defaultLazyViewport = (_component): Boxes.Bounds => {
   return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
 };
 
-export default <any> [
+export default [
   FieldSchema.optionObjOf('contextual', [
     FieldSchema.strict('fadeInClass'),
     FieldSchema.strict('fadeOutClass'),

@@ -7,6 +7,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { FocusManager } from 'ephox/alloy/api/focus/FocusManagers';
+import { EventFormat, CustomEvent } from 'ephox/alloy/api/Main';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {
@@ -60,3 +61,7 @@ export interface MenuSpec extends CompositeSketchSpec {
 }
 
 export interface MenuSketcher extends CompositeSketch<MenuSpec, MenuDetail> { }
+
+export interface MenuItemHoverEvent extends CustomEvent {
+  item: () => AlloyComponent;
+}

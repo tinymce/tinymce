@@ -18,8 +18,9 @@ import { DraggingState } from '../../dragging/common/DraggingTypes';
 
 const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.mousedown(), (component, simulatedEvent) => {
-      if (simulatedEvent.event().raw().button !== 0) { return; }
+    AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw() as MouseEvent;
+      if (raw.button !== 0) { return; }
       simulatedEvent.stop();
 
       const dragApi: DragApi = {
@@ -98,4 +99,4 @@ const schema: FieldProcessorAdt[] = [
   })
 ];
 
-export default <any> schema;
+export default schema;

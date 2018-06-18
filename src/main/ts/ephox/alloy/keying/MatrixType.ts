@@ -2,7 +2,7 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';

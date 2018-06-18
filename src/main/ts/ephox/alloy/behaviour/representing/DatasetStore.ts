@@ -1,4 +1,4 @@
-import { FieldSchema, Objects } from '@ephox/boulder';
+import { FieldSchema, Objects, FieldProcessorAdt } from '@ephox/boulder';
 
 import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
@@ -31,7 +31,7 @@ const onUnload = (component, repConfig, repState) => {
   repState.set({ });
 };
 
-export default <any> [
+export default [
   FieldSchema.option('initialValue'),
   FieldSchema.strict('getFallbackEntry'),
   FieldSchema.strict('getDataKey'),

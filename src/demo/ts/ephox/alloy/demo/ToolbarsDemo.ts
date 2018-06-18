@@ -6,10 +6,10 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
-import { document, console, window } from '@ephox/dom-globals';
+import * as DemoRenders from './forms/DemoRenders';
+import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();

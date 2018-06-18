@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 
 import * as Fields from '../../data/Fields';
 
-export default <any> [
+export default [
   // TODO: Work out when we want to  call this. Only when it is has changed?
   Fields.onHandler('onFocus'),
   FieldSchema.defaulted('ignore', false)

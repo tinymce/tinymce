@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
 
@@ -27,7 +27,7 @@ const placement = (component, posInfo, anchorInfo, origin) => {
   );
 };
 
-export default <any> [
+export default [
   FieldSchema.strict('x'),
   FieldSchema.strict('y'),
   FieldSchema.defaulted('height', 0),

@@ -47,7 +47,7 @@ const checkVal = (label, f, assertValue) => {
   });
 };
 
-export default <any> {
+export {
   checkErr,
   checkErrStr,
   checkVal

@@ -4,6 +4,6 @@ const skip = () => {
   return navigator.userAgent.indexOf('PhantomJS') > -1;
 };
 
-export default <any> {
+export {
   skip
 };

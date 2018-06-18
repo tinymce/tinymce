@@ -23,6 +23,6 @@ const sSameWidth = (label, gui, dropdown, menuSelector) => {
   );
 };
 
-export default <any> {
+export {
   sSameWidth
 };

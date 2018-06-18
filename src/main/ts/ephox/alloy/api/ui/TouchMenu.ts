@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Cell, Fun, Merger, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
-import ElementFromPoint from '../../alien/ElementFromPoint';
+import * as ElementFromPoint from '../../alien/ElementFromPoint';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
@@ -26,6 +26,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
 type TouchHoverState = (AlloyComponent) => void;
 
@@ -164,8 +165,9 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
         //   - if over items, trigger mousemover on item (and hoverOff on button)
         //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
         //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
-        AlloyEvents.run(NativeEvents.touchmove(), (component, simulatedEvent) => {
-          const e = simulatedEvent.event().raw().touches[0];
+        AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+          const raw = simulatedEvent.event().raw() as TouchEvent;
+          const e = raw.touches[0];
           getMenu(component).each((iMenu) => {
             ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(() => {
               // No items, so blur everything.

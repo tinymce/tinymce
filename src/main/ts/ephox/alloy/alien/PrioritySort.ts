@@ -23,6 +23,6 @@ const sortKeys = (label: string, keyName: string, array: Array<Record<string, ()
   }
 };
 
-export default {
+export {
   sortKeys
 };

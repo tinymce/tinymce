@@ -39,7 +39,7 @@ const eToComponent = (other) => {
   });
 };
 
-export default <any> {
+export {
   cLogging,
   cFindUids,
   cToElement,

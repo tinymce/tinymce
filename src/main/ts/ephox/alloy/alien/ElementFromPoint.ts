@@ -27,6 +27,6 @@ const insideComponent = (component: AlloyComponent, x: number, y: number): Optio
   return elementFromPoint(doc, x, y).filter(isInside).filter(hasValidRect);
 };
 
-export default {
+export {
   insideComponent
 };

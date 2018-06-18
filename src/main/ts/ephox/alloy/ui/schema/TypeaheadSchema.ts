@@ -1,7 +1,7 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import Strings from '../../alien/Strings';
+import * as Strings from '../../alien/Strings';
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';

@@ -1,17 +1,14 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
-import { CouplingConfig } from './CouplingTypes';
-import { BehaviourState, nuState } from '../common/BehaviourState';
+import { CouplingConfigSpec, CouplingConfig } from './CouplingTypes';
+import { BehaviourState, nuState, BehaviourStateInitialiser } from '../common/BehaviourState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const init = (spec) => {
-  console.log('reinitialising');
-  console.trace();
+const init = (spec: CouplingConfigSpec) => {
   const coupled = { };
 
   const getOrCreate = (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): AlloyComponent => {
-    console.log('reading coupled', coupled);
     const available = Obj.keys(coupleConfig.others());
     if (! available) { throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2)); } else { return Objects.readOptFrom(coupled, name).getOrThunk(() => {
       const builder = Objects.readOptFrom(coupleConfig.others(), name).getOrDie(
@@ -34,6 +31,6 @@ const init = (spec) => {
   });
 };
 
-export default <any> {
+export {
   init
 };

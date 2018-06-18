@@ -10,6 +10,7 @@ export interface TransitionRoute {
   start: () => string;
 }
 
+// TYPIFY
 const findRoute = function <T>(component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<any> {
   return Objects.readOptFrom(transConfig.routes(), route.start()).map(Fun.apply).bind((sConfig) => {
     return Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);

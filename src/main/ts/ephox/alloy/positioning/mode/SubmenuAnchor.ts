@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -25,7 +25,7 @@ const placement = (component, posInfo, submenuInfo, origin) => {
   );
 };
 
-export default <any> [
+export default [
   FieldSchema.strict('item'),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)

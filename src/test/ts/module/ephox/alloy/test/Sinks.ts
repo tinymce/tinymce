@@ -65,7 +65,7 @@ const isInside = (sinkComponent, popupComponent) => {
   return PredicateExists.closest(popupComponent.element(), isSink);
 };
 
-export default <any> {
+export {
   fixedSink,
   isInside,
   relativeSink,

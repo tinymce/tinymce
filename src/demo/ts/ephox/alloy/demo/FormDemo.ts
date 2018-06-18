@@ -11,10 +11,10 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoFields from './forms/DemoFields';
+import * as DemoFields from './forms/DemoFields';
 import { document, console, setTimeout } from '@ephox/dom-globals';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 

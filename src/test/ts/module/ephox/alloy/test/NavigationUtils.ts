@@ -45,7 +45,7 @@ const highlights = (container, key, modifiers, identifiers) => {
   return GeneralSteps.sequence(array);
 };
 
-export default <any> {
+export {
   sequence,
   highlights
 };

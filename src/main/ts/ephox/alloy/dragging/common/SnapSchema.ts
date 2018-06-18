@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
@@ -19,7 +19,7 @@ const defaultLazyViewport = (): Bounds => {
   };
 };
 
-export default <any> FieldSchema.optionObjOf('snaps', [
+export default FieldSchema.optionObjOf('snaps', [
   FieldSchema.strict('getSnapPoints'),
   Fields.onHandler('onSensor'),
   FieldSchema.strict('leftAttr'),

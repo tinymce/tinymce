@@ -10,9 +10,9 @@ import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
 import { BehaviourConfigAndState } from 'ephox/alloy/behaviour/common/BehaviourBlob';
 import { BehaviourState } from 'ephox/alloy/api/Main';
 
-type ModificationChain = Array<{ name(): string, modification(): Option<any> }>;
+type ModificationChain<M> = Array<{ name(): string, modification(): Option<M> }>;
 
-const concat = (chain: ModificationChain, aspect: string): Result<Record<string, any[]>, Error> => {
+const concat = <M>(chain: ModificationChain<M[]>, aspect: string): Result<Record<string, M[]>, Error> => {
   const values: any[] = Arr.bind(chain, (c) => {
     return c.modification().getOr([ ]);
   });
@@ -21,7 +21,7 @@ const concat = (chain: ModificationChain, aspect: string): Result<Record<string,
   );
 };
 
-const onlyOne = (chain: ModificationChain, aspect: string) => {
+const onlyOne = <M>(chain: ModificationChain<M>, aspect: string): Result<Record<string, M>, string> => {
   if (chain.length > 1) {
     return Result.error(
     'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
@@ -49,10 +49,10 @@ const duplicate = (aspect, k, obj, behaviours) => {
   );
 };
 
-const safeMerge = (chain: Array<{name: string, modification(): Option<any>}>, aspect: string) => {
+const objSafeMerge = (chain: Array<{name: string, modification(): Option<{ }>}>, aspect: string) => {
   // return unsafeMerge(chain, aspect);
   const y = Arr.foldl(chain, (acc, c) => {
-    const obj = c.modification().getOr({});
+    const obj = c.modification().getOr({ });
     return acc.bind((accRest) => {
       const parts = Obj.mapToArray(obj, (v, k) => {
         return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) :
@@ -69,14 +69,14 @@ const safeMerge = (chain: Array<{name: string, modification(): Option<any>}>, as
 
 const mergeTypes = {
   classes: concat,
-  attributes: safeMerge,
-  styles: safeMerge,
+  attributes: objSafeMerge,
+  styles: objSafeMerge,
 
   // Group these together somehow
   domChildren: onlyOne,
-  defChildren: onlyOne,
-  innerHtml: onlyOne,
-
+  defChildren:  onlyOne,
+  innerHtml:  onlyOne,
+  // TODO: Maybe a value isn't "string"
   value: onlyOne
 };
 
@@ -104,10 +104,10 @@ const combine = (
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
   const byAspect = ObjIndex.byInnerKey<any, any>(modsByBehaviour, nameAndMod) as Record<
     string,
-    Array<{ name: string, modification(): Option<any> }>
+    Array<{ name: string, modification(): Option<DomModification> }>
   >;
 
-  const usedAspect = Obj.map(byAspect, (values: Array<{name: string, modification(): Option<any>}>, aspect: string) => {
+  const usedAspect = Obj.map(byAspect, (values: Array<{name: string, modification(): Option<DomModification>}>, aspect: string) => {
     return Arr.bind(values, (value) => {
       return value.modification().fold(() => {
         return [ ];
@@ -117,10 +117,10 @@ const combine = (
     });
   }) as Record<
     string,
-    Array<{name: string, modification(): Option<any>}>
+    Array<{name: string, modification(): Option<DomModification>}>
   >;
 
-  const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): any}>, aspect: string) => {
+  const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): { } | string[]}>, aspect: string) => {
     return Objects.readOptFrom(mergeTypes, aspect).fold(() => {
       return Result.error('Unknown field type: ' + aspect);
     }, (merger) => {

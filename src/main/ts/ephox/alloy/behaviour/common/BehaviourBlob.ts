@@ -36,11 +36,11 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): Behaviou
       ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
-  }, (v: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourStateInitialiser>>>) => v);
+  }, (v: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourStateInitialiser<any>>>>) => v);
 
   return {
     list: all as AlloyBehaviour[],
-    data: Obj.map(validated, (optBlobThunk: () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser>>) => {
+    data: Obj.map(validated, (optBlobThunk: () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser<any>>>) => {
       const optBlob = optBlobThunk();
       const output = optBlob.map((blob) => ({
         config: blob.config(),

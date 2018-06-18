@@ -4,8 +4,10 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
-const renderMenu = (spec) => {
+const renderMenu = (spec): Partial<MenuSpec> => {
   return {
     dom: {
       tag: 'ol',
@@ -21,7 +23,7 @@ const renderMenu = (spec) => {
   };
 };
 
-const renderItem = (spec) => {
+const renderItem = (spec): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -56,7 +58,7 @@ const part = (store) => {
     dom: {
       tag: 'div'
     },
-    markers,
+    markers: itemMarkers,
     onExecute (dropdown, item) {
       const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
@@ -90,7 +92,7 @@ const mWaitForNewMenu = (component) => {
   });
 };
 
-const markers = {
+const itemMarkers = {
   item: 'item',
   selectedItem: 'selected-item',
   menu: 'menu',
@@ -98,12 +100,13 @@ const markers = {
   backgroundMenu: 'background-menu'
 };
 
-export default <any> {
+const markers = () => itemMarkers;
+
+export {
   renderItem,
   renderMenu,
   part,
-  markers: Fun.constant(markers),
-
+  markers,
   mWaitForNewMenu,
   mStoreMenuUid
 };

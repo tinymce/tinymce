@@ -2,6 +2,8 @@ import * as NativeEvents from './NativeEvents';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { StringConstant } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { CustomEvent } from '../../events/SimulatedEvent';
 
 const alloy = { tap: Fun.constant('alloy.tap') };
 
@@ -47,6 +49,13 @@ const windowScroll = Fun.constant('alloy.system.scroll') as StringConstant;
 const attachedToDom = Fun.constant('alloy.system.attached') as StringConstant;
 const detachedFromDom = Fun.constant('alloy.system.detached') as StringConstant;
 
+export interface AlloyChangeTabEvent extends CustomEvent {
+  button: () => AlloyComponent;
+}
+
+export interface AlloyDismissTabEvent extends CustomEvent {
+  button: () => AlloyComponent;
+}
 const changeTab = Fun.constant('alloy.change.tab') as StringConstant;
 const dismissTab = Fun.constant('alloy.dismiss.tab') as StringConstant;
 

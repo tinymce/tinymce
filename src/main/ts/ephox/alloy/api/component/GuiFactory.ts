@@ -3,7 +3,7 @@ import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
-import DefaultEvents from '../../events/DefaultEvents';
+import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';

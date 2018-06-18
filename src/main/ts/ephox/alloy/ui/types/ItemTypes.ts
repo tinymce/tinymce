@@ -16,6 +16,7 @@ export type ItemSpec = WidgetItemSpec | SeparatorItemSpec | NormalItemSpec;
 export interface WidgetItemSpec {
   type: 'widget';
   uid?: string;
+  components?: AlloySpec[];
   data?: ItemDataTuple // why is this necessary?
   dom: RawDomSchema;
   autofocus?: boolean;

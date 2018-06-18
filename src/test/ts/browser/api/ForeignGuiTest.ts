@@ -9,12 +9,10 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { document } from '@ephox/dom-globals';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { document, console } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
-
-
-
   const root = Element.fromTag('div');
   Html.set(root, '<span class="clicker">A</span> and <span class="clicker">B</span>');
 
@@ -35,7 +33,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
             })
           ]),
           events: AlloyEvents.derive([
-            AlloyEvents.run(NativeEvents.click(), (component, simulatedEvent) => {
+            AlloyEvents.run<SugarEvent>(NativeEvents.click(), (component, simulatedEvent) => {
               // We have to remove the proxy first, because we are during a proxied event (click)
               connection.unproxy(component);
               connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());

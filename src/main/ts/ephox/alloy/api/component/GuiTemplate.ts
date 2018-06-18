@@ -32,7 +32,7 @@ const readChildren = (elem) => {
 
     return [{
       dom: Objects.wrapAll(
-        Arr.flatten<any>([
+        Arr.flatten<{key: string, value: string}>([
           [ { key: 'tag', value: Node.name(elem) } ],
           Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
           classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
@@ -55,7 +55,7 @@ const read = (elem): SimpleOrSketchSpec => {
 
   return {
     dom: Objects.wrapAll(
-      Arr.flatten<any>([
+      Arr.flatten<{key: string, value: string}>([
         [ { key: 'tag', value: Node.name(elem) } ],
         Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
         classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]

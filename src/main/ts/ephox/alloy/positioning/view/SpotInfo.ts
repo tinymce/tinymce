@@ -1,3 +1,3 @@
 import { Struct } from '@ephox/katamari';
 
-export default <any> Struct.immutable('x', 'y', 'bubble', 'direction', 'anchors', 'label');
+export default Struct.immutable('x', 'y', 'bubble', 'direction', 'anchors', 'label');

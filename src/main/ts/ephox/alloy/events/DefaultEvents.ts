@@ -1,4 +1,4 @@
-import { EventFormat } from './SimulatedEvent';
+import { EventFormat, FocusingEvent } from './SimulatedEvent';
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
@@ -16,23 +16,25 @@ const isRecursive = (component: AlloyComponent, originator: SugarElement, target
     !Compare.eq(originator, target);
 };
 
-export default {
-  events: AlloyEvents.derive([
-    AlloyEvents.can(SystemEvents.focus(), (component, simulatedEvent) => {
-      // originator may not always be there. Will need to check this.
-      const originator: SugarElement = simulatedEvent.event().originator();
-      const target: SugarElement = simulatedEvent.event().target();
-      if (isRecursive(component, originator, target)) {
-        console.warn(
-          SystemEvents.focus() + ' did not get interpreted by the desired target. ' +
-          '\nOriginator: ' + AlloyLogger.element(originator) +
-          '\nTarget: ' + AlloyLogger.element(target) +
-          '\nCheck the ' + SystemEvents.focus() + ' event handlers'
-        );
-        return false;
-      } else {
-        return true;
-      }
-    })
-  ]) as AlloyEvents.AlloyEventRecord
+const events: AlloyEvents.AlloyEventRecord = AlloyEvents.derive([
+  AlloyEvents.can<FocusingEvent>(SystemEvents.focus(), (component, simulatedEvent) => {
+    // originator may not always be there. Will need to check this.
+    const originator: SugarElement = simulatedEvent.event().originator();
+    const target: SugarElement = simulatedEvent.event().target();
+    if (isRecursive(component, originator, target)) {
+      console.warn(
+        SystemEvents.focus() + ' did not get interpreted by the desired target. ' +
+        '\nOriginator: ' + AlloyLogger.element(originator) +
+        '\nTarget: ' + AlloyLogger.element(target) +
+        '\nCheck the ' + SystemEvents.focus() + ' event handlers'
+      );
+      return false;
+    } else {
+      return true;
+    }
+  })
+])
+
+export {
+  events
 };

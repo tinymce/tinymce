@@ -9,8 +9,8 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document } from '@ephox/dom-globals';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();

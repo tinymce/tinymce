@@ -1,9 +1,9 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 
-export default <any> [
+export default [
   FieldSchema.defaulted('destinationAttr', 'data-transitioning-destination'),
   FieldSchema.defaulted('stateAttr', 'data-transitioning-state'),
   FieldSchema.strict('initialState'),

@@ -11,7 +11,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { MenuDetail, MenuSpec } from '../../ui/types/MenuTypes';
+import { MenuDetail, MenuSpec, MenuItemHoverEvent } from '../../ui/types/MenuTypes';
 
 const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, spec, externals) => {
   return Merger.deepMerge(
@@ -64,7 +64,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
 
         // Highlight the item that the cursor is over. The onHighlight
         // code needs to handle updating focus if required
-        AlloyEvents.run(ItemEvents.hover(), (menu, simulatedEvent) => {
+        AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (menu, simulatedEvent) => {
           const item = simulatedEvent.event().item();
           Highlighting.highlight(menu, item);
         })

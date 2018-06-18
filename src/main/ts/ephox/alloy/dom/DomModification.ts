@@ -22,7 +22,7 @@ export interface DomModification {
   classes(): Option<string[]>;
   attributes(): Option<Record<string, string>>;
   styles(): Option<Record<string, string>>;
-  value(): Option<any>;
+  value(): Option<string>;
   innerHtml(): Option<string>;
   defChildren(): Option<DomDefinitionDetail[]>;
   domChildren(): Option<SugarElement[]>;

@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../../alien/EditableFields';
@@ -108,4 +108,4 @@ const schema = [
   Fields.output('builder', builder)
 ];
 
-export default <any> schema;
+export default schema;

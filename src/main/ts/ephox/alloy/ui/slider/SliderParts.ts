@@ -11,7 +11,8 @@ import * as PartType from '../../parts/PartType';
 import * as SliderActions from './SliderActions';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { NativeSimulatedEvent, SimulatedEvent } from 'ephox/alloy/api/Main';
+import { NativeSimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -85,7 +86,7 @@ const spectrumPart = PartType.required({
 
     const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), moveToX),
-      AlloyEvents.run(NativeEvents.mousemove(), (spectrum, se) => {
+      AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
         if (detail.mouseIsDown().get()) { moveToX(spectrum, se); }
       })
     ]);

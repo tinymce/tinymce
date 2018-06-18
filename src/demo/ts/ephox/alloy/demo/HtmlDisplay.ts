@@ -1,3 +1,4 @@
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -90,6 +91,6 @@ const section = (gui, instructions, spec) => {
 
 };
 
-export default <any> {
+export {
   section
 };

@@ -10,12 +10,12 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
-import DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
-import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
-import Sinks from 'ephox/alloy/test/Sinks';
-import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+import * as Sinks from 'ephox/alloy/test/Sinks';
+import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('TypeaheadTest', (success, failure) => {

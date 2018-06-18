@@ -2,7 +2,7 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';

@@ -11,6 +11,6 @@ const events = (sandboxConfig: SandboxingConfig, sandboxState: SandboxingState):
   ]);
 };
 
-export default <any> {
+export {
   events
 };
