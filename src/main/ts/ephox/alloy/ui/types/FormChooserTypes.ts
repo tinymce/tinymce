@@ -1,11 +1,8 @@
-
-import { Option } from '@ephox/katamari';
-
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, SimpleOrSketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
+import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+
 
 export interface FormChooserDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -28,6 +25,7 @@ export interface FormChooserSpec extends CompositeSketchSpec {
     selectedClass: string;
   };
 
+  // TYPIFY
   choices: Array<LooseSpec>;
 }
 

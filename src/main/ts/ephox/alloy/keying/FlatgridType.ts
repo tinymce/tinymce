@@ -73,7 +73,6 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-// TYPIFY state
 const getRules: () => KeyRules.KeyRule<FlatgridConfig, FlatgridState>[] = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),

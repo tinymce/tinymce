@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Cell, Fun, Merger } from '@ephox/katamari';
+import { Cell, Fun, Merger, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import ElementFromPoint from '../../alien/ElementFromPoint';
@@ -31,8 +31,7 @@ type TouchHoverState = (AlloyComponent) => void;
 
 const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail, components, spec, externals) => {
 
-  // FIX: Typify
-  const getMenu = (component: AlloyComponent): any => {
+  const getMenu = (component: AlloyComponent): Option<AlloyComponent> => {
     const sandbox = Coupling.getCoupled(component, 'sandbox');
     return Sandboxing.getState(sandbox);
   };

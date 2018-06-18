@@ -11,7 +11,6 @@ export type KeyHandlerApi<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent
 export type KeyRuleHandler<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
 
 export interface GeneralKeyingConfigSpec {
-  // TYPIFY
   focusManager?: FocusManager;
 }
 

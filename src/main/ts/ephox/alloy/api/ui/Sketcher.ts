@@ -8,9 +8,12 @@ import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { SingleSketchFactory, CompositeSketchFactory } from './UiSketcher';
 
-// TYPIFY: Not sure what goes in this yet.
-export interface SingleSketchSpec { };
-export interface SingleSketchDetail { };
+export interface SingleSketchSpec {
+  uid?: string;
+};
+export interface SingleSketchDetail {
+  uid: () => string;
+};
 
 export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
   name: () => string;

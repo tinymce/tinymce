@@ -1,8 +1,9 @@
-import { RawDomSchema, AlloySpec } from "../../api/component/SpecTypes";
-import { TogglingConfigSpec } from "../../behaviour/toggling/TogglingTypes";
-import { SketchBehaviours } from "../../api/component/SketchBehaviours";
-import { Option } from "@ephox/katamari";
-import { CompositeSketchDetail } from "ephox/alloy/api/ui/Sketcher";
+import { Option } from '@ephox/katamari';
+import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
+
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 
 export interface ItemDataTuple {
   value: string;
@@ -57,7 +58,7 @@ export interface NormalItemSpec {
 }
 
 export interface NormalItemDetail extends ItemDetail {
-  data: () => ItemDataTuple;
+  data: () => RawDomSchema;
   components: () => AlloySpec[];
   dom: () => RawDomSchema;
   // INVESTIGATE: () => this might not be right

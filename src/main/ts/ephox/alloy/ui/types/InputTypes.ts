@@ -3,7 +3,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SketchSpec, StructDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchSpec, SingleSketchDetail } from '../../api/ui/Sketcher';
 
 // The V is because this is shared with Typeahead.

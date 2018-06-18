@@ -1,12 +1,9 @@
-
-import { Option } from '@ephox/katamari';
-
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, OptionalDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch } from '../../api/ui/Sketcher';
+import { AlloySpec, OptionalDomSchema, RawDomSchema } from '../../api/component/SpecTypes';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { SingleSketch } from '../../api/ui/Sketcher';
+
 
 export interface ContainerDetail {
   uid: () => string;

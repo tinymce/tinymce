@@ -1,5 +1,5 @@
 import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Result } from '@ephox/katamari';
+import { Arr, Fun, Merger, Result, Option } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
 import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
@@ -19,8 +19,7 @@ export interface CustomDetail {
   events: () => AlloyEventRecord;
   apis: () => Record<string, Function>;
   eventOrder: () => Record<string, string[]>;
-  // TYPIFY
-  domModification: () => any;
+  domModification: () => Option<DomModification>;
   originalSpec: () => SimpleOrSketchSpec;
   'debug.sketcher': () => string;
 }

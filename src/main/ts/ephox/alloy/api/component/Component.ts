@@ -109,7 +109,6 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 
-  // TYPIFY: any -> some basic state information
   const readState = (behaviourName: string): Option<any> => {
     return bData[behaviourName]().map((b) => {
       return b.state.readState();

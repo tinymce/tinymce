@@ -1,21 +1,20 @@
-import { Option, Future, Result } from '@ephox/katamari';
+import { Future, Option, Result } from '@ephox/katamari';
+import { TieredData } from 'ephox/alloy/api/Main';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface DropdownDetail extends CompositeSketchDetail {
   uid: () => string;
-  // TYPIFY: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   dropdownBehaviours: () => SketchBehaviours;
   role: () => Option<string>;
   eventOrder: () => Record<string, string[]>
-  // TYPIFY: Types
-  fetch: () => (comp: AlloyComponent) => Future<LooseSpec>;
+  fetch: () => (comp: AlloyComponent) => Future<TieredData>;
   onOpen: () => (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -29,8 +28,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
-  // TYPIFY
-  fetch: (comp: AlloyComponent) => Future<LooseSpec>;
+  fetch: (comp: AlloyComponent) => Future<TieredData>;
   onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;

@@ -3,7 +3,7 @@ import { Option, Result, Future } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec, StructDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
