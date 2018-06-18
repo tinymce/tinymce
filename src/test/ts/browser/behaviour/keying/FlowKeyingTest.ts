@@ -11,9 +11,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
-
-
-
   GuiSetup.setup((store, doc, body) => {
     const item = (classes, name) => {
       return Container.sketch({

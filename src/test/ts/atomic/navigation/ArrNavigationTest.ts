@@ -75,7 +75,7 @@ UnitTest.test('ArrNavigationTest', () => {
     arbUniqueNumTestCase,
     (testCase) => {
       const initial = testCase.index;
-      const before = ArrNavigation.cyclePrev(testCase.values, initial, Fun.constant(true)).getOrDie(
+      const before = ArrNavigation.cyclePrev<number>(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
       );
       // Note, the index is the same as the value, so we can do this.
@@ -92,7 +92,7 @@ UnitTest.test('ArrNavigationTest', () => {
     arbUniqueNumTestCase,
     (testCase) => {
       const initial = testCase.index;
-      const after = ArrNavigation.cycleNext(testCase.values, initial, Fun.constant(true)).getOrDie(
+      const after = ArrNavigation.cycleNext<number>(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
       // Note, the index is the same as the value, so we can do this.

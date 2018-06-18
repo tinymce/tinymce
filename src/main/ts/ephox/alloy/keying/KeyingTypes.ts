@@ -4,15 +4,18 @@ import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as KeyMatch from '../navigation/KeyMatch';
 import { Option } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { NativeSimulatedEvent, SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
-const doDefaultExecute = (component, simulatedEvent, focused) => {
+const doDefaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, focused: SugarElement): Option<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
   AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
   return Option.some(true);
 };
 
-const defaultExecute = (component, simulatedEvent, focused) => {
+const defaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, focused: SugarElement): Option<boolean> => {
   return EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE())(simulatedEvent.event()) ? Option.none() : doDefaultExecute(component, simulatedEvent, focused);
 };
 

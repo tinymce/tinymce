@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -12,6 +12,13 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { FlatgridConfig, FlatgridState, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { ElementMover } from '../navigation/DomMovement';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent, SugarElement } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -21,25 +28,25 @@ const schema = [
   Fields.initSize()
 ];
 
-const focusIn = (component, gridConfig, gridState) => {
-  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first) => {
+const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, gridState: FlatgridState): void => {
+  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first: SugarElement) => {
     gridConfig.focusManager().set(component, first);
   });
 };
 
-const findCurrent = (component, gridConfig) => {
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<SugarElement> => {
   return gridConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, gridConfig.selector());
   });
 };
 
-const execute = (component, simulatedEvent, gridConfig, gridState) => {
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, gridState: FlatgridState): Option<boolean> => {
   return findCurrent(component, gridConfig).bind((focused) => {
     return gridConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const doMove = (cycle) => {
+const doMove = (cycle): ElementMover<FlatgridConfig, FlatgridState> => {
   return (element, focused, gridConfig, gridState) => {
     return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind((identified) => {
       return cycle(
@@ -52,11 +59,11 @@ const doMove = (cycle) => {
   };
 };
 
-const handleTab = (component, simulatedEvent, gridConfig, gridState) => {
+const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.captureTab() ? Option.some(true) : Option.none();
 };
 
-const doEscape = (component, simulatedEvent, gridConfig, gridState) => {
+const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.onEscape()(component, simulatedEvent);
 };
 
@@ -66,8 +73,9 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-const getRules = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
+// TYPIFY state
+const getRules: () => KeyRules.KeyRule<FlatgridConfig, FlatgridState>[] = Fun.constant([
+  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
   KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
@@ -82,4 +90,4 @@ const getEvents = Fun.constant({ });
 
 const getApis = {};
 
-export default <any> KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));

@@ -2,21 +2,26 @@ import { SugarElement } from "ephox/alloy/alien/TypeDefinitions";
 import { Option } from "@ephox/katamari";
 import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
 import { SimulatedEvent, NativeSimulatedEvent } from "ephox/alloy/events/SimulatedEvent";
+import { FocusManager } from "ephox/alloy/api/focus/FocusManagers";
+import { BehaviourState } from "ephox/alloy/api/Main";
+import { Stateless } from "ephox/alloy/behaviour/common/BehaviourState";
 
-export type MogelHandler = (comp: AlloyComponent, se: NativeSimulatedEvent) => Option<boolean>;
+export type KeyHandlerApi<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
+
+export type KeyRuleHandler<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
 
 export interface GeneralKeyingConfigSpec {
   // TYPIFY
-  focusManager?: any;
+  focusManager?: FocusManager;
 }
 
 export interface GeneralKeyingConfig {
-  focusManager: () => any;
+  focusManager: () => FocusManager;
 }
 
-export interface TabbingConfigSpec extends GeneralKeyingConfigSpec {
-  onEscape?: MogelHandler;
-  onEnter?: MogelHandler;
+export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyingConfigSpec {
+  onEscape?: KeyHandlerApi<C,Stateless>;
+  onEnter?: KeyHandlerApi<C,Stateless>;
   selector?: string;
   firstTabstop?: number;
   useTabstopAt?: (elem: SugarElement) => boolean;
@@ -24,23 +29,24 @@ export interface TabbingConfigSpec extends GeneralKeyingConfigSpec {
 }
 
 export interface TabbingConfig extends GeneralKeyingConfig {
-  onEscape: () => Option<MogelHandler>;
-  onEnter: () => Option<MogelHandler>;
+  onEscape: <C extends TabbingConfig>() => Option<KeyHandlerApi<C,Stateless>>;
+  onEnter: <C extends TabbingConfig>() => Option<KeyHandlerApi<C,Stateless>>;
   selector: () => string;
   firstTabstop: () => number;
   useTabstopAt: () => (elem: SugarElement) => boolean;
   visibilitySelector: () => Option<string>;
+  cyclic: () => boolean;
 }
 
-export interface AcylicConfigSpec extends TabbingConfigSpec {
+export interface AcylicConfigSpec extends TabbingConfigSpec<AcyclicConfig> {
   mode: 'acyclic'
 }
 
-export interface CyclicConfigSpec extends TabbingConfigSpec {
+export interface CyclicConfigSpec extends TabbingConfigSpec<CyclicConfig> {
   mode: 'cyclic'
 }
 
-export interface AyclicConfig extends TabbingConfig {
+export interface AcyclicConfig extends TabbingConfig {
   cyclic: () => false;
 }
 
@@ -51,17 +57,18 @@ export interface CyclicConfig extends TabbingConfig {
 // Escaping Type
 export interface EscapingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'escaping';
-  onEscape: MogelHandler
+  onEscape: KeyHandlerApi<EscapingConfig, Stateless>
 }
 
 export interface EscapingConfig extends GeneralKeyingConfig {
-  onEscape: () => MogelHandler;
+  onEscape: () => KeyHandlerApi<EscapingConfig, Stateless>;
 }
 
 // Execution Type
 export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'execution';
-  execute?:MogelHandler;
+  // NOTE: inconsistent.
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
   useSpace?: boolean;
   useEnter?: boolean;
   useControlEnter?: boolean;
@@ -69,7 +76,7 @@ export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
 }
 
 export interface ExecutingConfig extends GeneralKeyingConfig {
-  execute: () => MogelHandler;
+  execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
   useSpace: () => boolean;
   useEnter: () => boolean;
   useControlEnter: () => boolean;
@@ -80,8 +87,8 @@ export interface ExecutingConfig extends GeneralKeyingConfig {
 export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flatgrid';
   selector: string;
-  execute?: MogelHandler;
-  onEscape?: MogelHandler;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
+  onEscape?: KeyHandlerApi<FlatgridConfig, FlatgridState>;
   captureTab?: boolean;
   initSize: {
     numColumns: number;
@@ -91,13 +98,19 @@ export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
 
 export interface FlatgridConfig extends GeneralKeyingConfig {
   selector: () => string;
-  execute: () => MogelHandler;
-  onEscape: () => Option<MogelHandler>;
+  execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
+  onEscape: () => KeyHandlerApi<FlatgridConfig, FlatgridState>;
   captureTab: () => boolean;
   initSize: () => {
     numColumns: () => number;
     numRows: () => number;
   }
+}
+
+export interface FlatgridState extends BehaviourState {
+  getNumRows: () => Option<number>;
+  getNumColumns: () => Option<number>;
+  setGridSize: (numRows: number, numColumns: number) => void;
 }
 
 // Flow type
@@ -127,7 +140,7 @@ export interface MatrixConfigSpec extends GeneralKeyingConfigSpec {
   };
   cycles?: boolean;
   previousSelector?: (comp: AlloyComponent) => Option<SugarElement>;
-  execute?: MogelHandler;
+  execute?: KeyHandlerApi<MatrixConfig, Stateless>;
 }
 
 export interface MatrixConfig extends GeneralKeyingConfig {
@@ -137,48 +150,48 @@ export interface MatrixConfig extends GeneralKeyingConfig {
   };
   cycles: () => boolean;
   previousSelector: () => (comp: AlloyComponent) => Option<SugarElement>;
-  execute: () => MogelHandler;
+  execute: () => KeyHandlerApi<MatrixConfig, Stateless>;
 }
 
 // Menu type
 export interface MenuConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'menu';
   selector: string;
-  execute?: MogelHandler;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
   moveOnTab?: boolean;
 }
 
 export interface MenuConfig extends GeneralKeyingConfig {
   selector: () => string;
-  execute: () => MogelHandler;
+  execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
   moveOnTab: () => boolean;
 }
 
 export interface SpecialConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'special';
-  onSpace?: MogelHandler;
-  onEnter?: MogelHandler;
-  onShiftEnter?: MogelHandler;
-  onLeft?: MogelHandler;
-  onRight?: MogelHandler;
-  onTab?: MogelHandler;
-  onShiftTab?: MogelHandler;
-  onUp?: MogelHandler;
-  onDown?: MogelHandler;
-  onEscape?: MogelHandler;
+  onSpace?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onShiftEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onLeft?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onRight?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onTab?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onShiftTab?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onUp?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onDown?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onEscape?: KeyHandlerApi<SpecialConfig, Stateless>;
   focusIn?: (comp: AlloyComponent, info: SpecialConfig) => void;
 }
 
 export interface SpecialConfig extends GeneralKeyingConfig {
-  onSpace?: () => Option<MogelHandler>;
-  onEnter?: () => Option<MogelHandler>;
-  onShiftEnter?: () => Option<MogelHandler>;
-  onLeft?: () => Option<MogelHandler>;
-  onRight?: () => Option<MogelHandler>;
-  onTab?: () => Option<MogelHandler>;
-  onShiftTab?: () => Option<MogelHandler>;
-  onUp?: () => Option<MogelHandler>;
-  onDown?: () => Option<MogelHandler>;
-  onEscape?: () => Option<MogelHandler>;
-  focusIn?: () => Option<(comp: AlloyComponent, info: SpecialConfig) => void>;
+  onSpace?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onEnter?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onShiftEnter?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onLeft?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onRight?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onTab?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onShiftTab?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onUp?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onDown?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  onEscape?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  focusIn?: () => Option<(comp: AlloyComponent, info: SpecialConfig) => Option<boolean>>;
 }

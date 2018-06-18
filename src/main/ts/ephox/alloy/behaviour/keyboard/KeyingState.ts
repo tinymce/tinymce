@@ -1,8 +1,9 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
 import { BehaviourState, nuState } from '../common/BehaviourState';
+import { FlatgridState } from 'ephox/alloy/keying/KeyingModeTypes';
 
-const flatgrid = (spec) => {
+const flatgrid = (spec): FlatgridState => {
   const dimensions = Cell(Option.none());
 
   const setGridSize = (numRows, numColumns) => {
@@ -31,7 +32,7 @@ const flatgrid = (spec) => {
     setGridSize,
     getNumRows,
     getNumColumns
-  });
+  }) as FlatgridState;
 };
 
 const init = (spec) => {

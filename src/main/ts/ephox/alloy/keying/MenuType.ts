@@ -1,15 +1,21 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
-import { NoState } from '../behaviour/common/BehaviourState';
+import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { KeyRuleHandler, MenuConfig } from 'ephox/alloy/keying/KeyingModeTypes';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -17,32 +23,32 @@ const schema = [
   FieldSchema.defaulted('moveOnTab', false)
 ];
 
-const execute = (component, simulatedEvent, menuConfig) => {
+const execute: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig) => {
   return menuConfig.focusManager().get(component).bind((focused) => {
     return menuConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const focusIn = (component, menuConfig) => {
+const focusIn = (component: AlloyComponent, menuConfig: MenuConfig): void => {
   // Maybe keep selection if it was there before
   SelectorFind.descendant(component.element(), menuConfig.selector()).each((first) => {
     menuConfig.focusManager().set(component, first);
   });
 };
 
-const moveUp = (element, focused, info) => {
+const moveUp: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-const moveDown = (element, focused, info) => {
+const moveDown: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focused, info) => {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 
-const fireShiftTab = (component, simulatedEvent, menuConfig) => {
+const fireShiftTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig) => {
   return menuConfig.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig) : Option.none();
 };
 
-const fireTab = (component, simulatedEvent, menuConfig) => {
+const fireTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig) => {
   return menuConfig.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig) : Option.none();
 };
 
@@ -59,4 +65,4 @@ const getEvents = Fun.constant({ });
 
 const getApis = Fun.constant({ });
 
-export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

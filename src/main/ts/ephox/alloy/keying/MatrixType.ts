@@ -1,9 +1,9 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
-import { NoState } from '../behaviour/common/BehaviourState';
+import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
@@ -11,8 +11,15 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { MatrixConfig, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-const schema = [
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
+
+const schema: FieldProcessorAdt[] = [
   FieldSchema.strictObjOf('selectors', [
     FieldSchema.strict('row'),
     FieldSchema.strict('cell')
@@ -24,7 +31,7 @@ const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
-const focusIn = (component, matrixConfig) => {
+const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig): void => {
   const focused = matrixConfig.previousSelector()(component).orThunk(() => {
     const selectors = matrixConfig.selectors();
     return SelectorFind.descendant(component.element(), selectors.cell());
@@ -35,19 +42,19 @@ const focusIn = (component, matrixConfig) => {
   });
 };
 
-const execute = (component, simulatedEvent, matrixConfig) => {
+const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => {
   return Focus.search(component.element()).bind((focused) => {
     return matrixConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const toMatrix = (rows, matrixConfig) => {
+const toMatrix = (rows: SugarElement[], matrixConfig: MatrixConfig): Array<Array<SugarElement>> => {
   return Arr.map(rows, (row) => {
     return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
   });
 };
 
-const doMove = (ifCycle, ifMove) => {
+const doMove = (ifCycle, ifMove): DomMovement.ElementMover<MatrixConfig, Stateless> => {
   return (element, focused, matrixConfig) => {
     const move = matrixConfig.cycles() ? ifCycle : ifMove;
     return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind((inRow) => {
@@ -73,7 +80,7 @@ const moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight
 const moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
 const moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
-const getRules = Fun.constant([
+const getRules: () => KeyRules.KeyRule<MatrixConfig, Stateless>[] = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
@@ -85,4 +92,4 @@ const getEvents = Fun.constant({ });
 
 const getApis = Fun.constant({ });
 
-export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

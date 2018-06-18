@@ -1,12 +1,17 @@
-import { FieldSchema } from '@ephox/boulder';
+import { AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import Keys from '../alien/Keys';
-import { NoState } from '../behaviour/common/BehaviourState';
+import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SpecialConfig } from './KeyingModeTypes';
+import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
 
 const schema = [
   Fields.onKeyboardHandler('onSpace'),
@@ -22,7 +27,7 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getRules = (component, simulatedEvent, specialInfo) => {
+const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): KeyRules.KeyRule<SpecialConfig, Stateless>[] => {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
     KeyRules.rule(
@@ -47,13 +52,13 @@ const getRules = (component, simulatedEvent, specialInfo) => {
   ];
 };
 
-const focusIn = (component, specialInfo) => {
+const focusIn = (component: AlloyComponent, specialInfo: SpecialConfig): Option<boolean>  => {
   return specialInfo.focusIn().bind((f) => {
     return f(component, specialInfo);
   });
 };
 
-const getEvents = Fun.constant({ });
-const getApis = Fun.constant({ });
+const getEvents = () => ({ });
+const getApis = () => ({ });
 
-export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

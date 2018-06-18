@@ -5,17 +5,12 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface FocusDom {
-  get: (component: AlloyComponent) => any;
+export interface FocusManager {
+  get: (component: AlloyComponent) => Option<SugarElement>;
   set: (component: AlloyComponent, focusee: SugarElement) => void;
 }
 
-export interface FocusHighlights {
-  get: (component: AlloyComponent) => Option<SugarElement>;
-  set: (component: AlloyComponent, element: SugarElement) => void;
-}
-
-const dom = (): FocusDom => {
+const dom = (): FocusManager => {
   const get = (component) => {
     return Focus.search(component.element());
   };
@@ -30,7 +25,7 @@ const dom = (): FocusDom => {
   };
 };
 
-const highlights = (): FocusHighlights => {
+const highlights = (): FocusManager => {
   const get = (component) => {
     return Highlighting.getHighlighted(component).map((item) => {
       return item.element();

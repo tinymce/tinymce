@@ -24,23 +24,6 @@ export type KeyingConfigSpec =
   AcylicConfigSpec | CyclicConfigSpec | FlowConfigSpec | FlatgridConfigSpec |
   MatrixConfigSpec | ExecutingConfigSpec | MenuConfigSpec | SpecialConfigSpec;
 
-export interface KeyingInfo2 {
-  focusIn: () => any;
-  focusManager: () => any;
-  handler: () => any;
-  onDown: () => any;
-  onEnter: () => any;
-  onEscape: () => any;
-  onLeft: () => any;
-  onRight: () => any;
-  onShiftEnter: () => any;
-  onShiftTab: () => any;
-  onSpace: () => any;
-  onTab: () => any;
-  onUp: () => any;
-  state: () => any;
-}
-
 export interface KeyingFocusManager {
   set: (component: AlloyComponent, focusee: any) => void;
   get: (component: AlloyComponent) => AlloyComponent;
