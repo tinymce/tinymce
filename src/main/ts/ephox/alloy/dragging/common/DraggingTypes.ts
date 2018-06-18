@@ -15,12 +15,6 @@ export type DraggingMode = 'touch' | 'mouse';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
-export interface SnapConfigSpec {
-  sensor: SensorCoords;
-  range: (x, y) => PositionCoordinates;
-  output: OutputCoords;
-}
-
 export interface SnapConfig {
   sensor: () => CoordAdt;
   range: () => SugarPosition;
