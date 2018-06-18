@@ -1,12 +1,12 @@
 import { Option, Result } from '@ephox/katamari';
 
+import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SimpleOrSketchSpec, StructDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: () => string;

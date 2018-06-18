@@ -1,8 +1,9 @@
+import { Option } from '@ephox/katamari';
+
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { Option } from '@ephox/katamari';
 
 export interface HtmlSelectDetail extends SingleSketchDetail {
   uid: () => string;

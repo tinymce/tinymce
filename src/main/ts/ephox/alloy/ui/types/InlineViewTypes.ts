@@ -1,11 +1,11 @@
 import { Option, Result } from '@ephox/katamari';
 
+import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, StructDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchSpec, SingleSketchDetail } from '../../api/ui/Sketcher';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: () => string;

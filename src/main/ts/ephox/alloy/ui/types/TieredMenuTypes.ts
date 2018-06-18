@@ -3,7 +3,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, StructDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { ItemDataTuple } from './ItemTypes';
 import { MenuSpec } from './MenuTypes';

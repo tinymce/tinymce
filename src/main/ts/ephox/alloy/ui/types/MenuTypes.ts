@@ -1,12 +1,11 @@
-import { Option } from '@ephox/katamari';
+import { MenuConfigSpec } from 'ephox/alloy/keying/KeyingModeTypes';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, StructDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { MenuConfigSpec } from 'ephox/alloy/keying/KeyingModeTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {

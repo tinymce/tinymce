@@ -3,7 +3,7 @@ import { Cell } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SimpleOrSketchSpec, SketchSpec, StructDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
 

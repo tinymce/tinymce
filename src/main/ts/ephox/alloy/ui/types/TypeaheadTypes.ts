@@ -6,7 +6,7 @@ import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, LooseSpec, RawDomSchema, StructDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TypeaheadDetail extends DropdownDetail, InputDetail<TypeaheadData> {
