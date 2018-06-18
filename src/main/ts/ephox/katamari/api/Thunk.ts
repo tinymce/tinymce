@@ -1,15 +1,15 @@
-var cached = function (f) {
+var cached = function (f: Function) {
   var called = false;
   var r;
-  return function() {
+  return function(...args) {
     if (!called) {
       called = true;
-      r = f.apply(null, arguments);
+      r = f.apply(null, args);
     }
     return r;
   };
 };
 
-export default <any> {
+export default {
   cached: cached
 };

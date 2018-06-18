@@ -133,7 +133,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     var expected = 'The value 10 in the required fields was not a string.';
     try {
-      var bg = MixedBag([ 10 ], [  ]);
+      var bg = MixedBag(<any>[ 10 ], [  ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -144,7 +144,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     var expected = 'The value 5 in the optional fields was not a string.';
     try {
-      var bg = MixedBag([ ], [ 5 ]);
+      var bg = MixedBag([ ], <any>[ 5 ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -155,7 +155,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     var expected = 'The required fields must be an array. Was: apple.';
     try {
-      var bg = MixedBag('apple', [ 5 ]);
+      var bg = MixedBag(<any>'apple', <any>[ 5 ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -166,7 +166,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     var expected = 'The optional fields must be an array. Was: beetroot.';
     try {
-      var bg = MixedBag([], 'beetroot');
+      var bg = MixedBag([], <any>'beetroot');
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {

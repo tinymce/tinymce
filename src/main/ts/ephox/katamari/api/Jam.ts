@@ -1,9 +1,9 @@
 /** intersperseThunk :: ([a], (_ -> a)) -> [a] */
-var intersperseThunk = function (array, delimiterThunk) {
+var intersperseThunk = function <T>(array: T[], delimiterThunk: () => T) {
   if (array === undefined) throw new Error('Cannot intersperse undefined');
   if (array.length <= 1) return array;
 
-  var r = [];
+  var r: T[] = [];
 
   r.push(array[0]);
   for (var i = 1; i < array.length; i ++) {
@@ -14,7 +14,7 @@ var intersperseThunk = function (array, delimiterThunk) {
 };
 
 /** intersperse :: ([a], a) -> [a] */
-var intersperse = function (array, delimiter) {
+var intersperse = function <T> (array: T[], delimiter: T) {
   var thunk = function () {
     return delimiter;
   };
@@ -22,7 +22,7 @@ var intersperse = function (array, delimiter) {
   return intersperseThunk(array, thunk);
 };
 
-export default <any> {
+export default {
   intersperse: intersperse,
   intersperseThunk: intersperseThunk
 };

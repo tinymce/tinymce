@@ -1,7 +1,7 @@
 import Arr from './Arr';
 import Obj from './Obj';
 
-var stringArray = function(a) {
+var stringArray = function(a: string[]): string[] {
   var all = {};
   Arr.each(a, function(key) {
     all[key] = {};
@@ -9,6 +9,6 @@ var stringArray = function(a) {
   return Obj.keys(all);
 };
 
-export default <any> {
+export default {
   stringArray: stringArray
 };

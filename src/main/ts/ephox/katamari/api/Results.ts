@@ -1,4 +1,4 @@
-import Adt from './Adt';
+import { Adt } from './Adt';
 import Arr from './Arr';
 import { Result } from './Result';
 

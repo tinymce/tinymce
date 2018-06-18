@@ -3,8 +3,8 @@
  *  If values is longer than keys, extra values are ignored.
  *  zipToObject :: ([key], [value]) -> {key1: value1, key2: value2 ...}
  */
-var zipToObject = function(keys, values) {
-  var r = {};
+var zipToObject = function <K extends string | number, V>(keys: K[], values: V[]) {
+  var r: Record<string | number, V | undefined> = {};
   for (var i = 0; i < keys.length; i++) {
     r[keys[i]] = values[i];
   }
@@ -12,15 +12,15 @@ var zipToObject = function(keys, values) {
 };
 
 /** zipToTuples :: ([key], [value]) -> [{k: key1, v: value1}, {k: key2, v: value2} ...] */
-var zipToTuples = function(keys, values) {      
-  var r = [];
+var zipToTuples = function <K, V>(keys: K[], values: V[]) {
+  var r: { k: K, v: V | undefined }[] = [];
   for (var i = 0; i < keys.length; i++) {
-    r.push({k: keys[i], v: values[i]});
+    r.push({ k: keys[i], v: values[i] });
   }
   return r;
 };
 
-export default <any> {
+export default {
   zipToObject: zipToObject,
   zipToTuples: zipToTuples
 };

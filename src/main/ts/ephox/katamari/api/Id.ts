@@ -11,7 +11,7 @@
  */
 var unique = 0;
 
-var generate = function (prefix) {
+var generate = function (prefix: string) {
   var date   = new Date();
   var time   = date.getTime();
   var random = Math.floor(Math.random() * 1000000000);
@@ -21,6 +21,6 @@ var generate = function (prefix) {
   return prefix + '_' + random + unique + String(time);
 };
 
-export default <any> {
+export default {
   generate: generate
 };

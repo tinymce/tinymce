@@ -1,4 +1,4 @@
-import Adt from 'ephox/katamari/api/Adt';
+import { Adt } from 'ephox/katamari/api/Adt';
 import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
 import Obj from 'ephox/katamari/api/Obj';

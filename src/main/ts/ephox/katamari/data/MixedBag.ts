@@ -6,7 +6,7 @@ import BagUtils from '../util/BagUtils';
 
 
 
-export default <any> function (required, optional) {
+export default function (required: string[], optional: string[]) {
   var everything = required.concat(optional);
   if (everything.length === 0) throw new Error('You must specify at least one required or optional field.');
 
@@ -15,8 +15,8 @@ export default <any> function (required, optional) {
 
   BagUtils.checkDupes(everything);
 
-  return function (obj) {
-    var keys = Obj.keys(obj);
+  return function (obj: {}) {
+    var keys: string[] = Obj.keys(obj);
 
     // Ensure all required keys are present.
     var allReqd = Arr.forall(required, function (req) {
@@ -31,7 +31,7 @@ export default <any> function (required, optional) {
 
     if (unsupported.length > 0) BagUtils.unsuppMessage(unsupported);
 
-    var r = {};
+    var r: {[key: string]: () => any} = {};
     Arr.each(required, function (req) {
       r[req] = Fun.constant(obj[req]);
     });

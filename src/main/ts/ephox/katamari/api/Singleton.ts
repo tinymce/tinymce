@@ -1,8 +1,8 @@
 import { Option } from './Option';
 import { Cell } from './Cell';
 
-var revocable = function (doRevoke) {
-  var subject = Cell(Option.none());
+var revocable = function <T> (doRevoke: (data: T) => void) {
+  var subject = Cell(Option.none<T>());
 
   var revoke = function () {
     subject.get().each(doRevoke);
@@ -13,7 +13,7 @@ var revocable = function (doRevoke) {
     subject.set(Option.none());
   };
 
-  var set = function (s) {
+  var set = function (s: T) {
     revoke();
     subject.set(Option.some(s));
   };
@@ -29,20 +29,20 @@ var revocable = function (doRevoke) {
   };
 };
 
-var destroyable = function () {
-  return revocable(function (s) {
+var destroyable = function <T extends { destroy: () => void; }> () {
+  return revocable<T>(function (s) {
     s.destroy();
   });
 };
 
-var unbindable = function () {
-  return revocable(function (s) {
+var unbindable = function <T extends { unbind: () => void; }> () {
+  return revocable<T>(function (s) {
     s.unbind();
   });
 };
 
-var api = function () {
-  var subject = Cell(Option.none());
+var api = function <T extends { destroy: () => void; }> () {
+  var subject = Cell(Option.none<T>());
 
   var revoke = function () {
     subject.get().each(function (s) {
@@ -55,12 +55,12 @@ var api = function () {
     subject.set(Option.none());
   };
 
-  var set = function (s) {
+  var set = function (s: T) {
     revoke();
     subject.set(Option.some(s));
   };
 
-  var run = function (f) {
+  var run = function (f: (data: T) => void) {
     subject.get().each(f);
   };
 
@@ -76,18 +76,18 @@ var api = function () {
   };
 };
 
-var value = function () {
-  var subject = Cell(Option.none());
+var value = function <T> () {
+  var subject = Cell(Option.none<T>());
 
   var clear = function () {
     subject.set(Option.none());
   };
 
-  var set = function (s) {
+  var set = function (s: T) {
     subject.set(Option.some(s));
   };
 
-  var on = function (f) {
+  var on = function (f: (data: T) => void) {
     subject.get().each(f);
   };
 
@@ -103,7 +103,7 @@ var value = function () {
   };
 };
 
-export default <any> {
+export default {
   destroyable: destroyable,
   unbindable: unbindable,
   api: api,

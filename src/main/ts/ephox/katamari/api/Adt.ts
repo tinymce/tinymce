@@ -2,11 +2,17 @@ import Arr from './Arr';
 import Obj from './Obj';
 import Type from './Type';
 
+export interface Adt {
+  fold: <T> (...caseHandlers: ((...data) => T)[]) => T;
+  match: <T> (branches: { [branch: string]: (...data) => T; }) => T;
+  log: (label: string) => void;
+};
+
 /*
  * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
  * For syntax and use, look at the test code.
  */
-var generate = function (cases) {
+var generate = function (cases: { [key: string]: string[] }[]): any {
   // validation
   if (!Type.isArray(cases)) {
     throw new Error('cases must be an array');
@@ -15,12 +21,12 @@ var generate = function (cases) {
     throw new Error('there must be at least one case');
   }
 
-  var constructors = [ ];
+  var constructors: string[] = [];
 
   // adt is mutated to add the individual cases
-  var adt = {};
+  var adt: Record<string,(...data: any[]) => Adt> = {};
   Arr.each(cases, function (acase, count) {
-    var keys = Obj.keys(acase);
+    var keys: string[] = Obj.keys(acase);
 
     // validation
     if (keys.length !== 1) {
@@ -44,7 +50,7 @@ var generate = function (cases) {
     //
     // constructor for key
     //
-    adt[key] = function () {
+    adt[key] = function (): Adt {
       var argLength = arguments.length;
 
       // validation
@@ -57,8 +63,8 @@ var generate = function (cases) {
       for (var i = 0; i < args.length; i++) args[i] = arguments[i];
 
 
-      var match = function (branches) {
-        var branchKeys = Obj.keys(branches);
+      var match = function (branches: { [branch: string]: Function }) {
+        var branchKeys: string[] = Obj.keys(branches);
         if (constructors.length !== branchKeys.length) {
           throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
         }
@@ -101,6 +107,6 @@ var generate = function (cases) {
   return adt;
 };
 
-export default <any> {
+export const Adt = {
   generate: generate
 };

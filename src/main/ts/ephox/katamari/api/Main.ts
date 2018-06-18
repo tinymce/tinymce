@@ -1,4 +1,4 @@
-import Adt from './Adt';
+import { Adt } from './Adt';
 import Arr from './Arr';
 import { Cell } from './Cell';
 import Contracts from './Contracts';
@@ -20,7 +20,7 @@ import Resolve from './Resolve';
 import { Result } from './Result';
 import Results from './Results';
 import Singleton from './Singleton';
-import StringMatch from './StringMatch';
+import { StringMatch } from './StringMatch';
 import Strings from './Strings';
 import Struct from './Struct';
 import Throttler from './Throttler';

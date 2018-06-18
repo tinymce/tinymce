@@ -2,6 +2,6 @@ var zeroWidth = function () {
   return '\uFEFF';
 };
 
-export default <any> {
+export default {
   zeroWidth: zeroWidth
 };

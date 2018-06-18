@@ -4,8 +4,15 @@ import Obj from './Obj';
 import Type from './Type';
 import BagUtils from '../util/BagUtils';
 
+export interface ContractCondition {
+  label: string;
+  validate: (value: any, key: string) => boolean;
+};
+
+type HandleFn = (required: string[], keys: string[]) => void;
+
 // Ensure that the object has all required fields. They must be functions.
-var base = function (handleUnsupported, required) {
+var base = function (handleUnsupported: HandleFn, required: string[]) {
   return baseWith(handleUnsupported, required, {
     validate: Type.isFunction,
     label: 'function'
@@ -13,15 +20,15 @@ var base = function (handleUnsupported, required) {
 };
 
 // Ensure that the object has all required fields. They must satisy predicates.
-var baseWith = function (handleUnsupported, required, pred) {
+var baseWith = function (handleUnsupported: HandleFn, required: string[], pred: ContractCondition) {
   if (required.length === 0) throw new Error('You must specify at least one required field.');
 
   BagUtils.validateStrArr('required', required);
 
   BagUtils.checkDupes(required);
 
-  return function (obj) {
-    var keys = Obj.keys(obj);
+  return function <T> (obj: T) {
+    var keys: string[] = Obj.keys(obj);
 
     // Ensure all required keys are present.
     var allReqd = Arr.forall(required, function (req) {
@@ -52,8 +59,8 @@ var handleExact = function (required, keys) {
 
 var allowExtra = Fun.noop;
 
-export default <any> {
-  exactly: Fun.curry(base, handleExact),
-  ensure: Fun.curry(base, allowExtra),
-  ensureWith: Fun.curry(baseWith, allowExtra)
+export default {
+  exactly: (required: string[]) => base(handleExact, required),
+  ensure: (required: string[]) => base(allowExtra, required),
+  ensureWith: (required: string[], condition: ContractCondition) => baseWith(allowExtra, required, condition)
 };

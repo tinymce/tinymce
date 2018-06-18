@@ -1,6 +1,5 @@
-var bounce = function(f) {
-  return function() {
-    var args = Array.prototype.slice.call(arguments);
+var bounce = function(f: Function) {
+  return function(...args) {
     var me = this;
     setTimeout(function() {
       f.apply(me, args);
@@ -8,6 +7,6 @@ var bounce = function(f) {
   };
 };
 
-export default <any> {
+export default {
   bounce: bounce
 };
