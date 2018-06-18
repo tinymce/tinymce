@@ -2,13 +2,23 @@ import { Adt, Arr, Fun } from '@ephox/katamari';
 
 import * as Direction from '../layout/Direction';
 import * as Reposition from './Reposition';
+import { RepositionDecision } from './Reposition';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/Layout';
+import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { SpotInfo } from 'ephox/alloy/positioning/view/SpotInfo';
+import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+
+
+export interface BounderAttemptAdt extends AdtInterface {
+}
 
 const adt = Adt.generate([
   { fit:   [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-const attempt = (candidate, width, height, bounds) => {
+const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bounds): BounderAttemptAdt  => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleLeft = candidate.bubble().left();
@@ -95,11 +105,11 @@ const attempt = (candidate, width, height, bounds) => {
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = (candidates, anchorBox, elementBox, bubbles, bounds) => {
+const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Bounds): RepositionDecision => {
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
-  const attemptBestFit = (layout, reposition, deltaW, deltaH) => {
-    const next = layout(anchorBox, elementBox, bubbles);
+  const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, deltaW: number, deltaH: number) => {
+    const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     // unwrapping fit only to rewrap seems... silly
@@ -107,16 +117,18 @@ const attempts = (candidates, anchorBox, elementBox, bubbles, bounds) => {
       const improved = newDeltaW > deltaW || newDeltaH > deltaH;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
-      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)
-                      : adt.nofit(reposition, deltaW, deltaH);
+      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH) as BounderAttemptAdt
+                      : adt.nofit(reposition, deltaW, deltaH) as BounderAttemptAdt;
     });
   };
 
-  const abc = Arr.foldl(candidates, (b, a) => {
-    const bestNext = Fun.curry(attemptBestFit, a);
-    // unwrapping fit only to rewrap seems... silly
-    return b.fold(adt.fit, bestNext);
-  },
+  const abc = Arr.foldl(
+    candidates,
+    (b, a) => {
+      const bestNext = Fun.curry(attemptBestFit, a);
+      // unwrapping fit only to rewrap seems... silly
+      return b.fold(adt.fit, bestNext);
+    },
     // fold base case: No candidates, it's never going to be correct, so do whatever
     adt.nofit(Reposition.decision({
       x: anchorBox.x(),
@@ -133,7 +145,7 @@ const attempts = (candidates, anchorBox, elementBox, bubbles, bounds) => {
 
   // unwrapping 'reposition' from the adt, for both fit & nofit the first arg is the one we need,
   // so we can cheat and use Fun.identity
-  return abc.fold(Fun.identity, Fun.identity);
+  return abc.fold(Fun.identity, Fun.identity) as RepositionDecision;
 };
 
 export {

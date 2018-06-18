@@ -42,6 +42,13 @@ export interface SugarPosition {
   translate: (x: number, y: number) => SugarPosition;
 }
 
+export interface SugarRange {
+  start: () => SugarElement;
+  soffset: () => number;
+  finish: () => SugarElement;
+  foffset: () => number;
+}
+
 // Fun.constant, Rather than => T, we will have explicit return types
 export type StringConstant = () => string;
 

@@ -1,13 +1,14 @@
 import { Fun } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 // applies the max-height as determined by Bounder
-const setMaxHeight = (element, maxHeight) => {
+const setMaxHeight = (element: SugarElement, maxHeight: number): void => {
   Height.setMax(element, Math.floor(maxHeight));
 };
 
 // adds both max-height and overflow to constrain it
-const anchored = Fun.constant((element, available) => {
+const anchored = Fun.constant((element: SugarElement, available: number): void => {
   setMaxHeight(element, available);
   Css.setAll(element, {
     'overflow-x': 'hidden',
@@ -21,7 +22,7 @@ const anchored = Fun.constant((element, available) => {
  *
  * If the element expands below the screen height it will be cut off, but we were already doing that.
  */
-const expandable = Fun.constant((element, available) => {
+const expandable = Fun.constant((element: SugarElement, available: number): void => {
   setMaxHeight(element, available);
 });
 

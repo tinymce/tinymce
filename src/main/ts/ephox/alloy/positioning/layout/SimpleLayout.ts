@@ -5,16 +5,37 @@ import * as Boxes from './Boxes';
 import * as Layout from './Layout';
 import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';
+import { Anchor } from 'ephox/alloy/positioning/layout/Anchor';
+import { SugarElement } from 'ephox/alloy/api/Main';
+import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+import { AnchorLayout, AnchorBox } from './Layout';
+import { AnchorOverrides, MaxHeightFunction } from 'ephox/alloy/positioning/mode/Anchoring';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { OriginAdt } from './Origins';
 
-const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction'], []);
+export interface ReparteeOptionsSpec {
+  bounds?: Bounds;
+  origin?: OriginAdt;
+  preference?: AnchorLayout[];
+  maxHeightFunction?: MaxHeightFunction;
+}
+
+export interface ReparteeOptions {
+  bounds: () => Bounds;
+  origin: () => OriginAdt;
+  preference: () => AnchorLayout[];
+  maxHeightFunction: () => MaxHeightFunction;
+}
+
+const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction'], []) as (obj) => ReparteeOptions
 const defaultOr = (options, key, dephault) => {
   return options[key] === undefined ? dephault : options[key];
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen (position: fixed)
-const fixed = (anchor, element, bubble, layouts, overrideOptions) => {
+const fixed = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: AnchorLayout[], overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
-  const maxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
+  const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
   const anchorBox = anchor.anchorBox();
   const origin = anchor.origin();
@@ -29,7 +50,7 @@ const fixed = (anchor, element, bubble, layouts, overrideOptions) => {
   go(anchorBox, element, bubble, options);
 };
 
-const relative = (anchorBox, element, bubble, _options) => {
+const relative = (anchorBox: AnchorBox, element: SugarElement, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
   const defaults = (_opts) => {
     const opts = _opts !== undefined ? _opts : {};
     return reparteeOptions({
@@ -40,12 +61,12 @@ const relative = (anchorBox, element, bubble, _options) => {
     });
   };
 
-  const options = defaults(_options);
+  const options: ReparteeOptions = defaults(optionsSpec);
   go(anchorBox, element, bubble, options);
 };
 
 // This is the old public API. If we ever need full customisability again, this is how to expose it
-const go = (anchorBox, element, bubble, options) => {
+const go = (anchorBox: AnchorBox, element: SugarElement, bubble: Bubble, options: ReparteeOptions) => {
   const decision = Callouts.layout(anchorBox, element, bubble, options);
 
   Callouts.position(element, decision, options);

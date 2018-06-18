@@ -6,11 +6,15 @@ import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';
 import * as Fields from '../../data/Fields';
-import Bubble from '../layout/Bubble';
+import { nu as Bubble } from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import Anchoring from './Anchoring';
+import { SelectionAnchor, nu as NuAnchor, Anchoring } from './Anchoring';
 import * as ContainerOffsets from './ContainerOffsets';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
+import { SugarRange, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AnchorLayout } from '../layout/Layout';
 
 const point = Struct.immutable('element', 'offset');
 
@@ -19,7 +23,7 @@ const descendOnce = (element, offset) => {
   return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 };
 
-const getAnchorSelection = (win, anchorInfo) => {
+const getAnchorSelection = (win: Window, anchorInfo): Option<SugarRange> => {
   const getSelection = anchorInfo.getSelection().getOrThunk(() => {
     return () => {
       return WindowSelection.getExact(win);
@@ -33,8 +37,8 @@ const getAnchorSelection = (win, anchorInfo) => {
   });
 };
 
-const placement = (component, posInfo, anchorInfo, origin) => {
-  const win = Traverse.defaultView(anchorInfo.root()).dom();
+const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
+  const win: Window = Traverse.defaultView(anchorInfo.root()).dom();
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {
@@ -47,7 +51,7 @@ const placement = (component, posInfo, anchorInfo, origin) => {
         Remove.remove(x);
         return rect;
       });
-    });
+    }) as Option<{ left: () => number, top: () => number, width: () => number, height: () => number}>;
     return optRect.map((rawRect) => {
       // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
       const point = CssPosition.screen(
@@ -61,7 +65,7 @@ const placement = (component, posInfo, anchorInfo, origin) => {
     });
   });
 
-  return selectionBox.map((box) => {
+  return selectionBox.map(box => {
     const points = [ rootPoint, box.point() ];
     const topLeft = Origins.cata(origin,
       () => {
@@ -82,26 +86,27 @@ const placement = (component, posInfo, anchorInfo, origin) => {
       box.height()
     );
 
-    const targetElement = getAnchorSelection(win, anchorInfo).bind((sel) => {
+    const targetElement: Option<SugarElement> = getAnchorSelection(win, anchorInfo).bind((sel) => {
       return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
     });
 
-    const layoutsLtr = () => {
+    const layoutsLtr = (): AnchorLayout[] => {
       return anchorInfo.showAbove() ?
         [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const layoutsRtl = () => {
+    const layoutsRtl = (): AnchorLayout[] => {
       return anchorInfo.showAbove() ?
         [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const getLayouts = Direction.onDirection(layoutsLtr(), layoutsRtl());
+    const getLayouts: (elem: SugarElement) => AnchorLayout[] =
+      Direction.onDirection(layoutsLtr(), layoutsRtl());
     const layouts = targetElement.map(getLayouts).getOrThunk(layoutsLtr);
 
-    return Anchoring({
+    return NuAnchor({
       anchorBox: Fun.constant(anchorBox),
       bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble(0, 0))),
       overrides: anchorInfo.overrides,

@@ -9,7 +9,7 @@ export interface Bubble {
   northeast: () => SugarPosition;
 }
 
-export default (width, yoffset): Bubble => {
+const nu = (width, yoffset): Bubble => {
   return {
     southeast: Fun.constant(Position(-width, yoffset)),
     southwest: Fun.constant(Position(width, yoffset)),
@@ -17,3 +17,7 @@ export default (width, yoffset): Bubble => {
     northwest: Fun.constant(Position(width, -yoffset))
   };
 };
+
+export {
+  nu
+}

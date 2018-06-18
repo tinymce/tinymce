@@ -1,4 +1,4 @@
-import Bounds from 'ephox/alloy/positioning/layout/Bounds';
+import { bounds } from 'ephox/alloy/alien/Boxes';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { Position } from '@ephox/sugar';
@@ -49,17 +49,17 @@ UnitTest.test('BounderToolbuttonTest', () => {
     label: 'none',
     x: 0,
     y: 0
-  }, [], Bounds(0, 0, 10, 10), Bounds(0, 0, 50, 50), chameleonBubble(0), Bounds(0, 0, 1000, 1000));
+  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), chameleonBubble(0), bounds(0, 0, 1000, 1000));
 
   check({
     label: 'none',
     x: 100,
     y: 0
-  }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), chameleonBubble(10), Bounds(0, 0, 1000, 1000));
+  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), chameleonBubble(10), bounds(0, 0, 1000, 1000));
 
-  const panelBox = Bounds(0, 0, 100, 75);
-  const bigPanel = Bounds(0, 0, 75, 500);
-  const view = Bounds(50, 50, 350, 220);
+  const panelBox = bounds(0, 0, 100, 75);
+  const bigPanel = bounds(0, 0, 75, 500);
+  const view = bounds(50, 50, 350, 220);
   const bubb = chameleonBubble(32);
 
   /*
@@ -71,49 +71,49 @@ UnitTest.test('BounderToolbuttonTest', () => {
     label: 'layout-se',
     x: 100 - 1,
     y: 55 + 10 - 2
-  }, four, Bounds(100, 55, 10, 10), panelBox, bubb, view);
+  }, four, bounds(100, 55, 10, 10), panelBox, bubb, view);
 
   // Southwest.
   check({
     label: 'layout-sw',
     x: 350 - 100, // 320 - 100 + 32 - 1, capped at view width
     y: 55 + 10 - 2
-  }, four, Bounds(320, 55, 30, 10), panelBox, bubb, view);
+  }, four, bounds(320, 55, 30, 10), panelBox, bubb, view);
 
   // Northeast.
   check({
     label: 'layout-ne',
     x: 140 - 1,
     y: 235 - 75 + 1
-  }, four, Bounds(140, 235, 10, 10), panelBox, bubb, view);
+  }, four, bounds(140, 235, 10, 10), panelBox, bubb, view);
 
   // Northwest.
   check({
     label: 'layout-nw',
     x: 350 - 100, // 320 - 100 + 32 - 1, capped at view width
     y: 235 - 75 + 1
-  }, four, Bounds(320, 235, 10, 10), panelBox, bubb, view);
+  }, four, bounds(320, 235, 10, 10), panelBox, bubb, view);
 
   // All fit -> southeast because of order of preference.
   check({
     label: 'layout-se',
     x: 350 - 100, // 270 - 1, capped at view width
     y: 100 + 10 - 2
-  }, four, Bounds(270, 100, 10, 10), panelBox, bubb, view);
+  }, four, bounds(270, 100, 10, 10), panelBox, bubb, view);
 
   // None near top left -> best fit is southeast
   check({
     label: 'layout-se',
     x: 55 - 1,
     y: 55 + 10 - 2
-  }, four, Bounds(55, 55, 10, 10), bigPanel, bubb, view);
+  }, four, bounds(55, 55, 10, 10), bigPanel, bubb, view);
 
   // None near top right -> best fit is southwest
   check({
     label: 'layout-sw',
     x: 350 - 75, // 350 - 75 + 32 - 1, capped at view width
     y: 55 + 10 - 2
-  }, four, Bounds(350, 55, 10, 10), bigPanel, bubb, view);
+  }, four, bounds(350, 55, 10, 10), bigPanel, bubb, view);
 
   // None near bottom left -> best fit is northeast
   check({
@@ -121,7 +121,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
     x: 55 - 1,
     y: 50,
     candidateYforTest: 200 - 500 + 1
-  }, four, Bounds(55, 200, 10, 10), bigPanel, bubb, view);
+  }, four, bounds(55, 200, 10, 10), bigPanel, bubb, view);
 
   // None near bottom right -> best fit is northwest
   check({
@@ -129,40 +129,40 @@ UnitTest.test('BounderToolbuttonTest', () => {
     x: 350 - 75, // 350 - 75 + 32 - 1, capped at view width
     y: 50,
     candidateYforTest: 200 - 500 + 1
-  }, four, Bounds(350, 200, 10, 10), bigPanel, bubb, view);
+  }, four, bounds(350, 200, 10, 10), bigPanel, bubb, view);
 
   // Southeast (1px short on x and y).
   check({
     label: 'layout-se',
     x: 350 - 100, // 350+50+1-101 - 1,
     y: 220 + 50 + 2 - 10 - 76 + 10 - 2
-  }, four, Bounds(350 + 50 + 1 - 101, 220 + 50 + 2 - 10 - 76, 10, 10), panelBox, bubb, view);
+  }, four, bounds(350 + 50 + 1 - 101, 220 + 50 + 2 - 10 - 76, 10, 10), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
     label: 'layout-se',
     x: 350 - 100, // 350+50+1-100 - 1, capped at view width
     y: 220 + 50 + 2 - 10 - 75 + 10 - 2
-  }, four, Bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
+  }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Southwest (1px too far on x).
   check({
     label: 'layout-sw',
     x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
     y: 220 + 50 + 2 - 10 - 75 + 10 - 2
-  }, four, Bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
+  }, four, bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Northeast (1px too far on y).
   check({
     label: 'layout-ne',
     x: 350 - 100, // 350+50+1-100 - 1, capped at view width
     y: 220 + 50 + 2 - 10 - 74 - 75 + 1
-  }, four, Bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
+  }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Northwest (1px too far on x and y).
   check({
     label: 'layout-nw',
     x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
     y: 220 + 50 + 2 - 10 - 74 - 75 + 1
-  }, four, Bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
+  }, four, bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 });

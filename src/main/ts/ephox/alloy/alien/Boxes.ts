@@ -2,8 +2,9 @@ import { Fun, Struct } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
 import { SugarElement } from '../alien/TypeDefinitions';
+import { CssPositionAdt } from 'ephox/alloy/alien/CssPosition';
 
-const pointed = Struct.immutable('point', 'width', 'height');
+const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
 const rect = Struct.immutable('x', 'y', 'width', 'height');
 
 export interface Bounds {
@@ -13,6 +14,12 @@ export interface Bounds {
   height: () => number;
   right: () => number;
   bottom: () => number;
+}
+
+export interface BoxByPoint {
+  point: () => CssPositionAdt
+  width: () => number;
+  height: () => number;
 }
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {

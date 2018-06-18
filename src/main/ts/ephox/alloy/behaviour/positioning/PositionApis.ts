@@ -11,6 +11,7 @@ import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes'
 import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
+import { Anchoring, AnchorSpec, AnchorDetail } from 'ephox/alloy/positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
 
 export interface OriginAdt extends AdtInterface { };
@@ -25,13 +26,14 @@ const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
   return Origins.relative(position.left(), position.top());
 };
 
-const placeFixed = (_component: AlloyComponent, origin: SugarPosition, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void => {
+const placeFixed = (_component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
   const anchor = Anchor.box(anchoring.anchorBox());
   // TODO: Overrides for expanding panel
   SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
-const placeRelative = (component: AlloyComponent, origin: SugarPosition, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void => {
+// TYPIFY
+const placeRelative = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
   const bounds = posConfig.bounds().getOr(Boxes.view());
 
   SimpleLayout.relative(
@@ -42,18 +44,18 @@ const placeRelative = (component: AlloyComponent, origin: SugarPosition, anchori
       bounds,
       origin,
       preference: anchoring.layouts(),
-      maxHeight: () => { }
+      maxHeightFunction: () => { }
     }
   );
 };
 
-const place = (component: AlloyComponent, origin: SugarPosition, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void => {
+const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
   const f = posConfig.useFixed() ? placeFixed : placeRelative;
   f(component, origin, anchoring, posConfig, placee);
 };
 
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: any, placee: AlloyComponent): void => {
-  const anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
+const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
+  const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
   const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything

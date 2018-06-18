@@ -1,12 +1,13 @@
 import { Adt, Option } from '@ephox/katamari';
 
 import * as OriginsUI from '../view/OriginsUI';
-import * as Reposition from '../view/Reposition';
+import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
-import { AdtInterface } from '../../alien/TypeDefinitions';
+import { AdtInterface, SugarElement, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
 
-export interface Origins extends AdtInterface {
-  // TODO
+export interface OriginAdt extends AdtInterface {
+
 }
 
 const adt = Adt.generate([
@@ -15,11 +16,11 @@ const adt = Adt.generate([
   { fixed: [ 'x', 'y', 'width', 'height' ] }
 ]);
 
-const reposition = (origin, decision) => {
-  return origin.fold(() => {
-    return Reposition.css('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
+const reposition = (origin: OriginAdt, decision: RepositionDecision): RepositionCss => {
+  return origin.fold<RepositionCss>(() => {
+    return NuRepositionCss('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
   }, (x, y) => {
-    return Reposition.css('absolute', Option.some(decision.x() - x), Option.some(decision.y() - y), Option.none(), Option.none());
+    return NuRepositionCss('absolute', Option.some(decision.x() - x), Option.some(decision.y() - y), Option.none(), Option.none());
   }, (x, y, width, height) => {
     const decisionX = decision.x() - x;
     const decisionY = decision.y() - y;
@@ -38,43 +39,48 @@ const reposition = (origin, decision) => {
     return Direction.cata(decision.direction(),
       () => {
         // southeast
-        return Reposition.css('fixed', left, top, none, none);
+        return NuRepositionCss('fixed', left, top, none, none);
       },
       () => {
         // southwest
-        return Reposition.css('fixed', none, top, right, none);
+        return NuRepositionCss('fixed', none, top, right, none);
       },
       () => {
         // northeast
-        return Reposition.css('fixed', left, none, none, bottom);
+        return NuRepositionCss('fixed', left, none, none, bottom);
       },
       () => {
         // northwest
-        return Reposition.css('fixed', none, none, right, bottom);
+        return NuRepositionCss('fixed', none, none, right, bottom);
       }
     );
   });
 };
 
-const toBox = (origin, element) => {
+const toBox = (origin: OriginAdt, element: SugarElement): Bounds => {
   return OriginsUI.toBox(origin, element);
 };
 
-const viewport = (origin, bounds) => {
+const viewport = (origin: OriginAdt, bounds: Option<() => Bounds>): Bounds => {
   return OriginsUI.viewport(origin, bounds);
 };
 
-const translate = (origin, doc, x, y) => {
+const translate = (origin: OriginAdt, doc: SugarDocument, x: number, y: number): SugarPosition => {
   return OriginsUI.translate(origin, doc, x, y);
 };
 
-const cata = (subject, onNone, onRelative, onFixed) => {
-  return subject.fold(onNone, onRelative, onFixed);
+const cata = <B>(
+  subject: OriginAdt,
+  onNone: () => B,
+  onRelative: (x: number, y: number) => B,
+  onFixed: (x: number, y: number, width: number, height: number) => B
+): B => {
+  return subject.fold<B>(onNone, onRelative, onFixed);
 };
 
-const none = adt.none;
-const relative = adt.relative;
-const fixed = adt.fixed;
+const none = adt.none as () => OriginAdt;
+const relative = adt.relative as (x: number, y: number) => OriginAdt;
+const fixed = adt.fixed as (x: number, y: number, width: number, height: number) => OriginAdt;
 
 export {
   none,

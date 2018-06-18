@@ -1,23 +1,28 @@
+import { RepositionDecision } from 'ephox/alloy/positioning/view/Reposition';
 import { Fun, Option } from '@ephox/katamari';
 import { Classes, Css, Height, Width } from '@ephox/sugar';
 
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AnchorElement, AnchorBox } from 'ephox/alloy/positioning/layout/Layout';
+import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+import { ReparteeOptions } from 'ephox/alloy/positioning/layout/SimpleLayout';
 
 /*
  * This is the old repartee API. It is retained in a similar structure to the original form,
  * in case we decide to bring back the flexibility of working with non-standard positioning.
  */
 
-const elementSize = (p) => {
+const elementSize = (p: SugarElement): AnchorElement => {
   return {
     width: Fun.constant(Width.getOuter(p)),
     height: Fun.constant(Height.getOuter(p))
   };
 };
 
-const layout = (anchorBox, element, bubbles, options) => {
+const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, options: ReparteeOptions) => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
 

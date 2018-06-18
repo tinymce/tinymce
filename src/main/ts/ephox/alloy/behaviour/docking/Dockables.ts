@@ -6,7 +6,7 @@ import * as DragCoord from '../../api/data/DragCoord';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { DockingContext, DockingConfig } from '../../behaviour/docking/DockingTypes';
 import { SugarElement, SugarPosition } from '../../alien/TypeDefinitions';
-import { Origins } from '../../positioning/layout/Origins';
+import { OriginAdt } from '../../positioning/layout/Origins';
 import { Bounds } from '../../alien/Boxes';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
