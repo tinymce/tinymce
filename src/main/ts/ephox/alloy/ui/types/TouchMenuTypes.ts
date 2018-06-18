@@ -1,13 +1,13 @@
 import { Future, Option, Result } from '@ephox/katamari';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { TabviewSpec } from 'ephox/alloy/ui/types/TabviewTypes';
-import { PartialMenuSpec, TieredData } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 export interface TouchMenuDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -61,7 +61,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   parts: {
     menu: PartialMenuSpec,
     view: Partial<TabviewSpec>,
-    sink?: LooseSpec
+    sink?: SimpleOrSketchSpec
   },
 
   getAnchor?: (comp: AlloyComponent) => any;

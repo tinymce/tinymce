@@ -1,6 +1,6 @@
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 

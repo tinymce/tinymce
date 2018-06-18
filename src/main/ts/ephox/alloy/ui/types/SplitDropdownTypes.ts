@@ -1,11 +1,11 @@
 import { Future, Result } from '@ephox/katamari';
 import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
-import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { TieredMenuSpec, TieredData } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface SplitDropdownDetail extends DropdownDetail {
@@ -30,7 +30,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink?: () => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<LooseSpec>;
+  fetch: (comp: AlloyComponent) => Future<TieredData>;
   toggleClass: string;
 
   parts: {

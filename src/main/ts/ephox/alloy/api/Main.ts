@@ -52,7 +52,6 @@ import * as SketchBehaviours from './component/SketchBehaviours';
 import {
   AlloySpec,
   ComponentSpec,
-  LooseSpec,
   PremadeSpec,
   RawDomSchema,
   SimpleOrSketchSpec,
@@ -196,7 +195,6 @@ export {
 
   AlloySpec,
   SimpleOrSketchSpec,
-  LooseSpec,
   RawDomSchema,
   ComponentSpec,
   SketchSpec,
