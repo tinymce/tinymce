@@ -63,8 +63,8 @@ export default function (editor): Annotator {
      * Registers a specific annotator by name
      *
      * @method register
-     * @param {Object/String} name ""
-     * @param {Object/Array} format ""
+     * @param {String} name the name of the annotation
+     * @param {Object} settings settings for the annotation (e.g. decorate)
      */
     register: (name: string, settings: { }) => {
       annotations[name] = {
@@ -73,6 +73,12 @@ export default function (editor): Annotator {
       };
     },
 
+    /**
+     * Applies the annotation at the current selection using data
+     * @param {String} name the name of the annotation to apply
+     * @param {Object} data information to pass through to this particular
+     * annotation
+     */
     annotate: (name: string, data: { }) => {
       // Doesn't work for non collapsed selections.
       if (! editor.selection.isCollapsed()) {
@@ -83,12 +89,24 @@ export default function (editor): Annotator {
       }
     },
 
+    /**
+     * Adds a listener that is notified when the annotation at the
+     * current selection changes
+     * @param {function} f: the callback function invoked with the
+     * uid for the current annotation and the name of the current annotation
+     * supplied
+     */
     annotationChanged: (f: (uid: string, name: string) => void): void => {
       changeCallbacks.set(
         changeCallbacks.get().concat([ f ])
       );
     },
 
+    /**
+     * Removes any annotations from the current selection that match
+     * the name
+     * @param {String} name the name of the annotation to remove
+     */
     remove: (name: string): void => {
       identify(editor, Option.some(name)).each(({ uid }) => {
         const markers = findMarkers(editor, uid);
@@ -96,12 +114,21 @@ export default function (editor): Annotator {
       });
     },
 
-    // TODO: Test this
+    /*
+     * Sets the current annotation to an annotation of type name and
+     * with a uid of uid
+     * @param {String} uid the uid for the annotation
+     * @param {String} name the name of the anotation
+     */
     setToActive: (uid, name) => {
       updateActive(editor, name, Option.some(uid));
     },
 
-    // TODO Test this
+    /*
+     * Clears the current annotation for annotation of type name
+     * @param {String} the name of the annotation to clear any
+     * active highlights
+     */
     clearActive: (name) => {
       // Not sure if the name here needs to be considered. Probably does.
       updateActive(editor, name, Option.none());

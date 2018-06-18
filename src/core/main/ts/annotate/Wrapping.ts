@@ -3,7 +3,6 @@ import { Attr, Class, Element, Insert, Node, Remove, Replication, Traverse, Clas
 
 import { ChildContext, context } from './AnnotationContext';
 
-// import * as Markings from '../style/Markings';
 import { findMarkers } from './Identification';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import RangeWalk from '../selection/RangeWalk';
@@ -11,10 +10,15 @@ import RangeWalk from '../selection/RangeWalk';
 import * as Markings from './Markings';
 import { Editor } from 'tinymce/core/api/Editor';
 
-// import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
-// import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
+export type Decorator = (
+  uid: string,
+  data: { }
+) => {
+  attributes: { },
+  classes: string[]
+};
 
-const annotate = (editor, annotationName: string, decorate, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
+const annotate = (editor: Editor, annotationName: string, decorate: Decorator, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [ ];
 

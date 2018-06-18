@@ -2,10 +2,11 @@ import { Arr, Option } from '@ephox/katamari';
 import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 
 import * as Markings from './Markings';
+import { Editor } from 'tinymce/core/api/Editor';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor, annotationName: Option<string>): Option<{uid: string, name: string}> => {
+const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
@@ -38,13 +39,13 @@ const identify = (editor, annotationName: Option<string>): Option<{uid: string, 
   });
 };
 
-const isAnnotation = (elem) => {
+const isAnnotation = (elem: any): boolean => {
   return Node.isElement(elem) && Class.has(elem, Markings.annotation());
 };
 
 // Update the 'mce-active-annotation' to only be on an annotation that is
 // currently selected
-const updateActive = (editor: any, name: string, optUid: Option<string>) => {
+const updateActive = (editor: Editor, name: string, optUid: Option<string>): void => {
   const allMarkers = SelectorFilter.descendants(
     // Using classes because they are faster?
     Element.fromDom(editor.getBody()),
@@ -59,7 +60,7 @@ const updateActive = (editor: any, name: string, optUid: Option<string>) => {
   });
 };
 
-const findMarkers = (editor, uid) => {
+const findMarkers = (editor: Editor, uid: string): any[] => {
   const body = Element.fromDom(editor.getBody());
   return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };

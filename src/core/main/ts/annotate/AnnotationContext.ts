@@ -3,6 +3,7 @@ import { Node, Text, Traverse } from '@ephox/sugar';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import FormatUtils from '../fmt/FormatUtils';
 import { isAnnotation } from './Identification';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export const enum ChildContext {
   Skipping = 'skipping',
@@ -12,12 +13,12 @@ export const enum ChildContext {
   Valid = 'valid'
 }
 
-const isZeroWidth = (elem) => {
+const isZeroWidth = (elem): boolean => {
   // TODO: I believe this is the same cursor used in tinymce (Unicode.zeroWidth)?
   return Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth();
 };
 
-const context = (editor, elem: any, wrapName: string, nodeName: string): ChildContext => {
+const context = (editor: Editor, elem: any, wrapName: string, nodeName: string): ChildContext => {
   return Traverse.parent(elem).fold(
     () => ChildContext.Skipping,
 
