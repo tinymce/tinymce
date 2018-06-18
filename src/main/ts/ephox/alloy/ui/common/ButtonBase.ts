@@ -7,7 +7,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 
 import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.AlloyEventRecord => {
   const executeHandler = (action) => {

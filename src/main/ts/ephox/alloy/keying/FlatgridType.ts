@@ -12,7 +12,7 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { FlatgridConfig, FlatgridState, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { FlatgridConfig, FlatgridState, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import { ElementMover } from '../navigation/DomMovement';
 
 import { AlloyComponent } from '../api/component/ComponentApi';

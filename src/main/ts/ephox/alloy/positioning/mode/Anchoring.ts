@@ -1,14 +1,11 @@
-import { Contracts } from '@ephox/katamari';
-import { SugarElement, SugarRange } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Contracts, Option } from '@ephox/katamari';
 
-import { Option } from '@ephox/katamari';
-import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
-import { AnchorLayout, AnchorBox } from 'ephox/alloy/positioning/layout/Layout';
-import { OriginAdt } from 'ephox/alloy/behaviour/positioning/PositionApis';
-import { Anchor } from 'ephox/alloy/positioning/layout/Anchor';
+import { SugarElement, SugarRange } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { OriginAdt } from '../../behaviour/positioning/PositionApis';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { Bubble } from '../../positioning/layout/Bubble';
+import { AnchorBox, AnchorLayout } from '../../positioning/layout/Layout';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =

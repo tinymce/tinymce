@@ -15,7 +15,7 @@ import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { WidgetItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
+import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 
 const builder = (detail: WidgetItemDetail) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());

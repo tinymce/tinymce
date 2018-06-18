@@ -10,8 +10,8 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { FlowConfig, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { SugarElement } from '../alien/TypeDefinitions';
+import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent } from '../alien/TypeDefinitions';

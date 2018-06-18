@@ -1,5 +1,5 @@
 import { Struct } from '@ephox/katamari';
-import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
 export interface SpotInfo {
   x: () => number;

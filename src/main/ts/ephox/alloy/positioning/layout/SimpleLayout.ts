@@ -5,12 +5,12 @@ import * as Boxes from './Boxes';
 import * as Layout from './Layout';
 import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';
-import { Anchor } from 'ephox/alloy/positioning/layout/Anchor';
-import { SugarElement } from 'ephox/alloy/api/Main';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+import { Anchor } from '../../positioning/layout/Anchor';
+import { SugarElement } from '../../api/Main';
+import { Bubble } from '../../positioning/layout/Bubble';
 import { AnchorLayout, AnchorBox } from './Layout';
-import { AnchorOverrides, MaxHeightFunction } from 'ephox/alloy/positioning/mode/Anchoring';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { AnchorOverrides, MaxHeightFunction } from '../../positioning/mode/Anchoring';
+import { Bounds } from '../../alien/Boxes';
 import { OriginAdt } from './Origins';
 
 export interface ReparteeOptionsSpec {

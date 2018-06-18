@@ -2,7 +2,7 @@ import * as InputBase from '../../ui/common/InputBase';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import { InputSketcher, InputDetail, InputSpec } from '../../ui/types/InputTypes';
-import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<InputDetail<string>, InputSpec> = (detail, spec): SketchSpec => {
   return {

@@ -2,7 +2,7 @@ import { Element, Height, Scroll, Width } from '@ephox/sugar';
 
 import * as OuterPosition from '../../frame/OuterPosition';
 import { bounds, Bounds } from '../../alien/Boxes';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../../api/Main';
 import { window, document } from '@ephox/dom-globals';
 
 // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that

@@ -6,7 +6,7 @@ import * as Fields from '../data/Fields';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
-import { KeyRuleHandler, EscapingConfig } from 'ephox/alloy/keying/KeyingModeTypes';
+import { KeyRuleHandler, EscapingConfig } from '../keying/KeyingModeTypes';
 import { KeyRule } from '../navigation/KeyRules';
 
 import { AlloyComponent } from '../api/component/ComponentApi';

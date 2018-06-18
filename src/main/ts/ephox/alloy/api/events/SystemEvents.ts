@@ -2,7 +2,7 @@ import * as NativeEvents from './NativeEvents';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { StringConstant } from '../../alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CustomEvent } from '../../events/SimulatedEvent';
 
 const alloy = { tap: Fun.constant('alloy.tap') };

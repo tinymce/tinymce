@@ -1,4 +1,4 @@
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 import * as Truncate from '../alien/Truncate';
 

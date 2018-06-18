@@ -12,8 +12,8 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
-import { AlloySpec } from 'ephox/alloy/api/Main';
-import { NormalItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
+import { AlloySpec } from '../../api/Main';
+import { NormalItemDetail } from '../../ui/types/ItemTypes';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
   return {

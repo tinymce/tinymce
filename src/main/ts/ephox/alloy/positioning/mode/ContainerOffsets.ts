@@ -3,9 +3,9 @@ import { Compare, Element, Location, Scroll, Traverse } from '@ephox/sugar';
 
 import * as CssPosition from '../../alien/CssPosition';
 import { SugarPosition } from '../../alien/TypeDefinitions';
-import { OriginAdt } from 'ephox/alloy/positioning/layout/Origins';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SelectionAnchor } from 'ephox/alloy/positioning/mode/Anchoring';
+import { OriginAdt } from '../../positioning/layout/Origins';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SelectionAnchor } from '../../positioning/mode/Anchoring';
 
 // In one mode, the window is inside an iframe. If that iframe is in the
 // same document as the positioning element (component), then identify the offset

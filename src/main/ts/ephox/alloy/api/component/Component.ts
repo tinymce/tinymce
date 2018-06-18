@@ -14,12 +14,12 @@ import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
-import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
-import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
-import { AlloySystemApi } from 'ephox/alloy/api/system/SystemApi';
-import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import { AlloySystemApi } from '../../api/system/SystemApi';
+import { UncurriedHandler } from '../../events/EventRegistry';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.

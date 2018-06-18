@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Representing } from '../../api/behaviour/Representing';
 import * as PartType from '../../parts/PartType';
-import { WidgetItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
+import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 
 const owner = () => 'item-widget';
 

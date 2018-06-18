@@ -11,7 +11,7 @@ import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!

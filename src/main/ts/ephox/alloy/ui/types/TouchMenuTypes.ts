@@ -1,15 +1,15 @@
 import { Future, Option, Result } from '@ephox/katamari';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { TabviewSpec } from 'ephox/alloy/ui/types/TabviewTypes';
-import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { ItemSpec } from '../../ui/types/ItemTypes';
+import { TabviewSpec } from '../../ui/types/TabviewTypes';
+import { PartialMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
-import { CommonDropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<Array<ItemSpec>>, CompositeSketchDetail {
   uid: () => string;

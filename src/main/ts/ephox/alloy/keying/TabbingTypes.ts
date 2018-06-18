@@ -13,7 +13,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent, SugarElement } from '../alien/TypeDefinitions';
 import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
-import { TabbingConfig, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { TabbingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 const create = (cyclicField: FieldProcessorAdt) => {
   const schema: FieldProcessorAdt[] = [

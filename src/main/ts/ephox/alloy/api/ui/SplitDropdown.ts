@@ -16,7 +16,7 @@ import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
 import { SplitDropdownSketcher, SplitDropdownDetail, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 

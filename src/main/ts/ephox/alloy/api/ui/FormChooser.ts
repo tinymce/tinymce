@@ -13,7 +13,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
   const findByValue = (chooser, value) => {

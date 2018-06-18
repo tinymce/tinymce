@@ -6,11 +6,11 @@ import * as Fields from '../../data/Fields';
 import { nu as Bubble } from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import { nu as NuAnchoring, MakeshiftAnchor } from './Anchoring';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
-import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
-import { OriginAdt } from 'ephox/alloy/positioning/layout/Origins';
-import { bounds } from 'ephox/alloy/alien/Boxes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { OriginAdt } from '../../positioning/layout/Origins';
+import { bounds } from '../../alien/Boxes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
   const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());

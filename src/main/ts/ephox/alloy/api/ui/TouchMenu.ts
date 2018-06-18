@@ -26,7 +26,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 type TouchHoverState = (AlloyComponent) => void;
 

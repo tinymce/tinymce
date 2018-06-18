@@ -15,7 +15,7 @@ import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => { return GuiFactory.premade(g); });

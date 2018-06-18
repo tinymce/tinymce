@@ -10,7 +10,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
 import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
+import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface ForeignGuiSpec {
   root: () => SugarElement;

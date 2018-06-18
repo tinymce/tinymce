@@ -4,7 +4,7 @@ import * as OriginsUI from '../view/OriginsUI';
 import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
 import { AdtInterface, SugarElement, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Bounds } from '../../alien/Boxes';
 
 export interface OriginAdt extends AdtInterface {
 

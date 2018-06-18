@@ -2,7 +2,7 @@ import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema }
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 export type PartType = (PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }

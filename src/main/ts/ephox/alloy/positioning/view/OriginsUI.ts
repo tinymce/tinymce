@@ -4,8 +4,8 @@ import { Height, Position, Scroll, Width } from '@ephox/sugar';
 import * as OuterPosition from '../../frame/OuterPosition';
 import { Bounds, bounds } from '../../alien/Boxes';
 import * as Boxes from '../layout/Boxes';
-import { OriginAdt } from 'ephox/alloy/positioning/layout/Origins';
-import { SugarElement, SugarPosition, SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+import { OriginAdt } from '../../positioning/layout/Origins';
+import { SugarElement, SugarPosition, SugarDocument } from '../../alien/TypeDefinitions';
 
 // Moved out of Origins so that Origins can be tested atomically
 // if/when repartee is compiled with NPM modules available, we can switch to `domtest` which allows sugar to load in nodejs

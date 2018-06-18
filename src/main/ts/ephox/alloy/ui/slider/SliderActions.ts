@@ -4,9 +4,9 @@ import { PlatformDetection } from '@ephox/sand';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SliderModel from './SliderModel';
 import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SugarPosition, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 
 import { Position } from '@ephox/sugar';
 

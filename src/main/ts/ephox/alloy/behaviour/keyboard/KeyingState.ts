@@ -1,7 +1,7 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
 import { BehaviourState, nuState } from '../common/BehaviourState';
-import { FlatgridState } from 'ephox/alloy/keying/KeyingModeTypes';
+import { FlatgridState } from '../../keying/KeyingModeTypes';
 
 const flatgrid = (spec): FlatgridState => {
   const dimensions = Cell(Option.none());

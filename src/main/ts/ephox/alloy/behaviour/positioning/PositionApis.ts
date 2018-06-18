@@ -11,7 +11,7 @@ import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes'
 import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
-import { Anchoring, AnchorSpec, AnchorDetail } from 'ephox/alloy/positioning/mode/Anchoring';
+import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
 
 export interface OriginAdt extends AdtInterface { };

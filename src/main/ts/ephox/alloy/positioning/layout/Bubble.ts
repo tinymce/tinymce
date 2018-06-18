@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
 export interface Bubble {
   southeast: () => SugarPosition;

@@ -7,7 +7,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { FocusManagers } from '../../api/Main';
-import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec, GeneralKeyingConfig } from 'ephox/alloy/keying/KeyingModeTypes';
+import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 import { console } from '@ephox/dom-globals';
 
 export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviour.AlloyBehaviour<KeyingConfigSpec, D> {

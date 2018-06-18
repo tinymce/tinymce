@@ -13,9 +13,9 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
-import { TypeaheadDetail } from 'ephox/alloy/ui/types/TypeaheadTypes';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),

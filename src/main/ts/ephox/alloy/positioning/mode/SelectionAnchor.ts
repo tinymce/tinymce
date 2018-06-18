@@ -11,9 +11,9 @@ import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import { SelectionAnchor, nu as NuAnchor, Anchoring } from './Anchoring';
 import * as ContainerOffsets from './ContainerOffsets';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
-import { SugarRange, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { SugarRange, SugarElement } from '../../alien/TypeDefinitions';
 import { AnchorLayout } from '../layout/Layout';
 
 const point = Struct.immutable('element', 'offset');

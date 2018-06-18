@@ -3,7 +3,7 @@ import { AlloySystemApi } from '../../api/system/SystemApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyEventKeyAndHandler, AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
+import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;

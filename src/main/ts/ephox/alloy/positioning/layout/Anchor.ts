@@ -1,9 +1,10 @@
-import * as Origins from './Origins';
 import { Struct } from '@ephox/katamari';
-import { OriginAdt } from 'ephox/alloy/behaviour/positioning/PositionApis';
-import { SugarElement } from 'ephox/alloy/api/Main';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
-import { AnchorBox } from 'ephox/alloy/positioning/layout/Layout';
+
+import { Bounds } from '../../alien/Boxes';
+import { SugarElement } from '../../api/Main';
+import { OriginAdt } from '../../behaviour/positioning/PositionApis';
+import { AnchorBox } from '../../positioning/layout/Layout';
+import * as Origins from './Origins';
 import { window } from '@ephox/dom-globals';
 
 /*

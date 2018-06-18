@@ -1,14 +1,12 @@
 import { Objects } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 
-import EventRegistry from '../events/EventRegistry';
-import { ElementAndHandler, UidAndHandler} from '../events/EventRegistry';
+import { SugarElement } from '../alien/TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import EventRegistry, { ElementAndHandler, UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
-
-import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/api/Main';
 
 export default () => {
   const events = EventRegistry();

@@ -4,7 +4,7 @@ import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 import * as TransformFind from '../alien/TransformFind';
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../api/Main';
 
 export interface ElementAndHandler {
   element: () => SugarElement;

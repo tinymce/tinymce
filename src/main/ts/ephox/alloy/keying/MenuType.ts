@@ -10,7 +10,7 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { KeyRuleHandler, MenuConfig } from 'ephox/alloy/keying/KeyingModeTypes';
+import { KeyRuleHandler, MenuConfig } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent } from '../alien/TypeDefinitions';

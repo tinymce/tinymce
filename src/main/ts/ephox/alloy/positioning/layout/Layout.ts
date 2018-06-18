@@ -1,7 +1,7 @@
 import * as Direction from './Direction';
 import * as Anchors from '../view/Anchors';
 import { SpotInfo, nu as NuSpotInfo } from '../view/SpotInfo';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+import { Bubble } from '../../positioning/layout/Bubble';
 
 /*
   Layout for menus and inline context dialogs;

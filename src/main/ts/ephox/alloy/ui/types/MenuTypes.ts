@@ -1,13 +1,13 @@
-import { MenuConfigSpec } from 'ephox/alloy/keying/KeyingModeTypes';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { MenuConfigSpec } from '../../keying/KeyingModeTypes';
+import { ItemSpec } from '../../ui/types/ItemTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { FocusManager } from 'ephox/alloy/api/focus/FocusManagers';
-import { EventFormat, CustomEvent } from 'ephox/alloy/api/Main';
+import { FocusManager } from '../../api/focus/FocusManagers';
+import { EventFormat, CustomEvent } from '../../api/Main';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {

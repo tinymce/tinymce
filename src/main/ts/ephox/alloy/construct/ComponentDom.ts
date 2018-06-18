@@ -1,14 +1,13 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Result, Option } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
-import { DomModification, nu as NuModification } from '../dom/DomModification';
+import { AlloyBehaviour } from '../api/behaviour/Behaviour';
+import { BehaviourConfigAndState } from '../behaviour/common/BehaviourBlob';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
-import { CustomDetail } from 'ephox/alloy/construct/CustomDefinition';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
-import { BehaviourConfigAndState } from 'ephox/alloy/behaviour/common/BehaviourBlob';
-import { BehaviourState } from 'ephox/alloy/api/Main';
+import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 type ModificationChain<M> = Array<{ name(): string, modification(): Option<M> }>;
 

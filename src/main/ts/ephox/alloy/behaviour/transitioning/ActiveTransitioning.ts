@@ -5,7 +5,7 @@ import { TransitioningConfig } from '../../behaviour/transitioning/Transitioning
 import { Stateless } from '../../behaviour/common/BehaviourState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([

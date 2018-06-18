@@ -9,7 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { ModalDialogDetail } from 'ephox/alloy/ui/types/ModalDialogTypes';
+import { ModalDialogDetail } from '../../ui/types/ModalDialogTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),

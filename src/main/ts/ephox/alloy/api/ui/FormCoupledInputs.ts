@@ -7,8 +7,8 @@ import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchem
 import { Objects } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from 'ephox/alloy/ui/types/FormCoupledInputsTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {

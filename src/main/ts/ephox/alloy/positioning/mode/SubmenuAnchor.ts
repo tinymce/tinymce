@@ -7,9 +7,9 @@ import * as LinkedLayout from '../layout/LinkedLayout';
 import * as Origins from '../layout/Origins';
 import { nu as NuAnchoring, SubmenuAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
-import { OriginAdt } from 'ephox/alloy/behaviour/positioning/PositionApis';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, submenuInfo: SubmenuAnchor, origin: OriginAdt): Option<Anchoring> => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item().element());

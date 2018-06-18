@@ -3,7 +3,7 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
-import { SeparatorItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
+import { SeparatorItemDetail } from '../../ui/types/ItemTypes';
 
 const builder = (detail: SeparatorItemDetail) => {
   return {

@@ -11,8 +11,8 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { MatrixConfig, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { MatrixConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent } from '../alien/TypeDefinitions';

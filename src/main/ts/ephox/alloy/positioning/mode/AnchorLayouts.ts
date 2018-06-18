@@ -1,8 +1,8 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AnchorLayout } from 'ephox/alloy/positioning/layout/Layout';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AnchorLayout } from '../../positioning/layout/Layout';
 
 const schema: () => FieldProcessorAdt = () => {
   return FieldSchema.optionObjOf('layouts', [

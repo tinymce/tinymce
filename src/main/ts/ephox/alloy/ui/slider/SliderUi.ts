@@ -12,9 +12,9 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as SliderActions from './SliderActions';
 
 import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 

@@ -8,9 +8,9 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
 import * as Fields from '../data/Fields';
 import * as KeyRules from '../navigation/KeyRules';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
-import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from 'ephox/alloy/events/SimulatedEvent';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
+import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
 
 const typical = <C,S>(
   infoSchema: FieldProcessorAdt[],

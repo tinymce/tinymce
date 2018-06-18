@@ -15,9 +15,9 @@ import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
 import { MenuDetail, MenuMovement } from '../../ui/types/MenuTypes';
-import { AlloySpec, RawDomSchema } from 'ephox/alloy/api/Main';
-import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { AlloySpec, RawDomSchema } from '../../api/Main';
+import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
+import { ItemSpec } from '../../ui/types/ItemTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',

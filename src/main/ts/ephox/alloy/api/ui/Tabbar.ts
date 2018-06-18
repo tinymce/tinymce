@@ -8,7 +8,7 @@ import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { TabbarSketcher, TabbarDetail, TabbarSpec } from '../../ui/types/TabbarTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {

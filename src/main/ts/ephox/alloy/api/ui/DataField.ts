@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
-import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from 'ephox/alloy/ui/types/DataFieldTypes';
+import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as Behaviour from '../behaviour/Behaviour';
@@ -9,7 +9,7 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
-import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => {
   return {

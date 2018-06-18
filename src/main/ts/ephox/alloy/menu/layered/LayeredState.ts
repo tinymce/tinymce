@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
 
 import * as MenuPathing from './MenuPathing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 // Object indexed by menu value. Each entry has a list of item values.
 export type MenuDirectory = Record<string, string[]>

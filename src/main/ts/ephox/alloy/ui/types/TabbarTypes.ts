@@ -1,4 +1,4 @@
-import { TabButtonSpec } from 'ephox/alloy/ui/types/TabButtonTypes';
+import { TabButtonSpec } from '../../ui/types/TabButtonTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';

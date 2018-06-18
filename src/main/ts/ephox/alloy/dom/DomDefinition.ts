@@ -1,6 +1,6 @@
 import { JSON as Json } from '@ephox/sand';
 import { Struct, Option, Arr } from '@ephox/katamari';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 export interface GeneralDefinitionSpec<EC, DC> {
   tag?: string;

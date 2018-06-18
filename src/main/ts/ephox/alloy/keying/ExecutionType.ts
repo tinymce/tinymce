@@ -8,7 +8,7 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { ExecutingConfig, KeyRuleHandler } from 'ephox/alloy/keying/KeyingModeTypes';
+import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent } from '../alien/TypeDefinitions';

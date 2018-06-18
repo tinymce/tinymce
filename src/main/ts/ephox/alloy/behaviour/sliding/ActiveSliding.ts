@@ -7,7 +7,7 @@ import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
   const expanded = slideConfig.expanded();

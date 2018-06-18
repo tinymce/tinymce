@@ -1,15 +1,13 @@
 import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Merger, Option, Result } from '@ephox/katamari';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
+import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
-import { DomModification, nu as NuModification } from '../dom/DomModification'
-;
+import { DomModification, nu as NuModification } from '../dom/DomModification';
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { SketchSpec, SimpleSpec, SimpleOrSketchSpec, RawDomSchema, StructDomSchema } from '../api/component/SpecTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AlloyEventRecord, AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
-import { EventFormat } from '../events/SimulatedEvent';
 
 export interface CustomDetail {
   dom: () => StructDomSchema;

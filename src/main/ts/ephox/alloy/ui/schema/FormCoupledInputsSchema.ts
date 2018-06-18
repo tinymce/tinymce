@@ -12,8 +12,8 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { FormCoupledInputsDetail } from 'ephox/alloy/ui/types/FormCoupledInputsTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { FormCoupledInputsDetail } from '../../ui/types/FormCoupledInputsTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),

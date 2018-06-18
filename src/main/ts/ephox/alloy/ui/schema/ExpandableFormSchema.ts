@@ -11,8 +11,8 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { ExpandableFormDetail } from 'ephox/alloy/ui/types/ExpandableFormTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { ExpandableFormDetail } from '../../ui/types/ExpandableFormTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([

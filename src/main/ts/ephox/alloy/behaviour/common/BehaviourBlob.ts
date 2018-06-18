@@ -3,8 +3,8 @@ import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
 
 import { NoState, BehaviourStateInitialiser, BehaviourState } from '../../behaviour/common/BehaviourState';
-import { SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface BehaviourConfigAndState<C, S> {
   config: () => C;

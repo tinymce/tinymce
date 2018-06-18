@@ -1,7 +1,7 @@
 import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr, Node, PredicateFind, SelectorFind, Traverse } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/api/Main';
-import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+
+import { SugarDocument, SugarElement } from '../alien/TypeDefinitions';
 
 const find = (queryElem: SugarElement): Option<SugarElement> => {
   const dependent: Option<SugarElement> = PredicateFind.closest(queryElem, (elem) => {

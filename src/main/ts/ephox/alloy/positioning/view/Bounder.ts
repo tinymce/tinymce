@@ -3,11 +3,11 @@ import { Adt, Arr, Fun } from '@ephox/katamari';
 import * as Direction from '../layout/Direction';
 import * as Reposition from './Reposition';
 import { RepositionDecision } from './Reposition';
-import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/Layout';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
-import { SpotInfo } from 'ephox/alloy/positioning/view/SpotInfo';
-import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout/Layout';
+import { Bubble } from '../../positioning/layout/Bubble';
+import { Bounds } from '../../alien/Boxes';
+import { SpotInfo } from '../../positioning/view/SpotInfo';
+import { AdtInterface } from '../../alien/TypeDefinitions';
 
 
 export interface BounderAttemptAdt extends AdtInterface {

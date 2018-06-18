@@ -5,7 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { SliderSpec } from 'ephox/alloy/ui/types/SliderTypes';
+import { SliderSpec } from '../../ui/types/SliderTypes';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 

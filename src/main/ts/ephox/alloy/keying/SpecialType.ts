@@ -1,5 +1,5 @@
-import { AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
+import { SugarEvent } from '../alien/TypeDefinitions';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 

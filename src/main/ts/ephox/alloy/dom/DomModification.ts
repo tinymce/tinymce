@@ -3,7 +3,7 @@ import { Arr, Merger, Obj, Struct, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 export interface DomModification {
   classes(): Option<string[]>;

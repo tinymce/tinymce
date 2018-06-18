@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarEvent } from 'ephox/alloy/api/Main';
+import { SugarEvent } from '../alien/TypeDefinitions';
 
 export type KeyMatcher = (SugarEvent) => boolean;
 

@@ -5,7 +5,7 @@ import { Receiving } from '../api/behaviour/Receiving';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import * as Channels from '../api/messages/Channels';
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
-import { ReceivingConfig, ReceivingConfigSpec } from 'ephox/alloy/behaviour/receiving/ReceivingTypes';
+import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))

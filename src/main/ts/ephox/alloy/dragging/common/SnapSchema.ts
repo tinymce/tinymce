@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Bounds } from '../../alien/Boxes';
 import { window } from '@ephox/dom-globals';
 
 const defaultLazyViewport = (): Bounds => {

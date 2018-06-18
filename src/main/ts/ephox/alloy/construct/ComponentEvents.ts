@@ -6,7 +6,7 @@ import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
 import * as DescribedHandler from '../events/DescribedHandler';
 import * as EventHandler from './EventHandler';
-import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
+import { UncurriedHandler } from '../events/EventRegistry';
 
 /*
  * The process of combining a component's events

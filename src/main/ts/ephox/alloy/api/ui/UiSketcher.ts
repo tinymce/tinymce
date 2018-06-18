@@ -5,7 +5,7 @@ import {
   CompositeSketchSpec,
   SingleSketchDetail,
   SingleSketchSpec,
-} from 'ephox/alloy/api/ui/Sketcher';
+} from '../../api/ui/Sketcher';
 
 import { AdtInterface } from '../../alien/TypeDefinitions';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';

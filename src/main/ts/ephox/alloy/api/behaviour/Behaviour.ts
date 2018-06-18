@@ -2,11 +2,11 @@ import { FieldProcessorAdt, FieldSchema, Objects, Processor, ValueSchema } from 
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
-import { NoState, BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
-import { BehaviourConfigAndState } from 'ephox/alloy/behaviour/common/BehaviourBlob';
-import { DomModification } from 'ephox/alloy/dom/DomModification';
-import { CustomDetail } from 'ephox/alloy/construct/CustomDefinition';
-import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
+import { NoState, BehaviourState } from '../../behaviour/common/BehaviourState';
+import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
+import { DomModification } from '../../dom/DomModification';
+import { CustomDetail } from '../../construct/CustomDefinition';
+import { DomDefinitionDetail } from '../../dom/DomDefinition';
 
 export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour<any,any>>;
 

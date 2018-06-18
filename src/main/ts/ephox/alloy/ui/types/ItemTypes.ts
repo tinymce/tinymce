@@ -1,10 +1,10 @@
 import { Option } from '@ephox/katamari';
-import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
+import { CompositeSketchDetail } from '../../api/ui/Sketcher';
 
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
-import { DomModification, DomModificationSpec } from 'ephox/alloy/dom/DomModification';
+import { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
 export interface ItemDataTuple {
   value: string;

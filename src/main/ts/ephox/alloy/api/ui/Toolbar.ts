@@ -10,7 +10,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { composite, CompositeSketch } from './Sketcher';
 import { console } from '@ephox/dom-globals';
 import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 
 const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {

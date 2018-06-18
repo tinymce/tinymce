@@ -1,14 +1,14 @@
-import { RepositionDecision } from 'ephox/alloy/positioning/view/Reposition';
+import { RepositionDecision } from '../../positioning/view/Reposition';
 import { Fun, Option } from '@ephox/katamari';
 import { Classes, Css, Height, Width } from '@ephox/sugar';
 
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AnchorElement, AnchorBox } from 'ephox/alloy/positioning/layout/Layout';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
-import { ReparteeOptions } from 'ephox/alloy/positioning/layout/SimpleLayout';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AnchorElement, AnchorBox } from '../../positioning/layout/Layout';
+import { Bubble } from '../../positioning/layout/Bubble';
+import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
 
 /*
  * This is the old repartee API. It is retained in a similar structure to the original form,

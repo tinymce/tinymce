@@ -15,8 +15,8 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { HotspotAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {

@@ -3,7 +3,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, OptionalDomSchema, RawDomSchema } from '../../api/component/SpecTypes';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { SingleSketch } from '../../api/ui/Sketcher';
-import { DomModificationSpec, DomModification } from 'ephox/alloy/dom/DomModification';
+import { DomModificationSpec, DomModification } from '../../dom/DomModification';
 
 
 export interface ContainerDetail {

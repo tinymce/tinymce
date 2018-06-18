@@ -14,7 +14,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {

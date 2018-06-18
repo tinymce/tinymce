@@ -1,7 +1,7 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
-import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { MenuSpec } from '../../ui/types/MenuTypes';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';

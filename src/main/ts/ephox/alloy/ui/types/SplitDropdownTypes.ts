@@ -1,6 +1,6 @@
 import { Future, Result } from '@ephox/katamari';
-import { DropdownDetail, CommonDropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
-import { TieredMenuSpec, TieredData } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { DropdownDetail, CommonDropdownDetail } from '../../ui/types/DropdownTypes';
+import { TieredMenuSpec, TieredData } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';

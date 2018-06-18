@@ -4,9 +4,9 @@ import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as KeyMatch from '../navigation/KeyMatch';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { NativeSimulatedEvent, SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
-import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
+import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
 
 const doDefaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, focused: SugarElement): Option<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification

@@ -9,7 +9,7 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
-import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, spec) => {
 

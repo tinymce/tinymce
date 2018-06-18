@@ -1,7 +1,7 @@
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { CommonDropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
-import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
-import { TieredData, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
+import { InputDetail } from '../../ui/types/InputTypes';
+import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';

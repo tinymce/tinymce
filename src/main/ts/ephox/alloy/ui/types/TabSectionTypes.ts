@@ -1,4 +1,4 @@
-import { TabButtonWithViewSpec } from 'ephox/alloy/ui/types/TabbarTypes';
+import { TabButtonWithViewSpec } from '../../ui/types/TabbarTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';

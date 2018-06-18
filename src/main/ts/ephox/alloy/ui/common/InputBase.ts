@@ -8,7 +8,7 @@ import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import { InputDetail } from '../../ui/types/InputTypes';
-import { RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { RawDomSchema } from '../../api/component/SpecTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),

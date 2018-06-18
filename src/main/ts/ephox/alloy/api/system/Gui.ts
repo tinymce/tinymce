@@ -14,8 +14,8 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { SystemApi } from './SystemApi';
-import { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
-import { FocusingEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { ElementAndHandler } from '../../events/EventRegistry';
+import { FocusingEvent } from '../../events/SimulatedEvent';
 
 export interface GuiSystem {
   root: () => AlloyComponent;

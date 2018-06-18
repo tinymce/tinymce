@@ -1,19 +1,19 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
 import { Width } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/api/Main';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
+import { SugarElement } from '../alien/TypeDefinitions';
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Positioning } from '../api/behaviour/Positioning';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
-import { tieredMenu as TieredMenu, TieredData } from '../api/ui/TieredMenu';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
+import { AnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';

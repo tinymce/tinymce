@@ -10,9 +10,9 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
 import * as SliderActions from './SliderActions';
 import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { NativeSimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();

@@ -22,9 +22,9 @@ import { EventFormat, SimulatedEvent, CustomEvent } from '../../events/Simulated
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarEvent } from 'ephox/alloy/api/Main';
-import { AnchorSpec, HotspotAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarEvent } from '../../api/Main';
+import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   const navigateList = (

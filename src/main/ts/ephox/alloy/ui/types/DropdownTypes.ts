@@ -1,13 +1,13 @@
 import { Future, Option, Result } from '@ephox/katamari';
-import { TieredData } from 'ephox/alloy/api/Main';
-import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { TieredData } from '../../api/Main';
+import { TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
