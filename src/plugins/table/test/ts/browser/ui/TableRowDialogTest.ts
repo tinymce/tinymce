@@ -201,6 +201,41 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', function 
     closeTopMostWindow(editor);
   });
 
+  suite.test('Remove all advanced styles through the style field', function (editor) {
+    editor.getBody().innerHTML = (
+      '<table>' +
+      '<tbody>' +
+      '<tr style="height: 50px;">' +
+      '<td>a</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    LegacyUnit.setSelection(editor, 'tr:nth-child(1) td:nth-child(1)', 0);
+    editor.execCommand('mceTableRowProps');
+
+    const win = getFrontmostWindow(editor);
+    win.fromJSON({ style: '' });
+    win.find('#style')[0].fire('change');
+    win.submit();
+
+    LegacyUnit.equal(
+      cleanTableHtml(editor.getContent()),
+      (
+        '<table>' +
+        '<tbody>' +
+        '<tr>' +
+        '<td>a</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      )
+    );
+
+    closeTopMostWindow(editor);
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
