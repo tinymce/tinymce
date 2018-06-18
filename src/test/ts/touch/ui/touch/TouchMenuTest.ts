@@ -9,9 +9,10 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) => {
-  const munge = (i) => {
+  const munge = (i): ItemSpec => {
     return {
       type: 'item',
       data: i.data,

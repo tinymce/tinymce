@@ -25,8 +25,7 @@ export interface FormChooserSpec extends CompositeSketchSpec {
     selectedClass: string;
   };
 
-  // TYPIFY
-  choices: Array<LooseSpec>;
+  choices: Array<{ value: string }>;
 }
 
 export interface FormChooserSketcher extends CompositeSketch<FormChooserSpec, FormChooserDetail> { }

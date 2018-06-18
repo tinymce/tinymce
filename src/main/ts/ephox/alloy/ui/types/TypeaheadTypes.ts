@@ -1,7 +1,7 @@
 import { Cell, Future, Option, Result } from '@ephox/katamari';
 import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
-import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { TieredMenuSpec, TieredData } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -35,8 +35,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  // TYPIFY
-  fetch: (comp: AlloyComponent) => Future<LooseSpec>;
+  fetch: (comp: AlloyComponent) => Future<TieredData>;
   dom: RawDomSchema;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;

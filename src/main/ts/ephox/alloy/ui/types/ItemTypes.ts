@@ -4,6 +4,7 @@ import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
+import { DomModification } from 'ephox/alloy/dom/DomModification';
 
 export interface ItemDataTuple {
   value: string;
@@ -46,15 +47,14 @@ export interface SeparatorItemDetail extends ItemDetail {
 export interface NormalItemSpec {
   type: 'item';
   data: ItemDataTuple;
-  components: AlloySpec[];
+  components?: AlloySpec[];
   dom: RawDomSchema;
   // INVESTIGATE: this might not be right
   toggling?: Partial<TogglingConfigSpec>;
-  itemBehaviours: SketchBehaviours;
+  itemBehaviours?: SketchBehaviours;
   ignoreFocus?: boolean;
-  // TYPIFY
-  domModification?: any;
-  eventOrder: Record<string, string[]>;
+  domModification?: DomModification;
+  eventOrder?: Record<string, string[]>;
 }
 
 export interface NormalItemDetail extends ItemDetail {
@@ -65,8 +65,7 @@ export interface NormalItemDetail extends ItemDetail {
   toggling: () => Option<Partial<TogglingConfigSpec>>;
   itemBehaviours: () => SketchBehaviours;
   ignoreFocus?: () => boolean;
-  // TYPIFY
-  domModification: () => { };
+  domModification: () => DomModification;
   eventOrder: () => Record<string, string[]>;
   builder: () => <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
 }

@@ -40,8 +40,7 @@ export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) =
     );
   };
 
-  // TYPIFY
-  const sAssertValue = (label: string, expected: any) => {
+  const sAssertValue = (label: string, expected: string) => {
     return Logger.t(
       label,
       Chain.asStep(typeahead.element(), [

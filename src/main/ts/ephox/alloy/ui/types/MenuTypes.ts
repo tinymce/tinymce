@@ -6,6 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { FocusManager } from 'ephox/alloy/api/focus/FocusManagers';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {
@@ -33,8 +34,7 @@ export interface MenuDetail extends CompositeSketchDetail {
   value: () => string;
   movement: () => MenuMovement;
 
-  // TYPIFY
-  focusManager: () => any;
+  focusManager: () => FocusManager;
   eventOrder: () => Record<string, string[]>;
 }
 
@@ -44,7 +44,6 @@ export interface MenuSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   menuBehaviours?: AlloyBehaviourRecord;
 
-  // TYPIFY
   value: string;
   items: ItemSpec[];
 

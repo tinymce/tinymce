@@ -6,6 +6,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { NormalItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
@@ -43,7 +44,8 @@ const demoChoiceRender = (choice) => {
   return {
     dom: DomFactory.fromHtml(
       '<span class="ephox-pastry-independent-button" title="' + spec.text + '" style="display: flex;"></span>'
-    )
+    ),
+    value: choice.value
   };
 };
 
@@ -149,7 +151,7 @@ const demoMenuRender = (menu) => {
   };
 };
 
-const demoOrbRender = (orb) => {
+const demoOrbRender = (orb): NormalItemSpec => {
   const spec = orb;
   return {
     type: 'item',
