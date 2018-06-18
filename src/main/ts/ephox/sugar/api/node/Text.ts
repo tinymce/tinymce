@@ -1,22 +1,23 @@
 import Node from './Node';
 import NodeValue from '../../impl/NodeValue';
+import Element from './Element';
 
 var api = NodeValue(Node.isText, 'text');
 
-var get = function (element) {
+var get = function (element: Element) {
   return api.get(element);
 };
 
-var getOption = function (element) {
+var getOption = function (element: Element) {
   return api.getOption(element);
 };
 
-var set = function (element, value) {
+var set = function (element: Element, value: string) {
   api.set(element, value);
 };
 
-export default <any> {
-  get: get,
-  getOption: getOption,
-  set: set
+export default {
+  get,
+  getOption,
+  set,
 };

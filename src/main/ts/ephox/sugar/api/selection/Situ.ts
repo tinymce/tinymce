@@ -16,10 +16,10 @@ var getStart = function (situ) {
   return situ.fold(Fun.identity, Fun.identity, Fun.identity)
 };
 
-export default <any> {
+export default {
   before: adt.before,
   on: adt.on,
   after: adt.after,
-  cata: cata,
-  getStart: getStart
+  cata,
+  getStart,
 };

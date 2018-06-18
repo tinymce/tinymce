@@ -66,7 +66,7 @@ export default function (name: string, getOffset: (e: Element) => number) {
     }, 0);
   };
 
-  var max = function (element: Element, value, properties) {
+  var max = function (element: Element, value: number, properties) {
     var cumulativeInclusions = aggregate(element, properties);
     // if max-height is 100px and your cumulativeInclusions is 150px, there is no way max-height can be 100px, so we return 0.
     var absoluteMax = value > cumulativeInclusions ? value - cumulativeInclusions : 0;

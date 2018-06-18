@@ -12,7 +12,7 @@ var find = function (parent: Element) {
   return SelectorFind.descendant(parent, 'input:checked');
 };
 
-export default <any> {
-  set: set,
-  find: find
+export default{
+  set,
+  find,
 };

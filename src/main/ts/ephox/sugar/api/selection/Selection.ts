@@ -42,13 +42,13 @@ var getWin = function (selection) {
   return Traverse.defaultView(start);
 };
 
-export default <any> {
+export default {
   domRange: type.domRange,
   relative: type.relative,
   exact: type.exact,
 
-  exactFromRange: exactFromRange,
-  range: range,
+  exactFromRange,
+  range,
 
-  getWin: getWin
+  getWin,
 };

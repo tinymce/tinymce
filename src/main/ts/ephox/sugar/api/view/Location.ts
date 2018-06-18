@@ -1,21 +1,22 @@
 import Dom from '../dom/Dom';
 import Element from '../node/Element';
-import Position from './Position';
+import { Position } from './Position';
+import { Element as DomElement, HTMLElement, Node } from '@ephox/dom-globals';
 
-var boxPosition = function (dom) {
+var boxPosition = function (dom: DomElement) {
   var box = dom.getBoundingClientRect();
   return Position(box.left, box.top);
 };
 
 // Avoids falsy false fallthrough
-var firstDefinedOrZero = function (a, b) {
+var firstDefinedOrZero = function (a: number, b: number) {
   return a !== undefined ? a :
          b !== undefined ? b :
          0;
 };
 
-var absolute = function (element) {
-  var doc = element.dom().ownerDocument;
+var absolute = function (element: Element) {
+  var doc = (element.dom() as Node).ownerDocument;
   var body = doc.body;
   var win = Dom.windowOf(Element.fromDom(doc));
   var html = doc.documentElement;
@@ -34,14 +35,14 @@ var absolute = function (element) {
 // This is the old $.position(), but JQuery does nonsense calculations.
 // We're only 1 <-> 1 with the old value in the single place we use this function
 // (ego.api.Dragging) so the rest can bite me.
-var relative = function (element) {
-  var dom = element.dom();
+var relative = function (element: Element) {
+  var dom: HTMLElement = element.dom();
   // jquery-ism: when style="position: fixed", this === boxPosition()
   // but tests reveal it returns the same thing anyway
   return Position(dom.offsetLeft, dom.offsetTop);
 };
 
-var viewport = function (element) {
+var viewport = function (element: Element) {
   var dom = element.dom();
 
   var doc = dom.ownerDocument;
@@ -57,8 +58,8 @@ var viewport = function (element) {
   return boxPosition(dom);
 };
 
-export default <any> {
-  absolute: absolute,
-  relative: relative,
-  viewport: viewport
+export default {
+  absolute,
+  relative,
+  viewport,
 };

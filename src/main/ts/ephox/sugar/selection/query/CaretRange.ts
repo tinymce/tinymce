@@ -4,22 +4,23 @@ import Traverse from '../../api/search/Traverse';
 import Selection from '../../api/selection/Selection';
 import ContainerPoint from './ContainerPoint';
 import EdgePoint from './EdgePoint';
+import { Window, Document, Range } from '@ephox/dom-globals';
 
 declare const document: any;
 
-var caretPositionFromPoint = function (doc, x, y) {
+var caretPositionFromPoint = function (doc: Element, x: number, y: number) {
   return Option.from(doc.dom().caretPositionFromPoint(x, y)).bind(function (pos) {
     // It turns out that Firefox can return null for pos.offsetNode
-    if (pos.offsetNode === null) return Option.none();
-    var r = doc.dom().createRange();
+    if (pos.offsetNode === null) return Option.none<Range>();
+    var r = (doc.dom() as Document).createRange();
     r.setStart(pos.offsetNode, pos.offset);
     r.collapse();
     return Option.some(r);
   });
 };
 
-var caretRangeFromPoint = function (doc, x, y) {
-  return Option.from(doc.dom().caretRangeFromPoint(x, y));
+var caretRangeFromPoint = function (doc: Element, x: number, y: number) {
+  return Option.from((doc.dom() as Document).caretRangeFromPoint(x, y));
 };
 
 var searchTextNodes = function (doc, node, x, y) {
@@ -33,7 +34,7 @@ var searchTextNodes = function (doc, node, x, y) {
   return ContainerPoint.locate(doc, node, boundedX, boundedY);
 };
 
-var searchFromPoint = function (doc, x, y) {
+var searchFromPoint = function (doc: Element, x: number, y: number): Option<Range> {
   // elementFromPoint is defined to return null when there is no element at the point
   // This often happens when using IE10 event.y instead of event.clientY
   return Element.fromPoint(doc, x, y).bind(function (elem) {
@@ -53,7 +54,7 @@ var availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint :
                       searchFromPoint;                                            // fallback
 
 
-var fromPoint = function (win, x, y) {
+var fromPoint = function (win: Window, x: number, y: number) {
   var doc = Element.fromDom(win.document);
   return availableSearch(doc, x, y).map(function (rng) {
     return Selection.range(
@@ -65,6 +66,6 @@ var fromPoint = function (win, x, y) {
   });
 };
 
-export default <any> {
-  fromPoint: fromPoint
+export default {
+  fromPoint
 };

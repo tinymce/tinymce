@@ -28,6 +28,6 @@ var execute = function (f) {
   }
 };
 
-export default <any> {
-  execute: execute
+export default {
+  execute
 };

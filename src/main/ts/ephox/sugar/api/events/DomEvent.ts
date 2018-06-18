@@ -11,7 +11,7 @@ var capture = function (element, event, handler) {
   return FilteredEvent.capture(element, event, filter, handler);
 };
 
-export default <any> {
-  bind: bind,
-  capture: capture
+export default {
+  bind,
+  capture,
 };

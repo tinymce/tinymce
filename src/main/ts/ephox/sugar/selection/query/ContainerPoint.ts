@@ -4,6 +4,8 @@ import Node from '../../api/node/Node';
 import Traverse from '../../api/search/Traverse';
 import Geometry from '../alien/Geometry';
 import TextPoint from './TextPoint';
+import Element from '../../api/node/Element';
+import { Document, Range } from '@ephox/dom-globals';
 
 /**
  * Future idea:
@@ -16,10 +18,10 @@ import TextPoint from './TextPoint';
  * (repartee does something similar).
  */
 
-var searchInChildren = function (doc, node, x, y) {
-  var r = doc.dom().createRange();
+var searchInChildren = function (doc: Element, node: Element, x: number, y: number): Option<Range> {
+  var r = (doc.dom() as Document).createRange();
   var nodes = Traverse.children(node);
-  return Options.findMap(nodes, function (n: any) {
+  return Options.findMap(nodes, function (n: Element) {
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?
@@ -28,12 +30,12 @@ var searchInChildren = function (doc, node, x, y) {
   });
 };
 
-var locateNode = function (doc, node, x, y) {
+var locateNode = function (doc: Element, node: Element, x: number, y: number) {
   var locator = Node.isText(node) ? TextPoint.locate : searchInChildren;
   return locator(doc, node, x, y);
 };
 
-var locate = function (doc, node, x, y) {
+var locate = function (doc: Element, node: Element, x: number, y: number) {
   var r = doc.dom().createRange();
   r.selectNode(node.dom());
   var rect = r.getBoundingClientRect();
@@ -44,6 +46,6 @@ var locate = function (doc, node, x, y) {
   return locateNode(doc, node, boundedX, boundedY);
 };
 
-export default <any> {
-  locate: locate
+export default {
+  locate
 };

@@ -1,12 +1,13 @@
 import FilteredEvent from '../../impl/FilteredEvent';
+import { MouseEvent } from '@ephox/dom-globals';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-var isLeftClick = function (raw) {
+var isLeftClick = function (raw: MouseEvent) {
   return raw.button === 0;
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
-var isLeftButtonPressed = function (raw) {
+var isLeftButtonPressed = function (raw: MouseEvent) {
   // Only added by Chrome/Firefox in June 2015.
   // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
   if (raw.buttons === undefined) return true;
@@ -16,7 +17,7 @@ var isLeftButtonPressed = function (raw) {
 };
 
 // Not 100% sure whether this works, so use with caution
-var isRealClick = function (raw) {
+var isRealClick = function (raw: any) {
   // Firefox non-standard property
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent#mozInputSource
   return (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false
@@ -35,7 +36,7 @@ var filtered = function (event, filter) {
   };
 };
 
-export default <any> {
+export default {
   realClick: filtered('click', isRealClick),
   leftDown: filtered('mousedown', isLeftClick),
   leftPressedOver: filtered('mouseover', isLeftButtonPressed),

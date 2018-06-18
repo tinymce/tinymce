@@ -12,7 +12,14 @@ import Width from '../view/Width';
 import Monitors from '../../impl/Monitors';
 import { setTimeout, window } from '@ephox/dom-globals';
 
-var elem = function (element) {
+interface Monitored {
+  element: Element
+  handlers: any[],
+  lastWidth: number,
+  lastHeight: number
+}
+
+var elem = function (element: Element): Monitored {
   return {
     element: element,
     handlers: [],
@@ -20,15 +27,15 @@ var elem = function (element) {
     lastHeight: Height.get(element)
   };
 };
-var elems = [];
+var elems: Monitored[] = [];
 
-var findElem = function (element) {
+var findElem = function (element: Element) {
   return Arr.findIndex(elems, function (el) {
     return Compare.eq(el.element, element);
   }).getOr(-1);
 };
 
-var bind = function (element, handler) {
+var bind = function (element: Element, handler) {
   var el = Arr.find(elems, function (el) {
     return Compare.eq(el.element, element);
   }).getOr(undefined);
@@ -48,7 +55,7 @@ var bind = function (element, handler) {
   }, 100);
 };
 
-var unbind = function (element, handler) {
+var unbind = function (element: Element, handler) {
   // remove any monitors on this element
   Monitors.end(element);
   var index = findElem(element);
@@ -62,7 +69,7 @@ var unbind = function (element, handler) {
   if (elems.length === 0) stop();
 };
 
-var visibleUpdate = function (el) {
+var visibleUpdate = function (el: Monitored) {
   var w = Width.get(el.element);
   var h = Height.get(el.element);
   if (w !== el.lastWidth || h !== el.lastHeight) {
@@ -72,7 +79,7 @@ var visibleUpdate = function (el) {
   }
 };
 
-var update = function (el) {
+var update = function (el: Monitored) {
   var element = el.element;
   // if already visible, run the update
   if (Visibility.isVisible(element)) visibleUpdate(el);
@@ -116,7 +123,7 @@ var stop = function () {
   });
 };
 
-export default <any> {
-  bind: bind,
-  unbind: unbind
+export default {
+  bind,
+  unbind,
 };

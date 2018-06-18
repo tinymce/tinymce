@@ -62,7 +62,7 @@ import SelectTag from './tag/SelectTag';
 import Height from './view/Height';
 import Location from './view/Location';
 import Platform from './view/Platform';
-import Position from './view/Position';
+import { Position } from './view/Position';
 import Scroll from './view/Scroll';
 import Visibility from './view/Visibility';
 import Width from './view/Width';
