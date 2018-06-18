@@ -12,7 +12,7 @@ import { document, Window, HTMLElement } from '@ephox/dom-globals';
 var isSafari = PlatformDetection.detect().browser.isSafari();
 
 // get scroll position (x,y) relative to document _doc (or global if not supplied)
-var get = function (_doc: Element) {
+var get = function (_doc?: Element) {
   var doc = _doc !== undefined ? _doc.dom() : document;
 
   // ASSUMPTION: This is for cross-browser support, body works for Safari & EDGE, and when we have an iframe body scroller
@@ -22,14 +22,14 @@ var get = function (_doc: Element) {
 };
 
 // Scroll content to (x,y) relative to document _doc (or global if not supplied)
-var to = function (x: number, y: number, _doc: Element) {
+var to = function (x: number, y: number, _doc?: Element) {
   var doc = _doc !== undefined ? _doc.dom() : document;
   var win = doc.defaultView;
   win.scrollTo(x, y);
 };
 
 // Scroll content by (x,y) relative to document _doc (or global if not supplied)
-var by = function (x: number, y: number, _doc: Element) {
+var by = function (x: number, y: number, _doc?: Element) {
   var doc = _doc !== undefined ? _doc.dom() : document;
   var win = doc.defaultView;
   win.scrollBy(x, y);
