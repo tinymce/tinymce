@@ -4,7 +4,7 @@ import * as RepresentApis from './RepresentApis';
 import { RepresentingConfig, RepresentingState } from '../../behaviour/representing/RepresentingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = (repConfig: RepresentingConfig, repState: RepresentingState): AlloyEvents.EventHandlerConfigRecord => {
+const events = (repConfig: RepresentingConfig, repState: RepresentingState): AlloyEvents.AlloyEventRecord => {
   const es = repConfig.resetOnDom() ? [
     AlloyEvents.runOnAttached((comp, se) => {
       RepresentApis.onLoad(comp, repConfig, repState);

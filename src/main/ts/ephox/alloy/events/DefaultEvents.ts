@@ -34,5 +34,5 @@ export default {
         return true;
       }
     })
-  ]) as AlloyEvents.EventHandlerConfigRecord
+  ]) as AlloyEvents.AlloyEventRecord
 };

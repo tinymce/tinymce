@@ -1,7 +1,7 @@
 import { Contracts, Result } from '@ephox/katamari';
 import { AlloySystemApi } from '../../api/system/SystemApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
+import { AlloyEventKeyAndHandler, AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 

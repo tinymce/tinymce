@@ -5,7 +5,7 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.EventHandlerConfigRecord => {
+const events = (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.AlloyEventRecord => {
   return invalidConfig.validator().map((validatorInfo) => {
     return AlloyEvents.derive([
       AlloyEvents.run(validatorInfo.onEvent(), (component) => {

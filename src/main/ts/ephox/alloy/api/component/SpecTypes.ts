@@ -1,7 +1,7 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
+import { AlloyEventKeyAndHandler, AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
 import { Option } from '@ephox/katamari';
 
@@ -36,7 +36,7 @@ export interface RawDomSchema extends OptionalDomSchema {
 export interface ComponentSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
-  events?: EventHandlerConfigRecord;
+  events?: AlloyEventRecord;
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
   domModification?: {};

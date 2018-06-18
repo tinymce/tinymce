@@ -7,13 +7,13 @@ import * as DomModification from '../../dom/DomModification';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
 
-const executeEvent = (bConfig, bState, executor): AlloyEvents.EventHandlerConfig<CustomEvent> => {
+const executeEvent = (bConfig, bState, executor): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
   return AlloyEvents.runOnExecute((component) => {
     executor(component, bConfig, bState);
   });
 };
 
-const loadEvent = (bConfig, bState, f): AlloyEvents.EventHandlerConfig<CustomEvent> => {
+const loadEvent = (bConfig, bState, f): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
   return AlloyEvents.runOnInit((component, simulatedEvent) => {
     f(component, bConfig, bState);
   });

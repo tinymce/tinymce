@@ -8,7 +8,7 @@ import { DomModification, nu as NuModification } from '../dom/DomModification'
 import * as AlloyTags from '../ephemera/AlloyTags';
 import { SketchSpec, SimpleSpec, SimpleOrSketchSpec, RawDomSchema, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { EventHandlerConfigRecord, AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyEventRecord, AlloyEventHandler } from 'ephox/alloy/api/events/AlloyEvents';
 import { EventFormat } from '../events/SimulatedEvent';
 
 export interface CustomDetail {
@@ -16,7 +16,7 @@ export interface CustomDetail {
   // By this stage, the components are built.
   components: () => AlloyComponent[];
   uid: () => string;
-  events: () => EventHandlerConfigRecord;
+  events: () => AlloyEventRecord;
   apis: () => Record<string, Function>;
   eventOrder: () => Record<string, string[]>;
   // TYPIFY
@@ -98,7 +98,7 @@ const toApis = (info: CustomDetail): Record<string, Function> => {
   return info.apis();
 };
 
-const toEvents = (info: CustomDetail): EventHandlerConfigRecord => {
+const toEvents = (info: CustomDetail): AlloyEventRecord => {
   return info.events();
 };
 

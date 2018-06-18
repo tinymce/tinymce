@@ -20,7 +20,7 @@ const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } =>
   });
 };
 
-const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.EventHandlerConfigRecord => {
+const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw();

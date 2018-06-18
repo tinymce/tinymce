@@ -4,7 +4,7 @@ import { DragApi } from '../../dragging/mouse/MouseDraggingTypes';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const init = (dragApi: DragApi): AlloyEvents.EventHandlerConfigRecord => {
+const init = (dragApi: DragApi): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     // When the user clicks on the blocker, something has probably gone slightly
     // wrong, so we'll just drop for safety. The blocker should really only

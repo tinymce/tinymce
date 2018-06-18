@@ -38,7 +38,7 @@ const mode: DragModeDeltas<PinchDragData> = {
   }
 };
 
-const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.EventHandlerConfigRecord => {
+const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
     // Note: in testing, it didn't seem to cause problems on Android. Check.

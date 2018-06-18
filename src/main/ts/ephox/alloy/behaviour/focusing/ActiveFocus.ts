@@ -15,7 +15,7 @@ const exhibit = (base: { }, focusConfig: FocusingConfig): any => {
   }
 };
 
-const events = (focusConfig: FocusingConfig) : AlloyEvents.EventHandlerConfigRecord => {
+const events = (focusConfig: FocusingConfig) : AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
       FocusApis.focus(component, focusConfig);

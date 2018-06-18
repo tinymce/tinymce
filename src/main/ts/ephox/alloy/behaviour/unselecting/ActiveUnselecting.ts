@@ -20,7 +20,7 @@ const exhibit = (base: { }, unselectConfig: UnselectingConfig): { } => {
   });
 };
 
-const events = (unselectConfig: UnselectingConfig): AlloyEvents.EventHandlerConfigRecord => {
+const events = (unselectConfig: UnselectingConfig): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
   ]);

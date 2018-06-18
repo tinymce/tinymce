@@ -16,7 +16,7 @@ import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDragging
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { DraggingState } from '../../dragging/common/DraggingTypes';
 
-const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.EventHandlerConfigRecord => {
+const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.mousedown(), (component, simulatedEvent) => {
       if (simulatedEvent.event().raw().button !== 0) { return; }

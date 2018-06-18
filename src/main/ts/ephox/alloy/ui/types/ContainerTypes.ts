@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec, OptionalDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch } from '../../api/ui/Sketcher';
-import { EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
+import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 
 export interface ContainerDetail {
   uid: () => string;
@@ -14,7 +14,7 @@ export interface ContainerDetail {
   components: () => AlloySpec[ ];
   containerBehaviours: () => SketchBehaviours;
   // DEPRECATE:
-  events: () => EventHandlerConfigRecord;
+  events: () => AlloyEventRecord;
   // FIX: types
   domModification: () => any;
   eventOrder: () => Record<string, string[]>
@@ -25,7 +25,7 @@ export interface ContainerSpec {
   dom?: OptionalDomSchema;
   components?: AlloySpec[];
   containerBehaviours?: AlloyBehaviourRecord;
-  events?: EventHandlerConfigRecord;
+  events?: AlloyEventRecord;
   domModification?: any;
   eventOrder?: Record<string, string[]>
 }

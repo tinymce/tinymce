@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
-import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
 import { RawDomSchema } from '../../api/component/SpecTypes';
 
 const getAttrs = (elem) => {

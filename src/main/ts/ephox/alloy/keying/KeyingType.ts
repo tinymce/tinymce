@@ -16,7 +16,7 @@ const typical = <C,S>(
   infoSchema: FieldProcessorAdt[],
   stateInit: (config: C) => BehaviourState,
   getRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => KeyRules.KeyRule<C,S>[],
-  getEvents: (config: C, state?: S) => AlloyEvents.EventHandlerConfigRecord,
+  getEvents: (config: C, state?: S) => AlloyEvents.AlloyEventRecord,
   getApis,
 optFocusIn) => {
   const schema = () => {
@@ -35,7 +35,7 @@ optFocusIn) => {
     });
   };
 
-  const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.EventHandlerConfigRecord => {
+  const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
     const otherEvents = getEvents(keyingConfig, keyingState);
     const keyEvents = AlloyEvents.derive(
       optFocusIn.map((focusIn) => {

@@ -9,7 +9,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.EventHandlerConfigRecord => {
+const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.AlloyEventRecord => {
   const executeHandler = (action) => {
     return AlloyEvents.run(SystemEvents.execute(), (component, simulatedEvent) => {
       action(component);

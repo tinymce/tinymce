@@ -12,7 +12,7 @@ import { TouchDraggingConfigSpec, TouchDraggingConfig } from '../../dragging/tou
 import { DraggingState } from '../../dragging/common/DraggingTypes';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 
-const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.EventHandlerConfigRecord => {
+const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
 
   return AlloyEvents.derive([
     AlloyEvents.stopper(NativeEvents.touchstart()),

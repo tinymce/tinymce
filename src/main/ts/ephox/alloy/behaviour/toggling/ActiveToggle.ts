@@ -12,7 +12,7 @@ const exhibit = (base: { }, toggleConfig: TogglingConfig, toggleState: Stateless
   return DomModification.nu({ });
 };
 
-const events = (toggleConfig: TogglingConfig, toggleState: Stateless): AlloyEvents.EventHandlerConfigRecord => {
+const events = (toggleConfig: TogglingConfig, toggleState: Stateless): AlloyEvents.AlloyEventRecord => {
   const execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
   const load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
 

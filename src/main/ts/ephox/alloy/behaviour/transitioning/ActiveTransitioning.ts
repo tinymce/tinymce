@@ -6,7 +6,7 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.EventHandlerConfigRecord => {
+const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw();
