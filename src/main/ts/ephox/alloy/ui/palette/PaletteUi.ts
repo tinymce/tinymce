@@ -150,6 +150,7 @@ const sketch = function (detail, components, spec, externals) {
           const thumb = getThumb(slider);
           // Call onInit instead of onChange for the first value.
           refresh(slider);
+          console.log(detail.colour().get());
           refreshColour(slider, detail.colour().get());
           detail.onInit()(slider, thumb, detail.value().get());
         })

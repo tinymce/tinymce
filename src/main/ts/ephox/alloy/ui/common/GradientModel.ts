@@ -75,11 +75,11 @@ const findValueOfY = function (bounds, min, max, yValue, step, snapToGrid, snapS
   return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
 };
 
-const findUnroundedOf = function (bounds, value, ledgeProp, redgeProp, lengthProp) {
+const findUnroundedOf = function (bounds, value, ledgeProp, redgeProp) {
   if (value < bounds[ledgeProp]) {
     return 0;
   } else if (value > bounds[redgeProp]) {
-    return bounds[redgeProp];
+    return bounds[redgeProp] - bounds[ledgeProp];
   } else {
     const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
     return offset;
@@ -87,8 +87,8 @@ const findUnroundedOf = function (bounds, value, ledgeProp, redgeProp, lengthPro
 };
 
 const findPercentageValueOfCoords = function (bounds, coords) {
-  const x = findUnroundedOf(bounds, coords.x, 'left', 'right', 'width');
-  const y = findUnroundedOf(bounds, coords.y, 'top', 'bottom', 'height');
+  const x = findUnroundedOf(bounds, coords.x, 'left', 'right');
+  const y = findUnroundedOf(bounds, coords.y, 'top', 'bottom');
   return {
     x,
     y,

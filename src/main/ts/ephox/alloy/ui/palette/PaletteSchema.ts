@@ -15,7 +15,7 @@ const PaletteSchema : FieldProcessorAdt[] = [
   FieldSchema.defaulted('onDragStart', Fun.noop),
   FieldSchema.defaulted('onDragEnd', Fun.noop),
   FieldSchema.state('value', function (spec) { return Cell({x: 0, y: 0}); }),
-  FieldSchema.state('colour', function (spec) { return Cell(RgbaColour.rgbaColour(0, 0, 0, 1)); }),
+  FieldSchema.state('colour', function (spec) { return Cell(RgbaColour.rgbaColour(255, 0, 0, 1)); }),
   SketchBehaviours.field('paletteBehaviours', [ Keying, Representing ])
 ].concat(! isTouch ? [
   // Only add if not on a touch device
