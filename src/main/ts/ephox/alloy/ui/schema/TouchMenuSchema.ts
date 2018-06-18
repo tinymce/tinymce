@@ -39,6 +39,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.option('role'),
   FieldSchema.defaulted('eventOrder', { }),
+  FieldSchema.defaulted('matchWidth', true),
 
   Fields.onHandler('onClosed'),
 

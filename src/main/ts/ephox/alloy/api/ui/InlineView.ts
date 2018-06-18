@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
-import { SketchSpec } from '../../api/component/SpecTypes';
+import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -47,7 +47,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       eventOrder: detail.eventOrder(),
 
       apis: {
-        showAt (sandbox, anchor: AnchorSpec, thing) {
+        showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
           Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);
@@ -55,7 +55,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
           Sandboxing.decloak(sandbox);
           detail.onShow()(sandbox);
         },
-        hide (sandbox) {
+        hide (sandbox: AlloyComponent) {
           Sandboxing.close(sandbox);
           detail.onHide()(sandbox);
         },

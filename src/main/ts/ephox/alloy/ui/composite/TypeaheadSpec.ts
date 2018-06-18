@@ -24,6 +24,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SugarEvent } from 'ephox/alloy/api/Main';
+import { AnchorSpec, HotspotAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   const navigateList = (
@@ -41,7 +42,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         });
       });
     } else {
-      const anchor = { anchor: 'hotspot', hotspot: comp };
+      const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
       const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
@@ -108,7 +109,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
               });
             };
 
-            const anchor = { anchor: 'hotspot', hotspot: component };
+            const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
             DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
@@ -178,7 +179,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((comp) => {
-        const anchor = { anchor: 'hotspot', hotspot: comp };
+        const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
         const onOpenSync = Fun.noop;
         DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
       })

@@ -9,21 +9,25 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
-export interface DropdownDetail extends CompositeSketchDetail {
+// F is the fetched data
+export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
-  dropdownBehaviours: () => SketchBehaviours;
+
   role: () => Option<string>;
   eventOrder: () => Record<string, string[]>
-  fetch: () => (comp: AlloyComponent) => Future<TieredData>;
+  fetch: () => (comp: AlloyComponent) => Future<F>;
   onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-
-  toggleClass: () => string;
   lazySink?: () => Option<() => Result<AlloyComponent, Error>>
   matchWidth: () => boolean;
+}
+
+export interface DropdownDetail extends CommonDropdownDetail<TieredData>, CompositeSketchDetail {
+  dropdownBehaviours: () => SketchBehaviours;
+  onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  toggleClass: () => string;
 }
 
 export interface DropdownSpec extends CompositeSketchSpec {

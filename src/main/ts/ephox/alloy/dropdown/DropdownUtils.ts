@@ -1,5 +1,8 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
 import { Width } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/api/Main';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
@@ -8,21 +11,19 @@ import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Positioning } from '../api/behaviour/Positioning';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
-import { tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
+import { tieredMenu as TieredMenu, TieredData } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
-import { DropdownDetail } from '../ui/types/DropdownTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 
-const fetch = (detail: DropdownDetail, component) => {
+const fetch = (detail: CommonDropdownDetail<TieredData>, component) => {
   const fetcher = detail.fetch();
   return fetcher(component);
 };
 
-const openF = (detail: DropdownDetail, anchor, component, sandbox, externals) => {
+const openF = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component, sandbox, externals) => {
   const futureData = fetch(detail, component);
 
   const lazySink = getSink(component, detail);
@@ -66,7 +67,7 @@ const openF = (detail: DropdownDetail, anchor, component, sandbox, externals) =>
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: DropdownDetail, anchor, component: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) => {
+const open = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) => {
   const processed = openF(detail, anchor, component, sandbox, externals);
   return processed.map((data) => {
     Sandboxing.cloak(sandbox);
@@ -76,12 +77,12 @@ const open = (detail: DropdownDetail, anchor, component: AlloyComponent, sandbox
   });
 };
 
-const close = (detail: DropdownDetail, anchor, component, sandbox, _externals, _onOpenSync) => {
+const close = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component, sandbox, _externals, _onOpenSync) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: DropdownDetail, anchor, hotspot: AlloyComponent, externals, onOpenSync) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, anchor:AnchorSpec, hotspot: AlloyComponent, externals, onOpenSync) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
@@ -89,13 +90,13 @@ const togglePopup = (detail: DropdownDetail, anchor, hotspot: AlloyComponent, ex
   return action(detail, anchor, hotspot, sandbox, externals, onOpenSync);
 };
 
-const matchWidth = (hotspot, container) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
   Width.set(menu.element(), buttonWidth);
 };
 
-const getSink = (anyInSystem, detail) => {
+const getSink = (anyInSystem: AlloyComponent, detail: CommonDropdownDetail<any>) => {
   return anyInSystem.getSystem().getByUid(detail.uid() + '-' + InternalSink.suffix()).map((internalSink) => {
     return Fun.constant(
       Result.value(internalSink)
@@ -111,7 +112,7 @@ const getSink = (anyInSystem, detail) => {
   });
 };
 
-const makeSandbox = (detail: DropdownDetail, anchor: AnchorSpec, anyInSystem: AlloyComponent, extras) => {
+const makeSandbox = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, anyInSystem: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (component, menu) => {
@@ -139,7 +140,7 @@ const makeSandbox = (detail: DropdownDetail, anchor: AnchorSpec, anyInSystem: Al
       Sandboxing.config({
         onOpen,
         onClose,
-        isPartOf (container, data, queryElem) {
+        isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean {
           return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
         },
         getAttachPoint () {
@@ -147,7 +148,7 @@ const makeSandbox = (detail: DropdownDetail, anchor: AnchorSpec, anyInSystem: Al
         }
       }),
       Composing.config({
-        find (sandbox) {
+        find (sandbox: AlloyComponent): Option<AlloyComponent> {
           return Sandboxing.getState(sandbox).bind((menu) => {
             return Composing.getCurrent(menu);
           });

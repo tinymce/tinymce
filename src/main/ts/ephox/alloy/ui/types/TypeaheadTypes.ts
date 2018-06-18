@@ -1,5 +1,5 @@
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
+import { CommonDropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
 import { TieredData, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
@@ -9,13 +9,14 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-export interface TypeaheadDetail extends DropdownDetail, InputDetail<TypeaheadData> {
+export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail<TypeaheadData> {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   minChars: () => number;
 
   typeaheadBehaviours: () => SketchBehaviours;
+  onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: () => boolean;
 
   data: () => Option<TypeaheadData>;

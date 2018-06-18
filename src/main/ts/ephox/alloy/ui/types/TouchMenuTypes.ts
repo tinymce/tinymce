@@ -9,8 +9,9 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { CommonDropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 
-export interface TouchMenuDetail extends CompositeSketchDetail {
+export interface TouchMenuDetail extends CommonDropdownDetail<Array<ItemSpec>>, CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
@@ -25,6 +26,7 @@ export interface TouchMenuDetail extends CompositeSketchDetail {
 
   menuTransition: () => Option<{ property: string; transitionClass: string }>;
 
+  onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed: () => (sandbox: AlloyComponent, inline: AlloyComponent) => void;
   eventOrder: () => Record<string, string[]>;
   role: () => Option<string>;
@@ -33,6 +35,9 @@ export interface TouchMenuDetail extends CompositeSketchDetail {
   lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
 
   fetch: () => (comp: AlloyComponent) => Future<Array<ItemSpec>>;
+
+  // FIX: Clean up DropdownUtils, so this isn't required here.
+  matchWidth: () => boolean;
 }
 
 export interface TouchMenuSpec extends CompositeSketchSpec {
@@ -50,6 +55,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
 
   menuTransition?: { property: string, transitionClass: string };
 
+  onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed?: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;
   role?: string;
@@ -57,6 +63,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   lazySink?: () => Result<AlloyComponent, Error>;
 
   fetch: (comp: AlloyComponent) => Future<Array<ItemSpec>>;
+  matchWidth?: boolean;
 
   parts: {
     menu: PartialMenuSpec,
