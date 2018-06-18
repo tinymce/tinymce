@@ -27,6 +27,10 @@ PluginManager.add('autosave', function (editor) {
   BeforeUnload.setup(editor);
   Buttons.register(editor, started);
 
+  if (!editor.getContent()) {
+    Api.restoreWhenEmpty(editor);
+  }
+
   return Api.get(editor);
 });
 
