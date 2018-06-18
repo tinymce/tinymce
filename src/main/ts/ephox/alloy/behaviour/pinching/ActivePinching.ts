@@ -6,10 +6,11 @@ import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pi
 import { Stateless } from '../../behaviour/common/BehaviourState';
 import { DraggingState, DragModeDeltas } from '../../dragging/common/DraggingTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
+import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 
 const mode: DragModeDeltas<PinchDragData> = {
   getData (e: SugarEvent)  {
-    const raw = e.raw() as any;
+    const raw = e.raw() as TouchEvent;
     const touches = raw.touches;
     if (touches.length < 2) { return Option.none(); }
 
