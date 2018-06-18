@@ -24,10 +24,6 @@ export type KeyingConfigSpec =
   AcylicConfigSpec | CyclicConfigSpec | FlowConfigSpec | FlatgridConfigSpec |
   MatrixConfigSpec | ExecutingConfigSpec | MenuConfigSpec | SpecialConfigSpec;
 
-export interface KeyingFocusManager {
-  set: (component: AlloyComponent, focusee: any) => void;
-  get: (component: AlloyComponent) => AlloyComponent;
-}
 
 // TODO: dynamic type, TODO: group these into their KeyingModes
 export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
