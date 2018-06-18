@@ -15,6 +15,7 @@ import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { ClientRect } from '@ephox/dom-globals';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 

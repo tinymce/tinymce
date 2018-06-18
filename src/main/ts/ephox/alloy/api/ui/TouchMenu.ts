@@ -1,6 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Cell, Fun, Merger, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
+import { TouchEvent } from '@ephox/dom-globals';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';

@@ -1,4 +1,5 @@
 import { Fun, Option } from '@ephox/katamari';
+import { TouchEvent } from '@ephox/dom-globals';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';

@@ -1,14 +1,14 @@
-import { Fun, Option } from '@ephox/katamari';
+import { ClientRect, MouseEvent, Touch, TouchEvent } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as SliderModel from './SliderModel';
-import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
-
 import { Position } from '@ephox/sugar';
+
+import { SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail } from '../../ui/types/SliderTypes';
+import * as SliderModel from './SliderModel';
 
 const _changeEvent = 'slider.change.value';
 

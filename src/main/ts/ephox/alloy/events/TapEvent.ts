@@ -1,6 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
+import { Touch, TouchEvent } from '@ephox/dom-globals';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';

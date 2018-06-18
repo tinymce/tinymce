@@ -1,6 +1,7 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Navigation } from './Navigation';
 import { SugarDocument, SugarElement } from '../alien/TypeDefinitions';
+import { HTMLDocument } from '@ephox/dom-globals';
 
 const walkUp = (navigation: Navigation, doc: SugarDocument): SugarElement[] => {
   const frame = navigation.view(doc);

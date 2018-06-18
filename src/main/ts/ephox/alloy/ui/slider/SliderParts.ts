@@ -1,18 +1,19 @@
 import { FieldSchema } from '@ephox/boulder';
+import { ClientRect, HTMLElement } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as PartType from '../../parts/PartType';
-import * as SliderActions from './SliderActions';
-import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import * as PartType from '../../parts/PartType';
+import { SliderDetail } from '../../ui/types/SliderTypes';
+import * as SliderActions from './SliderActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();

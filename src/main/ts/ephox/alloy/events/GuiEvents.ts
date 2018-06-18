@@ -9,7 +9,7 @@ import * as TapEvent from './TapEvent';
 
 import { SugarEvent, SugarElement, SugarListener } from '../alien/TypeDefinitions';
 import { EventFormat } from '../events/SimulatedEvent';
-import { setTimeout } from '@ephox/dom-globals';
+import { setTimeout, KeyboardEvent } from '@ephox/dom-globals';
 
 const isDangerous = (event: SugarEvent): boolean => {
   // Will trigger the Back button in the browser

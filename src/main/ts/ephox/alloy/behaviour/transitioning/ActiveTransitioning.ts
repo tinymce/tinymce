@@ -1,11 +1,11 @@
+import { TransitionEvent } from '@ephox/dom-globals';
+
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as TransitionApis from './TransitionApis';
-import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-
-import { EventFormat } from '../../events/SimulatedEvent';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
+import * as TransitionApis from './TransitionApis';
 
 const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([

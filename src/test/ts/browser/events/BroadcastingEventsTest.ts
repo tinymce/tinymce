@@ -6,7 +6,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { document, console } from '@ephox/dom-globals';
+import { document, console, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, failure) => {
 

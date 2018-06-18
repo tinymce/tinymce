@@ -1,5 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarEvent } from '../alien/TypeDefinitions';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 export type KeyMatcher = (SugarEvent) => boolean;
 

@@ -2,6 +2,8 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
 import { Direction, Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
+import { Window } from '@ephox/dom-globals';
+
 import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';

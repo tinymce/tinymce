@@ -1,12 +1,13 @@
 import { Objects } from '@ephox/boulder';
 import { Css } from '@ephox/sugar';
+import { TransitionEvent } from '@ephox/dom-globals';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
-import { EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {

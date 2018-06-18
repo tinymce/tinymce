@@ -1,6 +1,7 @@
 import { SugarElement, SugarDocument } from "ephox/alloy/alien/TypeDefinitions";
 import { Option } from "@ephox/katamari";
 import { Body, Element, Traverse} from '@ephox/sugar';
+import { HTMLFrameElement, HTMLDocument } from '@ephox/dom-globals';
 
 const iframeDoc = (element: SugarElement): Option<SugarDocument> => {
   const dom = element.dom() as HTMLFrameElement;

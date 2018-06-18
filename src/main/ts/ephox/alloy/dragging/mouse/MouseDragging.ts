@@ -1,20 +1,21 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
 import DelayedFunction from '../../alien/DelayedFunction';
+import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { Container } from '../../api/ui/Container';
 import * as Fields from '../../data/Fields';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
+import { DragApi, MouseDraggingConfig } from '../../dragging/mouse/MouseDraggingTypes';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
-import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDraggingTypes';
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
-import { DraggingState } from '../../dragging/common/DraggingTypes';
 
 const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([

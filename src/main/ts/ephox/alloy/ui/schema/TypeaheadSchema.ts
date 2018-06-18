@@ -17,6 +17,8 @@ import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
+import { HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
+
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),

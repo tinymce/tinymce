@@ -1,5 +1,5 @@
 import { EventFormat } from '../events/SimulatedEvent';
-import { HTMLElement, Event, TouchEvent, TransitionEvent } from '@ephox/dom-globals';
+import { HTMLElement, HTMLDocument, Event, TouchEvent, TransitionEvent, KeyboardEvent, MouseEvent } from '@ephox/dom-globals';
 
 // TODO move these to the correct village
 

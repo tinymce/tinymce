@@ -1,7 +1,8 @@
+import { document, Element } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
-import { SugarElement, SugarDocument } from '../alien/TypeDefinitions';
+import { Element as SElement, Traverse } from '@ephox/sugar';
+
+import { SugarDocument, SugarElement } from '../alien/TypeDefinitions';
 
 export interface Navigation {
   view: (SugarDocument) => Option<SugarElement>;
@@ -14,7 +15,7 @@ const view = (doc: SugarDocument): Option<SugarElement> => {
   const element: Option<Element> = doc.dom() === document ?
                   Option.none()
                 : Option.from(doc.dom().defaultView.frameElement);
-  return element.map(Element.fromDom);
+  return element.map(SElement.fromDom);
 };
 
 const owner = (element: SugarElement): SugarDocument => {
