@@ -1,10 +1,10 @@
-import { SugarElement } from "ephox/alloy/alien/TypeDefinitions";
+import { SugarElement } from "../alien/TypeDefinitions";
 import { Option } from "@ephox/katamari";
-import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
-import { SimulatedEvent, NativeSimulatedEvent } from "ephox/alloy/events/SimulatedEvent";
-import { FocusManager } from "ephox/alloy/api/focus/FocusManagers";
-import { BehaviourState } from "ephox/alloy/api/Main";
-import { Stateless } from "ephox/alloy/behaviour/common/BehaviourState";
+import { AlloyComponent } from "../api/component/ComponentApi";
+import { SimulatedEvent, NativeSimulatedEvent } from "../events/SimulatedEvent";
+import { FocusManager } from "../api/focus/FocusManagers";
+import { BehaviourState } from "../api/Main";
+import { Stateless } from "../behaviour/common/BehaviourState";
 
 export type KeyHandlerApi<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
 

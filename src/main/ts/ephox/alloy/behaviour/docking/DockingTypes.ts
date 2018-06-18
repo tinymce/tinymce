@@ -2,7 +2,7 @@ import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from "../../api/component/ComponentApi";
 import { SugarElement } from "../../alien/TypeDefinitions";
-import { Bounds } from "ephox/alloy/alien/Boxes";
+import { Bounds } from "../../alien/Boxes";
 import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
