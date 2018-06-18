@@ -17,7 +17,7 @@ export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
 export interface SnapConfigSpec {
   sensor: SensorCoords;
-  range: (x, y) => Coordinates;
+  range: (x, y) => PositionCoordinates;
   output: OutputCoords;
 }
 

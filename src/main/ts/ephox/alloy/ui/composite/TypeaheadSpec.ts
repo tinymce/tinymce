@@ -19,6 +19,7 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
 import { EventFormat } from '../../events/SimulatedEvent';
+import { HTMLInputElement } from '@ephox/dom-globals';
 
 const make = function (detail, components, spec, externals) {
   const navigateList = function (comp, simulatedEvent, highlighter) {

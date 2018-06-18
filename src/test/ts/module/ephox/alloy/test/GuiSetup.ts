@@ -4,6 +4,7 @@ import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TestStore from './TestStore';
 import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
 import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
+import { document, console } from '@ephox/dom-globals';
 
 const setup = function (createComponent, f, success, failure) {
   const store = TestStore();

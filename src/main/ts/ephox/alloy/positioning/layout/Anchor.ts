@@ -1,5 +1,6 @@
 import * as Origins from './Origins';
 import { Struct } from '@ephox/katamari';
+import { window } from '@ephox/dom-globals';
 
 /*
  * Smooths over the difference between passing an element anchor (which requires an origin to determine the box) and passing a box.

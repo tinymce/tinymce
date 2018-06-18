@@ -3,6 +3,7 @@ import { Arr, Fun, Obj, Options } from '@ephox/katamari';
 
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
+import { console, window } from '@ephox/dom-globals';
 
 const unknown = 'unknown';
 

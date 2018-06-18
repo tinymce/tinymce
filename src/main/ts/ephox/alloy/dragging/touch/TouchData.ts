@@ -1,6 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { PositionCoordinates, SugarEvent } from '../../alien/TypeDefinitions';
+import { TouchEvent } from '@ephox/dom-globals';
 
 const getDataFrom = function (touches): Option<PositionCoordinates> {
   const touch = touches[0];

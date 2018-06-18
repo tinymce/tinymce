@@ -7,6 +7,7 @@ import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { console } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

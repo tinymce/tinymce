@@ -8,6 +8,7 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { composite, CompositeSketch } from './Sketcher';
+import { console } from '@ephox/dom-globals';
 
 export interface ToolbarSketch extends CompositeSketch {
   setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;

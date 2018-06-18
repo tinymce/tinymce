@@ -6,6 +6,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, console } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

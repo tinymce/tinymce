@@ -1,6 +1,7 @@
 import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
+import { setTimeout } from '@ephox/dom-globals';
 
 const isFirefox = PlatformDetection.detect().browser.isFirefox();
 

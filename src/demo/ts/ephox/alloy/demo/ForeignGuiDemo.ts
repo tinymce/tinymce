@@ -11,6 +11,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as Reader from 'ephox/alloy/frame/Reader';
 import * as Writer from 'ephox/alloy/frame/Writer';
+import { document } from '@ephox/dom-globals';
 
 const resize = function (element, changeX, changeY) {
   document.querySelector('h2').innerHTML = 'resizing';

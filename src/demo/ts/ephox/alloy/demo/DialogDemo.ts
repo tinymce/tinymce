@@ -8,6 +8,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, console } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

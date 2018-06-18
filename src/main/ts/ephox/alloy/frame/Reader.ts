@@ -1,5 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { console } from '@ephox/dom-globals';
 
 const iframeDoc = function (element) {
   const dom = element.dom();
