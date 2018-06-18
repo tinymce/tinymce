@@ -14,6 +14,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
@@ -46,7 +47,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       eventOrder: detail.eventOrder(),
 
       apis: {
-        showAt (sandbox, anchor, thing) {
+        showAt (sandbox, anchor: AnchorSpec, thing) {
           const sink = detail.lazySink()().getOrDie();
           Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);

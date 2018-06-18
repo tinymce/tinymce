@@ -15,6 +15,8 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { HotspotAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {
@@ -24,8 +26,8 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     });
   };
 
-  const action = (component) => {
-    const anchor = { anchor: 'hotspot', hotspot: component };
+  const action = (component: AlloyComponent): void => {
+    const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };

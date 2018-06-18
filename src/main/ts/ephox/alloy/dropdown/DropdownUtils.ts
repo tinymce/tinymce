@@ -46,8 +46,7 @@ const openF = (detail: DropdownDetail, anchor, component, sandbox, externals) =>
             const sink = lazySink().getOrDie();
             Positioning.position(sink, {
               anchor: 'submenu',
-              item,
-              bubble: Option.none()
+              item
             }, submenu);
             Sandboxing.decloak(sandbox);
 

@@ -5,11 +5,13 @@ import { Element } from '@ephox/dom-globals';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import { Stateless } from 'ephox/alloy/behaviour/common/BehaviourState';
 
 
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec,PositioningConfig> {
   config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
-  position: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
+  position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent) => void;
   getMode: (component: AlloyComponent) => string;
 }
 
@@ -22,11 +24,3 @@ export interface PositioningConfig extends BehaviourConfigDetail {
   useFixed: () => boolean;
   bounds: () => Option<Bounds> // TODO: Strengthen types
 };
-
-export interface AnchorPositioningConfig <T> {
-  anchor: string;
-  item?: AlloyComponent;  // TODO: Option type, {} empty works with Obj or change the scheme
-  bubble?: Option<T>;     // This is correctly implemented, bubble? value is Option<T>
-  root?: Element;         // TODO: Option type
-  hotspot?: AlloyComponent;
-}

@@ -19,6 +19,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {
@@ -68,8 +69,7 @@ export default (): void => {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
-        item,
-        bubble: Option.none()
+        item
       }, submenu);
 
     },
@@ -152,17 +152,17 @@ export default (): void => {
           inputBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('adhoc-show-popup', [
               AlloyEvents.run(NativeEvents.focusin(), (input) => {
-                const emptyAnchor = {
+                const emptyAnchor: SubmenuAnchorSpec = {
                   anchor: 'submenu',
                   item: input
                 };
 
-                const nonEmptyAnchor = {
+                const nonEmptyAnchor: SelectionAnchorSpec = {
                   anchor: 'selection',
                   root: gui.element()
                 };
 
-                const anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
                 InlineView.showAt(inlineComp, anchor, Container.sketch({
                   containerBehaviours: Behaviour.derive([
                     Keying.config({
