@@ -9,6 +9,7 @@
  */
 
 import Storage from '../core/Storage';
+import Settings from './Settings';
 
 // Inlined the curry function since adding Fun without tree shaking to every plugin would produce a lot of bloat
 const curry = function (f, editor) {
@@ -16,6 +17,12 @@ const curry = function (f, editor) {
     const args = Array.prototype.slice.call(arguments);
     return f.apply(null, [editor].concat(args));
   };
+};
+
+const restoreWhenEmpty = function (editor) {
+  if (Settings.shouldRestoreWhenEmpty(editor)) {
+    Storage.restoreDraft(editor);
+  }
 };
 
 const get = function (editor) {
@@ -29,5 +36,6 @@ const get = function (editor) {
 };
 
 export default {
-  get
+  get,
+  restoreWhenEmpty
 };
