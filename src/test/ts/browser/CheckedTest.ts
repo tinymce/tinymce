@@ -14,7 +14,7 @@ UnitTest.test('CheckedTest', function() {
   InsertAll.append(container, [ alpha, beta, gamma ]);
 
   assert.eq(true, Checked.find(container).isNone());
-  Checked.set(beta, 'true');
+  Checked.set(beta, true);
   assert.eq('beta', Value.get(Checked.find(container).getOrDie()));
   Checked.set(alpha, true);
   assert.eq('alpha', Value.get(Checked.find(container).getOrDie()));

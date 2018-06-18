@@ -30,7 +30,7 @@ var locate = function (doc: Element, node: Element, x: number, y: number) {
   var r = (doc.dom() as Document).createRange();
   r.selectNode(node.dom());
   var rects = r.getClientRects();
-  var foundRect = Options.findMap(rects as any, function (rect) {
+  var foundRect = Options.findMap(rects as any, function (rect: ClientRect) {
     return Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none();
   });
 

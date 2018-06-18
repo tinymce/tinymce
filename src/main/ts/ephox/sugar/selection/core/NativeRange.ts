@@ -9,7 +9,7 @@ var selectNodeContents = function (win: Window, element: Element) {
   return rng;
 };
 
-var selectNodeContentsUsing = function (rng: range, element: Element) {
+var selectNodeContentsUsing = function (rng: Range, element: Element) {
   rng.selectNodeContents(element.dom());
 };
 
