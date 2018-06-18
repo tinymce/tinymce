@@ -80,8 +80,7 @@ var choosePercentageSize = function (element, width, tableSize) {
     var percentMatch = percentageBasedSizeRegex.exec(width);
     return parseFloat(percentMatch[1]);
   } else {
-    var fallbackWidth = Width.get(element);
-    var intWidth = parseInt(fallbackWidth, 10);
+    var intWidth = Width.get(element);
     return normalizePercentageWidth(intWidth, tableSize);
   }
 };
@@ -90,8 +89,7 @@ var choosePercentageSize = function (element, width, tableSize) {
 var getPercentageWidth = function (cell, tableSize) {
   var width = getRawWidth(cell);
   return width.fold(function () {
-    var width = Width.get(cell);
-    var intWidth = parseInt(width, 10);
+    var intWidth = Width.get(cell);
     return normalizePercentageWidth(intWidth, tableSize);
   }, function (width) {
     return choosePercentageSize(cell, width, tableSize);
@@ -111,17 +109,14 @@ var choosePixelSize = function (element, width, tableSize) {
     var floatWidth = parseFloat(percentMatch[1]);
     return normalizePixelWidth(floatWidth, tableSize);
   } else {
-    var fallbackWidth = Width.get(element);
-    return parseInt(fallbackWidth, 10);
+    return Width.get(element)
   }
 };
 
 var getPixelWidth = function (cell, tableSize) {
   var width = getRawWidth(cell);
   return width.fold(function () {
-    var width = Width.get(cell);
-    var intWidth = parseInt(width, 10);
-    return intWidth;
+    return Width.get(cell);
   }, function (width) {
     return choosePixelSize(cell, width, tableSize);
   });

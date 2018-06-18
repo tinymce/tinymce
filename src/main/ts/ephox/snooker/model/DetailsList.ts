@@ -16,7 +16,7 @@ var fromTable = function (table) {
     var element = row;
 
     var parent = Traverse.parent(element);
-    var parentSection = parent.bind(function (parent) {
+    var parentSection = parent.map(function (parent) {
       var parentName = Node.name(parent);
       return (parentName === 'tfoot' || parentName === 'thead' || parentName === 'tbody') ? parentName : 'tbody';
     });

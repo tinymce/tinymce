@@ -84,9 +84,9 @@ UnitTest.test('TableLookupTest', function() {
     var element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
-    SelectorFind.descendant(Body.body(), 'td').fold(function () {
-        assert.fail('Could not find any table cell element');
-      }, function (cells) {
+    const cells = SelectorFilter.descendants(Body.body(), 'td');
+    if (cells.length === 0) assert.fail('Could not find any table cell element');
+    else {
         Arr.each(cells, function (cell) {
           var result = TableLookup.cell(cell);
         assert.eq(true, result.isSome(), label + ': Expected the result to find something');
@@ -94,8 +94,7 @@ UnitTest.test('TableLookupTest', function() {
         });
 
         Remove.remove(element);
-    });
-
+    }
   };
 
   var testRowShouldNotReturn = function (html, label) {
@@ -103,15 +102,15 @@ UnitTest.test('TableLookupTest', function() {
     var element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
-    SelectorFind.descendant(Body.body(), 'tr').fold(function () {
-        assert.fail('Could not find any table row element');
-      }, function (rows) {
-        Arr.each(rows, function (row) {
-          var result = TableLookup.cell(row);
-        assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
-        });
-        Remove.remove(element);
-    });
+    const rows = SelectorFilter.descendants(Body.body(), 'tr');
+    if (rows.length === 0) assert.fail('Could not find any table row elements');
+    else {
+      Arr.each(rows, function (row) {
+        var result = TableLookup.cell(row);
+      assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
+      });
+      Remove.remove(element);
+    }
   };
 
 
