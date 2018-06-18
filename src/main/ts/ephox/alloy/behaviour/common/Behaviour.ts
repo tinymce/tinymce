@@ -19,7 +19,7 @@ const loadEvent = (bConfig, bState, f): AlloyEvents.AlloyEventKeyAndHandler<Cust
   });
 };
 
-const create = (schema, name, active, apis, extra, state): AlloyBehaviour => {
+const create = (schema, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -27,7 +27,7 @@ const create = (schema, name, active, apis, extra, state): AlloyBehaviour => {
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour => {
+const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -61,7 +61,7 @@ const revokeBehaviour = (name) => {
   };
 };
 
-const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour => {
+const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
   const getConfig = (info) => {
     return Objects.hasKey(info, name) ? info[name]() : Option.none();
   };

@@ -15,6 +15,7 @@ import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { DropdownDetail } from '../ui/types/DropdownTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 const fetch = (detail: DropdownDetail, component) => {
   const fetcher = detail.fetch();
@@ -111,8 +112,7 @@ const getSink = (anyInSystem, detail) => {
   });
 };
 
-// TYPIFY: anchor type
-const makeSandbox = (detail: DropdownDetail, anchor: any, anyInSystem: AlloyComponent, extras) => {
+const makeSandbox = (detail: DropdownDetail, anchor: AnchorSpec, anyInSystem: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (component, menu) => {

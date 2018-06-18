@@ -7,6 +7,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export interface DropdownDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -16,7 +17,7 @@ export interface DropdownDetail extends CompositeSketchDetail {
   role: () => Option<string>;
   eventOrder: () => Record<string, string[]>
   fetch: () => (comp: AlloyComponent) => Future<TieredData>;
-  onOpen: () => (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
@@ -30,7 +31,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   fetch: (comp: AlloyComponent) => Future<TieredData>;
-  onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 

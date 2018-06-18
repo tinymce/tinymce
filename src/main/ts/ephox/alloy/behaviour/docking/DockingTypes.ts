@@ -3,9 +3,11 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from "../../api/component/ComponentApi";
 import { SugarElement } from "../../alien/TypeDefinitions";
 import { Bounds } from "ephox/alloy/alien/Boxes";
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
-export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+
+export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
+  config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DockingConfigSpec, DockingConfig>;
 }
 
 
@@ -16,14 +18,14 @@ export interface DockingContext {
   lazyContext: () => (component: AlloyComponent) => Option<SugarElement>;
 }
 
-export interface DockingConfig {
+export interface DockingConfig extends BehaviourConfigDetail {
   contextual: () => Option<DockingContext>;
   lazyViewport: () => (component?: AlloyComponent) => Bounds;
   leftAttr: () => string;
   topAttr: () => string;
 }
 
-export interface DockingConfigSpec {
+export interface DockingConfigSpec extends BehaviourConfigSpec {
   contextual?: {
     fadeInClass: string;
     fadeOutClass: string;

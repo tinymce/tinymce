@@ -9,8 +9,7 @@ export interface DomModification {
   classes(): Option<string[]>;
   attributes(): Option<Record<string, string>>;
   styles(): Option<Record<string, string>>;
-  // TYPIFY
-  value(): Option<string>;
+  value(): Option<any>;
   innerHtml(): Option<string>;
   defChildren(): Option<DomDefinitionDetail[]>;
   domChildren(): Option<SugarElement[]>;
@@ -20,8 +19,7 @@ export interface DomModificationSpec {
   classes?: string[];
   attributes?: Record<string, string>;
   styles?: Record<string, string>;
-  // TYPIFY:
-  value?: string;
+  value?: any;
   innerHtml?: string;
   defChildren?: DomDefinitionDetail[];
   domChildren?: SugarElement[];

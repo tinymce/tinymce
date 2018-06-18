@@ -9,16 +9,16 @@ import { BehaviourData } from '../../behaviour/common/BehaviourBlob';
 export interface ComponentBehaviour {
   data: {
     key: string;
-    value: () => AlloyBehaviour;
+    value: () => AlloyBehaviour<any,any>;
   };
-  list: AlloyBehaviour[];
+  list: AlloyBehaviour<any,any>[];
 }
 
 type BehaviourName = string;
 
 // This goes through the list of behaviours defined for a particular spec (removing anyhing
 // that has been revoked), and returns the BehaviourType (e.g. Sliding)
-const getBehaviours = (spec): AlloyBehaviour[] => {
+const getBehaviours = (spec): AlloyBehaviour<any,any>[] => {
   const behaviours: AlloyBehaviourRecord = Objects.readOptFrom(spec, 'behaviours').getOr({ });
   const keys = Arr.filter(
     Obj.keys(behaviours),
@@ -29,7 +29,7 @@ const getBehaviours = (spec): AlloyBehaviour[] => {
   });
 };
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): BehaviourData => {
+const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour<any,any>[]): BehaviourData => {
   return BehaviourBlob.generateFrom(spec, all);
 };
 

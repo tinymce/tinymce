@@ -15,7 +15,7 @@ export type AnchorPlacement =
   (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent) => void;
 
 export interface CommonAnchorSpec {
-
+  anchor: string;
 }
 
 export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec;
@@ -30,6 +30,7 @@ export interface AnchorOverrides {
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec {
+  anchor: 'selection';
   getSelection?: () => SugarRange;
   root: SugarElement;
   bubble?: Bubble;
@@ -46,6 +47,7 @@ export interface SelectionAnchor extends AnchorDetail<SelectionAnchor> {
 }
 
 export interface HotspotAnchorSpec extends CommonAnchorSpec {
+  anchor: 'hotspot';
   hotspot: AlloyComponent;
   layouts?: {
     onLtr: (elem: SugarElement) => AnchorLayout[];
@@ -62,6 +64,7 @@ export interface HotspotAnchor extends AnchorDetail<HotspotAnchor> {
 }
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec {
+  anchor: 'submenu';
   item: AlloyComponent;
   layouts?: {
     onLtr: (elem: SugarElement) => AnchorLayout[];
@@ -80,6 +83,7 @@ export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor> {
 
 
 export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
+  anchor: 'makeshift';
   x: number;
   y: number;
   height?: number;

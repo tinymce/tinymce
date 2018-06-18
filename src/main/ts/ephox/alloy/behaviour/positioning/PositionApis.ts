@@ -32,7 +32,6 @@ const placeFixed = (_component: AlloyComponent, origin: OriginAdt, anchoring: An
   SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
-// TYPIFY
 const placeRelative = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
   const bounds = posConfig.bounds().getOr(Boxes.view());
 

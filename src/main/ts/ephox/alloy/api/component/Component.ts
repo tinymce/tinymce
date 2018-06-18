@@ -25,7 +25,7 @@ import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 // questionable as a concept. Maybe it should be deprecated.
 const getDomDefinition = (
   info: CustomDefinition.CustomDetail,
-  bList: AlloyBehaviour[],
+  bList: AlloyBehaviour<any,any>[],
   bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
 ): DomDefinitionDetail => {
   const definition = CustomDefinition.toDefinition(info);
@@ -38,7 +38,7 @@ const getDomDefinition = (
 
 const getEvents = (
   info: CustomDefinition.CustomDetail,
-  bList: AlloyBehaviour[],
+  bList: AlloyBehaviour<any,any>[],
   bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
@@ -97,8 +97,8 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     subcomponents.set(subs);
   };
 
-  // TYPIFY
-  const config = (behaviour: AlloyBehaviour): Record<string, any> => {
+  // TYPIFY (any here is for the info.apis() pathway)
+  const config = <D>(behaviour: AlloyBehaviour<any,D>): D | any => {
     if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
@@ -107,7 +107,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     return f();
   };
 
-  const hasConfigured = (behaviour: AlloyBehaviour): boolean => {
+  const hasConfigured = (behaviour: AlloyBehaviour<any,any>): boolean => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 

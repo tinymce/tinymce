@@ -1,9 +1,11 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
-export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: HighlightingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+
+export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour<HighlightingConfigSpec, HighlightingConfig> {
+  config: (config: HighlightingConfigSpec) => Behaviour.NamedConfiguredBehaviour<HighlightingConfigSpec, HighlightingConfig>;
   dehighlightAll: (component: AlloyComponent) => void;
   dehighlight: (component: AlloyComponent, target: AlloyComponent) => void;
   highlight: (component: AlloyComponent, target: AlloyComponent) => void;
@@ -19,14 +21,14 @@ export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour {
   getNext: (component: AlloyComponent) => Option<AlloyComponent>;
 }
 
-export interface HighlightingConfigSpec {
+export interface HighlightingConfigSpec extends BehaviourConfigSpec {
   itemClass: string;
   highlightClass: string;
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   onDehighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 }
 
-export interface HighlightingConfig {
+export interface HighlightingConfig extends BehaviourConfigDetail {
   itemClass: () => string;
   highlightClass: () => string;
   onHighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;

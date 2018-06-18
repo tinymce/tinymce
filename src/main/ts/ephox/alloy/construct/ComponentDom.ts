@@ -85,12 +85,12 @@ const mergeTypes = {
 const combine = (
   info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
   baseMod: Record<string, DomModification>,
-  behaviours: AlloyBehaviour[],
+  behaviours: AlloyBehaviour<any,any>[],
   base: DomDefinitionDetail
 ): Result<DomModification, string> => {
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
   const modsByBehaviour: Record<string, DomModification> = Merger.deepMerge({ }, baseMod);
-  Arr.each(behaviours, (behaviour: AlloyBehaviour) => {
+  Arr.each(behaviours, (behaviour: AlloyBehaviour<any,any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
 

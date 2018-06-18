@@ -7,11 +7,11 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { FocusManagers } from '../../api/Main';
-import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec } from 'ephox/alloy/keying/KeyingModeTypes';
+import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec, GeneralKeyingConfig } from 'ephox/alloy/keying/KeyingModeTypes';
 import { console } from '@ephox/dom-globals';
 
-export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: KeyingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviour.AlloyBehaviour<KeyingConfigSpec, D> {
+  config: (config: KeyingConfigSpec) => Behaviour.NamedConfiguredBehaviour<KeyingConfigSpec, D>;
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
     component: AlloyComponent,
@@ -55,7 +55,7 @@ const Keying = Behaviour.createModes({
     }
   },
   state: KeyingState
-}) as KeyingBehaviour;
+}) as KeyingBehaviour<any>;
 
 export {
   Keying

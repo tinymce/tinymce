@@ -6,7 +6,7 @@ import { create as createBehaviour, ConfiguredBehaviour, AlloyBehaviour, NamedCo
 import { EventFormat } from '../../events/SimulatedEvent';
 import { NoState } from 'ephox/alloy/behaviour/common/BehaviourState';
 
-const events = (name: string, eventHandlers: AlloyEventKeyAndHandler<EventFormat>[]): AlloyBehaviour => {
+const events = (name: string, eventHandlers: AlloyEventKeyAndHandler<EventFormat>[]): AlloyBehaviour<any,any> => {
   const events: AlloyEventRecord = derive(eventHandlers);
 
   return createBehaviour({
@@ -20,7 +20,7 @@ const events = (name: string, eventHandlers: AlloyEventKeyAndHandler<EventFormat
   });
 };
 
-const config = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): NamedConfiguredBehaviour => {
+const config = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): NamedConfiguredBehaviour<any,any> => {
   const me = events(name, eventHandlers);
   return {
     key: name,

@@ -7,7 +7,7 @@ import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
-  config: (config: AlloyBehaviour) => Record<string, any>;
+  config: <D>(behaviour: AlloyBehaviour<any,D>) => D | any
   hasConfigured: (behaviour) => boolean;
   spec: () => any;
   readState: (behaviourName: string) => any;

@@ -6,8 +6,8 @@ import { SugarPosition, SugarEvent, SugarElement } from "../../alien/TypeDefinit
 import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
 import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
-export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
+  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
   snap: (SnapConfig) => any;
 }
 

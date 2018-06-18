@@ -1,23 +1,24 @@
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { Bounds } from 'ephox/alloy/alien/Boxes';
 import { Element } from '@ephox/dom-globals';
 
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
-export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+
+export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec,PositioningConfig> {
+  config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
   position: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
-  // TYPIFY
-  getMode: (component: AlloyComponent) => any;
+  getMode: (component: AlloyComponent) => string;
 }
 
-export interface PositioningConfigSpec {
+export interface PositioningConfigSpec extends BehaviourConfigSpec {
   useFixed?: boolean;
   bounds?: Bounds
 }
 
-export interface PositioningConfig {
+export interface PositioningConfig extends BehaviourConfigDetail {
   useFixed: () => boolean;
   bounds: () => Option<Bounds> // TODO: Strengthen types
 };

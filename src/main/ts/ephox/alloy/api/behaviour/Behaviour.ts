@@ -8,31 +8,33 @@ import { DomModification } from 'ephox/alloy/dom/DomModification';
 import { CustomDetail } from 'ephox/alloy/construct/CustomDefinition';
 import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
 
-export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour>;
+export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour<any,any>>;
 
-export interface NamedConfiguredBehaviour {
+export interface BehaviourConfigSpec { }
+export interface BehaviourConfigDetail { }
+
+export interface NamedConfiguredBehaviour<C extends BehaviourConfigSpec,D extends BehaviourConfigDetail> {
   key: string;
-  value: ConfiguredBehaviour;
+  value: ConfiguredBehaviour<C,D>;
 }
 
-export interface AlloyBehaviour {
-  config: (spec: any) => NamedConfiguredBehaviour;
+export interface AlloyBehaviour<C extends BehaviourConfigSpec,D extends BehaviourConfigDetail> {
+  config: (spec: C) => NamedConfiguredBehaviour<C,D>;
   exhibit: (
     info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
     base: DomDefinitionDetail
   ) => DomModification;
-  // TYPIFY
-  handlers: (info: any) => {};
+  handlers: (info: D) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };
   schema: () => FieldProcessorAdt;
 }
 
-export interface ConfiguredBehaviour {
-  config: { [key: string]: () => any};
-  configAsRaw: () => Record<string, any>;
+export interface ConfiguredBehaviour<C extends BehaviourConfigSpec,D extends BehaviourConfigDetail> {
+  config: D;
+  configAsRaw: () => C;
   initialConfig: {};
-  me: AlloyBehaviour;
+  me: AlloyBehaviour<C,D>;
   state: any;
 }
 
@@ -45,7 +47,9 @@ export interface AlloyBehaviourConfig {
   state?: {};
 }
 
-const derive = (capabilities): AlloyBehaviourRecord => {
+const derive = (
+  capabilities: NamedConfiguredBehaviour<any,any>[]
+): AlloyBehaviourRecord => {
   return Objects.wrapAll(capabilities);
 };
 
@@ -58,7 +62,7 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extra', { })
 ]);
 
-const create = (data: AlloyBehaviourConfig): AlloyBehaviour => {
+const create = <C extends BehaviourConfigSpec,D extends BehaviourConfigDetail>(data: AlloyBehaviourConfig): AlloyBehaviour<C,D> => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
@@ -83,7 +87,7 @@ const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extra', { })
 ]);
 
-const createModes = (data: BehaviourModeSpec): AlloyBehaviour => {
+const createModes = <C extends BehaviourConfigSpec,D extends BehaviourConfigDetail>(data: BehaviourModeSpec): AlloyBehaviour<C,D> => {
   const value: BehaviourModeSpec = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return Behaviour.createModes(
     ValueSchema.choose(value.branchKey, value.branches),

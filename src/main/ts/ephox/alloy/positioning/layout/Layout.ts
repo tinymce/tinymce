@@ -25,7 +25,6 @@ export type AnchorLayout = (
   anchor: AnchorBox,
   element: AnchorElement,
   bubbles: Bubble
-// TYPIFY
 ) => SpotInfo
 
 

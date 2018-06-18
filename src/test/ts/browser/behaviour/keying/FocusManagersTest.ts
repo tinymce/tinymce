@@ -11,9 +11,6 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
-
-
-
   const manager = (prefix) => {
     let active = '';
 
@@ -47,9 +44,12 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
           classes: [ prefix + '-' + num ],
           innerHtml: prefix + '-' + num
         },
-        behaviours: Behaviour.derive([
-          Focusing.config({ })
-        ].concat(haveTabstop ? [ Tabstopping.config({ }) ] : [ ]))
+        behaviours: Behaviour.derive(
+          Arr.flatten<any>([
+            [ Focusing.config({ }) ],
+            haveTabstop ? [ Tabstopping.config({ }) ] : [ ]
+          ])
+        )
       };
     });
   };

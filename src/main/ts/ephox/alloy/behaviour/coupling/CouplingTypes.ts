@@ -5,14 +5,16 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
-export interface CouplingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: CouplingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+
+export interface CouplingBehaviour extends Behaviour.AlloyBehaviour<CouplingConfigSpec, CouplingConfig> {
+  config: (config: CouplingConfigSpec) => Behaviour.NamedConfiguredBehaviour<CouplingConfigSpec, CouplingConfig>;
   getCoupled: (component: AlloyComponent, name: string) => AlloyComponent;
 }
 
-export interface CouplingConfigSpec {
+export interface CouplingConfigSpec extends BehaviourConfigSpec {
   others: { [key: string]: (comp: AlloyComponent) => AlloySpec };
 }
 
@@ -20,6 +22,6 @@ export interface CouplingState extends BehaviourState {
   getOrCreate: (component: AlloyComponent, coupleConfig: CouplingConfig, name: string) => AlloyComponent;
 }
 
-export interface CouplingConfig {
+export interface CouplingConfig extends BehaviourConfigDetail {
   others: () => { [key: string]: () => ((comp: AlloyComponent) => AlloySpec) };
 }

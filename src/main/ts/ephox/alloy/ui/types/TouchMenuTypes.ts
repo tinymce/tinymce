@@ -8,6 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { AnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export interface TouchMenuDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -28,8 +29,7 @@ export interface TouchMenuDetail extends CompositeSketchDetail {
   eventOrder: () => Record<string, string[]>;
   role: () => Option<string>;
 
-  // FIX: TYPIFY
-  getAnchor: () => (comp: AlloyComponent) => any;
+  getAnchor: () => (comp: AlloyComponent) => AnchorSpec;
   lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
 
   fetch: () => (comp: AlloyComponent) => Future<Array<ItemSpec>>;
@@ -64,7 +64,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
     sink?: SimpleOrSketchSpec
   },
 
-  getAnchor?: (comp: AlloyComponent) => any;
+  getAnchor?: (comp: AlloyComponent) => AnchorSpec;
 }
 
 export interface TouchMenuSketcher extends CompositeSketch<TouchMenuSpec, TouchMenuDetail> { }
