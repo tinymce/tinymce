@@ -20,8 +20,6 @@ export interface AlloyEventKeyAndHandler<T extends EventFormat> {
   value: AlloyEventHandler<T>;
 }
 
-// TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
-// export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
 type RunOnName<T extends EventFormat> = (handler: EventRunHandler<T>) => AlloyEventKeyAndHandler<T>;
 type RunOnSourceName<T extends EventFormat> = (handler: EventRunHandler<T>) => AlloyEventKeyAndHandler<T>;
 export type EventRunHandler<T extends EventFormat> = (component: AlloyComponent, se: SimulatedEvent<T>, ...others) => void;

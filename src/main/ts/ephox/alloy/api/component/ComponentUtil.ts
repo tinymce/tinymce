@@ -6,7 +6,7 @@ const toElem = (component: AlloyComponent): SugarElement => {
   return component.element();
 };
 
-const getByUid = (component: AlloyComponent, uid: any): Option<AlloyComponent> => {
+const getByUid = (component: AlloyComponent, uid: string): Option<AlloyComponent> => {
   return component.getSystem().getByUid(uid).toOption();
 };
 

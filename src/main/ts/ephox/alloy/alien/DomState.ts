@@ -7,7 +7,7 @@ const attrName = Id.generate('dom-data');
 // garbage collected rather than stored in a separate list that needs to be in sync with the DOM.
 // We don't want people to use this very often (it's used for ForeignGui), and we especially don't
 // want to try and store more than one thing on the DOM node, so the attribute name is hard-coded.
-const getOrCreate = (element: SugarElement, f: () => any): any => {
+const getOrCreate = <A>(element: SugarElement, f: () => A): A => {
   const existing = Objects.readOptFrom(element.dom(), attrName);
   const data = existing.getOrThunk(f);
   element.dom()[attrName] = data;

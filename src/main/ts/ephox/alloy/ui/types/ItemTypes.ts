@@ -4,7 +4,7 @@ import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
-import { DomModification } from 'ephox/alloy/dom/DomModification';
+import { DomModification, DomModificationSpec } from 'ephox/alloy/dom/DomModification';
 
 export interface ItemDataTuple {
   value: string;
@@ -20,7 +20,7 @@ export interface WidgetItemSpec {
   data?: ItemDataTuple // why is this necessary?
   dom: RawDomSchema;
   autofocus?: boolean;
-  domModification?: any;
+  domModification?: DomModificationSpec;
 }
 
 export interface WidgetItemDetail extends ItemDetail, CompositeSketchDetail {
@@ -54,7 +54,7 @@ export interface NormalItemSpec {
   toggling?: Partial<TogglingConfigSpec>;
   itemBehaviours?: SketchBehaviours;
   ignoreFocus?: boolean;
-  domModification?: DomModification;
+  domModification?: DomModificationSpec;
   eventOrder?: Record<string, string[]>;
 }
 

@@ -2,19 +2,6 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Struct, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-// classes: mod.classes().getOr('<none>'),
-//     attributes: mod.attributes().getOr('<none>'),
-//     styles: mod.styles().getOr('<none>'),
-//     value: mod.value().getOr('<none>'),
-//     innerHtml: mod.innerHtml().getOr('<none>'),
-//     defChildren: mod.defChildren().getOr('<none>'),
-//     domChildren: mod.domChildren().fold(() => {
-//       return '<none>';
-//     }, (children) => {
-//       return children.length === 0 ? '0 children, but still specified' : String(children.length);
-//     })
-
-
 import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
 import { SugarElement } from 'ephox/alloy/api/Main';
 
@@ -22,10 +9,22 @@ export interface DomModification {
   classes(): Option<string[]>;
   attributes(): Option<Record<string, string>>;
   styles(): Option<Record<string, string>>;
+  // TYPIFY
   value(): Option<string>;
   innerHtml(): Option<string>;
   defChildren(): Option<DomDefinitionDetail[]>;
   domChildren(): Option<SugarElement[]>;
+}
+
+export interface DomModificationSpec {
+  classes?: string[];
+  attributes?: Record<string, string>;
+  styles?: Record<string, string>;
+  // TYPIFY:
+  value?: string;
+  innerHtml?: string;
+  defChildren?: DomDefinitionDetail[];
+  domChildren?: SugarElement[];
 }
 
 const fields = [

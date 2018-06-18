@@ -5,6 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import { DomModification, DomModificationSpec } from 'ephox/alloy/dom/DomModification';
 
 export type ButtonAction = (AlloyComponent) => void;
 
@@ -14,7 +15,7 @@ export interface TabButtonDetail extends SingleSketchDetail {
   components: () => AlloySpec[ ];
   action: () => Option<ButtonAction>;
   tabButtonBehaviours: () => SketchBehaviours;
-  domModification: () => any;
+  domModification: () => DomModification;
   value: () => string;
 }
 
@@ -25,7 +26,7 @@ export interface TabButtonSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   tabButtonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
-  domModification?: { };
+  domModification?: DomModificationSpec
 }
 
 export interface TabButtonSketcher extends SingleSketch<TabButtonSpec, TabButtonDetail> { };

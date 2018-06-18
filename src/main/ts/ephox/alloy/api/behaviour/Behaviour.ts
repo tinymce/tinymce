@@ -21,6 +21,7 @@ export interface AlloyBehaviour {
     info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
     base: DomDefinitionDetail
   ) => DomModification;
+  // TYPIFY
   handlers: (info: any) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };

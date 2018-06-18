@@ -19,6 +19,7 @@ import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
 import { AlloySystemApi } from 'ephox/alloy/api/system/SystemApi';
+import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
@@ -39,7 +40,7 @@ const getEvents = (
   info: CustomDefinition.CustomDetail,
   bList: AlloyBehaviour[],
   bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
-): Record<string, Function> => {
+): Record<string, UncurriedHandler> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
   };
@@ -96,6 +97,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     subcomponents.set(subs);
   };
 
+  // TYPIFY
   const config = (behaviour: AlloyBehaviour): Record<string, any> => {
     if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
     const b = bData;

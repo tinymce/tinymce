@@ -6,6 +6,7 @@ import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
 import * as DescribedHandler from '../events/DescribedHandler';
 import * as EventHandler from './EventHandler';
+import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 /*
  * The process of combining a component's events
@@ -43,7 +44,7 @@ const groupByEvents = (info, behaviours, base) => {
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };
 
-const combine = (info, eventOrder, behaviours, base): Result<Record<string, Function>,any> => {
+const combine = (info, eventOrder, behaviours, base): Result<Record<string, UncurriedHandler>,string | Error> => {
   const byEventName = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
