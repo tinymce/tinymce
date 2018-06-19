@@ -1,5 +1,6 @@
 import DomEvent from './DomEvent';
 import Element from '../node/Element';
+import { document } from '@ephox/dom-globals';
 
 var execute = function (f) {
   /*
@@ -9,11 +10,11 @@ var execute = function (f) {
 
   /* The general spec describes three states: loading, complete, and interactive.
    * https://html.spec.whatwg.org/multipage/dom.html#current-document-readiness
-   * 
+   *
    * loading: the document is not ready (still loading)
    * interactive: the document is ready, but sub-resources are still loading
    * complete: the document is completely ready.
-   * 
+   *
    * Note, IE and w3 schools talk about: uninitialized and loaded. We may have to handle them in the future.
    */
   if (document.readyState === 'complete' || document.readyState === 'interactive') f();
@@ -27,6 +28,6 @@ var execute = function (f) {
   }
 };
 
-export default <any> {
-  execute: execute
+export default {
+  execute
 };

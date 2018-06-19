@@ -4,17 +4,18 @@ import { Option } from '@ephox/katamari';
 import { Thunk } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import NativeRange from './NativeRange';
+import { Window, Range } from '@ephox/dom-globals';
 
 var adt = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-var fromRange = function (win, type, range) {
+var fromRange = function (win, type, range: Range) {
   return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 };
 
-var getRanges = function (win, selection) {
+var getRanges = function (win: Window, selection) {
   return selection.match({
     domRange: function (rng) {
       return {
@@ -34,7 +35,7 @@ var getRanges = function (win, selection) {
         })
       };
     },
-    exact: function (start, soffset, finish, foffset) {
+    exact: function (start: Element, soffset: number, finish: Element, foffset: number) {
       return {
         ltr: Thunk.cached(function () {
           return NativeRange.exactToNative(win, start, soffset, finish, foffset);
@@ -49,7 +50,7 @@ var getRanges = function (win, selection) {
   });
 };
 
-var doDiagnose = function (win, ranges) {
+var doDiagnose = function (win: Window, ranges) {
   // If we cannot create a ranged selection from start > finish, it could be RTL
   var rng = ranges.ltr();
   if (rng.collapsed) {
@@ -57,12 +58,12 @@ var doDiagnose = function (win, ranges) {
     var reversed = ranges.rtl().filter(function (rev) {
       return rev.collapsed === false;
     });
-    
+
     return reversed.map(function (rev) {
       // We need to use "reversed" here, because the original only has one point (collapsed)
       return adt.rtl(
         Element.fromDom(rev.endContainer), rev.endOffset,
-        Element.fromDom(rev.startContainer), rev.startOffset  
+        Element.fromDom(rev.startContainer), rev.startOffset
       );
     }).getOrThunk(function () {
       return fromRange(win, adt.ltr, rng);
@@ -72,21 +73,21 @@ var doDiagnose = function (win, ranges) {
   }
 };
 
-var diagnose = function (win, selection) {
+var diagnose = function (win: Window, selection) {
   var ranges = getRanges(win, selection);
   return doDiagnose(win, ranges);
 };
 
-var asLtrRange = function (win, selection) {
+var asLtrRange = function (win: Window, selection) {
   var diagnosis = diagnose(win, selection);
   return diagnosis.match({
-    ltr: function (start, soffset, finish, foffset) {
+    ltr: function (start: Element, soffset: number, finish: Element, foffset: number) {
       var rng = win.document.createRange();
       rng.setStart(start.dom(), soffset);
       rng.setEnd(finish.dom(), foffset);
       return rng;
     },
-    rtl: function (start, soffset, finish, foffset) {
+    rtl: function (start: Element, soffset: number, finish: Element, foffset: number) {
       // NOTE: Reversing start and finish
       var rng = win.document.createRange();
       rng.setStart(finish.dom(), foffset);
@@ -96,9 +97,9 @@ var asLtrRange = function (win, selection) {
   });
 };
 
-export default <any> {
+export default {
   ltr: adt.ltr,
   rtl: adt.rtl,
-  diagnose: diagnose,
-  asLtrRange: asLtrRange
+  diagnose,
+  asLtrRange,
 };

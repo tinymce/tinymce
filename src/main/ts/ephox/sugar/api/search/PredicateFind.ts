@@ -6,13 +6,14 @@ import Body from '../node/Body';
 import Compare from '../dom/Compare';
 import Element from '../node/Element';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
+import { Node as DomNode } from '@ephox/dom-globals';
 
-var first = function (predicate) {
+var first = function (predicate: (e: Element) => boolean) {
   return descendant(Body.body(), predicate);
 };
 
-var ancestor = function (scope, predicate, isRoot) {
-  var element = scope.dom();
+var ancestor = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
+  var element: DomNode = scope.dom();
   var stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
   while (element.parentNode) {
@@ -22,54 +23,54 @@ var ancestor = function (scope, predicate, isRoot) {
     if (predicate(el)) return Option.some(el);
     else if (stop(el)) break;
   }
-  return Option.none();
+  return Option.none<Element>();
 };
 
-var closest = function (scope, predicate, isRoot) {
+var closest = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
   // This is required to avoid ClosestOrAncestor passing the predicate to itself
-  var is = function (scope) {
+  var is = function (scope: Element) {
     return predicate(scope);
   };
   return ClosestOrAncestor(is, ancestor, scope, predicate, isRoot);
 };
 
-var sibling = function (scope, predicate) {
-  var element = scope.dom();
-  if (!element.parentNode) return Option.none();
+var sibling = function (scope, predicate: (e: Element) => boolean) {
+  var element: DomNode = scope.dom();
+  if (!element.parentNode) return Option.none<Element>();
 
   return child(Element.fromDom(element.parentNode), function (x) {
     return !Compare.eq(scope, x) && predicate(x);
   });
 };
 
-var child = function (scope, predicate) {
+var child = function (scope: Element, predicate: (e: Element) => boolean) {
   var result = Arr.find(scope.dom().childNodes,
     Fun.compose(predicate, Element.fromDom));
   return result.map(Element.fromDom);
 };
 
-var descendant = function (scope, predicate) {
-  var descend = function (element) {
-    for (var i = 0; i < element.childNodes.length; i++) {
-      if (predicate(Element.fromDom(element.childNodes[i])))
-        return Option.some(Element.fromDom(element.childNodes[i]));
+var descendant = function (scope: Element, predicate: (e: Element) => boolean) {
+  var descend = function (node: DomNode): Option<Element> {
+    for (var i = 0; i < node.childNodes.length; i++) {
+      if (predicate(Element.fromDom(node.childNodes[i])))
+        return Option.some(Element.fromDom(node.childNodes[i]));
 
-      var res = descend(element.childNodes[i]);
+      var res = descend(node.childNodes[i]);
       if (res.isSome())
         return res;
     }
 
-    return Option.none();
+    return Option.none<Element>();
   };
 
   return descend(scope.dom());
 };
 
-export default <any> {
-  first: first,
-  ancestor: ancestor,
-  closest: closest,
-  sibling: sibling,
-  child: child,
-  descendant: descendant
+export default {
+  first,
+  ancestor,
+  closest,
+  sibling,
+  child,
+  descendant,
 };

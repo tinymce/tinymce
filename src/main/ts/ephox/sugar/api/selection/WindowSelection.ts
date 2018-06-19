@@ -170,31 +170,31 @@ var deleteAt = function (win, selection) {
   NativeRange.deleteContents(rng);
 };
 
-var isCollapsed = function (start, soffset, finish, foffset) {
+var isCollapsed = function (start: Element, soffset: number, finish: Element, foffset: number) {
   return Compare.eq(start, finish) && soffset === foffset;
 };
 
-export default <any> {
-  setExact: setExact,
-  getExact: getExact,
-  get: get,
-  setRelative: setRelative,
-  toNative: toNative,
-  setToElement: setToElement,
-  clear: clear,
+export default {
+  setExact,
+  getExact,
+  get,
+  setRelative,
+  toNative,
+  setToElement,
+  clear,
 
-  clone: clone,
-  replace: replace,
-  deleteAt: deleteAt,
+  clone,
+  replace,
+  deleteAt,
 
-  forElement: forElement,
+  forElement,
 
-  getFirstRect: getFirstRect,
-  getBounds: getBounds,
-  getAtPoint: getAtPoint,
+  getFirstRect,
+  getBounds,
+  getAtPoint,
 
-  findWithin: findWithin,
-  getAsString: getAsString,
+  findWithin,
+  getAsString,
 
-  isCollapsed: isCollapsed
+  isCollapsed,
 };

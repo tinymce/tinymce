@@ -10,6 +10,7 @@
 /gen
 /node_modules
 
+ephox-sugar-*.tgz
 package-lock.json
 
 jenkins-plumbing

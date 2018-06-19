@@ -1,23 +1,24 @@
 import Attr from './Attr';
+import Element from '../node/Element';
 
 
 
-export default <any> function (attribute, value) {
-  var is = function (element) {
+export default function (attribute, value) {
+  var is = function (element: Element) {
     return Attr.get(element, attribute) === value;
   };
 
-  var remove = function (element) {
+  var remove = function (element: Element) {
     Attr.remove(element, attribute);
   };
 
-  var set = function (element) {
+  var set = function (element: Element) {
     Attr.set(element, attribute, value);
   };
 
   return {
-    is: is,
-    remove: remove,
-    set: set
+    is,
+    remove,
+    set,
   };
 };

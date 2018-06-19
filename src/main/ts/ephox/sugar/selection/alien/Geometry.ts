@@ -1,4 +1,6 @@
-var searchForPoint = function (rectForOffset, x, y, maxX, length) {
+import { ClientRect, DOMRect } from "@ephox/dom-globals";
+
+var searchForPoint = function (rectForOffset: (number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) {
   // easy cases
   if (length === 0) return 0;
   else if (x === maxX) return length - 1;
@@ -25,11 +27,11 @@ var searchForPoint = function (rectForOffset, x, y, maxX, length) {
   return 0; // always return something, even if it's not the exact offset it'll be better than nothing
 };
 
-var inRect = function (rect, x, y) {
+var inRect = function (rect: ClientRect | DOMRect, x: number, y: number) {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 };
 
-export default <any> {
-  inRect: inRect,
-  searchForPoint: searchForPoint
+export default {
+  inRect,
+  searchForPoint,
 };

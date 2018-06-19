@@ -1,7 +1,14 @@
 import { Fun } from '@ephox/katamari';
+import { SVGAnimatedTransformList } from '@ephox/dom-globals';
 
-var r = function (left, top) {
-  var translate = function (x, y) {
+export interface Position {
+  left: () => number,
+  top: () => number,
+  translate: (x: number, y: number) => Position
+}
+
+var r = function (left: number, top: number): Position {
+  var translate = function (x: number, y: number): Position {
     return r(left + x, top + y);
   };
 
@@ -12,4 +19,4 @@ var r = function (left, top) {
   };
 };
 
-export default <any> r;
+export const Position = r;

@@ -1,35 +1,37 @@
 import { Arr } from '@ephox/katamari';
 import AttrList from '../api/properties/AttrList';
+import Element from '../api/node/Element';
+import { Element as DomElement } from '@ephox/dom-globals';
 
-var supports = function (element) {
+var supports = function (element: Element) {
   // IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.
-  return element.dom().classList !== undefined;
+  return (element.dom() as DomElement).classList !== undefined;
 };
 
-var get = function (element) {
+var get = function (element: Element) {
   return AttrList.read(element, 'class');
 };
 
-var add = function (element, clazz) {
+var add = function (element: Element, clazz: string) {
   return AttrList.add(element, 'class', clazz);
 };
 
-var remove = function (element, clazz) {
+var remove = function (element: Element, clazz: string) {
   return AttrList.remove(element, 'class', clazz);
 };
 
-var toggle = function (element, clazz) {
+var toggle = function (element: Element, clazz: string) {
   if (Arr.contains(get(element), clazz)) {
-    remove(element, clazz);
+    return remove(element, clazz);
   } else {
-    add(element, clazz);
+    return add(element, clazz);
   }
 };
 
-export default <any> {
-  get: get,
-  add: add,
-  remove: remove,
-  toggle: toggle,
-  supports: supports
+export default {
+  get,
+  add,
+  remove,
+  toggle,
+  supports,
 };

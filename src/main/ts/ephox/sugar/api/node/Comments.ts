@@ -1,15 +1,16 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { NodeFilter } from '@ephox/sand';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
+import { document, TreeWalker, Node } from '@ephox/dom-globals';
 
-var regularGetNodes = function (texas) {
-  var ret = [];
+var regularGetNodes = function (texas: TreeWalker) {
+  var ret: Element[] = [];
   while (texas.nextNode() !== null) ret.push(Element.fromDom(texas.currentNode));
   return ret;
 };
 
-var ieGetNodes = function (texas) {
+var ieGetNodes = function (texas: TreeWalker) {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {
@@ -26,10 +27,10 @@ var getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNodes
 // Weird, but oh well
 var noFilter = Fun.constant(Fun.constant(true));
 
-var find = function (node, filterOpt) {
+var find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
 
-  var vmlFilter = filterOpt.fold(noFilter, function (filter) {
-    return function (comment) {
+  var vmlFilter: any = filterOpt.fold(noFilter, function (filter) {
+    return function (comment: Node) {
       return filter(comment.nodeValue);
     };
   });
@@ -38,11 +39,11 @@ var find = function (node, filterOpt) {
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  var texas = document.createTreeWalker(node.dom(), NodeFilter().SHOW_COMMENT, vmlFilter, false);
+  var texas = document.createTreeWalker(node.dom() as Node, NodeFilter().SHOW_COMMENT, vmlFilter, false);
 
   return getNodes(texas);
 };
 
-export default <any> {
-  find: find
+export default {
+  find
 };

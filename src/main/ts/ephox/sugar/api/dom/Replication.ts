@@ -5,22 +5,22 @@ import InsertAll from './InsertAll';
 import Remove from './Remove';
 import Traverse from '../search/Traverse';
 
-var clone = function (original, deep) {
+var clone = function (original: Element, deep: boolean) {
   return Element.fromDom(original.dom().cloneNode(deep));
 };
 
 /** Shallow clone - just the tag, no children */
-var shallow = function (original) {
+var shallow = function (original: Element) {
   return clone(original, false);
 };
 
 /** Deep clone - everything copied including children */
-var deep = function (original) {
+var deep = function (original: Element) {
   return clone(original, true);
 };
 
 /** Shallow clone, with a new tag */
-var shallowAs = function (original, tag) {
+var shallowAs = function (original: Element, tag: string) {
   var nu = Element.fromTag(tag);
 
   var attributes = Attr.clone(original);
@@ -30,7 +30,7 @@ var shallowAs = function (original, tag) {
 };
 
 /** Deep clone, with a new tag */
-var copy = function (original, tag) {
+var copy = function (original: Element, tag: string) {
   var nu = shallowAs(original, tag);
 
   // NOTE
@@ -46,7 +46,7 @@ var copy = function (original, tag) {
 };
 
 /** Change the tag name, but keep all children */
-var mutate = function (original, tag) {
+var mutate = function (original: Element, tag: string) {
   var nu = shallowAs(original, tag);
 
   Insert.before(original, nu);
@@ -56,10 +56,10 @@ var mutate = function (original, tag) {
   return nu;
 };
 
-export default <any> {
-  shallow: shallow,
-  shallowAs: shallowAs,
-  deep: deep,
-  copy: copy,
-  mutate: mutate
+export default {
+  shallow,
+  shallowAs,
+  deep,
+  copy,
+  mutate,
 };

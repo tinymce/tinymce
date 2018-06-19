@@ -1,3 +1,5 @@
+import { Option } from "@ephox/katamari";
+
 /**
  * Applies f repeatedly until it completes (by returning Option.none()).
  *
@@ -5,8 +7,8 @@
  *
  * This is what recursion looks like when manually unravelled :)
  */
-var toArray = function (target, f) {
-  var r = [];
+var toArray = function  <T = any>(target: T, f: (T) => Option<T>) {
+  var r: T[] = [];
 
   var recurse = function (e) {
     r.push(e);
@@ -21,6 +23,6 @@ var toArray = function (target, f) {
   return r;
 };
 
-export default <any> {
-  toArray: toArray
+export default {
+  toArray
 };

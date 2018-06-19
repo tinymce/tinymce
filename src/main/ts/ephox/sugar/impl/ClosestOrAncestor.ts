@@ -1,9 +1,10 @@
 import { Type } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import Element from '../api/node/Element';
 
 
 
-export default <any> function (is, ancestor, scope, a, isRoot) {
+export default function (is, ancestor, scope: Element, a, isRoot): Option<Element> {
   return is(scope, a) ?
           Option.some(scope) :
           Type.isFunction(isRoot) && isRoot(scope) ?

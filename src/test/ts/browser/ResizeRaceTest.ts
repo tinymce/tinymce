@@ -8,6 +8,7 @@ import Resize from 'ephox/sugar/api/events/Resize';
 import Width from 'ephox/sugar/api/view/Width';
 import Monitors from 'ephox/sugar/impl/Monitors';
 import { UnitTest } from '@ephox/bedrock';
+import { setTimeout } from '@ephox/dom-globals';
 
 UnitTest.asynctest('ResizeRaceTest', function() {
   var success = arguments[arguments.length - 2];

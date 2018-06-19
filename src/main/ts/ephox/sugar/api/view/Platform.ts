@@ -1,23 +1,25 @@
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Option } from '@ephox/katamari';
+import { window } from '@ephox/dom-globals';
 
-var platform = PlatformDetection.detect();
-var isTouch = platform.deviceType.isTouch;
+const platform = PlatformDetection.detect();
+const isTouch: () => boolean = platform.deviceType.isTouch;
+const isAndroid: () => boolean = platform.deviceType.isAndroid;
 
 // TODO: Work out what these values are supposed to be.
-var MINIMUM_LARGE_WIDTH = 620;
-var MINIMUM_LARGE_HEIGHT = 700;
+const MINIMUM_LARGE_WIDTH = 620;
+const MINIMUM_LARGE_HEIGHT = 700;
 
 // window.screen.width and window.screen.height do not change with the orientation,
 // however window.screen.availableWidth and window.screen.availableHeight,
 // do change according to the orientation.
-var isOfSize = function (width, height) {
+const isOfSize = function (width: number, height: number) {
   return window.screen.width >= width && window.screen.height >= height;
 };
 
-var choice = function (options, fallback) {
-  var target = Arr.foldl(options, function (b, option) {
+const choice = function (options, fallback): Option<any> {
+  const target = Arr.foldl(options, function (b, option) {
     return b.orThunk(function () {
       return option.predicate() ? Option.some(option.value()) : Option.none();
     });
@@ -26,32 +28,32 @@ var choice = function (options, fallback) {
   return target.getOr(fallback);
 };
 
-var isLargeTouch = function () {
+const isLargeTouch = function () {
   return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
 };
 
-var isLargeDesktop = function () {
+const isLargeDesktop = function () {
   return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && !isTouch();
 };
 
-var isSmallTouch = function () {
+const isSmallTouch = function () {
   return !isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
 };
 
-var isLarge = function () {
+const isLarge = function () {
   return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT);
 };
 
-var isSmallAndroid = function () {
-  return isSmallTouch() && platform.deviceType.isAndroid();
+const isSmallAndroid = function () {
+  return isSmallTouch() && isAndroid();
 };
 
-export default <any> {
-  isTouch: isTouch,
-  choice: choice,
-  isLarge: isLarge,
-  isLargeTouch: isLargeTouch,
-  isSmallTouch: isSmallTouch,
-  isLargeDesktop: isLargeDesktop,
-  isSmallAndroid: isSmallAndroid
+export default {
+  isTouch,
+  choice,
+  isLarge,
+  isLargeTouch,
+  isSmallTouch,
+  isLargeDesktop,
+  isSmallAndroid,
 };

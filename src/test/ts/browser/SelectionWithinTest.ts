@@ -9,6 +9,7 @@ import Html from 'ephox/sugar/api/properties/Html';
 import Selection from 'ephox/sugar/api/selection/Selection';
 import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.test('Browser Test: SelectionTest', function() {
   var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');

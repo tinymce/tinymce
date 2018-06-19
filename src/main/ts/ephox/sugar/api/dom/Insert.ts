@@ -1,16 +1,17 @@
 import Traverse from '../search/Traverse';
+import Element from '../node/Element';
 
-var before = function (marker, element) {
-  var parent = Traverse.parent(marker);
+const before = function (marker: Element, element: Element) {
+  const parent = Traverse.parent(marker);
   parent.each(function (v) {
     v.dom().insertBefore(element.dom(), marker.dom());
   });
 };
 
-var after = function (marker, element) {
-  var sibling = Traverse.nextSibling(marker);
+const after = function (marker: Element, element: Element) {
+  const sibling = Traverse.nextSibling(marker);
   sibling.fold(function () {
-    var parent = Traverse.parent(marker);
+    const parent = Traverse.parent(marker);
     parent.each(function (v) {
       append(v, element);
     });
@@ -19,8 +20,8 @@ var after = function (marker, element) {
   });
 };
 
-var prepend = function (parent, element) {
-  var firstChild = Traverse.firstChild(parent);
+const prepend = function (parent: Element, element: Element) {
+  const firstChild = Traverse.firstChild(parent);
   firstChild.fold(function () {
     append(parent, element);
   }, function (v) {
@@ -28,11 +29,11 @@ var prepend = function (parent, element) {
   });
 };
 
-var append = function (parent, element) {
+const append = function (parent: Element, element: Element) {
   parent.dom().appendChild(element.dom());
 };
 
-var appendAt = function (parent, element, index) {
+const appendAt = function (parent: Element, element: Element, index: number) {
   Traverse.child(parent, index).fold(function () {
     append(parent, element);
   }, function (v) {
@@ -40,16 +41,16 @@ var appendAt = function (parent, element, index) {
   });
 };
 
-var wrap = function (element, wrapper) {
+const wrap = function (element: Element, wrapper: Element) {
   before(element, wrapper);
   append(wrapper, element);
 };
 
-export default <any> {
-  before: before,
-  after: after,
-  prepend: prepend,
-  append: append,
-  appendAt: appendAt,
-  wrap: wrap
+export default {
+  before,
+  after,
+  prepend,
+  append,
+  appendAt,
+  wrap,
 };

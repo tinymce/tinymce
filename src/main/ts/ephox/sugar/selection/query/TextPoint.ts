@@ -2,16 +2,21 @@ import { Option } from '@ephox/katamari';
 import { Options } from '@ephox/katamari';
 import Text from '../../api/node/Text';
 import Geometry from '../alien/Geometry';
+import Element from '../../api/node/Element';
+import { Document } from '@ephox/dom-globals';
+import { ClientRect } from '@ephox/dom-globals';
+import { DOMRect } from '@ephox/dom-globals';
+import { Range } from '@ephox/dom-globals';
 
-var locateOffset = function (doc, textnode, x, y, rect) {
+var locateOffset = function (doc: Element, textnode, x: number, y: number, rect: ClientRect | DOMRect) {
   var rangeForOffset = function (offset) {
-    var r = doc.dom().createRange();
+    var r: Range = (doc.dom() as Document).createRange();
     r.setStart(textnode.dom(), offset);
     r.collapse(true);
     return r;
   };
 
-  var rectForOffset = function (offset) {
+  var rectForOffset = function (offset: number) {
     var r = rangeForOffset(offset);
     return r.getBoundingClientRect();
   };
@@ -21,11 +26,11 @@ var locateOffset = function (doc, textnode, x, y, rect) {
   return rangeForOffset(offset);
 };
 
-var locate = function (doc, node, x, y) {
-  var r = doc.dom().createRange();
+var locate = function (doc: Element, node: Element, x: number, y: number) {
+  var r = (doc.dom() as Document).createRange();
   r.selectNode(node.dom());
   var rects = r.getClientRects();
-  var foundRect = Options.findMap(rects, function (rect) {
+  var foundRect = Options.findMap(rects as any, function (rect: ClientRect) {
     return Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none();
   });
 
@@ -34,6 +39,6 @@ var locate = function (doc, node, x, y) {
   });
 };
 
-export default <any> {
-  locate: locate
+export default {
+  locate
 };

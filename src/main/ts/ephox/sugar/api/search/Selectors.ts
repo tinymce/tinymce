@@ -2,12 +2,14 @@ import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import NodeTypes from '../node/NodeTypes';
+import { document, Element as DomElement } from '@ephox/dom-globals';
 
-var ELEMENT = NodeTypes.ELEMENT;
-var DOCUMENT = NodeTypes.DOCUMENT;
+const ELEMENT = NodeTypes.ELEMENT;
+const DOCUMENT = NodeTypes.DOCUMENT;
 
-var is = function (element, selector) {
-  var elem = element.dom();
+const is = function (element: Element, selector: String): boolean {
+  // elem must remain any because mozMatchesSelector doesn't exist in TS DOM lib
+  const elem = element.dom();
   if (elem.nodeType !== ELEMENT) return false; // documents have querySelector but not matches
 
   // As of Chrome 34 / Safari 7.1 / FireFox 34, everyone except IE has the unprefixed function.
@@ -19,25 +21,25 @@ var is = function (element, selector) {
   else throw new Error('Browser lacks native selectors'); // unfortunately we can't throw this on startup :(
 };
 
-var bypassSelector = function (dom) {
+const bypassSelector = function (dom: DomElement) {
   // Only elements and documents support querySelector
   return dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT ||
           // IE fix for complex queries on empty nodes: http://jsfiddle.net/spyder/fv9ptr5L/
           dom.childElementCount === 0;
 };
 
-var all = function (selector, scope) {
-  var base = scope === undefined ? document : scope.dom();
+const all = function (selector: string, scope?: Element) {
+  const base = scope === undefined ? document : scope.dom();
   return bypassSelector(base) ? [] : Arr.map(base.querySelectorAll(selector), Element.fromDom);
 };
 
-var one = function (selector, scope) {
-  var base = scope === undefined ? document : scope.dom();
-  return bypassSelector(base) ? Option.none() : Option.from(base.querySelector(selector)).map(Element.fromDom);
+const one = function (selector: string, scope?: Element) {
+  const base: DomElement = scope === undefined ? document : scope.dom();
+  return bypassSelector(base) ? Option.none<Element>() : Option.from(base.querySelector(selector)).map(Element.fromDom);
 };
 
-export default <any> {
-  all: all,
-  is: is,
-  one: one
+export default {
+  all,
+  is,
+  one,
 };

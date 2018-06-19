@@ -1,33 +1,34 @@
 import Class from './Class';
 import Classes from './Classes';
+import Element from '../node/Element';
 
-var addClass = function (clazz) {
- return function (element) {
+var addClass = function (clazz: string) {
+ return function (element: Element) {
    Class.add(element, clazz);
  };
 };
 
-var removeClass = function (clazz) {
-  return function (element) {
+var removeClass = function (clazz: string) {
+  return function (element: Element) {
     Class.remove(element, clazz);
   };
 };
 
-var removeClasses = function (classes) {
-  return function (element) {
+var removeClasses = function (classes: string[]) {
+  return function (element: Element) {
     Classes.remove(element, classes);
   };
 };
 
-var hasClass = function (clazz) {
-  return function (element) {
+var hasClass = function (clazz: string) {
+  return function (element: Element) {
     return Class.has(element, clazz);
   };
 };
 
-export default <any> {
-  addClass: addClass,
-  removeClass: removeClass,
-  removeClasses: removeClasses,
-  hasClass: hasClass
+export default {
+  addClass,
+  removeClass,
+  removeClasses,
+  hasClass,
 };

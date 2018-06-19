@@ -29,8 +29,8 @@ var isName = function (name) {
   };
 };
 
-export default <any> {
-  checkOpt: checkOpt,
-  checkList: checkList,
-  isName: isName
+export default {
+  checkOpt,
+  checkList,
+  isName,
 };

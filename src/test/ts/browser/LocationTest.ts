@@ -12,6 +12,7 @@ import Css from 'ephox/sugar/api/properties/Css';
 import Location from 'ephox/sugar/api/view/Location';
 import Scroll from 'ephox/sugar/api/view/Scroll';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
 
 UnitTest.asynctest('LocationTest', function() {
   var success = arguments[arguments.length - 2];

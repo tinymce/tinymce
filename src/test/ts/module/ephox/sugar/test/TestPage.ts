@@ -71,25 +71,25 @@ var connect = function () {
   Insert.append(body, container);
 };
 
-export default <any> {
-  container: container,
-  d1: d1,
-  p1: p1,
-  p2: p2,
-  p3: p3,
-  s1: s1,
-  s2: s2,
-  s3: s3,
-  s4: s4,
-  t1: t1,
-  t2: t2,
-  t3: t3,
-  t4: t4,
-  t5: t5,
-  t6: t6,
-  t7: t7,
-  ul: ul,
-  li: li,
+export default {
+  container,
+  d1,
+  p1,
+  p2,
+  p3,
+  s1,
+  s2,
+  s3,
+  s4,
+  t1,
+  t2,
+  t3,
+  t4,
+  t5,
+  t6,
+  t7,
+  ul,
+  li,
 
-  connect: connect
+  connect,
 };

@@ -2,13 +2,14 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Compare from './Compare';
 import Traverse from '../search/Traverse';
+import Element from '../node/Element';
 
 /*
  * The exported functions in this module are:
  * a) path: Generates a list of child indices from the ancestor to the descendant
  * b) follow: Follows a path of child indices from an ancestor to reach a descendant
  */
-var up = function (descendant, stopper) {
+var up = function (descendant: Element, stopper:(e: Element) => boolean): Option<number[]> {
   if (stopper(descendant)) return Option.some([]);
   return Traverse.parent(descendant).bind(function (parent) {
     return Traverse.findIndex(descendant).bind(function (index) {
@@ -19,12 +20,12 @@ var up = function (descendant, stopper) {
   });
 };
 
-var path = function (ancestor, descendant) {
+var path = function (ancestor: Element, descendant: Element) {
   var stopper = Fun.curry(Compare.eq, ancestor);
-  return Compare.eq(ancestor, descendant) ? Option.some([]) : up(descendant, stopper);
+  return Compare.eq(ancestor, descendant) ? Option.some<number[]>([]) : up(descendant, stopper);
 };
 
-var follow = function (ancestor, descendantPath) {
+var follow = function (ancestor: Element, descendantPath: number[]): Option<Element> {
   if (descendantPath.length === 0) return Option.some(ancestor);
   else {
     return Traverse.child(ancestor, descendantPath[0]).bind(function (child) {
@@ -33,7 +34,7 @@ var follow = function (ancestor, descendantPath) {
   }
 };
 
-export default <any> {
-  path: path,
-  follow: follow
+export default {
+  path,
+  follow,
 };

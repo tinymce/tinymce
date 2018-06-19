@@ -1,15 +1,15 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Compare from '../../api/dom/Compare';
 import Element from '../../api/node/Element';
+import { Range, Window } from '@ephox/dom-globals';
 
-var selectNodeContents = function (win, element) {
+var selectNodeContents = function (win: Window, element: Element) {
   var rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
   return rng;
 };
 
-var selectNodeContentsUsing = function (rng, element) {
+var selectNodeContentsUsing = function (rng: Range, element: Element) {
   rng.selectNodeContents(element.dom());
 };
 
@@ -44,31 +44,31 @@ var setFinish = function (rng, situ) {
   });
 };
 
-var replaceWith = function (rng, fragment) {
+var replaceWith = function (rng: Range, fragment: Element) {
   // Note: this document fragment approach may not work on IE9.
   deleteContents(rng);
   rng.insertNode(fragment.dom());
 };
 
-var relativeToNative = function (win, startSitu, finishSitu) {
+var relativeToNative = function (win: Window, startSitu, finishSitu) {
   var range = win.document.createRange();
   setStart(range, startSitu);
   setFinish(range, finishSitu);
   return range;
 };
 
-var exactToNative = function (win, start, soffset, finish, foffset) {
+var exactToNative = function (win: Window, start: Element, soffset: number, finish: Element, foffset: number) {
   var rng = win.document.createRange();
   rng.setStart(start.dom(), soffset);
   rng.setEnd(finish.dom(), foffset);
   return rng;
 };
 
-var deleteContents = function (rng) {
+var deleteContents = function (rng: Range) {
   rng.deleteContents();
 };
 
-var cloneFragment = function (rng) {
+var cloneFragment = function (rng: Range) {
   var fragment = rng.cloneContents();
   return Element.fromDom(fragment);
 };
@@ -84,33 +84,33 @@ var toRect = function (rect) {
   };
 };
 
-var getFirstRect = function (rng) {
+var getFirstRect = function (rng: Range) {
   var rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   var rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
   return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none();
 };
 
-var getBounds = function (rng) {
+var getBounds = function (rng: Range) {
   var rect = rng.getBoundingClientRect();
   return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none();
 };
 
-var toString = function (rng) {
+var toString = function (rng: Range) {
   return rng.toString();
 };
 
-export default <any> {
-  create: create,
-  replaceWith: replaceWith,
-  selectNodeContents: selectNodeContents,
-  selectNodeContentsUsing: selectNodeContentsUsing,
-  relativeToNative: relativeToNative,
-  exactToNative: exactToNative,
-  deleteContents: deleteContents,
-  cloneFragment: cloneFragment,
-  getFirstRect: getFirstRect,
-  getBounds: getBounds,
-  isWithin: isWithin,
-  toString: toString
+export default {
+  create,
+  replaceWith,
+  selectNodeContents,
+  selectNodeContentsUsing,
+  relativeToNative,
+  exactToNative,
+  deleteContents,
+  cloneFragment,
+  getFirstRect,
+  getBounds,
+  isWithin,
+  toString,
 };

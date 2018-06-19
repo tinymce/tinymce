@@ -3,7 +3,10 @@ import { Throttler } from '@ephox/katamari';
 import { Window } from '@ephox/sand';
 import Traverse from '../search/Traverse';
 import Visibility from '../view/Visibility';
+import { setInterval, clearInterval } from '@ephox/dom-globals';
+import Element from '../node/Element';
 
+// TypeScript does not include MutationObserver on the window object, and it's accessed that way for... reasons?
 declare const window: any;
 
 /*
@@ -13,7 +16,7 @@ declare const window: any;
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
 
-var poll = function (element, f) {
+var poll = function (element: Element, f) {
   var poller = setInterval(f, 500);
 
   var unbindPoll = function () {
@@ -22,7 +25,7 @@ var poll = function (element, f) {
   return unbindPoll;
 };
 
-var mutate = function (element, f) {
+var mutate = function (element: Element, f) {
   var observer = new window.MutationObserver(f);
 
   var unbindMutate = function () {
@@ -39,7 +42,7 @@ var mutate = function (element, f) {
 // IE11 and above, not using numerosity so we can poll on IE10
 var wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-var onShow = function (element, f) {
+var onShow = function (element: Element, f) {
   if (Visibility.isVisible(element)) {
     Window.requestAnimationFrame(f);
     return Fun.noop;
@@ -58,6 +61,6 @@ var onShow = function (element, f) {
   }
 };
 
-export default <any> {
-  onShow: onShow
+export default {
+  onShow
 };

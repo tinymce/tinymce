@@ -8,8 +8,9 @@ import Element from '../node/Element';
 import Node from '../node/Node';
 import Style from '../../impl/Style';
 import { Strings } from '@ephox/katamari';
+import { console, window, HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 
-var internalSet = function (dom, property, value) {
+var internalSet = function (dom: HTMLElement, property: string, value: string) {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
@@ -22,7 +23,7 @@ var internalSet = function (dom, property, value) {
   if (Style.isSupported(dom)) dom.style.setProperty(property, value);
 };
 
-var internalRemove = function (dom, property) {
+var internalRemove = function (dom: HTMLElement, property: string) {
   /*
    * IE9 and above - MDN doesn't have details, but here's a couple of random internet claims
    *
@@ -32,21 +33,21 @@ var internalRemove = function (dom, property) {
   if (Style.isSupported(dom)) dom.style.removeProperty(property);
 };
 
-var set = function (element, property, value) {
+var set = function (element: Element, property: string, value: string) {
   var dom = element.dom();
   internalSet(dom, property, value);
 };
 
-var setAll = function (element, css) {
-  var dom = element.dom();
+var setAll = function (element: Element, css) {
+  var dom: HTMLElement = element.dom();
 
   Obj.each(css, function (v, k) {
     internalSet(dom, k, v);
   });
 };
 
-var setOptions = function(element, css) {
-  var dom = element.dom();
+var setOptions = function(element: Element, css) {
+  var dom: HTMLElement = element.dom();
 
   Obj.each(css, function (v, k) {
     v.fold(function () {
@@ -63,8 +64,8 @@ var setOptions = function(element, css) {
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-var get = function (element, property) {
-  var dom = element.dom();
+var get = function (element: Element, property: string) {
+  var dom: HTMLElement = element.dom();
   /*
    * IE9 and above per
    * https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle
@@ -85,7 +86,7 @@ var get = function (element, property) {
   return v === null ? undefined : v;
 };
 
-var getUnsafeProperty = function (dom, property) {
+var getUnsafeProperty = function (dom: HTMLElement, property: string) {
   // removed: support for dom().style[property] where prop is camel case instead of normal property name
   // empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
   return Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
@@ -97,16 +98,16 @@ var getUnsafeProperty = function (dom, property) {
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-var getRaw = function (element, property) {
+var getRaw = function (element: Element, property: string) {
   var dom = element.dom();
   var raw = getUnsafeProperty(dom, property);
 
   return Option.from(raw).filter(function (r) { return r.length > 0; });
 };
 
-var getAllRaw = function (element) {
-  var css = {};
-  var dom = element.dom();
+var getAllRaw = function (element: Element) {
+  var css: any = {};
+  var dom: HTMLElement = element.dom();
 
   if (Style.isSupported(dom)) {
     for (var i = 0; i < dom.style.length; i++) {
@@ -117,15 +118,15 @@ var getAllRaw = function (element) {
   return css;
 };
 
-var isValidValue = function (tag, property, value) {
+var isValidValue = function (tag: string, property: string, value: string) {
   var element = Element.fromTag(tag);
   set(element, property, value);
   var style = getRaw(element, property);
   return style.isSome();
 };
 
-var remove = function (element, property) {
-  var dom = element.dom();
+var remove = function (element: Element, property: string) {
+  var dom: HTMLElement = element.dom();
 
   internalRemove(dom, property);
 
@@ -135,7 +136,7 @@ var remove = function (element, property) {
   }
 };
 
-var preserve = function (element, f) {
+var preserve = function<T = any> (element: Element, f: (e: Element) => T) {
   var oldStyles = Attr.get(element, 'style');
   var result = f(element);
   var restore = oldStyles === undefined ? Attr.remove : Attr.set;
@@ -143,7 +144,7 @@ var preserve = function (element, f) {
   return result;
 };
 
-var copy = function (source, target) {
+var copy = function (source: Element, target: Element) {
   var sourceDom = source.dom();
   var targetDom = target.dom();
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
@@ -151,39 +152,39 @@ var copy = function (source, target) {
   }
 };
 
-var reflow = function (e) {
+var reflow = function (e: Element) {
   /* NOTE:
    * do not rely on this return value.
    * It's here so the closure compiler doesn't optimise the property access away.
    */
-  return e.dom().offsetWidth;
+  return (e.dom() as HTMLElement).offsetWidth;
 };
 
-var transferOne = function (source, destination, style) {
+var transferOne = function (source: Element, destination: Element, style: string) {
   getRaw(source, style).each(function (value) {
     // NOTE: We don't want to clobber any existing inline styles.
     if (getRaw(destination, style).isNone()) set(destination, style, value);
   });
 };
 
-var transfer = function (source, destination, styles) {
+var transfer = function (source: Element, destination: Element, styles: string[]) {
   if (!Node.isElement(source) || !Node.isElement(destination)) return;
   Arr.each(styles, function (style) {
     transferOne(source, destination, style);
   });
 };
 
-export default <any> {
-  copy: copy,
-  set: set,
-  preserve: preserve,
-  setAll: setAll,
-  setOptions: setOptions,
-  remove: remove,
-  get: get,
-  getRaw: getRaw,
-  getAllRaw: getAllRaw,
-  isValidValue: isValidValue,
-  reflow: reflow,
-  transfer: transfer
+export default {
+  copy,
+  set,
+  preserve,
+  setAll,
+  setOptions,
+  remove,
+  get,
+  getRaw,
+  getAllRaw,
+  isValidValue,
+  reflow,
+  transfer,
 };

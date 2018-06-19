@@ -1,17 +1,18 @@
 import Css from './Css';
+import Element from '../node/Element';
 
 
 
-export default <any> function (property, value) {
-  var is = function (element) {
+export default function (property: string, value: string) {
+  var is = function (element: Element) {
     return Css.get(element, property) === value;
   };
 
-  var remove = function (element) {
+  var remove = function (element: Element) {
     Css.remove(element, property);
   };
 
-  var set = function (element) {
+  var set = function (element: Element) {
     Css.set(element, property, value);
   };
 

@@ -60,7 +60,7 @@ var unbind = function (element, event, handler, useCapture) {
   element.dom().removeEventListener(event, handler, useCapture);
 };
 
-export default <any> {
-  bind: bind,
-  capture: capture
+export default {
+  bind,
+  capture,
 };
