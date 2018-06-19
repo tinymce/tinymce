@@ -1,10 +1,11 @@
 import Css from '../properties/Css';
 import Dimension from '../../impl/Dimension';
 import Element from '../node/Element';
+import { HTMLElement } from '@ephox/dom-globals';
 
 var api = Dimension('width', function (element: Element) {
   // IMO passing this function is better than using dom['offset' + 'width']
-  return element.dom().offsetWidth;
+  return (element.dom() as HTMLElement).offsetWidth;
 });
 
 var set = function (element: Element, h: string | number) {
