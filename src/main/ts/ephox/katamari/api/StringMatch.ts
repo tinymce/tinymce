@@ -67,7 +67,12 @@ const cata = function <T>(
 };
 
 export const StringMatch = {
-  ...adt,
+  starts: adt.starts,
+  pattern: adt.pattern,
+  contains: adt.contains,
+  exact: adt.exact,
+  all: adt.all,
+  not: adt.not,
   cata: cata,
   matches: matches,
   caseSensitive: caseSensitive,
