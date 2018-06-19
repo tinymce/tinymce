@@ -17,8 +17,6 @@ export type Decorator = (
   classes: string[]
 };
 
-// /home/morgan/work/tiny/tinymce/src/core/main/ts/fmt/ExpandRange.ts
-// function (editor, rng, format, remove?)
 const applyWordGrab = (editor: Editor, rng: Range): void => {
   const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], false);
   rng.setStart(r.startContainer, r.startOffset);
