@@ -94,8 +94,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
       Waiter.sTryUntil(
         'removed beta',
         tinyApis.sAssertContentPresence({
-          '.mce-annotation': 2,
-          '.mce-active-annotation': 0
+          '.mce-annotation': 2
         }),
         100,
         1000

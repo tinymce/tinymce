@@ -18,6 +18,8 @@ export default function () {
     toolbar: 'annotate-alpha',
     plugins: [ ],
 
+    content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
+
     setup: (ed: Editor) => {
       ed.addButton('annotate-alpha', {
         text: 'Annotate',
