@@ -170,6 +170,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
               uid === null && name === null && dom === null
             );
           } else {
+            Assertions.assertEq('Wrapper must be in content', true, ed.getBody().contains(dom));
             Assertions.assertStructure(
               'Checking wrapper',
               ApproxStructure.build((s, str, arr) => {
