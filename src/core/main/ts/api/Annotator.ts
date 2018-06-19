@@ -1,14 +1,13 @@
 import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
-import { findMarkers, identify, updateActive } from 'tinymce/core/annotate/Identification';
+import { findMarkers, identify } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark } from 'tinymce/core/annotate/Wrapping';
 
 export interface Annotator {
   register: (name: string, settings: { }) => void;
   annotate: (name: string, data: { }) => void;
-  annotationChanged: (f: (uid: string, name: string) => void) => void;
+  annotationChanged: (f: (uid: string, name: string, node: any) => void) => void;
   remove: (name: string) => void;
-  setToActive: (uid: string, name: string) => void;
 }
 
 export default function (editor): Annotator {
@@ -19,13 +18,13 @@ export default function (editor): Annotator {
 
   const changeCallbacks = Cell([ ]);
 
-  const fireCallbacks = (name: string, uid: string): void => {
-    Arr.each(changeCallbacks.get(), (f) => f(name, uid));
+  const fireCallbacks = (name: string, uid: string, element: any): void => {
+    Arr.each(changeCallbacks.get(), (f) => f(name, uid, element !== null ? element.dom() : null));
   };
 
   const fireNoAnnotation = (): void => {
     // Surely there is a better API choice than this.
-    fireCallbacks(null, null);
+    fireCallbacks(null, null, null);
   };
 
   const isDifferent = ({ uid, name }): boolean => {
@@ -38,13 +37,11 @@ export default function (editor): Annotator {
     identify(editor, Option.none()).fold(
       () => {
         fireNoAnnotation();
-        updateActive(editor, name, Option.none());
       },
-      ({ uid, name }) => {
+      ({ uid, name, element }) => {
         if (isDifferent({ uid, name })) {
           lastAnnotation.set(Option.some({ uid, name }));
-          updateActive(editor, name, Option.some(uid));
-          fireCallbacks(uid, name);
+          fireCallbacks(uid, name, element);
         }
       }
     );
@@ -91,9 +88,9 @@ export default function (editor): Annotator {
      * current selection changes
      * @param {function} f: the callback function invoked with the
      * uid for the current annotation and the name of the current annotation
-     * supplied
+     * supplied, and the wrapping element
      */
-    annotationChanged: (f: (uid: string, name: string) => void): void => {
+    annotationChanged: (f: (uid: string, name: string, element: any) => void): void => {
       changeCallbacks.set(
         changeCallbacks.get().concat([ f ])
       );
@@ -109,26 +106,6 @@ export default function (editor): Annotator {
         const markers = findMarkers(editor, uid);
         Arr.each(markers, Remove.unwrap);
       });
-    },
-
-    /*
-     * Sets the current annotation to an annotation of type name and
-     * with a uid of uid
-     * @param {String} uid the uid for the annotation
-     * @param {String} name the name of the anotation
-     */
-    setToActive: (uid, name) => {
-      updateActive(editor, name, Option.some(uid));
-    },
-
-    /*
-     * Clears the current annotation for annotation of type name
-     * @param {String} the name of the annotation to clear any
-     * active highlights
-     */
-    clearActive: (name) => {
-      // Not sure if the name here needs to be considered. Probably does.
-      updateActive(editor, name, Option.none());
     }
   } as Annotator;
 }

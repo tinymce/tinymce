@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline, Waiter, Step } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -6,7 +6,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationUpdateTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (success, failure) => {
   ModernTheme();
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
@@ -35,10 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationUpdateTest', (succe
 
     const outside1 = { path: [ 0, 0 ], offset: 'Th'.length };
     const inside1 = { path: [ 0, 1, 0 ], offset: 'i'.length };
-    const inside2 = { path: [ 1, 1, 0 ], offset: 'hi'.length };
-    const outside2 = { path: [ 1, 2 ], offset: ' the '.length };
     const inside3 = { path: [ 2, 1, 0 ], offset: 'i'.length };
-    const outside3 = { path: [ 2, 0 ], offset: 'This'.length };
 
     // Outside: p(0) > text(0) > "Th".length
     // Inside: p(0) > span(1) > text(0) > 'i'.length
@@ -49,55 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationUpdateTest', (succe
       Waiter.sTryUntil(
         'Nothing active (outside1)',
         tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 0
-        }),
-        100,
-        1000
-      ),
-
-      tinyApis.sSetSelection(inside1.path, inside1.offset, inside1.path, inside1.offset),
-      Waiter.sTryUntil(
-        'alpha active (inside1)',
-        tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 1,
-          '.mce-active-annotation[data-mce-annotation-uid="id-one"]': 1
-        }),
-        100,
-        1000
-      ),
-
-      tinyApis.sSetSelection(inside2.path, inside2.offset, inside2.path, inside2.offset),
-      Waiter.sTryUntil(
-        'alpha active (inside2)',
-        tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 1,
-          '.mce-active-annotation[data-mce-annotation-uid="id-two"]': 1
-        }),
-        100,
-        1000
-      ),
-
-      tinyApis.sSetSelection(outside2.path, outside2.offset, outside2.path, outside2.offset),
-      Waiter.sTryUntil(
-        'nothing active (outside2)',
-        tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 0
-        }),
-        100,
-        1000
-      ),
-
-      tinyApis.sSetSelection(inside3.path, inside3.offset, inside3.path, inside3.offset),
-      Waiter.sTryUntil(
-        'beta active (inside3)',
-        tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 1,
-          '.mce-active-annotation[data-mce-annotation-uid="id-three"]': 1
+          '.mce-annotation': 3
         }),
         100,
         1000
@@ -114,14 +63,13 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationUpdateTest', (succe
       Waiter.sTryUntil(
         'removed alpha, but was not inside alpha',
         tinyApis.sAssertContentPresence({
-          '.mce-annotation': 3,
-          '.mce-active-annotation': 1,
-          '.mce-active-annotation[data-mce-annotation-uid="id-three"]': 1
+          '.mce-annotation': 3
         }),
         100,
         1000
       ),
 
+      tinyApis.sSetSelection(inside3.path, inside3.offset, inside3.path, inside3.offset),
       Step.sync(() => {
         editor.annotator.remove('beta');
       }),
@@ -135,30 +83,19 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationUpdateTest', (succe
         1000
       ),
 
+      tinyApis.sSetSelection(inside1.path, inside1.offset, inside1.path, inside1.offset),
       Step.sync(() => {
-        editor.annotator.setToActive('id-two', 'alpha');
+        editor.annotator.remove('alpha');
       }),
+
       Waiter.sTryUntil(
-        'setting active to id-two',
+        'removed alpha, and was inside alpha',
         tinyApis.sAssertContentPresence({
-          '.mce-annotation': 2,
-          '.mce-active-annotation': 1,
-          '.mce-active-annotation[data-mce-annotation-uid="id-two"]': 1
+          '.mce-annotation': 1
         }),
         100,
         1000
       ),
-
-      tinyApis.sSetSelection(outside3.path, outside3.offset, outside3.path, outside3.offset),
-      Waiter.sTryUntil(
-        'outside 3 after setToActive',
-        tinyApis.sAssertContentPresence({
-          '.mce-annotation': 2,
-          '.mce-active-annotation': 0
-        }),
-        100,
-        1000
-      )
     ]);
 
     Pipeline.async({}, [

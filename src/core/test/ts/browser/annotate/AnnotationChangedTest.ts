@@ -1,6 +1,7 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
@@ -11,16 +12,16 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
 
   ModernTheme();
 
-  const changes = Cell([ ]);
+  const changes: Cell<Array<{uid: string, name: string}>> = Cell([ ]);
 
-  const sAssertChanges = (message, expected) => Logger.t(
+  const sAssertChanges = (message: string, expected: Array<{uid: string, name: string}>) => Logger.t(
     message,
     // Use a chain so that changes.get() can be evaluated at run-time.
     Chain.asStep({ }, [
       Chain.mapper((_) => {
         return changes.get();
       }),
-      Chain.op((cs) => {
+      Chain.op((cs: Array<{uid: string, name: string}>) => {
         Assertions.assertEq('Checking changes', expected, cs);
       })
     ])
@@ -161,7 +162,28 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
           }
         });
 
-        ed.annotator.annotationChanged((uid, name) => {
+        ed.annotator.annotationChanged((uid: string, name: string, dom: any) => {
+          if (uid === null || name === null || dom === null) {
+            Assertions.assertEq(
+              'Every value must be null if one is',
+              true,
+              uid === null && name === null && dom === null
+            );
+          } else {
+            Assertions.assertStructure(
+              'Checking wrapper',
+              ApproxStructure.build((s, str, arr) => {
+                return s.element('span', {
+                  attrs: {
+                    'data-mce-annotation': str.is(name),
+                    'data-mce-annotation-uid': str.is(uid)
+                  }
+                });
+              }),
+              Element.fromDom(dom)
+            );
+          }
+
           changes.set(
             changes.get().concat([
               { uid, name }

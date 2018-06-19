@@ -1,12 +1,12 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import * as Markings from './Markings';
-import { Editor } from 'tinymce/core/api/Editor';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string}> => {
+const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string, element: any}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
@@ -33,7 +33,7 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
   return closest.bind((c) => {
     return getAttr(c, `${Markings.dataAnnotationId()}`).bind(
       (uid) => getAttr(c, `${Markings.dataAnnotation()}`).map((name) => ({
-        uid, name
+        uid, name, element: c
       }))
     );
   });
@@ -41,23 +41,6 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
 
 const isAnnotation = (elem: any): boolean => {
   return Node.isElement(elem) && Class.has(elem, Markings.annotation());
-};
-
-// Update the 'mce-active-annotation' to only be on an annotation that is
-// currently selected
-const updateActive = (editor: Editor, name: string, optUid: Option<string>): void => {
-  const allMarkers = SelectorFilter.descendants(
-    // Using classes because they are faster?
-    Element.fromDom(editor.getBody()),
-    '.' + Markings.annotation()
-  );
-
-  Arr.each(allMarkers, (m) => {
-    const isCurrent = optUid.exists((uid) =>
-      Attr.get(m, `${Markings.dataAnnotationId()}`) === uid && Attr.get(m, `${Markings.dataAnnotation()}`) === name);
-    const f = isCurrent ? Class.add : Class.remove;
-    f(m, Markings.activeAnnotation());
-  });
 };
 
 const findMarkers = (editor: Editor, uid: string): any[] => {
@@ -68,6 +51,5 @@ const findMarkers = (editor: Editor, uid: string): any[] => {
 export {
   identify,
   isAnnotation,
-  updateActive,
   findMarkers
 };
