@@ -19,7 +19,7 @@ var fromTable = function (table) {
     var parentSection = parent.map(function (parent) {
       var parentName = Node.name(parent);
       return (parentName === 'tfoot' || parentName === 'thead' || parentName === 'tbody') ? parentName : 'tbody';
-    });
+    }).getOr('tbody');
 
     var cells = Arr.map(TableLookup.cells(row), function (cell) {
       var rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
