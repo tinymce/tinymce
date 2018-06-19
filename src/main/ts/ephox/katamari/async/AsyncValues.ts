@@ -9,12 +9,12 @@ import * as Arr from '../api/Arr';
  *   get: function (callback) { callback(10); }
  * }
  */
-var par = function <A, T, C> (asyncValues: (A & {get: (callback: (value: T) => void) => void})[], nu: (worker: (callback: (values: T[]) => void) => void) => C) {
+export const par = function <A, T, C> (asyncValues: (A & {get: (callback: (value: T) => void) => void})[], nu: (worker: (callback: (values: T[]) => void) => void) => C) {
   return nu(function(callback) {
-    var r: T[] = [];
-    var count = 0;
+    const r: T[] = [];
+    let count = 0;
 
-    var cb = function(i: number) {
+    const cb = function(i: number) {
       return function(value: T) {
         r[i] = value;
         count++;
@@ -32,8 +32,4 @@ var par = function <A, T, C> (asyncValues: (A & {get: (callback: (value: T) => v
       });
     }
   });
-};
-
-export default {
-  par: par
 };

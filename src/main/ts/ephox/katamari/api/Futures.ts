@@ -1,6 +1,6 @@
 import * as Arr from './Arr';
 import { Future } from './Future';
-import AsyncValues from '../async/AsyncValues';
+import * as AsyncValues from '../async/AsyncValues';
 
 /** par :: [Future a] -> Future [a] */
 export const par = function <T> (futures: Future<T>[]) {

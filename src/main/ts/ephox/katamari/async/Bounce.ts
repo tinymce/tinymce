@@ -1,12 +1,8 @@
-const bounce = function(f: Function) {
+export const bounce = function(f: Function) {
   return function(...args: any[]) {
     const me = this;
     setTimeout(function() {
       f.apply(me, args);
     }, 0);
   };
-};
-
-export default {
-  bounce: bounce
 };

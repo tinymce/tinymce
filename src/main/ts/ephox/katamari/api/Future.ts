@@ -1,5 +1,5 @@
 import { LazyValue } from './LazyValue';
-import Bounce from '../async/Bounce';
+import * as Bounce from '../async/Bounce';
 
 export interface Future<T> {
   map: <U> (mapper: (v: T) => U) => Future<U>;
