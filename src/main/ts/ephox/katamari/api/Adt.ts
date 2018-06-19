@@ -3,8 +3,8 @@ import Obj from './Obj';
 import Type from './Type';
 
 export interface Adt {
-  fold: <T> (...caseHandlers: ((...data) => T)[]) => T;
-  match: <T> (branches: { [branch: string]: (...data) => T; }) => T;
+  fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
+  match: <T> (branches: { [branch: string]: (...data: any[]) => T; }) => T;
   log: (label: string) => void;
 };
 
