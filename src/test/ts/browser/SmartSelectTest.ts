@@ -51,13 +51,13 @@ UnitTest.test('SmartSelectTest', function () {
   };
 
   var check = function (expected, path, offset) {
-    var start = Hierarchy.follow(editor, path, 'Looking for start of smart select').getOrDie();
+    var start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
     var actual = DomSmartSelect.word(start, offset);
     actual.fold(function () {
       throw 'Expected to select word: ' + expected.word;
     }, function (act) {
-      var expStart = Hierarchy.follow(editor, expected.start.element, 'Could not find expected start').getOrDie();
-      var expFinish = Hierarchy.follow(editor, expected.finish.element, 'Could not find expected finish').getOrDie();
+      var expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
+      var expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
       assert.eq(true, Compare.eq(expStart, act.startContainer()));
       assert.eq(expected.start.offset, act.startOffset());
       assert.eq(true, Compare.eq(expFinish, act.endContainer()));
