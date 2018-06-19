@@ -48,7 +48,7 @@ var render = function (table, grid) {
   };
 
   var removeSection = function (sectionName) {
-    SelectorFind.child(table, sectionName).bind(Remove.remove);
+    SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
   var renderOrRemoveSection = function (gridSection, sectionName) {

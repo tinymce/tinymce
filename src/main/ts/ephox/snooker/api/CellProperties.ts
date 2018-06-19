@@ -26,7 +26,7 @@ var setWidth = function (cell, value) {
 };
 
 var setType = function (cell, type) {
-  var replica = Replication.copy(cell);
+  var replica = Replication.copy(cell, type);
   Insert.after(cell, replica);
   Remove.remove(cell);
 };
