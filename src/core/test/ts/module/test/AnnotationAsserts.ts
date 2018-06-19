@@ -1,7 +1,9 @@
-import { Step, ApproxStructure } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { Arr, Obj } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const sAnnotate = (editor, name, uid, data) => Step.sync(() => {
+const sAnnotate = (editor: Editor, name: string, uid: string, data: { }) => Step.sync(() => {
   editor.annotator.annotate(name, {
     uid,
     ...data
@@ -19,7 +21,36 @@ const sAssertHtmlContent = (tinyApis, children: string[]) => {
   );
 };
 
+const assertMarker = (editor: Editor, expected, node: any) => {
+  const { uid, name } = expected;
+  Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
+  Assertions.assertStructure(
+    'Checking wrapper has correct decoration',
+    ApproxStructure.build((s, str, arr) => {
+      return s.element('span', {
+        attrs: {
+          'data-mce-annotation': str.is(name),
+          'data-mce-annotation-uid': str.is(uid)
+        }
+      });
+    }),
+    Element.fromDom(node)
+  );
+};
+
+const sAssertGetAll = (editor: Editor, expected: string[], name: string) => Step.sync(() => {
+  const annotations = editor.annotator.getAll(name);
+  const keys = Obj.keys(annotations);
+  const sortedKeys = Arr.sort(keys);
+  Assertions.assertEq('Checking keys of getAll response', expected, sortedKeys);
+  Obj.each(annotations, (marker, uid) => {
+    assertMarker(editor, { uid, name }, marker);
+  });
+});
+
 export {
   sAnnotate,
-  sAssertHtmlContent
+  sAssertHtmlContent,
+  sAssertGetAll,
+  assertMarker
 };

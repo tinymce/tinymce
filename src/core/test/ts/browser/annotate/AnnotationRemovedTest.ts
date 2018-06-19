@@ -1,10 +1,10 @@
-import { GeneralSteps, Pipeline, Step, Waiter } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step, Waiter, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
+import { sAnnotate, sAssertHtmlContent, sAssertGetAll } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (success, failure) => {
   ModernTheme();
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
     // Inside: p(0) > span(1) > text(0) > 'i'.length
     // Inside: p(1) > span(1) > text(0), 'hi'.length
     // Outside: p(1) > text(2) > ' the '.length
-    const sSetToActive = GeneralSteps.sequence([
+    const sTestGetAndRemove = GeneralSteps.sequence([
       tinyApis.sSetSelection(outside1.path, outside1.offset, outside1.path, outside1.offset),
       Waiter.sTryUntil(
         'Nothing active (outside1)',
@@ -50,6 +50,16 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
         }),
         100,
         1000
+      ),
+
+      Logger.t(
+        'There should be two alpha annotations',
+        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+      ),
+
+      Logger.t(
+        'There should be one beta annotation',
+        sAssertGetAll(editor, [ 'id-three' ], 'beta')
       ),
 
       Step.sync(() => {
@@ -68,6 +78,14 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
         100,
         1000
       ),
+      Logger.t(
+        'There should be still be two alpha annotations (because remove only works if you are inside)',
+        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+      ),
+      Logger.t(
+        'There should still be one beta annotation',
+        sAssertGetAll(editor, [ 'id-three' ], 'beta')
+      ),
 
       tinyApis.sSetSelection(inside3.path, inside3.offset, inside3.path, inside3.offset),
       Step.sync(() => {
@@ -83,6 +101,15 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
         1000
       ),
 
+      Logger.t(
+        'There should be still be two alpha annotations (because cursor was inside beta)',
+        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+      ),
+      Logger.t(
+        'There should be no beta annotations',
+        sAssertGetAll(editor, [ ], 'beta')
+      ),
+
       tinyApis.sSetSelection(inside1.path, inside1.offset, inside1.path, inside1.offset),
       Step.sync(() => {
         editor.annotator.remove('alpha');
@@ -96,12 +123,21 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
         100,
         1000
       ),
+
+      Logger.t(
+        'There should now be just one alpha annotation (second one was removed)',
+        sAssertGetAll(editor, [ 'id-two' ], 'alpha')
+      ),
+      Logger.t(
+        'There should be no beta annotations',
+        sAssertGetAll(editor, [ ], 'beta')
+      ),
     ]);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
       sSetupData,
-      sSetToActive
+      sTestGetAndRemove
     ], onSuccess, onFailure);
   }, {
     skin_url: '/project/js/tinymce/skins/lightgray',

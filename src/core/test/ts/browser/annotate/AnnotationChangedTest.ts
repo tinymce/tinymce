@@ -1,12 +1,11 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter, ApproxStructure } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
+import { assertMarker, sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (success, failure) => {
 
@@ -170,19 +169,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
               uid === null && name === null && dom === null
             );
           } else {
-            Assertions.assertEq('Wrapper must be in content', true, ed.getBody().contains(dom));
-            Assertions.assertStructure(
-              'Checking wrapper',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('span', {
-                  attrs: {
-                    'data-mce-annotation': str.is(name),
-                    'data-mce-annotation-uid': str.is(uid)
-                  }
-                });
-              }),
-              Element.fromDom(dom)
-            );
+            assertMarker(ed, { uid, name }, dom);
           }
 
           changes.set(

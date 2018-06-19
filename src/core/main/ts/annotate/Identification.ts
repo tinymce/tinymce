@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -48,8 +48,20 @@ const findMarkers = (editor: Editor, uid: string): any[] => {
   return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };
 
+const findAll = (editor: Editor, name: string): Record<string, any> => {
+  const body = Element.fromDom(editor.getBody());
+  const markers = SelectorFilter.descendants(body, `[${Markings.dataAnnotation()}="${name}"]`);
+  const directory = { };
+  Arr.each(markers, (m) => {
+    const uid = Attr.get(m, Markings.dataAnnotationId());
+    directory[uid] = m;
+  });
+  return directory;
+};
+
 export {
   identify,
   isAnnotation,
-  findMarkers
+  findMarkers,
+  findAll
 };

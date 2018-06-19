@@ -1,6 +1,6 @@
-import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Option, Throttler, Obj } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
-import { findMarkers, identify } from 'tinymce/core/annotate/Identification';
+import { findMarkers, identify, findAll } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark } from 'tinymce/core/annotate/Wrapping';
 
 export interface Annotator {
@@ -8,6 +8,8 @@ export interface Annotator {
   annotate: (name: string, data: { }) => void;
   annotationChanged: (f: (uid: string, name: string, node: any) => void) => void;
   remove: (name: string) => void;
+  // TODO: Use stronger types for Nodes when available.
+  getAll: (name: string) => Record<string, any>;
 }
 
 export default function (editor): Annotator {
@@ -106,6 +108,16 @@ export default function (editor): Annotator {
         const markers = findMarkers(editor, uid);
         Arr.each(markers, Remove.unwrap);
       });
+    },
+
+    /**
+     * Retrieve all the annotations for a given name
+     * @param {String} name the name of the annotations to retrieve
+     * @return {Object} an index of annotations from uid => DOM node
+     */
+    getAll: (name: string): Record<string, any> => {
+      const directory = findAll(editor, name);
+      return Obj.map(directory, (elem) => elem.dom());
     }
   } as Annotator;
 }
