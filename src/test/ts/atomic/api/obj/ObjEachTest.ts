@@ -3,8 +3,8 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ObjEachTest', function() {
-  var check = function (expected, input) {
-    var values = [];
+  const check = function (expected, input) {
+    const values = [];
     Obj.each(input, function (x, i) {
       values.push({index: i, value: x});
     });
@@ -19,8 +19,8 @@ UnitTest.test('ObjEachTest', function() {
     'Each + set should equal the same object',
     Jsc.dict(Jsc.json),
     function (obj) {
-      var values = { };
-      var output = Obj.each(obj, function (x, i) {
+      const values = { };
+      const output = Obj.each(obj, function (x, i) {
         values[i] = x;
       });
       return Jsc.eq(obj, values) && Jsc.eq(undefined, output);

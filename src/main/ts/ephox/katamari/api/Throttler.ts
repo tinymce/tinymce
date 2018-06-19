@@ -1,17 +1,17 @@
 // Run a function fn afer rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
-var adaptable = function (fn: Function, rate: number) {
-  var timer: number | null = null;
-  var args: any[] | null = null;
-  var cancel = function () {
+export const adaptable = function (fn: Function, rate: number) {
+  let timer: number | null = null;
+  let args: any[] | null = null;
+  const cancel = function () {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
       args = null;
     }
   };
-  var throttle = function (...newArgs) {
+  const throttle = function (...newArgs) {
     args = newArgs;
     if (timer === null) {
       timer = setTimeout(function () {
@@ -30,15 +30,15 @@ var adaptable = function (fn: Function, rate: number) {
 
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, ignore it completely.
-var first = function (fn: Function, rate: number) {
-  var timer: number | null = null;
-  var cancel = function () {
+export const first = function (fn: Function, rate: number) {
+  let timer: number | null = null;
+  const cancel = function () {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
     }
   };
-  var throttle = function (...args) {
+  const throttle = function (...args) {
     if (timer === null) {
       timer = setTimeout(function () {
         fn.apply(null, args);
@@ -56,15 +56,15 @@ var first = function (fn: Function, rate: number) {
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, reschedule the function again
 // with the new arguments.
-var last = function (fn: Function, rate: number) {
-  var timer: number | null = null;
-  var cancel = function () {
+export const last = function (fn: Function, rate: number) {
+  let timer: number | null = null;
+  const cancel = function () {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
     }
   };
-  var throttle = function (...args) {
+  const throttle = function (...args) {
     if (timer !== null) clearTimeout(timer);
     timer = setTimeout(function () {
       fn.apply(null, args);
@@ -76,10 +76,4 @@ var last = function (fn: Function, rate: number) {
     cancel: cancel,
     throttle: throttle
   };
-};
-
-export default {
-  adaptable: adaptable,
-  first: first,
-  last: last
 };

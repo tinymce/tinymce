@@ -1,17 +1,17 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
-import Futures from 'ephox/katamari/api/Futures';
+import * as Futures from 'ephox/katamari/api/Futures';
 import { Result } from 'ephox/katamari/api/Result';
-import AsyncProps from 'ephox/katamari/test/AsyncProps';
+import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('FutureTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var testPure = function () {
+  const testPure = function () {
     return new Promise(function (resolve, reject) {
       Future.pure('hello').get(function(a) {
         assert.eq('hello', a);
@@ -20,7 +20,7 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testGet = function () {
+  const testGet = function () {
     return new Promise(function (resolve, reject) {
       Future.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
@@ -31,13 +31,13 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testMap = function () {
+  const testMap = function () {
     return new Promise(function (resolve, reject) {
-      var fut = Future.nu(function(callback) {
+      const fut = Future.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      var f = function(x) {
+      const f = function(x) {
         return x + 'hello';
       };
 
@@ -48,13 +48,13 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testBind = function () {
+  const testBind = function () {
     return new Promise(function (resolve, reject) {
-      var fut = Future.nu(function(callback) {
+      const fut = Future.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      var f = function(x) {
+      const f = function(x) {
         return Future.nu(function(callback) {
           callback(x + 'hello');
         });
@@ -67,16 +67,16 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testAnonBind = function () {
+  const testAnonBind = function () {
     return new Promise(function (resolve, reject) {
-      var called = false;
+      let called = false;
 
-      var fut = Future.nu(function(callback) {
+      const fut = Future.nu(function(callback) {
         called = true;
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      var f = Future.nu(function(callback) {
+      const f = Future.nu(function(callback) {
         callback('hello');
       });
 
@@ -88,15 +88,15 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testParallel = function () {
+  const testParallel = function () {
     return new Promise(function (resolve, reject) {
-      var f = Future.nu(function(callback) {
+      const f = Future.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'apple'), 10);
       });
-      var g = Future.nu(function(callback) {
+      const g = Future.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'banana'), 5);
       });
-      var h = Future.nu(function(callback) {
+      const h = Future.nu(function(callback) {
         callback('carrot');
       });
 
@@ -110,9 +110,9 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testMapM = function () {
+  const testMapM = function () {
     return new Promise(function (resolve, reject) {
-      var fn = function(a) {
+      const fn = function(a) {
         return Future.nu(function(cb) {
           setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
         });
@@ -126,15 +126,15 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testCompose = function () {
+  const testCompose = function () {
     return new Promise(function (resolve, reject) {
-      var f = function(a) {
+      const f = function(a) {
         return Future.nu(function(cb) {
           setTimeout(Fun.curry(cb, a + ' f'), 10);
         });
       };
 
-      var g = function(a) {
+      const g = function(a) {
         return Future.nu(function(cb) {
           setTimeout(Fun.curry(cb, a + ' g'), 10);
         });
@@ -147,9 +147,9 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
-  var testSpecs = function () {
-    var genFutureSchema = Jsc.json.generator.map(function (json) {
-      var future = Future.nu(function (done) {
+  const testSpecs = function () {
+    const genFutureSchema = Jsc.json.generator.map(function (json) {
+      const future = Future.nu(function (done) {
         setTimeout(function () {
           done(json);
         }, 10);
@@ -161,7 +161,7 @@ UnitTest.asynctest('FutureTest', function() {
       };
     });
 
-    var genFuture = Jsc.json.generator.map(function (json) {
+    const genFuture = Jsc.json.generator.map(function (json) {
       return Future.nu(function (done) {
         setTimeout(function () {
           done(json);
@@ -169,11 +169,11 @@ UnitTest.asynctest('FutureTest', function() {
       });
     });
 
-    var arbFuture = Jsc.bless({
+    const arbFuture = Jsc.bless({
       generator: genFuture
     });
 
-    var arbFutureSchema = Jsc.bless({
+    const arbFutureSchema = Jsc.bless({
       generator: genFutureSchema
     });
 
@@ -216,8 +216,8 @@ UnitTest.asynctest('FutureTest', function() {
         label: 'futures.par([future]).get() === [future.val]',
         arbs: [ Jsc.array(arbFutureSchema) ],
         f: function (futures) {
-          var rawFutures = Arr.map(futures, function (ft) { return ft.future; });
-          var expected = Arr.map(futures, function (ft) { return ft.contents; });
+          const rawFutures = Arr.map(futures, function (ft) { return ft.future; });
+          const expected = Arr.map(futures, function (ft) { return ft.contents; });
           return AsyncProps.checkFuture(Futures.par(rawFutures), function (list) {
             return Jsc.eq(expected, list) ? Result.value(true) : Result.error(
               'Expected: ' + expected.join(',') +', actual: ' + list.join(',')
@@ -230,7 +230,7 @@ UnitTest.asynctest('FutureTest', function() {
         label: 'futures.mapM([json], json -> future).get(length) === [json].length',
         arbs: [ Jsc.array(arbFuture), Jsc.fun(arbFuture) ],
         f: function (inputs, g) {
-          var fResult = Futures.mapM(inputs, g);
+          const fResult = Futures.mapM(inputs, g);
           return AsyncProps.checkFuture(fResult, function (list) {
             return Jsc.eq(inputs.length, list.length) ? Result.value(true) : Result.error('input length was not the same as output length');
           });

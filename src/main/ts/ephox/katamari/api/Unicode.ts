@@ -1,7 +1,3 @@
-var zeroWidth = function () {
+export const zeroWidth = function () {
   return '\uFEFF';
-};
-
-export default {
-  zeroWidth: zeroWidth
 };

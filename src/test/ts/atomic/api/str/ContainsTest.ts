@@ -1,10 +1,10 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('contains', function() {
   function check(expected, str, substr) {
-    var actual = Strings.contains(str, substr);
+    const actual = Strings.contains(str, substr);
     assert.eq(expected, actual);
   }
 
@@ -25,7 +25,7 @@ UnitTest.test('contains', function() {
     Jsc.string,
     Jsc.nestring,
     function (str, contents) {
-      var r = str + contents;
+      const r = str + contents;
       return Jsc.eq(true, Strings.contains(r, contents));
     }
   );
@@ -35,7 +35,7 @@ UnitTest.test('contains', function() {
     Jsc.string,
     Jsc.nestring,
     function (str, contents) {
-      var r = contents = str;
+      const r = contents = str;
       return Jsc.eq(true, Strings.contains(r, contents));
     }
   );

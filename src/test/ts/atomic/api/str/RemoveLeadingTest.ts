@@ -1,10 +1,10 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('removeLeading', function() {
   function check(expected, str, trail) {
-    var actual = Strings.removeLeading(str, trail);
+    const actual = Strings.removeLeading(str, trail);
     assert.eq(expected, actual);
   }
 
@@ -21,7 +21,7 @@ UnitTest.test('removeLeading', function() {
     Jsc.asciistring,
     Jsc.asciinestring,
     function (str, s1) {
-      var doubleStart = Strings.startsWith(str, s1) && Strings.startsWith(str.substring(s1.length), s1);
+      const doubleStart = Strings.startsWith(str, s1) && Strings.startsWith(str.substring(s1.length), s1);
       return Jsc.eq(
         doubleStart,
         Strings.startsWith(

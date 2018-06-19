@@ -1,17 +1,17 @@
 import { Future } from 'ephox/katamari/api/Future';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
-import Results from 'ephox/katamari/api/Results';
-import AsyncProps from 'ephox/katamari/test/AsyncProps';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as Results from 'ephox/katamari/api/Results';
+import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('FutureResultsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var testPure = function () {
+  const testPure = function () {
     return new Promise(function (resolve, reject) {
       FutureResult.value('future.result.hello').get(function (res) {
         res.fold(function (err) {
@@ -24,7 +24,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
-  var testError = function () {
+  const testError = function () {
     return new Promise(function (resolve, reject) {
       FutureResult.error('future.result.error').get(function (res) {
         res.fold(function (err) {
@@ -37,7 +37,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
-  var testFromResult = function () {
+  const testFromResult = function () {
     return new Promise(function (resolve, reject) {
       FutureResult.fromResult(Result.error('future.from.result.error')).get(function (res) {
         res.fold(function (err) {
@@ -50,7 +50,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
-  var testFromFuture = function () {
+  const testFromFuture = function () {
     return new Promise(function (resolve, reject) {
       FutureResult.fromFuture(Future.pure('future.from.future')).get(function (res) {
         res.fold(function (err) {
@@ -63,7 +63,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
-  var testNu = function () {
+  const testNu = function () {
     return new Promise(function (resolve, reject) {
       FutureResult.nu(function (callback) {
         callback(
@@ -80,48 +80,48 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
-  var testBindFuture = function () {
+  const testBindFuture = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.value('10');
+      const fut = FutureResult.value('10');
 
-      var f = function (x: string) {
+      const f = function (x: string) {
         return FutureResult.value(x + '.bind.future');
       };
 
       fut.bindFuture(f).get(function (output) {
-        var value = output.getOrDie();
+        const value = output.getOrDie();
         assert.eq('10.bind.future', value);
         resolve(true);
       });
     });
   };
 
-  var testBindResult = function () {
+  const testBindResult = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.value('10');
+      const fut = FutureResult.value('10');
 
-      var f = function (x) {
+      const f = function (x) {
         return Result.value(x + '.bind.result');
       };
 
       fut.bindResult(f).get(function (output) {
-        var value = output.getOrDie();
+        const value = output.getOrDie();
         assert.eq('10.bind.result', value);
         resolve(true);
       });
     });
   };
 
-  var testMapResult = function () {
+  const testMapResult = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.value('10');
+      const fut = FutureResult.value('10');
 
-      var f = function (x) {
+      const f = function (x) {
         return x + '.map.result';
       };
 
       fut.mapResult(f).get(function (output) {
-        var value = output.getOrDie();
+        const value = output.getOrDie();
         assert.eq('10.map.result', value);
         resolve(true);
       });
@@ -129,7 +129,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
   };
 
 
-  var testSpecs = function () {
+  const testSpecs = function () {
     return AsyncProps.checkProps([
       {
         label: 'FutureResult.value resolves with data',
@@ -149,7 +149,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
         label: 'FutureResult.value mapResult f resolves with f data',
         arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
         f: function (json, f) {
-          var futureResult = FutureResult.value(json);
+          const futureResult = FutureResult.value(json);
           return AsyncProps.checkFuture(futureResult.mapResult(f), function (data) {
             return data.fold(function (err) {
               return Result.error('Should not have failed: ' + err);
@@ -167,7 +167,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
           return AsyncProps.futureToPromise(arbF.futureResult.bindFuture(binder)).then(function (data) {
             return new Promise(function (resolve, reject) {
 
-              var comparison = Results.compare(arbF.contents, data);
+              const comparison = Results.compare(arbF.contents, data);
               comparison.match({
                 // input was error
                 // bind result was error
@@ -227,7 +227,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
         f: function (arbF, resultBinder) {
           return AsyncProps.futureToPromise(arbF.futureResult.bindResult(resultBinder)).then(function (data) {
             return new Promise(function (resolve, reject) {
-              var comparison = Results.compare(arbF.contents, data);
+              const comparison = Results.compare(arbF.contents, data);
               comparison.match({
                 // input was error
                 // bind result was error
@@ -280,11 +280,11 @@ UnitTest.asynctest('FutureResultsTest', function() {
 
       {
         label: 'futureResult.mapResult equiv mapping original result',
-        arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.json) ],
+        arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(Jsc.json) ],
         f: function (arbF, resultMapper) {
           return AsyncProps.futureToPromise(arbF.futureResult.mapResult(resultMapper)).then(function (data) {
             return new Promise(function (resolve, reject) {
-              var comparison = Results.compare(arbF.contents, data);
+              const comparison = Results.compare(arbF.contents, data);
               comparison.match({
                 // input was error
                 // bind result was error
@@ -310,7 +310,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
                   // input was value
                   // bind result was value
                   // something is right if mapper(value) === value
-                  var valF = resultMapper(valInit);
+                  const valF = resultMapper(valInit);
                   return Jsc.eq(valBind, valF) ? resolve(true) : reject(
                     'Mapper results did not match\n' +
                     'First: ' + valBind + '\n' +

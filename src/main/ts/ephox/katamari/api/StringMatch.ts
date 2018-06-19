@@ -2,7 +2,7 @@ import { Adt } from './Adt';
 
 type StringMapper = (str: string) => string;
 
-export interface StringMatch {
+export interface StringMatch extends Adt {
   fold: <T>(
     starts:(value: string, f: StringMapper) => T,
     pattern: (regex: RegExp, f: StringMapper) => T,
@@ -13,7 +13,14 @@ export interface StringMatch {
   ) => T;
 };
 
-var adt = Adt.generate([
+const adt: {
+  starts: (value: string, f: StringMapper) => StringMatch;
+  pattern: (regex: RegExp, f: StringMapper) => StringMatch;
+  contains: (value: string, f: StringMapper) => StringMatch;
+  exact: (value: string, f: StringMapper) => StringMatch;
+  all: () => StringMatch;
+  not: (stringMatch: StringMatch) => StringMatch;
+} = Adt.generate([
   { starts: [ 'value', 'f' ] },
   { pattern: [ 'regex', 'f' ] },
   { contains: [ 'value', 'f' ] },
@@ -22,16 +29,16 @@ var adt = Adt.generate([
   { not: [ 'stringMatch' ] }
 ]);
 
-var caseInsensitive = function (val: string) {
+const caseInsensitive = function (val: string) {
   return val.toLowerCase();
 };
 
-var caseSensitive = function (val: string) {
+const caseSensitive = function (val: string) {
   return val;
 };
 
 /** matches :: (StringMatch, String) -> Boolean */
-var matches = function (subject: StringMatch, str: string): boolean {
+const matches = function (subject: StringMatch, str: string): boolean {
   return subject.fold(function (value, f) {
     return f(str).indexOf(f(value)) === 0;
   }, function (regex, f) {
@@ -47,7 +54,7 @@ var matches = function (subject: StringMatch, str: string): boolean {
   });
 };
 
-var cata = function <T>(
+const cata = function <T>(
   subject: StringMatch,
   s:(value: string, f: StringMapper) => T,
   p: (regex: RegExp, f: StringMapper) => T,
@@ -60,12 +67,7 @@ var cata = function <T>(
 };
 
 export const StringMatch = {
-  starts: <(value: string, f: StringMapper) => StringMatch>adt.starts,
-  pattern: <(regex: RegExp, f: StringMapper) => StringMatch>adt.pattern,
-  contains: <(value: string, f: StringMapper) => StringMatch>adt.contains,
-  exact: <(value: string, f: StringMapper) => StringMatch>adt.exact,
-  all: <() => StringMatch>adt.all,
-  not: <(stringMatch: StringMatch) => StringMatch>adt.not,
+  ...adt,
   cata: cata,
   matches: matches,
   caseSensitive: caseSensitive,

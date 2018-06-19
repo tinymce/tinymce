@@ -1,6 +1,6 @@
-var bounce = function(f: Function) {
-  return function(...args) {
-    var me = this;
+const bounce = function(f: Function) {
+  return function(...args: any[]) {
+    const me = this;
     setTimeout(function() {
       f.apply(me, args);
     }, 0);

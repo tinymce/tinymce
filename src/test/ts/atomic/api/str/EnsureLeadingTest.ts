@@ -1,10 +1,10 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ensureLeading', function() {
   function check(expected, str, prefix) {
-    var actual = Strings.ensureLeading(str, prefix);
+    const actual = Strings.ensureLeading(str, prefix);
     assert.eq(expected, actual);
   }
 

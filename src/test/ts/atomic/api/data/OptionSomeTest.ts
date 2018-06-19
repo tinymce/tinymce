@@ -1,14 +1,14 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionSomeTest', function() {
-  var testSanity = function () {
-    var boom = function(f?) { throw 'Should not be called'; };
+  const testSanity = function () {
+    const boom = function(f?) { throw 'Should not be called'; };
 
-    var s = Option.some(5);   
+    const s = Option.some(5);   
     assert.eq(true, s.isSome());
     assert.eq(false, s.isNone());
     assert.eq(5, s.getOr(6));
@@ -43,7 +43,7 @@ UnitTest.test('OptionSomeTest', function() {
     assert.eq(true, Option.some(5).equals(Option.some(5)));
     assert.eq(false, Option.some(5.1).equals(Option.some(5.3)));
 
-    var comparator = function(a, b) { return Math.round(a) === Math.round(b); };
+    const comparator = function(a, b) { return Math.round(a) === Math.round(b); };
 
     assert.eq(true, Option.some(5.1).equals_(Option.some(5.3), comparator));
     assert.eq(false, Option.some(5.1).equals_(Option.some(5.9), comparator));
@@ -52,11 +52,11 @@ UnitTest.test('OptionSomeTest', function() {
     assert.eq([{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());
     assert.eq([[ 1 ]], Option.some([1]).toArray());
 
-    var plus2 = function(a) { return a + 2; };
+    const plus2 = function(a) { return a + 2; };
     assert.eq(true, Option.some(5).ap(Option.some(plus2)).equals(Option.some(7)));
     assert.eq(true, Option.some(5).ap(Option.none()).equals(Option.none()));
 
-    var person = function (name) {
+    const person = function (name) {
       return function (age) {
         return function (address) {
           return { name: name, age: age, address: address };
@@ -69,8 +69,8 @@ UnitTest.test('OptionSomeTest', function() {
     assert.eq(true, Option.some(6).or(Option.some(7)).equals(Option.some(6)));
     assert.eq(true, Option.some(3).or(Option.none()).equals(Option.some(3)));
 
-    var assertOptionEq = function(expected, actual) {
-      var same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
+    const assertOptionEq = function(expected, actual) {
+      const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
       if (!same) {
         // assumes toString() works
         assert.fail('Expected: ' + expected.toString() + ' Actual: ' + actual.toString());
@@ -85,20 +85,20 @@ UnitTest.test('OptionSomeTest', function() {
     assert.eq('az', Option.some('a').fold(Fun.die('boom'), function(x) { return x + 'z'; }));
   };
 
-  var testSpecs = function () {
-    var arbOptionSome = ArbDataTypes.optionSome;
-    var arbOptionNone = ArbDataTypes.optionNone;
+  const testSpecs = function () {
+    const arbOptionSome = ArbDataTypes.optionSome;
+    const arbOptionNone = ArbDataTypes.optionNone;
 
 
     Jsc.property('Checking some(x).fold(die, id) === x', 'json', function (json) {
-      var opt = Option.some(json);
-      var actual = opt.fold(Fun.die('Should not be none!'), Fun.identity);
+      const opt = Option.some(json);
+      const actual = opt.fold(Fun.die('Should not be none!'), Fun.identity);
       return Jsc.eq(json, actual);
     });
 
 
     Jsc.property('Checking some(x).is(x) === true', 'json', function (json) {
-      var opt = Option.some(json);
+      const opt = Option.some(json);
       return Jsc.eq(true, opt.is(json));
     });
 
@@ -122,7 +122,7 @@ UnitTest.test('OptionSomeTest', function() {
     // Require non empty string of msg falsiness gets in the way.
     Jsc.property('Checking some.getOrDie() never throws', 'json', Jsc.nestring, function (json, s) {
       try {
-        var opt = Option.some(json);
+        const opt = Option.some(json);
         opt.getOrDie(s);
         return Jsc.eq(json, opt.getOrDie(s));
       } catch (err) {
@@ -131,59 +131,59 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).or(oSomeValue) === some(x)', 'json', arbOptionSome, function (json, other) {
-      var output = Option.some(json).or(other);
+      const output = Option.some(json).or(other);
       return Jsc.eq(true, output.is(json));
     });      
 
     Jsc.property('Checking some(x).orThunk(_ -> oSomeValue) === some(x)', 'json', arbOptionSome, function (json, other) {
-      var output = Option.some(json).orThunk(function () {
+      const output = Option.some(json).orThunk(function () {
         return other;
       });
       return Jsc.eq(true, output.is(json));
     });     
 
     Jsc.property('Checking some(x).map(f) === some(f(x))', 'json', 'json -> json', function (json, f) {
-      var opt = Option.some(json);
-      var actual = opt.map(f);
+      const opt = Option.some(json);
+      const actual = opt.map(f);
       return Jsc.eq(f(json), actual.getOrDie());
     });
 
     Jsc.property('Checking some(x).ap(Option.some(f) === some(f(x))', 'json', 'string -> json', function (json, f) {
-      var opt = Option.some(json);
-      var g = Option.some(f);
-      var actual = opt.ap(g);
+      const opt = Option.some(json);
+      const g = Option.some(f);
+      const actual = opt.ap(g);
       return Jsc.eq(f(json), actual.getOrDie());
     });      
 
     Jsc.property('Checking some(x).each(f) === undefined and f gets x', arbOptionSome, function (opt) {
-      var hack = null;
-      var actual = opt.each(function (x) {
+      let hack = null;
+      const actual = opt.each(function (x) {
         hack = x;
       });
       return Jsc.eq(undefined, actual) && hack == opt.getOrDie();
     });
 
     Jsc.property('Given f :: s -> some(b), checking some(x).bind(f) === some(b)', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
-      var actual = opt.bind(f);
+      const actual = opt.bind(f);
       return actual.isSome() && Jsc.eq(true, actual.equals(f(opt.getOrDie())));
     });
 
     
 
     Jsc.property('Given f :: s -> none, checking some(x).bind(f) === none', arbOptionSome, Jsc.fn(arbOptionNone), function (opt, f) {
-      var actual = opt.bind(f);
+      const actual = opt.bind(f);
       return Jsc.eq(true, actual.isNone());
     });
 
 
 
     Jsc.property('Checking some(none).flatten === none', arbOptionNone, function (inside) {
-      var opt = Option.some(inside);
+      const opt = Option.some(inside);
       return Jsc.eq(true, opt.flatten().isNone());
     });
 
     Jsc.property('Checking some(some(y)).flatten === none', arbOptionSome, function (inside) {
-      var opt = Option.some(inside);
+      const opt = Option.some(inside);
       return Jsc.eq(inside.getOrDie(), opt.flatten().getOrDie());
     });
 
@@ -196,7 +196,7 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).exists(f) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
-      var opt = Option.some(json);
+      const opt = Option.some(json);
       return f(json) === true ? Jsc.eq(true, opt.exists(f)) : Jsc.eq(false, opt.exists(f));
     });
 
@@ -209,7 +209,7 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).forall(f) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
-      var opt = Option.some(json);
+      const opt = Option.some(json);
       return f(json) === true ? Jsc.eq(true, opt.forall(f)) : Jsc.eq(false, opt.forall(f));
     });
 
@@ -222,7 +222,7 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).filter(f) === some(x) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
-      var opt = Option.some(json);
+      const opt = Option.some(json);
       return f(json) === true ? Jsc.eq(json, opt.filter(f).getOrDie()) : Jsc.eq(true, opt.filter(f).isNone());
     });
 
@@ -231,8 +231,8 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).equals(some(y)) iff. x === y', arbOptionSome, arbOptionSome, function (json1, json2) {
-      var opt1 = Option.some(json1);
-      var opt2 = Option.some(json2);
+      const opt1 = Option.some(json1);
+      const opt2 = Option.some(json2);
       return json1 === json2 ? opt1.equals(opt2) : !opt1.equals(opt2);
     });
 
@@ -249,14 +249,14 @@ UnitTest.test('OptionSomeTest', function() {
     });
 
     Jsc.property('Checking some(x).equals_(some(y), _, _ -> true) === true', 'json', 'json', function (json1, json2) {
-      var opt1 = Option.some(json1);
-      var opt2 = Option.some(json2);
+      const opt1 = Option.some(json1);
+      const opt2 = Option.some(json2);
       return Jsc.eq(true, opt1.equals_(opt2, Fun.constant(true)));
     });
 
     Jsc.property('Checking some(x).equals_(some(y), f) iff. f(x, y)', arbOptionSome, arbOptionSome, 'json, json -> bool', function (json1, json2, f) {
-      var opt1 = Option.some(json1);
-      var opt2 = Option.some(json2);
+      const opt1 = Option.some(json1);
+      const opt2 = Option.some(json2);
       return f(json1, json2) ? opt1.equals_(opt2, f) : !opt1.equals_(opt2, f);
     });
 

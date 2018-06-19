@@ -1,25 +1,25 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FindIndexTest', function() {
-  var checkNoneHelper = function (input, pred) {
-    var actual = Arr.findIndex(input, pred);
+  const checkNoneHelper = function (input, pred) {
+    const actual = Arr.findIndex(input, pred);
     assert.eq(true, actual.isNone());
   };
 
-  var checkNone = function (input: any[], pred) {
+  const checkNone = function (input: any[], pred) {
     checkNoneHelper(input, pred);
     checkNoneHelper(Object.freeze(input.slice()), pred);
   };
 
-  var checkHelper = function (expected, input, pred) {
-    var actual = Arr.findIndex(input, pred).getOrDie('should have found index: ' + input);
+  const checkHelper = function (expected, input, pred) {
+    const actual = Arr.findIndex(input, pred).getOrDie('should have found index: ' + input);
     assert.eq(expected, actual);
   };
 
-  var check = function (expected, input: any[], pred) {
+  const check = function (expected, input: any[], pred) {
     checkHelper(expected, input, pred);
     checkHelper(expected, Object.freeze(input.slice()), pred);
   };
@@ -49,7 +49,7 @@ UnitTest.test('FindIndexTest', function() {
     'If predicate is always false, then index is always none',
     Jsc.array(Jsc.json),
     function (arr) {
-      var index = Arr.findIndex(arr, Fun.constant(false));
+      const index = Arr.findIndex(arr, Fun.constant(false));
       return index.isNone();
     }
   );
@@ -58,7 +58,7 @@ UnitTest.test('FindIndexTest', function() {
     'If predicate is always true, then index is always some(0), or none if array is empty',
     Jsc.array(Jsc.json),
     function (arr) {
-      var index = Arr.findIndex(arr, Fun.constant(true));
+      const index = Arr.findIndex(arr, Fun.constant(true));
       if (arr.length === 0) return Jsc.eq(true, index.isNone());
       else return Jsc.eq(0, index.getOrDie('should have found index'));
     }

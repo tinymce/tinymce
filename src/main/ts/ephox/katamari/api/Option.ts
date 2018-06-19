@@ -1,4 +1,4 @@
-import Fun from './Fun';
+import * as Fun from './Fun';
 
 export interface Option<T> {
   fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
@@ -27,8 +27,8 @@ export interface Option<T> {
   toString: () => string;
 };
 
-var never: () => false = Fun.never;
-var always: () => true = Fun.always;
+const never: () => false = Fun.never;
+const always: () => true = Fun.always;
 
 /**
   Option objects support the following methods:
@@ -87,21 +87,21 @@ var always: () => true = Fun.always;
 
 */
 
-var none = function<T = any> () { return <Option<T>> NONE; };
+const none = function<T = any> () { return <Option<T>> NONE; };
 
-var NONE: Option<any> = (function () {
-  var eq = function (o) {
+const NONE: Option<any> = (function () {
+  const eq = function (o) {
     return o.isNone();
   };
 
   // inlined from peanut, maybe a micro-optimisation?
-  var call = function (thunk) { return thunk(); };
-  var id = function (n) { return n; };
-  var noop = function () { };
-  var nul = function() { return null; };
-  var undef = function() { return undefined; };
+  const call = function (thunk) { return thunk(); };
+  const id = function (n) { return n; };
+  const noop = function () { };
+  const nul = function() { return null; };
+  const undef = function() { return undefined; };
 
-  var me: Option<any> = {
+  const me: Option<any> = {
     fold: function (n, s) { return n(); },
     is: never,
     isSome: never,
@@ -134,25 +134,25 @@ var NONE: Option<any> = (function () {
 
 
 /** some :: a -> Option a */
-var some = function <T> (a: T): Option<T> {
+const some = function <T> (a: T): Option<T> {
 
   // inlined from peanut, maybe a micro-optimisation?
-  var constant_a = function () { return a; };
+  const constant_a = function () { return a; };
 
-  var self = function () {
+  const self = function () {
     // can't Fun.constant this one
     return me;
   };
 
-  var map = function <T2> (f: (value: T) => T2) {
+  const map = function <T2> (f: (value: T) => T2) {
     return some(f(a));
   };
 
-  var bind = function <T2> (f: (value: T) => T2) {
+  const bind = function <T2> (f: (value: T) => T2) {
     return f(a);
   };
 
-  var me: Option<T> = {
+  const me: Option<T> = {
     fold: function <T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
     is: function (v: T) { return a === v; },
     isSome: always,
@@ -200,7 +200,7 @@ var some = function <T> (a: T): Option<T> {
 };
 
 /** from :: undefined|null|a -> Option a */
-var from = function <T> (value: T | undefined | null): Option<NonNullable<T>> {
+const from = function <T> (value: T | undefined | null): Option<NonNullable<T>> {
   return value === null || value === undefined ? NONE : some(value as NonNullable<T>);
 };
 

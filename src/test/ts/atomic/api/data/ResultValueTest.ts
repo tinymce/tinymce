@@ -1,12 +1,12 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ResultValueTest', function() {
-  var testSanity = function () {
-    var s = Result.value(5);
+  const testSanity = function () {
+    const s = Result.value(5);
     assert.eq(true, s.is(5));
     assert.eq(true, s.isValue());
     assert.eq(false, s.isError());
@@ -38,10 +38,10 @@ UnitTest.test('ResultValueTest', function() {
     assert.eq(true, Result.value(5).toOption().isSome());      
   };
 
-  var arbResultError = ArbDataTypes.resultError;
-  var arbResultValue = ArbDataTypes.resultValue;
+  const arbResultError = ArbDataTypes.resultError;
+  const arbResultValue = ArbDataTypes.resultValue;
 
-  var testSpecs = function () {
+  const testSpecs = function () {
     Jsc.property('Checking value.is(value.getOrDie()) === true', arbResultValue, function (res) {
       return Jsc.eq(true, res.is(res.getOrDie()));
     });
@@ -55,7 +55,7 @@ UnitTest.test('ResultValueTest', function() {
     });      
 
     Jsc.property('Checking value.getOr(v) === value.value', arbResultValue, 'json', function (res, json) {
-      var inside = res.fold(Fun.die('no'), Fun.identity);
+      const inside = res.fold(Fun.die('no'), Fun.identity);
       return Jsc.eq(inside, res.getOr(json)) === true;
     });
 
@@ -69,7 +69,7 @@ UnitTest.test('ResultValueTest', function() {
     });
 
     Jsc.property('Checking value.or(oValue) === value', arbResultValue, 'json', function (res, json) {
-      var inside = res.fold(Fun.die('no'), Fun.identity);
+      const inside = res.fold(Fun.die('no'), Fun.identity);
       return Jsc.eq(inside, res.or(Result.value(json)).getOr(json)) === true;
     });
 
@@ -83,7 +83,7 @@ UnitTest.test('ResultValueTest', function() {
     });
 
     Jsc.property('Checking value.fold(die, id) === value.getOrDie()', arbResultValue, 'json', function (res, json) {
-      var actual = res.getOrDie();
+      const actual = res.getOrDie();
       return Jsc.eq(actual, res.fold(Fun.die('should not get here'), Fun.identity));
     });
 
@@ -92,7 +92,7 @@ UnitTest.test('ResultValueTest', function() {
     });
 
     Jsc.property('Checking value.each(f) === undefined', arbResultValue, 'string -> json', function (res, f) {
-      var actual = res.each(f);
+      const actual = res.each(f);
       return Jsc.eq(undefined, actual);
     });
 
@@ -101,7 +101,7 @@ UnitTest.test('ResultValueTest', function() {
     });
 
     Jsc.property('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', arbResultValue, Jsc.fn(arbResultError), function (res, f) {
-      var toErrString = function (r) {
+      const toErrString = function (r) {
         return r.fold(Fun.identity, Fun.die('Not a Result.error'));
       };
 

@@ -1,11 +1,11 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DifferenceTest', function() {
-  var check = function <T> (expected, a1: T[], a2: T[]) {
-    var readonlyA1 = Object.freeze(a1.slice());
-    var readonlyA2 = Object.freeze(a2.slice());
+  const check = function <T> (expected, a1: T[], a2: T[]) {
+    const readonlyA1 = Object.freeze(a1.slice());
+    const readonlyA2 = Object.freeze(a2.slice());
     assert.eq(expected, Arr.difference(a1, a2));
     assert.eq(expected, Arr.difference(readonlyA1, a2));
     assert.eq(expected, Arr.difference(a1, readonlyA2));
@@ -26,9 +26,9 @@ UnitTest.test('DifferenceTest', function() {
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
     function (subject, toMinus) {
-      var diffed = Arr.difference(subject, toMinus);
+      const diffed = Arr.difference(subject, toMinus);
 
-      var hasMinus = Arr.exists(toMinus, function (item) {
+      const hasMinus = Arr.exists(toMinus, function (item) {
         return Arr.contains(diffed, item);
       });
 

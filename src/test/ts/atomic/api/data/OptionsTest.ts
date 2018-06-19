@@ -1,13 +1,13 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
-import Options from 'ephox/katamari/api/Options';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as Options from 'ephox/katamari/api/Options';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionsTest', function() {
-  var person = function(name, age, address) {
+  const person = function(name, age, address) {
     return {name:name, age:age, address:address};
   };
 
@@ -16,7 +16,7 @@ UnitTest.test('OptionsTest', function() {
   assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
   assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
 
-  var arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
+  const arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
   assert.eq([1, 2, 3, 4], Options.cat(arr1));
 
   assert.eq(undefined, Option.some(1).each(Fun.identity), 'each returns undefined');
@@ -26,7 +26,7 @@ UnitTest.test('OptionsTest', function() {
     'Options.cat of only nones should be an empty array',
     Jsc.array(ArbDataTypes.optionNone),
     function (options) {
-      var output = Options.cat(options);
+      const output = Options.cat(options);
       return Jsc.eq(0, output.length);
     }
   );
@@ -35,7 +35,7 @@ UnitTest.test('OptionsTest', function() {
     'Options.cat of only somes should have the same length',
     Jsc.array(ArbDataTypes.optionSome),
     function (options) {
-      var output = Options.cat(options);
+      const output = Options.cat(options);
       return Jsc.eq(options.length, output.length);
     }
   );
@@ -44,8 +44,8 @@ UnitTest.test('OptionsTest', function() {
     'Options.cat of Arr.map(xs, Option.some) should be xs',
     Jsc.array(Jsc.json),
     function (arr) {
-      var options = Arr.map(arr, Option.some);
-      var output = Options.cat(options);
+      const options = Arr.map(arr, Option.some);
+      const output = Options.cat(options);
       return Jsc.eq(arr, output);
     }
   );
@@ -54,7 +54,7 @@ UnitTest.test('OptionsTest', function() {
     'Options.cat of somes and nones should have length <= original',
     Jsc.array(ArbDataTypes.option),
     function (arr) {
-      var output = Options.cat(arr);
+      const output = Options.cat(arr);
       return Jsc.eq(output.length <= arr.length, true);
     }
   );
@@ -65,10 +65,10 @@ UnitTest.test('OptionsTest', function() {
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
     function (before, on, after) {
-      var beforeNones = Arr.map(before, Option.none);
-      var afterNones = Arr.map(after, Option.none);
-      var onSomes = Arr.map(on, Option.some);
-      var output = Options.cat(beforeNones.concat(onSomes).concat(afterNones));
+      const beforeNones = Arr.map(before, Option.none);
+      const afterNones = Arr.map(after, Option.none);
+      const onSomes = Arr.map(on, Option.some);
+      const output = Options.cat(beforeNones.concat(onSomes).concat(afterNones));
       return Jsc.eq(on, output);
     }
   );
@@ -102,7 +102,7 @@ UnitTest.test('OptionsTest', function() {
     Jsc.nearray(Jsc.json),
     Jsc.fun(ArbDataTypes.option),
     function (arr, f) {
-      var output = Options.findMap(arr, f);
+      const output = Options.findMap(arr, f);
       return output.isNone() || output.isSome();
     }
   );
@@ -111,7 +111,7 @@ UnitTest.test('OptionsTest', function() {
     'Options.liftN of an array of nones returns a none',
     Jsc.nearray(ArbDataTypes.optionNone),
     function (arr) {
-      var output = Options.liftN(arr, Fun.die('Never executes f'));
+      const output = Options.liftN(arr, Fun.die('Never executes f'));
       return output.isNone();
     }
   );
@@ -122,7 +122,7 @@ UnitTest.test('OptionsTest', function() {
     Jsc.nearray(ArbDataTypes.optionSome),
     Jsc.fun(Jsc.json),
     function (arr, f) {
-      var output = Options.liftN(arr, f);
+      const output = Options.liftN(arr, f);
       return output.isSome();
     }
   );
@@ -132,8 +132,8 @@ UnitTest.test('OptionsTest', function() {
     Jsc.nearray(ArbDataTypes.option),
     Jsc.fun(Jsc.json),
     function (arr, f) {
-      var args = Options.cat(arr);
-      var output = Options.liftN(arr, f);
+      const args = Options.cat(arr);
+      const output = Options.liftN(arr, f);
 
       if (args.length === arr.length) {
         return Jsc.eq(output.getOrDie(), f.apply(undefined, args));

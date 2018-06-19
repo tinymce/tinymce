@@ -1,9 +1,9 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('supplant', function() {
   function check(expected, str, obj) {
-    var actual = Strings.supplant(str, obj);
+    const actual = Strings.supplant(str, obj);
     assert.eq(expected, actual);
   }
 

@@ -1,10 +1,10 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
 import Jsc from '@ephox/wrap-jsverify';
 
-var show = function (res) {
+const show = function (res) {
   return res.fold(function (e) {
     return 'Result.error(' + e + ')';
   }, function (v) {
@@ -12,23 +12,23 @@ var show = function (res) {
   });
 };
 
-var arbResultError = Jsc.string.smap(function (e) {
+export const resultError = Jsc.string.smap(function (e) {
   return Result.error(e);
 }, function (res) {
   return res.fold(Fun.identity, Fun.die('This should not happen'));
 }, show);
 
-var arbResultValue = Jsc.string.smap(function (e) {
+export const resultValue = Jsc.string.smap(function (e) {
   return Result.value(e);
 }, function (res) {
   return res.fold(Fun.die('This should not happen'), Fun.identity);
 }, show);
 
-var arbResult = Jsc.oneof([ arbResultError, arbResultValue ]);
+export const result = Jsc.oneof([ resultError, resultValue ]);
 
 
-var genFutureResultSchema = arbResult.generator.map(function (result) {
-  var futureResult = FutureResult.nu(function (callback) {
+const genFutureResultSchema = result.generator.map(function (result) {
+  const futureResult = FutureResult.nu(function (callback) {
     callback(result);
   });
 
@@ -38,56 +38,42 @@ var genFutureResultSchema = arbResult.generator.map(function (result) {
   };
 });
 
-var genFutureResult = arbResult.generator.map(function (result) {
+const genFutureResult = result.generator.map(function (result) {
   return FutureResult.nu(function (callback) {
     callback(result);
   });
 });
 
-var arbFutureResult  = Jsc.bless({
+export const futureResult  = Jsc.bless({
   generator: genFutureResult
 });
 
-var arbFutureResultSchema = Jsc.bless({
+export const futureResultSchema = Jsc.bless({
   generator: genFutureResultSchema
 });
 
 
-var arbNone = Jsc.constant(Option.none());
-var arbSome = Jsc.json.smap(function (v) {
+export const optionNone = Jsc.constant(Option.none());
+export const optionSome = Jsc.json.smap(function (v) {
   return Option.some(v);
 }, function (option) {
   return option.getOrDie();
 });
 
-var arbOption = Jsc.oneof([ arbNone, arbSome ]);
+export const option = Jsc.oneof([ optionNone, optionSome ]);
 
-var genIndexArrayOf = function (len) {
+const genIndexArrayOf = function (len) {
   return Jsc.integer(0, len).generator.map(function (aLength) {
-    var r = [ ];
-    for (var i = 0; i < aLength; i++) {
+    const r = [ ];
+    for (let i = 0; i < aLength; i++) {
       r.push(i);
     }
     return r;
   });
 };
 
-var arbIndexArrayOf = function (len) {
+export const indexArrayOf = function (len) {
   return Jsc.bless({
     generator: genIndexArrayOf(len)
   });
-};
-
-export default <any> {
-  option: arbOption,
-  optionSome: arbSome,
-  optionNone: arbNone,
-
-  indexArrayOf: arbIndexArrayOf,
-  resultError: arbResultError,
-  resultValue: arbResultValue,
-  result: arbResult,
-
-  futureResult: arbFutureResult,
-  futureResultSchema: arbFutureResultSchema
 };

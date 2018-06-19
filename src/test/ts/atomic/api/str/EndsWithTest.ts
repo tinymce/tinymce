@@ -1,10 +1,10 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('endsWith', function() {
   function check(expected, str, suffix) {
-    var actual = Strings.endsWith(str, suffix);
+    const actual = Strings.endsWith(str, suffix);
     assert.eq(expected, actual);
   }
 
@@ -22,7 +22,7 @@ UnitTest.test('endsWith', function() {
     Jsc.string,
     Jsc.nestring,
     function (str, contents) {
-      var r = str + contents;
+      const r = str + contents;
       return Jsc.eq(true, Strings.endsWith(r, contents));
     }
   );

@@ -1,9 +1,7 @@
-import Immutable from '../data/Immutable';
-import MixedBag from '../data/MixedBag';
+import { Immutable as immutable } from '../data/Immutable';
+import { MixedBag as immutableBag } from '../data/MixedBag';
 
-
-
-export default {
-  immutable: Immutable,
-  immutableBag: MixedBag
+export {
+  immutable,
+  immutableBag
 };

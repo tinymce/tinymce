@@ -1,13 +1,13 @@
-import Resolve from 'ephox/katamari/api/Resolve';
+import * as Resolve from 'ephox/katamari/api/Resolve';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ObjResolverTest', function() {
-  var testNamespace = function () {
-    var survivor = 'i want to survive this namespacing';
-    var token = 'i should be set as the [token] attribute on the namespace';
+  const testNamespace = function () {
+    const survivor = 'i want to survive this namespacing';
+    const token = 'i should be set as the [token] attribute on the namespace';
 
-    var data:any = {
+    const data:any = {
       foo: {
         barney: survivor
       },
@@ -15,8 +15,8 @@ UnitTest.test('ObjResolverTest', function() {
       didgy: null
     };
 
-    var run = function (path, target) {
-      var r = Resolve.namespace(path, target);
+    const run = function (path, target) {
+      const r = Resolve.namespace(path, target);
       r.token = token;
     };
 
@@ -31,13 +31,13 @@ UnitTest.test('ObjResolverTest', function() {
     assert.eq(token, data.didgy.bar.baz.token);
   };
 
-  var testResolve = function () {
-    var check = function (expected, path, scope) {
-      var actual = Resolve.resolve(path, scope);
+  const testResolve = function () {
+    const check = function (expected, path, scope) {
+      const actual = Resolve.resolve(path, scope);
       assert.eq(expected, actual);
     };
 
-    var data = {
+    const data = {
       a: {
         apple: {
           red: 'i am a red apple',
@@ -62,8 +62,8 @@ UnitTest.test('ObjResolverTest', function() {
     check(parseInt, 'parseInt', null);
   };
 
-  var testSpecs = function () {
-    var checkEq = function (label, expected, actual) {
+  const testSpecs = function () {
+    const checkEq = function (label, expected, actual) {
       return Jsc.eq(expected, actual) ? true : label + '. Exp: ' + expected + ', actual: ' + actual;
     };
 
@@ -81,9 +81,9 @@ UnitTest.test('ObjResolverTest', function() {
       Jsc.asciinestring,
       Jsc.asciinestring,
       function (dict, parts, field, newValue) {
-        var created = Resolve.forge(parts, dict);
+        const created = Resolve.forge(parts, dict);
         created[field] = newValue;
-        var resolved = Resolve.path(parts.concat([ field ]), dict);
+        const resolved = Resolve.path(parts.concat([ field ]), dict);
         return checkEq(
           'Checking that namespace works with resolve',
           newValue,

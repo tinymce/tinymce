@@ -1,8 +1,8 @@
 import { Adt } from './Adt';
-import Arr from './Arr';
+import * as Arr from './Arr';
 import { Result } from './Result';
 
-var comparison = Adt.generate([
+const comparison = Adt.generate([
   { bothErrors: ['error1', 'error2'] },
   { firstError: ['error1', 'value2'] },
   { secondError: ['value1', 'error2'] },
@@ -10,9 +10,9 @@ var comparison = Adt.generate([
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-var partition = function <T, E>(results: Result<T, E>[]) {
-  var errors: E[] = [];
-  var values: T[] = [];
+export const partition = function <T, E>(results: Result<T, E>[]) {
+  const errors: E[] = [];
+  const values: T[] = [];
 
   Arr.each(results, function (result: Result<T, E>) {
     result.fold(
@@ -25,7 +25,7 @@ var partition = function <T, E>(results: Result<T, E>[]) {
 };
 
 /** compare :: (Result a, Result b) -> Comparison a b */
-var compare = function (result1: Result<any, any>, result2: Result<any, any>) {
+export const compare = function (result1: Result<any, any>, result2: Result<any, any>) {
   return result1.fold(function (err1) {
     return result2.fold(function (err2) {
       return comparison.bothErrors(err1, err2);
@@ -39,9 +39,4 @@ var compare = function (result1: Result<any, any>, result2: Result<any, any>) {
       return comparison.bothValues(val1, val2);
     });
   });
-};
-
-export default {
-  partition: partition,
-  compare: compare
 };

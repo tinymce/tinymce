@@ -1,16 +1,16 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrEqualTest', function() {
-  var checkHelper = function (expected, a1, a2) {
-    var actual = Arr.equal(a1, a2);
+  const checkHelper = function (expected, a1, a2) {
+    const actual = Arr.equal(a1, a2);
     assert.eq(expected, actual);
   };
 
-  var check = function (expected, a1, a2) {
+  const check = function (expected, a1, a2) {
     checkHelper(expected, a1, a2);
     checkHelper(expected, Object.freeze(a1.slice()), a2);
     checkHelper(expected, a1, Object.freeze(a2.slice()));
@@ -58,7 +58,7 @@ UnitTest.test('ArrEqualTest', function() {
     'Two arrays should be the same if one is mapped identity over the other',
     Jsc.array(Jsc.json),
     function (arr) {
-      var other = Arr.map(arr, Fun.identity);
+      const other = Arr.map(arr, Fun.identity);
       return Arr.equal(arr, other);
     }
   );
@@ -67,7 +67,7 @@ UnitTest.test('ArrEqualTest', function() {
     'reverse(arr) !== arr if arr contains unique elements and has length > 1',
     ArbDataTypes.indexArrayOf(10),
     function (arr) {
-      var other = Arr.reverse(arr);
+      const other = Arr.reverse(arr);
       return arr.length > 1  ? !Arr.equal(arr, other) : Arr.equal(arr, other);
     }
   );
@@ -76,8 +76,8 @@ UnitTest.test('ArrEqualTest', function() {
     'reverse(reverse(arr)).eq(arr)',
     Jsc.nearray(Jsc.json),
     function (arr) {
-      var other = Arr.reverse(arr);
-      var again = Arr.reverse(other);
+      const other = Arr.reverse(arr);
+      const again = Arr.reverse(other);
       return Arr.equal(arr, again);
     }
   );

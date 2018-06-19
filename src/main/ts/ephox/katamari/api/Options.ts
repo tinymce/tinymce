@@ -1,21 +1,21 @@
 import { Option } from './Option';
 
 /** cat :: [Option a] -> [a] */
-var cat = function <A> (arr: Option<A>[]) {
-  var r: A[] = [];
-  var push = function (x: A) {
+export const cat = function <A> (arr: Option<A>[]) {
+  const r: A[] = [];
+  const push = function (x: A) {
     r.push(x);
   };
-  for (var i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     arr[i].each(push);
   }
   return r;
 };
 
 /** findMap :: ([a], (a, Int -> Option b)) -> Option b */
-var findMap = function <A, B> (arr: A[], f: (a: A, index: number) => Option<B>) {
-  for (var i = 0; i < arr.length; i++) {
-    var r = f(arr[i], i);
+export const findMap = function <A, B> (arr: A[], f: (a: A, index: number) => Option<B>) {
+  for (let i = 0; i < arr.length; i++) {
+    const r = f(arr[i], i);
     if (r.isSome()) {
       return r;
     }
@@ -27,10 +27,10 @@ var findMap = function <A, B> (arr: A[], f: (a: A, index: number) => Option<B>) 
  * if all elements in arr are 'some', their inner values are passed as arguments to f
  * f must have arity arr.length
 */
-var liftN = function <B> (arr: Option<any>[], f: (...args: any[]) => B) {
-  var r: any[] = [];
-  for (var i = 0; i < arr.length; i++) {
-    var x = arr[i];
+export const liftN = function <B> (arr: Option<any>[], f: (...args: any[]) => B) {
+  const r: any[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const x = arr[i];
     if (x.isSome()) {
       r.push(x.getOrDie());
     } else {
@@ -38,10 +38,4 @@ var liftN = function <B> (arr: Option<any>[], f: (...args: any[]) => B) {
     }
   }
   return Option.some(<B>f.apply(null, r));
-};
-
-export default {
-  cat: cat,
-  findMap: findMap,
-  liftN: liftN
 };

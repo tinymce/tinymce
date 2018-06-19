@@ -1,4 +1,4 @@
-import Arr from '../api/Arr';
+import * as Arr from '../api/Arr';
 
 /* 
  * NOTE: an `asyncValue` must have a `get` function which gets given a callback and calls 

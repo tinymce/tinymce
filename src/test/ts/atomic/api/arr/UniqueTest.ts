@@ -1,12 +1,12 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Unique from 'ephox/katamari/api/Unique';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Unique', function() {
-  var expected = ['three', 'two', 'one'];
+  const expected = ['three', 'two', 'one'];
 
-  var check = function(input) {
+  const check = function(input) {
     assert.eq(expected, Unique.stringArray(input));
   };
 
@@ -22,7 +22,7 @@ UnitTest.test('Unique', function() {
     'The result of a unique test should contain no duplicates',
     Jsc.array(Jsc.nestring),
     function (arr) {
-      var unique = Unique.stringArray(arr);
+      const unique = Unique.stringArray(arr);
       return Arr.forall(unique, function (x, i) {
         return !Arr.contains(unique.slice(i + 1), x);
       });
@@ -33,8 +33,8 @@ UnitTest.test('Unique', function() {
     'Unique is idempotent (assuming sorted)',
     Jsc.array(Jsc.nestring),
     function (arr) {
-      var once = Unique.stringArray(arr);
-      var twice = Unique.stringArray(once);
+      const once = Unique.stringArray(arr);
+      const twice = Unique.stringArray(once);
       return Jsc.eq(Arr.sort(once), Arr.sort(twice));
     }
   );

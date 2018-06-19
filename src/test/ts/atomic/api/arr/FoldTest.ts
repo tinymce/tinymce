@@ -1,14 +1,14 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FoldTest', function() {
-  var checkl = function (expected, input: any[], f, acc) {
+  const checkl = function (expected, input: any[], f, acc) {
     assert.eq(expected, Arr.foldl(input, f, acc));
     assert.eq(expected, Arr.foldl(Object.freeze(input.slice()), f, acc));
   };
 
-  var checkr = function (expected, input, f, acc) {
+  const checkr = function (expected, input, f, acc) {
     assert.eq(expected, Arr.foldr(input, f, acc));
     assert.eq(expected, Arr.foldr(Object.freeze(input.slice()), f, acc));
   };
@@ -29,7 +29,7 @@ UnitTest.test('FoldTest', function() {
     'foldl concat [ ] xs === reverse(xs)',
     Jsc.array(Jsc.json),
     function (arr) {
-      var output = Arr.foldl(arr, function (b, a) {
+      const output = Arr.foldl(arr, function (b, a) {
         return [ a ].concat(b);
       }, [ ]);
       return Jsc.eq(Arr.reverse(arr), output);
@@ -40,7 +40,7 @@ UnitTest.test('FoldTest', function() {
     'foldr concat [ ] xs === xs',
     Jsc.array(Jsc.json),
     function (arr) {
-      var output = Arr.foldr(arr, function (b, a) {
+      const output = Arr.foldr(arr, function (b, a) {
         return [ a ].concat(b);
       }, [ ]);
       return Jsc.eq(arr, output);
@@ -52,7 +52,7 @@ UnitTest.test('FoldTest', function() {
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
     function (xs, ys) {
-      var output = Arr.foldr(xs, function (b, a) {
+      const output = Arr.foldr(xs, function (b, a) {
         return [ a ].concat(b);
       }, ys);
       return Jsc.eq(xs.concat(ys), output);
@@ -64,7 +64,7 @@ UnitTest.test('FoldTest', function() {
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
     function (xs, ys) {
-      var output = Arr.foldl(xs, function (b, a) {
+      const output = Arr.foldl(xs, function (b, a) {
         return [ a ].concat(b);
       }, ys);
       return Jsc.eq(Arr.reverse(xs).concat(ys), output);

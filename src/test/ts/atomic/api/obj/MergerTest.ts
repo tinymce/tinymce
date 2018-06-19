@@ -1,5 +1,5 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Merger from 'ephox/katamari/api/Merger';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Merger from 'ephox/katamari/api/Merger';
 import Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
@@ -83,15 +83,15 @@ UnitTest.test('Merger', function() {
   });
 
   Jsc.property('Merge(a, Merge(b, c)) === Merge(Merge(a, b), c)', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b, c) {
-    var one = Merger.merge(a, Merger.merge(b, c));
-    var other = Merger.merge(Merger.merge(a, b), c);
+    const one = Merger.merge(a, Merger.merge(b, c));
+    const other = Merger.merge(Merger.merge(a, b), c);
     return Jsc.eq(one, other);
   });
 
   Jsc.property('Merge(a, b) contains all the keys of b', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b) {
-    var output = Merger.merge(a, b);
-    var keys = Obj.keys(b);
-    var oKeys = Obj.keys(output);
+    const output = Merger.merge(a, b);
+    const keys = Obj.keys(b);
+    const oKeys = Obj.keys(output);
     return Arr.forall(keys, function (k) {
       return Arr.contains(oKeys, k);
     });
@@ -110,15 +110,15 @@ UnitTest.test('Merger', function() {
   });
 
   Jsc.property('Deep-merge(a, Deep-merge(b, c)) === Deep-merge(Deep-merge(a, b), c)', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b, c) {
-    var one = Merger.merge(a, Merger.merge(b, c));
-    var other = Merger.merge(Merger.merge(a, b), c);
+    const one = Merger.merge(a, Merger.merge(b, c));
+    const other = Merger.merge(Merger.merge(a, b), c);
     return Jsc.eq(one, other);
   });
 
   Jsc.property('Deep-merge(a, b) contains all the keys of b', Jsc.dict(Jsc.json), Jsc.dict(Jsc.json), function (a, b) {
-    var output = Merger.deepMerge(a, b);
-    var keys = Obj.keys(b);
-    var oKeys = Obj.keys(output);
+    const output = Merger.deepMerge(a, b);
+    const keys = Obj.keys(b);
+    const oKeys = Obj.keys(output);
     return Arr.forall(keys, function (k) {
       return Arr.contains(oKeys, k);
     });

@@ -3,23 +3,23 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Cell', function() {
-  var single = Cell('hello world');
+  const single = Cell('hello world');
   assert.eq('hello world', single.get());
   single.set('again');
   assert.eq('again', single.get());
 
   Jsc.property('cell(x).get() === x', Jsc.json, function (json) {
-    var cell = Cell(json);
+    const cell = Cell(json);
     return Jsc.eq(json, cell.get());
   });
 
   Jsc.property('cell.get() === last set call', Jsc.json, Jsc.json, Jsc.json, function (a, b, c) {
-    var cell = Cell(a);
-    var first = cell.get();
+    const cell = Cell(a);
+    const first = cell.get();
     cell.set(b);
-    var second = cell.get();
+    const second = cell.get();
     cell.set(c);
-    var third = cell.get();
+    const third = cell.get();
     return Jsc.eq(a, first) && Jsc.eq(b, second) && Jsc.eq(c, third);
   });
 });

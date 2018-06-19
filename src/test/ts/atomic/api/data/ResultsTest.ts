@@ -1,13 +1,13 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import Results from 'ephox/katamari/api/Results';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as Results from 'ephox/katamari/api/Results';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ResultsTest', function() {
-  var testPartition = function () {
-    var actual = Results.partition([
+  const testPartition = function () {
+    const actual = Results.partition([
       Result.value('a'),
       Result.value('b'),
       Result.error('e1'),
@@ -26,15 +26,15 @@ UnitTest.test('ResultsTest', function() {
 
   testPartition();
 
-  var arbResultError = ArbDataTypes.resultError;
-  var arbResultValue = ArbDataTypes.resultValue;
-  var arbResult = ArbDataTypes.result;
+  const arbResultError = ArbDataTypes.resultError;
+  const arbResultValue = ArbDataTypes.resultValue;
+  const arbResult = ArbDataTypes.result;
 
   Jsc.property(
     'Check that values should be empty and  errors should be all if we only generate errors',
     Jsc.array(arbResultError),
     function (resErrors) {
-      var actual = Results.partition(resErrors);
+      const actual = Results.partition(resErrors);
       if (! Jsc.eq(0, actual.values.length)) return 'Values length should be 0';
       else if (! Jsc.eq(resErrors.length, actual.errors.length)) return 'Errors length should be ' + resErrors.length;
       return true;
@@ -45,7 +45,7 @@ UnitTest.test('ResultsTest', function() {
     'Check that errors should be empty and values should be all if we only generate values',
     Jsc.array(arbResultValue),
     function (resValues) {
-      var actual = Results.partition(resValues);
+      const actual = Results.partition(resValues);
       if (! Jsc.eq(0, actual.errors.length)) return 'Errors length should be 0';
       else if (! Jsc.eq(resValues.length, actual.values.length)) return 'Values length should be ' + resValues.length;
       return true;
@@ -56,7 +56,7 @@ UnitTest.test('ResultsTest', function() {
     'Check that the total number of values and errors matches the input size',
     Jsc.array(arbResult),
     function (results) {
-      var actual = Results.partition(results);
+      const actual = Results.partition(results);
       return Jsc.eq(results.length, actual.errors.length + actual.values.length) ? true : 'Total number should match size of input';
     }
   );
@@ -66,7 +66,7 @@ UnitTest.test('ResultsTest', function() {
     arbResultError,
     arbResultError,
     function (r1, r2) {
-      var comparison = Results.compare(r1, r2);
+      const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.constant(true),
         firstError: Fun.constant(false),
@@ -81,7 +81,7 @@ UnitTest.test('ResultsTest', function() {
     arbResultError,
     arbResultValue,
     function (r1, r2) {
-      var comparison = Results.compare(r1, r2);
+      const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.constant(false),
         firstError: Fun.constant(true),
@@ -96,7 +96,7 @@ UnitTest.test('ResultsTest', function() {
     arbResultValue,
     arbResultError,
     function (r1, r2) {
-      var comparison = Results.compare(r1, r2);
+      const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.constant(false),
         firstError: Fun.constant(false),
@@ -111,7 +111,7 @@ UnitTest.test('ResultsTest', function() {
     arbResultValue,
     arbResultValue,
     function (r1, r2) {
-      var comparison = Results.compare(r1, r2);
+      const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.constant(false),
         firstError: Fun.constant(false),

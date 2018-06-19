@@ -1,6 +1,6 @@
-import Arr from './Arr';
+import * as Arr from './Arr';
 import Obj from './Obj';
-import Type from './Type';
+import * as Type from './Type';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
@@ -21,20 +21,20 @@ var generate = function (cases: { [key: string]: string[] }[]): any {
     throw new Error('there must be at least one case');
   }
 
-  var constructors: string[] = [];
+  const constructors: string[] = [];
 
   // adt is mutated to add the individual cases
-  var adt: Record<string,(...data: any[]) => Adt> = {};
+  const adt: Record<string,(...data: any[]) => Adt> = {};
   Arr.each(cases, function (acase, count) {
-    var keys: string[] = Obj.keys(acase);
+    const keys: string[] = Obj.keys(acase);
 
     // validation
     if (keys.length !== 1) {
       throw new Error('one and only one name per case');
     }
 
-    var key = keys[0];
-    var value = acase[key];
+    const key = keys[0];
+    const value = acase[key];
 
     // validation
     if (adt[key] !== undefined) {
@@ -51,7 +51,7 @@ var generate = function (cases: { [key: string]: string[] }[]): any {
     // constructor for key
     //
     adt[key] = function (): Adt {
-      var argLength = arguments.length;
+      const argLength = arguments.length;
 
       // validation
       if (argLength !== value.length) {
@@ -59,17 +59,17 @@ var generate = function (cases: { [key: string]: string[] }[]): any {
       }
 
       // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-      var args = new Array(argLength);
-      for (var i = 0; i < args.length; i++) args[i] = arguments[i];
+      const args = new Array(argLength);
+      for (let i = 0; i < args.length; i++) args[i] = arguments[i];
 
 
-      var match = function (branches: { [branch: string]: Function }) {
-        var branchKeys: string[] = Obj.keys(branches);
+      const match = function (branches: { [branch: string]: Function }) {
+        const branchKeys: string[] = Obj.keys(branches);
         if (constructors.length !== branchKeys.length) {
           throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
         }
 
-        var allReqd = Arr.forall(constructors, function (reqKey) {
+        const allReqd = Arr.forall(constructors, function (reqKey) {
           return Arr.contains(branchKeys, reqKey);
         });
 
@@ -87,7 +87,7 @@ var generate = function (cases: { [key: string]: string[] }[]): any {
           if (arguments.length !== cases.length) {
             throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
           }
-          var target = arguments[count];
+          const target = arguments[count];
           return target.apply(null, args);
         },
         match: match,

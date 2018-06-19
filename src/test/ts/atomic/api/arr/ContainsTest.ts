@@ -1,9 +1,9 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ContainsTest', function() {
-  var check = function (expected, input: any[], value) {
+  const check = function (expected, input: any[], value) {
     assert.eq(expected, Arr.contains(input, value));
     assert.eq(expected, Arr.contains(Object.freeze(input.slice()), value));
   };
@@ -16,7 +16,7 @@ UnitTest.test('ContainsTest', function() {
   check(true, [2, 4, 6], 6);
   check(false, [2, 4, 6], 3);
 
-  var genArrayWithSplit = Jsc.nearray(Jsc.json).generator.flatMap(function (arr) {
+  const genArrayWithSplit = Jsc.nearray(Jsc.json).generator.flatMap(function (arr) {
     return Jsc.integer(0, arr.length).generator.map(function (slicePt) {
       return {
         arr: arr,
@@ -25,7 +25,7 @@ UnitTest.test('ContainsTest', function() {
     });
   });
 
-  var arbArrayWithSplit = Jsc.bless({
+  const arbArrayWithSplit = Jsc.bless({
     generator: genArrayWithSplit
   });
 
@@ -34,7 +34,7 @@ UnitTest.test('ContainsTest', function() {
     arbArrayWithSplit,
     Jsc.json,
     function (arb, value) {
-      var arr = arb.arr.slice(0, arb.slicePt).concat([ value ]).concat(arb.arr.slice(arb.slicePt));
+      const arr = arb.arr.slice(0, arb.slicePt).concat([ value ]).concat(arb.arr.slice(arb.slicePt));
       return Arr.contains(arr, value);
     }
   );
@@ -44,7 +44,7 @@ UnitTest.test('ContainsTest', function() {
     arbArrayWithSplit,
     Jsc.json,
     function (arb, value) {
-      var filtered = Arr.filter(arb.arr, function (item) {
+      const filtered = Arr.filter(arb.arr, function (item) {
         return item !== value;
       });
       return !Arr.contains(filtered, value);

@@ -1,4 +1,4 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 

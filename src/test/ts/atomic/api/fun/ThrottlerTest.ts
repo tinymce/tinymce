@@ -1,15 +1,15 @@
 import { Future } from 'ephox/katamari/api/Future';
-import Throttler from 'ephox/katamari/api/Throttler';
+import * as Throttler from 'ephox/katamari/api/Throttler';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('ThrottlerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var testAdaptable = function () {
+  const testAdaptable = function () {
     return Future.nu(function (callback) {
-      var data = [];
-      var throttler = Throttler.adaptable(function (value) {
+      const data = [];
+      const throttler = Throttler.adaptable(function (value) {
         data.push(value);
       }, 250);
 
@@ -30,10 +30,10 @@ UnitTest.asynctest('ThrottlerTest', function() {
     });
   };
 
-  var testFirst = function () {
+  const testFirst = function () {
     return Future.nu(function (callback) {
-      var data = [];
-      var throttler = Throttler.first(function (value) {
+      const data = [];
+      const throttler = Throttler.first(function (value) {
         data.push(value);
       }, 250);
 
@@ -54,10 +54,10 @@ UnitTest.asynctest('ThrottlerTest', function() {
     });
   };
 
-  var testLast = function () {
+  const testLast = function () {
     return Future.nu(function (callback) {
-      var data = [];
-      var throttler = Throttler.last(function (value) {
+      const data = [];
+      const throttler = Throttler.last(function (value) {
         data.push(value);
       }, 250);
 

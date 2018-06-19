@@ -1,24 +1,24 @@
 import { Option } from './Option';
 import { Cell } from './Cell';
 
-var revocable = function <T> (doRevoke: (data: T) => void) {
-  var subject = Cell(Option.none<T>());
+const revocable = function <T> (doRevoke: (data: T) => void) {
+  const subject = Cell(Option.none<T>());
 
-  var revoke = function () {
+  const revoke = function () {
     subject.get().each(doRevoke);
   };
 
-  var clear = function () {
+  const clear = function () {
     revoke();
     subject.set(Option.none());
   };
 
-  var set = function (s: T) {
+  const set = function (s: T) {
     revoke();
     subject.set(Option.some(s));
   };
 
-  var isSet = function () {
+  const isSet = function () {
     return subject.get().isSome();
   };
 
@@ -29,42 +29,42 @@ var revocable = function <T> (doRevoke: (data: T) => void) {
   };
 };
 
-var destroyable = function <T extends { destroy: () => void; }> () {
+export const destroyable = function <T extends { destroy: () => void; }> () {
   return revocable<T>(function (s) {
     s.destroy();
   });
 };
 
-var unbindable = function <T extends { unbind: () => void; }> () {
+export const unbindable = function <T extends { unbind: () => void; }> () {
   return revocable<T>(function (s) {
     s.unbind();
   });
 };
 
-var api = function <T extends { destroy: () => void; }> () {
-  var subject = Cell(Option.none<T>());
+export const api = function <T extends { destroy: () => void; }> () {
+  const subject = Cell(Option.none<T>());
 
-  var revoke = function () {
+  const revoke = function () {
     subject.get().each(function (s) {
       s.destroy();
     });
   };
 
-  var clear = function () {
+  const clear = function () {
     revoke();
     subject.set(Option.none());
   };
 
-  var set = function (s: T) {
+  const set = function (s: T) {
     revoke();
     subject.set(Option.some(s));
   };
 
-  var run = function (f: (data: T) => void) {
+  const run = function (f: (data: T) => void) {
     subject.get().each(f);
   };
 
-  var isSet = function () {
+  const isSet = function () {
     return subject.get().isSome();
   };
 
@@ -76,22 +76,22 @@ var api = function <T extends { destroy: () => void; }> () {
   };
 };
 
-var value = function <T> () {
-  var subject = Cell(Option.none<T>());
+export const value = function <T> () {
+  const subject = Cell(Option.none<T>());
 
-  var clear = function () {
+  const clear = function () {
     subject.set(Option.none());
   };
 
-  var set = function (s: T) {
+  const set = function (s: T) {
     subject.set(Option.some(s));
   };
 
-  var on = function (f: (data: T) => void) {
+  const on = function (f: (data: T) => void) {
     subject.get().each(f);
   };
 
-  var isSet = function () {
+  const isSet = function () {
     return subject.get().isSome();
   };
 
@@ -101,11 +101,4 @@ var value = function <T> () {
     isSet: isSet,
     on: on
   };
-};
-
-export default {
-  destroyable: destroyable,
-  unbindable: unbindable,
-  api: api,
-  value: value
 };
