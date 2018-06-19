@@ -6,10 +6,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', (success, failure) => {
   ModernTheme();
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
@@ -40,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', function () {
         tinyApis.sSetSelection([ 0, 0 ], 'This is the first p'.length, [ 0, 0 ], 'This is the first par'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This is the first p<span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">ar</span>agraph here</p>`,
+          `<p>This is the first p<span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">ar</span>agraph</p>`,
           '<p>This is the second.</p'
         ]),
 

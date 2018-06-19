@@ -33,7 +33,7 @@ const each = Tools.each, extend = Tools.extend;
 const map = Tools.map, inArray = Tools.inArray;
 
 export default function (editor: Editor) {
-  let dom: DOMUtils, selection: Selection, formatter, annotator;
+  let dom: DOMUtils, selection: Selection, formatter;
   const commands = { state: {}, exec: {}, value: {} };
   let settings = editor.settings,
     bookmark;
@@ -43,7 +43,6 @@ export default function (editor: Editor) {
     selection = editor.selection;
     settings = editor.settings;
     formatter = editor.formatter;
-    annotator = editor.annotator;
   });
 
   /**

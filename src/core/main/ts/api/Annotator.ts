@@ -80,12 +80,9 @@ export default function (editor): Annotator {
      * annotation
      */
     annotate: (name: string, data: { }) => {
-      // Doesn't work for non collapsed selections.
-      if (! editor.selection.isCollapsed()) {
-        if (annotations.hasOwnProperty(name)) {
-          const annotator = annotations[name];
-          annotateWithBookmark(editor, annotator, data);
-        }
+      if (annotations.hasOwnProperty(name)) {
+        const annotator = annotations[name];
+        annotateWithBookmark(editor, annotator, data);
       }
     },
 

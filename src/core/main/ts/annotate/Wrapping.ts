@@ -1,14 +1,13 @@
-import { Arr, Cell, Option, Id } from '@ephox/katamari';
-import { Attr, Class, Element, Insert, Node, Remove, Replication, Traverse, Classes } from '@ephox/sugar';
-
-import { ChildContext, context } from './AnnotationContext';
-
-import { findMarkers } from './Identification';
-import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
-import RangeWalk from '../selection/RangeWalk';
-
-import * as Markings from './Markings';
+import { Arr, Cell, Id, Option } from '@ephox/katamari';
+import { Attr, Class, Classes, Element, Insert, Node, Remove, Replication, Traverse } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
+import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
+import ExpandRange from 'tinymce/core/fmt/ExpandRange';
+
+import RangeWalk from '../selection/RangeWalk';
+import { ChildContext, context } from './AnnotationContext';
+import { findMarkers } from './Identification';
+import * as Markings from './Markings';
 
 export type Decorator = (
   uid: string,
@@ -18,13 +17,18 @@ export type Decorator = (
   classes: string[]
 };
 
-const annotate = (editor: Editor, annotationName: string, decorate: Decorator, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
+// /home/morgan/work/tiny/tinymce/src/core/main/ts/fmt/ExpandRange.ts
+// function (editor, rng, format, remove?)
+const applyWordGrab = (editor: Editor, rng: Range): void => {
+  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], false);
+  rng.setStart(r.startContainer, r.startOffset);
+  rng.setEnd(r.endContainer, r.endOffset);
+  editor.selection.setRng(rng);
+};
+
+const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, { uid = Id.generate('mce-annotation'), ...data }): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [ ];
-
-  // Get the current selection. The bookmark is responsible for splitting the nodes beforehand
-  // at the selection points
-  const rng = editor.selection.getRng();
 
   // Setup the spans for the comments
   const master = Element.fromTag('span');
@@ -107,8 +111,14 @@ export interface Annotation {
 }
 
 const annotateWithBookmark = (editor: Editor, { name, settings }: Annotation, data: { }): void => {
+  const initialRng = editor.selection.getRng();
+  if (initialRng.collapsed) {
+    applyWordGrab(editor, initialRng);
+  }
+  // The bookmark is responsible for splitting the nodes beforehand at the selection points
   const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
-  annotate(editor, name, settings.decorate, data, bookmark);
+  const rng = editor.selection.getRng();
+  annotate(editor, rng, name, settings.decorate, data);
   editor.selection.moveToBookmark(bookmark);
 };
 

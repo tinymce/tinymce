@@ -1,14 +1,13 @@
-import { Pipeline, Step, ApproxStructure, GeneralSteps, Logger, Assertions, Waiter, Chain } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { Arr, Cell } from '@ephox/katamari';
+
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (success, failure) => {
 
   ModernTheme();
 

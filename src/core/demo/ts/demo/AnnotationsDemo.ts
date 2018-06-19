@@ -7,9 +7,8 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+
 declare let tinymce: any;
 
 export default function () {
@@ -27,6 +26,7 @@ export default function () {
           ed.annotator.annotate('alpha', {
             comment
           });
+          ed.focus();
         },
 
         onpostrender: (ctrl) => {
