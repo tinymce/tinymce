@@ -17,7 +17,7 @@ const init = (spec: CouplingConfigSpec) => {
       const spec = builder()(component);
       const built = component.getSystem().build(spec);
       coupled[name] = built;
-      console.log('coupled', name, coupled);
+      // console.log('coupled', name, coupled);
       return built;
     });
     }

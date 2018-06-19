@@ -16,7 +16,7 @@ import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
-import { document } from '@ephox/dom-globals';
+import { document, console } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();
