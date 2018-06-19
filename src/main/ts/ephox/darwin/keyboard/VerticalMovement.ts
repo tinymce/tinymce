@@ -24,11 +24,17 @@ var inSameTable = function (elem, table) {
   });
 };
 
+interface Simulated {
+  start: () => number,
+  finish: () => number,
+  range: () => any
+};
+
 // Note: initial is the finishing element, because that's where the cursor starts from
 // Anchor is the starting element, and is only used to work out if we are in the same table
 var simulate = function (bridge, isRoot, direction, initial, anchor) {
   return SelectorFind.closest(initial, 'td,th', isRoot).bind(function (start) {
-    return SelectorFind.closest(start, 'table', isRoot).bind(function (table) {
+    return SelectorFind.closest(start, 'table', isRoot).bind<Simulated>(function (table) {
       if (!inSameTable(anchor, table)) return Option.none();
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
         return SelectorFind.closest(range.finish(), 'td,th', isRoot).map(function (finish) {
