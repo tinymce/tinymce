@@ -13,6 +13,7 @@ import DemoContent from 'ephox/alloy/demo/DemoContent';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as Writer from 'ephox/alloy/frame/Writer';
+import { document } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

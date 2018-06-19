@@ -5,6 +5,7 @@ import { JSON as Json } from '@ephox/sand';
 import { Attr, Compare, Element, Html, Insert } from '@ephox/sugar';
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('EventRegistryTest', function () {
   const success = arguments[arguments.length - 2];

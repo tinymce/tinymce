@@ -7,6 +7,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, console } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

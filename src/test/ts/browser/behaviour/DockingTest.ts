@@ -6,6 +6,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('DockingTest', function () {
   const success = arguments[arguments.length - 2];

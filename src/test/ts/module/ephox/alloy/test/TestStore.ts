@@ -1,5 +1,6 @@
 import { RawAssertions, Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
+import { console } from '@ephox/dom-globals';
 
 export default function () {
   let array = [ ];

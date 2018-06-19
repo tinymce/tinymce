@@ -9,6 +9,7 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
   const success = arguments[arguments.length - 2];

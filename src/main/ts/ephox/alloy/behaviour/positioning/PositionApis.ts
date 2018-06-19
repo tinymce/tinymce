@@ -11,6 +11,7 @@ import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes'
 import { Stateless } from '../../behaviour/common/NoState';
 import { PositionCoordinates } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
+import { window } from '@ephox/dom-globals';
 
 export interface OriginAdt extends AdtInterface { };
 

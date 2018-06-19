@@ -3,6 +3,7 @@ import { Element, Location, Position, Scroll } from '@ephox/sugar';
 
 import * as Frames from './Frames';
 import * as Navigation from './Navigation';
+import { document } from '@ephox/dom-globals';
 
 const find = function (element) {
   const doc = Element.fromDom(document);

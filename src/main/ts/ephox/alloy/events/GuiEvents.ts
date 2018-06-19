@@ -7,6 +7,7 @@ import Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
 import { SugarEvent } from '../alien/TypeDefinitions';
+import { setTimeout } from '@ephox/dom-globals';
 
 const isDangerous = function (event) {
   // Will trigger the Back button in the browser

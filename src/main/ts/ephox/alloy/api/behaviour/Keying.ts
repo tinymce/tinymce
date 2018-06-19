@@ -7,6 +7,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { FocusManagers } from '../../api/Main';
+import { console } from '@ephox/dom-globals';
 
 export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: KeyingConfig) => Behaviour.NamedConfiguredBehaviour;

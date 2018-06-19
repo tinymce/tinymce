@@ -1,6 +1,7 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/dom-globals';
 
 
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {

@@ -4,6 +4,7 @@ import * as AlloyLogger from '../log/AlloyLogger';
 import { Compare } from '@ephox/sugar';
 import { SugarElement } from '../alien/TypeDefinitions';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { console } from '@ephox/dom-globals';
 
 // The purpose of this check is to ensure that a simulated focus call is not going
 // to recurse infinitely. Essentially, if the originator of the focus call is the same

@@ -15,6 +15,7 @@ import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import DemoFields from './forms/DemoFields';
+import { document, console, setTimeout } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();

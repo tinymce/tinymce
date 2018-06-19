@@ -4,6 +4,7 @@ import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
 import { ViewportBox } from '../../behaviour/docking/DockingTypes';
+import { window } from '@ephox/dom-globals';
 
 const defaultLazyViewport = (): ViewportBox => {
   const scroll = Scroll.get();

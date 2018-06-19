@@ -2,6 +2,7 @@ import { Element, Height, Scroll, Width } from '@ephox/sugar';
 
 import * as OuterPosition from '../../frame/OuterPosition';
 import Bounds from './Bounds';
+import { window, document } from '@ephox/dom-globals';
 
 // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that
 // we are not changing the visibility of the element. Hopefully (2015-09-29).

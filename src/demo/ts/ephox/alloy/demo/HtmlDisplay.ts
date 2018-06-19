@@ -3,6 +3,7 @@ import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
+import { MutationObserver, document } from '@ephox/dom-globals';
 
 const register = Thunk.cached(function (gui) {
   Debugging.registerInspector('htmldisplay', gui);

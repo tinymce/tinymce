@@ -5,6 +5,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Html, Insert, SelectorFind } from '@ephox/sugar';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('TriggersTest', function () {
   const success = arguments[arguments.length - 2];

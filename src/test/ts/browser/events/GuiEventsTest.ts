@@ -5,6 +5,7 @@ import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import * as DomRender from 'ephox/alloy/dom/DomRender';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 import TestStore from 'ephox/alloy/test/TestStore';
+import { document, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('GuiEventsTest', function () {
   const success = arguments[arguments.length - 2];

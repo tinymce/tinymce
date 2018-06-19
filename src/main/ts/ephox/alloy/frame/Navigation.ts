@@ -1,5 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 const view = function (doc) {
   // Only walk up to the document this script is defined in.

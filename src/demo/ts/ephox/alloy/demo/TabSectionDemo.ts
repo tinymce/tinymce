@@ -6,6 +6,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document } from '@ephox/dom-globals';
 
 export default <any> function () {
   const gui = Gui.create();
