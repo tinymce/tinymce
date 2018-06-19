@@ -147,7 +147,7 @@ const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLE
   }
 };
 
-const moveH = (editor, forward: boolean): () => boolean => {
+const moveH = (editor, forward: boolean) => () => {
   return () => {
     return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
       return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
@@ -157,7 +157,7 @@ const moveH = (editor, forward: boolean): () => boolean => {
   };
 };
 
-const moveV = (editor, forward: boolean): () => boolean => {
+const moveV = (editor, forward: boolean) => () => {
   return () => {
     return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
       return Option.from(editor.dom.getParent(td, 'table')).map((table) => {

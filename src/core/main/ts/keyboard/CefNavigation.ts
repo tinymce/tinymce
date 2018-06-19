@@ -228,7 +228,7 @@ const getVerticalRange = (editor, down: boolean): Range => {
   return null;
 };
 
-const moveH = (editor, forward: boolean): () => boolean => {
+const moveH = (editor, forward: boolean) => {
   return () => {
     const newRng = getHorizontalRange(editor, forward);
 
@@ -241,7 +241,7 @@ const moveH = (editor, forward: boolean): () => boolean => {
   };
 };
 
-const moveV = (editor, down: boolean): () => boolean => {
+const moveV = (editor, down: boolean) => {
   return () => {
     const newRng = getVerticalRange(editor, down);
 

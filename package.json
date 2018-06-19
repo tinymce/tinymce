@@ -17,18 +17,20 @@
   },
   "scripts": {
     "test": "grunt bedrock-auto:chrome-headless",
-    "lint": "tslint src/**/*.ts"
+    "lint": "tslint src/**/*.ts",
+    "postinstall": "rimraf node_modules/@ephox/alloy/node_modules"
   },
   "dependencies": {
-    "@ephox/alloy": "latest",
-    "@ephox/boulder": "latest",
+    "@ephox/alloy": "2.0.6",
+    "@ephox/boulder": "3.0.5",
     "@ephox/darwin": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
-    "@ephox/sugar": "latest"
+    "@ephox/sugar": "latest",
+    "rimraf": "^2.6.2"
   },
   "devDependencies": {
     "@ephox/agar": "latest",
