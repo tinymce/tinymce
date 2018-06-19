@@ -148,23 +148,19 @@ const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLE
 };
 
 const moveH = (editor, forward: boolean) => () => {
-  return () => {
-    return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
-      return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
-        return navigateHorizontally(editor, forward, table, td);
-      });
-    }).getOr(false);
-  };
+  return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
+    return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
+      return navigateHorizontally(editor, forward, table, td);
+    });
+  }).getOr(false);
 };
 
 const moveV = (editor, forward: boolean) => () => {
-  return () => {
-    return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
-      return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
-        return navigateVertically(editor, forward, table, td);
-      });
-    }).getOr(false);
-  };
+  return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
+    return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
+      return navigateVertically(editor, forward, table, td);
+    });
+  }).getOr(false);
 };
 
 export {
