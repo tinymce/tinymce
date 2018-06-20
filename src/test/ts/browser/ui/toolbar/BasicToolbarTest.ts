@@ -6,13 +6,10 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
+import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
-UnitTest.asynctest('BasicToolbarTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  GuiSetup.setup(function (store, doc, body) {
+UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -48,8 +45,8 @@ UnitTest.asynctest('BasicToolbarTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const makeButton = function (itemSpec) {
+  }, (doc, body, gui, component, store) => {
+    const makeButton = (itemSpec) => {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -69,7 +66,7 @@ UnitTest.asynctest('BasicToolbarTest', function () {
 
       Assertions.sAssertStructure(
         'Checking initial structure of toolbar',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -93,7 +90,7 @@ UnitTest.asynctest('BasicToolbarTest', function () {
         component.element()
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t1, [
           {
             items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
@@ -103,7 +100,7 @@ UnitTest.asynctest('BasicToolbarTest', function () {
 
       Assertions.sAssertStructure(
         'Checking structure of toolbar after adding groups to shell-toolbar',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -138,7 +135,7 @@ UnitTest.asynctest('BasicToolbarTest', function () {
         component.element()
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t2, [
           {
             items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
@@ -148,7 +145,7 @@ UnitTest.asynctest('BasicToolbarTest', function () {
 
       Assertions.sAssertStructure(
         'Checking structure of toolbar after adding groups to not-shell-toolbar',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -195,5 +192,5 @@ UnitTest.asynctest('BasicToolbarTest', function () {
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

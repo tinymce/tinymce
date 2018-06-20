@@ -7,12 +7,12 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('MenuKeyingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
-    const makeItem = function (name) {
+
+
+  GuiSetup.setup((store, doc, body) => {
+    const makeItem = (name) => {
       return Container.sketch({
         dom: {
           classes: [ 'test-item', name ],
@@ -38,8 +38,8 @@ UnitTest.asynctest('MenuKeyingTest', function () {
           Keying.config({
             mode: 'menu',
             selector: '.test-item',
-            onRight: store.adderH('detected.right'),
-            onLeft:  store.adderH('detected.left'),
+            // onRight: store.adderH('detected.right'),
+            // onLeft:  store.adderH('detected.left'),
             moveOnTab: true
           })
         ]),
@@ -51,8 +51,8 @@ UnitTest.asynctest('MenuKeyingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const checkStore = function (label, steps, expected) {
+  }, (doc, body, gui, component, store) => {
+    const checkStore = (label, steps, expected) => {
       return GeneralSteps.sequence([
         store.sClear
       ].concat(steps).concat([
@@ -62,7 +62,7 @@ UnitTest.asynctest('MenuKeyingTest', function () {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
 
@@ -107,5 +107,5 @@ UnitTest.asynctest('MenuKeyingTest', function () {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

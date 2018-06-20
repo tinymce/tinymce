@@ -8,15 +8,15 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
-import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
-import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
-UnitTest.asynctest('Dropdown List', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Dropdown List', (success, failure) => {
+
+
 
   const sink = Memento.record(
     Container.sketch({
@@ -28,7 +28,7 @@ UnitTest.asynctest('Dropdown List', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     const c = GuiFactory.build(
       Dropdown.sketch({
         dom: {
@@ -64,7 +64,7 @@ UnitTest.asynctest('Dropdown List', function () {
             { type: 'item', data: { value: 'delta', text: 'Delta' } }
           ]);
 
-          return future.map(function (f) {
+          return future.map((f) => {
             const menu = TestDropdownMenu.renderMenu({
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
@@ -77,7 +77,7 @@ UnitTest.asynctest('Dropdown List', function () {
 
     return c;
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     gui.add(
       GuiFactory.build(sink.asSpec())
@@ -95,7 +95,7 @@ UnitTest.asynctest('Dropdown List', function () {
       // Add more information to this.
       Assertions.sAssertStructure(
         'Initial structure of dropdown button',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
               role: str.is('button')
@@ -219,5 +219,5 @@ UnitTest.asynctest('Dropdown List', function () {
         UiFinder.sNotExists(gui.element(), '.menu')
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

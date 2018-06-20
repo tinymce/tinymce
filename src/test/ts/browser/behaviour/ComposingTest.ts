@@ -6,16 +6,16 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) => {
+
+
 
   const inner = Memento.record({
     dom: { tag: 'span', innerHtml: 'inner' }
   });
 
   GuiSetup.setup(
-    function (store, doc, body) {
+    (store, doc, body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div'
@@ -32,11 +32,11 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function () {
         ])
       });
     },
-    function (doc, body, gui, component, store) {
+    (doc, body, gui, component, store) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
               children: [
                 s.element('span', {
@@ -47,11 +47,11 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function () {
           }),
           component.element()
         ),
-        Step.sync(function () {
+        Step.sync(() => {
           const delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
           Assertions.assertStructure(
             'Checking delegate structure',
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('span', { html: str.is('inner') });
             }),
             delegate.element()

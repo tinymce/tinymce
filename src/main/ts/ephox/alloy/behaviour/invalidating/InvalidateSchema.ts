@@ -1,9 +1,9 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 
-export default <any> [
+export default [
   FieldSchema.strict('invalidClass'),
   FieldSchema.defaulted('getRoot', Option.none),
 

@@ -1,22 +1,27 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
 import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.asynctest('browser events.TapEventsTest', function () {
+UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+
+
 
   const store = TestStore();
 
   const monitor = TapEvent.monitor({
     triggerEvent (name) {
       store.adder(name)();
+      return true;
+    },
+    broadcastEvent: (name) => {
+      store.adder('broadcast: ' + name)();
+      return true;
     }
   });
 
@@ -24,7 +29,7 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
   const beta = Element.fromText('beta');
   const gamma = Element.fromText('gamma');
 
-  const touches = function (x, y, target) {
+  const touches = (x, y, target) => {
     return {
       raw: Fun.constant({
         touches: [
@@ -35,8 +40,8 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
     };
   };
 
-  const sFireIfReady = function (event, type) {
-    return Step.sync(function () {
+  const sFireIfReady = (event, type) => {
+    return Step.sync(() => {
       monitor.fireIfReady(event, type);
     });
   };
@@ -179,5 +184,5 @@ UnitTest.asynctest('browser events.TapEventsTest', function () {
         store.sClear
       ])
     )
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

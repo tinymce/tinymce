@@ -1,6 +1,8 @@
 import { Compare } from '@ephox/sugar';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
 
-const isSource = function (component, simulatedEvent) {
+const isSource = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => {
   return Compare.eq(component.element(), simulatedEvent.event().target());
 };
 

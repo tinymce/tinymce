@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
-import { SketchSpec } from '../../api/component/SpecTypes';
+import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -12,26 +12,14 @@ import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
-export interface InlineViewSketch extends Sketcher.SingleSketch {
-  // InlineViewApis;
-  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: SketchSpec) => void;
-  hide: (component: AlloyComponent) => void;
-  isOpen: (component: AlloyComponent) => boolean;
-}
-
-export interface InlineViewAnchor {
-  anchor: string;
-  x?: number;
-  y?: number;
-  item?: AlloyComponent;
-  root?: SugarElement;
-}
-
-const factory = function (detail, spec): SketchSpec {
-  const isPartOfRelated = function (container, queryElem) {
+const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
+  const isPartOfRelated = (container, queryElem) => {
     const related = detail.getRelated()(container);
-    return related.exists(function (rel) {
+    return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
   };
@@ -59,7 +47,7 @@ const factory = function (detail, spec): SketchSpec {
       eventOrder: detail.eventOrder(),
 
       apis: {
-        showAt (sandbox, anchor, thing) {
+        showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
           Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);
@@ -67,7 +55,7 @@ const factory = function (detail, spec): SketchSpec {
           Sandboxing.decloak(sandbox);
           detail.onShow()(sandbox);
         },
-        hide (sandbox) {
+        hide (sandbox: AlloyComponent) {
           Sandboxing.close(sandbox);
           detail.onHide()(sandbox);
         },
@@ -99,7 +87,7 @@ const InlineView = Sketcher.single({
       return apis.isOpen(component);
     }
   }
-}) as InlineViewSketch;
+}) as InlineViewSketcher;
 
 export {
   InlineView

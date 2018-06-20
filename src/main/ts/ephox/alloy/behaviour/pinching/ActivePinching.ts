@@ -1,15 +1,17 @@
 import { Fun, Option } from '@ephox/katamari';
+import { TouchEvent } from '@ephox/dom-globals';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pinching/PinchingTypes';
-import { Stateless } from '../../behaviour/common/NoState';
+import { Stateless } from '../../behaviour/common/BehaviourState';
 import { DraggingState, DragModeDeltas } from '../../dragging/common/DraggingTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
+import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 
 const mode: DragModeDeltas<PinchDragData> = {
   getData (e: SugarEvent)  {
-    const raw = e.raw() as any;
+    const raw = e.raw() as TouchEvent;
     const touches = raw.touches;
     if (touches.length < 2) { return Option.none(); }
 
@@ -38,17 +40,17 @@ const mode: DragModeDeltas<PinchDragData> = {
   }
 };
 
-const events = function (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.EventHandlerConfigRecord {
+const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
     // Note: in testing, it didn't seem to cause problems on Android. Check.
     AlloyEvents.preventDefault(NativeEvents.gesturestart()),
 
-    AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+    AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = pinchState.update(mode, simulatedEvent.event());
-      delta.each(function (dlt) {
+      delta.each((dlt) => {
         const multiplier = dlt.deltaDistance() > 0 ? 1 : -1;
         const changeX = multiplier * Math.abs(dlt.deltaX());
         const changeY = multiplier * Math.abs(dlt.deltaY());
@@ -62,6 +64,6 @@ const events = function (pinchConfig: PinchingConfig, pinchState: PinchingState)
   ]);
 };
 
-export default <any> {
+export {
   events
 };

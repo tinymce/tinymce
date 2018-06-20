@@ -8,9 +8,11 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, spec): SketchSpec {
-  const options = Arr.map(detail.options(), function (option) {
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
+  const options = Arr.map(detail.options(), (option) => {
     return {
       dom: {
         tag: 'option',
@@ -20,7 +22,7 @@ const factory = function (detail, spec): SketchSpec {
     };
   });
 
-  const initialValues = detail.data().map(function (v) {
+  const initialValues = detail.data().map((v) => {
     return Objects.wrap('initialValue', v);
   }).getOr({ });
 
@@ -43,7 +45,7 @@ const factory = function (detail, spec): SketchSpec {
                 },
                 setValue (select, newValue) {
                   // This is probably generically useful ... may become a part of Representing.
-                  const found = Arr.find(detail.options(), function (opt) {
+                  const found = Arr.find(detail.options(), (opt) => {
                     return opt.value === newValue;
                   });
                   if (found.isSome()) { Value.set(select.element(), newValue); }
@@ -67,7 +69,7 @@ const HtmlSelect = Sketcher.single({
     FieldSchema.option('data')
   ],
   factory
-});
+}) as HtmlSelectSketcher;
 
 export {
   HtmlSelect

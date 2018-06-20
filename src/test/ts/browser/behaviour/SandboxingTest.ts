@@ -9,15 +9,15 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('SandboxingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return Sinks.fixedSink();
-  }, function (doc, body, gui, sink, store) {
+  }, (doc, body, gui, sink, store) => {
     const sandbox = sink.getSystem().build(
       Container.sketch({
         dom: {
@@ -39,18 +39,18 @@ UnitTest.asynctest('SandboxingTest', function () {
       })
     );
 
-    const sOpenWith = function (data) {
-      return Step.sync(function () {
+    const sOpenWith = (data) => {
+      return Step.sync(() => {
         Sandboxing.open(sandbox, data);
       });
     };
 
-    const sClose = Step.sync(function () {
+    const sClose = Step.sync(() => {
       Sandboxing.close(sandbox);
     });
 
-    const sCheckShowing = function (label, expected) {
-      return Step.sync(function () {
+    const sCheckShowing = (label, expected) => {
+      return Step.sync(() => {
         Assertions.assertEq(
           label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
           expected,
@@ -59,7 +59,7 @@ UnitTest.asynctest('SandboxingTest', function () {
       });
     };
 
-    const sCheckOpenState = function (label, expected) {
+    const sCheckOpenState = (label, expected) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -68,7 +68,7 @@ UnitTest.asynctest('SandboxingTest', function () {
           UiFinder.sExists(gui.element(), '.test-sandbox'),
           store.sAssertEq('Checking store', expected.store),
           store.sClear,
-          Step.sync(function () {
+          Step.sync(() => {
             const state = Sandboxing.getState(sandbox);
             Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
           })
@@ -76,7 +76,7 @@ UnitTest.asynctest('SandboxingTest', function () {
       );
     };
 
-    const sCheckClosedState = function (label, expected) {
+    const sCheckClosedState = (label, expected) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -85,7 +85,7 @@ UnitTest.asynctest('SandboxingTest', function () {
           UiFinder.sNotExists(gui.element(), '.test-sandbox'),
           store.sAssertEq(label, expected.store),
           store.sClear,
-          Step.sync(function () {
+          Step.sync(() => {
             const state = Sandboxing.getState(sandbox);
             Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
           })
@@ -93,7 +93,7 @@ UnitTest.asynctest('SandboxingTest', function () {
       );
     };
 
-    const makeData = function (rawData) {
+    const makeData = (rawData) => {
       return Input.sketch({
         uid: rawData,
         inputAttributes: {
@@ -136,7 +136,7 @@ UnitTest.asynctest('SandboxingTest', function () {
         Chain.asStep({}, [
           Chain.inject(sandbox.element()),
           UiFinder.cFindIn('input'),
-          Chain.op(function (input) {
+          Chain.op((input) => {
             AlloyTriggers.dispatch(sandbox, input, SystemEvents.sandboxClose());
           })
         ])
@@ -144,5 +144,5 @@ UnitTest.asynctest('SandboxingTest', function () {
 
       sCheckClosedState('After sending system close event', { store: [ 'onClose' ] })
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

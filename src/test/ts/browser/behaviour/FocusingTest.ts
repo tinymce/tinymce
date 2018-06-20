@@ -6,11 +6,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('FocusingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FocusingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -28,11 +28,11 @@ UnitTest.asynctest('FocusingTest', function () {
         ])
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Checking tabindex is -1',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             attrs: {
               tabindex: str.is('-1')
@@ -50,11 +50,11 @@ UnitTest.asynctest('FocusingTest', function () {
         // need to fix this.
         Guard.tryUntilNot('Container should not be focused originally', 100, 1000)
       ),
-      Step.sync(function () {
+      Step.sync(() => {
         component.getSystem().triggerFocus(component.element(), gui.element());
       }),
       FocusTools.sTryOnSelector('Focusing after focus call', doc, '.focusable')
 
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

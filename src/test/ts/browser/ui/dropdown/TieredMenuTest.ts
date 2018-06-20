@@ -12,14 +12,14 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
-import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TieredMenuTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       TieredMenu.sketch({
         uid: 'uid-test-menu-1',
@@ -75,30 +75,30 @@ UnitTest.asynctest('TieredMenuTest', function () {
         onOpenSubmenu: store.adderH('onOpenSubmenu')
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = function (label, expected) {
-      return Chain.op(function (element) {
+    const cAssertStructure = (label, expected) => {
+      return Chain.op((element) => {
         Assertions.assertStructure(label, expected, element);
       });
     };
 
-    const cTriggerFocusItem = Chain.op(function (target) {
+    const cTriggerFocusItem = Chain.op((target) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
-    const cAssertStore = function (label, expected) {
-      return Chain.op(function () {
+    const cAssertStore = (label, expected) => {
+      return Chain.op(() => {
         store.assertEq(label, expected);
       });
     };
 
-    const cClearStore = Chain.op(function () {
+    const cClearStore = Chain.op(() => {
       store.clear();
     });
 
     return [
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
@@ -110,5 +110,5 @@ UnitTest.asynctest('TieredMenuTest', function () {
 
       // TODO: Beef up tests
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

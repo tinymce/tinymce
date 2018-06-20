@@ -11,9 +11,9 @@ import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('MouseDraggingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
+
+
 
   const subject = Memento.record(
     Container.sketch({
@@ -46,7 +46,7 @@ UnitTest.asynctest('MouseDraggingTest', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -54,14 +54,14 @@ UnitTest.asynctest('MouseDraggingTest', function () {
         ]
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
-    const cSubject = Chain.mapper(function () {
+    const cSubject = Chain.mapper(() => {
       return subject.get(component).element();
     });
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder(function (all) {
+      Chain.binder((all) => {
         return all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
           Result.error('Positions did not change.\nPosition data: ' + Json.stringify({
@@ -73,7 +73,7 @@ UnitTest.asynctest('MouseDraggingTest', function () {
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
     const cEnsurePinned = Chain.control(
-      Chain.binder(function (all) {
+      Chain.binder((all) => {
         const pinned = all.box_position4.top !== all.box_position5_pinned.top &&
           all.box_position5_pinned.top === all.box_position6_pinned.top &&
           all.box_position5_pinned.top === '10px';
@@ -90,15 +90,15 @@ UnitTest.asynctest('MouseDraggingTest', function () {
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(
-        Chain.binder(function (box) {
-          return Css.getRaw(box, 'left').bind(function (left) {
-            return Css.getRaw(box, 'top').map(function (top) {
+        Chain.binder((box) => {
+          return Css.getRaw(box, 'left').bind((left) => {
+            return Css.getRaw(box, 'top').map((top) => {
               return Result.value({
                 left,
                 top
               });
             });
-          }).getOrThunk(function () {
+          }).getOrThunk(() => {
             return Result.error('No left,top information yet');
           });
         }),
@@ -132,7 +132,7 @@ UnitTest.asynctest('MouseDraggingTest', function () {
 
           // When testing pinning, we need every browser to behave identically, so we reset positions
           // so we know what we are dealing with
-          NamedChain.direct('box', Chain.op(function (elem) {
+          NamedChain.direct('box', Chain.op((elem) => {
             Css.setAll(elem, {
               left: '50px',
               top: '100px'
@@ -154,11 +154,11 @@ UnitTest.asynctest('MouseDraggingTest', function () {
           NamedChain.write('_', cEnsurePinned),
 
           Chain.wait(10),
-          NamedChain.bundle(function (output) {
+          NamedChain.bundle((output) => {
             return Result.value(output);
           })
         ])
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

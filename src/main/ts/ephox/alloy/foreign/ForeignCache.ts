@@ -2,17 +2,19 @@ import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as DomState from '../alien/DomState';
+import { SugarElement } from '../alien/TypeDefinitions';
 import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import BehaviourBlob from '../behaviour/common/BehaviourBlob';
-import * as ComponentEvents from '../construct/ComponentEvents';
 import { SketchSpec } from '../api/component/SpecTypes';
+import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
+import * as ComponentEvents from '../construct/ComponentEvents';
+import { UncurriedHandler } from '../events/EventRegistry';
 
-export default function () {
-  const getEvents = function (elem, spec: SketchSpec) {
-    const evts = DomState.getOrCreate(elem, function () {
+export default () => {
+  const getEvents = (elem: SugarElement, spec: SketchSpec) => {
+    const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = ValueSchema.asStructOrDie('foreign.cache.configuration', ValueSchema.objOfOnly([

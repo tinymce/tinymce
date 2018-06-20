@@ -4,8 +4,10 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
 import { Merger } from '@ephox/katamari';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from '../../ui/types/ToolbarGroupTypes';
 
-const factory = function (detail, components, spec, _externals) {
+const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, spec, _externals) => {
   return Merger.deepMerge(
     {
       dom: {
@@ -39,7 +41,7 @@ const ToolbarGroup = Sketcher.composite({
   configFields: ToolbarGroupSchema.schema(),
   partFields: ToolbarGroupSchema.parts(),
   factory
-});
+}) as ToolbarGroupSketcher;
 
 export {
   ToolbarGroup

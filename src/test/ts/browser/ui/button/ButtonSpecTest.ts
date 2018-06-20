@@ -18,11 +18,11 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ButtonSpecTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Button.sketch({
         dom: {
@@ -34,11 +34,11 @@ UnitTest.asynctest('ButtonSpecTest', function () {
         uid: 'test-button-id'
       })
     );
-  }, function (doc, body, gui, component, store) {
-    const testStructure = Step.sync(function () {
+  }, (doc, body, gui, component, store) => {
+    const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of button',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             classes: [
               arr.has('test-button')
@@ -75,7 +75,7 @@ UnitTest.asynctest('ButtonSpecTest', function () {
     const testExecuting = Logger.t(
       'testing dispatching execute',
       GeneralSteps.sequence([
-        Step.sync(function () {
+        Step.sync(() => {
           store.clear();
           store.assertEq('post clear', [ ]);
           AlloyTriggers.emitExecute(component);

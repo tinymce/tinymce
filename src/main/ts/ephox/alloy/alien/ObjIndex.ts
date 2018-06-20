@@ -20,18 +20,22 @@ import { Obj } from '@ephox/katamari';
  * }
  */
 
-const byInnerKey = function (data, tuple) {
+type OuterKey = string;
+type InnerKey = string;
 
-const r = {};
-Obj.each(data, function (detail, key) {
-    Obj.each(detail, function (value, indexKey) {
-      const chain = Objects.readOr(indexKey, [ ])(r);
+const byInnerKey = <T, O>(data: Record<OuterKey, Record<InnerKey, T>>, tuple: (string, T) => O):
+  Record<InnerKey, Array<O>> => {
+
+  const r: Record<InnerKey, Array<O>> = {};
+  Obj.each(data, (detail: Record<InnerKey, T>, key: OuterKey) => {
+    Obj.each(detail, (value: T, indexKey: InnerKey) => {
+      const chain: O[] = Objects.readOr(indexKey, [ ])(r);
       r[indexKey] = chain.concat([
         tuple(key, value)
       ]);
     });
   });
-return r;
+  return r;
 };
 
 export {

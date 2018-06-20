@@ -6,11 +6,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('StreamingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('StreamingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -29,7 +29,7 @@ UnitTest.asynctest('StreamingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GeneralSteps.sequenceRepeat(
         5,
@@ -52,5 +52,5 @@ UnitTest.asynctest('StreamingTest', function () {
       Step.wait(500),
       store.sAssertEq('Should have only fired two events', [ 'onStream', 'onStream' ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

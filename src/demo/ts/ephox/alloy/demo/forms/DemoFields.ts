@@ -16,10 +16,10 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import DemoRenders from './DemoRenders';
+import * as DemoRenders from './DemoRenders';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
-const invalidation = function (validate, invalidUid) {
+const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => {
   return Invalidating.config({
     invalidClass: 'invalid-input',
     notify: {
@@ -28,13 +28,13 @@ const invalidation = function (validate, invalidUid) {
       }
     },
     validator: {
-      validate: Invalidating.validation(validate),
+      validate: Invalidating.validation<Record<string, string>>(validate),
       onEvent: NativeEvents.input()
     }
   });
 };
 
-const rawTextMunger = function (spec) {
+const rawTextMunger = (spec) => {
   const invalidUid = Tagger.generate('demo-invalid-uid');
 
   const pLabel = FormField.parts().label({
@@ -44,7 +44,7 @@ const rawTextMunger = function (spec) {
   const pField = FormField.parts().field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
-      invalidation(function (v) {
+      invalidation((v) => {
         return v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
       }, invalidUid),
       Tabstopping.config({ })
@@ -63,12 +63,12 @@ const rawTextMunger = function (spec) {
   };
 };
 
-const textMunger = function (spec): SketchSpec {
+const textMunger = (spec): SketchSpec => {
   const m = rawTextMunger(spec);
   return FormField.sketch(m);
 };
 
-const selectMunger = function (spec): SketchSpec {
+const selectMunger = (spec): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
@@ -98,7 +98,7 @@ const selectMunger = function (spec): SketchSpec {
   });
 };
 
-const chooserMunger = function (spec): SketchSpec {
+const chooserMunger = (spec): SketchSpec => {
   const pLegend = FormChooser.parts().legend({
     dom: {
       innerHtml: spec.legend
@@ -127,7 +127,7 @@ const chooserMunger = function (spec): SketchSpec {
   });
 };
 
-const coupledTextMunger = function (spec): SketchSpec {
+const coupledTextMunger = (spec): SketchSpec => {
   const pField1 = FormCoupledInputs.parts().field1(
     rawTextMunger(spec.field1)
   );
@@ -162,7 +162,7 @@ const coupledTextMunger = function (spec): SketchSpec {
   });
 };
 
-const typeaheadMunger = function (spec): SketchSpec {
+const typeaheadMunger = (spec): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: {
       tag: 'label',
@@ -179,7 +179,7 @@ const typeaheadMunger = function (spec): SketchSpec {
     fetch (input) {
 
       const text = Value.get(input.element());
-      const matching = Arr.bind(spec.dataset, function (d) {
+      const matching = Arr.bind(spec.dataset, (d) => {
         const index = d.indexOf(text.toLowerCase());
         if (index > -1) {
           const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
@@ -195,7 +195,7 @@ const typeaheadMunger = function (spec): SketchSpec {
       ];
 
       const future = Future.pure(matches);
-      return future.map(function (items) {
+      return future.map((items) => {
         const menu = DemoRenders.menu({
           value: 'typeahead-menu-blah',
           items: Arr.map(items, DemoRenders.item)
@@ -232,7 +232,7 @@ const typeaheadMunger = function (spec): SketchSpec {
   });
 };
 
-export default {
+export {
   textMunger,
   selectMunger,
   chooserMunger,

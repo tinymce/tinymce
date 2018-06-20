@@ -1,29 +1,34 @@
 import { FieldSchema } from '@ephox/boulder';
+import { ClientRect, HTMLElement } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
+import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderActions from './SliderActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = function (name, action) {
+const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) => void) => {
   return PartType.optional({
     name: '' + name + '-edge',
-    overrides (detail) {
+    overrides (detail: SliderDetail) {
       const touchEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
       ]);
 
       const mouseEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [ detail ]),
-        AlloyEvents.runActionExtra(NativeEvents.mousemove(), function (l, det) {
+        AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det) => {
           if (det.mouseIsDown().get()) { action (l, det); }
         }, [ detail ])
       ]);
@@ -49,7 +54,7 @@ const thumbPart = PartType.required({
       styles: { position: 'absolute' }
     }
   }),
-  overrides (detail) {
+  overrides (detail: SliderDetail) {
     return {
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
@@ -64,13 +69,14 @@ const thumbPart = PartType.required({
 
 const spectrumPart = PartType.required({
   schema: [
-    FieldSchema.state('mouseIsDown', function () { return Cell(false); })
+    FieldSchema.state('mouseIsDown', () => { return Cell(false); })
   ],
   name: 'spectrum',
-  overrides (detail) {
+  overrides (detail: SliderDetail) {
 
-    const moveToX = function (spectrum, simulatedEvent) {
-      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+    const moveToX = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+      const domElem = spectrum.element().dom() as HTMLElement;
+      const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
       SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
@@ -81,7 +87,7 @@ const spectrumPart = PartType.required({
 
     const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), moveToX),
-      AlloyEvents.run(NativeEvents.mousemove(), function (spectrum, se) {
+      AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
         if (detail.mouseIsDown().get()) { moveToX(spectrum, se); }
       })
     ]);
@@ -108,9 +114,9 @@ const spectrumPart = PartType.required({
   }
 });
 
-export default <any> [
+export default [
   ledgePart,
   redgePart,
   thumbPart,
   spectrumPart
-];
+] as PartType.PartTypeAdt[]

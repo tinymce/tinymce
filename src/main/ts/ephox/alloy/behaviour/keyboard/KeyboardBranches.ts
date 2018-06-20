@@ -7,13 +7,24 @@ import MatrixType from '../../keying/MatrixType';
 import MenuType from '../../keying/MenuType';
 import SpecialType from '../../keying/SpecialType';
 
-export default {
-  acyclic: AcyclicType.schema(),
-  cyclic: CyclicType.schema(),
-  flow: FlowType.schema(),
-  flatgrid: FlatgridType.schema(),
-  matrix: MatrixType.schema(),
-  execution: ExecutionType.schema(),
-  menu: MenuType.schema(),
-  special: SpecialType.schema()
+import { FieldProcessorAdt } from '@ephox/boulder';
+
+const acyclic = AcyclicType.schema();
+const cyclic = CyclicType.schema();
+const flow = FlowType.schema();
+const flatgrid = FlatgridType.schema();
+const matrix = MatrixType.schema();
+const execution = ExecutionType.schema();
+const menu = MenuType.schema();
+const special = SpecialType.schema();
+
+export {
+  acyclic,
+  cyclic,
+  flow,
+  flatgrid,
+  matrix,
+  execution,
+  menu,
+  special
 };

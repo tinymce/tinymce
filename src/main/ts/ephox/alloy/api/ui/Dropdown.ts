@@ -1,8 +1,11 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import DropdownSchema from '../../ui/schema/DropdownSchema';
+import * as DropdownSchema from '../../ui/schema/DropdownSchema';
+import { DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
@@ -12,18 +15,19 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
+import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const factory = function (detail, components, spec, externals): SketchSpec {
-  const switchToMenu = function (sandbox) {
-    Composing.getCurrent(sandbox).each(function (current) {
+const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
+  const switchToMenu = (sandbox) => {
+    Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  const action = function (component) {
-    const anchor = { anchor: 'hotspot', hotspot: component };
+  const action = (component: AlloyComponent): void => {
+    const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
@@ -91,7 +95,7 @@ const Dropdown = Sketcher.composite({
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
   factory
-});
+}) as DropdownSketcher;
 
 export {
   Dropdown

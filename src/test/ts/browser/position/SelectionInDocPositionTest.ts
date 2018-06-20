@@ -4,16 +4,16 @@ import { Option, Result } from '@ephox/katamari';
 import { Css, Element, Html } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('SelectionInDocPositionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
@@ -47,8 +47,8 @@ UnitTest.asynctest('SelectionInDocPositionTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const cSetupAnchor = Chain.mapper(function (data) {
+  }, (doc, body, gui, component, store) => {
+    const cSetupAnchor = Chain.mapper((data) => {
       return {
         anchor: 'selection',
         root: data.inline.element(),
@@ -116,7 +116,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', function () {
                 finishPath: [ 13 ],
                 foffset: 0
               })),
-              NamedChain.bundle(function (data) {
+              NamedChain.bundle((data) => {
                 const root = data.inline.element();
                 const path = data.path;
                 const range = Cursors.calculate(root, path);
@@ -140,5 +140,5 @@ UnitTest.asynctest('SelectionInDocPositionTest', function () {
         ])
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

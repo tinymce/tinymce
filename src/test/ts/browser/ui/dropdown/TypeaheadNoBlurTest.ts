@@ -8,17 +8,17 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
-import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
-import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import * as Sinks from 'ephox/alloy/test/Sinks';
+import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
-UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -51,7 +51,7 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function ()
                 { type: 'item', data: { value: text + '2', text: text + '2' } }
               ]);
 
-              return future.map(function (f) {
+              return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
                   { type: 'separator', text: 'No data', data: {value: '', text: 'No data'} }
@@ -78,7 +78,7 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function ()
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 
@@ -102,13 +102,13 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function ()
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
       // Focus something else.
-      Step.sync(function () {
+      Step.sync(() => {
         Focus.focus(component.element());
       }),
       Step.wait(1000),
       steps.sWaitForMenu('Blurring should NOT dismiss popup due to setting'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Focus.focus(typeahead.element());
       }),
       Keyboard.sKeydown(doc, Keys.escape(), { }),

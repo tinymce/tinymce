@@ -9,21 +9,22 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import * as Reader from 'ephox/alloy/frame/Reader';
-import * as Writer from 'ephox/alloy/frame/Writer';
+import * as Frames from './frames/Frames';
+import { SugarEvent } from 'ephox/alloy/api/Main';
 import { document } from '@ephox/dom-globals';
 
-const resize = function (element, changeX, changeY) {
+
+const resize = (element, changeX, changeY) => {
   document.querySelector('h2').innerHTML = 'resizing';
-  const width = Css.getRaw(element, 'width').map(function (w) {
+  const width = Css.getRaw(element, 'width').map((w) => {
     return parseInt(w, 10);
-  }).getOrThunk(function () {
+  }).getOrThunk(() => {
     return Width.get(element);
   });
 
-  const height = Css.getRaw(element, 'height').map(function (h) {
+  const height = Css.getRaw(element, 'height').map((h) => {
     return parseInt(h, 10);
-  }).getOrThunk(function () {
+  }).getOrThunk(() => {
     return Height.get(element);
   });
 
@@ -31,12 +32,12 @@ const resize = function (element, changeX, changeY) {
   Css.set(element, 'height', (height + changeY) + 'px');
 };
 
-export default <any> function () {
+export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = function (name) {
-    return function (elem) {
+  const onNode = (name) => {
+    return (elem) => {
       return Node.name(elem) === name ? Option.some(elem) : Option.none();
     };
   };
@@ -46,9 +47,9 @@ export default <any> function () {
 
   const frame = Element.fromTag('iframe');
   Css.set(frame, 'min-width', '80%');
-  const onload = DomEvent.bind(frame, 'load', function () {
+  const onload = DomEvent.bind(frame, 'load', () => {
     onload.unbind();
-    Writer.write(
+    Frames.write(
       frame,
       '<html>' +
         '<head>' +
@@ -63,8 +64,8 @@ export default <any> function () {
         '</body>' +
       '</html>'
     );
-    const root = Element.fromDom(Reader.doc(frame).dom().documentElement);
-    addAsForeign(root, function (gui) {
+    const root = Element.fromDom(Frames.readDoc(frame).dom().documentElement);
+    addAsForeign(root, (gui) => {
       Insert.append(root, gui.element());
     });
   });
@@ -73,7 +74,7 @@ export default <any> function () {
     contents
   );
 
-  const addAsForeign = function (root, doInsert) {
+  const addAsForeign = (root, doInsert) => {
     const connection = ForeignGui.engage({
       root,
       dispatchers: [
@@ -87,7 +88,7 @@ export default <any> function () {
             ]),
 
             events: AlloyEvents.derive([
-              AlloyEvents.run(NativeEvents.click(), function (component, simulatedEvent) {
+              AlloyEvents.run<SugarEvent>(NativeEvents.click(), (component, simulatedEvent) => {
                 // We have to remove the proxy first, because we are during a proxied event (click)
                 connection.unproxy(component);
                 connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
@@ -141,7 +142,7 @@ export default <any> function () {
   Insert.append(ephoxUi, Element.fromHtml('<h3>Div Editor</h3>'));
   Insert.append(ephoxUi, inlineContainer);
 
-  addAsForeign(inlineContainer, function (gui) {
+  addAsForeign(inlineContainer, (gui) => {
     Insert.after(inlineContainer, gui.element());
   });
 };

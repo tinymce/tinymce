@@ -3,17 +3,18 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Future, Result } from '@ephox/katamari';
 import { SugarElement } from '../../alien/TypeDefinitions';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
-export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
+  config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
   markValid: (Component: AlloyComponent) => void;
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
-  validation: (validate: <T, E>(v: string) => Result<T, E>) => (component: AlloyComponent) => any;
+  validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
-export interface InvalidatingConfigSpec {
+export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
   invalidClass: string;
   getRoot?: (AlloyComponent) => Option<SugarElement>;
   notify?: {
@@ -31,7 +32,7 @@ export interface InvalidatingConfigSpec {
   }
 }
 
-export interface InvalidatingConfig {
+export interface InvalidatingConfig extends BehaviourConfigDetail {
   invalidClass: () => string;
   notify?: () => Option<{
     getContainer?: () => (input: AlloyComponent) => Option<SugarElement>;

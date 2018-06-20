@@ -32,16 +32,20 @@ export interface ReceivingEvent extends EventFormat {
   data: () => any;
 }
 
-const fromSource = function (event, source) {
+export interface FocusingEvent extends EventFormat {
+  originator: () => SugarElement;
+}
+
+const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
 
-  const stop = function () {
+  const stop = () => {
     stopper.set(true);
   };
 
-  const cut = function () {
+  const cut = () => {
     cutter.set(true);
   };
 
@@ -58,10 +62,10 @@ const fromSource = function (event, source) {
 };
 
 // Events that come from outside of the alloy root (e.g. window scroll)
-const fromExternal = function (event) {
+const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
-  const stop = function () {
+  const stop = () => {
     stopper.set(true);
   };
 
@@ -72,12 +76,12 @@ const fromExternal = function (event) {
     isCut: Fun.constant(false),
     event: Fun.constant(event),
     // Nor do targets really
-    setTarget: Fun.die('Cannot set target of a broadcasted event'),
-    getTarget: Fun.die('Cannot get target of a broadcasted event')
+    setSource: Fun.die('Cannot set source of a broadcasted event'),
+    getSource: Fun.die('Cannot get source of a broadcasted event')
   };
 };
 
-const fromTarget = function (event, target) {
+const fromTarget = <T extends EventFormat>(event: T, target: SugarElement): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };

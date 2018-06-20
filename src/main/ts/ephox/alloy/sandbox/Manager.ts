@@ -8,30 +8,30 @@ const contract = Contracts.exactly([
   'isPartOf'
 ]);
 
-const clear = function (sandbox, sInfo) {
-  sInfo.state().get().each(function (state) {
+const clear = (sandbox, sInfo) => {
+  sInfo.state().get().each((state) => {
     sInfo.manager().clear(sandbox, state);
   });
 };
 
-const populate = function (sandbox, sInfo, data) {
+const populate = (sandbox, sInfo, data) => {
   return sInfo.manager().populate(sandbox, data);
 };
 
-const preview = function (sandbox, sInfo) {
-  sInfo.state().get().each(function (state) {
+const preview = (sandbox, sInfo) => {
+  sInfo.state().get().each((state) => {
     sInfo.manager().preview(sandbox, state);
   });
 };
 
-const enter = function (sandbox, sInfo) {
-  sInfo.state().get().each(function (state) {
+const enter = (sandbox, sInfo) => {
+  sInfo.state().get().each((state) => {
     sInfo.manager().enter(sandbox, state);
   });
 };
 
-const isPartOf = function (sandbox, sInfo, queryElem) {
-  return sInfo.state().get().exists(function (state) {
+const isPartOf = (sandbox, sInfo, queryElem) => {
+  return sInfo.state().get().exists((state) => {
     return sInfo.manager().isPartOf(sandbox, state, queryElem);
   });
 };

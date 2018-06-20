@@ -8,11 +8,11 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Fun } from '@ephox/katamari';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -32,10 +32,10 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function () {
         })
       ])
     });
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
-    const sSendTouchmove = function (touches) {
-      return Step.sync(function () {
+    const sSendTouchmove = (touches) => {
+      return Step.sync(() => {
         AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
           raw: { touches }
         });
@@ -95,5 +95,5 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function () {
         { method: 'pinch', dx: (16 - 8) - (20 - 5), dy: (160 - 80) - (200 - 50) }
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

@@ -10,20 +10,20 @@ asynctest(
     'ephox.alloy.test.GuiSetup'
   ],
 
-  function (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup) {
+  (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup) => {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    GuiSetup.setup(function (store, doc, body) {
+    GuiSetup.setup((store, doc, body) => {
       return GuiFactory.build({
         ...
       });
 
-    }, function (doc, body, gui, component, store) {
+    }, (doc, body, gui, component, store) => {
       return [
         ..
       ];
-    }, function () { success(); }, failure);
+    }, () => { success(); }, failure);
 
   }
 );

@@ -1,8 +1,11 @@
 import { Assertions, Chain, FocusTools, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Focus } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
 
-export default <any> function (doc, gui, typeahead) {
-  const sWaitForMenu = function (label) {
+export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) => {
+  const sWaitForMenu = (label: string) => {
     return Logger.t(
       label,
       Waiter.sTryUntil(
@@ -14,7 +17,7 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  const sWaitForNoMenu = function (label) {
+  const sWaitForNoMenu = (label: string) => {
     return Logger.t(
       label,
       Waiter.sTryUntil(
@@ -26,7 +29,7 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  const sAssertFocusOnTypeahead = function (label) {
+  const sAssertFocusOnTypeahead = (label: string) => {
     return Logger.t(
       label,
       FocusTools.sTryOnSelector(
@@ -37,11 +40,11 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  const sAssertValue = function (label, expected) {
+  const sAssertValue = (label: string, expected: string) => {
     return Logger.t(
       label,
       Chain.asStep(typeahead.element(), [
-        Chain.op(function (t) {
+        Chain.op((t) => {
           Focus.focus(t);
         }),
         UiControls.cGetValue,

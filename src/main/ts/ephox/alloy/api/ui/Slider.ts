@@ -4,12 +4,7 @@ import SliderParts from '../../ui/slider/SliderParts';
 import { SliderSchema } from '../../ui/slider/SliderSchema';
 import * as SliderUi from '../../ui/slider/SliderUi';
 import * as Sketcher from './Sketcher';
-
-export interface SliderSketch extends Sketcher.CompositeSketch {
-  resetToMin: (slider: AlloyComponent) => void;
-  resetToMax: (slider: AlloyComponent) => void;
-  refresh: (slider: AlloyComponent) => void;
-}
+import { SliderSketcher } from '../../ui/types/SliderTypes';
 
 const Slider = Sketcher.composite({
   name: 'Slider',
@@ -27,7 +22,7 @@ const Slider = Sketcher.composite({
       apis.refresh(slider);
     }
   }
-}) as SliderSketch;
+}) as SliderSketcher;
 
 export {
   Slider

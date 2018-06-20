@@ -11,7 +11,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
-export default <any> function () {
+export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 // TODO: Change this to match the simplified UI templating model we have now including text
@@ -26,12 +26,10 @@ export default <any> function () {
       }),
       Input.sketch({
         tag: 'textarea',
-        dom: {
-          styles: {
-            width: '90%',
-            height: '300px',
-            display: 'block'
-          }
+        inputStyles: {
+          width: '90%',
+          height: '300px',
+          display: 'block'
         },
         data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'

@@ -6,23 +6,36 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { SingleSketchFactory, CompositeSketchFactory } from './UiSketcher';
 
-export interface SingleSketch {
+export interface SingleSketchSpec {
+  uid?: string;
+};
+export interface SingleSketchDetail {
+  uid: () => string;
+};
+
+export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
-  sketch: (spec: Record<string, any>) => SketchSpec;
-  factory: UiSketcher.SingleFactory;
-  [key: string]: Function;
+  sketch: (spec: S) => SketchSpec;
+  factory: SingleSketchFactory<D, S>;
 }
 
-export interface CompositeSketch  {
+export interface CompositeSketchSpec { };
+export interface CompositeSketchDetail {
+  partUids: () => Record<string, string>;
+  components: () => AlloySpec[];
+};
+
+export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
-  sketch: (spec: Record<string, any>) => SketchSpec;
+  sketch: (spec: S) => SketchSpec;
   parts: () => AlloyParts.GeneratedParts;
-  factory: UiSketcher.CompositeFactory;
-  [key: string]: Function;
+  // TYPIFY externals
+  factory: CompositeSketchFactory<D, S>;
 }
 
 export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {
@@ -46,15 +59,15 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function (rawConfig) {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
-  const sketch = function (spec) {
+  const sketch = (spec) => {
     return UiSketcher.single(config.name, config.configFields, config.factory, spec);
   };
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
-  const extraApis = Obj.map(config.extraApis, function (f, k) {
+  const extraApis = Obj.map(config.extraApis, (f, k) => {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
@@ -68,13 +81,13 @@ const single = function (rawConfig) {
     },
     apis,
     extraApis
-  ) as SingleSketch;
+  ) as SingleSketch<S, D>;
 };
 
-const composite = function (rawConfig) {
+const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
-  const sketch = function (spec) {
+  const sketch = (spec) => {
     return UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
   };
 
@@ -82,7 +95,7 @@ const composite = function (rawConfig) {
   const parts: AlloyParts.GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
-  const extraApis = Obj.map(config.extraApis, function (f, k) {
+  const extraApis = Obj.map(config.extraApis, (f, k) => {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
@@ -96,7 +109,7 @@ const composite = function (rawConfig) {
     },
     apis,
     extraApis
-  ) as CompositeSketch;
+  ) as CompositeSketch<S, D>;
 };
 
 export {

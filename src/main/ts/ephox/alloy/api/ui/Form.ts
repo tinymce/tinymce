@@ -11,34 +11,23 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 
 const owner = 'form';
-export interface FormSketch {
-  // why do forms not use or follow the Single or compositeSketch Type signature?
-  sketch: (fSpec: FormSpecBuilder) => SketchSpec;
-  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
-}
-
-export interface FormParts {
-  field: (name: string, config: SimpleOrSketchSpec) => AlloyParts.ConfiguredPart;
-  record(): string[];
-}
-
-export type FormSpecBuilder = (FormParts) => any;
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
 ];
 
-const getPartName = function (name) {
+const getPartName = (name) => {
   return '<alloy.field.' + name + '>';
 };
 
-const sketch = function (fSpec: FormSpecBuilder): SketchSpec {
-  const parts = (function () {
+const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
+  const parts = (() => {
     const record: string[] = [ ];
 
-    const field = function (name: string, config: any): AlloyParts.ConfiguredPart {
+    const field = (name: string, config: any): AlloyParts.ConfiguredPart => {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };
@@ -54,14 +43,14 @@ const sketch = function (fSpec: FormSpecBuilder): SketchSpec {
   const partNames = parts.record();
   // Unlike other sketches, a form does not know its parts in advance (as they represent each field
   // in a particular form). Therefore, it needs to calculate the part names on the fly
-  const fieldParts = Arr.map(partNames, function (n) {
+  const fieldParts = Arr.map(partNames, (n) => {
     return PartType.required({ name: n, pname: getPartName(n) });
   });
 
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const make = function (detail, components, spec) {
+const make = (detail: FormDetail, components, spec) => {
   return Merger.deepMerge(
     {
       'debug.sketcher': {
@@ -79,14 +68,14 @@ const make = function (detail, components, spec) {
               mode: 'manual',
               getValue (form) {
                 const optPs = AlloyParts.getAllParts(form, detail);
-                return Obj.map(optPs, function (optPThunk, pName) {
+                return Obj.map(optPs, (optPThunk, pName) => {
                   return optPThunk().bind(Composing.getCurrent).map(Representing.getValue);
                 });
               },
               setValue (form, values) {
-                Obj.each(values, function (newValue, key) {
-                  AlloyParts.getPart(form, detail, key).each(function (wrapper) {
-                    Composing.getCurrent(wrapper).each(function (field) {
+                Obj.each(values, (newValue, key) => {
+                  AlloyParts.getPart(form, detail, key).each((wrapper) => {
+                    Composing.getCurrent(wrapper).each((field) => {
                       Representing.setValue(field, newValue);
                     });
                   });
@@ -109,11 +98,11 @@ const make = function (detail, components, spec) {
 };
 
 const Form = {
-  getField: GuiTypes.makeApi(function (apis, component, key) {
+  getField: GuiTypes.makeApi((apis, component, key) => {
     return apis.getField(component, key);
   }),
   sketch
-} as FormSketch;
+} as FormSketcher;
 
 export {
   Form

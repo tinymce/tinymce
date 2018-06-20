@@ -1,11 +1,12 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import BehaviourState from '../common/BehaviourState';
+import { BehaviourState, nuState } from '../common/BehaviourState';
+import { FlatgridState } from '../../keying/KeyingModeTypes';
 
-const flatgrid = function (spec) {
+const flatgrid = (spec): FlatgridState => {
   const dimensions = Cell(Option.none());
 
-  const setGridSize = function (numRows, numColumns) {
+  const setGridSize = (numRows, numColumns) => {
     dimensions.set(
       Option.some({
         numRows: Fun.constant(numRows),
@@ -14,27 +15,27 @@ const flatgrid = function (spec) {
     );
   };
 
-  const getNumRows = function () {
-    return dimensions.get().map(function (d) {
+  const getNumRows = () => {
+    return dimensions.get().map((d) => {
       return d.numRows();
     });
   };
 
-  const getNumColumns = function () {
-    return dimensions.get().map(function (d) {
+  const getNumColumns = () => {
+    return dimensions.get().map((d) => {
       return d.numColumns();
     });
   };
 
-  return BehaviourState({
+  return nuState({
     readState: Fun.constant({ }),
     setGridSize,
     getNumRows,
     getNumColumns
-  });
+  }) as FlatgridState;
 };
 
-const init = function (spec) {
+const init = (spec) => {
   return spec.state()(spec);
 };
 

@@ -1,8 +1,8 @@
 import { Assertions, Guard, Step } from '@ephox/agar';
 
-const sAssertFailIs = function (label, expected, f) {
+const sAssertFailIs = (label, expected, f) => {
   return Step.control(
-    Step.sync(function () {
+    Step.sync(() => {
       let passed = false;
       try {
         f();
@@ -18,9 +18,9 @@ const sAssertFailIs = function (label, expected, f) {
   );
 };
 
-const sAssertFailContains = function (label, expected, f) {
+const sAssertFailContains = (label, expected, f) => {
   return Step.control(
-    Step.sync(function () {
+    Step.sync(() => {
       let passed = false;
       try {
         f();
@@ -35,7 +35,7 @@ const sAssertFailContains = function (label, expected, f) {
   );
 };
 
-export default <any> {
+export {
   sAssertFailIs,
   sAssertFailContains
 };

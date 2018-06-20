@@ -18,23 +18,32 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
-import { EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarEvent } from '../../api/Main';
+import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 
-const make = function (detail, components, spec, externals) {
-  const navigateList = function (comp, simulatedEvent, highlighter) {
+const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
+  const navigateList = (
+    comp: AlloyComponent,
+    simulatedEvent: SimulatedEvent<SugarEvent>,
+    highlighter: (comp: AlloyComponent) => void
+  ) => {
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
-      Composing.getCurrent(sandbox).each(function (menu) {
-        Highlighting.getHighlighted(menu).fold(function () {
+      Composing.getCurrent(sandbox).each((menu) => {
+        Highlighting.getHighlighted(menu).fold(() => {
           highlighter(menu);
-        }, function () {
+        }, () => {
           AlloyTriggers.dispatchEvent(sandbox, menu.element(), 'keydown', simulatedEvent);
         });
       });
     } else {
-      const anchor = { anchor: 'hotspot', hotspot: comp };
-      const onOpenSync = function (sandbox) {
+      const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
+      const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
       DropdownUtils.open(detail, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
@@ -43,21 +52,21 @@ const make = function (detail, components, spec, externals) {
 
   // Due to the fact that typeahead probably need to separate value from text, they can't reuse
   // (easily) the same representing logic as input fields.
-  const inputBehaviours = InputBase.behaviours(detail);
+  const focusBehaviours = InputBase.focusBehaviours(detail);
 
   const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
       store: {
         mode: 'dataset',
-        getDataKey (typeahead) {
+        getDataKey (typeahead: AlloyComponent): string {
           return Value.get(typeahead.element());
         },
         initialValue: detail.data().getOr(undefined),
-        getFallbackEntry (key) {
+        getFallbackEntry (key: string): TypeaheadData {
           return { value: key, text: key };
         },
-        setData (typeahead, data) {
+        setData (typeahead: AlloyComponent, data: TypeaheadData) {
           Value.set(typeahead.element(), data.text);
         }
       }
@@ -75,23 +84,24 @@ const make = function (detail, components, spec, externals) {
         if (focusInInput) {
           if (Value.get(component.element()).length >= detail.minChars()) {
 
-            const previousValue = Composing.getCurrent(sandbox).bind(function (menu) {
-              return Highlighting.getHighlighted(menu).map(Representing.getValue);
+            const previousValue = Composing.getCurrent(sandbox).bind((menu) => {
+              return Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>;
             });
 
             detail.previewing().set(true);
 
-            const onOpenSync = function (_sandbox) {
-              Composing.getCurrent(sandbox).each(function (menu) {
-                previousValue.fold(function () {
+            const onOpenSync = (_sandbox) => {
+              Composing.getCurrent(sandbox).each((menu) => {
+                previousValue.fold(() => {
                   Highlighting.highlightFirst(menu);
-                }, function (pv) {
-                  Highlighting.highlightBy(menu, function (item) {
-                    return Representing.getValue(item).value === pv.value;
+                }, (pv) => {
+                  Highlighting.highlightBy(menu, (item) => {
+                    const itemData = Representing.getValue(item) as TypeaheadData;
+                    return itemData.value === pv.value;
                   });
 
                   // Highlight first if could not find it?
-                  Highlighting.getHighlighted(menu).orThunk(function () {
+                  Highlighting.getHighlighted(menu).orThunk(() => {
                     Highlighting.highlightFirst(menu);
                     return Option.none();
                   });
@@ -99,7 +109,7 @@ const make = function (detail, components, spec, externals) {
               });
             };
 
-            const anchor = { anchor: 'hotspot', hotspot: component };
+            const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
             DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
@@ -124,8 +134,8 @@ const make = function (detail, components, spec, externals) {
       onEnter (comp, simulatedEvent) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
-        detail.onExecute()(sandbox, comp);
-        const currentValue = Representing.getValue(comp);
+        const currentValue = Representing.getValue(comp) as TypeaheadData;
+        detail.onExecute()(sandbox, comp, currentValue);
         const input = comp.element().dom() as HTMLInputElement;
         input.setSelectionRange(currentValue.text.length, currentValue.text.length);
         return Option.some(true);
@@ -160,7 +170,7 @@ const make = function (detail, components, spec, externals) {
     uid: detail.uid(),
     dom: InputBase.dom(detail),
     behaviours: Merger.deepMerge(
-      inputBehaviours,
+      focusBehaviours,
       behaviours,
       SketchBehaviours.get(detail.typeaheadBehaviours())
     ),
@@ -168,13 +178,13 @@ const make = function (detail, components, spec, externals) {
     eventOrder: detail.eventOrder(),
 
     events: AlloyEvents.derive([
-      AlloyEvents.runOnExecute(function (comp) {
-        const anchor = { anchor: 'hotspot', hotspot: comp };
+      AlloyEvents.runOnExecute((comp) => {
+        const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
         const onOpenSync = Fun.noop;
         DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
-      AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
+      AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
         const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
         Sandboxing.close(sandbox);
       })

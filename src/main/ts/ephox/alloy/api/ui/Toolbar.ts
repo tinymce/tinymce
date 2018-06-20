@@ -9,24 +9,23 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { composite, CompositeSketch } from './Sketcher';
 import { console } from '@ephox/dom-globals';
+import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-export interface ToolbarSketch extends CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;
-}
 
-const factory = function (detail, components, spec, _externals) {
-  const setGroups = function (toolbar, groups) {
-    getGroupContainer(toolbar).fold(function () {
+const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
+  const setGroups = (toolbar, groups) => {
+    getGroupContainer(toolbar).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
       console.error('Toolbar was defined to not be a shell, but no groups container was specified in components');
       throw new Error('Toolbar was defined to not be a shell, but no groups container was specified in components');
-    }, function (container) {
+    }, (container) => {
       Replacing.set(container, groups);
     });
   };
 
-  const getGroupContainer = function (component) {
+  const getGroupContainer = (component) => {
     return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 
@@ -64,7 +63,7 @@ const Toolbar = composite({
       apis.setGroups(toolbar, groups);
     }
   }
-}) as ToolbarSketch;
+}) as ToolbarSketcher;
 
 export {
   Toolbar

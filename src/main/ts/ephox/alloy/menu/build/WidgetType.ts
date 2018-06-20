@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../../alien/EditableFields';
@@ -15,21 +15,22 @@ import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 
-const builder = function (info) {
-  const subs = AlloyParts.substitutes(WidgetParts.owner(), info, WidgetParts.parts());
-  const components = AlloyParts.components(WidgetParts.owner(), info, subs.internals());
+const builder = (detail: WidgetItemDetail) => {
+  const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
+  const components = AlloyParts.components(WidgetParts.owner(), detail, subs.internals());
 
-  const focusWidget = function (component) {
-    return AlloyParts.getPart(component, info, 'widget').map(function (widget) {
+  const focusWidget = (component) => {
+    return AlloyParts.getPart(component, detail, 'widget').map((widget) => {
       Keying.focusIn(widget);
       return widget;
     });
   };
 
-  const onHorizontalArrow = function (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
-    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (function () {
-      if (info.autofocus()) {
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (() => {
+      if (detail.autofocus()) {
         simulatedEvent.setSource(component.element());
         return Option.none();
       } else {
@@ -39,27 +40,27 @@ const builder = function (info) {
   };
 
   return Merger.deepMerge({
-    dom: info.dom(),
+    dom: detail.dom(),
     components,
-    domModification: info.domModification(),
+    domModification: detail.domModification(),
     events: AlloyEvents.derive([
-      AlloyEvents.runOnExecute(function (component, simulatedEvent) {
-        focusWidget(component).each(function (widget) {
+      AlloyEvents.runOnExecute((component, simulatedEvent) => {
+        focusWidget(component).each((widget) => {
           simulatedEvent.stop();
         });
       }),
 
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
-      AlloyEvents.run(SystemEvents.focusItem(), function (component, simulatedEvent) {
-        if (info.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
+      AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
+        if (detail.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
     behaviours: Behaviour.derive([
       Representing.config({
         store: {
           mode: 'memory',
-          initialValue: info.data()
+          initialValue: detail.data()
         }
       }),
       Focusing.config({
@@ -70,7 +71,7 @@ const builder = function (info) {
       Keying.config({
         mode: 'special',
         // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
-        focusIn: info.autofocus() ? function (component) {
+        focusIn: detail.autofocus() ? (component) => {
           focusWidget(component);
         } : Behaviour.revoke(),
         onLeft: onHorizontalArrow,
@@ -80,10 +81,10 @@ const builder = function (info) {
           // then focus it (i.e. escape the inner widget). Only do if not autofocusing
           // Autofocusing should treat the widget like it is the only item, so it should
           // let its outer menu handle escape
-          if (! Focusing.isFocused(component) && !info.autofocus()) {
+          if (! Focusing.isFocused(component) && !detail.autofocus()) {
             Focusing.focus(component);
             return Option.some(true);
-          } else if (info.autofocus()) {
+          } else if (detail.autofocus()) {
             simulatedEvent.setSource(component.element());
             return Option.none();
           } else {
@@ -107,4 +108,4 @@ const schema = [
   Fields.output('builder', builder)
 ];
 
-export default <any> schema;
+export default schema;

@@ -6,16 +6,18 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+import { Option } from '@ephox/katamari';
+
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = function (text) {
+  const makeBack = (text) => {
     return {
       data: TieredMenu.collapseItem(text),
       type: 'item',
@@ -27,7 +29,7 @@ export default <any> function () {
     };
   };
 
-  const makeItem = function (value, text) {
+  const makeItem = (value, text) => {
     return {
       data: {
         value,
@@ -42,7 +44,7 @@ export default <any> function () {
     };
   };
 
-  const makeSeparator = function (text) {
+  const makeSeparator = (text) => {
     return {
       type: 'separator',
       dom: {
@@ -60,7 +62,7 @@ export default <any> function () {
     };
   };
 
-  const makeMenu = function (value, items) {
+  const makeMenu = (value, items) => {
     return {
       value,
       dom: {
@@ -110,9 +112,11 @@ export default <any> function () {
 
     onExecute () {
       console.log('Executing');
+      return Option.some(true);
     },
     onEscape () {
       console.log('Escaping');
+      return Option.some(true);
     },
     onOpenMenu (container, menu) {
       const w = Width.get(container.element());

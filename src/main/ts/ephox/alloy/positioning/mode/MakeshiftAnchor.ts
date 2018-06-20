@@ -1,22 +1,26 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
-import Bounds from '../layout/Bounds';
-import Bubble from '../layout/Bubble';
+import { nu as Bubble } from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
-import Anchoring from './Anchoring';
+import { nu as NuAnchoring, MakeshiftAnchor } from './Anchoring';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { OriginAdt } from '../../positioning/layout/Origins';
+import { bounds } from '../../alien/Boxes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const placement = function (component, posInfo, anchorInfo, origin) {
-  const anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
+const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
+  const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-  const layouts = anchorInfo.layouts().getOrThunk(function () {
+  const layouts = anchorInfo.layouts().getOrThunk(() => {
     return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
   });
 
   return Option.some(
-    Anchoring({
+    NuAnchoring({
       anchorBox: Fun.constant(anchorBox),
       bubble: anchorInfo.bubble,
       // maxHeightFunction: Fun.constant(MaxHeight.available()),
@@ -27,7 +31,7 @@ const placement = function (component, posInfo, anchorInfo, origin) {
   );
 };
 
-export default <any> [
+export default [
   FieldSchema.strict('x'),
   FieldSchema.strict('y'),
   FieldSchema.defaulted('height', 0),

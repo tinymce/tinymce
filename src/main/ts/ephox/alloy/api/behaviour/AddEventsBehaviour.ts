@@ -1,12 +1,13 @@
 
-import { EventHandlerConfig, derive, EventHandlerConfigRecord } from '../events/AlloyEvents';
+import { AlloyEventKeyAndHandler, derive, AlloyEventRecord } from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { create as createBehaviour, noState, ConfiguredBehaviour, AlloyBehaviour, NamedConfiguredBehaviour } from './Behaviour';
+import { create as createBehaviour, ConfiguredBehaviour, AlloyBehaviour, NamedConfiguredBehaviour } from './Behaviour';
 import { EventFormat } from '../../events/SimulatedEvent';
+import { NoState } from '../../behaviour/common/BehaviourState';
 
-const events = function (name, eventHandlers): AlloyBehaviour {
-  const events: EventHandlerConfigRecord = derive(eventHandlers);
+const events = (name: string, eventHandlers: AlloyEventKeyAndHandler<EventFormat>[]): AlloyBehaviour<any,any> => {
+  const events: AlloyEventRecord = derive(eventHandlers);
 
   return createBehaviour({
     fields: [
@@ -19,7 +20,7 @@ const events = function (name, eventHandlers): AlloyBehaviour {
   });
 };
 
-const config = function <T extends EventFormat>(name: string, eventHandlers: Array<EventHandlerConfig<T>>): NamedConfiguredBehaviour {
+const config = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): NamedConfiguredBehaviour<any,any> => {
   const me = events(name, eventHandlers);
   return {
     key: name,
@@ -28,7 +29,7 @@ const config = function <T extends EventFormat>(name: string, eventHandlers: Arr
       me,
       configAsRaw: Fun.constant({ }),
       initialConfig: { },
-      state: noState()
+      state: NoState
     }
   };
 };

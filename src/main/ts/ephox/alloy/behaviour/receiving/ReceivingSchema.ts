@@ -1,9 +1,9 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 
-export default <any> [
+export default [
   FieldSchema.strictOf('channels', ValueSchema.setOf(
     // Allow any keys.
     Result.value,

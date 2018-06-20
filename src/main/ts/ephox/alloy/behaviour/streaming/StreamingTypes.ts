@@ -2,13 +2,14 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
-export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: StreamingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface StreamingBehaviour extends Behaviour.AlloyBehaviour<StreamingConfigSpec, StreamingConfig> {
+  config: (config: StreamingConfigSpec) => Behaviour.NamedConfiguredBehaviour<StreamingConfigSpec, StreamingConfig>;
 }
 
-export interface StreamingConfig {
+export interface StreamingConfig extends BehaviourConfigDetail {
   event: () => string;
   stream: () => {
     streams: () => {
@@ -17,12 +18,12 @@ export interface StreamingConfig {
   }
 };
 
-export interface StreamingConfigSpec {
+export interface StreamingConfigSpec extends BehaviourConfigSpec {
   stream: {
     mode: StreamMode,
     delay: number
   };
-  event?: any;
+  event?: string;
   onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
 }
 

@@ -4,8 +4,10 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
-const renderMenu = function (spec) {
+const renderMenu = (spec): Partial<MenuSpec> => {
   return {
     dom: {
       tag: 'ol',
@@ -21,7 +23,7 @@ const renderMenu = function (spec) {
   };
 };
 
-const renderItem = function (spec) {
+const renderItem = (spec): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -51,12 +53,12 @@ const renderItem = function (spec) {
   };
 };
 
-const part = function (store) {
+const part = (store) => {
   return {
     dom: {
       tag: 'div'
     },
-    markers,
+    markers: itemMarkers,
     onExecute (dropdown, item) {
       const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
@@ -64,8 +66,8 @@ const part = function (store) {
   };
 };
 
-const mStoreMenuUid = function (component) {
-  return Step.stateful(function (value, next, die) {
+const mStoreMenuUid = (component) => {
+  return Step.stateful((value, next, die) => {
     const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
     const uid = Attr.get(menu, 'data-alloy-id');
     next(
@@ -74,12 +76,12 @@ const mStoreMenuUid = function (component) {
   });
 };
 
-const mWaitForNewMenu = function (component) {
-  return Step.stateful(function (value, next, die) {
+const mWaitForNewMenu = (component) => {
+  return Step.stateful((value, next, die) => {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
-      Step.sync(function () {
-        SelectorFind.descendant(component.element(), '.menu').filter(function (menu) {
+      Step.sync(() => {
+        SelectorFind.descendant(component.element(), '.menu').filter((menu) => {
           const uid = Attr.get(menu, 'data-alloy-id');
           return value.menuUid !== uid;
         }).getOrDie('New menu has not appeared');
@@ -90,7 +92,7 @@ const mWaitForNewMenu = function (component) {
   });
 };
 
-const markers = {
+const itemMarkers = {
   item: 'item',
   selectedItem: 'selected-item',
   menu: 'menu',
@@ -98,12 +100,13 @@ const markers = {
   backgroundMenu: 'background-menu'
 };
 
-export default <any> {
+const markers = () => itemMarkers;
+
+export {
   renderItem,
   renderMenu,
   part,
-  markers: Fun.constant(markers),
-
+  markers,
   mWaitForNewMenu,
   mStoreMenuUid
 };

@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
 
-UnitTest.test('UiSubstitutesTest', function () {
+UnitTest.test('UiSubstitutesTest', () => {
   Logger.sync(
     'Testing empty components',
-    function () {
+    () => {
       const actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { }, [ ], { });
       RawAssertions.assertEq('Components should stay empty', [ ], actual);
     }
@@ -14,7 +14,7 @@ UnitTest.test('UiSubstitutesTest', function () {
 
   Logger.sync(
     'Testing everything normal',
-    function () {
+    () => {
       const actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail', [
         { uiType: 'normal' }
       ], { });
@@ -26,12 +26,12 @@ UnitTest.test('UiSubstitutesTest', function () {
 
   Logger.sync(
     'Testing one level with a dependent',
-    function () {
+    () => {
       const actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail', [
         { uiType: 'normal' },
         { uiType: 'placeholder', name: 'foo', owner: 'owner' }
       ], {
-        foo: UiSubstitutes.single(true, function (detail) {
+        foo: UiSubstitutes.single(true, (detail) => {
           return {
             uiType: 'foo-dependent',
             detail

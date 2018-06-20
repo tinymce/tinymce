@@ -10,14 +10,14 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('CustomComponentTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CustomComponentTest', (success, failure) => {
+
+
 
   const bA = Cell(null);
   const bB = Cell(null);
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     const behaviourA = Behaviour.create({
       fields: [ ],
       name: 'behaviourA',
@@ -94,11 +94,11 @@ UnitTest.asynctest('CustomComponentTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Checking initial DOM modification',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
             attrs: {
@@ -114,7 +114,7 @@ UnitTest.asynctest('CustomComponentTest', function () {
 
       store.sClear,
 
-      Step.sync(function () {
+      Step.sync(() => {
         AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
       }),
 
@@ -123,7 +123,7 @@ UnitTest.asynctest('CustomComponentTest', function () {
         'behaviour.b.event'
       ]),
 
-      Step.sync(function () {
+      Step.sync(() => {
         bA.get().behaveA(component);
       }),
 
@@ -133,7 +133,7 @@ UnitTest.asynctest('CustomComponentTest', function () {
         'behaveA'
       ]),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Assertions.assertEq('There should be no internal APIs on component', false, Objects.hasKey(component, 'apis'));
       })
     ];

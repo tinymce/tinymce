@@ -14,23 +14,26 @@ import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
+import { SplitDropdownSketcher, SplitDropdownDetail, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 
-  const switchToMenu = function (sandbox) {
-    Composing.getCurrent(sandbox).each(function (current) {
+  const switchToMenu = (sandbox) => {
+    Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  const action = function (component) {
-    const anchor = { anchor: 'hotspot', hotspot: component };
+  const action = (component) => {
+    const anchor: AnchorSpec = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
 
-  const executeOnButton = function (comp) {
+  const executeOnButton = (comp) => {
     const button = AlloyParts.getPartOrDie(comp, detail, 'button');
     AlloyTriggers.emitExecute(button);
     return Option.some(true);
@@ -101,7 +104,7 @@ const SplitDropdown = Sketcher.composite({
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),
   factory
-});
+}) as SplitDropdownSketcher;
 
 export {
   SplitDropdown

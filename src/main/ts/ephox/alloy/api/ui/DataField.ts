@@ -1,15 +1,17 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
+import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => {
   return {
     uid: detail.uid(),
     dom: detail.dom(),
@@ -28,7 +30,7 @@ const factory = function (detail, spec): SketchSpec {
       SketchBehaviours.get(detail.dataBehaviours())
     ),
     events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+      AlloyEvents.runOnAttached((component, simulatedEvent) => {
         Representing.setValue(component, detail.getInitialValue()());
       })
     ])
@@ -44,7 +46,7 @@ const DataField = Sketcher.single({
     FieldSchema.strict('getInitialValue'),
     SketchBehaviours.field('dataBehaviours', [ Representing, Composing ])
   ]
-});
+}) as DataFieldSketcher;
 
 export {
   DataField

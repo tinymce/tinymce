@@ -1,3 +1,21 @@
+import * as EventRoot from '../alien/EventRoot';
+import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
+import * as Fields from '../data/Fields';
+import * as Debugging from '../debugging/Debugging';
+import * as FunctionAnnotator from '../debugging/FunctionAnnotator';
+import {
+  CustomEvent,
+  CustomSimulatedEvent,
+  EventFormat,
+  NativeSimulatedEvent,
+  ReceivingEvent,
+  SimulatedEvent,
+} from '../events/SimulatedEvent';
+import * as TapEvent from '../events/TapEvent';
+import * as AlloyLogger from '../log/AlloyLogger';
+import * as AlloyParts from '../parts/AlloyParts';
+import * as PartType from '../parts/PartType';
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import * as Behaviour from './behaviour/Behaviour';
 import { Composing } from './behaviour/Composing';
@@ -5,7 +23,6 @@ import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
 import { Docking } from './behaviour/Docking';
 import { Dragging } from './behaviour/Dragging';
-
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
@@ -32,6 +49,16 @@ import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';
 import * as SketchBehaviours from './component/SketchBehaviours';
+import {
+  AlloySpec,
+  ComponentSpec,
+  PremadeSpec,
+  RawDomSchema,
+  SimpleOrSketchSpec,
+  SimpleSpec,
+  SketchSpec,
+} from './component/SpecTypes';
+import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
 import * as AlloyTriggers from './events/AlloyTriggers';
@@ -45,7 +72,6 @@ import * as Gui from './system/Gui';
 import { NoContextApi } from './system/NoContextApi';
 import * as SystemApi from './system/SystemApi';
 import { Button } from './ui/Button';
-import * as Composite from './composite/Parts';
 import { Container } from './ui/Container';
 import { DataField } from './ui/DataField';
 import { Dropdown } from './ui/Dropdown';
@@ -69,30 +95,15 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import { tieredMenu as TieredMenu, TieredMenuSketch, TieredData } from './ui/TieredMenu';
-
+import { TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
-import * as Fields from '../data/Fields';
 
 // TODO: naughty non API's being exported
-import * as AlloyParts from '../parts/AlloyParts';
-import BehaviourState from '../behaviour/common/BehaviourState';
-import * as PartType from '../parts/PartType';
-import * as EventRoot from '../alien/EventRoot';
-import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
-import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
-import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
-import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
-
 // Type Def Exports
-import { SugarEvent, SugarElement } from '../alien/TypeDefinitions'; // TODO FIX this when we fix SUGARE types
-import { AlloySpec, SimpleOrSketchSpec, LooseSpec, RawDomSchema, ComponentSpec, SketchSpec, SimpleSpec, PremadeSpec } from './component/SpecTypes';
-import { CustomEvent, EventFormat, SimulatedEvent, NativeSimulatedEvent, CustomSimulatedEvent, ReceivingEvent } from '../events/SimulatedEvent';
-
 export {
   AddEventsBehaviour,
   Behaviour,
@@ -165,7 +176,6 @@ export {
   TabSection,
   Tabview,
   TieredMenu,
-  TieredMenuSketch,
   TieredData,
   Toolbar,
   ToolbarGroup,
@@ -185,7 +195,6 @@ export {
 
   AlloySpec,
   SimpleOrSketchSpec,
-  LooseSpec,
   RawDomSchema,
   ComponentSpec,
   SketchSpec,

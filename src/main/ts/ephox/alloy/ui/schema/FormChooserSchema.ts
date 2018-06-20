@@ -11,6 +11,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
+import { FormChooserDetail } from '../../ui/types/FormChooserTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),
@@ -38,7 +39,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     },
     name: 'choices',
     unit: 'choice',
-    overrides (detail, choiceSpec) {
+    overrides (detail: FormChooserDetail, choiceSpec: { value: string }) {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.

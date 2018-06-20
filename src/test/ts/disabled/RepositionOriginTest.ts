@@ -15,30 +15,30 @@ test(
     'ephox.katamari.api.Type'
   ],
 
-  function (Direction, Origins, Reposition, Fun, Option, Type) {
+  (Direction, Origins, Reposition, Fun, Option, Type) => {
     // Disabled until we remove need for mocking.
 
     var noneOrigin = Origins.none();
     var relativeOrigin = Origins.relative(5, 10);
     var fixedOrigin = Origins.fixed(5, 10, 500, 500);
 
-    var assertOption = function (expected, actual) {
-      expected.fold(function () {
-        actual.fold(function () {
+    var assertOption = (expected, actual) => {
+      expected.fold(() => {
+        actual.fold(() => {
           // pass
-        }, function (av) {
+        }, (av) => {
           assert.fail('Expected was none, actual was ' + av);
         });
-      }, function (ev) {
-        actual.fold(function () {
+      }, (ev) => {
+        actual.fold(() => {
           assert.fail('Expected "' + ev + '" but was none');
-        }, function (av) {
+        }, (av) => {
           assert.eq(ev, av);
         });
       });
     };
 
-    var makeDecision = function (x, y, width, height, direction) {
+    var makeDecision = (x, y, width, height, direction) => {
       // Runtime type check because I made this mistake a few times while writing the test
       assert.eq(true, Type.isFunction(direction.fold), 'direction passed into makeDecision was not an ADT');
 
@@ -55,7 +55,7 @@ test(
       });
     };
 
-    var check = function (expected, origin, decision) {
+    var check = (expected, origin, decision) => {
       var actual = Origins.reposition(origin, decision);
 
       assert.eq(expected.position(), actual.position());

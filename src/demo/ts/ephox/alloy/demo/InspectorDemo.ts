@@ -3,13 +3,16 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
-import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
+import { Form } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { console } from '@ephox/dom-globals';
 
-export default <any> function () {
+import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+
+export default (): void => {
   const gui = Gui.create();
 
   const body = Body.body();
@@ -35,7 +38,7 @@ export default <any> function () {
             console.log('clicked on a button');
           }
         }),
-        Form.sketch(function (parts: FormParts) {
+        Form.sketch((parts: FormParts) => {
           return {
             dom: {
               tag: 'div'

@@ -1,36 +1,44 @@
 import { Direction } from '@ephox/sugar';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarElement } from '../alien/TypeDefinitions';
+import { Option } from '@ephox/katamari';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+
+
+export type ElementMover <C,S> = (elem: SugarElement, focused: SugarElement, config: C, state?: S) => Option<SugarElement>;
 
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.
-const useH = function (movement) {
-  return function (component, simulatedEvent, config, state?) {
+const useH = <C extends GeneralKeyingConfig,S>(movement): KeyRuleHandler<C, S> => {
+  return (component, simulatedEvent, config, state?) => {
     const move = movement(component.element());
     return use(move, component, simulatedEvent, config, state);
   };
 };
 
-const west = function (moveLeft, moveRight) {
+const west = <C extends GeneralKeyingConfig,S>(moveLeft: ElementMover<C,S>, moveRight: ElementMover<C,S>): KeyRuleHandler<C,S> => {
   const movement = Direction.onDirection(moveLeft, moveRight);
   return useH(movement);
 };
 
-const east = function (moveLeft, moveRight) {
+const east = <C extends GeneralKeyingConfig,S>(moveLeft: ElementMover<C,S>, moveRight: ElementMover<C,S>) => {
   const movement = Direction.onDirection(moveRight, moveLeft);
   return useH(movement);
 };
 
-const useV = function (move) {
-  return function (component, simulatedEvent, config, state?) {
+const useV = <C extends GeneralKeyingConfig,S>(move: ElementMover<C,S>): KeyRuleHandler<C,S> => {
+  return (component, simulatedEvent, config, state?) => {
     return use(move, component, simulatedEvent, config, state);
   };
 };
 
-const use = function (move, component, simulatedEvent, config, state?) {
-  const outcome = config.focusManager().get(component).bind(function (focused) {
+const use = <C extends GeneralKeyingConfig,S>(move: ElementMover<C,S>, component, simulatedEvent, config: C, state?: S): Option<boolean> => {
+  const outcome = config.focusManager().get(component).bind((focused) => {
     return move(component.element(), focused, config, state);
   });
 
-  return outcome.map(function (newFocus) {
+  return outcome.map((newFocus) => {
     config.focusManager().set(component, newFocus);
     return true;
   });

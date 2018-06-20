@@ -10,8 +10,10 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { MenuDetail, MenuSpec, MenuItemHoverEvent } from '../../ui/types/MenuTypes';
 
-const make = function (detail, components, spec, externals) {
+const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, spec, externals) => {
   return Merger.deepMerge(
     {
       dom: Merger.deepMerge(
@@ -47,10 +49,10 @@ const make = function (detail, components, spec, externals) {
       ),
       events: AlloyEvents.derive([
         // This is dispatched from a menu to tell an item to be highlighted.
-        AlloyEvents.run(ItemEvents.focus(), function (menu, simulatedEvent) {
+        AlloyEvents.run(ItemEvents.focus(), (menu, simulatedEvent) => {
           // Highlight the item
           const event = simulatedEvent.event();
-          menu.getSystem().getByDom(event.target()).each(function (item) {
+          menu.getSystem().getByDom(event.target()).each((item) => {
             Highlighting.highlight(menu, item);
 
             simulatedEvent.stop();
@@ -62,7 +64,7 @@ const make = function (detail, components, spec, externals) {
 
         // Highlight the item that the cursor is over. The onHighlight
         // code needs to handle updating focus if required
-        AlloyEvents.run(ItemEvents.hover(), function (menu, simulatedEvent) {
+        AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (menu, simulatedEvent) => {
           const item = simulatedEvent.event().item();
           Highlighting.highlight(menu, item);
         })

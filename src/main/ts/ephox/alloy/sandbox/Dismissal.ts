@@ -5,17 +5,18 @@ import { Receiving } from '../api/behaviour/Receiving';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import * as Channels from '../api/messages/Channels';
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
+import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))
 ]);
 
-const receivingConfig = function (rawSpec): NamedConfiguredBehaviour {
+const receivingConfig = (rawSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
   const c = receiving(rawSpec);
   return Receiving.config(c);
 };
 
-const receiving = function (rawSpec) {
+const receiving = (rawSpec) => {
   const spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     channels: Objects.wrap(

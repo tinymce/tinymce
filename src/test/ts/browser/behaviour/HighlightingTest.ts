@@ -6,15 +6,15 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('HighlightingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
-    const makeItem = function (name) {
+
+
+  GuiSetup.setup((store, doc, body) => {
+    const makeItem = (name) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -47,15 +47,15 @@ UnitTest.asynctest('HighlightingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const cCheckNum = function (label, expected) {
+  }, (doc, body, gui, component, store) => {
+    const cCheckNum = (label, expected) => {
       return Chain.fromChains([
-        Chain.mapper(function (array) { return array.length; }),
+        Chain.mapper((array) => { return array.length; }),
         Assertions.cAssertEq(label, expected)
       ]);
     };
 
-    const cCheckNumOf = function (label, selector, expected) {
+    const cCheckNumOf = (label, selector, expected) => {
       const field = 'check-' + selector;
       return Chain.fromChains([
         NamedChain.direct('container', UiFinder.cFindAllIn(selector), field),
@@ -63,12 +63,12 @@ UnitTest.asynctest('HighlightingTest', function () {
       ]);
     };
 
-    const cCheckSelected = function (label, expected) {
+    const cCheckSelected = (label, expected) => {
       return Chain.fromChains([
         // always check there is only 1
         cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
         NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
-        NamedChain.direct('selected', Chain.binder(function (sel) {
+        NamedChain.direct('selected', Chain.binder((sel) => {
           return Class.has(sel, expected) ? Result.value(sel) :
             Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
               Attr.get(sel, 'class'));
@@ -76,34 +76,34 @@ UnitTest.asynctest('HighlightingTest', function () {
       ]);
     };
 
-    const cHighlight = Chain.op(function (item) {
+    const cHighlight = Chain.op((item) => {
       Highlighting.highlight(component, item);
     });
 
-    const cDehighlight = Chain.op(function (item) {
+    const cDehighlight = Chain.op((item) => {
       Highlighting.dehighlight(component, item);
     });
 
-    const cDehighlightAll = Chain.op(function () {
+    const cDehighlightAll = Chain.op(() => {
       Highlighting.dehighlightAll(component);
     });
 
-    const cHighlightFirst = Chain.op(function () {
+    const cHighlightFirst = Chain.op(() => {
       Highlighting.highlightFirst(component);
     });
 
-    const cHighlightLast = Chain.op(function () {
+    const cHighlightLast = Chain.op(() => {
       Highlighting.highlightLast(component);
     });
 
-    const cHighlightAt = function (index) {
-      return Chain.op(function () {
+    const cHighlightAt = (index) => {
+      return Chain.op(() => {
         Highlighting.highlightAt(component, index);
       });
     };
 
-    const cHighlightAtError = function (index) {
-      return Chain.binder(function (v) {
+    const cHighlightAtError = (index) => {
+      return Chain.binder((v) => {
         try {
           Highlighting.highlightAt(component, index);
           return Result.error('Expected to get an error because there should be no item with index ' + index);
@@ -112,45 +112,45 @@ UnitTest.asynctest('HighlightingTest', function () {
       });
     };
 
-    const cIsHighlighted = Chain.mapper(function (item) {
+    const cIsHighlighted = Chain.mapper((item) => {
       return Highlighting.isHighlighted(component, item);
     });
 
-    const cGetHighlightedOrDie = Chain.binder(function () {
-      return Highlighting.getHighlighted(component).fold(function () {
+    const cGetHighlightedOrDie = Chain.binder(() => {
+      return Highlighting.getHighlighted(component).fold(() => {
         return Result.error(new Error('getHighlighted did not find a selection'));
       }, Result.value);
     });
 
-    const cGetHighlightedIsNone = Chain.binder(function (v) {
-      return Highlighting.getHighlighted(component).fold(function () {
+    const cGetHighlightedIsNone = Chain.binder((v) => {
+      return Highlighting.getHighlighted(component).fold(() => {
         return Result.value(v);
-      }, function (comp) {
+      }, (comp) => {
         return Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()));
       });
     });
 
-    const cGetFirst = Chain.binder(function () {
-      return Highlighting.getFirst(component).fold(function () {
+    const cGetFirst = Chain.binder(() => {
+      return Highlighting.getFirst(component).fold(() => {
         return Result.error(new Error('getFirst found nothing'));
       }, Result.value);
     });
 
-    const cGetLast = Chain.binder(function () {
-      return Highlighting.getLast(component).fold(function () {
+    const cGetLast = Chain.binder(() => {
+      return Highlighting.getLast(component).fold(() => {
         return Result.error(new Error('getLast found nothing'));
       }, Result.value);
     });
 
-    const cHasClass = function (clazz) {
-      return Chain.binder(function (comp) {
+    const cHasClass = (clazz) => {
+      return Chain.binder((comp) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
           Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
       });
     };
 
-    const cFindComponent = function (selector) {
+    const cFindComponent = (selector) => {
       return Chain.fromChains([
         UiFinder.cFindIn(selector),
         ChainUtils.eToComponent(component)
@@ -209,8 +209,8 @@ UnitTest.asynctest('HighlightingTest', function () {
           cDehighlightAll,
           NamedChain.direct('container', cGetHighlightedIsNone, '_'),
 
-          Chain.op(function (input) {
-            Highlighting.highlightBy(component, function (comp) {
+          Chain.op((input) => {
+            Highlighting.highlightBy(component, (comp) => {
               return Class.has(comp.element(), 'beta');
             });
           }),
@@ -219,5 +219,5 @@ UnitTest.asynctest('HighlightingTest', function () {
         ])
       ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

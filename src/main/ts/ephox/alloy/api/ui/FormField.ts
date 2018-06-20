@@ -10,8 +10,11 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const factory = function (detail, components, spec, externals): SketchSpec {
+const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, spec, externals): SketchSpec => {
   const behaviours = Merger.deepMerge(
     Behaviour.derive([
       Composing.config({
@@ -27,7 +30,7 @@ const factory = function (detail, components, spec, externals): SketchSpec {
             return Composing.getCurrent(field).bind(Representing.getValue);
           },
           setValue (field, value) {
-            Composing.getCurrent(field).each(function (current) {
+            Composing.getCurrent(field).each((current) => {
               Representing.setValue(current, value);
             });
           }
@@ -39,10 +42,10 @@ const factory = function (detail, components, spec, externals): SketchSpec {
 
   const events = AlloyEvents.derive([
     // Used to be systemInit
-    AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+    AlloyEvents.runOnAttached((component, simulatedEvent) => {
       const ps = AlloyParts.getParts(component, detail, [ 'label', 'field' ]);
-      ps.label().each(function (label) {
-        ps.field().each(function (field) {
+      ps.label().each((label) => {
+        ps.field().each((field) => {
           const id = Id.generate(detail.prefix());
 
           // TODO: Find a nicer way of doing this.
@@ -54,10 +57,10 @@ const factory = function (detail, components, spec, externals): SketchSpec {
   ]);
 
   const apis = {
-    getField: (container) => {
+    getField: (container: AlloyComponent) => {
       return AlloyParts.getPart(container, detail, 'field');
     },
-    getLabel: (container) => {
+    getLabel: (container: AlloyComponent) => {
       // TODO: Use constants for part names
       return AlloyParts.getPart(container, detail, 'label');
     }
@@ -82,7 +85,7 @@ const FormField =  Sketcher.composite({
     getField: (apis, comp) => apis.getField(comp),
     getLabel: (apis, comp) => apis.getLabel(comp)
   }
-});
+}) as FormFieldSketcher;
 
 export {
   FormField

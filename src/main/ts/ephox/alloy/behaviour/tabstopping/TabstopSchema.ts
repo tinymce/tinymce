@@ -1,5 +1,5 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
-export default <any> [
+export default [
   FieldSchema.defaulted('tabAttr', 'data-alloy-tabstop')
 ];

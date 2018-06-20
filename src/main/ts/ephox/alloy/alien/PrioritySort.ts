@@ -1,10 +1,10 @@
 import { JSON as Json } from '@ephox/sand';
 import { Result } from '@ephox/katamari';
 
-const sortKeys = function (label, keyName, array, order) {
+const sortKeys = (label: string, keyName: string, array: Array<Record<string, () => string>>, order: string[]): Result<Array<Record<string, () => string>>, Error[]> => {
   const sliced = array.slice(0);
   try {
-    const sorted = sliced.sort(function (a, b) {
+    const sorted = sliced.sort((a, b) => {
       const aKey = a[keyName]();
       const bKey = b[keyName]();
       const aIndex = order.indexOf(aKey);
@@ -23,6 +23,6 @@ const sortKeys = function (label, keyName, array, order) {
   }
 };
 
-export default {
+export {
   sortKeys
 };

@@ -9,6 +9,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { TabButton } from '../../api/ui/TabButton';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { TabbarDetail } from '../../ui/types/TabbarTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('tabs'),
@@ -24,8 +25,8 @@ const tabsPart = PartType.group({
   factory: TabButton,
   name: 'tabs',
   unit: 'tab',
-  overrides (barDetail, tabSpec) {
-    const dismissTab = function (tabbar, button) {
+  overrides (barDetail: TabbarDetail, tabSpec) {
+    const dismissTab = (tabbar, button) => {
       Highlighting.dehighlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.dismissTab(), {
         tabbar,
@@ -33,7 +34,7 @@ const tabsPart = PartType.group({
       });
     };
 
-    const changeTab = function (tabbar, button) {
+    const changeTab = (tabbar, button) => {
       Highlighting.highlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.changeTab(), {
         tabbar,
@@ -46,7 +47,7 @@ const tabsPart = PartType.group({
         const tabbar = button.getSystem().getByUid(barDetail.uid()).getOrDie();
         const activeButton = Highlighting.isHighlighted(tabbar, button);
 
-        const response = (function () {
+        const response = (() => {
           if (activeButton && barDetail.clickToDismiss()) { return dismissTab; } else if (! activeButton) { return changeTab; } else { return Fun.noop; }
         })();
 

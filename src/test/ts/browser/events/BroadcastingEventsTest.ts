@@ -5,17 +5,18 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { window } from '@ephox/dom-globals';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { document, console, window } from '@ephox/dom-globals';
 
-UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, failure) => {
+
+
 
   const bodyMargin = [
     'body { margin-top: 2000px; }'
   ];
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -27,18 +28,18 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
           }
         },
         events: AlloyEvents.derive([
-          AlloyEvents.run(SystemEvents.windowScroll(), function (component, simulatedEvent) {
+          AlloyEvents.run<SugarEvent>(SystemEvents.windowScroll(), (component, simulatedEvent) => {
             store.adder(simulatedEvent.event().raw().type)();
           })
         ])
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GuiSetup.mAddStyles(doc, bodyMargin),
       store.sClear,
-      Step.sync(function () {
+      Step.sync(() => {
         window.scrollTo(0, 100);
       }),
       Waiter.sTryUntil(
@@ -48,7 +49,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
         1000
       ),
       store.sClear,
-      Step.sync(function () {
+      Step.sync(() => {
         window.scrollTo(0, 0);
       }),
       Waiter.sTryUntil(
@@ -60,5 +61,5 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
       store.sClear,
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

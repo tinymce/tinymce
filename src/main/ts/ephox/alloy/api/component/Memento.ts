@@ -12,18 +12,18 @@ export interface MomentoRecord {
   asSpec: () => SimpleOrSketchSpec;
 }
 
-const record = function (spec: SimpleOrSketchSpec) {
+const record = (spec: SimpleOrSketchSpec) => {
   const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
-  const get = function (anyInSystem: AlloyComponent): AlloyComponent {
+  const get = (anyInSystem: AlloyComponent): AlloyComponent => {
     return anyInSystem.getSystem().getByUid(uid).getOrDie();
   };
 
-  const getOpt = function (anyInSystem: AlloyComponent): Option<AlloyComponent> {
+  const getOpt = (anyInSystem: AlloyComponent): Option<AlloyComponent> => {
     return anyInSystem.getSystem().getByUid(uid).fold(Option.none, Option.some);
   };
 
-  const asSpec = function (): SimpleOrSketchSpec {
+  const asSpec = (): SimpleOrSketchSpec => {
     return Merger.deepMerge(spec, {
       uid
     });

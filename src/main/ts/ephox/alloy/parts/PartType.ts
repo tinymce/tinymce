@@ -2,21 +2,21 @@ import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema }
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { DetailedSpec } from '../parts/AlloyParts';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 export type PartType = (PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
-export interface PartSpec {
+export interface PartSpec<D extends CompositeSketchDetail> {
   defaults: () => () => {};
   factory: () => any;
   name: () => string;
-  overrides: () => OverrideHandler;
+  overrides: () => OverrideHandler<D>;
   pname: () => string;
   schema: () => FieldProcessorAdt[];
 }
 
-export type OverrideHandler = (detail: DetailedSpec, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
+export type OverrideHandler<D extends CompositeSketchDetail> = (detail: D, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
 
 export interface OverrideSpec {
   [key: string]: any;
@@ -43,7 +43,7 @@ const fName = FieldSchema.strict('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
-  FieldPresence.defaultedThunk(function (typeSpec) {
+  FieldPresence.defaultedThunk((typeSpec) => {
     return '<alloy.' + Id.generate(typeSpec.name) + '>';
   }),
   ValueSchema.anyValue()
@@ -70,24 +70,24 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function (part: PartTypeAdt): Option<PartSpec> {
+const asNamedPart = function <D extends CompositeSketchDetail>(part: PartTypeAdt): Option<PartSpec<D>> {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
-const name = function (part: PartTypeAdt): string {
-  const get = function (data) {
+const name = (part: PartTypeAdt): string => {
+  const get = (data) => {
     return data.name();
   };
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function (part: PartTypeAdt): PartSpec {
+const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): PartSpec<D> {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
 const convert = (adtConstructor, partSchema: Processor):
                   (PartialSpec) => PartTypeAdt => {
-  return function (spec) {
+  return (spec) => {
     const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);
     return adtConstructor(data);
   };

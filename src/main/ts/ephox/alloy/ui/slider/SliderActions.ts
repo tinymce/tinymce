@@ -1,54 +1,63 @@
-import { Fun, Option } from '@ephox/katamari';
+import { ClientRect, MouseEvent, Touch, TouchEvent } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Position } from '@ephox/sugar';
 
+import { SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderModel from './SliderModel';
 
 const _changeEvent = 'slider.change.value';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const getEventSource = function (simulatedEvent) {
+const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
   const evt = simulatedEvent.event().raw();
-  if (isTouch && evt.touches !== undefined && evt.touches.length === 1) {
-    return Option.some(evt.touches[0]);
-  } else if (isTouch && evt.touches !== undefined) {
-      return Option.none();
-  } else if (!isTouch && evt.clientX !== undefined) {
-      return Option.some(evt);
+  if (isTouch) {
+    const touchEvent = evt as TouchEvent;
+    return touchEvent.touches !== undefined && touchEvent.touches.length === 1 ?
+      Option.some(touchEvent.touches[0]).map((t: Touch) => {
+        return Position(t.clientX, t.clientY) as SugarPosition;
+      }) : Option.none();
   } else {
-      return Option.none();
+    const mouseEvent = evt as MouseEvent;
+    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => {
+      return Position(me.clientX, me.clientY) as SugarPosition;
+    }) : Option.none();
   }
 };
 
-const getEventX = function (simulatedEvent) {
+const getEventX = (simulatedEvent: NativeSimulatedEvent): Option<number> => {
   const spot = getEventSource(simulatedEvent);
-  return spot.map(function (s) {
-    return s.clientX;
+  return spot.map((s) => {
+    return s.left();
   });
 };
 
-const fireChange = function (component, value) {
+const fireChange = (component: AlloyComponent, value: number): void => {
   AlloyTriggers.emitWith(component, _changeEvent, { value });
 };
 
-const moveRightFromLedge = function (ledge, detail) {
+const moveRightFromLedge = (ledge: AlloyComponent, detail: SliderDetail): void => {
   fireChange(ledge, detail.min());
 };
 
-const moveLeftFromRedge = function (redge, detail) {
+const moveLeftFromRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
   fireChange(redge, detail.max());
 };
 
-const setToRedge = function (redge, detail) {
+const setToRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
   fireChange(redge, detail.max() + 1);
 };
 
-const setToLedge = function (ledge, detail) {
+const setToLedge = (ledge: AlloyComponent, detail: SliderDetail): void => {
   fireChange(ledge, detail.min() - 1);
 };
 
-const setToX = function (spectrum, spectrumBounds, detail, xValue) {
+const setToX = (spectrum: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail, xValue: number): void => {
   const value = SliderModel.findValueOfX(
     spectrumBounds, detail.min(), detail.max(),
     xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
@@ -57,24 +66,24 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
   fireChange(spectrum, value);
 };
 
-const setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
-  return getEventX(simulatedEvent).map(function (xValue) {
+const setXFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<number> => {
+  return getEventX(simulatedEvent).map((xValue) => {
     setToX(spectrum, spectrumBounds, detail, xValue);
     return xValue;
   });
 };
 
-const moveLeft = function (spectrum, detail) {
+const moveLeft = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newValue = SliderModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireChange(spectrum, newValue);
 };
 
-const moveRight = function (spectrum, detail) {
+const moveRight = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newValue = SliderModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireChange(spectrum, newValue);
 };
 
-const changeEvent = Fun.constant(_changeEvent);
+const changeEvent = () => _changeEvent;
 
 export {
   setXFromEvent,

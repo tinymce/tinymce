@@ -6,6 +6,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
@@ -38,16 +39,17 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const demoChoiceRender = function (choice) {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choice);
+const choice = (choiceSpec) => {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
       '<span class="ephox-pastry-independent-button" title="' + spec.text + '" style="display: flex;"></span>'
-    )
+    ),
+    value: choiceSpec.value
   };
 };
 
-const demoSeparatorRender = function (spec) {
+const demoSeparatorRender = (spec): SeparatorItemSpec => {
   return {
     type: spec.type,
     dom: {
@@ -62,9 +64,13 @@ const demoSeparatorRender = function (spec) {
   };
 };
 
-const demoItemRender = function (item) {
-  if (item.type === 'widget') { return demoWidgetItemRender(item); } else if (item.type === 'separator') { return demoSeparatorRender(item); }
-  const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, item);
+const item = (itemSpec): ItemSpec => {
+  if (itemSpec.type === 'widget') {
+    return widgetItem(itemSpec);
+  } else if (itemSpec.type === 'separator') {
+    return demoSeparatorRender(itemSpec);
+  }
+  const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
   return {
     type: spec.type,
     data: spec.data,
@@ -73,8 +79,8 @@ const demoItemRender = function (item) {
   };
 };
 
-const demoGridItemRender = function (item) {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, item);
+const gridItem = (itemSpec) => {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
   return {
     type: spec.type,
     data: spec.data,
@@ -92,8 +98,8 @@ const demoGridItemRender = function (item) {
   };
 };
 
-const demoWidgetItemRender = function (item) {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, item);
+const widgetItem = (itemSpec) => {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, itemSpec);
   return {
     type: spec.type,
     data: spec.data,
@@ -108,8 +114,8 @@ const demoWidgetItemRender = function (item) {
   };
 };
 
-const demoGridMenuRender = function (menu) {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menu);
+const gridMenu = (menuSpec) => {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menuSpec);
   return {
     movement: {
       mode: 'grid',
@@ -132,8 +138,8 @@ const demoGridMenuRender = function (menu) {
   };
 };
 
-const demoMenuRender = function (menu) {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menu);
+const menu = (menuSpec) => {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menuSpec);
   return {
     dom: {
       tag: 'div',
@@ -149,8 +155,7 @@ const demoMenuRender = function (menu) {
   };
 };
 
-const demoOrbRender = function (orb) {
-  const spec = orb;
+const orb = (spec): NormalItemSpec => {
   return {
     type: 'item',
     data: spec.data,
@@ -170,8 +175,7 @@ const demoOrbRender = function (orb) {
   };
 };
 
-const demoToolbarItemRender = function (item) {
-  const spec = item;
+const toolbarItem = (spec) => {
   return {
     dom: {
       tag: 'span',
@@ -181,7 +185,7 @@ const demoToolbarItemRender = function (item) {
   };
 };
 
-const demoToolbarGroupRender = function (group) {
+const toolbarGroup = (group) => {
   const spec = group;
   return {
     dom: {
@@ -200,33 +204,33 @@ const demoToolbarGroupRender = function (group) {
   };
 };
 
-const orbMarkers = {
+const orbMarkers = () => ({
   item: 'demo-alloy-orb',
   selectedItem: 'demo-alloy-orb-selected'
-};
+});
 
-const tieredMarkers = {
+const tieredMarkers = () => ({
   item: 'demo-alloy-item',
   selectedItem: 'demo-alloy-item-selected',
   menu: 'demo-alloy-menu',
   selectedMenu: 'demo-alloy-menu-selected',
   backgroundMenu: 'demo-alloy-menu-background'
-};
+});
 
-export default {
-  item: demoItemRender,
-  gridItem: demoGridItemRender,
-  widgetItem: demoWidgetItemRender,
+export {
+  item,
+  gridItem,
+  widgetItem,
 
-  menu: demoMenuRender,
-  gridMenu: demoGridMenuRender,
+  menu,
+  gridMenu,
 
-  choice: demoChoiceRender,
-  orb: demoOrbRender,
+  choice,
+  orb,
 
-  toolbarItem: demoToolbarItemRender,
-  toolbarGroup: demoToolbarGroupRender,
+  toolbarItem,
+  toolbarGroup,
 
-  tieredMarkers: Fun.constant(tieredMarkers),
-  orbMarkers: Fun.constant(orbMarkers)
+  tieredMarkers,
+  orbMarkers
 };

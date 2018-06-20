@@ -9,15 +9,15 @@ const _initSize: FieldProcessorAdt = FieldSchema.strictObjOf('initSize', [
   FieldSchema.strict('numRows')
 ]);
 
-const itemMarkers: () => FieldProcessorAdt = function () {
+const itemMarkers: () => FieldProcessorAdt = () => {
   return FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
 };
 
-const menuMarkers: () => FieldProcessorAdt = function () {
+const menuMarkers: () => FieldProcessorAdt = () => {
   return FieldSchema.strictOf('markers', MenuMarkers.schema());
 };
 
-const tieredMenuMarkers: () => FieldProcessorAdt = function () {
+const tieredMenuMarkers: () => FieldProcessorAdt = () => {
   return FieldSchema.strictObjOf('markers', [
     FieldSchema.strict('backgroundMenu')
   ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
@@ -35,13 +35,13 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Fie
     fieldName,
     presence,
     // Apply some wrapping to their supplied function
-    ValueSchema.valueOf(function (f) {
-      return Result.value(function () {
+    ValueSchema.valueOf((f) => {
+      return Result.value((...args: any[]) => {
         /*
          * This line is just for debugging information
          */
         Debugging.logHandler(label, fieldName, trace);
-        return f.apply(undefined, arguments);
+        return f.apply(undefined, args);
       });
     })
   );

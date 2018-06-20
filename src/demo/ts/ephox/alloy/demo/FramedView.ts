@@ -1,3 +1,3 @@
 
 
-export default <any> null;
+export default null;

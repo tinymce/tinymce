@@ -12,16 +12,16 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('ModalDialogTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return Sinks.relativeSink();
 
-  }, function (doc, body, gui, sink, store) {
+  }, (doc, body, gui, sink, store) => {
     const focusAndTab = Behaviour.derive([
       Focusing.config({ }),
       Tabstopping.config({ })
@@ -140,13 +140,13 @@ UnitTest.asynctest('ModalDialogTest', function () {
       })
     );
 
-    const sCheckDialogStructure = function (label, expected) {
+    const sCheckDialogStructure = (label, expected) => {
       return Logger.t(
         label,
         Chain.asStep({ }, [
           Chain.inject(gui.element()),
           UiFinder.cFindIn('.test-dialog'),
-          Chain.op(function (dlg) {
+          Chain.op((dlg) => {
             Assertions.assertStructure('Checking dialog structure', expected, dlg);
           })
         ])
@@ -156,7 +156,7 @@ UnitTest.asynctest('ModalDialogTest', function () {
     return [
       Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
       Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
-      Step.sync(function () {
+      Step.sync(() => {
         ModalDialog.show(dialog);
       }),
       Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
@@ -164,7 +164,7 @@ UnitTest.asynctest('ModalDialogTest', function () {
       store.sClear,
 
       Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
-      sCheckDialogStructure('After showing', ApproxStructure.build(function (s, str, arr) {
+      sCheckDialogStructure('After showing', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('test-dialog') ],
           children: [
@@ -196,7 +196,7 @@ UnitTest.asynctest('ModalDialogTest', function () {
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
       FocusTools.sTryOnSelector('Focus should be back to title now', doc, '.test-dialog-title'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const body = ModalDialog.getBody(dialog);
         Toggling.on(body);
       }),
@@ -211,20 +211,20 @@ UnitTest.asynctest('ModalDialogTest', function () {
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       store.sAssertEq('After pressing <esc>', [ 'dialog.escape' ]),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const body = ModalDialog.getBody(dialog);
-        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build(function (s, str, arr) {
+        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-dialog-body') ]
           });
         }), body.element());
       }),
 
-      Step.sync(function () {
+      Step.sync(() => {
         ModalDialog.hide(dialog);
       }),
       Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
       Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker'))
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

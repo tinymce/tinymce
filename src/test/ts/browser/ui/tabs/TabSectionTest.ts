@@ -9,11 +9,8 @@ import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TabSection Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  GuiSetup.setup(function (store, doc, body) {
+UnitTest.asynctest('TabSection Test', (success, failure) => {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       TabSection.sketch({
         selectFirst: false,
@@ -78,12 +75,12 @@ UnitTest.asynctest('TabSection Test', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-test-tab-button { background: #cadbee; }'
       ]),
-      Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build(function (s, str, arr) {
+      Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: [
             s.element('div', {
@@ -120,11 +117,11 @@ UnitTest.asynctest('TabSection Test', function () {
         });
       }), component.element()),
 
-      Step.sync(function () {
+      Step.sync(() => {
         const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
         AlloyTriggers.emitExecute(alpha);
         const beta = component.getSystem().getByUid('beta-tab').getOrDie();
-        Assertions.assertStructure('alpha after execute(alpha)', ApproxStructure.build(function (s, str, arr) {
+        Assertions.assertStructure('alpha after execute(alpha)', ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
               'aria-selected': str.is('true')
@@ -132,7 +129,7 @@ UnitTest.asynctest('TabSection Test', function () {
             classes: [ arr.has('selected-test-tab-button') ]
           });
         }), alpha.element());
-        Assertions.assertStructure('beta after execute(alpha)', ApproxStructure.build(function (s, str, arr) {
+        Assertions.assertStructure('beta after execute(alpha)', ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
               'aria-selected': str.is('false')
@@ -144,5 +141,5 @@ UnitTest.asynctest('TabSection Test', function () {
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

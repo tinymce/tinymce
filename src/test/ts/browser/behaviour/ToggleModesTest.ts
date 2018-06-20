@@ -3,8 +3,8 @@ import { UnitTest } from '@ephox/bedrock';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
 
-UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
-  const mTag = function (name) {
+UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
+  const mTag = (name) => {
     return {
       dom: {
         tag: name
@@ -14,14 +14,14 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
 
   const notUsed: any = 'not-used';
 
-  Logger.sync('Checking tag=button', function () {
+  Logger.sync('Checking tag=button', () => {
     const button = GuiFactory.build(mTag('button'));
 
     ToggleModes.updateAuto(button, notUsed, true);
 
     Assertions.assertStructure(
       'Button should have aria-pressed role',
-      ApproxStructure.build(function (s, str, arr) {
+      ApproxStructure.build((s, str, arr) => {
         return s.element('button', {
           attrs: {
             'aria-checked': str.none(),
@@ -33,7 +33,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
     );
   });
 
-  Logger.sync('Checking role=listbox and tag=button', function () {
+  Logger.sync('Checking role=listbox and tag=button', () => {
     const listbox = GuiFactory.build({
       dom: {
         tag: 'button',
@@ -43,7 +43,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
     ToggleModes.updateAuto(listbox, notUsed, true);
     Assertions.assertStructure(
       'Listbox should have aria-pressed and aria-expanded role',
-      ApproxStructure.build(function (s, str, arr) {
+      ApproxStructure.build((s, str, arr) => {
         return s.element('button', {
           attrs: {
             'aria-checked': str.none(),
@@ -55,7 +55,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
     );
   });
 
-  Logger.sync('Checking role=menuitemcheck and tag=li', function () {
+  Logger.sync('Checking role=menuitemcheck and tag=li', () => {
     const menuitem = GuiFactory.build({
       dom: {
         tag: 'li',
@@ -65,7 +65,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
     ToggleModes.updateAuto(menuitem, notUsed, true);
     Assertions.assertStructure(
       'Menu Item Checkbox should have aria-checked role',
-      ApproxStructure.build(function (s, str, arr) {
+      ApproxStructure.build((s, str, arr) => {
         return s.element('li', {
           attrs: {
             'aria-checked': str.is('true'),

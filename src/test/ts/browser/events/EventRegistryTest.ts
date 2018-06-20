@@ -7,10 +7,7 @@ import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('EventRegistryTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = Element.fromDom(document.body);
   const page = Element.fromTag('div');
 
@@ -33,14 +30,14 @@ UnitTest.asynctest('EventRegistryTest', function () {
   const events = EventRegistry();
 
   events.registerId([ 'extra-args' ], 'comp-1', {
-    'event.alpha': DescribedHandler.nu(
-      function (extra) {
+    'event.alpha': DescribedHandler.uncurried(
+      (extra) => {
         return 'event.alpha.1(' + extra + ')';
       },
       'event.alpha.1.handler'
     ),
-    'event.only': DescribedHandler.nu(
-      function (extra) {
+    'event.only': DescribedHandler.uncurried(
+      (extra) => {
         return 'event.only(' + extra + ')';
       },
       'event.only.handler'
@@ -48,20 +45,25 @@ UnitTest.asynctest('EventRegistryTest', function () {
   });
 
   events.registerId([ 'extra-args' ], 'comp-4', {
-    'event.alpha': DescribedHandler.nu(
-      function (extra) {
+    'event.alpha': DescribedHandler.uncurried(
+      (extra) => {
         return 'event.alpha.4(' + extra + ')';
       },
       'event.alpha.4.handler'
     )
   });
 
-  const sAssertFilterByType = function (expected, type) {
-    return Step.sync(function () {
+  const sAssertFilterByType = (expected, type) => {
+    return Step.sync(() => {
       const filtered = events.filterByType(type);
-      const raw = Arr.map(filtered, function (f) {
-        return { handler: f.descHandler().handler(), purpose: f.descHandler().purpose(), id: f.id() };
-      }).sort(function (f, g) {
+      const raw = Arr.map(filtered, (f) => {
+        return {
+          // Invoke the handler
+          handler: f.descHandler().cHandler(),
+          purpose: f.descHandler().purpose(),
+          id: f.id()
+        };
+      }).sort((f, g) => {
         if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
 
@@ -69,21 +71,22 @@ UnitTest.asynctest('EventRegistryTest', function () {
     });
   };
 
-  const sAssertNotFound = function (label, type, id) {
+  const sAssertNotFound = (label, type, id) => {
     return Logger.t(
       'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
       GeneralSteps.sequence([
         Chain.asStep(page, [
           UiFinder.cFindIn('[data-alloy-id="' + id + '"]'),
-          Chain.binder(function (target) {
+          Chain.binder((target) => {
             const handler = events.find(isRoot, type, target);
-            return handler.fold(function () {
+            return handler.fold(() => {
               return Result.value({ });
-            }, function (h) {
+            }, (h) => {
               return Result.error(
                 'Unexpected handler found: ' + Json.stringify({
                   element: Truncate.getHtml(h.element()),
-                  handler: h.handler()
+                  // INVESTIGATE: Should this have changed?
+                  handler: h.descHandler()
                 })
               );
             });
@@ -93,8 +96,8 @@ UnitTest.asynctest('EventRegistryTest', function () {
     );
   };
 
-  const sAssertFind = function (label, expected, type, id) {
-    const cFindHandler = Chain.binder(function (target) {
+  const sAssertFind = (label, expected, type, id) => {
+    const cFindHandler = Chain.binder((target) => {
       return events.find(isRoot, type, target);
     });
 
@@ -108,7 +111,7 @@ UnitTest.asynctest('EventRegistryTest', function () {
             NamedChain.direct('target', cFindHandler, 'handler'),
             NamedChain.bundle(Result.value)
           ]),
-          Chain.op(function (actual) {
+          Chain.op((actual) => {
             const section = actual.handler;
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
@@ -118,7 +121,7 @@ UnitTest.asynctest('EventRegistryTest', function () {
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
               expected.handler,
-              section.descHandler().handler()
+              section.descHandler().cHandler()
             );
           })
         ])
@@ -153,5 +156,5 @@ UnitTest.asynctest('EventRegistryTest', function () {
       { handler: 'event.only(extra-args)', target: 'comp-1' },
       'event.only', 'comp-5'
     )
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

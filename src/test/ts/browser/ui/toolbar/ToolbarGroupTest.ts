@@ -9,11 +9,8 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ToolbarGroupTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  const mungeItem = function (itemSpec) {
+UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
+  const mungeItem = (itemSpec) => {
     return {
       dom: {
         tag: 'button',
@@ -26,7 +23,7 @@ UnitTest.asynctest('ToolbarGroupTest', function () {
     };
   };
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       ToolbarGroup.sketch({
         dom: {
@@ -52,11 +49,11 @@ UnitTest.asynctest('ToolbarGroupTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Checking initial toolbar groups',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [ arr.not('group-items') ],
             attrs: {
@@ -72,7 +69,7 @@ UnitTest.asynctest('ToolbarGroupTest', function () {
         component.element()
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.focusIn(component);
       }),
 
@@ -80,5 +77,5 @@ UnitTest.asynctest('ToolbarGroupTest', function () {
       Keyboard.sKeydown(doc, Keys.right(), { }),
       FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")')
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

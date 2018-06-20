@@ -14,13 +14,15 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
+import * as DemoRenders from './forms/DemoRenders';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -28,7 +30,7 @@ export default <any> function () {
 
   const sink = DemoSink.make();
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -56,6 +58,7 @@ export default <any> function () {
 
     onExecute () {
       console.log('inline.menu.execute');
+      return Option.some(true);
     },
 
     onOpenMenu (sandbox, menu) {
@@ -66,8 +69,7 @@ export default <any> function () {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
-        item,
-        bubble: Option.none()
+        item
       }, submenu);
 
     },
@@ -116,7 +118,7 @@ export default <any> function () {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run(NativeEvents.contextmenu(), function (component, simulatedEvent) {
+        AlloyEvents.run<SugarEvent>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event().kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
@@ -142,29 +144,25 @@ export default <any> function () {
       ]),
       components: [
         Input.sketch({
-          dom: {
-            styles: { 'display': 'block', 'margin-bottom': '50px' }
-          }
+          inputStyles: { 'display': 'block', 'margin-bottom': '50px' }
         }),
         Input.sketch({
-          dom: {
-            styles: { display: 'block' }
-          },
+          inputStyles: { display: 'block' },
 
           inputBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('adhoc-show-popup', [
-              AlloyEvents.run(NativeEvents.focusin(), function (input) {
-                const emptyAnchor = {
+              AlloyEvents.run(NativeEvents.focusin(), (input) => {
+                const emptyAnchor: SubmenuAnchorSpec = {
                   anchor: 'submenu',
                   item: input
                 };
 
-                const nonEmptyAnchor = {
+                const nonEmptyAnchor: SelectionAnchorSpec = {
                   anchor: 'selection',
                   root: gui.element()
                 };
 
-                const anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
                 InlineView.showAt(inlineComp, anchor, Container.sketch({
                   containerBehaviours: Behaviour.derive([
                     Keying.config({

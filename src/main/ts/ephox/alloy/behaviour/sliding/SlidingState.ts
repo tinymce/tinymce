@@ -1,15 +1,15 @@
 import { Cell, Fun } from '@ephox/katamari';
 
-import BehaviourState from '../common/BehaviourState';
+import { BehaviourState, nuState } from '../common/BehaviourState';
 
-const init = function (spec) {
+const init = (spec) => {
   const state = Cell(spec.expanded());
 
-  const readState = function () {
+  const readState = () => {
     return 'expanded: ' + state.get();
   };
 
-  return BehaviourState({
+  return nuState({
     isExpanded () { return state.get() === true; },
     isCollapsed () { return state.get() === false; },
     setCollapsed: Fun.curry(state.set, false),

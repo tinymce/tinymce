@@ -6,7 +6,7 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
-UnitTest.test('Atomic Test: parts.SchemasTest', function () {
+UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   const internal = PartType.required({
     factory: { sketch (x) { return 'sketch.' + x; } },
     schema: [ ],
@@ -55,7 +55,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', function () {
   // checkSuccessWithNone, the non-optional parts are expected, and the optional = None
   // checkSuccessWithSome, the non-optional parts are expected, and the optional is optExpected
 
-  const checkSuccess = function (label, expected, parts, input) {
+  const checkSuccess = (label, expected, parts, input) => {
     const schemas = AlloyParts.schemas(parts);
     const output = ValueSchema.asRawOrDie(
       label,
@@ -95,7 +95,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', function () {
     { }
   );
 
-  Jsc.syncProperty('Just internal', [ Jsc.string ], function (s) {
+  Jsc.syncProperty('Just internal', [ Jsc.string ], (s) => {
     return checkSuccess(
       'just internal',
       { },
@@ -104,7 +104,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', function () {
     );
   });
 
-  Jsc.syncProperty('Just external', [ Jsc.string ], function (s) {
+  Jsc.syncProperty('Just external', [ Jsc.string ], (s) => {
     return checkSuccess(
       'just external',
       {
@@ -115,7 +115,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', function () {
     );
   });
 
-  Jsc.syncProperty('Just group', [ Jsc.string ], function (s) {
+  Jsc.syncProperty('Just group', [ Jsc.string ], (s) => {
     return checkSuccess(
       'just group',
       { },

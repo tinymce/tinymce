@@ -6,10 +6,10 @@ import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -59,7 +59,7 @@ export default <any> function () {
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
                 lazyContext (component) {
-                  return component.getSystem().getByUid('panel-container').fold(Option.none, function (comp) {
+                  return component.getSystem().getByUid('panel-container').fold(Option.none, (comp) => {
                     return Option.some(comp.element());
                   });
                 }

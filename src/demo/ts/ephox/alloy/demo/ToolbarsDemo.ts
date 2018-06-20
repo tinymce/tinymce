@@ -6,18 +6,18 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
+import * as DemoRenders from './forms/DemoRenders';
 import { document, console, window } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const groups = function () {
+  const groups = () => {
     return Arr.map([
       {
         label: 'group-1',
@@ -166,7 +166,7 @@ export default <any> function () {
   console.log('gps2', gps2);
   SplitToolbar.setGroups(splitToolbar, gps2);
 
-  window.addEventListener('resize', function () {
+  window.addEventListener('resize', () => {
     SplitToolbar.refresh(splitToolbar);
   });
 };

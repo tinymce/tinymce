@@ -4,8 +4,8 @@ import { Position } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('DragCoordTest', function () {
-  const assertPt = function (label, expected, actual) {
+UnitTest.test('DragCoordTest', () => {
+  const assertPt = (label, expected, actual) => {
     const comparing = label + '\nCoordinate Expected: (' + expected.left() + ', ' + expected.top() + ')' +
       '\nCoordinate Actual: (' + actual.left() + ', ' + actual.top() + ')';
 
@@ -19,12 +19,12 @@ UnitTest.test('DragCoordTest', function () {
     { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
   ]);
 
-  const arbPosition = function (name) {
-    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap(function (arr) {
+  const arbPosition = (name) => {
+    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr) => {
       return Position(arr[0], arr[1]);
-    }, function (pos) {
+    }, (pos) => {
       return [ pos.left(), pos.top() ];
-    }, function (pos) {
+    }, (pos) => {
       return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
     });
   };
@@ -36,12 +36,12 @@ UnitTest.test('DragCoordTest', function () {
     arbPosition('point'),
     arbPosition('scroll'),
     arbPosition('origin'),
-    function (original, transformations, coord, scroll, origin) {
+    (original, transformations, coord, scroll, origin) => {
       const o = original.nu(coord.left(), coord.top());
 
-      const label = [ original.mode ].concat(Arr.map(transformations, function (t) { return t.mode; }));
+      const label = [ original.mode ].concat(Arr.map(transformations, (t) => { return t.mode; }));
 
-      const result = Arr.foldl(transformations, function (b, transformation) {
+      const result = Arr.foldl(transformations, (b, transformation) => {
         const pt = transformation.asPoint(b, scroll, origin);
         return transformation.nu(pt.left(), pt.top());
       }, o);

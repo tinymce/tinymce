@@ -1,12 +1,12 @@
-import Bounds from 'ephox/alloy/positioning/layout/Bounds';
-import Bubble from 'ephox/alloy/positioning/layout/Bubble';
+import { bounds, Bounds } from 'ephox/alloy/alien/Boxes';
+import { nu as NuBubble } from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderCursorTest', function () {
+UnitTest.test('BounderCursorTest', () => {
   /* global assert */
-  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());
@@ -22,19 +22,19 @@ UnitTest.test('BounderCursorTest', function () {
     label: 'none',
     x: 0,
     y: 0
-  }, [], Bounds(0, 0, 10, 10), Bounds(0, 0, 50, 50), Bubble(0, 0), Bounds(0, 0, 1000, 1000));
+  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), NuBubble(0, 0), bounds(0, 0, 1000, 1000));
 
   check({
     label: 'none',
     x: 100,
     y: 0
-  }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), Bubble(10, 0), Bounds(0, 0, 1000, 1000));
+  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), NuBubble(10, 0), bounds(0, 0, 1000, 1000));
 
-  const panelBox = Bounds(0, 0, 100, 75);
-  const bigPanel = Bounds(0, 0, 75, 500);
-  const widePanel = Bounds(0, 0, 350, 500);
-  const view = Bounds(50, 50, 350, 220);
-  const bubb = Bubble(0, 0);
+  const panelBox = bounds(0, 0, 100, 75);
+  const bigPanel = bounds(0, 0, 75, 500);
+  const widePanel = bounds(0, 0, 350, 500);
+  const view = bounds(50, 50, 350, 220);
+  const bubb = NuBubble(0, 0);
 
   /*
    * The expected values include the calculations that layout and bounder are doing
@@ -45,49 +45,49 @@ UnitTest.test('BounderCursorTest', function () {
     label: 'layout-se',
     x: 100,
     y: 55 + 2
-  }, four, Bounds(100, 55, 2, 2), panelBox, bubb, view);
+  }, four, bounds(100, 55, 2, 2), panelBox, bubb, view);
 
   // Southwest.
   check({
     label: 'layout-sw',
     x: 320 - 100 + 2,
     y: 55 + 2
-  }, four, Bounds(320, 55, 2, 2), panelBox, bubb, view);
+  }, four, bounds(320, 55, 2, 2), panelBox, bubb, view);
 
   // Northeast.
   check({
     label: 'layout-ne',
     x: 140,
     y: 235 - 75
-  }, four, Bounds(140, 235, 2, 2), panelBox, bubb, view);
+  }, four, bounds(140, 235, 2, 2), panelBox, bubb, view);
 
   // Northwest.
   check({
     label: 'layout-nw',
     x: 320 - 100 + 2,
     y: 235 - 75
-  }, four, Bounds(320, 235, 2, 2), panelBox, bubb, view);
+  }, four, bounds(320, 235, 2, 2), panelBox, bubb, view);
 
   // All fit -> southeast because of order of preference.
   check({
     label: 'layout-se',
     x: 350 - 100, //  capped at view width
     y: 100 + 2
-  }, four, Bounds(270, 100, 2, 2), panelBox, bubb, view);
+  }, four, bounds(270, 100, 2, 2), panelBox, bubb, view);
 
   // None near top left -> best fit is southeast
   check({
     label: 'layout-se',
     x: 55,
     y: 55 + 2
-  }, four, Bounds(55, 55, 2, 2), bigPanel, bubb, view);
+  }, four, bounds(55, 55, 2, 2), bigPanel, bubb, view);
 
   // None near top right -> best fit is southwest
   check({
     label: 'layout-sw',
     x: 350 - 75,
     y: 55 + 2
-  }, four, Bounds(350, 55, 2, 2), bigPanel, bubb, view);
+  }, four, bounds(350, 55, 2, 2), bigPanel, bubb, view);
 
   // None near bottom left -> best fit is northeast
   check({
@@ -95,7 +95,7 @@ UnitTest.test('BounderCursorTest', function () {
     x: 55,
     y: 50,
     candidateYforTest: 200 - 500
-  }, four, Bounds(55, 200, 2, 2), bigPanel, bubb, view);
+  }, four, bounds(55, 200, 2, 2), bigPanel, bubb, view);
 
   // None near bottom right -> best fit is northwest
   check({
@@ -103,7 +103,7 @@ UnitTest.test('BounderCursorTest', function () {
     x: 350 - 75,
     y: 50,
     candidateYforTest: 200 - 500
-  }, four, Bounds(350, 200, 2, 2), bigPanel, bubb, view);
+  }, four, bounds(350, 200, 2, 2), bigPanel, bubb, view);
 
   // TBIO-3366 prevent negative x
   // southwest
@@ -111,7 +111,7 @@ UnitTest.test('BounderCursorTest', function () {
     label: 'layout-sw',
     x: 0,
     y: 50 + 2
-  }, four, Bounds(300, 50, 2, 2), widePanel, bubb, view);
+  }, four, bounds(300, 50, 2, 2), widePanel, bubb, view);
 
   // TBIO-3366
   // northwest
@@ -120,40 +120,40 @@ UnitTest.test('BounderCursorTest', function () {
     x: 0,
     y: 50,
     candidateYforTest: 200 - 500
-  }, four, Bounds(300, 200, 2, 2), widePanel, bubb, view);
+  }, four, bounds(300, 200, 2, 2), widePanel, bubb, view);
 
   // Southeast (1px short on x and y).
   check({
     label: 'layout-se',
     x: 350 - 100, // 350 + 50 - 101, capped at view width
     y: 220 + 50 - 2 - 76 + 2
-  }, four, Bounds(350 + 50 - 101, 220 + 50 - 2 - 76, 2, 2), panelBox, bubb, view);
+  }, four, bounds(350 + 50 - 101, 220 + 50 - 2 - 76, 2, 2), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
     label: 'layout-se',
     x: 350 - 100, // 350 + 50 - 100, capped at view width
     y: 220 + 50 - 2 - 75 + 2
-  }, four, Bounds(350 + 50 - 100, 220 + 50 - 2 - 75, 2, 2), panelBox, bubb, view);
+  }, four, bounds(350 + 50 - 100, 220 + 50 - 2 - 75, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Southwest (1px too far on x).
   check({
     label: 'layout-sw',
     x: 350 + 50 - 99 - 100 + 2,
     y: 220 + 50 - 2 - 75 + 2
-  }, four, Bounds(350 + 50 - 99, 220 + 50 - 2 - 75, 2, 2), panelBox, bubb, view);
+  }, four, bounds(350 + 50 - 99, 220 + 50 - 2 - 75, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Northeast (1px too far on y).
   check({
     label: 'layout-ne',
     x: 350 - 100, // 350 + 50 - 100, capped at view width
     y: 220 + 50 - 2 - 74 - 75
-  }, four, Bounds(350 + 50 - 100, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
+  }, four, bounds(350 + 50 - 100, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Northwest (1px too far on x and y).
   check({
     label: 'layout-nw',
     x: 350 + 50 - 99 - 100 + 2,
     y: 220 + 50 - 2 - 74 - 75
-  }, four, Bounds(350 + 50 - 99, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
+  }, four, bounds(350 + 50 - 99, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
 });

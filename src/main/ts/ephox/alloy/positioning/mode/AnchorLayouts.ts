@@ -1,19 +1,28 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction } from '@ephox/sugar';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AnchorLayout } from '../../positioning/layout/Layout';
 
-const schema: () => FieldProcessorAdt = function () {
+const schema: () => FieldProcessorAdt = () => {
   return FieldSchema.optionObjOf('layouts', [
     FieldSchema.strict('onLtr'),
     FieldSchema.strict('onRtl')
   ]);
 };
 
-const get = function (component, info, defaultLtr, defaultRtl) {
-  const ltr = info.layouts().map(function (ls) {
+const get = (
+  // TYPIFY
+  component: AlloyComponent,
+  info: any,
+  defaultLtr: AnchorLayout[],
+  defaultRtl: AnchorLayout[]
+): AnchorLayout[] => {
+  const ltr = info.layouts().map((ls) => {
     return ls.onLtr();
   }).getOr(defaultLtr);
 
-  const rtl = info.layouts().map(function (ls) {
+  const rtl = info.layouts().map((ls) => {
     return ls.onRtl();
   }).getOr(defaultRtl);
 

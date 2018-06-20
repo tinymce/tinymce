@@ -1,10 +1,10 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 import * as ToggleModes from './ToggleModes';
 
-export default <any> [
+export default [
   FieldSchema.defaulted('selected', false),
   FieldSchema.strict('toggleClass'),
   FieldSchema.defaulted('toggleOnExecute', true),
