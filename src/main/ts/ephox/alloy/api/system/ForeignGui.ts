@@ -13,9 +13,9 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface ForeignGuiSpec {
-  root: () => SugarElement;
+  root: SugarElement;
   dispatchers: any[];
-  insertion?: (root: AlloyComponent, system: Gui.GuiSystem) => void;
+  insertion?: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([

@@ -47,7 +47,7 @@ const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<Bo
   });
 };
 
-const setPrior = (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string, absTop: string): void => {
+const setPrior = (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string | number, absTop: string | number): void => {
   const elem = component.element();
   Attr.set(elem, dockInfo.leftAttr(), absLeft);
   Attr.set(elem, dockInfo.topAttr(), absTop);
