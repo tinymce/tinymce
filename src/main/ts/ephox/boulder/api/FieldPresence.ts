@@ -11,7 +11,13 @@ export interface FieldPresenceAdt extends AdtInterface {
   fold<T>(StrictField, DefaultedThunkField, AsOptionField, AsDefaultedOptionThunkField, MergeWithThunkField): T;
 }
 
-const adt = Adt.generate([
+const adt: {
+  strict: () => FieldPresenceAdt;
+  defaultedThunk: (fallbackThunk: Function) => FieldPresenceAdt;
+  asOption: () => FieldPresenceAdt;
+  asDefaultedOptionThunk: (fallbackThunk: Function) => FieldPresenceAdt;
+  mergeWithThunk: (baseThunk) => FieldPresenceAdt;
+} = Adt.generate([
   { strict: [ ] },
   { defaultedThunk: [ 'fallbackThunk' ] },
   { asOption: [ ] },
