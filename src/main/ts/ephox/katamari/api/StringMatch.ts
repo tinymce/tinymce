@@ -13,14 +13,14 @@ export interface StringMatch extends Adt {
   ) => T;
 };
 
-const adt: {
+const adt = Adt.generate<{
   starts: (value: string, f: StringMapper) => StringMatch;
   pattern: (regex: RegExp, f: StringMapper) => StringMatch;
   contains: (value: string, f: StringMapper) => StringMatch;
   exact: (value: string, f: StringMapper) => StringMatch;
   all: () => StringMatch;
   not: (stringMatch: StringMatch) => StringMatch;
-} = Adt.generate([
+}>([
   { starts: [ 'value', 'f' ] },
   { pattern: [ 'regex', 'f' ] },
   { contains: [ 'value', 'f' ] },

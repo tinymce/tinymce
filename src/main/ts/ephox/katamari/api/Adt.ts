@@ -12,7 +12,7 @@ export interface Adt {
  * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
  * For syntax and use, look at the test code.
  */
-var generate = function (cases: { [key: string]: string[] }[]): any {
+var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [key: string]: string[] }[]): T {
   // validation
   if (!Type.isArray(cases)) {
     throw new Error('cases must be an array');
@@ -104,7 +104,7 @@ var generate = function (cases: { [key: string]: string[] }[]): any {
     };
   });
 
-  return adt;
+  return <any>adt;
 };
 
 export const Adt = {
