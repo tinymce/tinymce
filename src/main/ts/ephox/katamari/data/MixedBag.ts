@@ -4,9 +4,7 @@ import Obj from '../api/Obj';
 import { Option } from '../api/Option';
 import * as BagUtils from '../util/BagUtils';
 
-
-
-export const MixedBag = function (required: string[], optional: string[]) {
+export const MixedBag = function <T = {[key: string]: () => any}> (required: string[], optional: string[]): (obj: {}) => T {
   const everything = required.concat(optional);
   if (everything.length === 0) throw new Error('You must specify at least one required or optional field.');
 
@@ -40,6 +38,6 @@ export const MixedBag = function (required: string[], optional: string[]) {
       r[opt] = Fun.constant(Object.prototype.hasOwnProperty.call(obj, opt) ? Option.some(obj[opt]): Option.none());
     });
 
-    return r;
+    return <any>r;
   };
 };
