@@ -52,6 +52,15 @@ const strictArrayOfObj = function (key: string, objFields: any[]): FieldProcesso
   );
 };
 
+const strictArrayOf = function (key: string, schema: Processor): FieldProcessorAdt {
+  return field(
+    key,
+    key,
+    FieldPresence.strict(),
+    arrOf(schema)
+  );
+};
+
 const option = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.asOption(), anyValue());
 };
@@ -120,6 +129,7 @@ export {
   strict,
   strictOf,
   strictObjOf,
+  strictArrayOf,
   strictArrayOfObj,
   strictNumber,
   strictString,
