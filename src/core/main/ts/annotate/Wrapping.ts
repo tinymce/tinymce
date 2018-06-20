@@ -9,12 +9,14 @@ import { ChildContext, context } from './AnnotationContext';
 import { findMarkers } from './Identification';
 import * as Markings from './Markings';
 
+export type DecoratorData = Record<string, any>;
+
 export type Decorator = (
   uid: string,
-  data: { }
+  data: DecoratorData
 ) => {
-  attributes: { },
-  classes: string[]
+  attributes?: { },
+  classes?: string[]
 };
 
 const applyWordGrab = (editor: Editor, rng: Range): void => {

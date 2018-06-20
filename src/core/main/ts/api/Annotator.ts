@@ -1,15 +1,19 @@
 import { Arr, Cell, Option, Throttler, Obj } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
 import { findMarkers, identify, findAll } from 'tinymce/core/annotate/Identification';
-import { annotateWithBookmark } from 'tinymce/core/annotate/Wrapping';
+import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/annotate/Wrapping';
 
 export interface Annotator {
-  register: (name: string, settings: { }) => void;
-  annotate: (name: string, data: { }) => void;
+  register: (name: string, settings: AnnotatorSettings) => void;
+  annotate: (name: string, data: DecoratorData) => void;
   annotationChanged: (f: (uid: string, name: string, node: any) => void) => void;
   remove: (name: string) => void;
   // TODO: Use stronger types for Nodes when available.
   getAll: (name: string) => Record<string, any>;
+}
+
+export interface AnnotatorSettings {
+  decorate: Decorator;
 }
 
 export default function (editor): Annotator {
@@ -30,15 +34,18 @@ export default function (editor): Annotator {
   };
 
   const isDifferent = ({ uid, name }): boolean => {
-    return lastAnnotation.get().forall(({ lastUid, lastName }) => {
-      return uid !== lastName || name !== lastName;
+    return lastAnnotation.get().forall(({ uid: lastUid, name: lastName }) => {
+      return uid !== lastUid || name !== lastName;
     });
   };
 
   const onNodeChange = Throttler.last(() => {
     identify(editor, Option.none()).fold(
       () => {
-        fireNoAnnotation();
+        if (lastAnnotation.get().isSome()) {
+          fireNoAnnotation();
+          lastAnnotation.set(Option.none());
+        }
       },
       ({ uid, name, element }) => {
         if (isDifferent({ uid, name })) {

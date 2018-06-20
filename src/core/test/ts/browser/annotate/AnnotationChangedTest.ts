@@ -107,6 +107,22 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         ]
       ),
 
+      tinyApis.sSetSelection([ 1, 1, 0 ], 'his'.length, [ 1, 1, 0 ], 'his'.length),
+      // Give it time to throttle a node change.
+      Step.wait(400),
+      Waiter.sTryUntil(
+        'Moving selection within the same marker (alpha id-two) ... shoud not fire change',
+        sAssertChanges('checking changes',
+          [
+            { uid: null, name: null },
+          { uid: 'id-one', name: 'alpha' },
+          { uid: 'id-two', name: 'alpha' }
+          ]
+        ),
+        10,
+        1000
+      ),
+
       sTestAnnotationEvents(
         'Outside annotations again',
         [ 1, 2 ], ' the '.length,
@@ -128,7 +144,43 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
           { uid: null, name: null },
           { uid: 'id-three', name: 'beta' }
         ]
-      )
+      ),
+
+      tinyApis.sSetSelection([ 2, 0 ], 'T'.length, [ 2, 0 ], 'T'.length),
+      Waiter.sTryUntil(
+        'Moving selection outside all annotations. Should fire null',
+        sAssertChanges('checking changes',
+          [
+            { uid: null, name: null },
+            { uid: 'id-one', name: 'alpha' },
+            { uid: 'id-two', name: 'alpha' },
+            { uid: null, name: null },
+            { uid: 'id-three', name: 'beta' },
+            { uid: null, name: null }
+          ]
+        ),
+        10,
+        1000
+      ),
+
+      tinyApis.sSetSelection([ 2, 2 ], 'd'.length, [ 2, 2 ], 'd'.length),
+      // Give it time to throttle a node change.
+      Step.wait(400),
+      Waiter.sTryUntil(
+        'Moving selection outside all annotations (again). Should NOT fire null because it already has',
+        sAssertChanges('checking changes',
+          [
+            { uid: null, name: null },
+            { uid: 'id-one', name: 'alpha' },
+            { uid: 'id-two', name: 'alpha' },
+            { uid: null, name: null },
+            { uid: 'id-three', name: 'beta' },
+            { uid: null, name: null }
+          ]
+        ),
+        10,
+        1000
+      ),
     ]);
 
     Pipeline.async({}, [
