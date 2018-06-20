@@ -1,8 +1,7 @@
 import { Contracts, Result } from '@ephox/katamari';
 import { AlloySystemApi } from '../../api/system/SystemApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
-import { AlloyEventKeyAndHandler, AlloyEventRecord } from '../../api/events/AlloyEvents';
-import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { Element } from '@ephox/sugar';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface AlloyComponent {
@@ -13,7 +12,7 @@ export interface AlloyComponent {
   readState: (behaviourName: string) => any;
   connect: (newApi) => void;
   disconnect: () => void;
-  element: () => SugarElement;
+  element: () => Element;
   syncComponents: () => void;
   components: () => AlloyComponent[];
   events: () => Record<string, UncurriedHandler>;

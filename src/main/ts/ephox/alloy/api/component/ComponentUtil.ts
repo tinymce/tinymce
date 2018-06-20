@@ -1,8 +1,8 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
 
-const toElem = (component: AlloyComponent): SugarElement => {
+const toElem = (component: AlloyComponent): Element => {
   return component.element();
 };
 

@@ -2,27 +2,27 @@ import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr, Node, SelectorFind } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 
 const prefix = AlloyTags.prefix();
 const idAttr = AlloyTags.idAttr();
 
-const write = (label: string, elem: SugarElement): string => {
+const write = (label: string, elem: Element): string => {
   const id: string = Id.generate(prefix + label);
   Attr.set(elem, idAttr, id);
   return id;
 };
 
-const writeOnly = (elem: SugarElement, uid: string) => {
+const writeOnly = (elem: Element, uid: string) => {
   Attr.set(elem, idAttr, uid);
 };
 
-const read = (elem: SugarElement): Option<string> => {
+const read = (elem: Element): Option<string> => {
   const id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
   return Option.from(id);
 };
 
-// const find = (container: SugarElement, id: string): Option<SugarElement> => {
+// const find = (container: Element, id: string): Option<Element> => {
 //   return SelectorFind.descendant(container, id);
 // };
 
@@ -30,7 +30,7 @@ const generate = (prefix: string): string => {
   return Id.generate(prefix);
 };
 
-const revoke = (elem: SugarElement): void => {
+const revoke = (elem: Element): void => {
   Attr.remove(elem, idAttr);
 };
 

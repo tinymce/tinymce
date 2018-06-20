@@ -1,15 +1,15 @@
-import { Css, Location, Scroll, Traverse } from '@ephox/sugar';
+import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { SugarPosition, SugarElement } from '../../alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
 import { CoordAdt } from '../../api/data/DragCoord';
 
-const getCurrentCoord = (target: SugarElement): CoordAdt => {
+const getCurrentCoord = (target: Element): CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
     return Css.getRaw(target, 'top').bind((top) => {
       return Css.getRaw(target, 'position').map((position) => {

@@ -1,7 +1,6 @@
-import { Attr, Node } from '@ephox/sugar';
-import { SugarElement } from './TypeDefinitions';
+import { Attr, Node, Element } from '@ephox/sugar';
 
-const inside = (target: SugarElement) => {
+const inside = (target: Element) => {
   return (
     (Node.name(target) === 'input' && Attr.get(target, 'type') !== 'radio') ||
     Node.name(target) === 'textarea'

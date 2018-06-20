@@ -2,7 +2,6 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Dismissal from '../../sandbox/Dismissal';

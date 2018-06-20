@@ -1,7 +1,7 @@
 import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from "../../api/component/ComponentApi";
-import { SugarElement } from "../../alien/TypeDefinitions";
+import { Element } from "@ephox/sugar";
 import { Bounds } from "../../alien/Boxes";
 import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
@@ -15,7 +15,7 @@ export interface DockingContext {
   fadeInClass: () => string;
   fadeOutClass: () => string;
   transitionClass: () => string;
-  lazyContext: () => (component: AlloyComponent) => Option<SugarElement>;
+  lazyContext: () => (component: AlloyComponent) => Option<Element>;
 }
 
 export interface DockingConfig extends BehaviourConfigDetail {
@@ -30,7 +30,7 @@ export interface DockingConfigSpec extends BehaviourConfigSpec {
     fadeInClass: string;
     fadeOutClass: string;
     transitionClass: string;
-    lazyContext: (component: AlloyComponent) => Option<SugarElement>;
+    lazyContext: (component: AlloyComponent) => Option<Element>;
   };
   lazyViewport?: (component?: AlloyComponent) => Bounds;
   leftAttr: string;

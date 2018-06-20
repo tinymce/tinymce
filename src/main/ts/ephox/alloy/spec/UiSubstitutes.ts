@@ -1,10 +1,14 @@
 import { Objects } from '@ephox/boulder';
 import { Adt, Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
+import { AdtInterface } from '../alien/TypeDefinitions';
 
 const _placeholder = 'placeholder';
 
-const adt = Adt.generate([
+const adt: {
+  single: (required: boolean, valueThunk: Function) => AdtInterface;
+  multiple: (required: boolean, valueThunk: Function) => AdtInterface;
+} = Adt.generate([
   { single: [ 'required', 'valueThunk' ] },
   { multiple: [ 'required', 'valueThunks' ] }
 ]);

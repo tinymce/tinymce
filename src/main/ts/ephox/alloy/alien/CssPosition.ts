@@ -4,7 +4,10 @@ import { SugarPosition, AdtInterface } from './TypeDefinitions';
 
 export interface CssPositionAdt extends AdtInterface { }
 
-const adt = Adt.generate([
+const adt: {
+  screen: (point: SugarPosition) => CssPositionAdt;
+  absolute: (point: SugarPosition, sx: number, sy: number) => CssPositionAdt;
+} = Adt.generate([
   { screen: [ 'point' ] },
   { absolute: [ 'point', 'scrollLeft', 'scrollTop' ] }
 ]);
@@ -40,8 +43,8 @@ const sumAsAbsolute = (positions: CssPositionAdt[]): SugarPosition => {
   return sum(points);
 };
 
-const screen: (point: SugarPosition) => CssPositionAdt = adt.screen;
-const absolute: (point: SugarPosition, sx: number, sy: number) => CssPositionAdt = adt.absolute;
+const screen = adt.screen;
+const absolute = adt.absolute;
 
 export {
   sumAsFixed,

@@ -4,14 +4,14 @@ import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 import * as TransformFind from '../alien/TransformFind';
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
-import { SugarElement } from '../api/Main';
+import { Element } from '@ephox/sugar';
 
 export interface ElementAndHandler {
-  element: () => SugarElement;
+  element: () => Element;
   descHandler: () => CurriedHandler;
 }
 
-const eventHandler: (element: SugarElement, descHandler: CurriedHandler) => ElementAndHandler =
+const eventHandler: (element: Element, descHandler: CurriedHandler) => ElementAndHandler =
   Struct.immutable('element', 'descHandler');
 
 export interface CurriedHandler {
@@ -50,7 +50,7 @@ export default () => {
     });
   };
 
-  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: SugarElement): Option<ElementAndHandler> => {
+  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> => {
     return Tagger.read(elem).fold(() => {
       return Option.none();
     }, (id) => {
@@ -71,10 +71,10 @@ export default () => {
   };
 
   // Given event type, and element, find the handler.
-  const find = (isAboveRoot: (SugarElement) => boolean, type: string, target: SugarElement): Option<ElementAndHandler> => {
+  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     const readType = Objects.readOpt(type);
     const handlers = readType(registry) as Option<Record<string, CurriedHandler>>;
-    return TransformFind.closest(target, (elem: SugarElement) => {
+    return TransformFind.closest(target, (elem: Element) => {
       return findHandler(handlers, elem);
     }, isAboveRoot);
   };

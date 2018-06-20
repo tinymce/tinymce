@@ -1,9 +1,6 @@
 import * as Behaviour from './Behaviour';
 import * as ComposeApis from '../../behaviour/composing/ComposeApis';
 import { ComposeSchema } from '../../behaviour/composing/ComposeSchema';
-import { Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { ComposingBehaviour } from '../../behaviour/composing/ComposingTypes';
 
 const Composing = Behaviour.create({

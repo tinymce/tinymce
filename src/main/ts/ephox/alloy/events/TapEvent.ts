@@ -1,12 +1,12 @@
 import { Objects } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 import { Touch, TouchEvent } from '@ephox/dom-globals';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { SugarEvent, SugarElement } from '../alien/TypeDefinitions';
+import { SugarEvent } from '../alien/TypeDefinitions';
 import { GuiEventSettings } from './GuiEvents';
 
 const SIGNIFICANT_MOVE = 5;
@@ -29,7 +29,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
 export interface TouchHistoryData {
   x: () => number;
   y: () => number;
-  target: () => SugarElement;
+  target: () => Element;
 }
 
 const monitor = (settings: GuiEventSettings) => {

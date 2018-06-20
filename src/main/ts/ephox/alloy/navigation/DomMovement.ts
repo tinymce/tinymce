@@ -1,12 +1,12 @@
 import { Direction } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 
-export type ElementMover <C,S> = (elem: SugarElement, focused: SugarElement, config: C, state?: S) => Option<SugarElement>;
+export type ElementMover <C,S> = (elem: Element, focused: Element, config: C, state?: S) => Option<Element>;
 
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.

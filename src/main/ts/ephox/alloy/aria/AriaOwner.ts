@@ -1,10 +1,10 @@
 import { Fun, Id, Option } from '@ephox/katamari';
-import { Attr, Node, PredicateFind, SelectorFind, Traverse } from '@ephox/sugar';
+import { Attr, Node, PredicateFind, SelectorFind, Traverse, Element } from '@ephox/sugar';
 
-import { SugarDocument, SugarElement } from '../alien/TypeDefinitions';
+import { SugarDocument } from '../alien/TypeDefinitions';
 
-const find = (queryElem: SugarElement): Option<SugarElement> => {
-  const dependent: Option<SugarElement> = PredicateFind.closest(queryElem, (elem) => {
+const find = (queryElem: Element): Option<Element> => {
+  const dependent: Option<Element> = PredicateFind.closest(queryElem, (elem) => {
     if (! Node.isElement(elem)) { return false; }
     const id = Attr.get(elem, 'id');
     return id !== undefined && id.indexOf('aria-owns') > -1;
@@ -20,8 +20,8 @@ const find = (queryElem: SugarElement): Option<SugarElement> => {
 
 export interface AriaManager {
   id: () => string;
-  link: (SugarElement) => void;
-  unlink: (SugarElement) => void;
+  link: (Element) => void;
+  unlink: (Element) => void;
 }
 
 const manager = (): AriaManager => {

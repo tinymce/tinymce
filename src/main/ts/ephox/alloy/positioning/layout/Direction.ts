@@ -6,7 +6,12 @@ export interface DirectionAdt extends AdtInterface {
 
 }
 
-const adt = Adt.generate([
+const adt: {
+  southeast: () => DirectionAdt;
+  southwest: () => DirectionAdt;
+  northeast: () => DirectionAdt;
+  northwest: () => DirectionAdt;
+} = Adt.generate([
   { southeast: [ ] },
   { southwest: [ ] },
   { northeast: [ ] },
@@ -24,10 +29,10 @@ const cata = <B>(
 };
 
 // TODO: Simplify with the typescript approach.
-const southeast = adt.southeast as () => DirectionAdt;
-const southwest = adt.southwest as () => DirectionAdt;
-const northeast = adt.northeast as () => DirectionAdt;
-const northwest = adt.northwest as () => DirectionAdt;
+const southeast = adt.southeast;
+const southwest = adt.southwest;
+const northeast = adt.northeast;
+const northwest = adt.northwest;
 
 export {
   southeast,

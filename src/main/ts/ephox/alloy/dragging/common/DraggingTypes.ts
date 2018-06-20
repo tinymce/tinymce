@@ -1,8 +1,9 @@
 import { CoordAdt } from "../../api/data/DragCoord";
 import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarPosition, SugarEvent, SugarElement } from "../../alien/TypeDefinitions";
+import { SugarPosition, SugarEvent } from "../../alien/TypeDefinitions";
 import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
 import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
@@ -41,9 +42,9 @@ export interface SnapsConfig {
 }
 
 export interface DraggingConfig {
-  getTarget: () => (SugarElement) => SugarElement;
+  getTarget: () => (Element) => Element;
   snaps: () => Option<SnapsConfig>
-  onDrop: () => (AlloyComponent, SugarElement) => void;
+  onDrop: () => (AlloyComponent, Element) => void;
 }
 
 
@@ -54,8 +55,8 @@ export interface DraggingConfig {
 // FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
 export interface CommonDraggingConfigSpec {
   useFixed?: boolean;
-  onDrop?: (AlloyComponent, SugarElement) => void;
-  getTarget?: (SugarElement) => SugarElement;
+  onDrop?: (AlloyComponent, Element) => void;
+  getTarget?: (Element) => Element;
   snaps?: {
     getSnapPoints: (AlloyComponent) => SnapConfig[];
     leftAttr: string;

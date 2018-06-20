@@ -1,7 +1,6 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyEventKeyAndHandler, AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 import { Option } from '@ephox/katamari';
 

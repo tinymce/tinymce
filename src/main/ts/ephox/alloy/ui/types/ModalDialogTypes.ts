@@ -1,6 +1,6 @@
 import { Option, Result } from '@ephox/katamari';
 
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
@@ -17,7 +17,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   // FIX: Keying.cyclic
   onExecute: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  useTabstopAt: () => (elem: SugarElement) => boolean;
+  useTabstopAt: () => (elem: Element) => boolean;
 
   lazySink: () => () => Result<AlloyComponent, Error>;
   dragBlockClass: () => Option<string>;
@@ -30,7 +30,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   modalBehaviours?: AlloyBehaviourRecord;
 
   lazySink?: () => Result<AlloyComponent, Error>;
-  useTabstopAt?: (comp: SugarElement) => boolean;
+  useTabstopAt?: (comp: Element) => boolean;
   onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   dragBlockClass?: string;

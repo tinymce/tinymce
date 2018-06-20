@@ -30,7 +30,12 @@ export interface PartTypeAdt extends AdtInterface {
   fold<T>(required, external, optional, group);
 }
 
-const adt = Adt.generate([
+const adt: {
+  required: (data) => PartTypeAdt;
+  external: (data) => PartTypeAdt;
+  optional: (data) => PartTypeAdt;
+  group: (data) => PartTypeAdt;
+} = Adt.generate([
   { required: [ 'data' ] },
   { external: [ 'data' ] },
   { optional: [ 'data' ] },

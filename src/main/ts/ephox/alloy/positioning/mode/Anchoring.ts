@@ -1,6 +1,7 @@
 import { Contracts, Option } from '@ephox/katamari';
+import { Element } from "@ephox/sugar";
 
-import { SugarElement, SugarRange } from '../../alien/TypeDefinitions';
+import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
@@ -21,23 +22,23 @@ export interface AnchorDetail<D> {
   placement: () => (comp: AlloyComponent, posInfo: PositioningConfig, anchor: D, origin: OriginAdt) => Option<Anchoring>;
 }
 
-export type MaxHeightFunction =  (elem: SugarElement, available: number) => void;
+export type MaxHeightFunction =  (elem: Element, available: number) => void;
 export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec {
   anchor: 'selection';
-  getSelection?: () => SugarRange;
-  root: SugarElement;
+  getSelection?: () => Option<SugarRange>;
+  root: Element;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
   showAbove?: boolean;
 }
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor> {
-  getSelection: () => Option<() => SugarRange>;
-  root: () => SugarElement;
+  getSelection: () => Option<() => Option<SugarRange>>;
+  root: () => Element;
   bubble: () => Option<Bubble>;
   overrides: () => AnchorOverrides;
   showAbove: () => boolean;
@@ -47,16 +48,16 @@ export interface HotspotAnchorSpec extends CommonAnchorSpec {
   anchor: 'hotspot';
   hotspot: AlloyComponent;
   layouts?: {
-    onLtr: (elem: SugarElement) => AnchorLayout[];
-    onRtl: (elem: SugarElement) => AnchorLayout[];
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
   }
 }
 
 export interface HotspotAnchor extends AnchorDetail<HotspotAnchor> {
   hotspot: () => AlloyComponent;
   layouts: () => {
-    onLtr: () => (elem: SugarElement) => AnchorLayout[];
-    onRtl: () => (elem: SugarElement) => AnchorLayout[];
+    onLtr: () => (elem: Element) => AnchorLayout[];
+    onRtl: () => (elem: Element) => AnchorLayout[];
   }
 }
 
@@ -64,16 +65,16 @@ export interface SubmenuAnchorSpec extends CommonAnchorSpec {
   anchor: 'submenu';
   item: AlloyComponent;
   layouts?: {
-    onLtr: (elem: SugarElement) => AnchorLayout[];
-    onRtl: (elem: SugarElement) => AnchorLayout[];
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
   };
 }
 
 export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor> {
   item: () => AlloyComponent;
   layouts: () => {
-    onLtr: () => (elem: SugarElement) => AnchorLayout[];
-    onRtl: () => (elem: SugarElement) => AnchorLayout[];
+    onLtr: () => (elem: Element) => AnchorLayout[];
+    onRtl: () => (elem: Element) => AnchorLayout[];
   };
 }
 
@@ -87,8 +88,8 @@ export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   width?: number;
   bubble?: Bubble;
   layouts?: {
-    onLtr: (elem: SugarElement) => AnchorLayout[];
-    onRtl: (elem: SugarElement) => AnchorLayout[];
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
   }
 }
 
@@ -99,8 +100,8 @@ export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor> {
   width?: () => number;
   bubble?: () => Bubble;
   layouts?: () => Option<{
-    onLtr: () => (elem: SugarElement) => AnchorLayout[];
-    onRtl: () => (elem: SugarElement) => AnchorLayout[];
+    onLtr: () => (elem: Element) => AnchorLayout[];
+    onRtl: () => (elem: Element) => AnchorLayout[];
   }>
 }
 

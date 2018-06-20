@@ -1,6 +1,6 @@
 import { Option, Result } from '@ephox/katamari';
 
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
@@ -37,7 +37,7 @@ export interface InlineViewAnchor {
   x?: number;
   y?: number;
   item?: AlloyComponent;
-  root?: SugarElement;
+  root?: Element;
 }
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {

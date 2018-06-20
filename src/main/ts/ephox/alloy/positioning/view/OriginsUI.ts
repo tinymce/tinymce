@@ -1,16 +1,16 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Height, Position, Scroll, Width } from '@ephox/sugar';
+import { Height, Position, Scroll, Width, Element } from '@ephox/sugar';
 
 import * as OuterPosition from '../../frame/OuterPosition';
 import { Bounds, bounds } from '../../alien/Boxes';
 import * as Boxes from '../layout/Boxes';
 import { OriginAdt } from '../../positioning/layout/Origins';
-import { SugarElement, SugarPosition, SugarDocument } from '../../alien/TypeDefinitions';
+import { SugarPosition, SugarDocument } from '../../alien/TypeDefinitions';
 
 // Moved out of Origins so that Origins can be tested atomically
 // if/when repartee is compiled with NPM modules available, we can switch to `domtest` which allows sugar to load in nodejs
 
-const toBox = (origin: OriginAdt, element: SugarElement): Bounds => {
+const toBox = (origin: OriginAdt, element: Element): Bounds => {
   const rel = Fun.curry(OuterPosition.find, element);
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();
