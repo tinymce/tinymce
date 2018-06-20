@@ -15,9 +15,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
-
-
-
   GuiSetup.setup((store, doc, body) => {
     return Sinks.relativeSink();
 

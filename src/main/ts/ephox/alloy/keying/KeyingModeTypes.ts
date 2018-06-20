@@ -139,7 +139,7 @@ export interface MatrixConfigSpec extends GeneralKeyingConfigSpec {
   };
   cycles?: boolean;
   previousSelector?: (comp: AlloyComponent) => Option<SugarElement>;
-  execute?: KeyHandlerApi<MatrixConfig, Stateless>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
 }
 
 export interface MatrixConfig extends GeneralKeyingConfig {
@@ -149,7 +149,7 @@ export interface MatrixConfig extends GeneralKeyingConfig {
   };
   cycles: () => boolean;
   previousSelector: () => (comp: AlloyComponent) => Option<SugarElement>;
-  execute: () => KeyHandlerApi<MatrixConfig, Stateless>;
+  execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Option<boolean>;
 }
 
 // Menu type

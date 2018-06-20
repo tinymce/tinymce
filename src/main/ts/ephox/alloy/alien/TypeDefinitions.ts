@@ -1,5 +1,6 @@
 import { EventFormat } from '../events/SimulatedEvent';
 import { HTMLElement, HTMLDocument, Event, TouchEvent, TransitionEvent, KeyboardEvent, MouseEvent } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 // TODO move these to the correct village
 
@@ -12,9 +13,7 @@ export interface AdtInterface {
 }
 
 // Sugar Dom
-export interface SugarElement {
-  dom: () => HTMLElement;
-}
+export type SugarElement = Element;
 
 export interface SugarListener {
   unbind: () => void;

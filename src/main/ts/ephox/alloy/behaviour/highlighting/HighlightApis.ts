@@ -72,8 +72,7 @@ const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, h
 };
 
 const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
-  // FIX: Wrong return type (probably)
-  return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind(component.getSystem().getByDom);
+  return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
 const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, string> => {
@@ -85,8 +84,7 @@ const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hSta
 };
 
 const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
-  // FIX: Wrong return type (probably)
-  return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind(component.getSystem().getByDom);
+  return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {

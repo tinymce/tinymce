@@ -30,7 +30,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   modalBehaviours?: AlloyBehaviourRecord;
 
   lazySink?: () => Result<AlloyComponent, Error>;
-  useTabstopAt?: (comp: AlloyComponent) => boolean;
+  useTabstopAt?: (comp: SugarElement) => boolean;
   onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   dragBlockClass?: string;

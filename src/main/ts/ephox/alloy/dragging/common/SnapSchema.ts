@@ -14,8 +14,8 @@ const defaultLazyViewport = (): Bounds => {
     y: scroll.top,
     width: Fun.constant(window.innerWidth),
     height: Fun.constant(window.innerHeight),
-    bottom: Fun.constant(scroll.top + window.innerHeight),
-    right: Fun.constant(scroll.left + window.innerWidth)
+    bottom: Fun.constant(scroll.top() + window.innerHeight),
+    right: Fun.constant(scroll.left() + window.innerWidth)
   };
 };
 
