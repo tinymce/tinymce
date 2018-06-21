@@ -4,7 +4,7 @@ import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { AdtInterface } from '../alien/TypeDefinitions';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
-export type PartType = (PartialSpec) => PartTypeAdt;
+export type PartType = (p: PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
 export interface PartSpec<D extends CompositeSketchDetail> {
@@ -91,7 +91,7 @@ const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): 
 };
 
 const convert = (adtConstructor, partSchema: Processor):
-                  (PartialSpec) => PartTypeAdt => {
+                  (p: PartialSpec) => PartTypeAdt => {
   return (spec) => {
     const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);
     return adtConstructor(data);

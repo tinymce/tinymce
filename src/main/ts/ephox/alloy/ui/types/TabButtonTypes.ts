@@ -7,7 +7,7 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
-export type ButtonAction = (AlloyComponent) => void;
+export type ButtonAction = (comp: AlloyComponent) => void;
 
 export interface TabButtonDetail extends SingleSketchDetail {
   uid: () => string;

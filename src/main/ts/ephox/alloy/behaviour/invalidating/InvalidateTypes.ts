@@ -7,8 +7,8 @@ import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
-  markValid: (Component: AlloyComponent) => void;
-  markInvalid: (Component: AlloyComponent) => void;
+  markValid: (component: AlloyComponent) => void;
+  markInvalid: (component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
@@ -16,7 +16,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
 
 export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
   invalidClass: string;
-  getRoot?: (AlloyComponent) => Option<Element>;
+  getRoot?: (comp: AlloyComponent) => Option<Element>;
   notify?: {
     aria?: string;
     getContainer?: (input: AlloyComponent) => Option<Element>;
@@ -42,7 +42,7 @@ export interface InvalidatingConfig extends BehaviourConfigDetail {
     onValidate: () => (comp: AlloyComponent) => void;
   }>;
   onEvent?: () => string;
-  getRoot?: () => (AlloyComponent) => Option<Element>
+  getRoot?: () => (comp: AlloyComponent) => Option<Element>
   validator: () => Option<{
     validate: () => (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: () => string;

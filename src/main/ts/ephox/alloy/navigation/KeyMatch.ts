@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { SugarEvent } from '../alien/TypeDefinitions';
 import { KeyboardEvent } from '@ephox/dom-globals';
 
-export type KeyMatcher = (SugarEvent) => boolean;
+export type KeyMatcher = (evt: SugarEvent) => boolean;
 
 const inSet = (keys: number[]): KeyMatcher => {
   return (event: SugarEvent) => {

@@ -32,10 +32,10 @@ export interface RepresentingConfig extends BehaviourConfigDetail {
   resetOnDom: () => boolean;
   store: () => {
     manager: () => {
-      setValue: (AlloyComponent, RepresentingConfig, RepresentingState, data: RepresentingData) => void;
-      getValue: (AlloyComponent, RepresentingConfig, RepresentingState) => RepresentingData;
-      onLoad: (AlloyComponent, RepresentingConfig, RepresentingState) => void;
-      onUnload: (AlloyComponent, RepresentingConfig, RepresentingState) => void;
+      setValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState, data: RepresentingData) => void;
+      getValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => RepresentingData;
+      onLoad: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
+      onUnload: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
     }
   }
 }
