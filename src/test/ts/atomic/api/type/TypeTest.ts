@@ -1,16 +1,16 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Type from 'ephox/katamari/api/Type';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Type from 'ephox/katamari/api/Type';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Type', function() {
-  var check = function (expected, method, input) {
-    var actual = Type[method](input);
+  const check = function (expected, method, input) {
+    const actual = Type[method](input);
     assert.eq(expected, actual, "I'm a failure.");
   };
 
-  var objectString = new String('ball');
-  var noop = function () { };
+  const objectString = new String('ball');
+  const noop = function () { };
 
   check(true, 'isNull', null);
   check(false, 'isNull', undefined);
@@ -109,7 +109,7 @@ UnitTest.test('Type', function() {
   check(true, 'isNumber', 1);
 
   Jsc.property('Check Type.is* :: only one should match for every value', Jsc.json, function (json) {
-    var classifiers = [
+    const classifiers = [
       Type.isString,
       Type.isObject,
       Type.isArray,
@@ -120,7 +120,7 @@ UnitTest.test('Type', function() {
       Type.isNumber
     ];
 
-    var matches = Arr.filter(classifiers, function (c) {
+    const matches = Arr.filter(classifiers, function (c) {
       return c(json);
     });
 

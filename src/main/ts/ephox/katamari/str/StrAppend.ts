@@ -1,22 +1,15 @@
-var addToStart = function (str, prefix) {
+export const addToStart = function (str: string, prefix: string) {
   return prefix + str;
 };
 
-var addToEnd = function (str, suffix) {
+export const addToEnd = function (str: string, suffix: string) {
   return str + suffix;
 };
 
-var removeFromStart = function (str, numChars) {
+export const removeFromStart = function (str: string, numChars: number) {
   return str.substring(numChars);
 };
 
-var removeFromEnd = function (str, numChars) {
+export const removeFromEnd = function (str: string, numChars: number) {
   return str.substring(0, str.length - numChars);
-};
-
-export default <any> {
-  addToStart: addToStart,
-  addToEnd: addToEnd,
-  removeFromStart: removeFromStart,
-  removeFromEnd: removeFromEnd
 };

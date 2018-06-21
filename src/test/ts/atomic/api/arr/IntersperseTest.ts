@@ -1,15 +1,15 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Jam from 'ephox/katamari/api/Jam';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Jam from 'ephox/katamari/api/Jam';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Intersperse', function() {
-  var check = function (expected, input, delimiter) {
-    var actual = Jam.intersperse(input, delimiter);
+  const check = function (expected, input, delimiter) {
+    const actual = Jam.intersperse(input, delimiter);
     assert.eq(expected, actual);
   };
 
-  var checkErr = function (expected, input, delimiter) {
+  const checkErr = function (expected, input, delimiter) {
     try {
       Jam.intersperse(input, delimiter);
       assert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
@@ -30,8 +30,8 @@ UnitTest.test('Intersperse', function() {
     Jsc.array(Jsc.json),
     Jsc.json,
     function (arr, delimiter) {
-      var actual = Jam.intersperse(arr, delimiter);
-      var expected = arr.length === 0 ? 0 : arr.length * 2 - 1;
+      const actual = Jam.intersperse(arr, delimiter);
+      const expected = arr.length === 0 ? 0 : arr.length * 2 - 1;
       return Jsc.eq(expected, actual.length);
     }
 
@@ -42,7 +42,7 @@ UnitTest.test('Intersperse', function() {
     Jsc.array(Jsc.json),
     Jsc.json,
     function (arr, delimiter) {
-      var actual = Jam.intersperse(arr, delimiter);
+      const actual = Jam.intersperse(arr, delimiter);
       return Arr.forall(actual, function (x, i) {
         return i % 2 === 1 ? Jsc.eq(x, delimiter) : true;
       });
@@ -54,8 +54,8 @@ UnitTest.test('Intersperse', function() {
     Jsc.array(Jsc.string),
     Jsc.nat,
     function (arr, delimiter) {
-      var actual = Jam.intersperse(arr, delimiter);
-      var filtered = Arr.filter(actual, function (a) {
+      const actual = Jam.intersperse(arr, delimiter);
+      const filtered = Arr.filter(actual, function (a) {
         return a !== delimiter;
       });
       return Jsc.eq(arr, filtered);

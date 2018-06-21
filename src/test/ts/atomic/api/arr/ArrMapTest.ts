@@ -1,20 +1,20 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Obj from 'ephox/katamari/api/Obj';
-import Unique from 'ephox/katamari/api/Unique';
+import * as Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('MapTest', function() {
-  var dbl = function (x) {
+  const dbl = function (x) {
     return x * 2;
   };
 
-  var check = function (expected, C, input, f) {
+  const check = function (expected, C, input, f) {
     assert.eq(expected, C.map(input, f));
   };
 
-  var checkA = function (expected, input, f) {
+  const checkA = function (expected, input, f) {
     check(expected, Arr, input, f);
     check(expected, Arr, Object.freeze(input.slice()), f);
   };
@@ -23,7 +23,7 @@ UnitTest.test('MapTest', function() {
   checkA([2], [1], dbl);
   checkA([4, 6, 10], [2, 3, 5], dbl);
 
-  var checkToObject = function(expected, input: any[], f) {
+  const checkToObject = function(expected, input: any[], f) {
     assert.eq(expected, Arr.mapToObject(input, f));
     assert.eq(expected, Arr.mapToObject(Object.freeze(input.slice()), f));
   };
@@ -37,7 +37,7 @@ UnitTest.test('MapTest', function() {
     'map id xs = xs',
     Jsc.array(Jsc.json),
     function (arr) {
-      var output = Arr.map(arr, Fun.identity);
+      const output = Arr.map(arr, Fun.identity);
       return Jsc.eq(arr, output);
     }
   );
@@ -47,7 +47,7 @@ UnitTest.test('MapTest', function() {
     Jsc.array(Jsc.json),
     Jsc.json,
     function (arr, y) {
-      var output = Arr.map(arr, Fun.constant(y));
+      const output = Arr.map(arr, Fun.constant(y));
       return Arr.forall(output, function (x) {
         return x === y;
       });
@@ -59,9 +59,9 @@ UnitTest.test('MapTest', function() {
     Jsc.array(Jsc.nestring),
     Jsc.fun(Jsc.json),
     function (rawKeys, f) {
-      var keys = Unique.stringArray(rawKeys);
-      var output = Arr.mapToObject(keys, function (k) { return f(k); });
-      var objKeys = Obj.keys(output);
+      const keys = Unique.stringArray(rawKeys);
+      const output = Arr.mapToObject(keys, function (k) { return f(k); });
+      const objKeys = Obj.keys(output);
       if (objKeys.length !== keys.length) return 'Not all keys were mapped';
 
       return Arr.forall(objKeys, function (ok) {

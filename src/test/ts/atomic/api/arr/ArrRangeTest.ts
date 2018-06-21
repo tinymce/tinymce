@@ -1,11 +1,11 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrRangeTest', function() {
-  var check = function (expected, input, f) {
-    var actual = Arr.range(input, f);
+  const check = function (expected, input, f) {
+    const actual = Arr.range(input, f);
     assert.eq(expected, actual);
   };
 
@@ -17,7 +17,7 @@ UnitTest.test('ArrRangeTest', function() {
     'Range(num, Fun.identity) should Arr.forall(x === index) && length === num',
     Jsc.nat,
     function (num) {
-      var range = Arr.range(num, Fun.identity);
+      const range = Arr.range(num, Fun.identity);
       return Arr.forall(range, function (x, i) {
         return x === i;
       }) && range.length === num;
@@ -29,7 +29,7 @@ UnitTest.test('ArrRangeTest', function() {
     Jsc.nat,
     Jsc.json,
     function (num, c) {
-      var range = Arr.range(num, Fun.constant(c));
+      const range = Arr.range(num, Fun.constant(c));
       return Arr.forall(range, function (x, i) {
         return x === c;
       }) && range.length === num;

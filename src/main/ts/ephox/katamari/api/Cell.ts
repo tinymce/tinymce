@@ -5,17 +5,17 @@ export interface Cell<T> {
 }
 
 export const Cell = <T>(initial: T): Cell<T> => {
-  var value = initial;
+  let value = initial;
 
-  var get = function () {
+  const get = function () {
     return value;
   };
 
-  var set = function (v) {
+  const set = function (v) {
     value = v;
   };
 
-  var clone = function () {
+  const clone = function () {
     return Cell(get());
   };
 

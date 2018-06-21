@@ -1,15 +1,11 @@
-var cached = function (f) {
-  var called = false;
-  var r;
-  return function() {
+export const cached = function (f: Function) {
+  let called = false;
+  let r: any;
+  return function(...args: any[]) {
     if (!called) {
       called = true;
-      r = f.apply(null, arguments);
+      r = f.apply(null, args);
     }
     return r;
   };
-};
-
-export default <any> {
-  cached: cached
 };

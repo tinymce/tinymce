@@ -1,23 +1,23 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Obj from 'ephox/katamari/api/Obj';
-import Unique from 'ephox/katamari/api/Unique';
-import Zip from 'ephox/katamari/api/Zip';
+import * as Unique from 'ephox/katamari/api/Unique';
+import * as Zip from 'ephox/katamari/api/Zip';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Zip', function() {
-  var check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {
-    var sort = function(a, ord) {
-      var c = a.slice();
+  const check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {
+    const sort = function(a, ord) {
+      const c = a.slice();
       c.sort(ord);
       return c;
     };
 
-    var eq = 0;
-    var lt = -1;
-    var gt = 1;
+    const eq = 0;
+    const lt = -1;
+    const gt = 1;
 
-    var sortTuples = function(a) {  
+    const sortTuples = function(a) {  
       return sort(a, function(a, b) {
         return (
           a.k === b.k ? a.v === b.v ? eq
@@ -81,19 +81,19 @@ UnitTest.test('Zip', function() {
     'zipToObject has matching keys and values',
     Jsc.array(Jsc.nestring),
     function (rawValues) {
-      var values = Unique.stringArray(rawValues);
+      const values = Unique.stringArray(rawValues);
 
-      var keys = Arr.map(values, function (v, i) {
+      const keys = Arr.map(values, function (v, i) {
         return i;
       });
 
-      var output = Zip.zipToObject(keys, values);
+      const output = Zip.zipToObject(keys, values);
 
-      var oKeys = Obj.keys(output);
+      const oKeys = Obj.keys(output);
       if (oKeys.length !== values.length) return 'Output keys did not match';
       return Arr.forall(oKeys, function (oKey) {
-        var index = parseInt(oKey, 10);
-        var expected = values[index];
+        const index = parseInt(oKey, 10);
+        const expected = values[index];
         return output[oKey] === expected;
       });
     }
@@ -104,7 +104,7 @@ UnitTest.test('Zip', function() {
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
     function (keys, values) {
-      var output = Zip.zipToTuples(keys, values);
+      const output = Zip.zipToTuples(keys, values);
 
       if (output.length !== keys.length) return 'Output keys did not match';
       return Arr.forall(output, function (x, i) {

@@ -1,20 +1,20 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Function tests', function() {
-  var testSanity = function () {
-    var add2 = function (n) {
+  const testSanity = function () {
+    const add2 = function (n) {
       return n + 2;
     };
 
-    var squared = function (n) {
+    const squared = function (n) {
       return n * n;
     };
 
-    var add2squared = Fun.compose(squared, add2);
+    const add2squared = Fun.compose(squared, add2);
 
-    var f0 = function () {
+    const f0 = function () {
       return assert.eq(0, arguments.length);
     };
     Fun.noarg(f0)(1, 2, 3);
@@ -33,7 +33,7 @@ UnitTest.test('Function tests', function() {
     assert.eq(false, Fun.never());
     assert.eq(true, Fun.always());
 
-    var c = function (/* arguments */) {
+    const c = function (/* arguments */) {
       return Array.prototype.slice.call(arguments, 0);
     };
 
@@ -49,8 +49,8 @@ UnitTest.test('Function tests', function() {
 
     assert.throws(Fun.die('Died!'));
 
-    var called = false;
-    var f = function () {
+    let called = false;
+    const f = function () {
       called = true;
     };
     Fun.apply(f);
@@ -61,9 +61,9 @@ UnitTest.test('Function tests', function() {
 
   };
 
-  var testSpecs = function () {
+  const testSpecs = function () {
     Jsc.property('Check compose :: compose(f, g)(x) = f(g(x))', 'string', 'string -> string', 'string -> string', function (x, f, g) {
-      var h = Fun.compose(f, g);
+      const h = Fun.compose(f, g);
       return Jsc.eq(f(g(x)), h(x));
     });
 
@@ -84,23 +84,23 @@ UnitTest.test('Function tests', function() {
     });
 
     Jsc.property('Check curry :: curry(f, x)(y) = f(x, y)', Jsc.array(Jsc.json), Jsc.array(Jsc.json), function (extra1, extra2) {
-      var f = function () {
-        var args = Array.prototype.slice.call(arguments, 0);
+      const f = function () {
+        const args = Array.prototype.slice.call(arguments, 0);
         return args;
       };
 
-      var curried = Fun.curry.apply(undefined, [ f ].concat(extra1));
-      var output = Fun.curry.apply(undefined, [ curried ].concat(extra2))();
+      const curried = Fun.curry.apply(undefined, [ f ].concat(extra1));
+      const output = Fun.curry.apply(undefined, [ curried ].concat(extra2))();
       return Jsc.eq(extra1.concat(extra2), output);
     });
 
     Jsc.property('Check not :: not(f(x)) === !f(x)', Jsc.json, Jsc.fun(Jsc.bool), function (x, f) {
-      var g = Fun.not(f);
+      const g = Fun.not(f);
       return Jsc.eq(f(x), !g(x));
     });
 
     Jsc.property('Check not :: not(not(f(x))) === f(x)', Jsc.json, Jsc.fun(Jsc.bool), function (x, f) {
-      var g = Fun.not(Fun.not(f));
+      const g = Fun.not(Fun.not(f));
       return Jsc.eq(f(x), g(x));
     });
 
@@ -109,8 +109,8 @@ UnitTest.test('Function tests', function() {
     });
 
     Jsc.property('Check call :: apply(constant(a)) === undefined', Jsc.json, function (x) {
-      var hack = null;
-      var output = Fun.call(function () {
+      let hack = null;
+      const output = Fun.call(function () {
         hack = x;
       });
 

@@ -1,12 +1,12 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Partition Test', function() {
   (function() {
 
-    var check = function (input: any[], expected) {
+    const check = function (input: any[], expected) {
       const f = function (n) { return n.indexOf('yes') > -1; };
       assert.eq(expected, Arr.partition(input, f));
       assert.eq(expected, Arr.partition(Object.freeze(input.slice()), f));
@@ -33,7 +33,7 @@ UnitTest.test('Partition Test', function() {
       'Check that if the filter always returns false, then everything is in "fail"',
       Jsc.array(Jsc.json),
       function (arr) {
-        var output = Arr.partition(arr, Fun.constant(false));
+        const output = Arr.partition(arr, Fun.constant(false));
         return Jsc.eq(0, output.pass.length) && Jsc.eq(arr, output.fail);
       }
     );
@@ -42,7 +42,7 @@ UnitTest.test('Partition Test', function() {
       'Check that if the filter always returns true, then everything is in "pass"',
       Jsc.array(Jsc.json),
       function (arr) {
-        var output = Arr.partition(arr, Fun.constant(true));
+        const output = Arr.partition(arr, Fun.constant(true));
         return Jsc.eq(0, output.fail.length) && Jsc.eq(arr, output.pass);
       }
     );
@@ -52,7 +52,7 @@ UnitTest.test('Partition Test', function() {
       Jsc.array(Jsc.json),
       Jsc.fun(Jsc.bool),
       function (arr, predicate) {
-        var output = Arr.partition(arr, predicate);
+        const output = Arr.partition(arr, predicate);
 
         return Arr.forall(output.fail, function (x) {
           return predicate(x) === false;

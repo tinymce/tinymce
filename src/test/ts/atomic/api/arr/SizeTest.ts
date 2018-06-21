@@ -2,7 +2,7 @@ import Obj from 'ephox/katamari/api/Obj';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SizeTest', function() {
-  var check = function (expected, input) {
+  const check = function (expected, input) {
     assert.eq(expected, Obj.size(input));
   };
 

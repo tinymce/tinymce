@@ -1,15 +1,15 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ExistsTest', function() {
-  var eqc = function(x) { return function(a) { return x === a; }};
-  var never = function() { return false; };
-  var always = function() { return true; };
-  var bottom = function() { throw 'error'; };
+  const eqc = function(x) { return function(a) { return x === a; }};
+  const never = function() { return false; };
+  const always = function() { return true; };
+  const bottom = function() { throw 'error'; };
 
   Jsc.property('Element appended to array exists in array', 'json', '[json]', function(i, arr) {
-    var arr2 = Arr.flatten([arr, [i]]);
+    const arr2 = Arr.flatten([arr, [i]]);
     return Arr.exists(arr2, eqc(i));
   });
 
@@ -22,7 +22,7 @@ UnitTest.test('ExistsTest', function() {
   });
 
   Jsc.property('Element exists in middle of array', '[json]', 'json', '[json]', function(prefix, x, suffix) {
-    var arr = Arr.flatten([prefix, [x], suffix]);
+    const arr = Arr.flatten([prefix, [x], suffix]);
     return Arr.exists(arr, eqc(x));
   });
 
@@ -35,7 +35,7 @@ UnitTest.test('ExistsTest', function() {
   });
 
   Jsc.property('Element exists in non-empty array when predicate always returns true', '[json]', 'json', function(xs, x) {
-    var arr = Arr.flatten([xs, [x]]);
+    const arr = Arr.flatten([xs, [x]]);
     return Arr.exists(arr, always);
   });
 
@@ -44,7 +44,7 @@ UnitTest.test('ExistsTest', function() {
   });
 
 
-  var check = function (expected, input: any[], f) {
+  const check = function (expected, input: any[], f) {
     assert.eq(expected, Arr.exists(input, f));
     assert.eq(expected, Arr.exists(Object.freeze(input.slice()), f));
   };

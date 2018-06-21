@@ -1,4 +1,4 @@
-import Arr from './Arr';
+import * as Arr from './Arr';
 import { Option } from './Option';
 
 export interface LazyValue<T> {
@@ -7,12 +7,12 @@ export interface LazyValue<T> {
   isReady: () => boolean;
 }
 
-var nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
-  var data = Option.none<T>();
-  var callbacks: ((value: T) => void)[] = [];
+const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
+  let data = Option.none<T>();
+  let callbacks: ((value: T) => void)[] = [];
 
   /** map :: this LazyValue a -> (a -> b) -> LazyValue b */
-  var map = function <U> (f: (value: T) => U) {
+  const map = function <U> (f: (value: T) => U) {
     return nu(function (nCallback: (value: U) => void) {
       get(function (data) {
         nCallback(f(data));
@@ -20,26 +20,26 @@ var nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyVal
     });
   };
 
-  var get = function (nCallback: (value: T) => void) {
+  const get = function (nCallback: (value: T) => void) {
     if (isReady()) call(nCallback);
     else callbacks.push(nCallback);
   };
 
-  var set = function (x: T) {
+  const set = function (x: T) {
     data = Option.some(x);
     run(callbacks);
     callbacks = [];
   };
 
-  var isReady = function () {
+  const isReady = function () {
     return data.isSome();
   };
 
-  var run = function (cbs: ((value: T) => void)[]) {
+  const run = function (cbs: ((value: T) => void)[]) {
     Arr.each(cbs, call);
   };
 
-  var call = function(cb: (value: T) => void) {
+  const call = function(cb: (value: T) => void) {
     data.each(function(x) {
       setTimeout(function() {
         cb(x);
@@ -57,7 +57,7 @@ var nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyVal
   };
 };
 
-var pure = function <T> (a: T) {
+const pure = function <T> (a: T) {
   return nu(function (callback: (value: T) => void) {
     callback(a);
   });

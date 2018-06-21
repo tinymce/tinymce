@@ -1,30 +1,30 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrEachTest', function() {
-  var checkLHelper = function (expected, input) {
-    var values = [];
+  const checkLHelper = function (expected, input) {
+    const values = [];
     Arr.each(input, function (x, i) {
       values.push({index: i, value: x});
     });
     assert.eq(expected, values);
   };
 
-  var checkL = function(expected, input: any[]) {
+  const checkL = function(expected, input: any[]) {
     checkLHelper(expected, input);
     checkLHelper(expected, Object.freeze(input.slice()));
   };
 
-  var checkRHelper = function (expected, input) {
-    var values = [];
+  const checkRHelper = function (expected, input) {
+    const values = [];
     Arr.eachr(input, function (x, i) {
       values.push({index: i, value: x});
     });
     assert.eq(expected, values);
   };
 
-  var checkR = function(expected, input: any[]) {
+  const checkR = function(expected, input: any[]) {
     checkRHelper(expected, input);
     checkRHelper(expected, Object.freeze(input.slice()));
   };
@@ -39,8 +39,8 @@ UnitTest.test('ArrEachTest', function() {
     'Each + push should equal the same array',
     Jsc.array(Jsc.json),
     function (arr) {
-      var values = [ ];
-      var output = Arr.each(arr, function (x, i) {
+      const values = [ ];
+      const output = Arr.each(arr, function (x, i) {
         values.push(x);
       });
       return Jsc.eq(arr, values) && Jsc.eq(undefined, output);
@@ -51,8 +51,8 @@ UnitTest.test('ArrEachTest', function() {
     'eachr + push should equal the reverse of the array',
     Jsc.array(Jsc.json),
     function (arr) {
-      var values = [ ];
-      var output = Arr.eachr(arr, function (x, i) {
+      const values = [ ];
+      const output = Arr.eachr(arr, function (x, i) {
         values.push(x);
       });
       return Jsc.eq(arr, Arr.reverse(values)) && Jsc.eq(undefined, output);

@@ -1,10 +1,10 @@
-import Strings from 'ephox/katamari/api/Strings';
+import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('capitalize', function() {
   function check(expected, input) {
-    var actual = Strings.capitalize(input);
+    const actual = Strings.capitalize(input);
     assert.eq(expected, actual);
   }
 

@@ -1,18 +1,16 @@
-import Arr from '../api/Arr';
-import Fun from '../api/Fun';
+import * as Arr from '../api/Arr';
+import * as Fun from '../api/Fun';
 
-export default <T extends string>(...fields: T[]) => {
-  return function(...values): {
-    [key in T]: () => any
-  } {
+export const Immutable = <T = Record<string,() => any>>(...fields: string[]) => {
+  return function(...values: any[]): T {
     if (fields.length !== values.length) {
       throw new Error('Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments');
     }
 
-    var struct = {} as {[key in T]: () => any};
+    const struct: Record<string,() => any> = {};
     Arr.each(fields, function (name, i) {
       struct[name] = Fun.constant(values[i]);
     });
-    return struct;
+    return <any>struct;
   };
 };

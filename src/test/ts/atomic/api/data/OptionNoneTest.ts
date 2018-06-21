@@ -1,12 +1,12 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionNoneTest', function() {
-  var testSanity = function () {
-    var s = Option.none();
+  const testSanity = function () {
+    const s = Option.none();
     assert.eq(false, s.isSome());
     assert.eq(true, s.isNone());
     assert.eq(6, s.getOr(6));
@@ -43,8 +43,8 @@ UnitTest.test('OptionNoneTest', function() {
     assert.eq(true, Option.none().or(Option.some(7)).equals(Option.some(7)));
     assert.eq(true, Option.none().or(Option.none()).equals(Option.none()));
 
-    var assertOptionEq = function(expected, actual) {
-      var same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
+    const assertOptionEq = function(expected, actual) {
+      const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
       if (!same) {
         // assumes toString() works
         assert.fail('Expected: ' + expected.toString() + ' Actual: ' + actual.toString());
@@ -60,18 +60,18 @@ UnitTest.test('OptionNoneTest', function() {
     assert.eq('b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
   };
 
-  var testSpecs = function () {
-    var arbOptionNone = ArbDataTypes.optionNone;
-    var arbOptionSome = ArbDataTypes.optionSome;
-    var arbOption = ArbDataTypes.option;
+  const testSpecs = function () {
+    const arbOptionNone = ArbDataTypes.optionNone;
+    const arbOptionSome = ArbDataTypes.optionSome;
+    const arbOption = ArbDataTypes.option;
 
     Jsc.property('Checking none.fold(_ -> x, die) === x', arbOptionNone, 'json', function (opt, json) {
-      var actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
+      const actual = opt.fold(Fun.constant(json), Fun.die('Should not die'));
       return Jsc.eq(json, actual);
     });
 
     Jsc.property('Checking none.is === false', arbOptionNone, function (opt) {
-      var v = opt.fold(Fun.identity, Fun.die('should be option.none'));
+      const v = opt.fold(Fun.identity, Fun.die('should be option.none'));
       return Jsc.eq(false, opt.is(v));
     });
 
@@ -102,40 +102,40 @@ UnitTest.test('OptionNoneTest', function() {
     });
 
     Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionNone, 'json', function (opt, json) {
-      var output = opt.or(Option.some(json));
+      const output = opt.or(Option.some(json));
       return Jsc.eq(true, output.is(json));
     });      
 
     Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionNone, 'json', function (opt, json) {
-      var output = opt.orThunk(function () {
+      const output = opt.orThunk(function () {
         return Option.some(json);
       });
       return Jsc.eq(true, output.is(json));
     });     
 
     Jsc.property('Checking none.map(f) === none', arbOptionNone, 'string -> json', function (opt, f) {
-      var actual = opt.map(f);
+      const actual = opt.map(f);
       return Jsc.eq(true, actual.isNone());
     });
 
     Jsc.property('Checking none.ap(Option.some(string -> json) === none', arbOptionNone, 'string -> json', function (opt, f) {
-      var g = Option.some(f);
-      var actual = opt.ap(g);
+      const g = Option.some(f);
+      const actual = opt.ap(g);
       return Jsc.eq(true, actual.isNone());
     });
 
     Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionNone, 'string -> json', function (opt, f) {
-      var actual = opt.each(Fun.die('should not invoke'));
+      const actual = opt.each(Fun.die('should not invoke'));
       return Jsc.eq(undefined, actual);
     });
 
     Jsc.property('Given f :: s -> some(b), checking none.bind(f) === none', arbOptionNone, Jsc.fn(arbOptionSome), function (opt, f) {
-      var actual = opt.bind(f);
+      const actual = opt.bind(f);
       return Jsc.eq(true, actual.isNone());
     });
 
     Jsc.property('Given f :: s -> none, checking none.bind(f) === none', arbOptionNone, Jsc.fn(arbOptionNone), function (opt, f) {
-      var actual = opt.bind(f);
+      const actual = opt.bind(f);
       return Jsc.eq(true, actual.isNone());
     });
 

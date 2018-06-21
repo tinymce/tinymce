@@ -1,17 +1,17 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Obj from 'ephox/katamari/api/Obj';
-import Struct from 'ephox/katamari/api/Struct';
+import * as Struct from 'ephox/katamari/api/Struct';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Struct.immutable', function() {
-  var Thing = Struct.immutable('fred', 'barney');
-  var thing = Thing('hello', 1);
+  const Thing = Struct.immutable('fred', 'barney');
+  const thing = Thing('hello', 1);
   assert.eq('hello', thing.fred());
   assert.eq(1, thing.barney());
 
-  var toUnique = function (array) {
-    var r = { };
+  const toUnique = function (array) {
+    const r = { };
     Arr.each(array, function (v) {
       r[v] = {};
     });
@@ -23,12 +23,12 @@ UnitTest.test('Struct.immutable', function() {
     Jsc.nearray(Jsc.string),
     function (rawValues) {
       // Remove duplications.
-      var values = toUnique(rawValues);
+      const values = toUnique(rawValues);
 
-      var struct = Struct.immutable.apply(undefined, values);
-      var output = struct.apply(undefined, values);
+      const struct = Struct.immutable.apply(undefined, values);
+      const output = struct.apply(undefined, values);
 
-      var evaluated = Obj.mapToArray(output, function (v, k) {
+      const evaluated = Obj.mapToArray(output, function (v, k) {
         return v();
       });
       
@@ -41,9 +41,9 @@ UnitTest.test('Struct.immutable', function() {
     Jsc.nearray(Jsc.string),
     function (rawValues) {
       // Remove duplications.
-      var values = toUnique(rawValues);
+      const values = toUnique(rawValues);
 
-      var struct = Struct.immutable.apply(undefined, values);
+      const struct = Struct.immutable.apply(undefined, values);
       try {
         struct.apply(undefined, values.slice(1));
         return false;
@@ -59,9 +59,9 @@ UnitTest.test('Struct.immutable', function() {
     Jsc.integer(1, 10),
     function (rawValues, numToExclude) {
       // Remove duplications.
-      var values = toUnique(rawValues);
+      const values = toUnique(rawValues);
 
-      var struct = Struct.immutable.apply(undefined, values);
+      const struct = Struct.immutable.apply(undefined, values);
       try {
         struct.apply(undefined, values.slice(numToExclude));
         return false;
@@ -77,9 +77,9 @@ UnitTest.test('Struct.immutable', function() {
     Jsc.nearray(Jsc.string),
     function (rawValues, extra) {
       // Remove duplications.
-      var values = toUnique(rawValues);
+      const values = toUnique(rawValues);
 
-      var struct = Struct.immutable.apply(undefined, values);
+      const struct = Struct.immutable.apply(undefined, values);
       try {
         struct.apply(undefined, values.concat(extra));
         return false;

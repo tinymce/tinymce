@@ -1,9 +1,9 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FlattenTest', function() {
-  var check = function (expected, input: any[]) {
+  const check = function (expected, input: any[]) {
     assert.eq(expected, Arr.flatten(input));
     assert.eq(expected, Arr.flatten(Object.freeze(input.slice())));
   };
@@ -13,8 +13,8 @@ UnitTest.test('FlattenTest', function() {
   check([1, 2], [[1], [2]]);
   check([1, 2, 3, 4, 5], [[1, 2], [], [3], Object.freeze([4, 5]), []]);
 
-  var checkError = function (input) {
-    var message = undefined;
+  const checkError = function (input) {
+    let message = undefined;
     try {
       Arr.flatten(input);
     } catch (e) {
@@ -35,8 +35,8 @@ UnitTest.test('FlattenTest', function() {
     Jsc.array(Jsc.json),
     Jsc.integer(1, 5),
     function (arr, chunkSize) {
-      var chunks = Arr.chunk(arr, chunkSize);
-      var bound = Arr.flatten(chunks);
+      const chunks = Arr.chunk(arr, chunkSize);
+      const bound = Arr.flatten(chunks);
       return Jsc.eq(arr, bound);
     }
   );

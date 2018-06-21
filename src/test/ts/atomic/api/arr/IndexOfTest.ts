@@ -1,25 +1,25 @@
-import Arr from 'ephox/katamari/api/Arr';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IndexOfTest', function() {
-  var checkNoneHelper = function (xs, x) {
-    var actual = Arr.indexOf(xs, x);
+  const checkNoneHelper = function (xs, x) {
+    const actual = Arr.indexOf(xs, x);
     assert.eq(true, actual.isNone());
   };
 
-  var checkNone = function (xs: any[], x) {
+  const checkNone = function (xs: any[], x) {
     checkNoneHelper(xs, x);
     checkNoneHelper(Object.freeze(xs.slice()), x);
   };
 
-  var checkHelper = function (expected, xs, x) {
-    var actual = Arr.indexOf(xs, x).getOrDie('should have value');
+  const checkHelper = function (expected, xs, x) {
+    const actual = Arr.indexOf(xs, x).getOrDie('should have value');
     assert.eq(expected, actual);
   };
 
-  var check = function (expected, xs: any[], x) {
+  const check = function (expected, xs: any[], x) {
     checkHelper(expected, xs, x);
     checkHelper(expected, Object.freeze(xs.slice()), x);
   };
@@ -39,7 +39,7 @@ UnitTest.test('IndexOfTest', function() {
     Jsc.array(Jsc.json),
     function (arr) {
       return Arr.forall(arr, function (x, i) {
-        var index = Arr.indexOf(arr.slice(i), x).getOrDie('should have index');
+        const index = Arr.indexOf(arr.slice(i), x).getOrDie('should have index');
         return 0 === index;
       });
     }
@@ -50,7 +50,7 @@ UnitTest.test('IndexOfTest', function() {
     ArbDataTypes.indexArrayOf(10),
     function (arr) {
       return Arr.forall(arr, function (x, i) {
-        var index = Arr.indexOf(arr, x).getOrDie('should have index');
+        const index = Arr.indexOf(arr, x).getOrDie('should have index');
         return i === index;
       });
     }

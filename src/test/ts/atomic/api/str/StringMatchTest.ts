@@ -1,9 +1,9 @@
-import StringMatch from 'ephox/katamari/api/StringMatch';
+import { StringMatch } from 'ephox/katamari/api/StringMatch';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('StringMatchTest', function() {
-  var check = function (testcase) {
+  const check = function (testcase) {
     assert.eq(testcase.expected, StringMatch.matches(testcase.match, testcase.input));
     assert.eq(!testcase.expected, StringMatch.matches(
       StringMatch.not(testcase.match),
@@ -11,7 +11,7 @@ UnitTest.test('StringMatchTest', function() {
     ));
   };
 
-  var toString = function (subject) {
+  const toString = function (subject) {
     return StringMatch.cata(subject, function (s) {
       return 'starts with: ' + s;
     }, function (p) {
@@ -27,7 +27,7 @@ UnitTest.test('StringMatchTest', function() {
     });
   };
 
-  var testcases = [
+  const testcases = [
     { expected: false, input: 'bee', match: StringMatch.starts('a', StringMatch.caseInsensitive) },
     { expected: false, input: 'bee', match: StringMatch.starts('bed', StringMatch.caseInsensitive) },
     { expected: false, input: 'bee', match: StringMatch.starts('c', StringMatch.caseInsensitive) },
@@ -67,7 +67,7 @@ UnitTest.test('StringMatchTest', function() {
     { expected: true, input: '', match: StringMatch.all() }
   ];
 
-  for (var tc in testcases) {
+  for (const tc in testcases) {
     check(testcases[tc]);
   }
 

@@ -1,12 +1,12 @@
-import Fun from 'ephox/katamari/api/Fun';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Result.error tests', function() {
-  var testSanity = function () {
-    var s = Result.error('error');
+  const testSanity = function () {
+    const s = Result.error('error');
     assert.eq(false, s.is('error'));
     assert.eq(false, s.isValue());
     assert.eq(true, s.isError());
@@ -46,18 +46,18 @@ UnitTest.test('Result.error tests', function() {
     assert.eq(true, Result.error(4).toOption().isNone());
   };
 
-  var arbResultError = ArbDataTypes.resultError;
-  var arbResultValue = ArbDataTypes.resultValue;
+  const arbResultError = ArbDataTypes.resultError;
+  const arbResultValue = ArbDataTypes.resultValue;
 
-  var getErrorOrDie = function (res) {
+  const getErrorOrDie = function (res) {
     return res.fold(function (err) {
       return err;
     }, Fun.die('Was not an error!'));
   };
 
-  var testSpecs = function () {
+  const testSpecs = function () {
     Jsc.property('Checking error.is === false', arbResultError, function (res) {
-      var v = res.fold(Fun.identity, Fun.die('should be result.error'));
+      const v = res.fold(Fun.identity, Fun.die('should be result.error'));
       return Jsc.eq(false, res.is(v));
     });
 
@@ -83,46 +83,46 @@ UnitTest.test('Result.error tests', function() {
     });
 
     Jsc.property('Checking error.or(oValue) === oValue', arbResultError, 'json', function (res, json) {
-      var output = res.or(Result.value(json));
+      const output = res.or(Result.value(json));
       return Jsc.eq(true, output.is(json));
     });
 
     Jsc.property('Checking error.orThunk(_ -> v) === v', arbResultError, 'json', function (res, json) {
-      var output = res.orThunk(function () {
+      const output = res.orThunk(function () {
         return Result.value(json);
       });
       return Jsc.eq(true, output.is(json));
     });
 
     Jsc.property('Checking error.fold(_ -> x, die) === x', arbResultError, 'json', function (res, json) {
-      var actual = res.fold(Fun.constant(json), Fun.die('Should not die'));
+      const actual = res.fold(Fun.constant(json), Fun.die('Should not die'));
       return Jsc.eq(json, actual);
     });
 
     Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (res, f) {
-      var actual = res.map(f);
+      const actual = res.map(f);
       return Jsc.eq(true, actual.fold(function (e) {
         return e == res.fold(Fun.identity, Fun.die('should not get here!'));
       }), Fun.constant(false));
     });
 
     Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (res, f) {
-      var actual = res.map(f);
+      const actual = res.map(f);
       return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
     });
 
     Jsc.property('Checking error.each(f) === undefined', arbResultError, 'string -> json', function (res, f) {
-      var actual = res.each(f);
+      const actual = res.each(f);
       return Jsc.eq(undefined, actual);
     });
 
     Jsc.property('Given f :: s -> RV, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultValue), function (res, f) {
-      var actual = res.bind(f);
+      const actual = res.bind(f);
       return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
     });
 
     Jsc.property('Given f :: s -> RE, checking error.bind(f) === error', arbResultError, Jsc.fn(arbResultError), function (res, f) {
-      var actual = res.bind(f);
+      const actual = res.bind(f);
       return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
     });
 

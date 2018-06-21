@@ -1,4 +1,4 @@
-import Arr from 'ephox/katamari/api/Arr';
+import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
@@ -19,7 +19,7 @@ UnitTest.test('ReverseTest', function() {
     return Jsc.eq([c, b, a], Arr.reverse([a, b, c]));
   });
 
-  var check = function (expected, input) {
+  const check = function (expected, input) {
     assert.eq(expected, Arr.reverse(input));
     assert.eq(expected, Arr.reverse(Object.freeze(input.slice())));
   };

@@ -1,14 +1,14 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BindTest', function() {
-  var len = function (x) {
+  const len = function (x) {
     return [x.length];
   };
 
-  var check = function (expected, input: any[], f) {
+  const check = function (expected, input: any[], f) {
     assert.eq(expected, Arr.bind(input, f));
     assert.eq(expected, Arr.bind(Object.freeze(input.slice()), f));
   };
@@ -22,7 +22,7 @@ UnitTest.test('BindTest', function() {
     'Check Arr.bind(xs, _ -> [_] eq xs',
     Jsc.array(Jsc.json),
     function (arr) {
-      var output = Arr.bind(arr, Arr.pure);
+      const output = Arr.bind(arr, Arr.pure);
       return Jsc.eq(output, arr);
     }
   );
@@ -31,7 +31,7 @@ UnitTest.test('BindTest', function() {
     'Check binding an array of empty arrays with identity equals an empty array',
     Jsc.array(Jsc.constant([])),
     function (arr) {
-      var output = Arr.bind(arr, Fun.identity);
+      const output = Arr.bind(arr, Fun.identity);
       return Jsc.eq([ ], output);
     }
   );
@@ -41,8 +41,8 @@ UnitTest.test('BindTest', function() {
     Jsc.array(Jsc.json),
     Jsc.integer(1, 5),
     function (arr, chunkSize) {
-      var chunks = Arr.chunk(arr, chunkSize);
-      var bound = Arr.bind(chunks, Fun.identity);
+      const chunks = Arr.chunk(arr, chunkSize);
+      const bound = Arr.bind(chunks, Fun.identity);
       return Jsc.eq(arr, bound);
     }
   );
@@ -52,8 +52,8 @@ UnitTest.test('BindTest', function() {
     Jsc.array(Jsc.json),
     Jsc.fun(Jsc.json),
     function (arr, g) {
-      var bound = Arr.bind(arr, Fun.compose(Arr.pure, g));
-      var mapped = Arr.map(arr, g);
+      const bound = Arr.bind(arr, Fun.compose(Arr.pure, g));
+      const mapped = Arr.map(arr, g);
       return Jsc.eq(mapped, bound);
     }
   );

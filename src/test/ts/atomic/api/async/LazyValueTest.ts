@@ -1,27 +1,27 @@
-import Arr from 'ephox/katamari/api/Arr';
-import Fun from 'ephox/katamari/api/Fun';
+import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { LazyValue } from 'ephox/katamari/api/LazyValue';
-import LazyValues from 'ephox/katamari/api/LazyValues';
+import * as LazyValues from 'ephox/katamari/api/LazyValues';
 import { Result } from 'ephox/katamari/api/Result';
-import AsyncProps from 'ephox/katamari/test/AsyncProps';
+import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('LazyValueTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var lazyCounter = function () {
-    var counter = 0;
+  const lazyCounter = function () {
+    let counter = 0;
     return LazyValue.nu(function (callback) {
       counter++;
       callback(counter);
     });
   };
 
-  var testGet = function () {
+  const testGet = function () {
     return new Promise(function (resolve, reject) {
-      var lazy = lazyCounter();
+      const lazy = lazyCounter();
 
       lazy.get(function (val) {
         if (! Jsc.eq(val, 1)) reject('LazyValue.get. The counter should be 1 after 1 call');
@@ -33,13 +33,13 @@ UnitTest.asynctest('LazyValueTest', function() {
     });
   };
 
-  var testMap = function () {
+  const testMap = function () {
     return new Promise(function (resolve, reject) {
-      var f = function (x) {
+      const f = function (x) {
         return x + 'hello';
       };
 
-      var lazy = LazyValue.nu(function (callback) {
+      const lazy = LazyValue.nu(function (callback) {
         setTimeout(function () {
           callback('extra');
         }, 10);
@@ -51,9 +51,9 @@ UnitTest.asynctest('LazyValueTest', function() {
     });
   };
 
-  var testIsReady = function () {
+  const testIsReady = function () {
     return new Promise(function (resolve, reject) {
-      var lazy = LazyValue.nu(function (callback) {
+      const lazy = LazyValue.nu(function (callback) {
         setTimeout(function () {
           callback('extra');
         }, 100);
@@ -67,7 +67,7 @@ UnitTest.asynctest('LazyValueTest', function() {
     });
   };
 
-  var testPure = function () {
+  const testPure = function () {
     return new Promise(function (resolve, reject) {
       LazyValue.pure(10).get(function (v) {
         return Jsc.eq(10, v) ? resolve(true) : reject('LazyValue.pure. Expected 10, was: ' + v);
@@ -75,15 +75,15 @@ UnitTest.asynctest('LazyValueTest', function() {
     });
   };
 
-  var testParallel = function () {
+  const testParallel = function () {
     return new Promise(function (resolve, reject) {
-      var f = LazyValue.nu(function(callback) {
+      const f = LazyValue.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'apple'), 10);
       });
-      var g = LazyValue.nu(function(callback) {
+      const g = LazyValue.nu(function(callback) {
         setTimeout(Fun.curry(callback, 'banana'), 5);
       });
-      var h = LazyValue.nu(function(callback) {
+      const h = LazyValue.nu(function(callback) {
         callback('carrot');
       });
 
@@ -97,9 +97,9 @@ UnitTest.asynctest('LazyValueTest', function() {
     });
   };
 
-  var testSpecs = function () {
-    var genLazySchema = Jsc.json.generator.map(function (json) {
-      var future = LazyValue.nu(function (done) {
+  const testSpecs = function () {
+    const genLazySchema = Jsc.json.generator.map(function (json) {
+      const future = LazyValue.nu(function (done) {
         setTimeout(function () {
           done(json);
         }, 10);
@@ -111,7 +111,7 @@ UnitTest.asynctest('LazyValueTest', function() {
       };
     });
 
-    var arbLazySchema = Jsc.bless({
+    const arbLazySchema = Jsc.bless({
       generator: genLazySchema
     });
 
@@ -140,8 +140,8 @@ UnitTest.asynctest('LazyValueTest', function() {
         label: 'LazyValues.par([lazyvalue]).get() === [lazyvalue.val]',
         arbs: [ Jsc.array(arbLazySchema) ],
         f: function (futures) {
-          var rawLazyvals = Arr.map(futures, function (ft) { return ft.future; });
-          var expected = Arr.map(futures, function (ft) { return ft.contents; });
+          const rawLazyvals = Arr.map(futures, function (ft) { return ft.future; });
+          const expected = Arr.map(futures, function (ft) { return ft.contents; });
           return AsyncProps.checkLazy(LazyValues.par(rawLazyvals), function (list) {
             return Jsc.eq(expected, list) ? Result.value(true) : Result.error(
               'Expected: ' + expected.join(',') +', actual: ' + list.join(',')

@@ -1,16 +1,16 @@
-import Fun from 'ephox/katamari/api/Fun';
-import Contracts from 'ephox/katamari/api/Contracts';
+import * as Fun from 'ephox/katamari/api/Fun';
+import * as Contracts from 'ephox/katamari/api/Contracts';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ContractsTest', function() {
-  var a = Fun.constant('element');
-  var b = Fun.constant('destroy');
-  var c = Fun.constant('events');
+  const a = Fun.constant('element');
+  const b = Fun.constant('destroy');
+  const c = Fun.constant('events');
 
-  var bagger = Contracts.exactly([ 'element', 'destroy', 'events' ]);
-  var baggerMin = Contracts.ensure([ 'element', 'destroy', 'events' ]);
+  const bagger = Contracts.exactly([ 'element', 'destroy', 'events' ]);
+  const baggerMin = Contracts.ensure([ 'element', 'destroy', 'events' ]);
 
-  var baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
+  const baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
     label: '10 if mustBe10',
     validate: function (v, k) {
       return k === 'mustBe10' ? v === 10 : true;
@@ -18,7 +18,7 @@ UnitTest.test('ContractsTest', function() {
   });
 
   (function () {
-    var t1 = bagger({
+    const t1 = bagger({
       element: a,
       destroy: b,
       events: c
@@ -30,7 +30,7 @@ UnitTest.test('ContractsTest', function() {
   })();
 
   (function () {
-    var t1 = baggerMin({
+    const t1 = baggerMin({
       element: a,
       destroy: b,
       events: c
@@ -43,9 +43,9 @@ UnitTest.test('ContractsTest', function() {
 
 
   (function () {
-    var expected = 'All values need to be of type: function. Keys (element, events) were not.';
+    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
-      var bg = bagger({
+      const bg = bagger({
         element: 'element',
         destroy: b,
         events: 'events'
@@ -58,9 +58,9 @@ UnitTest.test('ContractsTest', function() {
   })();
 
   (function () {
-    var expected = 'All values need to be of type: function. Keys (element, events) were not.';
+    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
-      var bg = baggerMin({
+      const bg = baggerMin({
         element: 'element',
         destroy: b,
         events: 'events'
@@ -73,9 +73,9 @@ UnitTest.test('ContractsTest', function() {
   })();
 
   (function () {
-    var expected = 'Unsupported keys for object: blah';
+    const expected = 'Unsupported keys for object: blah';
     try {
-      var bg = bagger({
+      const bg = bagger({
         element: a,
         destroy: b,
         events: c,
@@ -90,7 +90,7 @@ UnitTest.test('ContractsTest', function() {
 
   (function () {
     // Ensure supports extra keys, with any type.
-    var bg = baggerMin({
+    const bg = baggerMin({
       element: a,
       destroy: b,
       events: c,
@@ -103,9 +103,9 @@ UnitTest.test('ContractsTest', function() {
   })();
 
   (function () {
-    var expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
+    const expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
     try {
-      var bg = baggerMin10({
+      const bg = baggerMin10({
         mustBe10: 'dog',
         any: 'cat'
       });
@@ -118,7 +118,7 @@ UnitTest.test('ContractsTest', function() {
 
   (function () {
     // EnsureWith provides a custom value validator.
-    var bg = baggerMin10({
+    const bg = baggerMin10({
       mustBe10: 10,
       any: 'cat'
     });
