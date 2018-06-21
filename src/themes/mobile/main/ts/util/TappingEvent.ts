@@ -7,7 +7,7 @@ const monitor = function (editorApi) {
     triggerEvent (type, evt) {
       editorApi.onTapContent(evt);
     }
-  });
+  } as any);
 
   // convenience methods
   const onTouchend = function () {

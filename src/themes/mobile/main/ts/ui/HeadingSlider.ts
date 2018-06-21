@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Compare, Element, Node, TransformFind } from '@ephox/sugar';
+import { Compare, Element, Node, PredicateFind } from '@ephox/sugar';
 
 import * as UiDomFactory from '../util/UiDomFactory';
 import SizeSlider from './SizeSlider';
@@ -25,12 +25,14 @@ const sketch = function (realm, editor): SketchSpec {
     getInitialValue () {
       const node = editor.selection.getStart();
       const elem = Element.fromDom(node);
-      return TransformFind.closest(elem, function (e) {
+      const heading = PredicateFind.closest(elem, (e) => {
         const nodeName = Node.name(e);
-        return Arr.indexOf(headings, nodeName);
+        return Arr.contains(headings, nodeName);
       }, function (e) {
         return Compare.eq(e, Element.fromDom(editor.getBody()));
-      }).getOr(0);
+      });
+
+      return heading.bind((elm) => Arr.indexOf(headings, Node.name(elm))).getOr(0);
     }
   };
 
