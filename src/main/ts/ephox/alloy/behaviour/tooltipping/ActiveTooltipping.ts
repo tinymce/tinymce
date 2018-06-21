@@ -47,7 +47,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       AlloyTriggers.emit(comp, HideTooltipEvent);
     }),
 
-    AlloyEvents.run('show.tooltip', (comp) => {
+    AlloyEvents.run(ShowTooltipEvent, (comp) => {
       state.clearTimer();
       if (! state.isShowing()) {
         comp.getSystem().broadcastOn([ ExclusivityChannel ], { });
@@ -56,10 +56,10 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           dom: tooltipConfig.tooltipDom(),
           events: AlloyEvents.derive([
             AlloyEvents.run(NativeEvents.mouseover(), (_) => {
-              AlloyTriggers.emit(comp, 'show.tooltip');
+              AlloyTriggers.emit(comp, ShowTooltipEvent);
             }),
             AlloyEvents.run(NativeEvents.mouseout(), (_) => {
-              AlloyTriggers.emit(comp, 'hide.tooltip');
+              AlloyTriggers.emit(comp, HideTooltipEvent);
             })
           ])
         });
@@ -77,24 +77,16 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       }
     }),
 
-    AlloyEvents.run('hide.tooltip', (comp) => {
+    AlloyEvents.run(HideTooltipEvent, (comp) => {
       state.resetTimer(() => {
         hide();
       }, tooltipConfig.delay());
     }),
     AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
-      AlloyTriggers.emit(comp, 'show.tooltip');
+      AlloyTriggers.emit(comp, ShowTooltipEvent);
    }),
     AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
-      AlloyTriggers.emit(comp, 'hide.tooltip');
-
-      // Only hide if we haven't received a show for some time.
-
-      // Hide the tooltip
-      // state.get().each((popup) => {
-      //   Attachment.detach(popup);
-      //   state.clear();
-      // });
+      AlloyTriggers.emit(comp, HideTooltipEvent);
     })
   ]);
 

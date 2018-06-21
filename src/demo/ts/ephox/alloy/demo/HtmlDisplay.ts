@@ -5,12 +5,14 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import { MutationObserver, document } from '@ephox/dom-globals';
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const register = Thunk.cached((gui) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-const section = (gui, instructions, spec) => {
+const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyComponent => {
   register(gui);
   const information = Container.sketch({
     dom: {
