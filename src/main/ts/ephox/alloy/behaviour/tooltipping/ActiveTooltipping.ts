@@ -26,6 +26,11 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     });
   };
 
+  // Logic.
+  // For mouse, there is no delay for it showing, but after you move away,
+  // you have a "delay" before it will actually disappear
+
+  // For keyboard, there is a delay for it showing. As soon as focus is lost, it goes away.
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
       // TODO: Think about the types for this, or find a better way for this
@@ -98,21 +103,3 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
 export {
   events
 };
-
-
-    // Logic.
-    // For mouse, there is no delay for it showing, but after you move away,
-    // you have a "delay" before it will actually disappear
-
-    // For keyboard, there is a delay for it showing. As soon as focus is lost, it goes away.
-
-    var events = (tooltipConfig, state) => {
-
-    };
-
-    return {
-      exhibit: exhibit,
-      events: events
-    };
-  }
-);

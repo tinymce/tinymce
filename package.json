@@ -23,7 +23,7 @@
   "devDependencies": {
     "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^3.4.1",
+    "awesome-typescript-loader": "^4.0.0",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2"
   },

@@ -3,6 +3,7 @@ import { Direction } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Element } from '@ephox/sugar';
 import { AnchorLayout } from '../../positioning/layout/Layout';
+import { HasLayoutAnchor } from 'ephox/alloy/positioning/mode/Anchoring';
 
 const schema: () => FieldProcessorAdt = () => {
   return FieldSchema.optionObjOf('layouts', [
@@ -12,9 +13,8 @@ const schema: () => FieldProcessorAdt = () => {
 };
 
 const get = (
-  // TYPIFY
   component: AlloyComponent,
-  info: any,
+  info: HasLayoutAnchor,
   defaultLtr: AnchorLayout[],
   defaultRtl: AnchorLayout[]
 ): AnchorLayout[] => {

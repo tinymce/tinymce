@@ -1,6 +1,7 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
+import * as AnchorLayouts from './AnchorLayouts';
 
 import * as Fields from '../../data/Fields';
 import { nu as Bubble } from '../layout/Bubble';
@@ -15,13 +16,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
   const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-  const layouts = anchorInfo.layouts().fold(() => {
-    return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
-  }, (layoutChooser) => {
-    const dirChooser = Direction.onDirection(layoutChooser.onLtr(), layoutChooser.onRtl());
-    const getLayouts = dirChooser(component.element());
-    return getLayouts(component.element());
-  });
+  const layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     NuAnchoring({
@@ -41,6 +36,6 @@ export default [
   FieldSchema.defaulted('height', 0),
   FieldSchema.defaulted('width', 0),
   FieldSchema.defaulted('bubble', Bubble(0, 0)),
-  FieldSchema.option('layouts'),
+  AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];
