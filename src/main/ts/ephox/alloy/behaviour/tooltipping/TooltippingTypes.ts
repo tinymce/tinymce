@@ -6,7 +6,7 @@ import { RawDomSchema } from "../../api/component/SpecTypes";
 import { BehaviourState } from "ephox/alloy/api/Main";
 
 export interface TooltippingBehaviour extends Behaviour.AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
-
+  hideAllExclusive(comp: AlloyComponent): void;
 }
 
 export interface TooltippingConfig extends BehaviourConfigDetail {

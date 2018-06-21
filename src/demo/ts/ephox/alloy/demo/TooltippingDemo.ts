@@ -60,6 +60,9 @@ export default (): void => {
             Focusing.config({ }),
             Tooltipping.config({
               lazySink: lazySink,
+              // NOTE: At this stage, probably doesn't do much. But would,
+              // with an API.
+              exclusive: false,
               tooltipDom: {
                 tag: 'span',
                 styles: {
