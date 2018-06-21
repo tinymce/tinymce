@@ -48,6 +48,7 @@ export default function () {
 
       ed.on('init', () => {
         ed.annotator.register('alpha', {
+          persistent: true,
           decorate: (uid, data) => {
             return {
               attributes: {

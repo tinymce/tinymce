@@ -14,6 +14,7 @@ export interface Annotator {
 
 export interface AnnotatorSettings {
   decorate: Decorator;
+  persistent?: boolean;
 }
 
 export default function (editor): Annotator {
