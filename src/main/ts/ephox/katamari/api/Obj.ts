@@ -34,8 +34,8 @@ export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, ob
 };
 
 /** map :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
-export const map = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => any) {
-  return tupleMap<R, T>(obj, function (x, i, obj) {
+export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, obj: T) => R) {
+  return tupleMap<{[k in keyof T]: R}, T>(obj, function (x, i, obj) {
     return {
       k: i,
       v: f(x, i, obj)
@@ -77,7 +77,7 @@ export const mapToArray = function <T,R> (obj: T, f: (value: T[keyof T], key: st
 };
 
 /** find :: (JsObj(k, v), (v, k, JsObj(k, v) -> Bool)) -> Option v */
-export const find = function <V, T extends Record<string,V>> (obj: T, pred: (value: V, key: string, obj: T) => boolean): Option<V> {
+export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Option<T[keyof T]> {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
