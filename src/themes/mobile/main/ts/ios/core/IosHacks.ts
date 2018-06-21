@@ -1,4 +1,4 @@
-import { Focus, WindowSelection } from '@ephox/sugar';
+import { Focus, WindowSelection, Selection } from '@ephox/sugar';
 
 const setSelectionAtTouch = function (editorApi, touchEvent) {
   // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor
@@ -14,8 +14,7 @@ const setSelectionAtTouch = function (editorApi, touchEvent) {
   // we have to live with this until we control selection
   const touch = touchEvent.raw().changedTouches[0];
   WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
-    // TODO: Figure out if deriveExact the same as forElement
-    const sel = WindowSelection.forElement(editorApi.win(), raw);
+    const sel = Selection.exactFromRange(raw);
     editorApi.setSelection(sel.start(), sel.soffset(), sel.finish(), sel.foffset());
   });
 };
