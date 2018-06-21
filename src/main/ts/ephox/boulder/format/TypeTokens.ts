@@ -22,7 +22,15 @@ export interface FieldProcessorAdt extends AdtInterface {
   fold<T>(OnFieldFieldProcessor, StateFieldProcessor): T;
 }
 
-const typeAdt = Adt.generate([
+const typeAdt: {
+  setOf: (validator: ValueValidator, valueType: Processor) => TypeProcessorAdt;
+  arrOf: (valueType: Processor) => TypeProcessorAdt;
+  objOf: (fields: FieldProcessorAdt[]) => TypeProcessorAdt;
+  itemOf: (validator: ValueValidator) => TypeProcessorAdt;
+  choiceOf: (key: string, branches: { [key: string]: FieldProcessorAdt[]; }) => TypeProcessorAdt;
+  thunk: (description: string) => TypeProcessorAdt;
+  func: (args: string[], outputSchema: Processor) => TypeProcessorAdt;
+} = Adt.generate([
   { setOf: [ 'validator', 'valueType' ] },
   { arrOf: [ 'valueType' ] },
   { objOf: [ 'fields' ] },
@@ -32,7 +40,10 @@ const typeAdt = Adt.generate([
   { func: [ 'args', 'outputSchema' ] }
 ]);
 
-const fieldAdt = Adt.generate([
+const fieldAdt: {
+  field: (name, presence, type) => FieldProcessorAdt;
+  state: (name) => FieldProcessorAdt;
+} = Adt.generate([
   { field: [ 'name', 'presence', 'type' ] },
   { state: [ 'name' ] }
 ]);
