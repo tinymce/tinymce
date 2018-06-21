@@ -3,7 +3,7 @@ import { Option } from '@ephox/katamari';
 import Compare from '../api/dom/Compare';
 import Element from '../api/node/Element';
 
-interface Polling {
+export interface Polling {
   element: Element,
   unbind: () => void
 }
