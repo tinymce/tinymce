@@ -1,5 +1,7 @@
 import Filters from '../transformations/Filters';
 import ImageTools from '../transformations/ImageTools';
+import JPEGMeta from '../meta/JPEGMeta';
+import ImageResult from 'ephox/imagetools/util/ImageResult';
 
 var invert = function (ir) {
   return Filters.invert(ir);
@@ -65,6 +67,26 @@ var rotate = function (ir, angle) {
   return ImageTools.rotate(ir, angle);
 };
 
+/* ImageResult -> ImageResult */
+var exifRotate = (ir) => {
+  var checkRotation = (data) => {
+    var orientation = data.tiff.Orientation;
+    if (orientation === 6) {
+      return rotate(ir, 90); 
+    } else if (orientation === 8) {
+      return rotate(ir, 270); 
+    } else {
+      return ir;
+    }
+  };
+
+  var notJpeg = () => {
+    return ir;
+  };
+
+  return ir.toBlob().then(JPEGMeta.extractFrom).then(checkRotation, notJpeg); 
+};
+
 export default <any> {
   invert,
   sharpen,
@@ -82,5 +104,7 @@ export default <any> {
   flip,
   crop,
   resize,
-  rotate
+  rotate,
+
+  exifRotate
 };
