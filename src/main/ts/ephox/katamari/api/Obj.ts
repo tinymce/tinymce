@@ -97,5 +97,5 @@ export const values = function <V> (obj: Record<string,V> | V[] | {}) {
 };
 
 export const size = function (obj: {}) {
-  return values(obj).length;
+  return keys(obj).length;
 };
