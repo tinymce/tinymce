@@ -10,6 +10,10 @@ import { sAnnotate } from '../../module/test/AnnotationAsserts';
 UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationPersistenceTest', (success, failure) => {
   ModernTheme();
 
+  const sUndoLevel = (editor: Editor) => Step.sync(() => {
+    editor.undoManager.add();
+  });
+
   const sRunTinyWithSettings = (annotation: AnnotatorSettings, getSteps: (tinyApis: any, editor: Editor) => any[]) => Step.async((next, die) => {
     const settings = {
       skin_url: '/project/js/tinymce/skins/lightgray',
@@ -62,9 +66,31 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationPersistenceTest', (
 
   const sSetupSingleAnnotation = (tinyApis, editor) => GeneralSteps.sequence([
     // '<p>This is the only p|ar|agraph</p>'
-    tinyApis.sSetContent('<p>This is the only paragraph</p>'),
+    tinyApis.sSetContent('<p>This is the only paragraph <em>here</em></p>'),
+    sUndoLevel(editor),
     tinyApis.sSetSelection([ 0, 0 ], 'This is the only p'.length, [ 0, 0 ], 'This is the only par'.length),
-    sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' })
+    sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
+    tinyApis.sAssertContentPresence({
+      '.mce-annotation': 1,
+      'p:contains("This is the only paragraph here")': 1
+    }),
+    Step.wait(1000),
+    Step.sync(() => {
+      editor.execCommand('undo');
+    }),
+    Step.wait(1000),
+    tinyApis.sAssertContentPresence({
+      '.mce-annotation': 0,
+      'p:contains("This is the only paragraph here")': 1
+    }),
+    Step.sync(() => {
+      editor.execCommand('redo');
+    }),
+    Step.wait(1000),
+    tinyApis.sAssertContentPresence({
+      '.mce-annotation': 1,
+      'p:contains("This is the only paragraph here")': 1
+    })
   ]);
 
   const sContentContains = (tinyApis: any, ed: Editor, pattern: string, isContained: boolean) => {

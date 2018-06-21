@@ -2,6 +2,7 @@ import { Arr, Cell, Option, Throttler, Obj } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
 import { findMarkers, identify, findAll } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/annotate/Wrapping';
+import * as Markings from 'tinymce/core/annotate/Markings';
 
 export interface Annotator {
   register: (name: string, settings: AnnotatorSettings) => void;
@@ -63,6 +64,23 @@ export default function (editor): Annotator {
 
   editor.on('nodeChange', () => {
     onNodeChange.throttle();
+  });
+
+  const identifyParserNode = (span): Option<{ name: string, settings: AnnotatorSettings }> => {
+    return Option.from(span.attributes.map[Markings.dataAnnotation()]).bind((n) => {
+      return Option.from(annotations[n]);
+    });
+  };
+
+  editor.on('init', () => {
+    editor.serializer.addNodeFilter('span', (spans) => {
+      Arr.each(spans, (span) => {
+        identifyParserNode(span).each((info) => {
+          const { settings } = info;
+          if (settings.persistent === false) { span.unwrap(); }
+        });
+      });
+    });
   });
 
   return {

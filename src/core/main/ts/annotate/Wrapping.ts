@@ -27,7 +27,7 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, persistent: boolean = true, { uid = Id.generate('mce-annotation'), ...data }): any[] => {
+const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, { uid = Id.generate('mce-annotation'), ...data }): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [ ];
 
@@ -36,7 +36,6 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   Class.add(master, Markings.annotation());
   Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
   Attr.set(master, `${Markings.dataAnnotation()}`, annotationName);
-  if (persistent === false) { Attr.set(master, 'data-mce-bogus', 'all'); }
 
   const { attributes = { }, classes = [ ] } = decorate(uid, data);
   Attr.setAll(master, attributes);
@@ -114,15 +113,17 @@ export interface Annotation {
 }
 
 const annotateWithBookmark = (editor: Editor, { name, settings }: Annotation, data: { }): void => {
-  const initialRng = editor.selection.getRng();
-  if (initialRng.collapsed) {
-    applyWordGrab(editor, initialRng);
-  }
-  // The bookmark is responsible for splitting the nodes beforehand at the selection points
-  const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
-  const rng = editor.selection.getRng();
-  annotate(editor, rng, name, settings.decorate, settings.persistent, data);
-  editor.selection.moveToBookmark(bookmark);
+  editor.undoManager.transact(() => {
+    const initialRng = editor.selection.getRng();
+    if (initialRng.collapsed) {
+      applyWordGrab(editor, initialRng);
+    }
+    // The bookmark is responsible for splitting the nodes beforehand at the selection points
+    const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
+    const rng = editor.selection.getRng();
+    annotate(editor, rng, name, settings.decorate, data);
+    editor.selection.moveToBookmark(bookmark);
+  });
 };
 
 const remove = (editor, cUid): void => {
