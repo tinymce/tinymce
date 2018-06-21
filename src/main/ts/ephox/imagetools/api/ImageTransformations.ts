@@ -70,10 +70,12 @@ var rotate = function (ir, angle) {
 /* ImageResult -> ImageResult */
 var exifRotate = (ir) => {
   var checkRotation = (data) => {
-    var orientation = data.tiff.Orientation;
+    var orientation = data.tiff.Orientation; // int from 1-8
     if (orientation === 6) {
+      // image is rotated left by 90 degrees
       return rotate(ir, 90); 
     } else if (orientation === 8) {
+      // image is rotated right by 90 degrees
       return rotate(ir, 270); 
     } else {
       return ir;
