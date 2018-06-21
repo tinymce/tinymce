@@ -151,8 +151,8 @@ UnitTest.test('ADT Test', function() {
     });
 
     try {
-      const branches = Obj.tupleMap(original, function (k, i) {
-        return { k: k, v: Fun.identity };
+      const branches = Arr.mapToObject(original, function () {
+        return Fun.identity;
       });
       subject.match(branches);
       return false;

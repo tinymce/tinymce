@@ -24,7 +24,7 @@ export const keys = (function () {
 })();
 
 
-export const each = function <T> (obj: T, f: (value: any, key: string, obj: T) => void) {
+export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => void) {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
@@ -34,7 +34,7 @@ export const each = function <T> (obj: T, f: (value: any, key: string, obj: T) =
 };
 
 /** map :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
-export const map = function <R, T> (obj: T, f: (value: any, key: string, obj: T) => any) {
+export const map = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => any) {
   return tupleMap<R, T>(obj, function (x, i, obj) {
     return {
       k: i,
@@ -44,7 +44,7 @@ export const map = function <R, T> (obj: T, f: (value: any, key: string, obj: T)
 };
 
 /** tupleMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> { k: x, v: y })) -> JsObj(x, y) */
-export const tupleMap = function <R, T> (obj: T, f: (value: any, key: string, obj: T) => {k: string, v: any}) : R {
+export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}) : R {
   const r: Record<string, any> = {};
   each(obj, function (x, i) {
     const tuple = f(x, i, obj);
@@ -68,8 +68,8 @@ export const bifilter = function <V> (obj: Record<string,V>, pred: (value: V, ke
 };
 
 /** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
-export const mapToArray = function <T> (obj: {}, f: (value: any, key: string) => T) {
-  const r: T[] = [];
+export const mapToArray = function <T,R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+  const r: R[] = [];
   each(obj, function(value, name) {
     r.push(f(value, name));
   });
@@ -90,8 +90,8 @@ export const find = function <V, T extends Record<string,V>> (obj: T, pred: (val
 };
 
 /** values :: JsObj(k, v) -> [v] */
-export const values = function <V> (obj: Record<string,V> | V[] | {}) {
-  return mapToArray(obj, function (v: V) {
+export const values = function <T> (obj: T) {
+  return mapToArray(obj, function (v) {
     return v;
   });
 };
