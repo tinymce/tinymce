@@ -1,5 +1,5 @@
 import * as Arr from './Arr';
-import Obj from './Obj';
+import * as Obj from './Obj';
 import * as Type from './Type';
 
 export interface Adt {

@@ -1,5 +1,5 @@
 import * as Arr from 'ephox/katamari/api/Arr';
-import Obj from 'ephox/katamari/api/Obj';
+import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 

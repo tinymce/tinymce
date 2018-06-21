@@ -1,6 +1,6 @@
 import * as Arr from '../api/Arr';
 import * as Fun from '../api/Fun';
-import Obj from '../api/Obj';
+import * as Obj from '../api/Obj';
 import { Option } from '../api/Option';
 import * as BagUtils from '../util/BagUtils';
 
