@@ -1,29 +1,32 @@
-asynctest(
-  'ExecutingKeyingTest',
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { XXX } from 'ephox/alloy/api/behaviour/XXX';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-  [
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup'
-  ],
+UnitTest.asynctest('XXX Behaviour', (success, failure) => {
+  GuiSetup.setup((store, doc, body) => {
+    return GuiFactory.build(
+      Container.sketch({
+        containerBehaviours: Behaviour.derive([
+          XXX.config({
 
-  (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup) => {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+          })
+        ])
+      })
+    );
 
-    GuiSetup.setup((store, doc, body) => {
-      return GuiFactory.build({
-        ...
-      });
-
-    }, (doc, body, gui, component, store) => {
-      return [
-        ..
-      ];
-    }, () => { success(); }, failure);
-
-  }
-);
+  }, (doc, body, gui, component, store) => {
+    return [
+      Assertions.sAssertStructure(
+        'Check initial XXX values',
+        ApproxStructure.build((s, str, arr) => {
+          return s.anything();
+        }),
+        component.element()
+      )
+    ];
+  }, () => { success(); }, failure);
+});
