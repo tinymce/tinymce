@@ -14,6 +14,7 @@ import FontInfo from 'tinymce/core/fmt/FontInfo';
 import { Option } from '@ephox/katamari';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import NodeType from 'tinymce/core/dom/NodeType';
+import { Range, Node } from '@ephox/dom-globals';
 
 const findFirstCaretElement = (editor: Editor) => {
   return CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {

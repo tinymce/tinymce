@@ -10,6 +10,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const getUiContainer = (editor: Editor): HTMLElement => {
   return DOMUtils.DOM.select(editor.settings.ui_container)[0];

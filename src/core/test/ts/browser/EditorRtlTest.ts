@@ -6,6 +6,7 @@ import Factory from 'tinymce/core/api/ui/Factory';
 import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {
   const success = arguments[arguments.length - 2];

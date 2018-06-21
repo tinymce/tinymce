@@ -11,8 +11,9 @@
 import Arr from '../util/Arr';
 import NodeType from './NodeType';
 import * as ClientRect from '../geom/ClientRect';
+import { HTMLElement, Node } from '@ephox/dom-globals';
 
-export interface NodeClientRect extends ClientRect {
+export interface NodeClientRect extends ClientRect.ClientRect {
   node: HTMLElement;
 }
 

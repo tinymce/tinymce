@@ -10,6 +10,7 @@
 
 import Env from '../Env';
 import Delay from '../util/Delay';
+import { document, window } from '@ephox/dom-globals';
 
 export type EditorEvent<T> = T & {
   isDefaultPrevented: () => boolean;

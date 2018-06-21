@@ -7,6 +7,7 @@ import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 declare const escape: any;
 

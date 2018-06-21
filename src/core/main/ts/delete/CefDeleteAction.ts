@@ -17,6 +17,7 @@ import DeleteUtils from './DeleteUtils';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
 import * as ElementType from 'tinymce/core/dom/ElementType';
+import { Node, Range } from '@ephox/dom-globals';
 
 const isCompoundElement = (node: Node) => ElementType.isTableCell(Element.fromDom(node)) || ElementType.isListItem(Element.fromDom(node));
 

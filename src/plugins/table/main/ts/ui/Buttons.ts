@@ -11,6 +11,7 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import { getToolbar } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Node } from '@ephox/dom-globals';
 
 const each = Tools.each;
 

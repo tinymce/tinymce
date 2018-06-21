@@ -10,6 +10,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Events from '../api/Events';
+import { window, document } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

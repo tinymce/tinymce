@@ -12,6 +12,7 @@ import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
 import { Editor } from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 const endTypingLevel = function (undoManager) {
   if (undoManager.typing) {

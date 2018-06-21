@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { document } from '@ephox/dom-globals';
+
 declare let tinymce: any;
 
 const element: any = document.querySelector('.tinymce');

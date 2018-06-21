@@ -16,6 +16,7 @@ import UndoRedo from './editorui/UndoRedo';
 import VisualAid from './editorui/VisualAid';
 import FloatPanel from './FloatPanel';
 import Widget from './Widget';
+import { document } from '@ephox/dom-globals';
 
 /**
  * FormatControls.js

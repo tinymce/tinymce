@@ -6,6 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
   const success = arguments[arguments.length - 2];

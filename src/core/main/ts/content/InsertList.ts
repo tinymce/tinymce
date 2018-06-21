@@ -12,6 +12,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
+import { Range } from '@ephox/dom-globals';
 
 /**
  * Handles inserts of lists into the editor instance.
@@ -176,7 +177,7 @@ const insertAfter = function (target, elms, rootNode, dom) {
   return findLastOf(elms[0], rootNode);
 };
 
-const insertAtCaret = function (serializer, dom, rng, fragment) {
+const insertAtCaret = function (serializer, dom, rng, fragment): Range {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));

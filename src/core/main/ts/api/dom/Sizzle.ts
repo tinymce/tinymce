@@ -13,6 +13,8 @@
  * - Disabled all assertions since they are only used for non supported browsers and cause dom repaints see #TINY-1141
  */
 
+import { window } from '@ephox/dom-globals';
+
 /*jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
 
 /*eslint-disable */

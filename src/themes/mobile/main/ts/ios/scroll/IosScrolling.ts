@@ -15,7 +15,7 @@ const ANIMATION_RATE = 10;
 const lastScroll = 'data-' + Styles.resolve('last-scroll-top');
 
 const getTop = function (element) {
-  const raw = Css.getRaw(element, 'top').getOr(0);
+  const raw = Css.getRaw(element, 'top').getOr('0');
   return parseInt(raw, 10);
 };
 

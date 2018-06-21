@@ -13,6 +13,7 @@ import DomUtils from '../api/dom/DOMUtils';
 import Fun from '../util/Fun';
 import Arr from '../util/Arr';
 import CaretPosition from '../caret/CaretPosition';
+import { Node } from '@ephox/dom-globals';
 
 /**
  * This module creates or resolves xpath like string representation of a CaretPositions.

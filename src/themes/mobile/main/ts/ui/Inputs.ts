@@ -12,9 +12,9 @@ import {
   Memento,
   NativeEvents,
   Representing,
-  Sketcher,
   Tabstopping,
   Toggling,
+  SketchSpec,
 } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
@@ -97,7 +97,7 @@ const hidden = function (name) {
       getInitialValue () {
         return Option.none();
       }
-    }) as Sketcher.SketchSpec
+    }) as SketchSpec
   };
 };
 

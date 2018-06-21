@@ -16,6 +16,7 @@ import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
 import TextBlock from '../core/TextBlock';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLLIElement } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

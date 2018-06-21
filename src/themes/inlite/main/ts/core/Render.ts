@@ -19,6 +19,7 @@ import SelectionMatcher from './SelectionMatcher';
 import SkinLoader from './SkinLoader';
 import { Editor } from 'tinymce/core/api/Editor';
 import { InlitePanel } from 'tinymce/themes/inlite/ui/Panel';
+import { document } from '@ephox/dom-globals';
 
 const getSelectionElements = function (editor: Editor) {
   const node = editor.selection.getNode();

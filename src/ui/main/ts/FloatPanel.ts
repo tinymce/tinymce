@@ -14,6 +14,7 @@ import DomUtils from './DomUtils';
 import Movable from './Movable';
 import Panel from './Panel';
 import Resizable from './Resizable';
+import { document, window } from '@ephox/dom-globals';
 
 /**
  * This class creates a floating panel.

@@ -8,6 +8,7 @@ import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import ImageUtils from '../module/test/ImageUtils';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
   const success = arguments[arguments.length - 2];

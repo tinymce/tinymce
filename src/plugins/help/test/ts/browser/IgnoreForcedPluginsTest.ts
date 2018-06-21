@@ -6,6 +6,7 @@ import { Html } from '@ephox/sugar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', function () {
   const success = arguments[arguments.length - 2];

@@ -10,6 +10,7 @@
 
 import DomUtils from './DomUtils';
 import UiContainer from 'tinymce/ui/UiContainer';
+import { Element, document, window } from '@ephox/dom-globals';
 
 /**
  * Movable mixin. Makes controls movable absolute and relative to other elements.

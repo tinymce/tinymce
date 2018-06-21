@@ -32,7 +32,7 @@ const markAsHorizontal = function (container) {
 };
 
 const hasScroll = function (container) {
-  return Attr.get(container, dataHorizontal) === 'true' ? hasHorizontalScroll : hasVerticalScroll;
+  return Attr.get(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
 };
 
 /*

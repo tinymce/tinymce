@@ -17,6 +17,7 @@ import InlineUtils from './InlineUtils';
 import WordSelection from '../selection/WordSelection';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Node, HTMLElement, Text } from '@ephox/dom-globals';
 
 const setCaretPosition = function (editor: Editor, pos: CaretPosition) {
   const rng = editor.dom.createRng();

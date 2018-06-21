@@ -5,6 +5,7 @@ import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
   const success = arguments[arguments.length - 2];

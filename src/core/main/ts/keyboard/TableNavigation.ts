@@ -20,7 +20,8 @@ import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import { Editor } from 'tinymce/core/api/Editor';
 import NodeType from 'tinymce/core/dom/NodeType';
 import Settings from 'tinymce/core/api/Settings';
-import { Element, Attr, Insert } from '@ephox/sugar';
+import { Element as SugarElement, Attr, Insert } from '@ephox/sugar';
+import { HTMLElement, Range, Element } from '@ephox/dom-globals';
 
 const browser = PlatformDetection.detect().browser;
 const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
@@ -94,14 +95,14 @@ const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: Car
 
   if (forcedRootBlock) {
     editor.undoManager.transact(() => {
-      const element = Element.fromTag(forcedRootBlock);
+      const element = SugarElement.fromTag(forcedRootBlock);
       Attr.setAll(element, Settings.getForcedRootBlockAttrs(editor));
-      Insert.append(element, Element.fromTag('br'));
+      Insert.append(element, SugarElement.fromTag('br'));
 
       if (down) {
-        Insert.after(Element.fromDom(table), element);
+        Insert.after(SugarElement.fromDom(table), element);
       } else {
-        Insert.before(Element.fromDom(table), element);
+        Insert.before(SugarElement.fromDom(table), element);
       }
 
       const rng = editor.dom.createRng();

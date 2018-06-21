@@ -28,6 +28,7 @@ import Tools from '../api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
 import TripleClickSelection from 'tinymce/core/selection/TripleClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
+import { document, window } from '@ephox/dom-globals';
 
 declare const escape: any;
 

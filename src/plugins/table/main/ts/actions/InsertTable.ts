@@ -15,6 +15,7 @@ import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/S
 import { fireNewRow, fireNewCell } from '../api/Events';
 import * as Util from '../alien/Util';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const placeCaretInCell = (editor: Editor, cell) => {
   editor.selection.select(cell.dom(), true);

@@ -12,6 +12,7 @@ import Rect from 'tinymce/core/api/geom/Rect';
 import Factory from 'tinymce/core/api/ui/Factory';
 import LoadImage from '../core/LoadImage';
 import CropRect from './CropRect';
+import { Image, document } from '@ephox/dom-globals';
 
 const create = function (settings) {
   const Control = Factory.get('Control');

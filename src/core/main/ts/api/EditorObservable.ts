@@ -13,6 +13,7 @@ import DOMUtils from './dom/DOMUtils';
 import Tools from './util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
 import { isReadOnly } from 'tinymce/core/Mode';
+import { Node, Event } from '@ephox/dom-globals';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.

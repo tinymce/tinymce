@@ -6,6 +6,7 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function () {
   const success = arguments[arguments.length - 2];

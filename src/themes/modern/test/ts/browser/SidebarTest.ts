@@ -3,6 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyDom, TinyLoader } from '@ephox/mcagar';
 
 import Theme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function () {
   const success = arguments[arguments.length - 2];

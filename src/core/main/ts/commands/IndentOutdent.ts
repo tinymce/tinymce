@@ -1,5 +1,6 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import { Arr } from '@ephox/katamari';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const indentElement = (dom, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement) => {
   if (dom.getContentEditable(element) === 'false') {

@@ -2,6 +2,7 @@ import { Pipeline, RawAssertions, Step } from '@ephox/agar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TrimNode from 'tinymce/core/dom/TrimNode';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
   const success = arguments[arguments.length - 2];

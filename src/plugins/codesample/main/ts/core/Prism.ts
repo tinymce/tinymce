@@ -10,6 +10,8 @@
  * Import of prism. Disabled DOMContentLoaded event listener.
  */
 
+import { self, document, Worker } from '@ephox/dom-globals';
+
 /*eslint-disable*/
 
 /*eslint-enable */

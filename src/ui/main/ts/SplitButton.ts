@@ -11,6 +11,7 @@
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import DomUtils from './DomUtils';
 import MenuButton from './MenuButton';
+import { window } from '@ephox/dom-globals';
 
 /**
  * Creates a split button.

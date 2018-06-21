@@ -20,6 +20,7 @@ import * as Util from '../alien/Util';
 import TableTargets from './TableTargets';
 import { Editor } from 'tinymce/core/api/Editor';
 import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 const forward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.next(cell), lazyWire);

@@ -20,6 +20,7 @@ import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import NodeType from 'tinymce/core/dom/NodeType';
 import { Element } from '@ephox/sugar';
 import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const defaultFormat = 'html';
 

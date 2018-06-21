@@ -21,8 +21,9 @@ import Ephemera from './Ephemera';
 import { DomParent } from '@ephox/robin';
 
 const hasInternalTarget = (e: Event) => {
-  return Class.has(Element.fromDom(e.target), 'ephox-snooker-resizer-bar') === false;
+  return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
+import { KeyboardEvent, MouseEvent, Event, HTMLElement } from '@ephox/dom-globals';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
@@ -103,7 +104,7 @@ export default function (editor, lazyResize) {
 
     const wrapEvent = function (event: MouseEvent | KeyboardEvent) {
       // IE9 minimum
-      const target = Element.fromDom(event.target);
+      const target = Element.fromDom(event.target as HTMLElement);
 
       const stop = function () {
         event.stopPropagation();

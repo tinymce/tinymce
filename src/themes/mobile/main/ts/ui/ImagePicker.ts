@@ -1,4 +1,4 @@
-import { AlloyEvents, Button, Memento, NativeEvents, Sketcher } from '@ephox/alloy';
+import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
 
@@ -26,7 +26,7 @@ const extractBlob = function (simulatedEvent) {
   return Option.from(files[0]);
 };
 
-const sketch = function (editor): Sketcher.SketchSpec {
+const sketch = function (editor): SketchSpec {
   const pickerDom = {
     tag: 'input',
     attributes: { accept: 'image/*', type: 'file', title: '' },

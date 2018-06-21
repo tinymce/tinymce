@@ -5,6 +5,7 @@ import { Attr, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar
 
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () {
   const success = arguments[arguments.length - 2];
@@ -65,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () 
   const cRemove = Chain.op(function (editor) {
     const id = editor.id;
     editor.remove();
-    Selectors.one('#' + id).bind(Remove.remove);
+    Selectors.one('#' + id).each(Remove.remove);
   });
 
   const lazyBody = function (editor) {

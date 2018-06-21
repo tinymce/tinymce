@@ -14,6 +14,7 @@ import InliteTheme from 'tinymce/themes/inlite/Theme';
 
 import Toolbar from '../module/test/Toolbar';
 import { SelectorFind, Element } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 const sAssertTableStructure = (editor, structure) => Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');

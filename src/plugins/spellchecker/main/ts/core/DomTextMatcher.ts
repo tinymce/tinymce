@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { HTMLElement, Range } from '@ephox/dom-globals';
+
 function isContentEditableFalse(node) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
@@ -26,7 +28,8 @@ export interface DomTextMatcher {
     add: (start: number, length: number, data: Record<string, string>) => DomTextMatcher;
     wrap: (cb: Function) => DomTextMatcher;
     unwrap: (match?: Match) => DomTextMatcher;
-    replace: (match: Match, text: string) => Range;
+    replace: (match: Match, text: string) => Range
+    ;
     rangeFromMatch: (match: Match) => Range;
     indexOf: (match: Match) => number;
 }

@@ -15,6 +15,7 @@ import * as Util from '../alien/Util';
 import Helpers from './Helpers';
 import { hasAdvancedCellTab, getCellClassList } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement, Node, HTMLTableCellElement } from '@ephox/dom-globals';
 
 /**
  * @class tinymce.table.ui.CellDialog

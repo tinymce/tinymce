@@ -1,6 +1,7 @@
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 const browser = PlatformDetection.detect().browser;
 

@@ -16,6 +16,7 @@ import NodeType from '../core/NodeType';
 import NormalizeLists from '../core/NormalizeLists';
 import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;

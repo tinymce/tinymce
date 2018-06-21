@@ -9,6 +9,7 @@ import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
+import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 export default function (scrollIntoView: () => void) {
   const alloy = OuterContainer({
@@ -17,7 +18,7 @@ export default function (scrollIntoView: () => void) {
 
   const toolbar = ScrollingToolbar();
 
-  const webapp = Singleton.api();
+  const webapp = Singleton.api<MobileWebApp>();
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 

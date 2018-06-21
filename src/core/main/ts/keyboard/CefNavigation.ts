@@ -20,6 +20,7 @@ import * as CefUtils from './CefUtils';
 import * as RangeNodes from '../selection/RangeNodes';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
+import { Range, Element } from '@ephox/dom-globals';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const getSelectedNode = RangeNodes.getSelectedNode;

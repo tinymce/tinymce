@@ -6,6 +6,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', function () {
   const success = arguments[arguments.length - 2];

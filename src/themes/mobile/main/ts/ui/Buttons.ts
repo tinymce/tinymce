@@ -1,4 +1,4 @@
-import { Behaviour, Button, Toggling, Unselecting, Sketcher } from '@ephox/alloy';
+import { Behaviour, Button, Toggling, Unselecting, SketchSpec } from '@ephox/alloy';
 import { Merger } from '@ephox/katamari';
 
 import Receivers from '../channels/Receivers';
@@ -41,7 +41,7 @@ const forToolbarStateAction = function (editor, clazz, command, action) {
   return forToolbar(clazz, action, extraBehaviours);
 };
 
-const forToolbar = function (clazz, action, extraBehaviours): Sketcher.SketchSpec {
+const forToolbar = function (clazz, action, extraBehaviours): SketchSpec {
   return Button.sketch({
     dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
     action,

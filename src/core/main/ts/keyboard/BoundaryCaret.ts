@@ -15,6 +15,7 @@ import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
+import { Text } from '@ephox/dom-globals';
 
 const insertInlinePos = function (pos: CaretPosition, before: boolean) {
   if (NodeType.isText(pos.container())) {

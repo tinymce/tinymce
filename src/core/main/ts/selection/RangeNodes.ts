@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Range, Node } from '@ephox/dom-globals';
+
 const getSelectedNode = function (range: Range): Node {
   const startContainer = range.startContainer,
     startOffset = range.startOffset;

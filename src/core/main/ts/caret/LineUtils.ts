@@ -11,12 +11,13 @@
 import Arr from '../util/Arr';
 import NodeType from '../dom/NodeType';
 import { NodeClientRect, getClientRects } from '../dom/Dimensions';
-import * as ClientRect from '../geom/ClientRect';
+import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretUtils from './CaretUtils';
 import * as CaretCandidate from './CaretCandidate';
 import { Fun } from '@ephox/katamari';
 import { ClientRectLine, VDirection } from 'tinymce/core/caret/LineWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
+import { Node, ClientRect, HTMLElement } from '@ephox/dom-globals';
 
 export interface CaretInfo {
   node: Node;
@@ -81,8 +82,8 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
   };
 
   clientRects.push(targetNodeRect);
-  walkUntil(VDirection.Up, root, Fun.curry(collect, ClientRect.isAbove), targetNodeRect.node);
-  walkUntil(VDirection.Down, root, Fun.curry(collect, ClientRect.isBelow), targetNodeRect.node);
+  walkUntil(VDirection.Up, root, Fun.curry(collect, GeomClientRect.isAbove), targetNodeRect.node);
+  walkUntil(VDirection.Down, root, Fun.curry(collect, GeomClientRect.isBelow), targetNodeRect.node);
 
   return clientRects;
 };

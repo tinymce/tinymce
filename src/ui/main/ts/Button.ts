@@ -9,6 +9,7 @@
  */
 
 import Widget from './Widget';
+import { window, document } from '@ephox/dom-globals';
 
 /**
  * This class is used to create buttons. You can create them directly or through the Factory.

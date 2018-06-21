@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-// import tinymce from 'tinymce/core/api/Tinymce';
+import { document } from '@ephox/dom-globals';
 
 declare const tinymce: any;
 

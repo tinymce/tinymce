@@ -6,6 +6,7 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
 import Utils from '../module/test/Utils';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function () {
   const success = arguments[arguments.length - 2];

@@ -10,6 +10,7 @@
 
 import Env from '../Env';
 import Arr from '../../util/Arr';
+import { window } from '@ephox/dom-globals';
 
 /**
  * This class contains various utlity functions. These are also exposed

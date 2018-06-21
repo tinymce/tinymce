@@ -4,6 +4,7 @@ import { Fun } from '@ephox/katamari';
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { window } from '@ephox/dom-globals';
 
 export interface DropUp {
   appear: (menu: any, update: any, component: any) => void;
@@ -17,7 +18,7 @@ const build = function (refresh, scrollIntoView): DropUp {
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: Styles.resolve('dropup')
+        classes: [ Styles.resolve('dropup') ]
       },
       components: [
 

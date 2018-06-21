@@ -14,6 +14,7 @@ import Settings from '../api/Settings';
 import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import Uuid from '../util/Uuid';
+import { document, window } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

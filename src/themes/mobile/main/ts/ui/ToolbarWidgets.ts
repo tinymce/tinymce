@@ -1,7 +1,7 @@
 import Buttons from './Buttons';
-import { Sketcher } from '@ephox/alloy';
+import { SketchSpec } from '@ephox/alloy';
 
-const button = function (realm, clazz, makeItems): Sketcher.SketchSpec {
+const button = function (realm, clazz, makeItems): SketchSpec {
   return Buttons.forToolbar(clazz, function () {
     const items = makeItems();
     realm.setContextToolbar([

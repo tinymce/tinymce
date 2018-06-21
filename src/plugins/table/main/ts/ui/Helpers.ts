@@ -14,6 +14,7 @@ import * as Util from '../alien/Util';
 import { getColorPickerCallback } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Node } from '@ephox/dom-globals';
 
 /**
  * @class tinymce.table.ui.Helpers

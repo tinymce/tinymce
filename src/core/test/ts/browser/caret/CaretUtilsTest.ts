@@ -8,6 +8,7 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function () {
   const success = arguments[arguments.length - 2];

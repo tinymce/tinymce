@@ -11,6 +11,7 @@
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import { Node, Element, document, Range } from '@ephox/dom-globals';
 
 /**
  * This module handles caret containers. A caret container is a node that

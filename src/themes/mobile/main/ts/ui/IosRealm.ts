@@ -1,7 +1,7 @@
 import { Replacing, ComponentApi, Gui } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
-import IosWebapp from '../api/IosWebapp';
+import IosWebapp, { MobileWebApp } from '../api/IosWebapp';
 import Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';
 import CommonRealm from './CommonRealm';
@@ -30,7 +30,7 @@ export default function (scrollIntoView: () => void) {
 
   const toolbar = ScrollingToolbar();
 
-  const webapp = Singleton.api();
+  const webapp = Singleton.api<MobileWebApp>();
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 

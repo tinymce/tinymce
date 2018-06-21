@@ -1,4 +1,4 @@
-import { Representing, Sketcher } from '@ephox/alloy';
+import { Representing, SketchSpec } from '@ephox/alloy';
 import { Option, Thunk } from '@ephox/katamari';
 
 import LinkBridge from '../bridge/LinkBridge';
@@ -41,7 +41,7 @@ const getGroups = Thunk.cached(function (realm, editor) {
   ];
 });
 
-const sketch = function (realm, editor): Sketcher.SketchSpec {
+const sketch = function (realm, editor): SketchSpec {
   return Buttons.forToolbarStateAction(editor, 'link', 'link', function () {
     const groups = getGroups(realm, editor);
 

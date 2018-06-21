@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Node, Text } from '@ephox/dom-globals';
+
 const isTextNode = function (node: Node): node is Text {
   return node && node.nodeType === 3;
 };

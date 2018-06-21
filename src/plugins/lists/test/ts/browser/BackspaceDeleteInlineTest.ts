@@ -5,6 +5,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function () {
   const success = arguments[arguments.length - 2];

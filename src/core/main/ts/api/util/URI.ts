@@ -9,6 +9,7 @@
  */
 
 import Tools from './Tools';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This class handles parsing, modification and serialization of URI/URL strings.

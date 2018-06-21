@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function () {
   const sAssertDivStructure = function (editor, expected) {
     return Step.sync(function () {
       const div = editor.dom.select('div')[0];
-      const actual = div ? Element.fromHtml(div.outerHTML) : Element.FromHtml('');
+      const actual = div ? Element.fromHtml(div.outerHTML) : Element.fromHtml('');
       return Assertions.sAssertStructure('Should be the same structure', expected, actual);
     });
   };

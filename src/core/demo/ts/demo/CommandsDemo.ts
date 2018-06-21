@@ -9,6 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 declare let tinymce: any;
 
 export default function () {
