@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
+    "typescript": "~2.8.2",
     "webpack": "^3.10.0"
   },
   "files": [
