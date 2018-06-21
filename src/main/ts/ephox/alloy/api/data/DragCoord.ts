@@ -26,7 +26,11 @@ export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: Suga
  * offset: the absolute coordinates to show for css when inside an offset parent
  * absolute: the absolute coordinates to show before considering the offset parent
  */
-const adt = Adt.generate([
+const adt: {
+  offset: DragCoords;
+  absolute: DragCoords;
+  fixed: DragCoords;
+} = Adt.generate([
   { offset: [ 'x', 'y' ] },
   { absolute: [ 'x', 'y' ] },
   { fixed: [ 'x', 'y' ] }

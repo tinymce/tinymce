@@ -1,11 +1,9 @@
-import { Attr, Css } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import { Attr, Css, Element } from '@ephox/sugar';
 import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SandboxingConfig, SandboxingState } from '../../behaviour/sandboxing/SandboxingTypes';
 import { AlloySpec } from '../../api/component/SpecTypes';
-import { SugarElement } from '../../alien/TypeDefinitions';
 
 // NOTE: A sandbox should not start as part of the world. It is expected to be
 // added to the sink on rebuild.
@@ -46,7 +44,7 @@ const isOpen = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sand
   return sState.isOpen();
 };
 
-const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement) => {
+const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) => {
   return isOpen(sandbox, sConfig, sState) && sState.get().exists((data) => {
     return sConfig.isPartOf()(sandbox, data, queryElem);
   });

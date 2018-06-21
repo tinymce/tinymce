@@ -1,21 +1,20 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Options, Option } from '@ephox/katamari';
-import { DomEvent, Insert } from '@ephox/sugar';
+import { DomEvent, Insert, Element } from '@ephox/sugar';
 
-import * as DescribedHandler from '../../events/DescribedHandler';
 import * as SimulatedEvent from '../../events/SimulatedEvent';
 import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
-import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface ForeignGuiSpec {
-  root: SugarElement;
+  root: Element;
   dispatchers: any[];
-  insertion?: (root: SugarElement, system: Gui.GuiSystem) => void;
+  insertion?: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([

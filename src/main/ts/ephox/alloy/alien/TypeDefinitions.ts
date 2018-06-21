@@ -13,7 +13,6 @@ export interface AdtInterface {
 }
 
 // Sugar Dom
-export type SugarElement = Element;
 
 export interface SugarListener {
   unbind: () => void;
@@ -29,7 +28,7 @@ export interface SugarEvent extends EventFormat {
   prevent: () => void;
   raw: () => Event | TouchEvent | TransitionEvent | MouseEvent | KeyboardEvent;
   stop: () => void;
-  target: () => SugarElement;
+  target: () => Element;
   x: () => number;
   y: () => number;
 }
@@ -42,9 +41,9 @@ export interface SugarPosition {
 }
 
 export interface SugarRange {
-  start: () => SugarElement;
+  start: () => Element;
   soffset: () => number;
-  finish: () => SugarElement;
+  finish: () => Element;
   foffset: () => number;
 }
 

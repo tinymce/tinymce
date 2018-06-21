@@ -4,9 +4,9 @@ import { Element, Location, Position, Scroll } from '@ephox/sugar';
 import * as Frames from './Frames';
 import * as Navigation from './Navigation';
 import { document } from '@ephox/dom-globals';
-import { SugarPosition, SugarElement } from '../alien/TypeDefinitions';
+import { SugarPosition } from '../alien/TypeDefinitions';
 
-const find = (element: SugarElement): SugarPosition => {
+const find = (element: Element): SugarPosition => {
   const doc = Element.fromDom(document);
   const scroll = Scroll.get(doc);
 

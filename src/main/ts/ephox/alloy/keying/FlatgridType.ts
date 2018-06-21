@@ -1,6 +1,6 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import { SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
@@ -16,7 +16,6 @@ import { FlatgridConfig, FlatgridState, KeyRuleHandler } from '../keying/KeyingM
 import { ElementMover } from '../navigation/DomMovement';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent, SugarElement } from '../alien/TypeDefinitions';
 import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
@@ -29,12 +28,12 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first: SugarElement) => {
+  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first: Element) => {
     gridConfig.focusManager().set(component, first);
   });
 };
 
-const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<SugarElement> => {
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<Element> => {
   return gridConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, gridConfig.selector());
   });

@@ -1,7 +1,6 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { SugarElement } from '../../alien/TypeDefinitions';
 
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
@@ -43,7 +42,7 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid ?: string; element: SugarElement; }
+export interface ExternalElement { uid ?: string; element: Element; }
 const external = (spec: ExternalElement): PremadeSpec => {
   const extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),

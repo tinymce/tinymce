@@ -2,7 +2,7 @@ import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
 import { Width } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
@@ -140,7 +140,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpe
       Sandboxing.config({
         onOpen,
         onClose,
-        isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean {
+        isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
           return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
         },
         getAttachPoint () {

@@ -7,7 +7,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { ReplacingConfig } from '../../behaviour/replacing/ReplacingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   Attachment.detachChildren(component);
@@ -24,7 +24,7 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   }, component.element());
 };
 
-const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
+const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: Element, c: Element) => void, childSpec: AlloySpec): void => {
   const child = component.getSystem().build(childSpec);
   Attachment.attachWith(component, child, insertion);
 };

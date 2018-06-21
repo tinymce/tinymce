@@ -98,8 +98,12 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = <D>(behaviour: AlloyBehaviour<any,D>): D | any => {
-    if (behaviour === GuiTypes.apiConfig()) { return info.apis(); }
+  const config = <D>(behaviour: AlloyBehaviour<any,D> | string): D | any => {
+    if (behaviour === GuiTypes.apiConfig()) {
+      return info.apis();
+    } else if (Type.isString(behaviour)) {
+      throw new Error('Invalid input: only API constant is allowed');
+    }
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));

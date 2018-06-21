@@ -6,7 +6,7 @@ import * as Layout from './Layout';
 import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';
 import { Anchor } from '../../positioning/layout/Anchor';
-import { SugarElement } from '../../api/Main';
+import { Element } from '@ephox/sugar';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { AnchorLayout, AnchorBox } from './Layout';
 import { AnchorOverrides, MaxHeightFunction } from '../../positioning/mode/Anchoring';
@@ -33,7 +33,7 @@ const defaultOr = (options, key, dephault) => {
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen (position: fixed)
-const fixed = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: AnchorLayout[], overrideOptions: AnchorOverrides): void => {
+const fixed = (anchor: Anchor, element: Element, bubble: Bubble, layouts: AnchorLayout[], overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -50,7 +50,7 @@ const fixed = (anchor: Anchor, element: SugarElement, bubble: Bubble, layouts: A
   go(anchorBox, element, bubble, options);
 };
 
-const relative = (anchorBox: AnchorBox, element: SugarElement, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
+const relative = (anchorBox: AnchorBox, element: Element, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
   const defaults = (_opts) => {
     const opts = _opts !== undefined ? _opts : {};
     return reparteeOptions({
@@ -66,7 +66,7 @@ const relative = (anchorBox: AnchorBox, element: SugarElement, bubble: Bubble, o
 };
 
 // This is the old public API. If we ever need full customisability again, this is how to expose it
-const go = (anchorBox: AnchorBox, element: SugarElement, bubble: Bubble, options: ReparteeOptions) => {
+const go = (anchorBox: AnchorBox, element: Element, bubble: Bubble, options: ReparteeOptions) => {
   const decision = Callouts.layout(anchorBox, element, bubble, options);
 
   Callouts.position(element, decision, options);

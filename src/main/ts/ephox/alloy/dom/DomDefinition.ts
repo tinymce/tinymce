@@ -1,6 +1,6 @@
 import { JSON as Json } from '@ephox/sand';
 import { Struct, Option, Arr } from '@ephox/katamari';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 
 export interface GeneralDefinitionSpec<EC, DC> {
   tag?: string;
@@ -13,7 +13,7 @@ export interface GeneralDefinitionSpec<EC, DC> {
   defChildren?: DC[];
 }
 
-export interface DomDefinitionSpec extends GeneralDefinitionSpec<SugarElement[], DomDefinitionSpec> {
+export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element[], DomDefinitionSpec> {
 
 }
 
@@ -28,7 +28,7 @@ export interface GeneralDefinitionDetail<EC, DC> {
   defChildren(): Option<DC>;
 }
 
-export interface DomDefinitionDetail extends GeneralDefinitionDetail<SugarElement[], DomDefinitionDetail[]> {
+export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element[], DomDefinitionDetail[]> {
 
 }
 

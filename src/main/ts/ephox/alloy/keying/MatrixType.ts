@@ -12,7 +12,7 @@ import * as MatrixNavigation from '../navigation/MatrixNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 import { MatrixConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SugarEvent } from '../alien/TypeDefinitions';
@@ -48,7 +48,7 @@ const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEv
   });
 };
 
-const toMatrix = (rows: SugarElement[], matrixConfig: MatrixConfig): Array<Array<SugarElement>> => {
+const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Array<Array<Element>> => {
   return Arr.map(rows, (row) => {
     return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
   });

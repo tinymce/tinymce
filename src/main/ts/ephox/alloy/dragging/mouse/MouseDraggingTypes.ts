@@ -1,5 +1,3 @@
-import { Option } from '@ephox/katamari';
-import { SugarElement, SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 import { DraggingConfig, CommonDraggingConfigSpec } from '../../dragging/common/DraggingTypes';
 
 export interface MouseDraggingConfig extends DraggingConfig {
@@ -10,7 +8,7 @@ export interface DragApi {
   drop: (AlloyComponent) => void;
   delayDrop: (AlloyComponent) => void;
   forceDrop: (AlloyComponent) => void;
-  move: (SugarElement) => void;
+  move: (Element) => void;
 }
 
 export interface MouseDraggingConfigSpec extends CommonDraggingConfigSpec {

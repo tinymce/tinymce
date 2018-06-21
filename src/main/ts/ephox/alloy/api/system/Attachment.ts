@@ -1,6 +1,5 @@
 import { Arr, Option } from '@ephox/katamari';
-import { Body, Insert, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Body, Insert, Remove, Traverse, Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { GuiSystem } from '../../api/system/Gui';
 
@@ -23,7 +22,7 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
-const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void => {
+const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element(), child.element());
   if (Body.inBody(parent.element())) { fireAttaching(child); }
@@ -56,7 +55,7 @@ const detachChildren = (component: AlloyComponent): void => {
   component.syncComponents();
 };
 
-const attachSystem = (element: SugarElement, guiSystem: GuiSystem): void => {
+const attachSystem = (element: Element, guiSystem: GuiSystem): void => {
   Insert.append(element, guiSystem.element());
   const children = Traverse.children(guiSystem.element());
   Arr.each(children, (child) => {

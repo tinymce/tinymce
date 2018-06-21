@@ -1,7 +1,6 @@
 import { Fun, Struct } from '@ephox/katamari';
-import { Height, Location, Width } from '@ephox/sugar';
+import { Height, Location, Width, Element } from '@ephox/sugar';
 
-import { SugarElement } from '../alien/TypeDefinitions';
 import { CssPositionAdt } from '../alien/CssPosition';
 
 const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
@@ -33,7 +32,7 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
   };
 };
 
-const box = (element: SugarElement): Bounds => {
+const box = (element: Element): Bounds => {
   const xy = Location.absolute(element);
   const w = Width.getOuter(element);
   const h = Height.getOuter(element);

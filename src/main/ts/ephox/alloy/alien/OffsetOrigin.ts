@@ -1,5 +1,4 @@
 import { Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement } from '../api/Main';
 import { SugarPosition } from '../alien/TypeDefinitions';
 
 /*
@@ -7,7 +6,7 @@ import { SugarPosition } from '../alien/TypeDefinitions';
  * means that the absolute coordinates can be obtained by adding the origin
  * to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element: SugarElement, scroll: SugarPosition): SugarPosition => {
+const getOrigin = (element: Element, scroll: SugarPosition): SugarPosition => {
   return Traverse.offsetParent(element).orThunk(() => {
     const marker = Element.fromTag('span');
     Insert.before(element, marker);

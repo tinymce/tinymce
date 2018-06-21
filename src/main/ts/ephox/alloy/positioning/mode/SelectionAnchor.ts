@@ -15,17 +15,18 @@ import { SelectionAnchor, nu as NuAnchor, Anchoring } from './Anchoring';
 import * as ContainerOffsets from './ContainerOffsets';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
-import { SugarRange, SugarElement } from '../../alien/TypeDefinitions';
+import { SugarRange } from '../../alien/TypeDefinitions';
 import { AnchorLayout } from '../layout/Layout';
 
-const point = Struct.immutable('element', 'offset');
+const point: (element: Element, offset: number) => {element: () => Element; offset: () => number;} = Struct.immutable('element', 'offset');
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
 const descendOnce = (element, offset) => {
   return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 };
 
-const getAnchorSelection = (win: Window, anchorInfo): Option<SugarRange> => {
+const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SugarRange> => {
+  // FIX TEST Test both providing a getSelection and not providing a getSelection
   const getSelection = anchorInfo.getSelection().getOrThunk(() => {
     return () => {
       return WindowSelection.getExact(win);
@@ -88,7 +89,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
       box.height()
     );
 
-    const targetElement: Option<SugarElement> = getAnchorSelection(win, anchorInfo).bind((sel) => {
+    const targetElement: Option<Element> = getAnchorSelection(win, anchorInfo).bind((sel) => {
       return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
     });
 
@@ -104,7 +105,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const getLayouts: (elem: SugarElement) => AnchorLayout[] =
+    const getLayouts: (elem: Element) => AnchorLayout[] =
       Direction.onDirection(layoutsLtr(), layoutsRtl());
     const layouts = targetElement.map(getLayouts).getOrThunk(layoutsLtr);
 

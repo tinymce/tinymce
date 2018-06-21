@@ -1,7 +1,6 @@
-import { Html, Replication } from '@ephox/sugar';
-import { SugarElement } from '../api/Main';
+import { Html, Replication, Element } from '@ephox/sugar';
 
-const getHtml = (element: SugarElement): string => {
+const getHtml = (element: Element): string => {
   const clone = Replication.shallow(element);
   return Html.getOuter(clone);
 };

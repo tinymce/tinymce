@@ -3,7 +3,7 @@ import { Arr, Merger, Obj, Struct, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 
 export interface DomModification {
   classes(): Option<string[]>;
@@ -12,7 +12,7 @@ export interface DomModification {
   value(): Option<any>;
   innerHtml(): Option<string>;
   defChildren(): Option<DomDefinitionDetail[]>;
-  domChildren(): Option<SugarElement[]>;
+  domChildren(): Option<Element[]>;
 }
 
 export interface DomModificationSpec {
@@ -22,7 +22,7 @@ export interface DomModificationSpec {
   value?: any;
   innerHtml?: string;
   defChildren?: DomDefinitionDetail[];
-  domChildren?: SugarElement[];
+  domChildren?: Element[];
 }
 
 const fields = [
