@@ -5,6 +5,7 @@ import { Uint8Array, Window } from '@ephox/sand';
 
 import Actions from 'tinymce/themes/inlite/core/Actions';
 import Theme from 'tinymce/themes/inlite/Theme';
+import { Blob } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser/core/ActionsTest', function () {
   const success = arguments[arguments.length - 2];

@@ -4,6 +4,7 @@ import { Element, Css, SelectorFind } from '@ephox/sugar';
 import EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function () {
   const success = arguments[arguments.length - 2];

@@ -9,6 +9,7 @@
  */
 
 import Promise from 'tinymce/core/api/util/Promise';
+import { document } from '@ephox/dom-globals';
 
 const pickFile = function () {
   return new Promise(function (resolve) {

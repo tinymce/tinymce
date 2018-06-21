@@ -10,6 +10,7 @@
 
 import DOMUtils from './DOMUtils';
 import Tools from '../util/Tools';
+import { document } from '@ephox/dom-globals';
 
 /*globals console*/
 

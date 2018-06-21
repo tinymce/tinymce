@@ -4,6 +4,7 @@ import { TinyDom } from '@ephox/mcagar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Bookmark from 'tinymce/themes/inlite/alien/Bookmark';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.alien.BookmarkTest', function () {
   const success = arguments[arguments.length - 2];

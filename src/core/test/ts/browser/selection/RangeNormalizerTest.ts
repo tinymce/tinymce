@@ -3,6 +3,7 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function () {
   const success = arguments[arguments.length - 2];

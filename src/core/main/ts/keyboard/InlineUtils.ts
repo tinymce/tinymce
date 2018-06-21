@@ -18,6 +18,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Node } from '@ephox/dom-globals';
 
 const isInlineTarget = function (editor: Editor, elm: Node): boolean {
   const selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');

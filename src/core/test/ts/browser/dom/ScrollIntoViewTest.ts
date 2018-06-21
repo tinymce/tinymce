@@ -6,6 +6,7 @@ import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
   const success = arguments[arguments.length - 2];

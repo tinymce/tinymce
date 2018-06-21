@@ -6,6 +6,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 
 import Toolbar from '../module/test/Toolbar';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.ClosedDialogScrollTest', function () {
   const success = arguments[arguments.length - 2];

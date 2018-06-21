@@ -13,6 +13,7 @@ import FocusManager from '../api/FocusManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import SelectionRestore from '../selection/SelectionRestore';
 import Delay from '../api/util/Delay';
+import { document } from '@ephox/dom-globals';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;

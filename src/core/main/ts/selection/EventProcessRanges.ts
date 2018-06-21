@@ -9,6 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+import { Range } from '@ephox/dom-globals';
 
 const processRanges = (editor, ranges: Range[]): Range[] => {
   return Arr.map(ranges, (range) => {

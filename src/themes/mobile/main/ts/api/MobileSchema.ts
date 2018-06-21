@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 
@@ -49,4 +49,4 @@ export default ValueSchema.objOf([
   FieldSchema.defaulted('translate', Fun.identity),
   FieldSchema.defaulted('setReadOnly', Fun.noop),
   FieldSchema.defaulted('readOnlyOnInit', Fun.constant(true))
-]) as DslType.Processor;
+]) as Processor;

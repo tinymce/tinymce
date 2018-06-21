@@ -20,6 +20,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
+import { HTMLElement, Node, Element, Range, Text } from '@ephox/dom-globals';
 
 const addBogus = (dom: DOMUtils, node: HTMLElement) => {
   // Adds a bogus BR element for empty block elements

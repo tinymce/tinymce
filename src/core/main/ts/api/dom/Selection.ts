@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Compare, Element } from '@ephox/sugar';
+import { Compare, Element as SugarElement } from '@ephox/sugar';
 import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
@@ -25,9 +25,9 @@ import SetSelectionContent from '../../selection/SetSelectionContent';
 import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint, hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
-import { NativeSelection } from './NativeTypes';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Selection as NativeSelection, HTMLElement, Node, Range, Element, ClientRect, Window } from '@ephox/dom-globals';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -46,7 +46,7 @@ const isNativeIeSelection = (rng: any): boolean => {
 };
 
 const isAttachedToDom = function (node: Node): boolean {
-  return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
+  return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
 };
 
 const isValidRange = function (rng: Range) {

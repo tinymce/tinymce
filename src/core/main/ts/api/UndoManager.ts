@@ -12,6 +12,7 @@ import GetBookmark from '../bookmark/GetBookmark';
 import Levels, { UndoLevel } from '../undo/Levels';
 import Tools from './util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Event } from '@ephox/dom-globals';
 
 /**
  * This class handles the undo/redo history levels for the editor. Since the built-in undo/redo has major drawbacks a custom one was needed.

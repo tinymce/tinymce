@@ -10,6 +10,7 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.core.ThemeTest', function () {
   const success = arguments[arguments.length - 2];

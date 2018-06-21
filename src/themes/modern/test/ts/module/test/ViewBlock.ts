@@ -1,7 +1,8 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { document, HTMLElement } from '@ephox/dom-globals';
 
 export default function () {
-  const domElm = DOMUtils.DOM.create('div', {
+  const domElm: HTMLElement = DOMUtils.DOM.create('div', {
     style: 'position: absolute; right: 10px; top: 10px;'
   });
 

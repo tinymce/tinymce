@@ -21,9 +21,10 @@
     "postinstall": "rimraf node_modules/@ephox/alloy/node_modules"
   },
   "dependencies": {
-    "@ephox/alloy": "2.0.6",
-    "@ephox/boulder": "3.0.5",
+    "@ephox/alloy": "latest",
+    "@ephox/boulder": "latest",
     "@ephox/darwin": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
     "@ephox/robin": "latest",

@@ -23,6 +23,7 @@ import { Selection } from '../api/dom/Selection';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Node } from '@ephox/dom-globals';
 
 const each = Tools.each;
 

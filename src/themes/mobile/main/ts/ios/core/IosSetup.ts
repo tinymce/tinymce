@@ -87,6 +87,21 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   };
 };
 
+export interface IosApi {
+  toEditing: () => void;
+  toReading: () => void;
+  onToolbarTouch: (event: any) => void;
+  refreshSelection: () => void;
+  clearSelection: () => void;
+  highlightSelection: () => void;
+  scrollIntoView: (top: any, bottom: any) => void;
+  updateToolbarPadding: (...x: any[]) => void;
+  setViewportOffset: (newYOffset: any) => void;
+  syncHeight: () => void;
+  refreshStructure: () => void;
+  destroy: () => void;
+}
+
 const setup = function (bag) {
   const cWin = bag.cWin();
   const ceBody = bag.ceBody();

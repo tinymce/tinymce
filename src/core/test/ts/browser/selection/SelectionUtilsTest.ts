@@ -3,6 +3,7 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import * as SelectionUtils from 'tinymce/core/selection/SelectionUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function () {
   const success = arguments[arguments.length - 2];

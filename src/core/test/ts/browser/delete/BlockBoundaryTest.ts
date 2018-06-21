@@ -3,6 +3,7 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import BlockBoundary from 'tinymce/core/delete/BlockBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () {
   const success = arguments[arguments.length - 2];

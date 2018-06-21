@@ -13,6 +13,7 @@ import * as CaretContainer from './CaretContainer';
 import CaretPosition from './CaretPosition';
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
+import { Node, Text } from '@ephox/dom-globals';
 
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;

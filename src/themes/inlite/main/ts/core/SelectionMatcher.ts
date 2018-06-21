@@ -12,6 +12,7 @@ import Matcher from './Matcher';
 import Measure from './Measure';
 import { Editor } from 'tinymce/core/api/Editor';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import { Element } from '@ephox/dom-globals';
 
 // textSelection :: String -> (Editor -> Matcher.result | Null)
 const textSelection = function (id: string) {

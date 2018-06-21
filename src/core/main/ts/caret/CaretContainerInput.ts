@@ -12,6 +12,7 @@ import { Fun } from '@ephox/katamari';
 import { Element, SelectorFind } from '@ephox/sugar';
 import * as CaretContainer from './CaretContainer';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement, Event } from '@ephox/dom-globals';
 
 /**
  * This module shows the invisble block that the caret is currently in when contents is added to that block.

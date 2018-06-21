@@ -10,6 +10,7 @@
 
 import Window from './Window';
 import MessageBox from './MessageBox';
+import { document } from '@ephox/dom-globals';
 
 export default function (editor) {
   const open = function (args, params, closeCallback) {

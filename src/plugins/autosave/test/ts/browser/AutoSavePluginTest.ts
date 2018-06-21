@@ -3,6 +3,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document, window, history } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', function () {
   const success = arguments[arguments.length - 2];

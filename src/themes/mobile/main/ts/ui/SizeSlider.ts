@@ -1,4 +1,4 @@
-import { Behaviour, Slider, Toggling, Sketcher } from '@ephox/alloy';
+import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import Receivers from '../channels/Receivers';
@@ -12,7 +12,7 @@ const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('sizes')
 ]);
 
-const sketch = function (rawSpec): Sketcher.SketchSpec {
+const sketch = function (rawSpec): SketchSpec {
   const spec = ValueSchema.asRawOrDie('SizeSlider', schema, rawSpec);
 
   const isValidValue = function (valueIndex) {

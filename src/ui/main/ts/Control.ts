@@ -19,6 +19,7 @@ import ObservableObject from './data/ObservableObject';
 import DomUtils from './DomUtils';
 import ReflowQueue from './ReflowQueue';
 import UiContainer from 'tinymce/ui/UiContainer';
+import { document } from '@ephox/dom-globals';
 
 /*eslint consistent-this:0 */
 

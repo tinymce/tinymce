@@ -3,7 +3,7 @@ import {
     TieredMenu, Toggling, Transitioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { Css, SelectorFind, Width } from '@ephox/sugar';
 
 import Receivers from '../channels/Receivers';
@@ -170,8 +170,10 @@ const sketch = function (settings) {
     onExecute (tmenu, item) {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
+      return Option.none();
     },
     onEscape () {
+      return Option.none();
     },
     onOpenMenu (container, menu) {
       const w = Width.get(container.element());

@@ -11,6 +11,7 @@
 import { XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
+import { FormData } from '@ephox/dom-globals';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.

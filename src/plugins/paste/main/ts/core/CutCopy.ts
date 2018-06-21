@@ -12,6 +12,7 @@ import Env from 'tinymce/core/api/Env';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
+import { DataTransfer, ClipboardEvent, Range } from '@ephox/dom-globals';
 
 const noop = function () {
 };

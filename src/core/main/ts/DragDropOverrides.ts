@@ -14,6 +14,7 @@ import NodeType from './dom/NodeType';
 import Arr from './util/Arr';
 import Delay from './api/util/Delay';
 import Fun from './util/Fun';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.

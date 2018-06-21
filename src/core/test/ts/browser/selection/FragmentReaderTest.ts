@@ -4,6 +4,7 @@ import { Hierarchy, Insert, Element, Html } from '@ephox/sugar';
 import FragmentReader from 'tinymce/core/selection/FragmentReader';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function () {
   const success = arguments[arguments.length - 2];

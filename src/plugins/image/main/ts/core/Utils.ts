@@ -13,6 +13,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
+import { document } from '@ephox/dom-globals';
 
 /**
  * @class tinymce.image.core.Utils

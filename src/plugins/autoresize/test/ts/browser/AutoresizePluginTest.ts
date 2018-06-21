@@ -5,6 +5,7 @@ import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { navigator } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', function () {
   const success = arguments[arguments.length - 2];

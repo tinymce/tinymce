@@ -11,13 +11,14 @@
 import { Fun } from '@ephox/katamari';
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
+import { Node, Text } from '@ephox/dom-globals';
 
 const isText = NodeType.isText;
 const startsWithCaretContainer = (node: Node) => isText(node) && node.data[0] === Zwsp.ZWSP;
 const endsWithCaretContainer = (node: Node) => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 const createZwsp = (node: Node) => node.ownerDocument.createTextNode(Zwsp.ZWSP);
 
-const insertBefore = (node: Node) => {
+const insertBefore = (node: Node): Text => {
   if (isText(node.previousSibling)) {
     if (endsWithCaretContainer(node.previousSibling)) {
       return node.previousSibling;

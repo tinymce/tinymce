@@ -4,6 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', function () {
   const success = arguments[arguments.length - 2];

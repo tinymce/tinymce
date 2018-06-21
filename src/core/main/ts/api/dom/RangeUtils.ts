@@ -16,6 +16,7 @@ import * as RangeNodes from '../../selection/RangeNodes';
 import RangeWalk from '../../selection/RangeWalk';
 import SplitRange from '../../selection/SplitRange';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Range, Document, Node } from '@ephox/dom-globals';
 
 /**
  * This class contains a few utility methods for ranges.
@@ -91,9 +92,9 @@ export namespace RangeUtils {
    * @param {Document} doc Document that x/y are relative to
    * @returns {Range} caret range
    */
-  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
+  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (clientX: number, clientY: number, doc: Document) => Range;
 
-  export const getSelectedNode = RangeNodes.getSelectedNode;
+  export const getSelectedNode = RangeNodes.getSelectedNode as (range: Range) => Node;
   export const getNode = RangeNodes.getNode;
 }
 

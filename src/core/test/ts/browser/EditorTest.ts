@@ -6,6 +6,7 @@ import HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
   const success = arguments[arguments.length - 2];

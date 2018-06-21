@@ -2,6 +2,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Fragments from 'tinymce/core/undo/Fragments';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function () {
   const success = arguments[arguments.length - 2];

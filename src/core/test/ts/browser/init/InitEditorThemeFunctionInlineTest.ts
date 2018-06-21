@@ -2,6 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Insert, Element, SelectorFind } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionInlineTest',

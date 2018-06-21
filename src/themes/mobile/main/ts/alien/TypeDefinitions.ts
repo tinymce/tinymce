@@ -1,3 +1,5 @@
+import { HTMLElement } from '@ephox/dom-globals';
+
 // Localised Type definitions from external Libraries, we can temporarily shoehorn them here, and migrate later
 
 // TODO move these to the correct village

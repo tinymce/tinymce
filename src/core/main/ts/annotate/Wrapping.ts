@@ -8,6 +8,7 @@ import RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';
 import { findMarkers } from './Identification';
 import * as Markings from './Markings';
+import { Range } from '@ephox/dom-globals';
 
 export type DecoratorData = Record<string, any>;
 

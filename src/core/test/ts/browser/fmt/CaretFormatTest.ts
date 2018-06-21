@@ -7,6 +7,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
+import { Text } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
   const success = arguments[arguments.length - 2];

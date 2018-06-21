@@ -11,6 +11,7 @@
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import { window } from '@ephox/dom-globals';
 
 EditorManager._beforeUnloadHandler = function () {
   let msg;

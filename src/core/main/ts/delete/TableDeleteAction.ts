@@ -10,6 +10,7 @@
 
 import { Adt, Arr, Fun, Option, Options, Struct } from '@ephox/katamari';
 import { Compare, Element, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Range } from '@ephox/dom-globals';
 
 const tableCellRng = Struct.immutable('start', 'end');
 const tableSelection = Struct.immutable('rng', 'table', 'cells');

@@ -12,6 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Convert from './Convert';
 import { Editor } from 'tinymce/core/api/Editor';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const toAbsolute = function (rect: GeomRect): GeomRect {
   const vp = DOMUtils.DOM.getViewPort();

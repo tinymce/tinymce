@@ -6,6 +6,7 @@ import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
   const success = arguments[arguments.length - 2];

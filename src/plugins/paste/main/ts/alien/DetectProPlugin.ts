@@ -10,6 +10,7 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 import { Editor } from 'tinymce/core/api/Editor';
+import { window } from '@ephox/dom-globals';
 
 const hasProPlugin = function (editor: Editor) {
   // draw back if power version is requested and registered

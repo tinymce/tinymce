@@ -5,6 +5,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', function () {
   const success = arguments[arguments.length - 2];

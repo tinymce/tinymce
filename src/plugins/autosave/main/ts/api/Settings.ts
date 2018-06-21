@@ -9,6 +9,7 @@
  */
 
 import Time from '../core/Time';
+import { document } from '@ephox/dom-globals';
 
 const shouldAskBeforeUnload = function (editor) {
   return editor.getParam('autosave_ask_before_unload', true);

@@ -4,6 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Element, Html } from '@ephox/sugar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',

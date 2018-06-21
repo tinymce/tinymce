@@ -16,6 +16,7 @@ import Helpers from './Helpers';
 import { hasAdvancedRowTab, getRowClassList } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Node, HTMLElement, Element } from '@ephox/dom-globals';
 
 interface FormData {
   height: string;

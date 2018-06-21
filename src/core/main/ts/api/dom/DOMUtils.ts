@@ -22,6 +22,7 @@ import { StyleMap, Styles } from '../html/Styles';
 import Tools from '../util/Tools';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
 import NodeType from 'tinymce/core/dom/NodeType';
+import { HTMLElement, Node, Window, Document, Element, DocumentFragment, NamedNodeMap, Range, window, document } from '@ephox/dom-globals';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.

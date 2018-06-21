@@ -17,6 +17,7 @@ import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
 import { HDirection } from 'tinymce/core/caret/CaretWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
+import { Node, Range } from '@ephox/dom-globals';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;

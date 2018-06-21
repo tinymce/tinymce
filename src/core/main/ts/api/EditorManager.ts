@@ -21,6 +21,7 @@ import Observable from './util/Observable';
 import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
+import { document } from '@ephox/dom-globals';
 
 declare const window: any;
 

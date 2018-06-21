@@ -13,6 +13,7 @@ import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import { Editor } from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
   MatchKeys.execute([

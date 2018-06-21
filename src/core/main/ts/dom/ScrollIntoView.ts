@@ -13,6 +13,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { getOverflow } from 'tinymce/core/geom/ClientRect';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Arr } from '@ephox/katamari';
+import { HTMLElement, Element, Range } from '@ephox/dom-globals';
 
 const getPos = function (elm: HTMLElement) {
   let x = 0, y = 0;

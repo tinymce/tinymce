@@ -14,6 +14,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import DomUtils from './DomUtils';
 import Widget from './Widget';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This class creates a combobox control. Select box that you select a value from or

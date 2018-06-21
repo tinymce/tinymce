@@ -9,6 +9,7 @@
  */
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import { document, window } from '@ephox/dom-globals';
 
 /**
  * Drag/drop helper class.

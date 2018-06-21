@@ -3,6 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
 import FontInfo from 'tinymce/core/fmt/FontInfo';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
   const success = arguments[arguments.length - 2];

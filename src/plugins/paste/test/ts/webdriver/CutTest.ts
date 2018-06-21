@@ -5,6 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', function () {
   const success = arguments[arguments.length - 2];

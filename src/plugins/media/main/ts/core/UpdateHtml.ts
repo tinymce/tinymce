@@ -13,6 +13,7 @@ import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Size from './Size';
+import { Element } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

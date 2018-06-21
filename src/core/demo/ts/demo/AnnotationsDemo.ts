@@ -8,6 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import { Editor } from 'tinymce/core/api/Editor';
+import { prompt } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 

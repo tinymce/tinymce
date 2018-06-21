@@ -1,6 +1,7 @@
 import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
 import { Attr, Class, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import { document, navigator } from '@ephox/dom-globals';
 
 const styleClass = Id.generate('ui-test-styles');
 

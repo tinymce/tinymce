@@ -8,8 +8,9 @@ import Thor from '../../util/Thor';
 import Scrollables from '../scroll/Scrollables';
 import IosKeyboard from '../view/IosKeyboard';
 import IosEvents from './IosEvents';
-import IosSetup from './IosSetup';
+import IosSetup, { IosApi } from './IosSetup';
 import PlatformEditor from './PlatformEditor';
+import { document } from '@ephox/dom-globals';
 
 const create = function (platform, mask) {
   const meta = MetaViewport.tag();
@@ -17,7 +18,7 @@ const create = function (platform, mask) {
   const priorState = Singleton.value();
   const scrollEvents = Singleton.value();
 
-  const iosApi = Singleton.api();
+  const iosApi = Singleton.api<IosApi>();
   const iosEvents = Singleton.api();
 
   const enter = function () {
@@ -79,7 +80,9 @@ const create = function (platform, mask) {
           outerWindow: platform.win,
           keyboardType: IosKeyboard.stubborn,
           isScrolling () {
-            return scrollEvents.get().exists(function (s) {
+            // TODO: There is no get in singleton investigate this
+            const scrollValue = scrollEvents as any;
+            return scrollValue.get().exists(function (s) {
               return s.socket.isScrolling();
             });
           }
@@ -103,7 +106,7 @@ const create = function (platform, mask) {
 
     mask.show();
 
-    priorState.on(function (s) {
+    priorState.on(function (s: any) {
       s.socketHeight.each(function (h) {
         Css.set(platform.socket, 'height', h);
       });
@@ -114,7 +117,7 @@ const create = function (platform, mask) {
     });
     priorState.clear();
 
-    scrollEvents.on(function (s) {
+    scrollEvents.on(function (s: any) {
       s.exclusives.unbind();
     });
     scrollEvents.clear();

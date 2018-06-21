@@ -13,6 +13,7 @@ import ResolveBookmark from './ResolveBookmark';
 import { Selection } from '../api/dom/Selection';
 import NodeType from '../dom/NodeType';
 import { Bookmark } from './BookmarkTypes';
+import { Node } from '@ephox/dom-globals';
 
 const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
   return GetBookmark.getBookmark(selection, type, normalized);

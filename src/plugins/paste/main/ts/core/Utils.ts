@@ -11,6 +11,7 @@
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
+import { navigator } from '@ephox/dom-globals';
 
 /**
  * This class contails various utility functions for the paste plugin.

@@ -13,6 +13,7 @@ import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/inlite/Theme';
 
 import Toolbar from '../module/test/Toolbar';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.AutoCompleteTest', function () {
   const success = arguments[arguments.length - 2];
