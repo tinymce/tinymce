@@ -1,16 +1,21 @@
 import { Adt, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 import * as OriginsUI from '../view/OriginsUI';
 import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
-import { AdtInterface, SugarElement, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
+import { AdtInterface, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
 import { Bounds } from '../../alien/Boxes';
 
 export interface OriginAdt extends AdtInterface {
 
 }
 
-const adt = Adt.generate([
+const adt: {
+  none: () => OriginAdt;
+  relative: (x: number, y: number) => OriginAdt;
+  fixed: (x: number, y: number, width: number, height: number) => OriginAdt;
+} = Adt.generate([
   { none: [ ] },
   { relative: [ 'x', 'y' ] },
   { fixed: [ 'x', 'y', 'width', 'height' ] }
@@ -57,7 +62,7 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): Reposition
   });
 };
 
-const toBox = (origin: OriginAdt, element: SugarElement): Bounds => {
+const toBox = (origin: OriginAdt, element: Element): Bounds => {
   return OriginsUI.toBox(origin, element);
 };
 

@@ -1,13 +1,12 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
+import { Focus, Element } from '@ephox/sugar';
 
 import { Highlighting } from '../behaviour/Highlighting';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface FocusManager {
-  get: (component: AlloyComponent) => Option<SugarElement>;
-  set: (component: AlloyComponent, focusee: SugarElement) => void;
+  get: (component: AlloyComponent) => Option<Element>;
+  set: (component: AlloyComponent, focusee: Element) => void;
 }
 
 const dom = (): FocusManager => {

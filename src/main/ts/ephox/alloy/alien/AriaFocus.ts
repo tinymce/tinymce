@@ -1,9 +1,7 @@
-import { Option } from '@ephox/katamari';
-import { Compare, Focus, PredicateFind, Traverse } from '@ephox/sugar';
+import { Option, Fun } from '@ephox/katamari';
+import { Compare, Focus, PredicateFind, Traverse, Element } from '@ephox/sugar';
 
-import { SugarElement } from '../alien/TypeDefinitions';
-
-const preserve = <T>(f: (SugarElement) => T, container: SugarElement): T => {
+const preserve = <T>(f: (e: Element) => T, container: Element): T => {
   const ownerDoc = Traverse.owner(container);
 
   const refocus = Focus.active(ownerDoc).bind((focused) => {
@@ -19,10 +17,10 @@ const preserve = <T>(f: (SugarElement) => T, container: SugarElement): T => {
   refocus.each((oldFocus) => {
     Focus.active(ownerDoc).filter((newFocus) => {
       return Compare.eq(newFocus, oldFocus);
-    }).orThunk(() => {
+    }).fold(() => {
       // Only refocus if the focus has changed, otherwise we break IE
       Focus.focus(oldFocus);
-    });
+    }, Fun.noop);
   });
   return result;
 };

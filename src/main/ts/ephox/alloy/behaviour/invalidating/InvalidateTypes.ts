@@ -2,7 +2,7 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Future, Result } from '@ephox/katamari';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
@@ -16,10 +16,10 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
 
 export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
   invalidClass: string;
-  getRoot?: (AlloyComponent) => Option<SugarElement>;
+  getRoot?: (AlloyComponent) => Option<Element>;
   notify?: {
     aria?: string;
-    getContainer?: (input: AlloyComponent) => Option<SugarElement>;
+    getContainer?: (input: AlloyComponent) => Option<Element>;
     validHtml?: string;
     onValid?: (comp: AlloyComponent) => void;
     onInvalid?: (comp: AlloyComponent, err: string) => void;
@@ -35,14 +35,14 @@ export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
 export interface InvalidatingConfig extends BehaviourConfigDetail {
   invalidClass: () => string;
   notify?: () => Option<{
-    getContainer?: () => (input: AlloyComponent) => Option<SugarElement>;
+    getContainer?: () => (input: AlloyComponent) => Option<Element>;
     onValid?: () => (comp: AlloyComponent) => void;
     validHtml: () => string;
     onInvalid?: () => (comp: AlloyComponent, err: string) => void;
     onValidate: () => (comp: AlloyComponent) => void;
   }>;
   onEvent?: () => string;
-  getRoot?: () => (AlloyComponent) => Option<SugarElement>
+  getRoot?: () => (AlloyComponent) => Option<Element>
   validator: () => Option<{
     validate: () => (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: () => string;

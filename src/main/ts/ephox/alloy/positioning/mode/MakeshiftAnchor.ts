@@ -15,8 +15,12 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
   const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-  const layouts = anchorInfo.layouts().getOrThunk(() => {
+  const layouts = anchorInfo.layouts().fold(() => {
     return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
+  }, (layoutChooser) => {
+    const dirChooser = Direction.onDirection(layoutChooser.onLtr(), layoutChooser.onRtl());
+    const getLayouts = dirChooser(component.element());
+    return getLayouts(component.element());
   });
 
   return Option.some(

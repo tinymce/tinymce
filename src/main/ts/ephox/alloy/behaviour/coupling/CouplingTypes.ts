@@ -1,8 +1,6 @@
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';

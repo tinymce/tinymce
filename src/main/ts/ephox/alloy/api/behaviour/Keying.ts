@@ -2,11 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
-import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { FocusManagers } from '../../api/Main';
 import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 import { console } from '@ephox/dom-globals';
 

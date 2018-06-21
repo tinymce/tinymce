@@ -1,6 +1,6 @@
 import { Contracts, Result } from '@ephox/katamari';
 
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
@@ -12,7 +12,7 @@ export interface AlloySystemApi {
   broadcastOn: (channels: string[], message: any) => void;
   build: (spec: AlloySpec) => AlloyComponent;
   debugInfo: () => string;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
+  getByDom: (element: Element) => Result<AlloyComponent, string>;
   getByUid: (uid: string) => Result<AlloyComponent, string>;
   removeFromGui: (component: AlloyComponent) => void;
   removeFromWorld: (component: AlloyComponent) => void;
@@ -21,8 +21,8 @@ export interface AlloySystemApi {
   // Weird method. Required?
   triggerEscape: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
 
-  triggerEvent: (eventName: string, target: SugarElement, data: {}) => void;
-  triggerFocus: (target: SugarElement, originator: SugarElement) => void;
+  triggerEvent: (eventName: string, target: Element, data: {}) => void;
+  triggerFocus: (target: Element, originator: Element) => void;
 }
 
 export type ContractAlloySystem = (AlloySystemApi) => AlloySystemApi;

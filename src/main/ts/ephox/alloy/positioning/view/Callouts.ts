@@ -5,7 +5,7 @@ import { Classes, Css, Height, Width } from '@ephox/sugar';
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { AnchorElement, AnchorBox } from '../../positioning/layout/Layout';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
@@ -15,14 +15,14 @@ import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
  * in case we decide to bring back the flexibility of working with non-standard positioning.
  */
 
-const elementSize = (p: SugarElement): AnchorElement => {
+const elementSize = (p: Element): AnchorElement => {
   return {
     width: Fun.constant(Width.getOuter(p)),
     height: Fun.constant(Height.getOuter(p))
   };
 };
 
-const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, options: ReparteeOptions) => {
+const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions) => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
 

@@ -1,12 +1,11 @@
 import { Option } from '@ephox/katamari';
-import { Attr, Class, Css, Height, Location, Width } from '@ephox/sugar';
+import { Attr, Class, Css, Height, Location, Width, Element } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as DragCoord from '../../api/data/DragCoord';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { DockingContext, DockingConfig } from '../../behaviour/docking/DockingTypes';
-import { SugarElement, SugarPosition } from '../../alien/TypeDefinitions';
-import { OriginAdt } from '../../positioning/layout/Origins';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Bounds } from '../../alien/Boxes';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
@@ -29,7 +28,7 @@ const isCompletelyVisible = (box: Bounds, viewport: Bounds): boolean => {
   return box.y() >= viewport.y() && box.bottom() <= viewport.bottom();
 };
 
-const getAttr = (elem: SugarElement, attr: string): Option<number> => {
+const getAttr = (elem: Element, attr: string): Option<number> => {
   return Attr.has(elem, attr) ? Option.some(
     parseInt(Attr.get(elem, attr), 10)
   ) : Option.none();
@@ -47,7 +46,7 @@ const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<Bo
   });
 };
 
-const setPrior = (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string, absTop: string): void => {
+const setPrior = (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string | number, absTop: string | number): void => {
   const elem = component.element();
   Attr.set(elem, dockInfo.leftAttr(), absLeft);
   Attr.set(elem, dockInfo.topAttr(), absTop);

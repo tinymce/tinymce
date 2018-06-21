@@ -13,7 +13,10 @@ import { AdtInterface } from '../../alien/TypeDefinitions';
 export interface BounderAttemptAdt extends AdtInterface {
 }
 
-const adt = Adt.generate([
+const adt: {
+  fit: ( reposition: RepositionDecision ) => BounderAttemptAdt;
+  nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
+} = Adt.generate([
   { fit:   [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
@@ -117,8 +120,8 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       const improved = newDeltaW > deltaW || newDeltaH > deltaH;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
-      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH) as BounderAttemptAdt
-                      : adt.nofit(reposition, deltaW, deltaH) as BounderAttemptAdt;
+      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)
+                      : adt.nofit(reposition, deltaW, deltaH);
     });
   };
 

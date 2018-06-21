@@ -1,9 +1,9 @@
-import { SugarElement, SugarDocument } from "ephox/alloy/alien/TypeDefinitions";
+import { SugarDocument } from "ephox/alloy/alien/TypeDefinitions";
 import { Option } from "@ephox/katamari";
 import { Body, Element, Traverse} from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
-const iframeDoc = (element: SugarElement): Option<SugarDocument> => {
+const iframeDoc = (element: Element): Option<SugarDocument> => {
   const dom = element.dom() as HTMLFrameElement;
   try {
     const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
@@ -17,7 +17,7 @@ const iframeDoc = (element: SugarElement): Option<SugarDocument> => {
 };
 
 // NOTE: This looks like it is only used in the demo. Move out.
-const readDoc = (element: SugarElement): SugarDocument => {
+const readDoc = (element: Element): SugarDocument => {
   const optDoc = iframeDoc(element);
   return optDoc.getOrThunk(() => {
     // INVESTIGATE: This is new, but there is nothing else than can be done here atm. Rethink.
@@ -25,7 +25,7 @@ const readDoc = (element: SugarElement): SugarDocument => {
   });
 };
 
-const write = (element: SugarElement, content: string): void => {
+const write = (element: Element, content: string): void => {
   if (!Body.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not n the DOM'); }
 
   const doc = readDoc(element);

@@ -1,5 +1,5 @@
 import * as EventRoot from '../alien/EventRoot';
-import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
+import { SugarEvent } from '../alien/TypeDefinitions';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
@@ -206,6 +206,5 @@ export {
   NativeSimulatedEvent,
   CustomSimulatedEvent,
   ReceivingEvent,
-  SugarEvent,
-  SugarElement
+  SugarEvent
 };

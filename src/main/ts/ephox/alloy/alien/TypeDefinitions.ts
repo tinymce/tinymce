@@ -1,5 +1,6 @@
 import { EventFormat } from '../events/SimulatedEvent';
 import { HTMLElement, HTMLDocument, Event, TouchEvent, TransitionEvent, KeyboardEvent, MouseEvent } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 // TODO move these to the correct village
 
@@ -12,9 +13,6 @@ export interface AdtInterface {
 }
 
 // Sugar Dom
-export interface SugarElement {
-  dom: () => HTMLElement;
-}
 
 export interface SugarListener {
   unbind: () => void;
@@ -30,7 +28,7 @@ export interface SugarEvent extends EventFormat {
   prevent: () => void;
   raw: () => Event | TouchEvent | TransitionEvent | MouseEvent | KeyboardEvent;
   stop: () => void;
-  target: () => SugarElement;
+  target: () => Element;
   x: () => number;
   y: () => number;
 }
@@ -43,9 +41,9 @@ export interface SugarPosition {
 }
 
 export interface SugarRange {
-  start: () => SugarElement;
+  start: () => Element;
   soffset: () => number;
-  finish: () => SugarElement;
+  finish: () => Element;
   foffset: () => number;
 }
 

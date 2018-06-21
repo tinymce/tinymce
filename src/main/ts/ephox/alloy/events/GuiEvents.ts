@@ -1,13 +1,13 @@
 import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Node, Traverse } from '@ephox/sugar';
+import { DomEvent, Node, Traverse, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
 
-import { SugarEvent, SugarElement, SugarListener } from '../alien/TypeDefinitions';
+import { SugarEvent, SugarListener } from '../alien/TypeDefinitions';
 import { EventFormat } from '../events/SimulatedEvent';
 import { setTimeout, KeyboardEvent } from '@ephox/dom-globals';
 
@@ -32,7 +32,7 @@ const settingsSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-const bindFocus = (container: SugarElement, handler: (SugarEvent) => void): SugarListener => {
+const bindFocus = (container: Element, handler: (SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -41,7 +41,7 @@ const bindFocus = (container: SugarElement, handler: (SugarEvent) => void): Suga
   }
 };
 
-const bindBlur = (container: SugarElement, handler: (SugarEvent) => void): SugarListener => {
+const bindBlur = (container: Element, handler: (SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
@@ -50,7 +50,7 @@ const bindBlur = (container: SugarElement, handler: (SugarEvent) => void): Sugar
   }
 };
 
-const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void } => {
+const setup = (container: Element, rawSettings: { }): { unbind: () => void } => {
   const settings: GuiEventSettings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
   const pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [

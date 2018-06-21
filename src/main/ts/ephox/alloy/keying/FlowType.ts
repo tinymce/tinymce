@@ -10,7 +10,7 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { SugarElement } from '../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -28,7 +28,7 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<SugarElement> => {
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> => {
   return flowConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, flowConfig.selector());
   });
@@ -46,11 +46,11 @@ const focusIn = (component: AlloyComponent, flowConfig: FlowConfig): void => {
   });
 };
 
-const moveLeft = (element: SugarElement, focused: SugarElement, info: FlowConfig): Option<SugarElement> => {
+const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-const moveRight = (element: SugarElement, focused: SugarElement, info: FlowConfig): Option<SugarElement> => {
+const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 

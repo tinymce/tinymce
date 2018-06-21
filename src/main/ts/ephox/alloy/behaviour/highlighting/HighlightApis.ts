@@ -1,11 +1,10 @@
 import { Arr, Option, Options, Result } from '@ephox/katamari';
-import { Class, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Class, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
 import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { SugarElement } from '../../alien/TypeDefinitions';
 
 const dehighlightAll = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void => {
   const highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass());
@@ -72,8 +71,7 @@ const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, h
 };
 
 const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
-  // FIX: Wrong return type (probably)
-  return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind(component.getSystem().getByDom);
+  return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
 const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, string> => {
@@ -85,12 +83,11 @@ const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hSta
 };
 
 const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
-  // FIX: Wrong return type (probably)
-  return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind(component.getSystem().getByDom);
+  return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
-  const items: SugarElement[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
+  const items: Element[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
   const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none();
   return last.bind((c) => component.getSystem().getByDom(c).toOption());
 };

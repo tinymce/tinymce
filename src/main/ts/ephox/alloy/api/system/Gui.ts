@@ -1,6 +1,6 @@
 import { Arr, Fun, Result, Option } from '@ephox/katamari';
-import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { Compare, Focus, Node, Remove, Traverse, Element } from '@ephox/sugar';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as Debugging from '../../debugging/Debugging';
@@ -19,12 +19,12 @@ import { FocusingEvent } from '../../events/SimulatedEvent';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
-  element: () => SugarElement;
+  element: () => Element;
   destroy: () => void;
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
   getByUid: (uid: string) => Result<AlloyComponent, string | Error>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, string | Error>;
+  getByDom: (element: Element) => Result<AlloyComponent, string | Error>;
 
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;
@@ -47,7 +47,7 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el: SugarElement): boolean => {
+  const isAboveRoot = (el: Element): boolean => {
     return Traverse.parent(root.element()).fold(
       () => {
         return true;
@@ -60,7 +60,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const registry = Registry();
 
-  const lookup = (eventName: string, target: SugarElement) => {
+  const lookup = (eventName: string, target: Element) => {
     return registry.find(isAboveRoot, eventName, target);
   };
 
@@ -84,13 +84,13 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (eventName: string, target: SugarElement, data: any) {
+    triggerEvent (eventName: string, target: Element, data: any) {
       Debugging.monitorEvent(eventName, target, (logger) => {
         // The return value is not used because this is a fake event.
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
-    triggerFocus (target: SugarElement, originator: SugarElement) {
+    triggerFocus (target: Element, originator: Element) {
       Tagger.read(target).fold(() => {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
@@ -196,7 +196,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     }, Result.value);
   };
 
-  const getByDom = (elem: SugarElement): Result<AlloyComponent, any> => {
+  const getByDom = (elem: Element): Result<AlloyComponent, any> => {
     const uid = Tagger.read(elem).getOr('not found');
     return getByUid(uid);
   };

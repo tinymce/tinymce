@@ -1,9 +1,10 @@
 import { Cell, Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
-import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
+import { SugarEvent } from '../alien/TypeDefinitions';
 
 export interface EventFormat {
-  target: () => SugarElement;
+  target: () => Element;
   kill: () => void;
   prevent: () => void;
 }
@@ -15,8 +16,8 @@ export interface SimulatedEvent<T extends EventFormat> {
   isCut: () => boolean;
   event: () => T;
 
-  getSource: () => SugarElement;
-  setSource: (SugarElement) => void;
+  getSource: () => Element;
+  setSource: (Element) => void;
 }
 
 export type NativeSimulatedEvent = SimulatedEvent<SugarEvent>;
@@ -37,10 +38,10 @@ export interface ReceivingEvent extends EventFormat {
 }
 
 export interface FocusingEvent extends EventFormat {
-  originator: () => SugarElement;
+  originator: () => Element;
 }
 
-const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
+const fromSource = <T extends EventFormat>(event: T, source: Cell<Element>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
@@ -85,7 +86,7 @@ const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
   };
 };
 
-const fromTarget = <T extends EventFormat>(event: T, target: SugarElement): SimulatedEvent<T> => {
+const fromTarget = <T extends EventFormat>(event: T, target: Element): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };

@@ -3,10 +3,7 @@ import { Representing } from './Representing';
 import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
-import { Future, Result, Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Component } from '../../api/Main';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Future } from '@ephox/katamari';
 import { InvalidatingBehaviour } from '../../behaviour/invalidating/InvalidateTypes';
 
 const Invalidating = Behaviour.create({
