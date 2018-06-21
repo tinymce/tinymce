@@ -14,7 +14,8 @@ const setSelectionAtTouch = function (editorApi, touchEvent) {
   // we have to live with this until we control selection
   const touch = touchEvent.raw().changedTouches[0];
   WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
-    const sel = WindowSelection.deriveExact(editorApi.win(), raw);
+    // TODO: Figure out if deriveExact the same as forElement
+    const sel = WindowSelection.forElement(editorApi.win(), raw);
     editorApi.setSelection(sel.start(), sel.soffset(), sel.finish(), sel.foffset());
   });
 };

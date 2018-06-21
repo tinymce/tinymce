@@ -18,7 +18,7 @@ const build = function (refresh, scrollIntoView): DropUp {
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: Styles.resolve('dropup')
+        classes: [ Styles.resolve('dropup') ]
       },
       components: [
 
