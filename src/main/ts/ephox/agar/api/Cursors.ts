@@ -12,9 +12,9 @@ export interface CursorRange {
 
 export interface CursorPath {
   startPath: () => number[];
-  soffset: () => any;
+  soffset: () => number;
   finishPath: () => number[];
-  foffset: () => any;
+  foffset: () => number;
 };
 
 type RangeConstructor = (obj: { start: Element; soffset: number; finish: Element; foffset: number; }) => CursorRange;
