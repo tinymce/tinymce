@@ -68,8 +68,8 @@ export const bifilter = function <V> (obj: Record<string,V>, pred: (value: V, ke
 };
 
 /** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
-export const mapToArray = function <T2> (obj: {}, f: (value: any, key: string) => T2) {
-  const r: T2[] = [];
+export const mapToArray = function <T> (obj: {}, f: (value: any, key: string) => T) {
+  const r: T[] = [];
   each(obj, function(value, name) {
     r.push(f(value, name));
   });
