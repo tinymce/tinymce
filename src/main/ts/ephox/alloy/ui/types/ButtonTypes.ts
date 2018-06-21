@@ -16,7 +16,7 @@ export interface ButtonDetail extends SingleSketchDetail {
   eventOrder: () => Record<string, string[]>
 }
 
-export type ButtonAction = (AlloyComponent) => void;
+export type ButtonAction = (comp: AlloyComponent) => void;
 
 export interface ButtonSpec extends SingleSketchSpec {
   uid?: string;

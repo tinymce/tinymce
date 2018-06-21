@@ -7,8 +7,8 @@ import * as Tagger from '../../registry/Tagger';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface MomentoRecord {
-  get: (AlloyComponent) => AlloyComponent;
-  getOpt: (AlloyComponent) => Option<AlloyComponent>;
+  get: (comp: AlloyComponent) => AlloyComponent;
+  getOpt: (comp: AlloyComponent) => Option<AlloyComponent>;
   asSpec: () => SimpleOrSketchSpec;
 }
 

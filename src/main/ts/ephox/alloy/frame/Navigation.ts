@@ -5,8 +5,8 @@ import { Element, Traverse } from '@ephox/sugar';
 import { SugarDocument } from '../alien/TypeDefinitions';
 
 export interface Navigation {
-  view: (SugarDocument) => Option<Element>;
-  owner: (Element) => SugarDocument;
+  view: (doc: SugarDocument) => Option<Element>;
+  owner: (elem: Element) => SugarDocument;
 }
 
 const view = (doc: SugarDocument): Option<Element> => {

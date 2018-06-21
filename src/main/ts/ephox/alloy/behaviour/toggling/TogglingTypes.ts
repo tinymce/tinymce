@@ -14,7 +14,7 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConf
 }
 
 export interface AriaTogglingConfig {
-  update: () => (AlloyComponent, AriaTogglingConfig, boolean) => void;
+  update: () => (comp: AlloyComponent, ariaConfig: AriaTogglingConfig, state: boolean) => void;
   syncWithExpanded: () => boolean;
 }
 

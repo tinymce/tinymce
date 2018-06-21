@@ -29,14 +29,14 @@ export interface SandboxingConfigSpec extends BehaviourConfigSpec {
 export interface SandboxingConfig extends BehaviourConfigDetail {
   cloakVisibilityAttr: () => string;
   getAttachPoint: () => () => AlloyComponent;
-  onOpen: () => (AlloyComponent, SandboxingState) => void;
+  onOpen: () => (comp: AlloyComponent, thing: AlloyComponent) => void;
   onClose: () => (sandbox: AlloyComponent, thing: AlloyComponent) => void;
   isPartOf: () => (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
 };
 
 export interface SandboxingState {
   get: () => Option<AlloyComponent>;
-  set: (AlloyComponent) => void;
+  set: (comp: AlloyComponent) => void;
   isOpen: () => boolean;
   clear: () => boolean;
 };

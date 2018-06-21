@@ -26,13 +26,13 @@ export interface SlidingConfig extends BehaviourConfigDetail {
   dimension: () => {
     property: () => string;
   };
-  onGrown: () => (AlloyComponent) => void;
-  onShrunk: () => (AlloyComponent) => void;
+  onGrown: () => (comp: AlloyComponent) => void;
+  onShrunk: () => (comp: AlloyComponent) => void;
   shrinkingClass: () => string;
   growingClass: () => string;
-  onStartGrow: () => (AlloyComponent) => void;
-  onStartShrink: () => (AlloyComponent) => void;
-  getAnimationRoot: () => Option<(AlloyComponent) => Element>;
+  onStartGrow: () => (comp: AlloyComponent) => void;
+  onStartShrink: () => (comp: AlloyComponent) => void;
+  getAnimationRoot: () => Option<(comp: AlloyComponent) => Element>;
 
 };
 
