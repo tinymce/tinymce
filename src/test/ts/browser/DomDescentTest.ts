@@ -12,17 +12,14 @@ UnitTest.test('DomDescentTest', function () {
     '</div>'
   );
 
-  var toRef = function (v, k) {
+  var toRef = function (v: number[], k: string) {
     return {
-      k: k,
-      v: {
-        element: Hierarchy.follow(root, v).getOrDie('Could not find path: ' + v + ' for key: ' + k),
-        path: v
-      }
+      element: Hierarchy.follow(root, v).getOrDie('Could not find path: ' + v + ' for key: ' + k),
+      path: v
     };
   };
 
-  var refs = Obj.tupleMap({
+  var refs = Obj.map({
     'div': [],
     'p': [1],
     'span': [1].concat([1]),
