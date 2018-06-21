@@ -116,6 +116,18 @@ UnitTest.test('ValueSchemaRawTest', function () {
     ])
   ]));
 
+  check('strictArrayOf test',
+    { values: [ 'a', 'b' ] },
+    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+  );
+
+  checkErr(
+    'strictArrayOf should fail since types are not the same',
+    'string but got: number',
+    { values: [ 'a', 3 ] },
+    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+  );
+
   checkErr('test.6 should fail because fields do not both start with f',
     'start-with-f',
     {
