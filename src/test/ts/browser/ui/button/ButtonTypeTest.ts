@@ -6,9 +6,9 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure) => {
+
+
 
   // This button specifies the type, so it should not change to "button"
   const memSubmitButton = Memento.record(
@@ -53,7 +53,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', function () {
    * The purpose of this test is to check that the type attribute is only defaulted
    * when the type is button (and that any specified type does not clobber it)
    */
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
 
     return GuiFactory.build({
       dom: {
@@ -66,11 +66,11 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', function () {
         memTypedSpan.asSpec()
       ]
     });
-  }, function (doc, body, gui, component, store) {
-    const sCheck = function (label, expected, memento) {
+  }, (doc, body, gui, component, store) => {
+    const sCheck = (label, expected, memento) => {
       return Logger.t(
         label,
-        Step.sync(function () {
+        Step.sync(() => {
           const button = memento.get(component);
           Assertions.assertEq('"type" attribute', expected, Attr.get(button.element(), 'type'));
         })

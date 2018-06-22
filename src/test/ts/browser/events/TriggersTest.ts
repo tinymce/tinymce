@@ -5,15 +5,13 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Html, Insert, SelectorFind } from '@ephox/sugar';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
+import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('TriggersTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('TriggersTest', (success, failure) => {
   let log = [ ];
 
-  const make = function (stop, message) {
-    return function (labEvent) {
+  const make = (stop, message) => {
+    return (labEvent) => {
       log.push(message);
       if (stop) { labEvent.stop(); }
     };
@@ -65,13 +63,13 @@ UnitTest.asynctest('TriggersTest', function () {
 
   const logger = Debugging.noLogger();
 
-  const lookup = function (eventType, target) {
+  const lookup = (eventType, target) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map(function (h) {
+    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map((h: Function) => {
       return {
         descHandler: Fun.constant({
-          handler: h,
+          cHandler: h,
           purpose: Fun.constant('purpose')
         }),
         element: Fun.constant(target)
@@ -82,11 +80,11 @@ UnitTest.asynctest('TriggersTest', function () {
   const container = Element.fromTag('div');
   const body = Element.fromDom(document.body);
 
-  const sCheck = function (label, expected, target, eventType) {
-    return Logger.t(label, Step.sync(function () {
+  const sCheck = (label, expected, target, eventType) => {
+    return Logger.t(label, Step.sync(() => {
       Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
       const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
-      Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl, logger);
+      Triggers.triggerOnUntilStopped(lookup, eventType, { } as any, targetEl, logger);
       Assertions.assertEq(label, expected, log.slice(0));
       log = [ ];
     }));
@@ -128,7 +126,7 @@ UnitTest.asynctest('TriggersTest', function () {
     { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' }
   ];
 
-  const steps = Arr.map(cases, function (c) {
+  const steps = Arr.map(cases, (c) => {
     return sCheck(
       'fire(' + c.target + ') using event: ' + c.type,
       c.expected,
@@ -137,5 +135,5 @@ UnitTest.asynctest('TriggersTest', function () {
     );
   });
 
-  Pipeline.async({}, steps, function () { success(); }, failure);
+  Pipeline.async({}, steps, () => { success(); }, failure);
 });

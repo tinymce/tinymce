@@ -1,25 +1,27 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
 import DelayedFunction from '../../alien/DelayedFunction';
+import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { Container } from '../../api/ui/Container';
 import * as Fields from '../../data/Fields';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
+import { DragApi, MouseDraggingConfig } from '../../dragging/mouse/MouseDraggingTypes';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
-import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDraggingTypes';
-import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
-import { DraggingState } from '../../dragging/common/DraggingTypes';
 
-const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
+const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.mousedown(), function (component, simulatedEvent) {
-      if (simulatedEvent.event().raw().button !== 0) { return; }
+    AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw() as MouseEvent;
+      if (raw.button !== 0) { return; }
       simulatedEvent.stop();
 
       const dragApi: DragApi = {
@@ -60,13 +62,13 @@ const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingS
         })
       );
 
-      const dragBy = function (delta) {
+      const dragBy = (delta) => {
         DragMovement.dragBy(component, dragConfig, delta);
       };
 
-      const stop = function () {
+      const stop = () => {
         BlockerUtils.discard(blocker);
-        dragConfig.snaps().each(function (snapInfo) {
+        dragConfig.snaps().each((snapInfo) => {
           Snappables.stopDrag(component, snapInfo);
         });
         const target = dragConfig.getTarget()(component.element());
@@ -77,7 +79,7 @@ const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingS
       // 200 ms, then drop
       const delayDrop = DelayedFunction(stop, 200);
 
-      const start = function () {
+      const start = () => {
         BlockerUtils.instigate(component, blocker);
       };
 
@@ -98,4 +100,4 @@ const schema: FieldProcessorAdt[] = [
   })
 ];
 
-export default <any> schema;
+export default schema;

@@ -1,10 +1,11 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
-export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TogglingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConfigSpec, TogglingConfig> {
+  config: (config: TogglingConfigSpec) => Behaviour.NamedConfiguredBehaviour<TogglingConfigSpec, TogglingConfig>;
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;
@@ -17,14 +18,14 @@ export interface AriaTogglingConfig {
   syncWithExpanded: () => boolean;
 }
 
-export interface TogglingConfig {
+export interface TogglingConfig extends BehaviourConfigDetail{
   toggleClass: () => string;
   aria: () => AriaTogglingConfig;
   toggleOnExecute: () => boolean;
   selected: () => boolean;
 }
 
-export interface TogglingConfigSpec {
+export interface TogglingConfigSpec extends BehaviourConfigSpec {
   toggleClass: string;
   aria?: {
     mode: TogglingMode;

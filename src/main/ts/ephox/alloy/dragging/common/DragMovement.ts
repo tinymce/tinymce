@@ -1,18 +1,18 @@
-import { Css, Location, Scroll, Traverse } from '@ephox/sugar';
+import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { PositionCoordinates, SugarElement } from '../../alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
 import { CoordAdt } from '../../api/data/DragCoord';
 
-const getCurrentCoord = (target: SugarElement): CoordAdt => {
-  return Css.getRaw(target, 'left').bind(function (left) {
-    return Css.getRaw(target, 'top').bind(function (top) {
-      return Css.getRaw(target, 'position').map(function (position) {
+const getCurrentCoord = (target: Element): CoordAdt => {
+  return Css.getRaw(target, 'left').bind((left) => {
+    return Css.getRaw(target, 'top').bind((top) => {
+      return Css.getRaw(target, 'position').map((position) => {
         const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
         return nu(
           parseInt(left, 10),
@@ -20,29 +20,29 @@ const getCurrentCoord = (target: SugarElement): CoordAdt => {
         );
       });
     });
-  }).getOrThunk(function () {
+  }).getOrThunk(() => {
     const location = Location.absolute(target);
     return DragCoord.absolute(location.left(), location.top());
   });
 };
 
 
-const calcNewCoord = function (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates, delta: PositionCoordinates): DragCoord.CoordAdt {
-  return optSnaps.fold(function () {
+const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
+  return optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
     const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
     return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
-  }, function (snapInfo) {
+  }, (snapInfo) => {
     const snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
-    snapping.extra.each(function (extra) {
+    snapping.extra.each((extra) => {
       snapInfo.onSensor()(component, extra);
     });
     return snapping.coord;
   });
 };
 
-const dragBy = function (component: AlloyComponent, dragConfig: DraggingConfig, delta: PositionCoordinates): void {
+const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: SugarPosition): void => {
   const doc = Traverse.owner(component.element());
   const scroll = Scroll.get(doc);
 

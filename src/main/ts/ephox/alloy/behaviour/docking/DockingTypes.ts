@@ -1,43 +1,38 @@
 import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from "../../api/component/ComponentApi";
-import { SugarElement } from "../../alien/TypeDefinitions";
+import { Element } from "@ephox/sugar";
+import { Bounds } from "../../alien/Boxes";
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
-export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+
+export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
+  config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DockingConfigSpec, DockingConfig>;
 }
 
-export interface ViewportBox {
-  x: () => number;
-  y: () => number;
-  bottom?: () => number;
-  top?: () => number;
-  width?: () => number;
-  height?: () => number;
-}
 
 export interface DockingContext {
   fadeInClass: () => string;
   fadeOutClass: () => string;
   transitionClass: () => string;
-  lazyContext: () => (component: AlloyComponent) => Option<SugarElement>;
+  lazyContext: () => (component: AlloyComponent) => Option<Element>;
 }
 
-export interface DockingConfig {
+export interface DockingConfig extends BehaviourConfigDetail {
   contextual: () => Option<DockingContext>;
-  lazyViewport: () => (component?: AlloyComponent) => ViewportBox;
+  lazyViewport: () => (component?: AlloyComponent) => Bounds;
   leftAttr: () => string;
-  topAttr: () => string; 
+  topAttr: () => string;
 }
 
-export interface DockingConfigSpec {
+export interface DockingConfigSpec extends BehaviourConfigSpec {
   contextual?: {
     fadeInClass: string;
     fadeOutClass: string;
     transitionClass: string;
-    lazyContext: (component: AlloyComponent) => Option<SugarElement>;
+    lazyContext: (component: AlloyComponent) => Option<Element>;
   };
-  lazyViewport?: (component?: AlloyComponent) => ViewportBox;
+  lazyViewport?: (component?: AlloyComponent) => Bounds;
   leftAttr: string;
   topAttr: string;
 }

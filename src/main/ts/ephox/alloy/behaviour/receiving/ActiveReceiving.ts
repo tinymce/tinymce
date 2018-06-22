@@ -8,21 +8,21 @@ import { ReceivingConfig } from '../../behaviour/receiving/ReceivingTypes';
 import { EventFormat, ReceivingEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const chooseChannels = function (channels, message) {
-  return message.universal() ? channels : Arr.filter(channels, function (ch) {
+const chooseChannels = (channels, message) => {
+  return message.universal() ? channels : Arr.filter(channels, (ch) => {
     return Arr.contains(message.channels(), ch);
   });
 };
 
-const events = function (receiveConfig: ReceivingConfig/*, receiveState */) {
+const events = (receiveConfig: ReceivingConfig/*, receiveState */) => {
   return AlloyEvents.derive([
     // FIX: Recieving data.
-    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), function (component: AlloyComponent, message: any) {
+    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
       const channelMap = receiveConfig.channels();
       const channels = Obj.keys(channelMap);
 
       const targetChannels = chooseChannels(channels, message);
-      Arr.each(targetChannels, function (ch) {
+      Arr.each(targetChannels, (ch) => {
         const channelInfo = channelMap[ch]();
         const channelSchema = channelInfo.schema();
         const data = ValueSchema.asStructOrDie(

@@ -7,13 +7,13 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('InputTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InputTest', (success, failure) => {
+
+
 
   const platform = PlatformDetection.detect();
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Input.sketch({
         placeholder: 'placeholder-text',
@@ -23,11 +23,11 @@ UnitTest.asynctest('InputTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
-    const testStructure = Step.sync(function () {
+  }, (doc, body, gui, component, store) => {
+    const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of input',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
             attrs: {
               'type': str.is('input'),
@@ -44,8 +44,8 @@ UnitTest.asynctest('InputTest', function () {
       );
     });
 
-    const sCheckInputSelection = function (label, expected) {
-      return Step.sync(function () {
+    const sCheckInputSelection = (label, expected) => {
+      return Step.sync(() => {
         Assertions.assertEq(
           label + '\nChecking selectionStart',
           expected.start,
@@ -65,7 +65,7 @@ UnitTest.asynctest('InputTest', function () {
       'Testing input.focus selects text inside',
       GeneralSteps.sequence([
         sCheckInputSelection('before focus', { start: defaultCursor, end: defaultCursor }),
-        Step.sync(function () {
+        Step.sync(() => {
           Focusing.focus(component);
         }),
         sCheckInputSelection('after focus', { start: 0, end: 'initial Value'.length })
@@ -75,7 +75,7 @@ UnitTest.asynctest('InputTest', function () {
 
     const testRepresenting = Logger.t(
       'Checking that representing is working',
-      Step.sync(function () {
+      Step.sync(() => {
         const data = Representing.getValue(component);
         Assertions.assertEq('Checking getValue', 'initial-value', data);
         Representing.setValue(component, 'v');
@@ -83,7 +83,7 @@ UnitTest.asynctest('InputTest', function () {
         Assertions.assertEq('Checking getValue after setValue', 'v', newData);
         Assertions.assertStructure(
           'Checking new structure of input',
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build((s, str, arr) => {
             return s.element('input', {
               attrs: {
                 'type': str.is('input'),

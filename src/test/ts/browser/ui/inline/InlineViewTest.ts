@@ -7,19 +7,19 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
-import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import * as Sinks from 'ephox/alloy/test/Sinks';
+import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
-UnitTest.asynctest('InlineViewTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return Sinks.relativeSink();
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {
@@ -52,7 +52,7 @@ UnitTest.asynctest('InlineViewTest', function () {
 
     gui.add(related);
 
-    const sCheckOpen = function (label) {
+    const sCheckOpen = (label) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -62,14 +62,14 @@ UnitTest.asynctest('InlineViewTest', function () {
             100,
             1000
           ),
-          Step.sync(function () {
+          Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
           })
         ])
       );
     };
 
-    const sCheckClosed = function (label) {
+    const sCheckClosed = (label) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -79,7 +79,7 @@ UnitTest.asynctest('InlineViewTest', function () {
             100,
             1000
           ),
-          Step.sync(function () {
+          Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
           })
         ])
@@ -88,7 +88,7 @@ UnitTest.asynctest('InlineViewTest', function () {
 
     return [
       UiFinder.sNotExists(gui.element(), '.test-inline'),
-      Step.sync(function () {
+      Step.sync(() => {
         InlineView.showAt(inline, {
           anchor: 'selection',
           root: gui.element()
@@ -100,7 +100,7 @@ UnitTest.asynctest('InlineViewTest', function () {
       }),
       sCheckOpen('After show'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         InlineView.hide(inline);
       }),
 
@@ -108,7 +108,7 @@ UnitTest.asynctest('InlineViewTest', function () {
 
       Logger.t(
         'Show inline view again, this time with buttons',
-        Step.sync(function () {
+        Step.sync(() => {
           InlineView.showAt(inline, {
             anchor: 'selection',
             root: gui.element()
@@ -136,7 +136,7 @@ UnitTest.asynctest('InlineViewTest', function () {
                     { type: 'item', data: { value: 'option-2', text: 'Option-2' } }
                   ]);
 
-                  return future.map(function (f) {
+                  return future.map((f) => {
                     const menu = TestDropdownMenu.renderMenu({
                       value: 'inline-view-test',
                       items: Arr.map(f, TestDropdownMenu.renderItem)
@@ -202,5 +202,5 @@ UnitTest.asynctest('InlineViewTest', function () {
       sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')
 
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

@@ -6,12 +6,13 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
+import * as DemoRenders from './forms/DemoRenders';
+import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   Debugging.registerInspector('gui', gui);
 

@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
 import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
 import * as EventHandler from 'ephox/alloy/construct/EventHandler';
-import ResultAssertions from 'ephox/alloy/test/ResultAssertions';
+import * as ResultAssertions from 'ephox/alloy/test/ResultAssertions';
 import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.test('ComponentEventsTest', function () {
+UnitTest.test('ComponentEventsTest', () => {
   // TODO: This needs to be restructured because events and behaviours have changed.
   const behaviour = Struct.immutable('name', 'handlers');
 
@@ -20,26 +20,26 @@ UnitTest.test('ComponentEventsTest', function () {
     }
   };
 
-  const checkErr = function (expectedPart, info, behaviours) {
+  const checkErr = (expectedPart, info, behaviours) => {
     ResultAssertions.checkErr(
       'Checking error combined events',
       expectedPart,
-      function () {
+      () => {
         return ComponentEvents.combine(info, info.eventOrder(), behaviours, base);
       }
     );
   };
 
-  const check = function (expected, info, behaviours) {
+  const check = (expected, info, behaviours) => {
     ResultAssertions.checkVal(
       'Checking value of combined events',
-      function () {
+      () => {
         store.clear();
         return ComponentEvents.combine(info, info.eventOrder(), behaviours, base);
       },
-      function (value) {
+      (value) => {
         const events = Obj.keys(value).sort();
-        Arr.each(events, function (eventName) {
+        Arr.each(events, (eventName) => {
           value[eventName].handler('component', {
             stop: store.adder(eventName + '.stop')
           });
@@ -50,7 +50,7 @@ UnitTest.test('ComponentEventsTest', function () {
     );
   };
 
-  const eo = function (eventOrder) {
+  const eo = (eventOrder) => {
     return {
       eventOrder: Fun.constant(eventOrder)
     };
@@ -58,7 +58,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing no behaviours',
-    function () {
+    () => {
       check([
         'base.0'
       ], eo({}), [ ]);
@@ -67,7 +67,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing 1 behaviour with 1 event',
-    function () {
+    () => {
       check([
         'base.0',
         'a.one'
@@ -83,7 +83,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing 1 behaviour with 2 events',
-    function () {
+    () => {
       check([
         'base.0',
         'a.one',
@@ -103,7 +103,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing complex behaviour with many events and incomplete ordering',
-    function () {
+    () => {
       checkErr(
         'event ordering',
         eo({}), [
@@ -138,7 +138,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing complex behaviour with many events and not quite complete ordering',
-    function () {
+    () => {
       checkErr(
         'entry for b.behaviour',
         eo({
@@ -175,7 +175,7 @@ UnitTest.test('ComponentEventsTest', function () {
 
   Logger.sync(
     'Testing complex behaviour with many events and *complete* ordering',
-    function () {
+    () => {
       check(
         [ 'base.0', 'a.one', 'a.two', 'b.three.abort', 'event.3.stop' ],
         eo({

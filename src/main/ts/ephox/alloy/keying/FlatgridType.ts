@@ -1,8 +1,8 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import { SelectorFind, Element } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
+import * as Keys from '../alien/Keys';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
 import * as Fields from '../data/Fields';
 import * as DomMovement from '../navigation/DomMovement';
@@ -12,6 +12,12 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { FlatgridConfig, FlatgridState, KeyRuleHandler } from '../keying/KeyingModeTypes';
+import { ElementMover } from '../navigation/DomMovement';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -21,27 +27,27 @@ const schema = [
   Fields.initSize()
 ];
 
-const focusIn = function (component, gridConfig, gridState) {
-  SelectorFind.descendant(component.element(), gridConfig.selector()).each(function (first) {
+const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, gridState: FlatgridState): void => {
+  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first: Element) => {
     gridConfig.focusManager().set(component, first);
   });
 };
 
-const findCurrent = function (component, gridConfig) {
-  return gridConfig.focusManager().get(component).bind(function (elem) {
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<Element> => {
+  return gridConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, gridConfig.selector());
   });
 };
 
-const execute = function (component, simulatedEvent, gridConfig, gridState) {
-  return findCurrent(component, gridConfig).bind(function (focused) {
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, gridState: FlatgridState): Option<boolean> => {
+  return findCurrent(component, gridConfig).bind((focused) => {
     return gridConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const doMove = function (cycle) {
-  return function (element, focused, gridConfig, gridState) {
-    return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind(function (identified) {
+const doMove = (cycle): ElementMover<FlatgridConfig, FlatgridState> => {
+  return (element, focused, gridConfig, gridState) => {
+    return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind((identified) => {
       return cycle(
         identified.candidates(),
         identified.index(),
@@ -52,11 +58,11 @@ const doMove = function (cycle) {
   };
 };
 
-const handleTab = function (component, simulatedEvent, gridConfig, gridState) {
+const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.captureTab() ? Option.some(true) : Option.none();
 };
 
-const doEscape = function (component, simulatedEvent, gridConfig, gridState) {
+const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig, gridState) => {
   return gridConfig.onEscape()(component, simulatedEvent);
 };
 
@@ -66,8 +72,8 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-const getRules = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
+const getRules: () => KeyRules.KeyRule<FlatgridConfig, FlatgridState>[] = Fun.constant([
+  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
   KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
@@ -82,4 +88,4 @@ const getEvents = Fun.constant({ });
 
 const getApis = {};
 
-export default <any> KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));

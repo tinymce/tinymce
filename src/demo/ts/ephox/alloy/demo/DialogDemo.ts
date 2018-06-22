@@ -6,10 +6,11 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -19,7 +20,7 @@ export default <any> function () {
 
   gui.add(sink);
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -89,7 +90,7 @@ export default <any> function () {
         console.log('escaping');
         return Option.some(true);
       },
-      dragBlockClass: [ 'blocker-class' ],
+      dragBlockClass: 'blocker-class',
 
       parts: {
         blocker: { }

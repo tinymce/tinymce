@@ -7,19 +7,19 @@ import * as DomModification from '../../dom/DomModification';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
 
-const executeEvent = function (bConfig, bState, executor): AlloyEvents.EventHandlerConfig<CustomEvent> {
-  return AlloyEvents.runOnExecute(function (component) {
+const executeEvent = (bConfig, bState, executor): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
+  return AlloyEvents.runOnExecute((component) => {
     executor(component, bConfig, bState);
   });
 };
 
-const loadEvent = function (bConfig, bState, f): AlloyEvents.EventHandlerConfig<CustomEvent> {
-  return AlloyEvents.runOnInit(function (component, simulatedEvent) {
+const loadEvent = (bConfig, bState, f): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
+  return AlloyEvents.runOnInit((component, simulatedEvent) => {
     f(component, bConfig, bState);
   });
 };
 
-const create = function (schema, name, active, apis, extra, state): AlloyBehaviour {
+const create = (schema, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -27,7 +27,7 @@ const create = function (schema, name, active, apis, extra, state): AlloyBehavio
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const createModes = function (modes, name, active, apis, extra, state): AlloyBehaviour {
+const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -35,16 +35,16 @@ const createModes = function (modes, name, active, apis, extra, state): AlloyBeh
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const wrapApi = function (bName, apiFunction, apiName) {
-  const f = function (component) {
-    const args = arguments;
+const wrapApi = (bName, apiFunction, apiName) => {
+  const f = (component, ...rest) => {
+    const args = [ component ].concat(rest);
     return component.config({
       name: Fun.constant(bName)
     }).fold(
-      function () {
+      () => {
         throw new Error('We could not find any behaviour configuration for: ' + bName + '. Using API: ' + apiName);
       },
-      function (info) {
+      (info) => {
         const rest = Array.prototype.slice.call(args, 1);
         return apiFunction.apply(undefined, [ component, info.config, info.state ].concat(rest));
       }
@@ -54,23 +54,23 @@ const wrapApi = function (bName, apiFunction, apiName) {
 };
 
 // I think the "revoke" idea is fragile at best.
-const revokeBehaviour = function (name) {
+const revokeBehaviour = (name) => {
   return {
     key: name,
     value: undefined
   };
 };
 
-const doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour {
-  const getConfig = function (info) {
+const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour<any,any> => {
+  const getConfig = (info) => {
     return Objects.hasKey(info, name) ? info[name]() : Option.none();
   };
 
-  const wrappedApis = Obj.map(apis, function (apiF, apiName) {
+  const wrappedApis = Obj.map(apis, (apiF, apiName) => {
     return wrapApi(name, apiF, apiName);
   });
 
-  const wrappedExtra = Obj.map(extra, function (extraF, extraName) {
+  const wrappedExtra = Obj.map(extra, (extraF, extraName) => {
     return FunctionAnnotator.markAsExtraApi(extraF, extraName);
   });
 
@@ -87,7 +87,7 @@ const doCreate = function (configSchema, schemaSchema, name, active, apis, extra
           value: {
             config: prepared,
             me,
-            configAsRaw: Thunk.cached(function () {
+            configAsRaw: Thunk.cached(() => {
               return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
             }),
             initialConfig: spec,
@@ -101,8 +101,8 @@ const doCreate = function (configSchema, schemaSchema, name, active, apis, extra
       },
 
       exhibit (info, base) {
-        return getConfig(info).bind(function (behaviourInfo) {
-          return Objects.readOptFrom(active, 'exhibit').map(function (exhibitor) {
+        return getConfig(info).bind((behaviourInfo) => {
+          return Objects.readOptFrom(active, 'exhibit').map((exhibitor) => {
             return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
           });
         }).getOr(DomModification.nu({ }));
@@ -113,8 +113,8 @@ const doCreate = function (configSchema, schemaSchema, name, active, apis, extra
       },
 
       handlers (info) {
-        return getConfig(info).bind(function (behaviourInfo) {
-          return Objects.readOptFrom(active, 'events').map(function (events) {
+        return getConfig(info).bind((behaviourInfo) => {
+          return Objects.readOptFrom(active, 'events').map((events) => {
             return events(behaviourInfo.config, behaviourInfo.state);
           });
         }).getOr({ });

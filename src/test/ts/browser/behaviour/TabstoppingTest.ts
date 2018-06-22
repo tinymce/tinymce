@@ -6,11 +6,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TabstoppingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TabstoppingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([
@@ -19,11 +19,11 @@ UnitTest.asynctest('TabstoppingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Check initial tabstopping values',
-        ApproxStructure.build(function (s, str, arr) {
+        ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             attrs: {
               'data-alloy-tabstop': str.is('true')
@@ -33,5 +33,5 @@ UnitTest.asynctest('TabstoppingTest', function () {
         component.element()
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

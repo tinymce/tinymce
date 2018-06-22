@@ -4,8 +4,9 @@ import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TestStore from './TestStore';
 import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
 import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
+import { document, console } from '@ephox/dom-globals';
 
-const setup = function (createComponent, f, success, failure) {
+const setup = (createComponent, f, success, failure) => {
   const store = TestStore();
 
   const gui = Gui.create();
@@ -18,18 +19,18 @@ const setup = function (createComponent, f, success, failure) {
   const component = createComponent(store, doc, body);
   gui.add(component);
 
-  Pipeline.async({}, f(doc, body, gui, component, store), function () {
+  Pipeline.async({}, f(doc, body, gui, component, store), () => {
     Attachment.detachSystem(gui);
     success();
-  }, function (e) {
+  }, (e) => {
     console.error(e);
     failure(e);
   });
 };
 
-const mSetupKeyLogger = function (body) {
-  return Step.stateful(function (_, next, die) {
-    const onKeydown = DomEvent.bind(body, 'keydown', function (event) {
+const mSetupKeyLogger = (body) => {
+  return Step.stateful((_, next, die) => {
+    const onKeydown = DomEvent.bind(body, 'keydown', (event) => {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });
 
@@ -42,16 +43,16 @@ const mSetupKeyLogger = function (body) {
   });
 };
 
-const mTeardownKeyLogger = function (body, expected) {
-  return Step.stateful(function (state, next, die) {
+const mTeardownKeyLogger = (body, expected) => {
+  return Step.stateful((state, next, die) => {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
     next({});
   });
 };
 
-const mAddStyles = function (doc, styles) {
-  return Step.stateful(function (value, next, die) {
+const mAddStyles = (doc, styles) => {
+  return Step.stateful((value, next, die) => {
     const style = Element.fromTag('style');
     const head = Element.fromDom(doc.dom().head);
     Insert.append(head, style);
@@ -63,7 +64,7 @@ const mAddStyles = function (doc, styles) {
   });
 };
 
-const mRemoveStyles = Step.stateful(function (value, next, die) {
+const mRemoveStyles = Step.stateful((value, next, die) => {
   Remove.remove(value.style);
   next(value);
 });

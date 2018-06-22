@@ -9,11 +9,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flat Grid Keying Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
+
+
 
   const squares = [
     's01', 's02', 's03', 's04', 's05', 's06',
@@ -22,8 +22,8 @@ UnitTest.asynctest('Flat Grid Keying Test', function () {
     's19', 's20', 's21'
   ];
 
-  GuiSetup.setup(function (store, doc, body) {
-    const item = function (classes) {
+  GuiSetup.setup((store, doc, body) => {
+    const item = (classes) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -70,16 +70,16 @@ UnitTest.asynctest('Flat Grid Keying Test', function () {
           })
         ]),
         // 4 x 6 grid size
-        components: Arr.map(squares, function (num) {
+        components: Arr.map(squares, (num) => {
           return item([ num ]);
         })
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     const targets: any = Objects.wrapAll(
-      Arr.map(squares, function (sq) {
+      Arr.map(squares, (sq) => {
         return {
           key: sq,
           value: {
@@ -93,7 +93,7 @@ UnitTest.asynctest('Flat Grid Keying Test', function () {
     return [
       GuiSetup.mSetupKeyLogger(body),
       FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
-      Step.sync(function () {
+      Step.sync(() => {
         Keying.setGridSize(component, 4, 6);
       }),
       NavigationUtils.sequence(
@@ -178,7 +178,7 @@ UnitTest.asynctest('Flat Grid Keying Test', function () {
       ),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, function () {
+  }, () => {
     success();
   }, failure);
 });

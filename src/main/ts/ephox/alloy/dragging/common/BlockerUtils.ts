@@ -7,8 +7,8 @@ const initialAttribute = 'data-initial-z-index';
 // it can have a z-index high enough to act as the "blocker". Just before
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
-const resetZIndex = function (blocker: AlloyComponent): void {
-  Traverse.parent(blocker.element()).each(function (root) {
+const resetZIndex = (blocker: AlloyComponent): void => {
+  Traverse.parent(blocker.element()).each((root) => {
     const initZIndex = Attr.get(root, initialAttribute);
     if (Attr.has(root, initialAttribute)) { Css.set(root, 'z-index', initZIndex); } else { Css.remove(root, 'z-index'); }
 
@@ -16,9 +16,9 @@ const resetZIndex = function (blocker: AlloyComponent): void {
   });
 };
 
-const changeZIndex = function (blocker: AlloyComponent): void {
-  Traverse.parent(blocker.element()).each(function (root) {
-    Css.getRaw(root, 'z-index').each(function (zindex) {
+const changeZIndex = (blocker: AlloyComponent): void => {
+  Traverse.parent(blocker.element()).each((root) => {
+    Css.getRaw(root, 'z-index').each((zindex) => {
       Attr.set(root, initialAttribute, zindex);
     });
 
@@ -28,12 +28,12 @@ const changeZIndex = function (blocker: AlloyComponent): void {
   });
 };
 
-const instigate = function (anyComponent: AlloyComponent, blocker: AlloyComponent): void {
+const instigate = (anyComponent: AlloyComponent, blocker: AlloyComponent): void => {
   anyComponent.getSystem().addToGui(blocker);
   changeZIndex(blocker);
 };
 
-const discard = function (blocker: AlloyComponent): void {
+const discard = (blocker: AlloyComponent): void => {
   resetZIndex(blocker);
   blocker.getSystem().removeFromGui(blocker);
 };

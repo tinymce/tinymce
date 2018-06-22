@@ -5,10 +5,10 @@ import { Obj } from '@ephox/katamari';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
-UnitTest.test('Atomic Test: parts.GenerateTest', function () {
+UnitTest.test('Atomic Test: parts.GenerateTest', () => {
   const schema = [
     FieldSchema.strict('test-data'),
-    FieldSchema.state('state', function () {
+    FieldSchema.state('state', () => {
       return 'state';
     })
   ];
@@ -37,13 +37,13 @@ UnitTest.test('Atomic Test: parts.GenerateTest', function () {
     schema
   });
 
-  const check = function (label, expected, parts) {
-    Logger.sync(label, function () {
+  const check = (label, expected, parts) => {
+    Logger.sync(label, () => {
       const data = { 'test-data': label };
       const generated = AlloyParts.generate('owner', parts);
 
       // Check that config and validated match what was passed through
-      Obj.each(generated, function (g, k) {
+      Obj.each(generated, (g, k) => {
         const output = g(data);
         RawAssertions.assertEq('Checking config', data, output.config);
         RawAssertions.assertEq('Checking validated', {
@@ -55,7 +55,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', function () {
       RawAssertions.assertEq(
         'Checking PartType.generate',
         expected,
-        Obj.map(generated, function (g) {
+        Obj.map(generated, (g) => {
           const output = g(data);
           return Objects.exclude(output, [ 'config', 'validated' ]);
         })

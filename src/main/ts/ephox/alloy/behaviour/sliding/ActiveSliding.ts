@@ -1,14 +1,16 @@
 import { Objects } from '@ephox/boulder';
 import { Css } from '@ephox/sugar';
+import { TransitionEvent } from '@ephox/dom-globals';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
-import { EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
-const exhibit = function (base: { }, slideConfig: SlidingConfig/*, slideState */): { } {
+const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
   const expanded = slideConfig.expanded();
 
   return expanded ? DomModification.nu({
@@ -20,10 +22,10 @@ const exhibit = function (base: { }, slideConfig: SlidingConfig/*, slideState */
   });
 };
 
-const events = function (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.EventHandlerConfigRecord {
+const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
-      const raw = simulatedEvent.event().raw();
+    AlloyEvents.run<SugarEvent>(NativeEvents.transitionend(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw() as TransitionEvent;
       // This will fire for all transitions, we're only interested in the dimension completion
       if (raw.propertyName === slideConfig.dimension().property()) {
         SlidingApis.disableTransitions(component, slideConfig); // disable transitions immediately (Safari animates the dimension removal below)

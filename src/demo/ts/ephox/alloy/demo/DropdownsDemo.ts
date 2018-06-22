@@ -12,12 +12,13 @@ import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoRenders from './forms/DemoRenders';
+import * as DemoRenders from './forms/DemoRenders';
+import { document, console } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -29,7 +30,7 @@ export default <any> function () {
 
   gui.add(sink);
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -50,8 +51,8 @@ export default <any> function () {
         Keying.config({ mode: 'cyclic' })
       ]),
       components: [
-        Input.sketch({ dom: { tag: 'input' } }),
-        Input.sketch({ dom: { tag: 'input' } })
+        Input.sketch({ tag: 'input' }),
+        Input.sketch({ tag: 'input' })
       ]
     })
 
@@ -137,7 +138,7 @@ export default <any> function () {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map(function (m) {
+        return Future.pure(menu).map((m) => {
           return TieredMenu.singleData('demo.2.menu', menu);
         });
       }
@@ -176,7 +177,7 @@ export default <any> function () {
         ], DemoRenders.gridItem);
 
         const future = Future.pure(data);
-        return future.map(function (items) {
+        return future.map((items) => {
           const menu = DemoRenders.gridMenu({
             value: 'demo.3.menu',
             items,
@@ -227,7 +228,7 @@ export default <any> function () {
         ], DemoRenders.item);
 
         const future = Future.pure(data);
-        return future.map(function (items) {
+        return future.map((items) => {
           const menu = DemoRenders.menu({
             value: 'demo.4.menu',
             items
@@ -290,12 +291,10 @@ export default <any> function () {
                     },
                     components: [
                       Input.sketch({
-                        dom: {
-                          tag: 'input',
-                          styles: {
-                            display: 'inline-block',
-                            width: '50px'
-                          }
+                        tag: 'input',
+                        inputStyles: {
+                          display: 'inline-block',
+                          width: '50px'
                         },
                         inputBehaviours: Behaviour.derive([
                           Tabstopping.config({ })
@@ -304,14 +303,14 @@ export default <any> function () {
                       Container.sketch({
                         components: [
                           Button.sketch({
-                            action () { console.log('clicked on a button', arguments); },
+                            action (...args) { console.log('clicked on a button', ...args); },
                             dom: {
                               tag: 'button',
                               innerHtml: '-'
                             }
                           }),
                           Button.sketch({
-                            action () { console.log('clicked on a button', arguments); },
+                            action (...args) { console.log('clicked on a button', ...args); },
                             dom: {
                               tag: 'button',
                               innerHtml: '+'
@@ -375,7 +374,7 @@ export default <any> function () {
           }
         });
 
-        return future.map(function (f) {
+        return future.map((f) => {
           return TieredMenu.tieredData(f.primary, f.menus, f.expansions);
         });
       }

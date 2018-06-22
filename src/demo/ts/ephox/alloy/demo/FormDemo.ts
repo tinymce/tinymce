@@ -9,14 +9,16 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
-import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
+import { Form } from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-import DemoFields from './forms/DemoFields';
+import * as DemoFields from './forms/DemoFields';
+import { document, console, setTimeout } from '@ephox/dom-globals';
+import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -26,7 +28,7 @@ export default <any> function () {
 
   gui.add(sink);
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
 
@@ -105,7 +107,7 @@ export default <any> function () {
             action (button) {
               console.log('Form values', Obj.map(
                 Representing.getValue(form),
-                function (v) {
+                (v) => {
                   return v.getOr('Not found');
                 }
               ));
@@ -148,7 +150,7 @@ export default <any> function () {
 
       components: [
         ExpandableForm.parts().minimal(
-          Form.sketch(function (parts: FormParts) {
+          Form.sketch((parts: FormParts) => {
             return {
               dom: {
                 tag: 'div',
@@ -165,7 +167,7 @@ export default <any> function () {
         ),
 
         ExpandableForm.parts().extra(
-          Form.sketch(function (parts: FormParts) {
+          Form.sketch((parts: FormParts) => {
             return {
               dom: {
                 tag: 'div',
@@ -217,7 +219,7 @@ export default <any> function () {
                 action (button) {
                   console.log('Exp Form values', Obj.map(
                     Representing.getValue(expform),
-                    function (v) {
+                    (v) => {
                       return v.getOr('Not found');
                     }
                   ));
@@ -238,16 +240,16 @@ export default <any> function () {
 
   Keying.focusIn(expform);
 
-  setTimeout(function () {
+  setTimeout(() => {
     ExpandableForm.toggleForm(expform);
 
     Representing.setValue(form, {
       alpha: 'hi'
     });
 
-    console.log('form', Obj.map(Representing.getValue(form), function (v) { return v.getOrDie(); }));
+    console.log('form', Obj.map(Representing.getValue(form), (v) => { return v.getOrDie(); }));
 
-    console.log('expform', Obj.map(Representing.getValue(expform), function (v) { return v.getOrDie(); }));
+    console.log('expform', Obj.map(Representing.getValue(expform), (v) => { return v.getOrDie(); }));
 
     Representing.setValue(expform, {
       omega: 'hi'

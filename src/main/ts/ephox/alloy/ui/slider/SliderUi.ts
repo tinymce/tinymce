@@ -12,30 +12,34 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as GradientActions from '../common/GradientActions';
 
 import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { ClientRect } from '@ephox/dom-globals';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const sketch = function (detail, components, spec, externals) {
+const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, components, spec, externals) => {
   const range = detail.max() - detail.min();
 
-  const getXCentre = function (component) {
+  const getXCentre = (component: AlloyComponent): number => {
     const rect = component.element().dom().getBoundingClientRect();
     return (rect.left + rect.right) / 2;
   };
 
-  const getYCentre = function (component) {
+  const getYCentre = (component: AlloyComponent): number => {
     const rect = component.element().dom().getBoundingClientRect();
     return (rect.top + rect.bottom) / 2;
   };
 
-  const getThumb = function (component) {
+  const getThumb = (component: AlloyComponent): AlloyComponent => {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
 
-  const getOffset = function (slider, spectrumBounds, detail, getCentre, edgeProperty, lengthProperty) {
+  const getOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail, getCentre: (edgePart: AlloyComponent) => number, edgeProperty: string, lengthProperty:string): number => {
     const v = detail.value().get();
     if (v < detail.min()) {
-      return AlloyParts.getPart(slider, detail, 'left-edge').fold(function () {
+      return AlloyParts.getPart(slider, detail, 'left-edge').fold(() => {
         return 0;
       }, function (ledge) {
         return getCentre(ledge) - spectrumBounds[edgeProperty];
@@ -53,15 +57,15 @@ const sketch = function (detail, components, spec, externals) {
     }
   };
 
-  const getXOffset = function (slider, spectrumBounds, detail) {
+  const getXOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
     return getOffset(slider, spectrumBounds, detail, getXCentre, 'left', 'width');
   }
 
-  const getYOffset = function (slider, spectrumBounds, detail) {
+  const getYOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
     return getOffset(slider, spectrumBounds, detail, getYCentre, 'top', 'height');
   };
 
-  const getPos = function (slider, getOffset, edgeProperty) {
+  const getPos = (slider: AlloyComponent, getOffset: (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail) => number, edgeProperty: string): number => {
     const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
     const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
     const sliderBounds = slider.element().dom().getBoundingClientRect();
@@ -70,15 +74,15 @@ const sketch = function (detail, components, spec, externals) {
     return (spectrumBounds[edgeProperty] - sliderBounds[edgeProperty]) + offset;
   };
 
-  const getXPos = function (slider) {
+  const getXPos = (slider: AlloyComponent): number => {
     return getPos(slider, getXOffset, 'left');
   }
 
-  const getYPos = function (slider) {
+  const getYPos = (slider: AlloyComponent): number => {
     return getPos(slider, getYOffset, 'top');
   };
 
-  const refresh = function (component) {
+  const refresh = (component: AlloyComponent): void => {
     const thumb = getThumb(component);
     if (detail.orientation() === 'vertical') {
       const pos = getYPos(component);
@@ -91,7 +95,7 @@ const sketch = function (detail, components, spec, externals) {
     }
   };
 
-  const changeValue = function (component, newValue) {
+  const changeValue = (component: AlloyComponent, newValue: number): Option<boolean> => {
     const oldValue = detail.value().get();
     const thumb = getThumb(component);
     const edgeProp = (detail.orientation() === 'vertical') ? 'top' : 'left';
@@ -106,28 +110,28 @@ const sketch = function (detail, components, spec, externals) {
     }
   };
 
-  const resetToMin = function (slider) {
+  const resetToMin = (slider: AlloyComponent): void => {
     changeValue(slider, detail.min());
   };
 
-  const resetToMax = function (slider) {
+  const resetToMax = (slider: AlloyComponent): void => {
     changeValue(slider, detail.max());
   };
 
   const uiEventsArr = isTouch ? [
-    AlloyEvents.run(NativeEvents.touchstart(), function (slider, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.touchstart(), (slider, simulatedEvent) => {
       detail.onDragStart()(slider, getThumb(slider));
     }),
-    AlloyEvents.run(NativeEvents.touchend(), function (slider, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.touchend(), (slider, simulatedEvent) => {
       detail.onDragEnd()(slider, getThumb(slider));
     })
   ] : [
-    AlloyEvents.run(NativeEvents.mousedown(), function (slider, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.mousedown(), (slider, simulatedEvent) => {
       simulatedEvent.stop();
       detail.onDragStart()(slider, getThumb(slider));
       detail.mouseIsDown().set(true);
     }),
-    AlloyEvents.run(NativeEvents.mouseup(), function (slider, simulatedEvent) {
+    AlloyEvents.run(NativeEvents.mouseup(), (slider, simulatedEvent) => {
       detail.onDragEnd()(slider, getThumb(slider));
       detail.mouseIsDown().set(false);
     })
@@ -140,7 +144,7 @@ const sketch = function (detail, components, spec, externals) {
 
     behaviours: Merger.deepMerge(
       Behaviour.derive(
-        Arr.flatten([
+        Arr.flatten<any>([
           !isTouch ? [
             Keying.config({
               mode: 'special',
@@ -169,7 +173,7 @@ const sketch = function (detail, components, spec, externals) {
         AlloyEvents.run<CustomEvent>(GradientActions.sliderChangeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
-        AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
+        AlloyEvents.runOnAttached((slider, simulatedEvent) => {
           detail.value().set(detail.getInitialValue()());
           const thumb = getThumb(slider);
           // Call onInit instead of onChange for the first value.

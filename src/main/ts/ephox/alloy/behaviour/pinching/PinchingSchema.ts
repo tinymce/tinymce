@@ -1,6 +1,6 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
-export default <any> [
+export default [
   FieldSchema.strict('onPinch'),
   FieldSchema.strict('onPunch')
 ];

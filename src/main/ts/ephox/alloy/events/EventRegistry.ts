@@ -4,59 +4,84 @@ import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 import * as TransformFind from '../alien/TransformFind';
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
+import { Element } from '@ephox/sugar';
 
-const eventHandler = Struct.immutable('element', 'descHandler');
+export interface ElementAndHandler {
+  element: () => Element;
+  descHandler: () => CurriedHandler;
+}
 
-const messageHandler = function (id, handler) {
+const eventHandler: (element: Element, descHandler: CurriedHandler) => ElementAndHandler =
+  Struct.immutable('element', 'descHandler');
+
+export interface CurriedHandler {
+  purpose: () => string;
+  cHandler: Function;
+}
+
+export class UncurriedHandler {
+  purpose: () => string;
+  handler: Function;
+}
+
+export interface UidAndHandler {
+  id: () => string;
+  descHandler: () => CurriedHandler;
+}
+
+const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => {
   return {
     id: Fun.constant(id),
     descHandler: Fun.constant(handler)
   };
 };
 
-export default <any> function () {
-  const registry = { };
+export type EventName = string;
+export type Uid = string;
 
-  const registerId = function (extraArgs, id, events) {
-    Obj.each(events, function (v, k) {
+export default () => {
+  const registry: Record<EventName, Record<Uid, CurriedHandler>> = { };
+
+  const registerId = (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => {
+    Obj.each(events, (v: UncurriedHandler, k: EventName) => {
       const handlers = registry[k] !== undefined ? registry[k] : { };
       handlers[id] = DescribedHandler.curryArgs(v, extraArgs);
       registry[k] = handlers;
     });
   };
 
-  const findHandler = function (handlers, elem) {
-    return Tagger.read(elem).fold(function () {
+  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> => {
+    return Tagger.read(elem).fold(() => {
       return Option.none();
-    }, function (id) {
+    }, (id) => {
       const reader = Objects.readOpt(id);
-      return handlers.bind(reader).map(function (descHandler) {
+      return handlers.bind(reader).map((descHandler: CurriedHandler) => {
         return eventHandler(elem, descHandler);
       });
     });
   };
 
   // Given just the event type, find all handlers regardless of element
-  const filterByType = function (type) {
-    return Objects.readOptFrom(registry, type).map(function (handlers) {
-      return Obj.mapToArray(handlers, function (f, id) {
-        return messageHandler(id, f);
+  const filterByType = (type: string): UidAndHandler[] => {
+    return Objects.readOptFrom(registry, type).map((handlers) => {
+      return Obj.mapToArray(handlers, (f, id) => {
+        return broadcastHandler(id, f);
       });
     }).getOr([ ]);
   };
 
   // Given event type, and element, find the handler.
-  const find = function (isAboveRoot, type, target) {
+  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     const readType = Objects.readOpt(type);
-    const handlers = readType(registry);
-    return TransformFind.closest(target, function (elem) {
+    const handlers = readType(registry) as Option<Record<string, CurriedHandler>>;
+    return TransformFind.closest(target, (elem: Element) => {
       return findHandler(handlers, elem);
     }, isAboveRoot);
   };
 
-  const unregisterId = function (id) {
+  const unregisterId = (id: string): void => {
     // INVESTIGATE: Find a better way than mutation if we can.
-    Obj.each(registry, function (handlersById, eventName) {
+    Obj.each(registry, (handlersById: Record<string, CurriedHandler>, eventName) => {
       if (handlersById.hasOwnProperty(id)) { delete handlersById[id]; }
     });
   };

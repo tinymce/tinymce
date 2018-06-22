@@ -1,13 +1,19 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../alien/EditableFields';
-import Keys from '../alien/Keys';
-import * as NoState from '../behaviour/common/NoState';
+import * as Keys from '../alien/Keys';
+import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
@@ -17,11 +23,11 @@ const schema = [
   FieldSchema.defaulted('useDown', false)
 ];
 
-const execute = function (component, simulatedEvent, executeConfig, executeState) {
+const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig) => {
   return executeConfig.execute()(component, simulatedEvent, component.element());
 };
 
-const getRules = function (component, simulatedEvent, executeConfig, executeState) {
+const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): KeyRules.KeyRule<ExecutingConfig, Stateless>[] => {
   const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
   const enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
   const downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];
@@ -37,4 +43,4 @@ const getRules = function (component, simulatedEvent, executeConfig, executeStat
 const getEvents = Fun.constant({ });
 const getApis = Fun.constant({ });
 
-export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());
+export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());

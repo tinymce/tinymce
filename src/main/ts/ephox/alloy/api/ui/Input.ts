@@ -1,8 +1,10 @@
 import * as InputBase from '../../ui/common/InputBase';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { InputSketcher, InputDetail, InputSpec } from '../../ui/types/InputTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<InputDetail<string>, InputSpec> = (detail, spec): SketchSpec => {
   return {
     uid: detail.uid(),
     dom: InputBase.dom(detail),
@@ -17,7 +19,7 @@ const Input = Sketcher.single({
   name: 'Input',
   configFields: InputBase.schema(),
   factory
-});
+}) as InputSketcher;
 
 export {
   Input

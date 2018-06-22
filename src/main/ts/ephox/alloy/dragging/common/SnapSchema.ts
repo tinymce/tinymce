@@ -1,11 +1,12 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
-import { ViewportBox } from '../../behaviour/docking/DockingTypes';
+import { Bounds } from '../../alien/Boxes';
+import { window } from '@ephox/dom-globals';
 
-const defaultLazyViewport = (): ViewportBox => {
+const defaultLazyViewport = (): Bounds => {
   const scroll = Scroll.get();
 
   return {
@@ -13,11 +14,12 @@ const defaultLazyViewport = (): ViewportBox => {
     y: scroll.top,
     width: Fun.constant(window.innerWidth),
     height: Fun.constant(window.innerHeight),
-    bottom: Fun.constant(scroll.top + window.innerHeight)
+    bottom: Fun.constant(scroll.top() + window.innerHeight),
+    right: Fun.constant(scroll.left() + window.innerWidth)
   };
 };
 
-export default <any> FieldSchema.optionObjOf('snaps', [
+export default FieldSchema.optionObjOf('snaps', [
   FieldSchema.strict('getSnapPoints'),
   Fields.onHandler('onSensor'),
   FieldSchema.strict('leftAttr'),

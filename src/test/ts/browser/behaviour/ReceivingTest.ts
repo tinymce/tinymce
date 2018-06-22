@@ -8,11 +8,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ReceivingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ReceivingTest', (success, failure) => {
 
-  GuiSetup.setup(function (store, doc, body) {
+
+
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -42,20 +42,20 @@ UnitTest.asynctest('ReceivingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     return [
       store.sAssertEq('No messages yet', [ ]),
-      Step.sync(function () {
+      Step.sync(() => {
         gui.broadcastOn([ 'test.channel.1' ], {
           dummy: '1'
         });
       }),
       store.sAssertEq('After broadcast to channel', [ 'received: 1' ]),
       store.sClear,
-      Step.sync(function () {
+      Step.sync(() => {
         gui.broadcast({ dummy: '2' });
       }),
       store.sAssertEq('After broadcast to all', [ 'received: 2' ])
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

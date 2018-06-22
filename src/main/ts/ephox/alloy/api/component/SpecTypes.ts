@@ -1,27 +1,38 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
+import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { ConfiguredPart } from '../../parts/AlloyParts';
+import { Option } from '@ephox/katamari';
 
-export type AlloySpec = SimpleOrSketchSpec | PremadeSpec;
+export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 
 export type SimpleOrSketchSpec = SketchSpec | SimpleSpec;
 
-// This is used or partial specs and things like that.
-export type LooseSpec = { };
-
-export interface RawDomSchema {
-  tag: string;
+export interface OptionalDomSchema {
+  tag?: string;
   attributes?: Record<string, any>;
   styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
 }
 
+export interface StructDomSchema {
+  tag: () => string;
+  attributes: () => Record<string, any>;
+  styles: () => Record<string, string>;
+  classes: () => string[];
+  value: () => Option<string>;
+  innerHtml: () => Option<string>;
+}
+
+export interface RawDomSchema extends OptionalDomSchema {
+  tag: string;
+}
+
 export interface ComponentSpec {
   dom: RawDomSchema;
-  components?: ComponentSpec[];
-  events?: EventHandlerConfigRecord;
+  components?: AlloySpec[];
+  events?: AlloyEventRecord;
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
   domModification?: {};

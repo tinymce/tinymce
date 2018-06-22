@@ -14,18 +14,15 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
+import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
-  refresh: (toolbar: AlloyComponent) => void;
-}
-
-const setStoredGroups = function (bar, storedGroups) {
-  const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
+const setStoredGroups = (bar, storedGroups) => {
+  const bGroups = Arr.map(storedGroups, (g) => { return GuiFactory.premade(g); });
   Toolbar.setGroups(bar, bGroups);
 };
 
-const refresh = function (toolbar, detail, externals) {
+const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
   const primary = ps.primary();
   const overflow = ps.overflow();
@@ -65,7 +62,7 @@ const refresh = function (toolbar, detail, externals) {
 
   const total = Width.get(primary.element());
 
-  const overflows = Overflows.partition(total, groups, function (comp) {
+  const overflows = Overflows.partition(total, groups, (comp) => {
     return Width.get(comp.element());
   }, overflowGroup);
 
@@ -86,13 +83,13 @@ const refresh = function (toolbar, detail, externals) {
 
 };
 
-const factory = function (detail, components, spec, externals) {
-  const doSetGroups = function (toolbar, groups) {
+const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (detail, components, spec, externals) => {
+  const doSetGroups = (toolbar, groups) => {
     const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups().set(built);
   };
 
-  const setGroups = function (toolbar, groups) {
+  const setGroups = (toolbar, groups) => {
     doSetGroups(toolbar, groups);
     refresh(toolbar, detail, externals);
   };
@@ -133,7 +130,7 @@ const SplitToolbar = Sketcher.composite({
       apis.refresh(toolbar);
     }
   }
-}) as SplitToolbarSketch;
+}) as SplitToolbarSketcher;
 
 export {
   SplitToolbar

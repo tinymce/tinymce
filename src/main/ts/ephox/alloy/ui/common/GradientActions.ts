@@ -1,76 +1,76 @@
-import { Fun, Option } from '@ephox/katamari';
+import { ClientRect, MouseEvent, Touch, TouchEvent } from '@ephox/dom-globals';
+import { Option, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Position } from '@ephox/sugar';
 
+import { SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as GradientModel from './GradientModel';
+import { PercentagePosition } from './GradientModel';
 
 const _sliderChangeEvent = 'slider.change.value';
 const _paletteChangeEvent = 'palette.change.value';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const getEventSource = function (simulatedEvent) {
+const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
   const evt = simulatedEvent.event().raw();
-  if (isTouch && evt.touches !== undefined && evt.touches.length === 1) {
-    return Option.some(evt.touches[0]);
-  } else if (isTouch && evt.touches !== undefined) {
-      return Option.none();
-  } else if (!isTouch && evt.clientX !== undefined && evt.clientY !== undefined) {
-      return Option.some(evt);
+  if (isTouch) {
+    const touchEvent = evt as TouchEvent;
+    return touchEvent.touches !== undefined && touchEvent.touches.length === 1 ?
+      Option.some(touchEvent.touches[0]).map((t: Touch) => {
+        return Position(t.clientX, t.clientY) as SugarPosition;
+      }) : Option.none();
   } else {
-      return Option.none();
+    const mouseEvent = evt as MouseEvent;
+    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => {
+      return Position(me.clientX, me.clientY) as SugarPosition;
+    }) : Option.none();
   }
 };
 
-const getEventX = function (simulatedEvent) {
+const getEventX = (simulatedEvent: NativeSimulatedEvent): Option<number> => {
   const spot = getEventSource(simulatedEvent);
   return spot.map(function (s) {
-    return s.clientX;
+    return s.left();
   });
 };
 
-const getEventY = function (simulatedEvent) {
+const getEventY = (simulatedEvent: NativeSimulatedEvent): Option<number> => {
   const spot = getEventSource(simulatedEvent);
   return spot.map(function (s) {
-    return s.clientY;
+    return s.top();
   });
 };
 
-const getEventCoords = function (simulatedEvent) {
-  const spot = getEventSource(simulatedEvent);
-  return spot.map(function (s) {
-    return {
-      x: s.clientX, 
-      y: s.clientY
-    };
-  });
-};
-
-const fireSliderChange = function (component, value) {
+const fireSliderChange = (component: AlloyComponent, value: number): void => {
   AlloyTriggers.emitWith(component, _sliderChangeEvent, { value });
 };
 
-const firePaletteChange = function (component, value) {
+const firePaletteChange = (component: AlloyComponent, value: PercentagePosition): void => {
   AlloyTriggers.emitWith(component, _paletteChangeEvent, { value });
 };
 
-const moveRightFromLedge = function (ledge, detail) {
+const moveRightFromLedge = (ledge: AlloyComponent, detail: SliderDetail): void => {
   fireSliderChange(ledge, detail.min());
 };
 
-const moveLeftFromRedge = function (redge, detail) {
+const moveLeftFromRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
   fireSliderChange(redge, detail.max());
 };
 
-const setToRedge = function (redge, detail) {
+const setToRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
   fireSliderChange(redge, detail.max() + 1);
 };
 
-const setToLedge = function (ledge, detail) {
+const setToLedge = (ledge: AlloyComponent, detail: SliderDetail): void => {
   fireSliderChange(ledge, detail.min() - 1);
 };
 
-const setToX = function (spectrum, spectrumBounds, detail, xValue) {
+const setToX = (spectrum: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail, xValue: number): void => {
   const value = GradientModel.findValueOfX(
     spectrumBounds, detail.min(), detail.max(),
     xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
@@ -79,7 +79,7 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
   fireSliderChange(spectrum, value);
 };
 
-const setToY = function (spectrum, spectrumBounds, detail, yValue) {
+const setToY = (spectrum: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail, yValue: number): void => {
   const value = GradientModel.findValueOfY(
     spectrumBounds, detail.min(), detail.max(),
     yValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
@@ -88,39 +88,39 @@ const setToY = function (spectrum, spectrumBounds, detail, yValue) {
   fireSliderChange(spectrum, value);
 };
 
-const setToCoords = function (spectrum, spectrumBounds, detail, coords) {
-  const value = GradientModel.findPercentageValueOfCoords(spectrumBounds, coords);
+const setToCoords = (palette: AlloyComponent, paletteBounds: ClientRect, coords: SugarPosition): void => {
+  const value = GradientModel.findPercentageValueOfCoords(paletteBounds, coords);
 
-  firePaletteChange(spectrum, value);
+  firePaletteChange(palette, value);
 };
 
-const setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
+const setXFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<number> => {
   return getEventX(simulatedEvent).map(function (xValue) {
     setToX(spectrum, spectrumBounds, detail, xValue);
     return xValue;
   });
 };
 
-const setYFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
+const setYFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<number> => {
   return getEventY(simulatedEvent).map(function (yValue) {
     setToY(spectrum, spectrumBounds, detail, yValue);
     return yValue;
   });
 };
 
-const setCoordsFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
-  return getEventCoords(simulatedEvent).map(function (coords) {
-    setToCoords(spectrum, spectrumBounds, detail, coords);
+const setCoordsFromEvent = (spectrum: AlloyComponent, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
+  return getEventSource(simulatedEvent).map(function (coords) {
+    setToCoords(spectrum, spectrumBounds, coords);
     return coords;
   });
 };
 
-const moveLeft = function (spectrum, detail) {
+const moveLeft = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newValue = GradientModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireSliderChange(spectrum, newValue);
 };
 
-const moveRight = function (spectrum, detail) {
+const moveRight = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newValue = GradientModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireSliderChange(spectrum, newValue);
 };

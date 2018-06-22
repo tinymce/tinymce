@@ -1,35 +1,43 @@
 import { Arr, Fun } from '@ephox/katamari';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
-const inSet = function (keys) {
-  return function (event) {
-    return Arr.contains(keys, event.raw().which);
+export type KeyMatcher = (SugarEvent) => boolean;
+
+const inSet = (keys: number[]): KeyMatcher => {
+  return (event: SugarEvent) => {
+    const raw = event.raw() as KeyboardEvent;
+    return Arr.contains(keys, raw.which);
   };
 };
 
-const and = function (preds) {
-  return function (event) {
-    return Arr.forall(preds, function (pred) {
+const and = (preds: KeyMatcher[]): KeyMatcher => {
+  return (event: SugarEvent) => {
+    return Arr.forall(preds, (pred) => {
       return pred(event);
     });
   };
 };
 
-const is = function (key) {
-  return function (event) {
-    return event.raw().which === key;
+const is = (key: number): KeyMatcher => {
+  return (event: SugarEvent) => {
+    const raw = event.raw() as KeyboardEvent;
+    return raw.which === key;
   };
 };
 
-const isShift = function (event) {
-  return event.raw().shiftKey === true;
+const isShift = (event: SugarEvent): boolean => {
+  const raw = event.raw() as KeyboardEvent;
+  return raw.shiftKey === true;
 };
 
-const isControl = function (event) {
-  return event.raw().ctrlKey === true;
+const isControl = (event: SugarEvent): boolean => {
+  const raw = event.raw() as KeyboardEvent;
+  return raw.ctrlKey === true;
 };
 
-const isNotControl = Fun.not(isControl);
-const isNotShift = Fun.not(isShift);
+const isNotControl: (event: SugarEvent) => boolean = Fun.not(isControl);
+const isNotShift: (event: SugarEvent) => boolean = Fun.not(isShift);
 
 export {
   inSet,

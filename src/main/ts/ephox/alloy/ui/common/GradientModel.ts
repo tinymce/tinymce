@@ -1,4 +1,15 @@
-const reduceBy = function (value, min, max, step) {
+import { Option, Fun } from "@ephox/katamari";
+import { ClientRect } from '@ephox/dom-globals';
+import { SugarPosition } from "ephox/alloy/alien/TypeDefinitions";
+
+export interface PercentagePosition {
+  left: () => number;
+  top: () => number;
+  percentLeft: () => number;
+  percentTop: () => number;
+}
+
+const reduceBy = (value: number, min: number, max: number, step: number): number => {
   if (value < min) {
     return value;
   } else if (value > max) {
@@ -10,7 +21,7 @@ const reduceBy = function (value, min, max, step) {
   }
 };
 
-const increaseBy = function (value, min, max, step) {
+const increaseBy = (value: number, min: number, max: number, step: number): number => {
   if (value > max) {
     return value;
   } else if (value < min) {
@@ -22,22 +33,22 @@ const increaseBy = function (value, min, max, step) {
   }
 };
 
-const capValue = function (value, min, max) {
+const capValue = (value: number, min: number, max: number): number => {
   return Math.max(
     min,
     Math.min(max, value)
   );
 };
 
-const snapValueOf = function (bounds, value, min, max, step, snapStart) {
+const snapValueOf = (bounds: ClientRect, value: number, min: number, max: number, step: number, snapStart: Option<number>): number => {
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
-  return snapStart.fold(function () {
+  return snapStart.fold(() => {
     // There is no initial snapping start, so just go from the minimum
     const initValue = value - min;
     const extraValue = Math.round(initValue / step) * step;
     return capValue(min + extraValue, min - 1, max + 1);
-  }, function (start) {
+  }, (start) => {
     // There is an initial snapping start, so using that as the starting point,
     // calculate the nearest snap position based on the value
     const remainder = (value - start) % step;
@@ -52,7 +63,11 @@ const snapValueOf = function (bounds, value, min, max, step, snapStart) {
   });
 };
 
-const findValueOf = function (bounds, min, max, value, step, snapToGrid, snapStart, ledgeProp, redgeProp, lengthProp) {
+const findOffsetOf = (bounds: ClientRect, value: number, ledgeProp: string, redgeProp: string): number => {
+  return Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
+};
+
+const findValueOf = (bounds: ClientRect, min: number, max: number, value: number, step: number, snapToGrid: boolean, snapStart: Option<number>, ledgeProp: string, redgeProp: string, lengthProp: string): number => {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
   if (value < bounds[ledgeProp]) { 
@@ -60,40 +75,42 @@ const findValueOf = function (bounds, min, max, value, step, snapToGrid, snapSta
   } else if (value > bounds[redgeProp]) { 
     return max + 1; 
   } else {
-    const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
+    const offset = findOffsetOf(bounds, value, ledgeProp, redgeProp);
     const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, min - 1, max + 1);
     const roundedValue = Math.round(newValue);
     return snapToGrid && newValue >= min && newValue <= max ? snapValueOf(bounds, newValue, min, max, step, snapStart) : roundedValue;
   }
 };
 
-const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+const findValueOfX = (bounds: ClientRect, min: number, max: number, xValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>): number => {
   return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'left', 'right', 'width');
 };
 
-const findValueOfY = function (bounds, min, max, yValue, step, snapToGrid, snapStart) {
+const findValueOfY = (bounds: ClientRect, min: number, max: number, yValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>): number => {
   return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
 };
 
-const findUnroundedOf = function (bounds, value, ledgeProp, redgeProp) {
+const findUnroundedOf = (bounds: ClientRect, value: number, ledgeProp: string, redgeProp: string): number => {
   if (value < bounds[ledgeProp]) {
     return 0;
   } else if (value > bounds[redgeProp]) {
     return bounds[redgeProp] - bounds[ledgeProp];
   } else {
-    const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
-    return offset;
+    return findOffsetOf(bounds, value, ledgeProp, redgeProp);
   }
 };
 
-const findPercentageValueOfCoords = function (bounds, coords) {
-  const x = findUnroundedOf(bounds, coords.x, 'left', 'right');
-  const y = findUnroundedOf(bounds, coords.y, 'top', 'bottom');
+const findPercentageValueOfCoords = (bounds: ClientRect, coords: SugarPosition): PercentagePosition => {
+  const left = findUnroundedOf(bounds, coords.left(), 'left', 'right');
+  const top = findUnroundedOf(bounds, coords.top(), 'top', 'bottom');
+  const percentLeft = left / bounds.width * 100;
+  const percentTop = top / bounds.height * 100;
+
   return {
-    x,
-    y,
-    percentX: x / bounds.width * 100,
-    percentY: y / bounds.height * 100
+    left: Fun.constant(left),
+    top: Fun.constant(top),
+    percentLeft: Fun.constant(percentLeft),
+    percentTop: Fun.constant(percentTop)
   };
 };
 

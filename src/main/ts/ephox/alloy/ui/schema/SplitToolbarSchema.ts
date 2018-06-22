@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -7,12 +7,12 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { PartTypeAdt } from '../../parts/PartType';
+import { SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
-  FieldSchema.state('builtGroups', function () {
+  FieldSchema.state('builtGroups', () => {
     return Cell([ ]);
   })
 ]);
@@ -21,7 +21,7 @@ const toolbarSchema = [
   FieldSchema.strict('dom')
 ];
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     factory: Toolbar,
     schema: toolbarSchema,
@@ -32,7 +32,7 @@ const parts: () => PartTypeAdt[] = Fun.constant([
     factory: Toolbar,
     schema: toolbarSchema,
     name: 'overflow',
-    overrides (detail) {
+    overrides (detail: SplitToolbarDetail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({

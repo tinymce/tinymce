@@ -1,19 +1,21 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
-export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: ReplacingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
-  append: (compontent: AlloyComponent, replaceConfig: {}) => void;
-  prepend: (compontent: AlloyComponent, replaceConfig: {}) => void;
-  remove: (compontent: AlloyComponent, replaceConfig: {}) => void;
-  set: (compontent: AlloyComponent, replaceConfig: {}) => void;
-  contents: (compontent: AlloyComponent, replaceConfig?: {}) => AlloyComponent[];
+export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingConfigSpec, ReplacingConfig> {
+  config: (config: ReplacingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ReplacingConfigSpec, ReplacingConfig>;
+  append: (component: AlloyComponent, appendee: AlloySpec) => void;
+  prepend: (component: AlloyComponent, prependee: AlloySpec) => void;
+  remove: (component: AlloyComponent, removee: AlloyComponent) => void;
+  set: (component: AlloyComponent, data: AlloySpec[]) => void;
+  contents: (component: AlloyComponent) => AlloyComponent[];
 }
 
-export interface ReplacingConfigSpec { };
+export interface ReplacingConfigSpec extends BehaviourConfigSpec { };
 
-export interface ReplacingConfig {
+export interface ReplacingConfig extends BehaviourConfigDetail {
   // Intentionally Blank
 }

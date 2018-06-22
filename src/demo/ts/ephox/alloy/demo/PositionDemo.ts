@@ -9,12 +9,13 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import DemoContent from 'ephox/alloy/demo/DemoContent';
-import DemoSink from 'ephox/alloy/demo/DemoSink';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import * as Writer from 'ephox/alloy/frame/Writer';
+import * as DemoContent from 'ephox/alloy/demo/DemoContent';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as Frames from './frames/Frames';
+import { document } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Css.set(gui.element(), 'direction', 'rtl');
@@ -99,7 +100,7 @@ export default <any> function () {
             }
           },
           events: AlloyEvents.derive([
-            AlloyEvents.run(NativeEvents.mouseover(), function (item) {
+            AlloyEvents.run(NativeEvents.mouseover(), (item) => {
               Attachment.attach(sink, popup);
               Positioning.position(sink, {
                 anchor: 'submenu',
@@ -157,11 +158,11 @@ export default <any> function () {
 
   // Maybe make a component.
   const frame = Element.fromTag('iframe');
-  const onLoad = DomEvent.bind(frame, 'load', function () {
+  const onLoad = DomEvent.bind(frame, 'load', () => {
     onLoad.unbind();
 
     const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
-    Writer.write(frame, html);
+    Frames.write(frame, html);
   });
 
   const section4 = HtmlDisplay.section(

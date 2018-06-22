@@ -7,8 +7,10 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { TabbarSketcher, TabbarDetail, TabbarSpec } from '../../ui/types/TabbarTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {
     'uid': detail.uid(),
     'dom': Merger.deepMerge(
@@ -44,7 +46,7 @@ const factory = function (detail, components, spec, externals) {
           mode: 'flow',
           getInitial (tabbar) {
             // Restore focus to the previously highlighted tab.
-            return Highlighting.getHighlighted(tabbar).map(function (tab) {
+            return Highlighting.getHighlighted(tabbar).map((tab) => {
               return tab.element();
             });
           },
@@ -63,7 +65,7 @@ const Tabbar = Sketcher.composite({
   configFields: TabbarSchema.schema(),
   partFields: TabbarSchema.parts(),
   factory
-});
+}) as TabbarSketcher;
 
 export {
   Tabbar

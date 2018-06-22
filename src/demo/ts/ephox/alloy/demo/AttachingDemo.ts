@@ -6,9 +6,10 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { document, setTimeout } from '@ephox/dom-globals';
 
-export default <any> function () {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
@@ -48,7 +49,7 @@ export default <any> function () {
     },
 
     events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached(function (sq, simulatedEvent) {
+      AlloyEvents.runOnAttached((sq, simulatedEvent) => {
         simulatedEvent.stop();
         Replacing.append(list, {
           dom: {
@@ -58,7 +59,7 @@ export default <any> function () {
         });
       }),
 
-      AlloyEvents.runOnInit(function (sq, simulatedEvent) {
+      AlloyEvents.runOnInit((sq, simulatedEvent) => {
         simulatedEvent.stop();
         Replacing.append(list, {
           dom: {
@@ -70,9 +71,9 @@ export default <any> function () {
     ])
   });
 
-  setTimeout(function () {
+  setTimeout(() => {
     list.getSystem().addToWorld(square);
-    setTimeout(function () {
+    setTimeout(() => {
       gui.add(square);
     }, 2000);
   }, 2000);

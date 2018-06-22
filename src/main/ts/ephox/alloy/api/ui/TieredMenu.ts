@@ -1,35 +1,19 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { MenuSpec } from '../../ui/types/MenuTypes';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
+import { TieredData, TieredMenuRecord, TieredMenuSketcher } from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { single, SingleSketch } from './Sketcher';
-import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
+import { single } from './Sketcher';
 
-export type ItemSpec = { value: string; text: string };
-
-export interface TieredMenuSketch extends SingleSketch {
-  collapseMenu: (menu: any) => void;
-  tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
-  singleData: (name: string, menu: MenuSpec) => TieredData;
-  collapseItem: (text: string) => ItemSpec;
-}
-
-export type MenuSpec = LooseSpec;
-export type TieredMenuRecord = Record<string, MenuSpec>;
-
-export interface TieredData {
-  primary: string;
-  menus: TieredMenuRecord;
-  expansions: Record<string, string>;
-}
-
-const tieredData = function (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData {
+const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => {
   return {
     primary,
     menus,
@@ -37,7 +21,7 @@ const tieredData = function (primary: string, menus: TieredMenuRecord, expansion
   };
 };
 
-const singleData = function (name: string, menu: MenuSpec): TieredData {
+const singleData = (name: string, menu: MenuSpec): TieredData => {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -45,7 +29,7 @@ const singleData = function (name: string, menu: MenuSpec): TieredData {
   };
 };
 
-const collapseItem = function (text: string): ItemSpec {
+const collapseItem = (text: string): ItemDataTuple => {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text
@@ -97,8 +81,9 @@ const tieredMenu = single({
     singleData,
     collapseItem
   }
-}) as TieredMenuSketch;
+}) as TieredMenuSketcher;
 
 export {
-  tieredMenu
+  tieredMenu,
+  TieredData
 };

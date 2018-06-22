@@ -1,24 +1,24 @@
 import { Contracts, Result } from '@ephox/katamari';
 import { AlloySystemApi } from '../../api/system/SystemApi';
-import { SugarElement } from '../../alien/TypeDefinitions';
-import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
-import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { Element } from '@ephox/sugar';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
-  config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
+  config: <D>(behaviour: AlloyBehaviour<any,D>) => D | any
   hasConfigured: (behaviour) => boolean;
   spec: () => any;
   readState: (behaviourName: string) => any;
   connect: (newApi) => void;
   disconnect: () => void;
-  element: () => SugarElement;
+  element: () => Element;
   syncComponents: () => void;
-  components: () => any;
-  events: () => EventHandlerConfigRecord;
+  components: () => AlloyComponent[];
+  events: () => Record<string, UncurriedHandler>;
 }
 
-const ComponentApi = Contracts.exactly([
+const ComponentApi: (spec) => AlloyComponent = Contracts.exactly([
   'getSystem',
   'config',
   'hasConfigured',

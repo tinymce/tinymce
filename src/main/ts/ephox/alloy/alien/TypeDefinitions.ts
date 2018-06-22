@@ -1,4 +1,6 @@
 import { EventFormat } from '../events/SimulatedEvent';
+import { HTMLElement, HTMLDocument, Event, TouchEvent, TransitionEvent, KeyboardEvent, MouseEvent } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 // TODO move these to the correct village
 
@@ -11,26 +13,38 @@ export interface AdtInterface {
 }
 
 // Sugar Dom
-export interface SugarElement {
-  dom: () => HTMLElement;
+
+export interface SugarListener {
+  unbind: () => void;
+}
+
+export interface SugarDocument {
+  dom: () => HTMLDocument;
 }
 
 // Sugar Event
 export interface SugarEvent extends EventFormat {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event | TouchEvent | TransitionEvent;
+  raw: () => Event | TouchEvent | TransitionEvent | MouseEvent | KeyboardEvent;
   stop: () => void;
-  target: () => SugarElement;
+  target: () => Element;
   x: () => number;
   y: () => number;
 }
 
 // Sugar Position
-export interface PositionCoordinates {
+export interface SugarPosition {
   left: () => number;
   top: () => number;
-  translate: (x: number, y: number) => PositionCoordinates;
+  translate: (x: number, y: number) => SugarPosition;
+}
+
+export interface SugarRange {
+  start: () => Element;
+  soffset: () => number;
+  finish: () => Element;
+  foffset: () => number;
 }
 
 // Fun.constant, Rather than => T, we will have explicit return types

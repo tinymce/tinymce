@@ -1,8 +1,7 @@
 import * as Behaviour from './Behaviour';
-import ActivePinching from '../../behaviour/pinching/ActivePinching';
+import * as ActivePinching from '../../behaviour/pinching/ActivePinching';
 import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
 import * as DragState from '../../dragging/common/DragState';
-import { SugarElement } from '../../alien/TypeDefinitions';
 import { PinchingBehaviour } from '../../behaviour/pinching/PinchingTypes';
 
 

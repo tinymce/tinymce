@@ -9,13 +9,13 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('InvalidatingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InvalidatingTest', (success, failure) => {
+
+
 
   const root = Cell(Option.none());
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -37,7 +37,7 @@ UnitTest.asynctest('InvalidatingTest', function () {
         ])
       })
     );
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
 
     // This will be used for the other root.
     const other = GuiFactory.build({
@@ -47,14 +47,14 @@ UnitTest.asynctest('InvalidatingTest', function () {
     });
     gui.add(other);
 
-    const sCheckValidOf = function (label, comp) {
+    const sCheckValidOf = (label, comp) => {
       return Logger.t(
         label,
         Step.control(
 
           Assertions.sAssertStructure(
             'Checking structure after marking valid',
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 classes: [
                   arr.not('test-invalid')
@@ -68,13 +68,13 @@ UnitTest.asynctest('InvalidatingTest', function () {
       );
     };
 
-    const sCheckInvalidOf = function (label, comp) {
+    const sCheckInvalidOf = (label, comp) => {
       return Logger.t(
         label,
         Step.control(
           Assertions.sAssertStructure(
             'Checking structure after marking invalid',
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 classes: [
                   arr.has('test-invalid')
@@ -88,16 +88,16 @@ UnitTest.asynctest('InvalidatingTest', function () {
       );
     };
 
-    const sCheckValid = function (label) {
+    const sCheckValid = (label) => {
       return sCheckValidOf(label, component);
     };
 
-    const sCheckInvalid = function (label) {
+    const sCheckInvalid = (label) => {
       return sCheckInvalidOf(label, component);
     };
 
     const sValidate = GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         AlloyTriggers.emit(component, 'custom.test.validate');
       }),
       // It is future based, so give it a bit of time. The rest of the assertions should all
@@ -106,33 +106,33 @@ UnitTest.asynctest('InvalidatingTest', function () {
       Step.wait(100)
     ]);
 
-    const cQueryApi = Chain.on(function (value, next, die) {
-      Invalidating.query(component).get(function (res) {
+    const cQueryApi = Chain.on((value, next, die) => {
+      Invalidating.query(component).get((res) => {
         next(Chain.wrap(res));
       });
     });
 
-    const cRunApi = Chain.on(function (value, next, die) {
-      Invalidating.run(component).get(function (res) {
+    const cRunApi = Chain.on((value, next, die) => {
+      Invalidating.run(component).get((res) => {
         next(Chain.wrap(res));
       });
     });
 
-    const cCheckValidationFails = function (label, expected) {
-      return Chain.op(function (res) {
-        res.fold(function (err) {
+    const cCheckValidationFails = (label, expected) => {
+      return Chain.op((res) => {
+        res.fold((err) => {
           Assertions.assertEq(label, expected, err);
-        }, function (val) {
+        }, (val) => {
           throw new Error(label + ': Unexpected value: ' + val);
         });
       });
     };
 
-    const cCheckValidationPasses = function (label, expected) {
-      return Chain.op(function (res) {
-        res.fold(function (err) {
+    const cCheckValidationPasses = (label, expected) => {
+      return Chain.op((res) => {
+        res.fold((err) => {
           throw new Error(label + ': Unexpected error: ' + err);
-        }, function (val) {
+        }, (val) => {
           Assertions.assertEq(label, expected, val);
         });
       });
@@ -151,13 +151,13 @@ UnitTest.asynctest('InvalidatingTest', function () {
         4000
       ),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Invalidating.markValid(component);
       }),
 
       sCheckValid('after 1xmarkValid, should be valid'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Invalidating.markInvalid(component);
       }),
 
@@ -197,13 +197,13 @@ UnitTest.asynctest('InvalidatingTest', function () {
       ]),
       sCheckInvalid('run API should update classes on the input to failure'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Invalidating.markValid(component);
       }),
       sCheckValid('Before changing getRoot, everything should be valid again'),
 
       sCheckValidOf('Other should initially be valid', other),
-      Step.sync(function () {
+      Step.sync(() => {
         root.set(Option.some(other.element()));
       }),
 
@@ -222,13 +222,13 @@ UnitTest.asynctest('InvalidatingTest', function () {
       sCheckValidOf('After running validation, the "other" should be valid now', other),
       sCheckValid('The first input should stay valid the whole time'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Invalidating.markInvalid(component);
       }),
       sCheckInvalidOf('After running markInvalid, the "other" should be invalid again', other),
       sCheckValid('The first input should stay valid the whole time'),
 
-      Step.sync(function () {
+      Step.sync(() => {
         Invalidating.markValid(component);
       }),
       sCheckValidOf('After running markValid, the "other" should be valid again', other),
@@ -236,5 +236,5 @@ UnitTest.asynctest('InvalidatingTest', function () {
 
       GuiSetup.mRemoveStyles
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

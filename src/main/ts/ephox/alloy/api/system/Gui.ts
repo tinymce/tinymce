@@ -1,6 +1,6 @@
-import { Arr, Fun, Result } from '@ephox/katamari';
-import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { Arr, Fun, Result, Option } from '@ephox/katamari';
+import { Compare, Focus, Node, Remove, Traverse, Element } from '@ephox/sugar';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as Debugging from '../../debugging/Debugging';
@@ -14,15 +14,17 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { SystemApi } from './SystemApi';
+import { ElementAndHandler } from '../../events/EventRegistry';
+import { FocusingEvent } from '../../events/SimulatedEvent';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
-  element: () => SugarElement;
+  element: () => Element;
   destroy: () => void;
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
-  getByUid: (uid: string) => Result<AlloyComponent, string>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, any>;
+  getByUid: (uid: string) => Result<AlloyComponent, string | Error>;
+  getByDom: (element: Element) => Result<AlloyComponent, string | Error>;
 
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;
@@ -33,7 +35,7 @@ export interface GuiSystem {
 
 export type message = Record<string, string>;
 
-const create = function (): GuiSystem {
+const create = (): GuiSystem => {
   const root = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -44,13 +46,13 @@ const create = function (): GuiSystem {
   return takeover(root);
 };
 
-const takeover = function (root: AlloyComponent): GuiSystem {
-  const isAboveRoot = function (el) {
+const takeover = (root: AlloyComponent): GuiSystem => {
+  const isAboveRoot = (el: Element): boolean => {
     return Traverse.parent(root.element()).fold(
-      function () {
+      () => {
         return true;
       },
-      function (parent) {
+      (parent) => {
         return Compare.eq(el, parent);
       }
     );
@@ -58,13 +60,13 @@ const takeover = function (root: AlloyComponent): GuiSystem {
 
   const registry = Registry();
 
-  const lookup = function (eventName, target) {
+  const lookup = (eventName: string, target: Element) => {
     return registry.find(isAboveRoot, eventName, target);
   };
 
   const domEvents = GuiEvents.setup(root.element(), {
     triggerEvent (eventName: string, event: SugarEvent) {
-      return Debugging.monitorEvent(eventName, event.target(), function (logger) {
+      return Debugging.monitorEvent(eventName, event.target(), (logger) => {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
     },
@@ -82,22 +84,25 @@ const takeover = function (root: AlloyComponent): GuiSystem {
   const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (eventName, target, data) {
-      Debugging.monitorEvent(eventName, target, function (logger) {
+    triggerEvent (eventName: string, target: Element, data: any) {
+      Debugging.monitorEvent(eventName, target, (logger) => {
         // The return value is not used because this is a fake event.
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
-    triggerFocus (target: SugarElement, originator: SugarElement) {
-      Tagger.read(target).fold(function () {
+    triggerFocus (target: Element, originator: Element) {
+      Tagger.read(target).fold(() => {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
-      }, function (_alloyId) {
-        Debugging.monitorEvent(SystemEvents.focus(), target, function (logger) {
-          Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+      }, (_alloyId) => {
+        Debugging.monitorEvent(SystemEvents.focus(), target, (logger) => {
+          // NOTE: This will stop at first handler.
+          Triggers.triggerHandler<FocusingEvent>(lookup, SystemEvents.focus(), {
             // originator is used by the default events to ensure that focus doesn't
             // get called infinitely
             originator: Fun.constant(originator),
+            kill: Fun.noop,
+            prevent: Fun.noop,
             target: Fun.constant(target)
           }, target, logger);
         });
@@ -128,7 +133,7 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     isConnected: Fun.constant(true)
   });
 
-  const addToWorld = function (component) {
+  const addToWorld = (component) => {
     component.connect(systemApi);
     if (!Node.isText(component.element())) {
       registry.register(component);
@@ -137,7 +142,7 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     }
   };
 
-  const removeFromWorld = function (component) {
+  const removeFromWorld = (component) => {
     if (!Node.isText(component.element())) {
       Arr.each(component.components(), removeFromWorld);
       registry.unregister(component);
@@ -145,37 +150,37 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     component.disconnect();
   };
 
-  const add = function (component) {
+  const add = (component) => {
     Attachment.attach(root, component);
   };
 
-  const remove = function (component) {
+  const remove = (component) => {
     Attachment.detach(component);
   };
 
-  const destroy = function () {
+  const destroy = () => {
     // INVESTIGATE: something with registry?
     domEvents.unbind();
     Remove.remove(root.element());
   };
 
-  const broadcastData = function (data) {
+  const broadcastData = (data) => {
     const receivers = registry.filter(SystemEvents.receive());
-    Arr.each(receivers, function (receiver) {
+    Arr.each(receivers, (receiver) => {
       const descHandler = receiver.descHandler();
-      const handler = DescribedHandler.getHandler(descHandler);
+      const handler = DescribedHandler.getCurried(descHandler);
       handler(data);
     });
   };
 
-  const broadcast = function (message) {
+  const broadcast = (message) => {
     broadcastData({
       universal: Fun.constant(true),
       data: Fun.constant(message)
     });
   };
 
-  const broadcastOn = function (channels, message) {
+  const broadcastOn = (channels, message) => {
     broadcastData({
       universal: Fun.constant(false),
       channels: Fun.constant(channels),
@@ -183,15 +188,15 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     });
   };
 
-  const getByUid = function (uid) {
-    return registry.getById(uid).fold(function () {
+  const getByUid = (uid) => {
+    return registry.getById(uid).fold(() => {
       return Result.error(
         new Error('Could not find component with uid: "' + uid + '" in system.')
       );
     }, Result.value);
   };
 
-  const getByDom = function (elem: SugarElement): Result<AlloyComponent, any> {
+  const getByDom = (elem: Element): Result<AlloyComponent, any> => {
     const uid = Tagger.read(elem).getOr('not found');
     return getByUid(uid);
   };

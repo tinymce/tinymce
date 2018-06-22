@@ -1,6 +1,6 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
-export default <any> [
+export default [
   FieldSchema.defaulted('disabled', false),
   FieldSchema.option('disableClass')
 ] as FieldProcessorAdt[];

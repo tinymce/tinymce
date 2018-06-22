@@ -1,36 +1,37 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { SugarElement } from '../../alien/TypeDefinitions';
+import { Element } from '@ephox/sugar';
 import { AlloySpec } from '../../api/component/SpecTypes';
+import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 
-export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SandboxingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<SandboxingConfigSpec, SandboxingConfig> {
+  config: (config: SandboxingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SandboxingConfigSpec, SandboxingConfig>;
   cloak: (sandbox: AlloyComponent) => void;
   decloak: (sandbox: AlloyComponent) => void;
   open: (sandbox: AlloyComponent, thing: AlloySpec) => AlloyComponent;
   close: (sandbox: AlloyComponent) => void;
   isOpen: (sandbox: AlloyComponent) => boolean;
-  isPartOf: (sandbox: AlloyComponent, candidate: () => SugarElement) => boolean;
+  isPartOf: (sandbox: AlloyComponent, candidate: () => Element) => boolean;
   getState: (sandbox: AlloyComponent) => Option<AlloyComponent>;
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
-export interface SandboxingConfigSpec {
+export interface SandboxingConfigSpec extends BehaviourConfigSpec {
   getAttachPoint: () => AlloyComponent;
-  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
+  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
   onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
   onClose?: (component: AlloyComponent, menu: AlloyComponent) => void;
   cloakVisibilityAttr?: string;
 }
 
-export interface SandboxingConfig {
+export interface SandboxingConfig extends BehaviourConfigDetail {
   cloakVisibilityAttr: () => string;
   getAttachPoint: () => () => AlloyComponent;
   onOpen: () => (AlloyComponent, SandboxingState) => void;
   onClose: () => (sandbox: AlloyComponent, thing: AlloyComponent) => void;
-  isPartOf: () => (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
+  isPartOf: () => (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
 };
 
 export interface SandboxingState {

@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -11,7 +11,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
-import { PartTypeAdt } from '../../parts/PartType';
+import { FormChooserDetail } from '../../ui/types/FormChooserTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),
@@ -19,7 +19,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'choiceClass', 'selectedClass' ])
 ]);
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     name: 'legend',
     defaults (detail) {
@@ -39,7 +39,7 @@ const parts: () => PartTypeAdt[] = Fun.constant([
     },
     name: 'choices',
     unit: 'choice',
-    overrides (detail, choiceSpec) {
+    overrides (detail: FormChooserDetail, choiceSpec: { value: string }) {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.

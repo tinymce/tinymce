@@ -1,34 +1,38 @@
 import { Objects } from '@ephox/boulder';
 import { Adt, Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
+import { AdtInterface } from '../alien/TypeDefinitions';
 
 const _placeholder = 'placeholder';
 
-const adt = Adt.generate([
+const adt: {
+  single: (required: boolean, valueThunk: Function) => AdtInterface;
+  multiple: (required: boolean, valueThunk: Function) => AdtInterface;
+} = Adt.generate([
   { single: [ 'required', 'valueThunk' ] },
   { multiple: [ 'required', 'valueThunks' ] }
 ]);
 
-const isSubstitute = function (uiType) {
+const isSubstitute = (uiType) => {
   return Arr.contains([
     _placeholder
   ], uiType);
 };
 
-const subPlaceholder = function (owner, detail, compSpec, placeholders) {
-  if (owner.exists(function (o) { return o !== compSpec.owner; })) { return adt.single(true, Fun.constant(compSpec)); }
+const subPlaceholder = (owner, detail, compSpec, placeholders) => {
+  if (owner.exists((o) => { return o !== compSpec.owner; })) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
-  return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
+  return Objects.readOptFrom(placeholders, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
       Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
     );
-  }, function (newSpec) {
+  }, (newSpec) => {
     // Must return a single/multiple type
     return newSpec.replace();
   });
 };
 
-const scan = function (owner, detail, compSpec, placeholders) {
+const scan = (owner, detail, compSpec, placeholders) => {
   if (compSpec.uiType === _placeholder) {
     return subPlaceholder(owner, detail, compSpec, placeholders);
   } else {
@@ -36,14 +40,14 @@ const scan = function (owner, detail, compSpec, placeholders) {
   }
 };
 
-const substitute = function (owner, detail, compSpec, placeholders) {
+const substitute = (owner, detail, compSpec, placeholders) => {
   const base = scan(owner, detail, compSpec, placeholders);
 
   return base.fold(
-    function (req, valueThunk) {
+    (req, valueThunk) => {
       const value = valueThunk(detail, compSpec.config, compSpec.validated);
       const childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
-      const substituted = Arr.bind(childSpecs, function (c) {
+      const substituted = Arr.bind(childSpecs, (c) => {
         return substitute(owner, detail, c, placeholders);
       });
       return [
@@ -52,27 +56,27 @@ const substitute = function (owner, detail, compSpec, placeholders) {
         })
       ];
     },
-    function (req, valuesThunk) {
+    (req, valuesThunk) => {
       const values = valuesThunk(detail, compSpec.config, compSpec.validated);
       return values;
     }
   );
 };
 
-const substituteAll = function (owner, detail, components, placeholders) {
-  return Arr.bind(components, function (c) {
+const substituteAll = (owner, detail, components, placeholders) => {
+  return Arr.bind(components, (c) => {
     return substitute(owner, detail, c, placeholders);
   });
 };
 
-const oneReplace = function (label, replacements) {
+const oneReplace = (label, replacements) => {
   let called = false;
 
-  const used = function () {
+  const used = () => {
     return called;
   };
 
-  const replace = function () {
+  const replace = () => {
     if (called === true) { throw new Error(
       'Trying to use the same placeholder more than once: ' + label
     );
@@ -81,10 +85,10 @@ const oneReplace = function (label, replacements) {
     return replacements;
   };
 
-  const required = function () {
-    return replacements.fold(function (req, _) {
+  const required = () => {
+    return replacements.fold((req, _) => {
       return req;
-    }, function (req, _) {
+    }, (req, _) => {
       return req;
     });
   };
@@ -97,14 +101,14 @@ const oneReplace = function (label, replacements) {
   };
 };
 
-const substitutePlaces = function (owner, detail, components, placeholders) {
-  const ps = Obj.map(placeholders, function (ph, name) {
+const substitutePlaces = (owner, detail, components, placeholders) => {
+  const ps = Obj.map(placeholders, (ph, name) => {
     return oneReplace(name, ph);
   });
 
   const outcome = substituteAll(owner, detail, components, ps);
 
-  Obj.each(ps, function (p) {
+  Obj.each(ps, (p) => {
     if (p.used() === false && p.required()) {
       throw new Error(
         'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
@@ -116,11 +120,11 @@ const substitutePlaces = function (owner, detail, components, placeholders) {
   return outcome;
 };
 
-const singleReplace = function (detail, p) {
+const singleReplace = (detail, p) => {
   const replacement = p;
-  return replacement.fold(function (req, valueThunk) {
+  return replacement.fold((req, valueThunk) => {
     return [ valueThunk(detail) ];
-  }, function (req, valuesThunk) {
+  }, (req, valuesThunk) => {
     return valuesThunk(detail);
   });
 };

@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
@@ -10,9 +10,9 @@ import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
-import { PartTypeAdt } from '../../parts/PartType';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const anchorAtCentre = function (component) {
+const anchorAtCentre = (component: AlloyComponent) => {
   const pos = Location.absolute(component.element());
   const w = Width.get(component.element());
   const h = Height.get(component.element());
@@ -39,6 +39,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.option('role'),
   FieldSchema.defaulted('eventOrder', { }),
+  FieldSchema.defaulted('matchWidth', true),
 
   Fields.onHandler('onClosed'),
 
@@ -47,7 +48,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('getAnchor', anchorAtCentre)
 ]);
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
       Fields.itemMarkers()

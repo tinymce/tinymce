@@ -6,10 +6,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { window } from '@ephox/dom-globals';
 
-UnitTest.asynctest('DockingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DockingTest', (success, failure) => {
+
+
 
   const subject = Memento.record(
     Container.sketch({
@@ -29,7 +30,7 @@ UnitTest.asynctest('DockingTest', function () {
     })
   );
 
-  GuiSetup.setup(function (store, doc, body) {
+  GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -44,11 +45,11 @@ UnitTest.asynctest('DockingTest', function () {
       })
     );
 
-  }, function (doc, body, gui, component, store) {
+  }, (doc, body, gui, component, store) => {
     const box = subject.get(component);
 
-    const boxWithNoPosition = function () {
-      return ApproxStructure.build(function (s, str, arr) {
+    const boxWithNoPosition = () => {
+      return ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           styles: {
             position: str.none()
@@ -57,8 +58,8 @@ UnitTest.asynctest('DockingTest', function () {
       });
     };
 
-    const boxWithPosition = function (position) {
-      return ApproxStructure.build(function (s, str, arr) {
+    const boxWithPosition = (position) => {
+      return ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           styles: {
             position: str.is(position)
@@ -77,7 +78,7 @@ UnitTest.asynctest('DockingTest', function () {
 
       Logger.t(
         'Scroll completely offscreen',
-        Step.sync(function () {
+        Step.sync(() => {
           window.scrollTo(0, 3000);
         })
       ),
@@ -95,7 +96,7 @@ UnitTest.asynctest('DockingTest', function () {
 
       Logger.t(
         'Scroll back onscreen',
-        Step.sync(function () {
+        Step.sync(() => {
           window.scrollTo(0, 2000);
         })
       ),
@@ -111,5 +112,5 @@ UnitTest.asynctest('DockingTest', function () {
         1000
       )
     ];
-  }, function () { success(); }, failure);
+  }, () => { success(); }, failure);
 });

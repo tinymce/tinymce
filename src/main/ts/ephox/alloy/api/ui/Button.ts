@@ -8,8 +8,10 @@ import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
+import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action());
 
   const optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));
@@ -33,9 +35,9 @@ const factory = function (detail, spec): SketchSpec {
     ),
     domModification: {
       attributes: Merger.deepMerge(
-        optType.fold(function () {
+        optType.fold(() => {
           return optTag.is('button') ? { type: 'button' } : { };
-        }, function (t) {
+        }, (t) => {
           return { };
         }),
         {
@@ -59,7 +61,7 @@ const Button = Sketcher.single({
     FieldSchema.option('role'),
     FieldSchema.defaulted('eventOrder', { })
   ]
-});
+}) as ButtonSketcher;
 
 export {
   Button

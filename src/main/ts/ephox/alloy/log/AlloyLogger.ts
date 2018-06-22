@@ -1,6 +1,8 @@
+import { Element } from '@ephox/sugar';
+
 import * as Truncate from '../alien/Truncate';
 
-const element = function (elem) {
+const element = (elem: Element): string => {
   return Truncate.getHtml(elem);
 };
 

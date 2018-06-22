@@ -1,13 +1,14 @@
 import { CoordAdt } from "../../api/data/DragCoord";
 import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PositionCoordinates, SugarEvent, SugarElement } from "../../alien/TypeDefinitions";
+import { SugarPosition, SugarEvent } from "../../alien/TypeDefinitions";
 import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
 import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
-export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
+  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
   snap: (SnapConfig) => any;
 }
 
@@ -15,15 +16,9 @@ export type DraggingMode = 'touch' | 'mouse';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
-export interface SnapConfigSpec {
-  sensor: SensorCoords;
-  range: (x, y) => Coordinates;
-  output: OutputCoords;
-}
-
 export interface SnapConfig {
   sensor: () => CoordAdt;
-  range: () => PositionCoordinates;
+  range: () => SugarPosition;
   output: () => CoordAdt;
   extra: any;
 }
@@ -47,9 +42,9 @@ export interface SnapsConfig {
 }
 
 export interface DraggingConfig {
-  getTarget: () => (SugarElement) => SugarElement;
+  getTarget: () => (Element) => Element;
   snaps: () => Option<SnapsConfig>
-  onDrop: () => (AlloyComponent, SugarElement) => void;
+  onDrop: () => (AlloyComponent, Element) => void;
 }
 
 
@@ -60,8 +55,8 @@ export interface DraggingConfig {
 // FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
 export interface CommonDraggingConfigSpec {
   useFixed?: boolean;
-  onDrop?: (AlloyComponent, SugarElement) => void;
-  getTarget?: (SugarElement) => SugarElement;
+  onDrop?: (AlloyComponent, Element) => void;
+  getTarget?: (Element) => Element;
   snaps?: {
     getSnapPoints: (AlloyComponent) => SnapConfig[];
     leftAttr: string;

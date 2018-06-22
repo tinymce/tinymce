@@ -1,4 +1,5 @@
-import { FieldSchema } from '@ephox/boulder';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as AlloyEvents from '../api/events/AlloyEvents';
@@ -7,9 +8,18 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
 import * as Fields from '../data/Fields';
 import * as KeyRules from '../navigation/KeyRules';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
+import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
 
-const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
-  const schema = function () {
+const typical = <C,S>(
+  infoSchema: FieldProcessorAdt[],
+  stateInit: (config: C) => BehaviourState,
+  getRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => KeyRules.KeyRule<C,S>[],
+  getEvents: (config: C, state?: S) => AlloyEvents.AlloyEventRecord,
+  getApis,
+optFocusIn) => {
+  const schema = () => {
     return infoSchema.concat([
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),
       Fields.output('handler', me),
@@ -17,25 +27,25 @@ const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, o
     ]);
   };
 
-  const processKey = function (component, simulatedEvent, keyingConfig, keyingState) {
+  const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, keyingConfig: C, keyingState?: S): Option<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    return KeyRules.choose(rules, simulatedEvent.event()).bind(function (rule) {
+    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
       return rule(component, simulatedEvent, keyingConfig, keyingState);
     });
   };
 
-  const toEvents = function (keyingConfig, keyingState) {
+  const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
     const otherEvents = getEvents(keyingConfig, keyingState);
     const keyEvents = AlloyEvents.derive(
-      optFocusIn.map(function (focusIn) {
-        return AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
+      optFocusIn.map((focusIn) => {
+        return AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
           focusIn(component, keyingConfig, keyingState, simulatedEvent);
           simulatedEvent.stop();
         });
       }).toArray().concat([
-        AlloyEvents.run(NativeEvents.keydown(), function (component, simulatedEvent) {
-          processKey(component, simulatedEvent, keyingConfig, keyingState).each(function (_) {
+        AlloyEvents.run<SugarEvent>(NativeEvents.keydown(), (component, simulatedEvent) => {
+          processKey(component, simulatedEvent, keyingConfig, keyingState).each((_) => {
             simulatedEvent.stop();
           });
         })

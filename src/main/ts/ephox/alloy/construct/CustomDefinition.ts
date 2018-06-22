@@ -1,13 +1,28 @@
 import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Result } from '@ephox/katamari';
+import { Arr, Fun, Merger, Option, Result } from '@ephox/katamari';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
+import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
-import * as DomDefinition from '../dom/DomDefinition';
-import * as DomModification from '../dom/DomModification';
+import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
+import { DomModification, nu as NuModification } from '../dom/DomModification';
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { SketchSpec } from '../api/component/SpecTypes';
 
-const toInfo = function (spec): Result<SketchSpec, any> {
+export interface CustomDetail {
+  dom: () => StructDomSchema;
+  // By this stage, the components are built.
+  components: () => AlloyComponent[];
+  uid: () => string;
+  events: () => AlloyEventRecord;
+  apis: () => Record<string, Function>;
+  eventOrder: () => Record<string, string[]>;
+  domModification: () => Option<DomModification>;
+  originalSpec: () => SimpleOrSketchSpec;
+  'debug.sketcher': () => string;
+}
+
+const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
       // Note, no children.
@@ -47,40 +62,40 @@ const toInfo = function (spec): Result<SketchSpec, any> {
   ]), spec);
 };
 
-const getUid = function (info) {
-  return Objects.wrap(AlloyTags.idAttr(), info.uid());
+const getUid = (detail: CustomDetail): Record<string, string> => {
+  return Objects.wrap(AlloyTags.idAttr(), detail.uid());
 };
 
-const toDefinition = function (info) {
+const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
   const base = {
-    tag: info.dom().tag(),
-    classes: info.dom().classes(),
+    tag: detail.dom().tag(),
+    classes: detail.dom().classes(),
     attributes: Merger.deepMerge(
-      getUid(info),
-      info.dom().attributes()
+      getUid(detail),
+      detail.dom().attributes()
     ),
-    styles: info.dom().styles(),
-    domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
+    styles: detail.dom().styles(),
+    domChildren: Arr.map(detail.components(), (comp) => { return comp.element(); })
   };
 
-  return DomDefinition.nu(Merger.deepMerge(base,
-    info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
-    info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
+  return NuDefinition(Merger.deepMerge(base,
+    detail.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
+    detail.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
   ));
 };
 
-const toModification = function (info) {
-  return info.domModification().fold(function () {
-    return DomModification.nu({ });
-  }, DomModification.nu);
+const toModification = (detail: CustomDetail): DomModification => {
+  return detail.domModification().fold(() => {
+    return NuModification({ });
+  }, NuModification);
 };
 
 // Probably want to pass info to these at some point.
-const toApis = function (info) {
+const toApis = (info: CustomDetail): Record<string, Function> => {
   return info.apis();
 };
 
-const toEvents = function (info) {
+const toEvents = (info: CustomDetail): AlloyEventRecord => {
   return info.events();
 };
 

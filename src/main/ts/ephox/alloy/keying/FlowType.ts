@@ -1,15 +1,22 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import Keys from '../alien/Keys';
-import * as NoState from '../behaviour/common/NoState';
+import * as Keys from '../alien/Keys';
+import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { Element } from '@ephox/sugar';
+import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -21,41 +28,41 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = function (component, flowConfig) {
-  return flowConfig.focusManager().get(component).bind(function (elem) {
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> => {
+  return flowConfig.focusManager().get(component).bind((elem) => {
     return SelectorFind.closest(elem, flowConfig.selector());
   });
 };
 
-const execute = function (component, simulatedEvent, flowConfig) {
-  return findCurrent(component, flowConfig).bind(function (focused) {
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> => {
+  return findCurrent(component, flowConfig).bind((focused) => {
     return flowConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-const focusIn = function (component, flowConfig) {
-  flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each(function (first) {
+const focusIn = (component: AlloyComponent, flowConfig: FlowConfig): void => {
+  flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each((first) => {
     flowConfig.focusManager().set(component, first);
   });
 };
 
-const moveLeft = function (element, focused, info) {
+const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-const moveRight = function (element, focused, info) {
+const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 
-const doMove = function (movement) {
-  return function (component, simulatedEvent, flowConfig) {
-    return movement(component, simulatedEvent, flowConfig).bind(function () {
+const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> => {
+  return (component, simulatedEvent, flowConfig) => {
+    return movement(component, simulatedEvent, flowConfig).bind(() => {
       return flowConfig.executeOnMove() ? execute(component, simulatedEvent, flowConfig) : Option.some(true);
     });
   };
 };
 
-const getRules = function (_component, _se, flowConfig, _flowState) {
+const getRules = (_component, _se, flowConfig, _flowState): KeyRules.KeyRule<FlowConfig,Stateless>[] => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
   return [
@@ -70,4 +77,4 @@ const getEvents = Fun.constant({ });
 
 const getApis = Fun.constant({ });
 
-export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

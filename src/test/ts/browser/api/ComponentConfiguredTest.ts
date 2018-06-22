@@ -5,14 +5,11 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 
-UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t(
       'Checking basic component without any behaviour',
-      Step.sync(function () {
+      Step.sync(() => {
         const behaviourLess = GuiFactory.build({
           dom: {
             tag: 'div'
@@ -25,7 +22,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
 
     Logger.t(
       'Checking basic component with toggling',
-      Step.sync(function () {
+      Step.sync(() => {
         const toggler = GuiFactory.build({
           dom: {
             tag: 'div'
@@ -43,7 +40,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
 
     Logger.t(
       'Checking text component',
-      Step.sync(function () {
+      Step.sync(() => {
         const toggler = GuiFactory.build(
           GuiFactory.text('nothing')
         );
@@ -54,7 +51,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
 
     Logger.t(
       'Checking external component',
-      Step.sync(function () {
+      Step.sync(() => {
         const toggler = GuiFactory.build(
           GuiFactory.external({ element: Element.fromTag('div') })
         );
@@ -62,5 +59,5 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
         Assertions.assertEq('hasConfigured', false, toggler.hasConfigured(Toggling));
       })
     )
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

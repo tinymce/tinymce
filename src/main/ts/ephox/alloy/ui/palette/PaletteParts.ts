@@ -43,7 +43,7 @@ const palettePart = PartType.required({
   overrides (detail) {
     const moveTo = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      GradientActions.setCoordsFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      GradientActions.setCoordsFromEvent(spectrum, spectrumBounds, simulatedEvent);
     };
 
     const touchEvents = AlloyEvents.derive([

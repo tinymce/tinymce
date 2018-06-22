@@ -8,15 +8,15 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ExecutingKeyingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
+
+
 
   const sTestDefault = Logger.t(
     'Default execution',
-    Step.async(function (next, die) {
+    Step.async((next, die) => {
 
-      GuiSetup.setup(function (store, doc, body) {
+      GuiSetup.setup((store, doc, body) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
@@ -37,10 +37,10 @@ UnitTest.asynctest('ExecutingKeyingTest', function () {
           })
         );
 
-      }, function (doc, body, gui, component, store) {
+      }, (doc, body, gui, component, store) => {
         return [
           GuiSetup.mSetupKeyLogger(body),
-          Step.sync(function () {
+          Step.sync(() => {
             Focusing.focus(component);
           }),
           store.sAssertEq('Initially empty', [ ]),
@@ -54,8 +54,8 @@ UnitTest.asynctest('ExecutingKeyingTest', function () {
 
   const sTestConfiguration = Logger.t(
     'Testing ctrl+enter and space execute',
-    Step.async(function (next, die) {
-      GuiSetup.setup(function (store, doc, body) {
+    Step.async((next, die) => {
+      GuiSetup.setup((store, doc, body) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
@@ -79,10 +79,10 @@ UnitTest.asynctest('ExecutingKeyingTest', function () {
           })
         );
 
-      }, function (doc, body, gui, component, store) {
+      }, (doc, body, gui, component, store) => {
         return [
           GuiSetup.mSetupKeyLogger(body),
-          Step.sync(function () {
+          Step.sync(() => {
             Focusing.focus(component);
           }),
           store.sAssertEq('Initially empty', [ ]),
@@ -104,5 +104,5 @@ UnitTest.asynctest('ExecutingKeyingTest', function () {
   Pipeline.async({ }, [
     sTestDefault,
     sTestConfiguration
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

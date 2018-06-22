@@ -3,14 +3,14 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as SandboxApis from './SandboxApis';
 import { SandboxingConfig, SandboxingState } from '../../behaviour/sandboxing/SandboxingTypes';
 
-const events = function (sandboxConfig: SandboxingConfig, sandboxState: SandboxingState): AlloyEvents.EventHandlerConfigRecord {
+const events = (sandboxConfig: SandboxingConfig, sandboxState: SandboxingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.sandboxClose(), function (sandbox, simulatedEvent) {
+    AlloyEvents.run(SystemEvents.sandboxClose(), (sandbox, simulatedEvent) => {
       SandboxApis.close(sandbox, sandboxConfig, sandboxState);
     })
   ]);
 };
 
-export default <any> {
+export {
   events
 };

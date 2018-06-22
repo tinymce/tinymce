@@ -7,7 +7,7 @@ interface EventHandler {
   abort?: (comp) => boolean;
 }
 
-const nu = function (parts) {
+const nu = (parts) => {
   if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) { throw new Error(
     'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
   );
@@ -19,25 +19,23 @@ const nu = function (parts) {
   ]), parts);
 };
 
-const all = function (handlers, f) {
-  return function () {
-    const args = Array.prototype.slice.call(arguments, 0);
-    return Arr.foldl(handlers, function (acc, handler) {
+const all = (handlers, f) => {
+  return (...args) => {
+    return Arr.foldl(handlers, (acc, handler) => {
       return acc && f(handler).apply(undefined, args);
     }, true);
   };
 };
 
-const any = function (handlers, f) {
-  return function () {
-    const args = Array.prototype.slice.call(arguments, 0);
-    return Arr.foldl(handlers, function (acc, handler) {
+const any = (handlers, f) => {
+  return (...args) => {
+    return Arr.foldl(handlers, (acc, handler) => {
       return acc || f(handler).apply(undefined, args);
     }, false);
   };
 };
 
-const read = function (handler) {
+const read = (handler) => {
   return Type.isFunction(handler) ? {
     can: Fun.constant(true),
     abort: Fun.constant(false),
@@ -45,18 +43,17 @@ const read = function (handler) {
   } : handler;
 };
 
-const fuse = function (handlers) {
-  const can = all(handlers, function (handler) {
+const fuse = (handlers) => {
+  const can = all(handlers, (handler) => {
     return handler.can;
   });
 
-  const abort = any(handlers, function (handler) {
+  const abort = any(handlers, (handler) => {
     return handler.abort;
   });
 
-  const run = function () {
-    const args = Array.prototype.slice.call(arguments, 0);
-    Arr.each(handlers, function (handler) {
+  const run = (...args) => {
+    Arr.each(handlers, (handler) => {
       // ASSUMPTION: Return value is unimportant.
       handler.run.apply(undefined, args);
     });

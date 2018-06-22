@@ -1,26 +1,30 @@
 import { Objects } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 
-import EventRegistry from '../events/EventRegistry';
+import { Element } from '@ephox/sugar';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import EventRegistry, { ElementAndHandler, UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
-export default <any> function () {
+export default () => {
   const events = EventRegistry();
 
-  const components = { };
+  // An index of uid -> built components
+  const components: Record<string, AlloyComponent> = { };
 
-  const readOrTag = function (component) {
+  const readOrTag = (component: AlloyComponent): string => {
     const elem = component.element();
-    return Tagger.read(elem).fold(function () {
+    return Tagger.read(elem).fold(() => {
       // No existing tag, so add one.
       return Tagger.write('uid-', component.element());
-    }, function (uid) {
+    }, (uid) => {
       return uid;
     });
   };
 
-  const failOnDuplicate = function (component, tagId) {
+  const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {
     const conflict = components[tagId];
     if (conflict === component) { unregister(component); } else { throw new Error(
       'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
@@ -29,7 +33,7 @@ export default <any> function () {
     }
   };
 
-  const register = function (component) {
+  const register = (component: AlloyComponent): void => {
     const tagId = readOrTag(component);
     if (Objects.hasKey(components, tagId)) { failOnDuplicate(component, tagId); }
     // Component is passed through an an extra argument to all events
@@ -38,23 +42,23 @@ export default <any> function () {
     components[tagId] = component;
   };
 
-  const unregister = function (component) {
-    Tagger.read(component.element()).each(function (tagId) {
+  const unregister = (component: AlloyComponent): void => {
+    Tagger.read(component.element()).each((tagId) => {
       components[tagId] = undefined;
       events.unregisterId(tagId);
     });
   };
 
-  const filter = function (type) {
+  const filter = (type: string): UidAndHandler[] => {
     return events.filterByType(type);
   };
 
-  const find = function (isAboveRoot, type, target) {
+  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     return events.find(isAboveRoot, type, target);
   };
 
-  const getById = function (id) {
-    return Objects.readOpt(id)(components);
+  const getById = (id: string): Option<AlloyComponent> => {
+    return Objects.readOpt(id)(components) as Option<AlloyComponent>;
   };
 
   return {

@@ -4,13 +4,13 @@ import { Traverse } from '@ephox/sugar';
 
 /* global assert */
 
-const range = function (num, f) {
+const range = (num, f) => {
   const array = new Array(num);
   return Arr.bind(array, f);
 };
 
-const sequence = function (doc, key, modifiers, identifiers) {
-  const array = range(identifiers.length, function (_, i) {
+const sequence = (doc, key, modifiers, identifiers) => {
+  const array = range(identifiers.length, (_, i) => {
     return [
       Keyboard.sKeydown(doc, key, modifiers),
       FocusTools.sTryOnSelector(
@@ -26,8 +26,8 @@ const sequence = function (doc, key, modifiers, identifiers) {
 };
 
 // Selector based
-const highlights = function (container, key, modifiers, identifiers) {
-  const array = range(identifiers.length, function (_, i) {
+const highlights = (container, key, modifiers, identifiers) => {
+  const array = range(identifiers.length, (_, i) => {
     const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
     const doc = Traverse.owner(container);
     return [
@@ -45,7 +45,7 @@ const highlights = function (container, key, modifiers, identifiers) {
   return GeneralSteps.sequence(array);
 };
 
-export default <any> {
+export {
   sequence,
   highlights
 };

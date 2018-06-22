@@ -1,4 +1,4 @@
-import { FieldSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -12,28 +12,29 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { PartTypeAdt } from '../../parts/PartType';
+import { FormCoupledInputsDetail } from '../../ui/types/FormCoupledInputsTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ])
 ]);
 
-const getField = function (comp, detail, partName) {
+const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => {
   return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 };
 
-const coupledPart = function (selfName, otherName) {
+const coupledPart = (selfName: string, otherName: string) => {
   return PartType.required({
     factory: FormField,
     name: selfName,
-    overrides (detail) {
+    overrides (detail: FormCoupledInputsDetail) {
       return {
         fieldBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('coupled-input-behaviour', [
-            AlloyEvents.run(NativeEvents.input(), function (me) {
-              getField(me, detail, otherName).each(function (other) {
-                AlloyParts.getPart(me, detail, 'lock').each(function (lock) {
+            AlloyEvents.run(NativeEvents.input(), (me) => {
+              getField(me, detail, otherName).each((other) => {
+                AlloyParts.getPart(me, detail, 'lock').each((lock) => {
                   // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
                   if (Toggling.isOn(lock)) { detail.onLockedChange()(me, other, lock); }
                 });
@@ -46,7 +47,7 @@ const coupledPart = function (selfName, otherName) {
   });
 };
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   coupledPart('field1', 'field2'),
   coupledPart('field2', 'field1'),
 
@@ -56,7 +57,7 @@ const parts: () => PartTypeAdt[] = Fun.constant([
       FieldSchema.strict('dom')
     ],
     name: 'lock',
-    overrides (detail) {
+    overrides (detail: FormCoupledInputsDetail) {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({
@@ -71,7 +72,7 @@ const parts: () => PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const name = Fun.constant('CoupledInputs');
+const name = () => 'CoupledInputs';
 
 export {
   name,
