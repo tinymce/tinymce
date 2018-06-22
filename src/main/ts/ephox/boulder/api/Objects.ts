@@ -33,11 +33,11 @@ const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = function <T> (array: [{[T: string]: any}], key: string): {[T: string]: any} {
+const indexOnKey = function <T> (array: {[T: string]: any}[], key: string): {[T: string]: any} {
   return ObjChanger.indexOnKey(array, key);
 };
 
-const consolidate = function (objs: [{}], base: {}): Result <{}, string> {
+const consolidate = function (objs: {}[], base: {}): Result <{}, string> {
   return ResultCombine.consolidateObj(objs, base);
 };
 
