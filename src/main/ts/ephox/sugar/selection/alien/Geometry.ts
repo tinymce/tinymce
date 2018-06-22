@@ -12,16 +12,17 @@ var searchForPoint = function (rectForOffset: (number) => (ClientRect | DOMRect)
     var rect = rectForOffset(i);
     var curDeltaX = Math.abs(x - rect.left);
 
-    if (y > rect.bottom) {
-      // range is too high, above drop point, do nothing
-    } else if (y < rect.top || curDeltaX > xDelta) {
-      // if the search winds up on the line below the drop point,
-      // or we pass the best X offset,
-      // wind back to the previous (best) delta
-      return i - 1;
-    } else {
-      // update current search delta
-      xDelta = curDeltaX;
+    // If Y is below drop point, do nothing
+    if (y <= rect.bottom) {
+      if (y < rect.top || curDeltaX > xDelta) {
+        // if the search winds up on the line below the drop point,
+        // or we pass the best X offset,
+        // wind back to the previous (best) delta
+        return i - 1;
+      } else {
+        // update current search delta
+        xDelta = curDeltaX;
+      }
     }
   }
   return 0; // always return something, even if it's not the exact offset it'll be better than nothing
