@@ -7,9 +7,8 @@ import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
-import { CoordAdt } from '../../api/data/DragCoord';
 
-const getCurrentCoord = (target: Element): CoordAdt => {
+const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
     return Css.getRaw(target, 'top').bind((top) => {
       return Css.getRaw(target, 'position').map((position) => {
@@ -26,8 +25,7 @@ const getCurrentCoord = (target: Element): CoordAdt => {
   });
 };
 
-
-const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
+const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
   return optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());

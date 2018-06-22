@@ -20,8 +20,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Button.sketch({

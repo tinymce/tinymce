@@ -24,9 +24,9 @@ type OuterKey = string;
 type InnerKey = string;
 
 const byInnerKey = <T, O>(data: Record<OuterKey, Record<InnerKey, T>>, tuple: (string, T) => O):
-  Record<InnerKey, Array<O>> => {
+  Record<InnerKey, O[]> => {
 
-  const r: Record<InnerKey, Array<O>> = {};
+  const r: Record<InnerKey, O[]> = {};
   Obj.each(data, (detail: Record<InnerKey, T>, key: OuterKey) => {
     Obj.each(detail, (value: T, indexKey: InnerKey) => {
       const chain: O[] = Objects.readOr(indexKey, [ ])(r);

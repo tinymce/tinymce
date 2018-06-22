@@ -13,8 +13,6 @@ import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {

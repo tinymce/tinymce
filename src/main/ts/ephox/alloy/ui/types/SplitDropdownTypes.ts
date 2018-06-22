@@ -35,7 +35,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
 
   parts: {
     menu: Partial<TieredMenuSpec>;
-  }
+  };
 }
 
 export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec, SplitDropdownDetail> { }

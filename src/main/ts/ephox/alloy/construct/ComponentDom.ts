@@ -24,7 +24,7 @@ const onlyOne = <M>(chain: ModificationChain<M>, aspect: string): Result<Record<
   if (chain.length > 1) {
     return Result.error(
     'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
-      Json.stringify(Arr.map(chain, (b) => { return b.name(); })) + '. At this stage, this ' +
+      Json.stringify(Arr.map(chain, (b) => b.name())) + '. At this stage, this ' +
       'is not supported. Future releases might provide strategies for resolving this.'
     );
   } else if (chain.length === 0) {
@@ -84,12 +84,12 @@ const mergeTypes = {
 const combine = (
   info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
   baseMod: Record<string, DomModification>,
-  behaviours: AlloyBehaviour<any,any>[],
+  behaviours: Array<AlloyBehaviour<any, any>>,
   base: DomDefinitionDetail
 ): Result<DomModification, string> => {
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
   const modsByBehaviour: Record<string, DomModification> = Merger.deepMerge({ }, baseMod);
-  Arr.each(behaviours, (behaviour: AlloyBehaviour<any,any>) => {
+  Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
 

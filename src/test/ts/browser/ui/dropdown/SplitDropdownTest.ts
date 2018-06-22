@@ -16,8 +16,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
-
-
   const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([

@@ -5,7 +5,6 @@ import * as Presnaps from './Presnaps';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SnapsConfig, SnapConfig, SnapOutput, SnapPin } from '../../dragging/common/DraggingTypes';
 import { SugarPosition } from '../../alien/TypeDefinitions';
-import { CoordAdt } from '../../api/data/DragCoord';
 
 // Types of coordinates
 // Location: This is the position on the screen including scroll.
@@ -39,7 +38,7 @@ import { CoordAdt } from '../../api/data/DragCoord';
 // that we put on it before we snapped it into place (before dropping). Once it's dropped, the presnap
 // position will go away. It is used to avoid the situation where you can't escape the snap unless you
 // move the mouse really quickly :)
-const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: CoordAdt, delta: SugarPosition): CoordAdt => {
+const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: DragCoord.CoordAdt, delta: SugarPosition): DragCoord.CoordAdt => {
   return Presnaps.get(component, snapInfo).fold(() => {
     return coord;
   }, (fixed) => {

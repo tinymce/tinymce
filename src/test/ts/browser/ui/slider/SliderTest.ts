@@ -10,8 +10,6 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
 
-
-
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }

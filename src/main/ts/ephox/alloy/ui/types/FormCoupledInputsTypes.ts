@@ -9,7 +9,7 @@ export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   onLockedChange: () => (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
   markers: () => {
     lockClass: () => string;
-  }
+  };
 }
 
 export interface FormCoupledInputsSpec extends CompositeSketchSpec {
@@ -19,7 +19,7 @@ export interface FormCoupledInputsSpec extends CompositeSketchSpec {
   onLockedChange: (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
   markers: {
     lockClass: string;
-  }
+  };
 }
 
 export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec, FormCoupledInputsDetail> { }

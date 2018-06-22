@@ -13,8 +13,6 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return Sinks.fixedSink();
   }, (doc, body, gui, sink, store) => {

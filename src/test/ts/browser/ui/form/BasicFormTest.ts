@@ -12,8 +12,6 @@ import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('Basic Form', (success, failure) => {
 
-
-
   const formAntSpec = {
     uid: 'input-ant',
     dom: {

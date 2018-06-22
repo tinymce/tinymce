@@ -2,8 +2,6 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
-
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
   config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
@@ -19,7 +17,7 @@ export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfig
   disableTransitions?: (component: AlloyComponent) => void;
 }
 
-export interface SlidingConfig extends BehaviourConfigDetail {
+export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   expanded: () => boolean;
   openClass: () => string;
   closedClass: () => string;
@@ -34,11 +32,11 @@ export interface SlidingConfig extends BehaviourConfigDetail {
   onStartShrink: () => (comp: AlloyComponent) => void;
   getAnimationRoot: () => Option<(comp: AlloyComponent) => Element>;
 
-};
+}
 
 export interface SlidingState {
   isExpanded: () => boolean;
-};
+}
 
 export interface SlidingConfigSpec extends BehaviourConfigSpec {
   dimension: {

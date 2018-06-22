@@ -27,6 +27,6 @@ export interface FormParts {
 
 export interface FormSketcher {
   getField: (form: AlloyComponent, key: string) => Option<AlloyComponent>;
-  //complex
+  // complex
   sketch: (fSpec: FormSpecBuilder) => SketchSpec;
 }

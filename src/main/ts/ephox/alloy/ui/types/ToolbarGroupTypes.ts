@@ -21,10 +21,10 @@ export interface ToolbarGroupSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   tgroupBehaviours?: AlloyBehaviourRecord;
 
-  items: AlloySpec[]
+  items: AlloySpec[];
   markers: {
     itemClass: string;
-  }
+  };
 }
 
 export interface ToolbarGroupSketcher extends CompositeSketch<ToolbarGroupSpec, ToolbarGroupDetail> { }

@@ -247,9 +247,9 @@ export default (): void => {
       alpha: 'hi'
     });
 
-    console.log('form', Obj.map(Representing.getValue(form), (v) => { return v.getOrDie(); }));
+    console.log('form', Obj.map(Representing.getValue(form), (v) => v.getOrDie()));
 
-    console.log('expform', Obj.map(Representing.getValue(expform), (v) => { return v.getOrDie(); }));
+    console.log('expform', Obj.map(Representing.getValue(expform), (v) => v.getOrDie()));
 
     Representing.setValue(expform, {
       omega: 'hi'

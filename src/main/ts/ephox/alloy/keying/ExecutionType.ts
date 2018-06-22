@@ -27,7 +27,7 @@ const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyCom
   return executeConfig.execute()(component, simulatedEvent, component.element());
 };
 
-const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): KeyRules.KeyRule<ExecutingConfig, Stateless>[] => {
+const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
   const enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
   const downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];

@@ -25,7 +25,7 @@ export interface TabSectionSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   tabSectionBehaviours?: AlloyBehaviourRecord;
 
-  tabs: Partial<TabButtonWithViewSpec>[];
+  tabs: Array<Partial<TabButtonWithViewSpec>>;
   selectFirst?: boolean;
 }
 

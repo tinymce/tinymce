@@ -1,6 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Css, Height } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Css, Height, Element } from '@ephox/sugar';
 
 // applies the max-height as determined by Bounder
 const setMaxHeight = (element: Element, maxHeight: number): void => {

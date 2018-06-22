@@ -1,8 +1,7 @@
 import { Fun, Id, Option } from '@ephox/katamari';
-import { Attr, Node, SelectorFind } from '@ephox/sugar';
+import { Attr, Node, Element } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { Element } from '@ephox/sugar';
 
 const prefix = AlloyTags.prefix();
 const idAttr = AlloyTags.idAttr();

@@ -2,8 +2,7 @@ import { EventFormat, FocusingEvent } from './SimulatedEvent';
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { console } from '@ephox/dom-globals';
 
@@ -33,7 +32,7 @@ const events: AlloyEvents.AlloyEventRecord = AlloyEvents.derive([
       return true;
     }
   })
-])
+]);
 
 export {
   events

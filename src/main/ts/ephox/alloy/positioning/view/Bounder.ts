@@ -2,20 +2,18 @@ import { Adt, Arr, Fun } from '@ephox/katamari';
 
 import * as Direction from '../layout/Direction';
 import * as Reposition from './Reposition';
-import { RepositionDecision } from './Reposition';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout/Layout';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { Bounds } from '../../alien/Boxes';
 import { SpotInfo } from '../../positioning/view/SpotInfo';
 import { AdtInterface } from '../../alien/TypeDefinitions';
 
-
 export interface BounderAttemptAdt extends AdtInterface {
 }
 
 const adt: {
-  fit: ( reposition: RepositionDecision ) => BounderAttemptAdt;
-  nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
+  fit: ( reposition: Reposition.RepositionDecision ) => BounderAttemptAdt;
+  nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
 } = Adt.generate([
   { fit:   [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
@@ -148,7 +146,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 
   // unwrapping 'reposition' from the adt, for both fit & nofit the first arg is the one we need,
   // so we can cheat and use Fun.identity
-  return abc.fold(Fun.identity, Fun.identity) as RepositionDecision;
+  return abc.fold(Fun.identity, Fun.identity) as Reposition.RepositionDecision;
 };
 
 export {

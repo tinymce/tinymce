@@ -14,8 +14,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MenuTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Menu.sketch({

@@ -1,7 +1,5 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
-
 
 export interface FocusingBehaviour extends Behaviour.AlloyBehaviour<FocusingConfigSpec, FocusingConfig> {
   config: (config: FocusingConfigSpec) => Behaviour.NamedConfiguredBehaviour<FocusingConfigSpec, FocusingConfig>;
@@ -14,7 +12,7 @@ export interface FocusingConfigSpec extends BehaviourConfigSpec {
   ignore?: boolean;
 }
 
-export interface FocusingConfig extends BehaviourConfigDetail {
+export interface FocusingConfig extends Behaviour.BehaviourConfigDetail {
   ignore: () => boolean;
   onFocus: () => (comp: AlloyComponent) => void;
 }

@@ -27,7 +27,7 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): KeyRules.KeyRule<SpecialConfig, Stateless>[] => {
+const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
     KeyRules.rule(

@@ -12,11 +12,11 @@ export interface BehaviourConfigAndState<C, S> {
 }
 
 export interface BehaviourData {
-  list: AlloyBehaviour<any,any>[];
+  list: Array<AlloyBehaviour<any, any>>;
   data: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>;
 }
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour<any,any>[]): BehaviourData => {
+const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
   /*
    * This takes a basic record of configured behaviours, defaults their state
    * and ensures that all the behaviours were valid. Will need to document
@@ -39,7 +39,7 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour<any,any>[]):
   }, (v: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourStateInitialiser<any>>>>) => v);
 
   return {
-    list: all as AlloyBehaviour<any,any>[],
+    list: all as Array<AlloyBehaviour<any, any>>,
     data: Obj.map(validated, (optBlobThunk: () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser<any>>>) => {
       const optBlob = optBlobThunk();
       const output = optBlob.map((blob) => ({
@@ -51,11 +51,11 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour<any,any>[]):
   };
 };
 
-const getBehaviours = (bData: BehaviourData): AlloyBehaviour<any,any>[] => {
+const getBehaviours = (bData: BehaviourData): Array<AlloyBehaviour<any, any>> => {
   return bData.list;
 };
 
-const getData = (bData: BehaviourData): Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>> => {
+const getData = (bData: BehaviourData): Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>> => {
   return bData.data;
 };
 

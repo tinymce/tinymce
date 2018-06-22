@@ -15,7 +15,6 @@ import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { AlloySystemApi } from '../../api/system/SystemApi';
@@ -25,8 +24,8 @@ import { UncurriedHandler } from '../../events/EventRegistry';
 // questionable as a concept. Maybe it should be deprecated.
 const getDomDefinition = (
   info: CustomDefinition.CustomDetail,
-  bList: AlloyBehaviour<any,any>[],
-  bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
+  bList: Array<AlloyBehaviour<any, any>>,
+  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
   const definition = CustomDefinition.toDefinition(info);
   const baseModification = {
@@ -34,18 +33,18 @@ const getDomDefinition = (
   };
   const modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
   return DomModification.merge(definition, modification);
-}
+};
 
 const getEvents = (
   info: CustomDefinition.CustomDetail,
-  bList: AlloyBehaviour<any,any>[],
-  bData: Record<string, () => Option<BehaviourConfigAndState<any,BehaviourState>>>
+  bList: Array<AlloyBehaviour<any, any>>,
+  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
   };
   return ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
-}
+};
 
 const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   const getMe = () => {
@@ -98,7 +97,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = <D>(behaviour: AlloyBehaviour<any,D> | string): D | any => {
+  const config = <D>(behaviour: AlloyBehaviour<any, D> | string): D | any => {
     if (behaviour === GuiTypes.apiConfig()) {
       return info.apis();
     } else if (Type.isString(behaviour)) {
@@ -111,7 +110,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     return f();
   };
 
-  const hasConfigured = (behaviour: AlloyBehaviour<any,any>): boolean => {
+  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 

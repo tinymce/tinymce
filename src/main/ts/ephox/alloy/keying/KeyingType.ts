@@ -12,13 +12,13 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
 
-const typical = <C,S>(
+const typical = <C, S>(
   infoSchema: FieldProcessorAdt[],
   stateInit: (config: C) => BehaviourState,
-  getRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => KeyRules.KeyRule<C,S>[],
+  getRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
   getEvents: (config: C, state?: S) => AlloyEvents.AlloyEventRecord,
   getApis,
-optFocusIn) => {
+  optFocusIn) => {
   const schema = () => {
     return infoSchema.concat([
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),

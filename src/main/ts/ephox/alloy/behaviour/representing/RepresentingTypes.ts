@@ -1,7 +1,6 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<RepresentingConfigSpec, RepresentingConfig> {
   config: (config: RepresentingConfigSpec) => Behaviour.NamedConfiguredBehaviour<RepresentingConfigSpec, RepresentingConfig>;
@@ -26,9 +25,9 @@ export interface RepresentingConfigSpec extends BehaviourConfigSpec {
   onSetValue?: (comp: AlloyComponent, data: RepresentingData) => void;
 }
 
-export interface RepresentingState { };
+export interface RepresentingState { }
 
-export interface RepresentingConfig extends BehaviourConfigDetail {
+export interface RepresentingConfig extends Behaviour.BehaviourConfigDetail {
   resetOnDom: () => boolean;
   store: () => {
     manager: () => {
@@ -37,5 +36,5 @@ export interface RepresentingConfig extends BehaviourConfigDetail {
       onLoad: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
       onUnload: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
     }
-  }
+  };
 }

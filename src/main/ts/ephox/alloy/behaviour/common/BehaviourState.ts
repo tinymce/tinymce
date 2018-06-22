@@ -16,7 +16,7 @@ const NoState: BehaviourStateInitialiser<any> = {
       }
     });
   }
-}
+};
 
 export interface Stateless extends BehaviourState {
   // Add placeholder here.

@@ -47,4 +47,4 @@ export default () => {
   return {
     getEvents
   };
-}
+};

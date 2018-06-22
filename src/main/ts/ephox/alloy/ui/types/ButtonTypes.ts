@@ -13,7 +13,7 @@ export interface ButtonDetail extends SingleSketchDetail {
   buttonBehaviours: () => SketchBehaviours;
   action: () => Option<() => ButtonAction>;
   role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
 }
 
 export type ButtonAction = (comp: AlloyComponent) => void;
@@ -25,7 +25,7 @@ export interface ButtonSpec extends SingleSketchSpec {
   buttonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
   role?: string;
-  eventOrder?: Record<string, string[]>
+  eventOrder?: Record<string, string[]>;
 }
 
-export interface ButtonSketcher extends SingleSketch<ButtonSpec, ButtonDetail> { };
+export interface ButtonSketcher extends SingleSketch<ButtonSpec, ButtonDetail> { }

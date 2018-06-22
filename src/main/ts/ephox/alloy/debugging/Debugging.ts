@@ -32,7 +32,7 @@ const getTrace = () => {
   if (err.stack !== undefined) {
     const lines = err.stack.split('\n');
     return Arr.find(lines, (line) => {
-      return line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => { return line.indexOf(p) > -1; });
+      return line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => line.indexOf(p) > -1);
     }).getOr(unknown);
   } else {
     return unknown;

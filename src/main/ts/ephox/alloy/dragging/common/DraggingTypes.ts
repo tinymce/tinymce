@@ -1,11 +1,11 @@
-import { CoordAdt } from "../../api/data/DragCoord";
-import * as Behaviour from "../../api/behaviour/Behaviour";
+import { CoordAdt } from '../../api/data/DragCoord';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarPosition, SugarEvent } from "../../alien/TypeDefinitions";
-import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
-import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
+import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
+import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
+import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
@@ -50,10 +50,9 @@ export interface SnapsConfig {
 
 export interface DraggingConfig {
   getTarget: () => (comp: Element) => Element;
-  snaps: () => Option<SnapsConfig>
+  snaps: () => Option<SnapsConfig>;
   onDrop: () => (comp: AlloyComponent, Element) => void;
 }
-
 
 // FieldSchema.strict('getSnapPoints'),
 // Fields.onHandler('onSensor'),
@@ -70,9 +69,8 @@ export interface CommonDraggingConfigSpec {
     topAttr: string;
     onSensor?: (component: AlloyComponent, extra: {}) => void;
     lazyViewport?: (component: AlloyComponent) => any;
-  }
+  };
 }
-
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;
 
@@ -82,6 +80,6 @@ export interface DragModeDeltas<T> {
 }
 
 export interface DraggingState<T> {
-  update: (mode: DragModeDeltas<T>, dragEvent: SugarEvent) => Option<T>
+  update: (mode: DragModeDeltas<T>, dragEvent: SugarEvent) => Option<T>;
   reset: () => void;
 }

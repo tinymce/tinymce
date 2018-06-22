@@ -14,7 +14,7 @@ import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/Adt
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
 
-export interface OriginAdt extends AdtInterface { };
+export interface OriginAdt extends AdtInterface { }
 
 const getFixedOrigin = (): OriginAdt => {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);

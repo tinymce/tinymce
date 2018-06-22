@@ -1,4 +1,4 @@
-import { Option } from "@ephox/katamari";
+import { Option } from '@ephox/katamari';
 import { ClientRect } from '@ephox/dom-globals';
 
 const reduceBy = (value: number, min: number, max: number, step: number): number => {

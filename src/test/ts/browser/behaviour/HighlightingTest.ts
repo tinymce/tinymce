@@ -11,8 +11,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const makeItem = (name) => {
       return Container.sketch({
@@ -50,7 +48,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
   }, (doc, body, gui, component, store) => {
     const cCheckNum = (label, expected) => {
       return Chain.fromChains([
-        Chain.mapper((array) => { return array.length; }),
+        Chain.mapper((array) => array.length),
         Assertions.cAssertEq(label, expected)
       ]);
     };

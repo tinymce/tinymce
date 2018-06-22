@@ -1,8 +1,7 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width } from '@ephox/sugar';
+import { Width, Element } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
-import { Element } from '@ephox/sugar';
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
@@ -82,7 +81,7 @@ const close = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, com
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, anchor:AnchorSpec, hotspot: AlloyComponent, externals, onOpenSync) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, hotspot: AlloyComponent, externals, onOpenSync) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 

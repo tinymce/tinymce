@@ -5,16 +5,16 @@ import * as MenuPathing from './MenuPathing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 // Object indexed by menu value. Each entry has a list of item values.
-export type MenuDirectory = Record<string, string[]>
+export type MenuDirectory = Record<string, string[]>;
 
 export interface LayeredState {
-  setContents: (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory) => void
+  setContents: (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
   expand: (itemValue: string) => Option<string[]>;
   refresh: (itemValue: string) => Option<string[]>;
   collapse: (itemValue: string) => Option<string[]>;
   lookupMenu: (menuValue: string) => Option<AlloyComponent>;
-  otherMenus : (path: string[]) => string[];
-  getPrimary : () => Option<AlloyComponent>;
+  otherMenus: (path: string[]) => string[];
+  getPrimary: () => Option<AlloyComponent>;
   getMenus: () => Record<string, AlloyComponent>;
   clear: () => void;
   isClear: () => boolean;

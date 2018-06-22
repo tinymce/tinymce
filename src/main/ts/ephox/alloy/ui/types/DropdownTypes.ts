@@ -16,11 +16,11 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   components: () => AlloySpec[ ];
 
   role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
   fetch: () => (comp: AlloyComponent) => Future<F>;
   onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink?: () => Option<() => Result<AlloyComponent, Error>>
+  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
   matchWidth: () => boolean;
 }
 
@@ -43,7 +43,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   lazySink?: any;
   parts: {
     menu: Partial<TieredMenuSpec>;
-  }
+  };
   matchWidth?: boolean;
   role?: string;
 }

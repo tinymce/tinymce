@@ -9,8 +9,6 @@ import { document, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
-
-
   const page = DomRender.renderToDom(
     DomDefinition.nu({
       tag: 'div',

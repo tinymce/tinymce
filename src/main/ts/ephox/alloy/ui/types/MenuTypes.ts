@@ -16,7 +16,7 @@ export interface MenuMovement {
   initSize?: () => {
     numColumns: () => number;
     numRows: () => number;
-  }
+  };
 }
 
 export interface MenuDetail extends CompositeSketchDetail {
@@ -31,7 +31,7 @@ export interface MenuDetail extends CompositeSketchDetail {
     selectedItem: () => string;
   };
 
-  onHighlight: () =>(comp: AlloyComponent, target: AlloyComponent) => void;
+  onHighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;
   value: () => string;
   movement: () => MenuMovement;
 

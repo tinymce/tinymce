@@ -1,17 +1,15 @@
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { CompositeSketch } from '../../api/ui/Sketcher';
+import { Arr, Merger, Obj } from '@ephox/katamari';
 
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 
 const owner = 'form';
 

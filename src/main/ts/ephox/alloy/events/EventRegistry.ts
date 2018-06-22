@@ -20,8 +20,8 @@ export interface CurriedHandler {
 }
 
 export class UncurriedHandler {
-  purpose: () => string;
-  handler: Function;
+  public purpose: () => string;
+  public handler: Function;
 }
 
 export interface UidAndHandler {
