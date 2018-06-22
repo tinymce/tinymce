@@ -71,6 +71,6 @@ var extractHeaders = function (br: BinaryReader) {
 };
 
 
-export default <any> {
+export default {
     extractFrom
 };

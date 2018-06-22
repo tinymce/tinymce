@@ -69,27 +69,33 @@ var rotate = function (ir, angle) {
 
 /* ImageResult -> ImageResult */
 var exifRotate = (ir) => {
+  // EXIF orientation is represented by numbers 1-8. We don't want to deal with
+  // all the cases, but these two are probably the most common.
+  // Explanation of numbers: https://magnushoff.com/jpeg-orientation.html 
+  const ROTATE_90 = 6; // image is rotated left by 90 degrees
+  const ROTATE_180 = 3; // image is upside down
+  const ROTATE_270 = 8; // image is rotated right by 90 degrees
+
   var checkRotation = (data) => {
-    var orientation = data.tiff.Orientation; // int from 1-8
-    if (orientation === 6) {
-      // image is rotated left by 90 degrees
-      return rotate(ir, 90); 
-    } else if (orientation === 8) {
-      // image is rotated right by 90 degrees
-      return rotate(ir, 270); 
-    } else {
-      return ir;
-    }
+    var orientation = data.tiff.Orientation;
+    switch (orientation) {
+      case ROTATE_90: 
+        return rotate(ir, 90); 
+      case ROTATE_180: 
+        return rotate(ir, 180);
+      case ROTATE_270: 
+        return rotate(ir, 270); 
+      default:
+        return ir;      
+    };
   };
 
-  var notJpeg = () => {
-    return ir;
-  };
+  var notJpeg = () => ir;
 
   return ir.toBlob().then(JPEGMeta.extractFrom).then(checkRotation, notJpeg); 
 };
 
-export default <any> {
+export default {
   invert,
   sharpen,
   emboss,
