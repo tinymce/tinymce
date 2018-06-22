@@ -12,7 +12,7 @@ export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<Represen
 // NOTE: I'm not sure we have any guarantees on what this can be.
 export type RepresentingData = any;
 
-export interface RepresentingConfigSpec extends BehaviourConfigSpec {
+export interface RepresentingConfigSpec extends Behaviour.BehaviourConfigSpec {
   store: {
     mode: string,
     initialValue?: RepresentingData,

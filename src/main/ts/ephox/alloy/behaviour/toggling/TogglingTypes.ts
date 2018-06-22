@@ -23,7 +23,7 @@ export interface TogglingConfig extends Behaviour.BehaviourConfigDetail {
   selected: () => boolean;
 }
 
-export interface TogglingConfigSpec extends BehaviourConfigSpec {
+export interface TogglingConfigSpec extends Behaviour.BehaviourConfigSpec {
   toggleClass: string;
   aria?: {
     mode: TogglingMode;

@@ -106,10 +106,10 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Bounds): RepositionDecision => {
+const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Bounds): Reposition.RepositionDecision => {
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
-  const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, deltaW: number, deltaH: number) => {
+  const attemptBestFit = (layout: AnchorLayout, reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => {
     const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 

@@ -25,7 +25,7 @@ export interface TransitioningConfig extends Behaviour.BehaviourConfigDetail {
   onFinish: () => (comp: AlloyComponent, destination: string) => void;
 }
 
-export interface TransitioningConfigSpec extends BehaviourConfigSpec {
+export interface TransitioningConfigSpec extends Behaviour.BehaviourConfigSpec {
   destinationAttr?: string;
   stateAttr?: string;
   initialState: string;

@@ -16,7 +16,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
-export interface SandboxingConfigSpec extends BehaviourConfigSpec {
+export interface SandboxingConfigSpec extends Behaviour.BehaviourConfigSpec {
   getAttachPoint: () => AlloyComponent;
   isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
   onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;

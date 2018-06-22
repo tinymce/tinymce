@@ -16,7 +16,7 @@ export interface SwappingConfig extends Behaviour.BehaviourConfigDetail {
   omega: () => string;
 }
 
-export interface SwappingConfigSpec extends BehaviourConfigSpec {
+export interface SwappingConfigSpec extends Behaviour.BehaviourConfigSpec {
   alpha: string;
   omega: string;
 }

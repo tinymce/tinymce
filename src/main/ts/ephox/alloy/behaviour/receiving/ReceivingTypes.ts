@@ -16,7 +16,7 @@ export interface ReceivingConfig extends Behaviour.BehaviourConfigDetail {
   };
 }
 
-export interface ReceivingConfigSpec extends BehaviourConfigSpec {
+export interface ReceivingConfigSpec extends Behaviour.BehaviourConfigSpec {
   channels: {
     [ key: string]: {
       onReceive: any;

@@ -18,7 +18,7 @@ export interface PinchingConfig extends Behaviour.BehaviourConfigDetail {
   onPunch: () => (element: Element, changeX: number, changeY: number) => void;
 }
 
-export interface PinchingConfigSpec extends BehaviourConfigSpec {
+export interface PinchingConfigSpec extends Behaviour.BehaviourConfigSpec {
   onPinch: (element: Element, changeX: number, changeY: number) => void;
   onPunch: (element: Element, changeX: number, changeY: number) => void;
 }

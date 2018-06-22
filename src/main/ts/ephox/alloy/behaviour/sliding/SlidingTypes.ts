@@ -38,7 +38,7 @@ export interface SlidingState {
   isExpanded: () => boolean;
 }
 
-export interface SlidingConfigSpec extends BehaviourConfigSpec {
+export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {
   dimension: {
     property: string
   };

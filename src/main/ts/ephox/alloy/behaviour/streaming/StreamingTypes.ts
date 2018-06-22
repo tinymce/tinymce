@@ -16,7 +16,7 @@ export interface StreamingConfig extends Behaviour.BehaviourConfigDetail {
   };
 }
 
-export interface StreamingConfigSpec extends BehaviourConfigSpec {
+export interface StreamingConfigSpec extends Behaviour.BehaviourConfigSpec {
   stream: {
     mode: StreamMode,
     delay: number

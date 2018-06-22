@@ -22,7 +22,7 @@ export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
   topAttr: () => string;
 }
 
-export interface DockingConfigSpec extends BehaviourConfigSpec {
+export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {
   contextual?: {
     fadeInClass: string;
     fadeOutClass: string;

@@ -16,7 +16,7 @@ export interface DisableConfig extends Behaviour.BehaviourConfigDetail {
   disableClass: () => Option<string>;
 }
 
-export interface DisableConfigSpec extends BehaviourConfigSpec {
+export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {
   disabled?: boolean;
   disableClass?: string;
 }

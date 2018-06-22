@@ -13,7 +13,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
-export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
+export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
   invalidClass: string;
   getRoot?: (comp: AlloyComponent) => Option<Element>;
   notify?: {

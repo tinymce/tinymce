@@ -19,7 +19,7 @@ export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour<Highligh
   getNext: (component: AlloyComponent) => Option<AlloyComponent>;
 }
 
-export interface HighlightingConfigSpec extends BehaviourConfigSpec {
+export interface HighlightingConfigSpec extends Behaviour.BehaviourConfigSpec {
   itemClass: string;
   highlightClass: string;
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;

@@ -6,7 +6,7 @@ export interface UnselectingBehaviour extends Behaviour.AlloyBehaviour<Unselecti
   config: (config: UnselectingConfigSpec) => Behaviour.NamedConfiguredBehaviour<UnselectingConfigSpec, UnselectingConfig>;
 }
 
-export interface UnselectingConfigSpec extends BehaviourConfigSpec {
+export interface UnselectingConfigSpec extends Behaviour.BehaviourConfigSpec {
   // intentionally blank
 }
 

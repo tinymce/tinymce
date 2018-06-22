@@ -1,6 +1,5 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
 import { AlloySpec } from '../../api/component/SpecTypes';
 
 export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingConfigSpec, ReplacingConfig> {
@@ -12,7 +11,7 @@ export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingCo
   contents: (component: AlloyComponent) => AlloyComponent[];
 }
 
-export interface ReplacingConfigSpec extends BehaviourConfigSpec { }
+export interface ReplacingConfigSpec extends Behaviour.BehaviourConfigSpec { }
 
 export interface ReplacingConfig extends Behaviour.BehaviourConfigDetail {
   // Intentionally Blank
