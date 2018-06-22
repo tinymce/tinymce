@@ -91,7 +91,7 @@ const monitor = (settings: GuiEventSettings) => {
   ]);
 
   const fireIfReady = (event: SugarEvent, type: string): Option<boolean> => {
-    return Objects.readOptFrom(handlers, type).bind((handler: (SugarEvent) => Option<boolean>): Option<boolean> => {
+    return Objects.readOptFrom(handlers, type).bind((handler: (evt: SugarEvent) => Option<boolean>): Option<boolean> => {
       return handler(event);
     });
   };

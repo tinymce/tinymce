@@ -18,7 +18,7 @@ export interface FormSpec extends CompositeSketchSpec {
   formBehaviours?: AlloyBehaviourRecord;
 }
 
-export type FormSpecBuilder = (FormParts) => FormSpec;
+export type FormSpecBuilder = (parts: FormParts) => FormSpec;
 
 export interface FormParts {
   field: (name: string, config: SimpleOrSketchSpec) => ConfiguredPart;

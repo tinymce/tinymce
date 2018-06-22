@@ -9,7 +9,7 @@ import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
-  snap: (SnapConfig) => any;
+  snap: (sConfig: SnapConfigSpec) => any;
 }
 
 export type DraggingMode = 'touch' | 'mouse';
@@ -20,7 +20,14 @@ export interface SnapConfig {
   sensor: () => CoordAdt;
   range: () => SugarPosition;
   output: () => CoordAdt;
-  extra: any;
+  extra?: () => any;
+}
+
+export interface SnapConfigSpec {
+  sensor: CoordAdt;
+  range: SugarPosition;
+  output: CoordAdt;
+  extra?: any;
 }
 
 export interface SnapOutput {
@@ -34,7 +41,7 @@ export interface SnapPin {
 }
 
 export interface SnapsConfig {
-  getSnapPoints: () => (AlloyComponent) => SnapConfig[];
+  getSnapPoints: () => (comp: AlloyComponent) => SnapConfig[];
   leftAttr: () => string;
   topAttr: () => string;
   onSensor?: () => (component: AlloyComponent, extra: {}) => void;
@@ -42,9 +49,9 @@ export interface SnapsConfig {
 }
 
 export interface DraggingConfig {
-  getTarget: () => (Element) => Element;
+  getTarget: () => (comp: Element) => Element;
   snaps: () => Option<SnapsConfig>
-  onDrop: () => (AlloyComponent, Element) => void;
+  onDrop: () => (comp: AlloyComponent, Element) => void;
 }
 
 
@@ -55,10 +62,10 @@ export interface DraggingConfig {
 // FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
 export interface CommonDraggingConfigSpec {
   useFixed?: boolean;
-  onDrop?: (AlloyComponent, Element) => void;
-  getTarget?: (Element) => Element;
+  onDrop?: (comp: AlloyComponent, Element) => void;
+  getTarget?: (elem: Element) => Element;
   snaps?: {
-    getSnapPoints: (AlloyComponent) => SnapConfig[];
+    getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
     leftAttr: string;
     topAttr: string;
     onSensor?: (component: AlloyComponent, extra: {}) => void;

@@ -17,7 +17,7 @@ export interface SimulatedEvent<T extends EventFormat> {
   event: () => T;
 
   getSource: () => Element;
-  setSource: (Element) => void;
+  setSource: (elem: Element) => void;
 }
 
 export type NativeSimulatedEvent = SimulatedEvent<SugarEvent>;

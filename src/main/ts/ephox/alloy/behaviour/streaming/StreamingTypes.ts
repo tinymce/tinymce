@@ -13,7 +13,7 @@ export interface StreamingConfig extends BehaviourConfigDetail {
   event: () => string;
   stream: () => {
     streams: () => {
-      setup: (StreamingConfig) => (AlloyComponent, SimulatedEvent) => void;
+      setup: (config: StreamingConfig) => (comp: AlloyComponent, evt: SimulatedEvent<EventFormat>) => void;
     }
   }
 };

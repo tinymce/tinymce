@@ -53,7 +53,7 @@ export default () => {
     return events.filterByType(type);
   };
 
-  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
+  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     return events.find(isAboveRoot, type, target);
   };
 

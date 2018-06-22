@@ -32,7 +32,7 @@ const settingsSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-const bindFocus = (container: Element, handler: (SugarEvent) => void): SugarListener => {
+const bindFocus = (container: Element, handler: (evt: SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -41,7 +41,7 @@ const bindFocus = (container: Element, handler: (SugarEvent) => void): SugarList
   }
 };
 
-const bindBlur = (container: Element, handler: (SugarEvent) => void): SugarListener => {
+const bindBlur = (container: Element, handler: (evt: SugarEvent) => void): SugarListener => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);

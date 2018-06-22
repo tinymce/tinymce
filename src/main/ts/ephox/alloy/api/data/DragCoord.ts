@@ -15,7 +15,7 @@ export interface StylesCoord {
   position: string;
 }
 
-type CoordTransform = (PositionCoordinates) => SugarPosition;
+type CoordTransform = (coords: SugarPosition) => SugarPosition;
 
 export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => SugarPosition
 /*

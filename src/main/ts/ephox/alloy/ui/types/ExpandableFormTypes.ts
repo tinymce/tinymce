@@ -29,7 +29,7 @@ export interface ExpandableFormDetail extends CompositeSketchDetail {
   onGrown: () => (extra: AlloyComponent) => void;
 }
 
-export type ExpandableFormAction = (AlloyComponent) => void;
+export type ExpandableFormAction = (comp: AlloyComponent) => void;
 
 export interface ExpandableFormSpec {
   uid?: string;

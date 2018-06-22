@@ -3,6 +3,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import { DragApi } from '../../dragging/mouse/MouseDraggingTypes';
 
 import { EventFormat } from '../../events/SimulatedEvent';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const init = (dragApi: DragApi): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
@@ -16,7 +17,7 @@ const init = (dragApi: DragApi): AlloyEvents.AlloyEventRecord => {
 
     // As the user moves the mouse around (while pressed down), we move the
     // component around
-    AlloyEvents.run(NativeEvents.mousemove(), (comp, simulatedEvent) => {
+    AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (comp, simulatedEvent) => {
       dragApi.move(simulatedEvent.event());
     }),
 

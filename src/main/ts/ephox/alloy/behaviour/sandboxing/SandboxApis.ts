@@ -1,4 +1,5 @@
 import { Attr, Css, Element } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
 import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,9 +27,9 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
 
 // Open sandbox transfers focus to the opened menu
 const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) => {
-  const state = rebuild(sandbox, sConfig, sState, data);
-  sConfig.onOpen()(sandbox, state);
-  return state;
+  const newState = rebuild(sandbox, sConfig, sState, data);
+  sConfig.onOpen()(sandbox, newState);
+  return newState;
 };
 
 const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {

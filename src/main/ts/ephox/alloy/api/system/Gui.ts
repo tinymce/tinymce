@@ -26,8 +26,8 @@ export interface GuiSystem {
   getByUid: (uid: string) => Result<AlloyComponent, string | Error>;
   getByDom: (element: Element) => Result<AlloyComponent, string | Error>;
 
-  addToWorld: (AlloyComponent) => void;
-  removeFromWorld: (AlloyComponent) => void;
+  addToWorld: (comp: AlloyComponent) => void;
+  removeFromWorld: (comp: AlloyComponent) => void;
 
   broadcast: (message: message) => void;
   broadcastOn: (channels: string[], message: message) => void;
