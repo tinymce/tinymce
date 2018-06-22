@@ -13,7 +13,7 @@ import { CompositeSketchDetail } from '../api/ui/Sketcher';
 export interface PartialSpec { }
 
 export interface GeneratedParts {
-  [key: string]: (config: PartialSpec) => AlloySpec;
+  [key: string]: (config: PartialSpec) => ConfiguredPart;
 }
 
 export interface UnconfiguredPart {
@@ -122,7 +122,7 @@ const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, part
   return Obj.map(r, Fun.constant);
 };
 
-const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string>> => {
+const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string | Error>> => {
   const system = component.getSystem();
   return Obj.map(detail.partUids(), (pUid, k) => {
     return Fun.constant(system.getByUid(pUid));

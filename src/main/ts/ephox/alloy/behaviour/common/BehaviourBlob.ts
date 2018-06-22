@@ -31,23 +31,34 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: AlloyBehaviour<any,any>[]):
     ]);
   });
 
+  type B = Record<string, () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser<any>>>>;
   const validated = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold((errInfo) => {
     throw new Error(
       ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
-  }, (v: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourStateInitialiser<any>>>>) => v);
+  }, (v: B) => v);
+/*
+
+
+taview: () => Option({
+  config: () => tabviewconfig
+  state: () => NoState (BehaviourStateInitialiser)
+})
+
+*/
+
 
   return {
     list: all as AlloyBehaviour<any,any>[],
-    data: Obj.map(validated, (optBlobThunk: () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser<any>>>) => {
+    data: Obj.map(validated, (optBlobThunk) => {
       const optBlob = optBlobThunk();
       const output = optBlob.map((blob) => ({
         config: blob.config(),
         state: blob.state().init(blob.config())
       }));
       return () => output;
-    }) as Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>
+    })
   };
 };
 

@@ -1,4 +1,4 @@
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CompositeSketch } from '../../api/ui/Sketcher';
 
@@ -50,6 +50,8 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
+const toResult = <T,E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
+
 const make = (detail: FormDetail, components, spec) => {
   return Merger.deepMerge(
     {
@@ -67,9 +69,12 @@ const make = (detail: FormDetail, components, spec) => {
             store: {
               mode: 'manual',
               getValue (form) {
-                const optPs = AlloyParts.getAllParts(form, detail);
-                return Obj.map(optPs, (optPThunk, pName) => {
-                  return optPThunk().bind(Composing.getCurrent).map(Representing.getValue);
+                const resPs = AlloyParts.getAllParts(form, detail);
+                return Obj.map(resPs, (resPThunk, pName) => {
+                  return resPThunk().bind((v) => {
+                    const opt = Composing.getCurrent(v);
+                    return toResult(opt, 'missing current');
+                  }).map(Representing.getValue);
                 });
               },
               setValue (form, values) {
