@@ -7,14 +7,9 @@ import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
-<<<<<<< HEAD
   markValid: (Component: AlloyComponent) => void;
   isInvalid: (Component: AlloyComponent) => boolean;
   markInvalid: (Component: AlloyComponent) => void;
-=======
-  markValid: (component: AlloyComponent) => void;
-  markInvalid: (component: AlloyComponent) => void;
->>>>>>> master
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
