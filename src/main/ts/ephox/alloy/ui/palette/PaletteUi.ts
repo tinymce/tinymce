@@ -116,7 +116,7 @@ const sketch = function (detail, components, spec, externals) {
 
     behaviours: Merger.deepMerge(
       Behaviour.derive(
-        Arr.flatten([
+        Arr.flatten<any>([
           !isTouch ? [
             Keying.config({
               mode: 'special',
