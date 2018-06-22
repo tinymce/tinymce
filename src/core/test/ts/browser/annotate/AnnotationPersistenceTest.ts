@@ -74,11 +74,9 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationPersistenceTest', (
       '.mce-annotation': 1,
       'p:contains("This is the only paragraph here")': 1
     }),
-    Step.wait(1000),
     Step.sync(() => {
       editor.execCommand('undo');
     }),
-    Step.wait(1000),
     tinyApis.sAssertContentPresence({
       '.mce-annotation': 0,
       'p:contains("This is the only paragraph here")': 1
@@ -86,7 +84,6 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationPersistenceTest', (
     Step.sync(() => {
       editor.execCommand('redo');
     }),
-    Step.wait(1000),
     tinyApis.sAssertContentPresence({
       '.mce-annotation': 1,
       'p:contains("This is the only paragraph here")': 1

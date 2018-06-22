@@ -38,13 +38,17 @@ const assertMarker = (editor: Editor, expected, node: any) => {
   );
 };
 
-const sAssertGetAll = (editor: Editor, expected: string[], name: string) => Step.sync(() => {
+const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: string) => Step.sync(() => {
   const annotations = editor.annotator.getAll(name);
   const keys = Obj.keys(annotations);
   const sortedKeys = Arr.sort(keys);
-  Assertions.assertEq('Checking keys of getAll response', expected, sortedKeys);
-  Obj.each(annotations, (marker, uid) => {
-    assertMarker(editor, { uid, name }, marker);
+  const expectedKeys = Arr.sort(Obj.keys(expected));
+  Assertions.assertEq('Checking keys of getAll response', expectedKeys, sortedKeys);
+  Obj.each(annotations, (markers, uid) => {
+    Assertions.assertEq('Checking number of markers for uid', expected[uid], markers.length);
+    Arr.each(markers, (marker) => {
+      assertMarker(editor, { uid, name }, marker);
+    });
   });
 });
 

@@ -143,7 +143,7 @@ export default function (editor): Annotator {
      */
     getAll: (name: string): Record<string, any> => {
       const directory = findAll(editor, name);
-      return Obj.map(directory, (elem) => elem.dom());
+      return Obj.map(directory, (elems) => Arr.map(elems, (elem) => elem.dom()));
     }
   } as Annotator;
 }

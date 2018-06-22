@@ -8,11 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import { Editor } from 'tinymce/core/api/Editor';
-import { prompt } from '@ephox/dom-globals';
+import { prompt, document } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 
 export default function () {
+
+  const button = document.createElement('button');
+  button.innerHTML = 'Get all annotations';
+  button.addEventListener('click', () => {
+    console.log('annotations', tinymce.activeEditor.annotator.getAll('alpha'));
+  });
+  document.body.appendChild(button);
+
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/lightgray',
     selector: 'textarea.tinymce',

@@ -54,12 +54,17 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
 
       Logger.t(
         'There should be two alpha annotations',
-        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+        sAssertGetAll(editor, {
+          'id-one': 1,
+          'id-two': 1
+        }, 'alpha')
       ),
 
       Logger.t(
         'There should be one beta annotation',
-        sAssertGetAll(editor, [ 'id-three' ], 'beta')
+        sAssertGetAll(editor, {
+          'id-three': 1
+        }, 'beta')
       ),
 
       Step.sync(() => {
@@ -80,11 +85,16 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
       ),
       Logger.t(
         'There should be still be two alpha annotations (because remove only works if you are inside)',
-        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+        sAssertGetAll(editor, {
+          'id-one': 1,
+          'id-two': 1
+        }, 'alpha')
       ),
       Logger.t(
         'There should still be one beta annotation',
-        sAssertGetAll(editor, [ 'id-three' ], 'beta')
+        sAssertGetAll(editor, {
+          'id-three': 1
+        }, 'beta')
       ),
 
       tinyApis.sSetSelection(inside3.path, inside3.offset, inside3.path, inside3.offset),
@@ -102,11 +112,14 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
 
       Logger.t(
         'There should be still be two alpha annotations (because cursor was inside beta)',
-        sAssertGetAll(editor, [ 'id-one', 'id-two' ], 'alpha')
+        sAssertGetAll(editor, {
+          'id-one': 1,
+          'id-two': 1
+        }, 'alpha')
       ),
       Logger.t(
         'There should be no beta annotations',
-        sAssertGetAll(editor, [ ], 'beta')
+        sAssertGetAll(editor, { }, 'beta')
       ),
 
       tinyApis.sSetSelection(inside1.path, inside1.offset, inside1.path, inside1.offset),
@@ -125,11 +138,13 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
 
       Logger.t(
         'There should now be just one alpha annotation (second one was removed)',
-        sAssertGetAll(editor, [ 'id-two' ], 'alpha')
+        sAssertGetAll(editor, {
+          'id-two': 1
+        }, 'alpha')
       ),
       Logger.t(
         'There should be no beta annotations',
-        sAssertGetAll(editor, [ ], 'beta')
+        sAssertGetAll(editor, { }, 'beta')
       ),
     ]);
 

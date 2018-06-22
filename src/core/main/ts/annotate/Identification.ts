@@ -48,13 +48,14 @@ const findMarkers = (editor: Editor, uid: string): any[] => {
   return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };
 
-const findAll = (editor: Editor, name: string): Record<string, any> => {
+const findAll = (editor: Editor, name: string): Record<string, Element[]> => {
   const body = Element.fromDom(editor.getBody());
   const markers = SelectorFilter.descendants(body, `[${Markings.dataAnnotation()}="${name}"]`);
-  const directory = { };
+  const directory: Record<string, Element[]> = { };
   Arr.each(markers, (m) => {
     const uid = Attr.get(m, Markings.dataAnnotationId());
-    directory[uid] = m;
+    const nodesAlready = directory.hasOwnProperty(uid) ? directory[uid] : [ ];
+    directory[uid] = nodesAlready.concat([ m ]);
   });
   return directory;
 };
