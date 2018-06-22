@@ -1,6 +1,6 @@
 {
   "name": "@ephox/boulder",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "Basic javascript object validation",
   "dependencies": {
     "@ephox/katamari": "latest",
