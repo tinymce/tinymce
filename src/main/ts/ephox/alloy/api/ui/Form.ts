@@ -1,15 +1,15 @@
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { SketchSpec } from '../../api/component/SpecTypes';
+import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 
 const owner = 'form';
 
@@ -48,6 +48,8 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
+const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
+
 const make = (detail: FormDetail, components, spec) => {
   return Merger.deepMerge(
     {
@@ -65,9 +67,12 @@ const make = (detail: FormDetail, components, spec) => {
             store: {
               mode: 'manual',
               getValue (form) {
-                const optPs = AlloyParts.getAllParts(form, detail);
-                return Obj.map(optPs, (optPThunk, pName) => {
-                  return optPThunk().bind(Composing.getCurrent).map(Representing.getValue);
+                const resPs = AlloyParts.getAllParts(form, detail);
+                return Obj.map(resPs, (resPThunk, pName) => {
+                  return resPThunk().bind((v) => {
+                    const opt = Composing.getCurrent(v);
+                    return toResult(opt, 'missing current');
+                  }).map(Representing.getValue);
                 });
               },
               setValue (form, values) {
