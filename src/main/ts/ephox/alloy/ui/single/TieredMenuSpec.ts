@@ -161,7 +161,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
   };
 
-  type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>
+  type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => {
     return (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
       return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers().item()).bind((target) => {

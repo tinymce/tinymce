@@ -13,7 +13,6 @@ import * as Frames from './frames/Frames';
 import { SugarEvent } from 'ephox/alloy/api/Main';
 import { document } from '@ephox/dom-globals';
 
-
 const resize = (element, changeX, changeY) => {
   document.querySelector('h2').innerHTML = 'resizing';
   const width = Css.getRaw(element, 'width').map((w) => {

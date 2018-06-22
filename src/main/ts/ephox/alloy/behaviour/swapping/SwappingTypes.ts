@@ -1,8 +1,6 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
-
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour<SwappingConfigSpec, SwappingConfig> {
   config: (config: SwappingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SwappingConfigSpec, SwappingConfig>;
@@ -13,12 +11,12 @@ export interface SwappingBehaviour extends Behaviour.AlloyBehaviour<SwappingConf
   clear?: (component: AlloyComponent) => void;
 }
 
-export interface SwappingConfig extends BehaviourConfigDetail {
+export interface SwappingConfig extends Behaviour.BehaviourConfigDetail {
   alpha: () => string;
   omega: () => string;
-};
+}
 
-export interface SwappingConfigSpec extends BehaviourConfigSpec {
+export interface SwappingConfigSpec extends Behaviour.BehaviourConfigSpec {
   alpha: string;
   omega: string;
 }

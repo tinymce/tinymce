@@ -11,7 +11,7 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 
-export interface TouchMenuDetail extends CommonDropdownDetail<Array<ItemSpec>>, CompositeSketchDetail {
+export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
@@ -34,7 +34,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<Array<ItemSpec>>, 
   getAnchor: () => (comp: AlloyComponent) => AnchorSpec;
   lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
 
-  fetch: () => (comp: AlloyComponent) => Future<Array<ItemSpec>>;
+  fetch: () => (comp: AlloyComponent) => Future<ItemSpec[]>;
 
   // FIX: Clean up DropdownUtils, so this isn't required here.
   matchWidth: () => boolean;
@@ -62,14 +62,14 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
 
   lazySink?: () => Result<AlloyComponent, Error>;
 
-  fetch: (comp: AlloyComponent) => Future<Array<ItemSpec>>;
+  fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
   matchWidth?: boolean;
 
   parts: {
     menu: PartialMenuSpec,
     view: Partial<TabviewSpec>,
     sink?: SimpleOrSketchSpec
-  },
+  };
 
   getAnchor?: (comp: AlloyComponent) => AnchorSpec;
 }

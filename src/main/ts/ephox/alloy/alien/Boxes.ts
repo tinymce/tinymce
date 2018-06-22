@@ -16,7 +16,7 @@ export interface Bounds {
 }
 
 export interface BoxByPoint {
-  point: () => CssPositionAdt
+  point: () => CssPositionAdt;
   width: () => number;
   height: () => number;
 }

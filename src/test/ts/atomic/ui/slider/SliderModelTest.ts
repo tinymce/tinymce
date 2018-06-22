@@ -5,7 +5,7 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
-  const arb1Up = Jsc.nat.smap((num) => { return num + 1; }, (num) => { return num - 1; });
+  const arb1Up = Jsc.nat.smap((num) => num + 1, (num) => num - 1);
 
   const arbRanged = Jsc.bless({
     generator: Jsc.nat.generator.flatMap((min) => {

@@ -12,8 +12,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('DisablingTest', (success, failure) => {
 
-
-
   const subject = Memento.record(
     Button.sketch({
       dom: {

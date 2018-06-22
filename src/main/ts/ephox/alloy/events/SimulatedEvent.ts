@@ -2,6 +2,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { SugarEvent } from '../alien/TypeDefinitions';
+import { Event } from '@ephox/dom-globals';
 
 export interface EventFormat {
   target: () => Element;

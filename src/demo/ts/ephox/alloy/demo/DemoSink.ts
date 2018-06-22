@@ -4,7 +4,6 @@ import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
-
 const make = () => {
   return GuiFactory.build(
     Container.sketch({

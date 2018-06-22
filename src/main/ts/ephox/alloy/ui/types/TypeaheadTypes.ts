@@ -44,11 +44,11 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   minChars?: number;
   markers: {
     openClass: string;
-  }
+  };
 
   parts: {
     menu: Partial<TieredMenuSpec>;
-  }
+  };
 
   dismissOnBlur?: boolean;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;

@@ -6,7 +6,6 @@ import * as TabbingTypes from './TabbingTypes';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
-
 export default TabbingTypes.create(
   FieldSchema.state('cyclic', Fun.constant(false))
 );

@@ -9,8 +9,6 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const item = GuiFactory.build(
       Container.sketch({

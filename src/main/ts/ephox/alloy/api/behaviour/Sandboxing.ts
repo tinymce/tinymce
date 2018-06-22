@@ -5,7 +5,6 @@ import SandboxSchema from '../../behaviour/sandboxing/SandboxSchema';
 import * as SandboxState from '../../behaviour/sandboxing/SandboxState';
 import { SandboxingBehaviour } from '../../behaviour/sandboxing/SandboxingTypes';
 
-
 const Sandboxing = Behaviour.create({
   fields: SandboxSchema,
   name: 'sandboxing',

@@ -9,8 +9,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const makeItem = (name) => {
       return Container.sketch({

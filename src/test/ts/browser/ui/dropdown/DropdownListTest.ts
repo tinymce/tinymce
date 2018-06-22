@@ -16,8 +16,6 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
-
-
   const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([

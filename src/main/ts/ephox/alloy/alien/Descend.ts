@@ -7,7 +7,7 @@ export interface ElementAndOffset {
 }
 
 const point: (element: Element, offset: number) => ElementAndOffset =
-  Struct.immutable('element', 'offset')
+  Struct.immutable('element', 'offset');
 
 // NOTE: This only descends once.
 const descendOnce = (element: Element, offset: number): ElementAndOffset => {

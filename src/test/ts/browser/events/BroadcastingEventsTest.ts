@@ -10,8 +10,6 @@ import { document, console, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, failure) => {
 
-
-
   const bodyMargin = [
     'body { margin-top: 2000px; }'
   ];

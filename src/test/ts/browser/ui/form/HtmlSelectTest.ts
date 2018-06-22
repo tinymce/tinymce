@@ -7,8 +7,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
 
-
-
   const sNoInitialValue = Step.async((next, die) => {
     GuiSetup.setup((store, doc, body) => {
       return GuiFactory.build(

@@ -44,7 +44,7 @@ const groupByEvents = (info, behaviours, base) => {
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };
 
-const combine = (info, eventOrder, behaviours, base): Result<Record<string, UncurriedHandler>,string | Error> => {
+const combine = (info, eventOrder, behaviours, base): Result<Record<string, UncurriedHandler>, string | Error> => {
   const byEventName = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
@@ -65,7 +65,7 @@ const missingOrderError = (eventName, tuples) => {
   return Result.error([
     'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
-    'can trigger it are: ' + Json.stringify(Arr.map(tuples, (c) => { return c.name(); }), null, 2)
+    'can trigger it are: ' + Json.stringify(Arr.map(tuples, (c) => c.name()), null, 2)
   ]);
 };
 
@@ -73,7 +73,7 @@ const fuse = (tuples, eventOrder, eventName) => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
   if (! order) { return missingOrderError(eventName, tuples); } else { return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map((sortedTuples) => {
-    const handlers = Arr.map(sortedTuples, (tuple) => { return tuple.handler(); });
+    const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
     return EventHandler.fuse(handlers);
   });
   }
@@ -85,7 +85,7 @@ const combineGroups = (byEventName, eventOrder) => {
     return combined.map((handler) => {
       const assembled = assemble(handler);
       const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
-        return Arr.contains(tuples, (t) => { return t.name() === o; });
+        return Arr.contains(tuples, (t) => t.name() === o);
       }).join(' > ') : tuples[0].name();
       return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
     });

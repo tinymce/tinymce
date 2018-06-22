@@ -3,7 +3,6 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-
 export interface FormChooserDetail extends CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
@@ -11,9 +10,8 @@ export interface FormChooserDetail extends CompositeSketchDetail {
   markers: () => {
     choiceClass: () => string;
     selectedClass: () => string;
-  }
+  };
 }
-
 
 export interface FormChooserSpec extends CompositeSketchSpec {
   uid?: string;

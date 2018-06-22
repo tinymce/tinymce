@@ -20,4 +20,4 @@ const nu = (width, yoffset): Bubble => {
 
 export {
   nu
-}
+};

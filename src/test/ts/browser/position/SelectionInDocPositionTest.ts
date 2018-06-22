@@ -11,8 +11,6 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {

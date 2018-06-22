@@ -25,9 +25,7 @@ export type AnchorLayout = (
   anchor: AnchorBox,
   element: AnchorElement,
   bubbles: Bubble
-) => SpotInfo
-
-
+) => SpotInfo;
 
 // display element to the right, left edge against the anchor
 const east = (anchor: AnchorBox): number => {
