@@ -24,6 +24,35 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     });
   };
 
+  const show = (comp) => {
+    if (! state.isShowing()) {
+      TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
+      const sink = tooltipConfig.lazySink()(comp).getOrDie();
+      const popup = comp.getSystem().build({
+        dom: tooltipConfig.tooltipDom(),
+        events: AlloyEvents.derive([
+          AlloyEvents.run(NativeEvents.mouseover(), (_) => {
+            AlloyTriggers.emit(comp, ShowTooltipEvent);
+          }),
+          AlloyEvents.run(NativeEvents.mouseout(), (_) => {
+            AlloyTriggers.emit(comp, HideTooltipEvent);
+          })
+        ])
+      });
+
+      state.setTooltip(popup);
+      Attachment.attach(sink, popup);
+      Positioning.position(sink, {
+        anchor: 'hotspot',
+        hotspot: comp,
+        layouts: {
+          onLtr: [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ],
+          onRtl : [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]
+        }
+      }, popup);
+    }
+  }
+
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
       // TODO: Think about the types for this, or find a better way for this
@@ -41,33 +70,9 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     }),
 
     AlloyEvents.run(ShowTooltipEvent, (comp) => {
-      state.clearTimer();
-      if (! state.isShowing()) {
-        TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
-        const sink = tooltipConfig.lazySink()(comp).getOrDie();
-        const popup = comp.getSystem().build({
-          dom: tooltipConfig.tooltipDom(),
-          events: AlloyEvents.derive([
-            AlloyEvents.run(NativeEvents.mouseover(), (_) => {
-              AlloyTriggers.emit(comp, ShowTooltipEvent);
-            }),
-            AlloyEvents.run(NativeEvents.mouseout(), (_) => {
-              AlloyTriggers.emit(comp, HideTooltipEvent);
-            })
-          ])
-        });
-
-        state.setTooltip(popup);
-        Attachment.attach(sink, popup);
-        Positioning.position(sink, {
-          anchor: 'hotspot',
-          hotspot: comp,
-          layouts: {
-            onLtr: [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ],
-            onRtl : [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]
-          }
-        }, popup);
-      }
+      state.resetTimer(() => {
+        show(comp);
+      }, tooltipConfig.delay());
     }),
 
     AlloyEvents.run(HideTooltipEvent, (comp) => {
