@@ -85,7 +85,6 @@ const thumbPart = PartType.required({
         AlloyEvents.redirectToPart(NativeEvents.touchmove(), detail, 'spectrum'),
         AlloyEvents.redirectToPart(NativeEvents.touchend(), detail, 'spectrum'),
 
-
         AlloyEvents.redirectToPart(NativeEvents.mousedown(), detail, 'spectrum'),
         AlloyEvents.redirectToPart(NativeEvents.mousemove(), detail, 'spectrum'),
         AlloyEvents.redirectToPart(NativeEvents.mouseup(), detail, 'spectrum')

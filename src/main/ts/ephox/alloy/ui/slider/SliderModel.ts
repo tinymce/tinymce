@@ -97,22 +97,34 @@ const findValueOfY = (bounds: ClientRect, min: number, max: number, yValue: numb
   return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, rounded, hasLedge, hasRedge, 'top', 'bottom', 'height');
 };
 
+const halfOf = (bounds: ClientRect, ledgeProperty: string, redgeProperty: string): number => {
+  return (bounds[redgeProperty] - bounds[ledgeProperty]) / 2
+};
+
+const centerX = (bounds: ClientRect): number => {
+  return halfOf(bounds, 'left', 'right');
+};
+
+const centerY = (bounds: ClientRect): number => {
+  return halfOf(bounds, 'top', 'bottom');
+};
+
 const halfX = (bounds: ClientRect, min: number, max: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean): number => {
-  return findValueOf(bounds, min, max, ((bounds.right - bounds.left) / 2) + bounds.left, step, snapToGrid, snapStart, rounded, false, false, 'left', 'right', 'width');
+  return findValueOf(bounds, min, max, halfOf(bounds, 'left', 'right') + bounds.left, step, snapToGrid, snapStart, rounded, false, false, 'left', 'right', 'width');
 };
 
 const halfY = (bounds: ClientRect, min: number, max: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean): number => {
-  return findValueOf(bounds, min, max, ((bounds.bottom - bounds.top) / 2) + bounds.top, step, snapToGrid, snapStart, rounded, false, false, 'top', 'bottom', 'height');
+  return findValueOf(bounds, min, max, halfOf(bounds, 'top', 'bottom') + bounds.top, step, snapToGrid, snapStart, rounded, false, false, 'top', 'bottom', 'height');
 };
 
-const findOffsetOfValue = (bounds: ClientRect, min: number, max: number, value: number, getCentre: (edgePart: AlloyComponent) => number, ledge: Option<AlloyComponent>, redge: Option<AlloyComponent>, edgeProperty: string, lengthProperty:string): number => {
+const findOffsetOfValue = (bounds: ClientRect, min: number, max: number, value: number, getCentre: (bounds: ClientRect) => number, ledge: Option<AlloyComponent>, redge: Option<AlloyComponent>, edgeProperty: string, lengthProperty:string): number => {
   const range = max - min;
   if (value < min) {
     return ledge.fold(() => 0, 
-      (edge) => getCentre(edge) - bounds[edgeProperty]);
+      (_edge) => getCentre(bounds) - bounds[edgeProperty]);
   } else if (value > max) {
     return redge.fold(() => bounds[edgeProperty],
-      (edge) => getCentre(edge) - bounds[edgeProperty]);
+      (_edge) => getCentre(bounds) - bounds[edgeProperty]);
   } else {
     // position along the slider
     return (value - min) / range * bounds[lengthProperty];
@@ -126,5 +138,8 @@ export {
   findValueOfY,
   halfX,
   halfY,
+  halfOf,
+  centerX,
+  centerY,
   findOffsetOfValue
 };

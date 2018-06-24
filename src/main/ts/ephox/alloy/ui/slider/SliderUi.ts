@@ -21,16 +21,6 @@ import { ClientRect } from '@ephox/dom-globals';
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, components, spec, externals) => {
-  const getXCentre = (component: AlloyComponent): number => {
-    const rect = component.element().dom().getBoundingClientRect();
-    return (rect.left + rect.right) / 2;
-  };
-
-  const getYCentre = (component: AlloyComponent): number => {
-    const rect = component.element().dom().getBoundingClientRect();
-    return (rect.top + rect.bottom) / 2;
-  };
-
   const getThumb = (component: AlloyComponent): AlloyComponent => {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
@@ -39,11 +29,11 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
   };
 
   const getXOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
-    return SliderModel.findOffsetOfValue(spectrumBounds, detail.minX(), detail.maxX(), detail.value().get().x(), getXCentre, AlloyParts.getPart(slider, detail, 'left-edge'), AlloyParts.getPart(slider, detail, 'right-edge'), 'left', 'width');
+    return SliderModel.findOffsetOfValue(spectrumBounds, detail.minX(), detail.maxX(), detail.value().get().x(), SliderModel.centerX, AlloyParts.getPart(slider, detail, 'left-edge'), AlloyParts.getPart(slider, detail, 'right-edge'), 'left', 'width');
   }
 
   const getYOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
-    return SliderModel.findOffsetOfValue(spectrumBounds, detail.minY(), detail.maxY(), detail.value().get().y(), getYCentre, AlloyParts.getPart(slider, detail, 'top-edge'), AlloyParts.getPart(slider, detail, 'bottom-edge'), 'top', 'height');
+    return SliderModel.findOffsetOfValue(spectrumBounds, detail.minY(), detail.maxY(), detail.value().get().y(), SliderModel.centerY, AlloyParts.getPart(slider, detail, 'top-edge'), AlloyParts.getPart(slider, detail, 'bottom-edge'), 'top', 'height');
   };
 
   const getPos = (slider: AlloyComponent, getOffset: (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail) => number, edgeProperty: string): number => {

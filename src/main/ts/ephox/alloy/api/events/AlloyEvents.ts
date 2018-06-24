@@ -142,12 +142,6 @@ const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
 const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());
 const runOnInit = runOnSourceName(SystemEvents.systemInit());
 const runOnExecute = runOnName(SystemEvents.execute());
-
-const partRedirects = function <T extends EventFormat>(events, detail, part): AlloyEventKeyAndHandler<T>[] {
-  return Arr.map(events, (evt) => {
-    return redirectToPart(evt, detail, part);
-  })
-}
 export {
   derive,
   run,
@@ -164,6 +158,5 @@ export {
   abort,
   can,
   cutter,
-  stopper,
-  partRedirects
+  stopper
 };
