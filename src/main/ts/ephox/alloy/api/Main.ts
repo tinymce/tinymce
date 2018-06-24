@@ -87,7 +87,6 @@ import { Input } from './ui/Input';
 import * as ItemWidget from './ui/ItemWidget';
 import { Menu } from './ui/Menu';
 import { ModalDialog } from './ui/ModalDialog';
-import { Palette } from './ui/Palette';
 import * as Sketcher from './ui/Sketcher';
 import { Slider } from './ui/Slider';
 import { SplitDropdown } from './ui/SplitDropdown';
@@ -169,7 +168,6 @@ export {
   Menu,
   ModalDialog,
   Sketcher,
-  Palette,
   Slider,
   SplitDropdown,
   SplitToolbar,

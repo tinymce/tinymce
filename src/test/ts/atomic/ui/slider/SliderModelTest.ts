@@ -1,11 +1,11 @@
 import { RawAssertions } from '@ephox/agar';
-import * as GradientModel from 'ephox/alloy/ui/common/GradientModel';
+import * as SliderModel from 'ephox/alloy/ui/slider/SliderModel';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
 
-UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
+UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   const arb1Up = Jsc.nat.smap((num) => { return num + 1; }, (num) => { return num - 1; });
 
   const arbRanged = Jsc.bless({
@@ -25,14 +25,17 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
     })
   });
 
-  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool]).smap(
+  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool, Jsc.bool]).smap(
     (arr) => {
       return {
         min: arr[0].min,
         max: arr[0].max,
         value: arr[0].value,
         stepSize: arr[1],
-        snapToGrid: arr[2]
+        snapToGrid: arr[2],
+        rounded: arr[3],
+        hasLedge: arr[4],
+        hasRedge: arr[5]
       };
     },
     (r) => {
@@ -61,7 +64,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
     [
       arbData
     ], (data) => {
-      const newValue = GradientModel.reduceBy(data.value, data.min, data.max, data.stepSize);
+      const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
       RawAssertions.assertEq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
       return true;
     },
@@ -73,7 +76,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
     [
       arbData
     ], (data) => {
-      const newValue = GradientModel.increaseBy(data.value, data.min, data.max, data.stepSize);
+      const newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
       RawAssertions.assertEq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
       return true;
     },
@@ -88,7 +91,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue) => {
-      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none());
+      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - data.min) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -107,7 +110,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue, snapOffset) => {
-      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min));
+      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -125,7 +128,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue) => {
-      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
+      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
@@ -143,7 +146,7 @@ UnitTest.test('Atomic Test: ui.slider.GradientModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue, snapOffset) => {
-      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max));
+      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1

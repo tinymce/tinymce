@@ -13,7 +13,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
-import * as GradientActions from '../common/GradientActions';
+import * as SliderActions from './SliderActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -41,10 +41,28 @@ const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) 
 };
 
 // When the user touches the left edge, it should move the thumb
-const ledgePart = edgePart('left', GradientActions.setToLedge);
+const ledgePart = edgePart('left', SliderActions.setToLedge);
 
 // When the user touches the right edge, it should move the thumb
-const redgePart = edgePart('right', GradientActions.setToRedge);
+const redgePart = edgePart('right', SliderActions.setToRedge);
+
+// When the user touches the top edge, it should move the thumb
+const tedgePart = edgePart('top', SliderActions.setToTedge);
+
+// When the user touches the right edge, it should move the thumb
+const bedgePart = edgePart('bottom', SliderActions.setToBedge);
+
+// When the user touches the top left edge, it should move the thumb
+const tlEdgePart = edgePart('top-left', SliderActions.setToTLedge);
+
+// When the user touches the top right edge, it should move the thumb
+const trEdgePart = edgePart('top-right', SliderActions.setToTRedge);
+
+// When the user touches the bottom left edge, it should move the thumb
+const blEdgePart = edgePart('bottom-left', SliderActions.setToBLedge);
+
+// When the user touches the bottom right edge, it should move the thumb
+const brEdgePart = edgePart('bottom-right', SliderActions.setToBRedge);
 
 // The thumb part needs to have position absolute to be positioned correctly
 const thumbPart = PartType.required({
@@ -82,16 +100,26 @@ const spectrumPart = PartType.required({
     const moveToX = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
       const domElem = spectrum.element().dom() as HTMLElement;
       const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
-      GradientActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
     const moveToY = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
       const domElem = spectrum.element().dom() as HTMLElement;
       const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
-      GradientActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      SliderActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
-    const moveTo = detail.orientation() === 'vertical' ? moveToY : moveToX;
+    const moveTo = function (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
+      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+      SliderActions.setCoordsFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      // If you said no to both axes, don't expect any movement /shrug.
+      if (detail.axisHorizontal()) {
+        moveToX(spectrum, simulatedEvent);
+      } 
+      if (detail.axisVertical()) {
+        moveToY(spectrum, simulatedEvent);
+      }
+    };
 
     const touchEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.touchstart(), moveTo),
@@ -111,12 +139,36 @@ const spectrumPart = PartType.required({
         Keying.config({
           mode: 'special',
           onLeft (spectrum) {
-            GradientActions.moveLeft(spectrum, detail);
-            return Option.some(true);
+            if (detail.axisHorizontal()) {
+              SliderActions.moveLeft(spectrum, detail);
+              return Option.some(true);
+            } else {
+              return Option.none();
+            }
           },
           onRight (spectrum) {
-            GradientActions.moveRight(spectrum, detail);
-            return Option.some(true);
+            if (detail.axisHorizontal()) {
+              SliderActions.moveRight(spectrum, detail);
+              return Option.some(true);
+            } else {
+              return Option.none();
+            }
+          },
+          onDown (spectrum) {
+            if (detail.axisVertical()) {
+              SliderActions.moveDown(spectrum, detail);
+              return Option.some(true);
+            } else {
+              return Option.none();
+            }
+          },
+          onUp (spectrum) {
+            if (detail.axisVertical()) {
+              SliderActions.moveUp(spectrum, detail);
+              return Option.some(true);
+            } else {
+              return Option.none();
+            }
           }
         }),
         Focusing.config({ })
@@ -130,6 +182,12 @@ const spectrumPart = PartType.required({
 export default [
   ledgePart,
   redgePart,
+  tedgePart,
+  bedgePart,
+  tlEdgePart,
+  trEdgePart,
+  blEdgePart,
+  brEdgePart,
   thumbPart,
   spectrumPart
 ] as PartType.PartTypeAdt[]

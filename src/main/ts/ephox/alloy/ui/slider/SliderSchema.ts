@@ -10,8 +10,10 @@ import { SliderSpec } from '../../ui/types/SliderTypes';
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const SliderSchema: FieldProcessorAdt[] = [
-  FieldSchema.strict('min'),
-  FieldSchema.strict('max'),
+  FieldSchema.strict('minX'),
+  FieldSchema.strict('maxX'),
+  FieldSchema.strict('minY'),
+  FieldSchema.strict('maxY'),
   FieldSchema.defaulted('stepSize', 1),
   FieldSchema.defaulted('onChange', Fun.noop),
   FieldSchema.defaulted('onInit', Fun.noop),
@@ -22,8 +24,15 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('getInitialValue'),
   SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
 
-  FieldSchema.state('value', (spec: SliderSpec) => { return Cell(spec.min); }),
-  FieldSchema.defaulted('orientation', 'horizontal'),
+  FieldSchema.state('value', (spec: SliderSpec) => { 
+    return Cell({
+      x: spec.minX, 
+      y: spec.minY
+    });
+  }),
+  FieldSchema.defaulted('axisHorizontal', true),
+  FieldSchema.defaulted('axisVertical', false),
+  FieldSchema.defaulted('rounded', true)
 ].concat(! isTouch ? [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', () => { return Cell(false); })

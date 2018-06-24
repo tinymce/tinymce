@@ -1,6 +1,6 @@
 import { Option, Fun } from "@ephox/katamari";
 import { ClientRect } from '@ephox/dom-globals';
-import { SugarPosition } from "ephox/alloy/alien/TypeDefinitions";
+import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
 
 export interface PercentagePosition {
   left: () => number;
@@ -67,51 +67,48 @@ const findOffsetOf = (bounds: ClientRect, value: number, ledgeProp: string, redg
   return Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
 };
 
-const findValueOf = (bounds: ClientRect, min: number, max: number, value: number, step: number, snapToGrid: boolean, snapStart: Option<number>, ledgeProp: string, redgeProp: string, lengthProp: string): number => {
+const findValueOf = (bounds: ClientRect, min: number, max: number, value: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean, hasLedge: boolean, hasRedge: boolean, ledgeProp: string, redgeProp: string, lengthProp: string): number => {
   const range = max - min;
-  // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
-  if (value < bounds[ledgeProp]) { 
-    return min - 1; 
+  const capMin = hasLedge ? min - 1 : min;
+  const capMax = hasRedge ? max + 1 : max;
+
+  if (value < bounds[ledgeProp]) {
+    return capMin;
   } else if (value > bounds[redgeProp]) { 
-    return max + 1; 
+    return capMax;
   } else {
     const offset = findOffsetOf(bounds, value, ledgeProp, redgeProp);
-    const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, min - 1, max + 1);
-    const roundedValue = Math.round(newValue);
-    return snapToGrid && newValue >= min && newValue <= max ? snapValueOf(bounds, newValue, min, max, step, snapStart) : roundedValue;
+    const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, capMin, capMax);
+    if (snapToGrid && newValue >= min && newValue <= max) {
+      return snapValueOf(bounds, newValue, min, max, step, snapStart);
+    } else if (rounded) {
+      return Math.round(newValue);
+    } else {
+      return newValue;
+    }
   }
 };
 
-const findValueOfX = (bounds: ClientRect, min: number, max: number, xValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>): number => {
-  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'left', 'right', 'width');
+const findValueOfX = (bounds: ClientRect, min: number, max: number, xValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean, hasLedge: boolean, hasRedge: boolean): number => {
+  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, rounded, hasLedge, hasRedge, 'left', 'right', 'width');
 };
 
-const findValueOfY = (bounds: ClientRect, min: number, max: number, yValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>): number => {
-  return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
+const findValueOfY = (bounds: ClientRect, min: number, max: number, yValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean, hasLedge: boolean, hasRedge: boolean): number => {
+  return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, rounded, hasLedge, hasRedge, 'top', 'bottom', 'height');
 };
 
-const findUnroundedOf = (bounds: ClientRect, value: number, ledgeProp: string, redgeProp: string): number => {
-  if (value < bounds[ledgeProp]) {
-    return 0;
-  } else if (value > bounds[redgeProp]) {
-    return bounds[redgeProp] - bounds[ledgeProp];
+const findOffsetOfValue = (bounds: ClientRect, min: number, max: number, value: number, getCentre: (edgePart: AlloyComponent) => number, ledge: Option<AlloyComponent>, redge: Option<AlloyComponent>, edgeProperty: string, lengthProperty:string): number => {
+  const range = max - min;
+  if (value < min) {
+    return ledge.fold(() => 0, 
+      (edge) => getCentre(edge) - bounds[edgeProperty]);
+  } else if (value > max) {
+    return redge.fold(() => bounds[edgeProperty],
+      (edge) => getCentre(edge) - bounds[edgeProperty]);
   } else {
-    return findOffsetOf(bounds, value, ledgeProp, redgeProp);
+    // position along the slider
+    return (value - min) / range * bounds[lengthProperty];
   }
-};
-
-const findPercentageValueOfCoords = (bounds: ClientRect, coords: SugarPosition): PercentagePosition => {
-  const left = findUnroundedOf(bounds, coords.left(), 'left', 'right');
-  const top = findUnroundedOf(bounds, coords.top(), 'top', 'bottom');
-  const percentLeft = left / bounds.width * 100;
-  const percentTop = top / bounds.height * 100;
-
-  return {
-    left: Fun.constant(left),
-    top: Fun.constant(top),
-    percentLeft: Fun.constant(percentLeft),
-    percentTop: Fun.constant(percentTop)
-  };
 };
 
 export {
@@ -119,5 +116,5 @@ export {
   increaseBy,
   findValueOfX,
   findValueOfY,
-  findPercentageValueOfCoords
+  findOffsetOfValue
 };

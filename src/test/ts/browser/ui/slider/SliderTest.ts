@@ -23,9 +23,11 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
           classes: [ 'slider-test' ]
         },
 
-        min: 50,
-        getInitialValue: Fun.constant(200),
-        max: 200,
+        minX: 50,
+        getInitialValue: Fun.constant({x: Fun.constant(200), y: Fun.constant(-1)}),
+        maxX: 200,
+        minY: -1,
+        maxY: -1,
         stepSize: 10,
         snapToGrid: true,
 

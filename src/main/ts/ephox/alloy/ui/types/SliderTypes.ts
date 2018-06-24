@@ -6,6 +6,16 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
+export interface SliderValue {
+  x: () => number,
+  y: () => number
+};
+
+export interface PositionUpdate {
+  x: () => Option<number>;
+  y: () => Option<number>;
+}
+
 export interface SliderDetail extends CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
@@ -14,21 +24,25 @@ export interface SliderDetail extends CompositeSketchDetail {
 
 
   mouseIsDown: () => Cell<boolean>;
-  value: () => Cell<number>;
-  orientation: () => string;
+  value: () => Cell<SliderValue>;
+  axisHorizontal?: () => boolean;
+  axisVertical?: () => boolean;
+  rounded?: () => boolean;
 
-  min: () => number;
-  max: () => number;
+  minX: () => number;
+  maxX: () => number;
+  minY: () => number;
+  maxY: () => number;
   stepSize: () => number;
   snapToGrid: () => boolean;
   snapStart: () => Option<number>;
 
-  onChange: () => (component: AlloyComponent, thumb: AlloyComponent, value: number) => void;
+  onChange: () => (component: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail) => void;
   onDragStart: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  getInitialValue: () => () => number;
-  onInit: () => (component: AlloyComponent, thumb: AlloyComponent, value: Number) => void;
+  getInitialValue: () => () => SliderValue;
+  onInit: () => (component: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail) => void;
 }
 
 export interface SliderSpec extends CompositeSketchSpec {
@@ -37,19 +51,23 @@ export interface SliderSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   sliderBehaviours?: AlloyBehaviourRecord;
 
-  min: number;
-  max: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
   stepSize?: number;
   snapToGrid?: boolean;
   snapStart?: number;
 
-  onChange?: (component: AlloyComponent, thumb: AlloyComponent, value: number) => void;
+  onChange?: (component: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail) => void;
   onDragStart?: (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd?: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  getInitialValue: () => number;
-  onInit?: (component: AlloyComponent, thumb: AlloyComponent, value: Number) => void;
-  orientation?: string;
+  getInitialValue: () => SliderValue;
+  onInit?: (component: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail) => void;
+  axisHorizontal?: boolean;
+  axisVertical?: boolean;
+  rounded?: boolean;
 }
 
 export interface SliderSketcher extends CompositeSketch<SliderSpec, SliderDetail> {
