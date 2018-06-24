@@ -179,7 +179,7 @@ const setToTedge = (tedge: AlloyComponent, bounds: ClientRect, detail: SliderDet
   fireSliderChange(tedge, 
     {
       x: Fun.constant(Option.some(SliderModel.halfX(bounds, detail.minX(), detail.maxX(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded()))),
-      y: Fun.constant(Option.some(detail.minX() - 1))
+      y: Fun.constant(Option.some(detail.minY() - 1))
     });
 };
 
@@ -187,7 +187,7 @@ const setToBedge = (bedge: AlloyComponent, bounds: ClientRect, detail: SliderDet
   fireSliderChange(bedge, 
     {
       x: Fun.constant(Option.some(SliderModel.halfX(bounds, detail.minX(), detail.maxX(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded()))),
-      y: Fun.constant(Option.some(detail.maxX() + 1))
+      y: Fun.constant(Option.some(detail.maxY() + 1))
     });
 };
 
