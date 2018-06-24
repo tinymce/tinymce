@@ -120,21 +120,21 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
         if (checkX(oldValue.x(), newX, thumb)) {
           if (checkY(oldValue.y(), newY, thumb)) { // X And Y Updates
             detail.value().set({
-              x: Fun.constant(oldValue.x()),
+              x: Fun.constant(newX),
               y: Fun.constant(newY)
             });
             return Option.some(true);
           } else { // X Only Update
             detail.value().set({
-              x: Fun.constant(oldValue.x()),
-              y: Fun.constant(newY)
+              x: Fun.constant(newX),
+              y: Fun.constant(oldValue.y())
             });
             return Option.some(true);
           }
         } else {
           if (checkY(oldValue.y(), newY, thumb)) { // Y Only Update
             detail.value().set({
-              x: Fun.constant(newX),
+              x: Fun.constant(oldValue.x()),
               y: Fun.constant(newY)
             });
             return Option.some(true);

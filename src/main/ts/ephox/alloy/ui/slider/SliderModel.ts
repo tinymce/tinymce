@@ -97,6 +97,14 @@ const findValueOfY = (bounds: ClientRect, min: number, max: number, yValue: numb
   return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, rounded, hasLedge, hasRedge, 'top', 'bottom', 'height');
 };
 
+const halfX = (bounds: ClientRect, min: number, max: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean): number => {
+  return findValueOf(bounds, min, max, ((bounds.right - bounds.left) / 2) + bounds.left, step, snapToGrid, snapStart, rounded, false, false, 'left', 'right', 'width');
+};
+
+const halfY = (bounds: ClientRect, min: number, max: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean): number => {
+  return findValueOf(bounds, min, max, ((bounds.bottom - bounds.top) / 2) + bounds.top, step, snapToGrid, snapStart, rounded, false, false, 'top', 'bottom', 'height');
+};
+
 const findOffsetOfValue = (bounds: ClientRect, min: number, max: number, value: number, getCentre: (edgePart: AlloyComponent) => number, ledge: Option<AlloyComponent>, redge: Option<AlloyComponent>, edgeProperty: string, lengthProperty:string): number => {
   const range = max - min;
   if (value < min) {
@@ -116,5 +124,7 @@ export {
   increaseBy,
   findValueOfX,
   findValueOfY,
+  halfX,
+  halfY,
   findOffsetOfValue
 };

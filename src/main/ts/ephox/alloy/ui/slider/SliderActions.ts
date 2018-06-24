@@ -160,66 +160,66 @@ const moveUpLeftFromBRedge = (redge: AlloyComponent, detail: SliderDetail): void
   });
 };
 
-const setToLedge = (ledge: AlloyComponent, detail: SliderDetail): void => {
+const setToLedge = (ledge: AlloyComponent, bounds: ClientRect, detail: SliderDetail): void => {
   fireSliderChange(ledge, {
     x: Fun.constant(Option.some(detail.minX() - 1)),
-    y: Fun.constant(Option.none())
+    y: Fun.constant(Option.some(SliderModel.halfY(bounds, detail.minY(), detail.maxY(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded())))
   });
 };
 
-const setToRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
+const setToRedge = (redge: AlloyComponent, bounds: ClientRect, detail: SliderDetail): void => {
   fireSliderChange(redge, 
     {
       x: Fun.constant(Option.some(detail.maxX() + 1)),
-      y: Fun.constant(Option.none())
+      y: Fun.constant(Option.some(SliderModel.halfY(bounds, detail.minY(), detail.maxY(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded())))
     });
 };
 
-const setToTedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
+const setToTedge = (tedge: AlloyComponent, bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(tedge, 
     {
-      x: Fun.constant(Option.none()),
+      x: Fun.constant(Option.some(SliderModel.halfX(bounds, detail.minX(), detail.maxX(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded()))),
       y: Fun.constant(Option.some(detail.minX() - 1))
     });
 };
 
-const setToBedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
+const setToBedge = (bedge: AlloyComponent, bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(bedge, 
     {
-      x: Fun.constant(Option.none()),
+      x: Fun.constant(Option.some(SliderModel.halfX(bounds, detail.minX(), detail.maxX(), detail.stepSize(), detail.snapToGrid(), detail.snapStart(), detail.rounded()))),
       y: Fun.constant(Option.some(detail.maxX() + 1))
     });
 };
 
-const setToTLedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
+const setToTLedge = (tledge: AlloyComponent, bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(tledge, 
     {
       x: Fun.constant(Option.some(detail.minX() - 1)),
-      y: Fun.constant(Option.some(detail.minX() - 1))
+      y: Fun.constant(Option.some(detail.minY() - 1))
     });
 };
 
-const setToTRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
-    {
-      x: Fun.constant(Option.some(detail.maxX() - 1)),
-      y: Fun.constant(Option.some(detail.minX() + 1))
-    });
-};
-
-const setToBLedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
-    {
-      x: Fun.constant(Option.some(detail.minX() - 1)),
-      y: Fun.constant(Option.some(detail.maxX() - 1))
-    });
-};
-
-const setToBRedge = (redge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(redge, 
+const setToTRedge = (tredge: AlloyComponent, _bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(tredge, 
     {
       x: Fun.constant(Option.some(detail.maxX() + 1)),
-      y: Fun.constant(Option.some(detail.maxX() + 1))
+      y: Fun.constant(Option.some(detail.minY() - 1))
+    });
+};
+
+const setToBLedge = (bledge: AlloyComponent, _bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(bledge, 
+    {
+      x: Fun.constant(Option.some(detail.minX() - 1)),
+      y: Fun.constant(Option.some(detail.maxY() + 1))
+    });
+};
+
+const setToBRedge = (bredge: AlloyComponent, _bounds: ClientRect, detail: SliderDetail): void => {
+  fireSliderChange(bredge, 
+    {
+      x: Fun.constant(Option.some(detail.maxX() + 1)),
+      y: Fun.constant(Option.some(detail.maxY() + 1))
     });
 };
 

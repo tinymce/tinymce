@@ -18,7 +18,11 @@ import * as SliderActions from './SliderActions';
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) => void) => {
+const edgePart = (name: string, _action: (comp: AlloyComponent, b: ClientRect, d: SliderDetail) => void) => {
+  const action = (comp: AlloyComponent, d: SliderDetail) => {
+    const bounds = comp.element().dom().getBoundingClientRect();
+    _action(comp, bounds, d);
+  };
   return PartType.optional({
     name: '' + name + '-edge',
     overrides (detail: SliderDetail) {

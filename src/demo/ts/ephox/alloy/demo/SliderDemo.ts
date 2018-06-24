@@ -82,16 +82,16 @@ export default (): void => {
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart (_, thumb) { Toggling.on(thumb); },
-      onDragEnd (_, thumb) { Toggling.off(thumb); },
+      onDragStart(_, thumb) { Toggling.on(thumb); },
+      onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onInit (slider, thumb, detail) {
+      onInit(slider, thumb, detail) {
         Replacing.set(thumb, [
           GuiFactory.text(detail.value().get().toString())
         ]);
       },
 
-      onChange (slider, thumb, detail) {
+      onChange(slider, thumb, detail) {
         Replacing.set(thumb, [
           GuiFactory.text(detail.value().get().toString())
         ]);
@@ -119,7 +119,7 @@ export default (): void => {
             }
           },
           behaviours: Behaviour.derive([
-            Replacing.config({ }),
+            Replacing.config({}),
             Toggling.config({
               toggleClass: 'thumb-pressed'
             })
@@ -149,7 +149,7 @@ export default (): void => {
       }),
       stepSize: 10,
 
-      onChange (slider, thumb, detail) {
+      onChange(slider, thumb, detail) {
         const getColor = (hue) => {
           if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
@@ -158,7 +158,7 @@ export default (): void => {
       },
 
       // TODO: Remove duplication in demo.
-      onInit (slider, thumb, detail) {
+      onInit(slider, thumb, detail) {
         const getColor = (hue) => {
           if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
@@ -211,7 +211,7 @@ export default (): void => {
         Slider.parts().thumb({
           dom: {
             tag: 'div',
-            classes: [ 'demo-sliding-thumb' ],
+            classes: ['demo-sliding-thumb'],
             styles: {
               'height': '30px',
               'width': '10px',
@@ -232,18 +232,18 @@ export default (): void => {
     const width = canvas.width;
     var height = canvas.height;
 
-    var ctx = canvas.getContext('2d');   
+    var ctx = canvas.getContext('2d');
 
     var rgba = `rgba(255,0,0,1)`;
     ctx.fillStyle = rgba;
     ctx.fillRect(0, 0, width, height);
-  
+
     var grdWhite = ctx.createLinearGradient(0, 0, width, 0);
     grdWhite.addColorStop(0, 'rgba(255,255,255,1)');
     grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = grdWhite;
     ctx.fillRect(0, 0, width, height);
-  
+
     var grdBlack = ctx.createLinearGradient(0, 0, 0, height);
     grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
     grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
@@ -251,157 +251,195 @@ export default (): void => {
     ctx.fillRect(0, 0, width, height);
   };
 
+  const setPreviewColour = (slider: AlloyComponent, x: number, y: number): void => {
+    slider.getSystem().getByUid(_previewId).fold((err) => {
+
+    }, (comp) => {
+      const saturation = (x | 0) / 100;
+      const brightness = ((100 - y) | 0) / 100;
+
+      const lightness = (2 - saturation) * brightness / 2;
+      const newSaturation = lightness < 1 ? saturation * brightness / (lightness < 0.5 ? lightness * 2 : 2 - lightness * 2) : saturation;
+
+      const colorCss = 'hsl(0, ' + newSaturation * 100 + '%, ' + lightness * 100 + '%)';
+      Css.set(comp.element(), 'background-color', colorCss);
+    });
+  };
+
+  const _previewId = 'saturationBrightnessSliderPreview';
+
+  const _saturationBrightnessSlider = Slider.sketch({
+    dom: {
+      tag: 'div',
+      styles: {
+        width: '500px',
+        height: '500px',
+        display: 'flex',
+        'flex-wrap': 'wrap'
+      }
+    },
+    minX: 0,
+    maxX: 100,
+    minY: 0,
+    maxY: 100,
+    rounded: false,
+    axisVertical: true,
+    getInitialValue: Fun.constant({
+      x: Fun.constant(101),
+      y: Fun.constant(-1)
+    }),
+    onChange(slider, thumb, detail) {
+      setPreviewColour(slider, detail.value().get().x(), detail.value().get().y())
+    },
+
+    onInit(slider, thumb, detail) {
+      const spectrum = AlloyParts.getPart(slider, detail, 'spectrum').getOrDie();
+      setColour(spectrum);
+      setPreviewColour(slider, detail.value().get().x(), detail.value().get().y())
+    },
+
+    components: [
+      Slider.parts()['top-left-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '18px',
+            background: 'transparent',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['top-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '458px',
+            height: '18px',
+            background: 'rgb(255, 131, 131)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['top-right-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '18px',
+            background: 'rgb(255, 0, 0)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['left-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '458px',
+            background: 'rgb(128, 128, 128)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['spectrum']({
+        dom: {
+          tag: 'canvas',
+          styles: {
+            width: '460px',
+            height: '460px'
+          }
+        }
+      }),
+      Slider.parts()['right-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '458px',
+            background: 'rgb(126, 0, 0)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['bottom-left-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '18px',
+            background: 'rgb(0, 0, 0)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['bottom-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '458px',
+            height: '18px',
+            background: 'rgb(0, 0, 0)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts()['bottom-right-edge']({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '18px',
+            height: '18px',
+            background: 'rgb(0, 0, 0)',
+            border: '1px solid black'
+          }
+        }
+      }),
+      Slider.parts().thumb({
+        dom: {
+          tag: 'div',
+          classes: ['demo-sliding-thumb'],
+          styles: {
+            'height': '30px',
+            'width': '10px',
+            'top': '0px',
+            'background': 'black',
+            'padding-top': '-5px',
+            'border': '1px solid black',
+            'outline': '1px solid white'
+          }
+        }
+      })
+    ]
+  });
+
   const saturationBrightnessSlider = HtmlDisplay.section(
     gui,
     'This is another basic color slider with a sliding thumb and edges',
-    Slider.sketch({
+    Container.sketch({
       dom: {
         tag: 'div',
         styles: {
-          width: '500px',
-          height: '500px',
-          display: 'flex',
-          'flex-wrap': 'wrap'
+          display: 'flex'
         }
       },
-      minX: 0,
-      maxX: 100,
-      minY: 0,
-      maxY: 100,
-      rounded: false,
-      axisVertical: true,
-      getInitialValue: Fun.constant({
-        x: Fun.constant(256),
-        y: Fun.constant(0)
-      }),
-      onChange (slider, thumb, detail) {
-        const rightEdge = AlloyParts.getPart(slider, detail, 'right-edge').getOrDie();
-        // This color is wrong but otherwise we'd need another library.
-        const getColor = (value) => {
-          return 'hsl(0, ' + value.x() + '%, ' + (100 - value.y()) + '%)';
-        };
-        const color = getColor(detail.value().get());
-        Css.set(rightEdge.element(), 'background-color', color);
-      },
-
-      onInit (slider, thumb, detail) {
-        const spectrum = AlloyParts.getPart(slider, detail, 'spectrum').getOrDie();
-        setColour(spectrum);
-      },
-
       components: [
-        Slider.parts()['top-left-edge']({
+        _saturationBrightnessSlider,
+        {
+          uid: _previewId,
           dom: {
             tag: 'div',
             styles: {
-              width: '18px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
+              width: '50px',
+              height: '50px'
             }
           }
-        }),
-        Slider.parts()['top-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '458px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['top-right-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '18px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['left-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '18px',
-              height: '458px',
-              background: 'white',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['spectrum']({
-          dom: {
-            tag: 'canvas',
-            styles: {
-              width: '460px',
-              height: '460px'
-            }
-          }
-        }),
-        Slider.parts()['right-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '18px',
-              height: '458px',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['bottom-left-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '18px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['bottom-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '458px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts()['bottom-right-edge']({
-          dom: {
-            tag: 'div',
-            styles: {
-              width: '18px',
-              height: '18px',
-              background: 'transparent',
-              border: '1px solid black'
-            }
-          }
-        }),
-        Slider.parts().thumb({
-          dom: {
-            tag: 'div',
-            classes: [ 'demo-sliding-thumb' ],
-            styles: {
-              'height': '30px',
-              'width': '10px',
-              'top': '0px',
-              'background': 'black',
-              'padding-top': '-5px',
-              'border': '1px solid black',
-              'outline': '1px solid white'
-            }
-          }
-        })
-      ]
+        }
+      ],
+      containerBehaviours: Behaviour.derive([
+        Keying.config({ mode: 'special' })
+      ])
     })
   );
 
@@ -409,6 +447,6 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (! isTouch) { Keying.focusIn(saturationBrightnessSlider); }
+    if (!isTouch) { Keying.focusIn(saturationBrightnessSlider); }
   });
 };
