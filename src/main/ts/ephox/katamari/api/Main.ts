@@ -13,7 +13,7 @@ import { LazyValue } from './LazyValue';
 import * as LazyValues from './LazyValues';
 import * as Merger from './Merger';
 import * as Namespace from './Namespace';
-import Obj from './Obj';
+import * as Obj from './Obj';
 import { Option } from './Option';
 import * as Options from './Options';
 import * as Resolve from './Resolve';

@@ -4,15 +4,15 @@ import { Option } from './Option';
 // http://jsperf.com/object-keys-iteration/107
 //
 // Use the native keys if it is available (IE9+), otherwise fall back to manually filtering
-var keys = (function () {
-  var fastKeys = Object.keys;
+export const keys = (function () {
+  const fastKeys = Object.keys;
 
   // This technically means that 'each' and 'find' on IE8 iterate through the object twice.
   // This code doesn't run on IE8 much, so it's an acceptable tradeoff.
   // If it becomes a problem we can always duplicate the feature detection inside each and find as well.
-  var slowKeys = function (o) {
-    var r = [];
-    for (var i in o) {
+  const slowKeys = function (o: {}) {
+    const r: string[] = [];
+    for (const i in o) {
       if (o.hasOwnProperty(i)) {
         r.push(i);
       }
@@ -24,18 +24,18 @@ var keys = (function () {
 })();
 
 
-var each = function (obj, f) {
-  var props = keys(obj);
-  for (var k = 0, len = props.length; k < len; k++) {
-    var i = props[k];
-    var x = obj[i];
+export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => void) {
+  const props = keys(obj);
+  for (let k = 0, len = props.length; k < len; k++) {
+    const i = props[k];
+    const x = obj[i];
     f(x, i, obj);
   }
 };
 
-/** objectMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
-var objectMap = function (obj, f) {
-  return tupleMap(obj, function (x, i, obj) {
+/** map :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
+export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, obj: T) => R) {
+  return tupleMap<{[k in keyof T]: R}, T>(obj, function (x, i, obj) {
     return {
       k: i,
       v: f(x, i, obj)
@@ -44,21 +44,21 @@ var objectMap = function (obj, f) {
 };
 
 /** tupleMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> { k: x, v: y })) -> JsObj(x, y) */
-var tupleMap = function (obj, f) {
-  var r = {};
+export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}) : R {
+  const r: Record<string, any> = {};
   each(obj, function (x, i) {
-    var tuple = f(x, i, obj);
+    const tuple = f(x, i, obj);
     r[tuple.k] = tuple.v;
   });
-  return r;
+  return <R>r;
 };
 
 /** bifilter :: (JsObj(k, v), (v, k -> Bool)) -> { t: JsObj(k, v), f: JsObj(k, v) } */
-var bifilter = function (obj, pred) {
-  var t = {};
-  var f = {};
+export const bifilter = function <V> (obj: Record<string,V>, pred: (value: V, key: string) => boolean) {
+  const t: Record<string,V> = {};
+  const f: Record<string,V> = {};
   each(obj, function(x, i) {
-    var branch = pred(x, i) ? t : f;
+    const branch = pred(x, i) ? t : f;
     branch[i] = x;
   });
   return {
@@ -68,8 +68,8 @@ var bifilter = function (obj, pred) {
 };
 
 /** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
-var mapToArray = function (obj, f) {
-  var r = [];
+export const mapToArray = function <T,R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+  const r: R[] = [];
   each(obj, function(value, name) {
     r.push(f(value, name));
   });
@@ -77,11 +77,11 @@ var mapToArray = function (obj, f) {
 };
 
 /** find :: (JsObj(k, v), (v, k, JsObj(k, v) -> Bool)) -> Option v */
-var find = function (obj, pred) {
-  var props = keys(obj);
-  for (var k = 0, len = props.length; k < len; k++) {
-    var i = props[k];
-    var x = obj[i];
+export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Option<T[keyof T]> {
+  const props = keys(obj);
+  for (let k = 0, len = props.length; k < len; k++) {
+    const i = props[k];
+    const x = obj[i];
     if (pred(x, i, obj)) {
       return Option.some(x);
     }
@@ -90,24 +90,12 @@ var find = function (obj, pred) {
 };
 
 /** values :: JsObj(k, v) -> [v] */
-var values = function (obj) {
+export const values = function <T> (obj: T) {
   return mapToArray(obj, function (v) {
     return v;
   });
 };
 
-var size = function (obj) {
-  return values(obj).length;
-};
-
-export default <any> {
-  bifilter: bifilter,
-  each: each,
-  map: objectMap,
-  mapToArray: mapToArray,
-  tupleMap: tupleMap,
-  find: find,
-  keys: keys,
-  values: values,
-  size: size
+export const size = function (obj: {}) {
+  return keys(obj).length;
 };

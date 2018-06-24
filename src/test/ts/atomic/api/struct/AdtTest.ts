@@ -1,7 +1,7 @@
 import { Adt } from 'ephox/katamari/api/Adt';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import Obj from 'ephox/katamari/api/Obj';
+import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
@@ -151,8 +151,8 @@ UnitTest.test('ADT Test', function() {
     });
 
     try {
-      const branches = Obj.tupleMap(original, function (k, i) {
-        return { k: k, v: Fun.identity };
+      const branches = Arr.mapToObject(original, function () {
+        return Fun.identity;
       });
       subject.match(branches);
       return false;

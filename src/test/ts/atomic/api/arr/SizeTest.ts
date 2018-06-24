@@ -1,4 +1,4 @@
-import Obj from 'ephox/katamari/api/Obj';
+import * as Obj from 'ephox/katamari/api/Obj';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SizeTest', function() {

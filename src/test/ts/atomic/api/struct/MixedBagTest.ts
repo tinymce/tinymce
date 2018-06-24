@@ -1,5 +1,5 @@
 import * as Arr from 'ephox/katamari/api/Arr';
-import Obj from 'ephox/katamari/api/Obj';
+import * as Obj from 'ephox/katamari/api/Obj';
 import * as Type from 'ephox/katamari/api/Type';
 import * as Unique from 'ephox/katamari/api/Unique';
 import { MixedBag } from 'ephox/katamari/data/MixedBag';
