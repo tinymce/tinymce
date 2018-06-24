@@ -70,7 +70,7 @@ var rotate = function (ir, angle) {
 /* ImageResult -> ImageResult */
 var exifRotate = (ir) => {
   // EXIF orientation is represented by numbers 1-8. We don't want to deal with
-  // all the cases, but these two are probably the most common.
+  // all the cases, but these three are probably the most common.
   // Explanation of numbers: https://magnushoff.com/jpeg-orientation.html 
   const ROTATE_90 = 6; // image is rotated left by 90 degrees
   const ROTATE_180 = 3; // image is upside down
