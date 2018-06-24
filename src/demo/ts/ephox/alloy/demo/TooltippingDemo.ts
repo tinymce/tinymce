@@ -60,9 +60,11 @@ export default (): void => {
             Focusing.config({ }),
             Tooltipping.config({
               lazySink: lazySink,
-              // NOTE: At this stage, probably doesn't do much. But would,
-              // with an API.
-              exclusive: false,
+              // NOTE: At this stage, exclusive=false, probably doesn't do much, because
+              // a mouseout/focusout is almost always fired before another tooltip
+              // would show. However, if there was an API to make tooltips show,
+              // then it would have a purpose.
+              exclusive: true,
               tooltipDom: {
                 tag: 'span',
                 styles: {
