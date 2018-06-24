@@ -7,8 +7,6 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result } from '@ephox/katamari';
 import { RepresentingBehaviour } from '../../behaviour/representing/RepresentingTypes';
 
-
-
 // The self-reference is clumsy.
 const Representing = Behaviour.create({
   fields: RepresentSchema,

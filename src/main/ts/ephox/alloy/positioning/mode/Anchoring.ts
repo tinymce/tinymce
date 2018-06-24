@@ -1,5 +1,5 @@
 import { Contracts, Option } from '@ephox/katamari';
-import { Element } from "@ephox/sugar";
+import { Element } from '@ephox/sugar';
 
 import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -24,7 +24,7 @@ export interface AnchorDetail<D> {
 
 export type MaxHeightFunction =  (elem: Element, available: number) => void;
 export interface AnchorOverrides {
-  maxHeightFunction?: MaxHeightFunction
+  maxHeightFunction?: MaxHeightFunction;
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec {
@@ -50,7 +50,7 @@ export interface HotspotAnchorSpec extends CommonAnchorSpec {
   layouts?: {
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
-  }
+  };
 }
 
 export interface HotspotAnchor extends AnchorDetail<HotspotAnchor> {
@@ -58,7 +58,7 @@ export interface HotspotAnchor extends AnchorDetail<HotspotAnchor> {
   layouts: () => {
     onLtr: () => (elem: Element) => AnchorLayout[];
     onRtl: () => (elem: Element) => AnchorLayout[];
-  }
+  };
 }
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec {
@@ -78,8 +78,6 @@ export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor> {
   };
 }
 
-
-
 export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   anchor: 'makeshift';
   x: number;
@@ -90,7 +88,7 @@ export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   layouts?: {
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
-  }
+  };
 }
 
 export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor> {
@@ -102,7 +100,7 @@ export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor> {
   layouts?: () => Option<{
     onLtr: () => (elem: Element) => AnchorLayout[];
     onRtl: () => (elem: Element) => AnchorLayout[];
-  }>
+  }>;
 }
 
 export interface Anchoring {
@@ -110,7 +108,7 @@ export interface Anchoring {
   bubble: () => Bubble;
   overrides: () => AnchorOverrides;
   layouts: () => AnchorLayout[];
-  placer: () => Option<AnchorPlacement>
+  placer: () => Option<AnchorPlacement>;
 }
 
 const nu: (spec) => Anchoring = Contracts.exactly([
@@ -119,8 +117,8 @@ const nu: (spec) => Anchoring = Contracts.exactly([
   'overrides',
   'layouts',
   'placer'
-])
+]);
 
 export {
   nu
-}
+};

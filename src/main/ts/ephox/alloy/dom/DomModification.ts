@@ -71,7 +71,7 @@ const modToRaw = (mod) => {
 };
 
 // Ensure that both defChildren and domChildren are not specified.
-const clashingOptArrays = (key: string, oArr1: Option<Array<any>>, oArr2: Option<Array<any>>): Record<string, Array<any>> => {
+const clashingOptArrays = (key: string, oArr1: Option<any[]>, oArr2: Option<any[]>): Record<string, any[]> => {
   return oArr1.fold(() => {
     return oArr2.fold(() => {
       return { };

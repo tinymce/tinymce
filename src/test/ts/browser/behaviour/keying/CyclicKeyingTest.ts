@@ -12,8 +12,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const makeButton = (v, t) => {
       return Button.sketch({

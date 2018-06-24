@@ -8,7 +8,7 @@ export interface SketchBehaviours {
   dump: () => AlloyBehaviourRecord;
 }
 
-const field = (name: string, forbidden: AlloyBehaviour<any,any>[]): FieldProcessorAdt => {
+const field = (name: string, forbidden: Array<AlloyBehaviour<any, any>>): FieldProcessorAdt => {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, (f) => {
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([

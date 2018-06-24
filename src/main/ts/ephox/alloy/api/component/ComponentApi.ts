@@ -6,7 +6,7 @@ import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
-  config: <D>(behaviour: AlloyBehaviour<any,D>) => D | any
+  config: <D>(behaviour: AlloyBehaviour<any, D>) => D | any;
   hasConfigured: (behaviour) => boolean;
   spec: () => any;
   readState: (behaviourName: string) => any;

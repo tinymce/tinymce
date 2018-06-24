@@ -1,6 +1,6 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import { SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
@@ -10,13 +10,11 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { Element } from '@ephox/sugar';
+
 import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -62,7 +60,7 @@ const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler
   };
 };
 
-const getRules = (_component, _se, flowConfig, _flowState): KeyRules.KeyRule<FlowConfig,Stateless>[] => {
+const getRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
   return [

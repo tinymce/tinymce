@@ -9,8 +9,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('InputTest', (success, failure) => {
 
-
-
   const platform = PlatformDetection.detect();
 
   GuiSetup.setup((store, doc, body) => {

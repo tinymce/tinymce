@@ -6,7 +6,6 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 
-
 export interface ExpandableFormDetail extends CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
@@ -14,7 +13,7 @@ export interface ExpandableFormDetail extends CompositeSketchDetail {
   expandableBehaviours: () => SketchBehaviours;
   action: () => Option<() => ExpandableFormAction>;
   role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
 
   markers: () => {
     closedClass: () => string;
@@ -36,7 +35,7 @@ export interface ExpandableFormSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   expandableBehaviours?: AlloyBehaviourRecord;
-  eventOrder?: Record<string, string[]>
+  eventOrder?: Record<string, string[]>;
 
   markers: {
     closedClass: string;

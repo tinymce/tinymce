@@ -10,8 +10,6 @@ import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('DockingTest', (success, failure) => {
 
-
-
   const subject = Memento.record(
     Container.sketch({
       dom: {

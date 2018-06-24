@@ -11,8 +11,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
-
-
   const root = Cell(Option.none());
 
   GuiSetup.setup((store, doc, body) => {

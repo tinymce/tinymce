@@ -1,13 +1,13 @@
 import { Fun } from '@ephox/katamari';
 
 const BACKSPACE: () => number[] = () => [8];
-const TAB : () => number[] = () => [9];
-const ENTER : () => number[] = () => [13];
-const SHIFT : () => number[] = () => [16];
-const CTRL : () => number[] = () => [17];
-const ALT : () => number[] = () => [18];
-const CAPSLOCK : () => number[] = () => [20];
-const ESCAPE : () => number[] = () => [27];
+const TAB: () => number[] = () => [9];
+const ENTER: () => number[] = () => [13];
+const SHIFT: () => number[] = () => [16];
+const CTRL: () => number[] = () => [17];
+const ALT: () => number[] = () => [18];
+const CAPSLOCK: () => number[] = () => [20];
+const ESCAPE: () => number[] = () => [27];
 const SPACE: () => number[] = () => [32];
 const PAGEUP: () => number[] = () => [33];
 const PAGEDOWN: () => number[] = () => [34];

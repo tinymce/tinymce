@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Compare, Insert } from '@ephox/sugar';
+import { Compare, Insert, Element } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
 import * as Attachment from '../../api/system/Attachment';
@@ -7,7 +7,6 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { ReplacingConfig } from '../../behaviour/replacing/ReplacingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { Element } from '@ephox/sugar';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   Attachment.detachChildren(component);

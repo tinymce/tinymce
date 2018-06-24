@@ -28,7 +28,7 @@ export interface TabbarSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   tabbarBehaviours?: AlloyBehaviourRecord;
 
-  tabs: Partial<TabButtonWithViewSpec>[];
+  tabs: Array<Partial<TabButtonWithViewSpec>>;
 }
 
 export interface TabbarSketcher extends CompositeSketch<TabbarSpec, TabbarDetail> { }

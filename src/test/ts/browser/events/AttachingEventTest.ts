@@ -12,8 +12,6 @@ import TestStore from 'ephox/alloy/test/TestStore';
 
 UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure) => {
 
-
-
   const gui = Gui.takeover(
     GuiFactory.build(
       Container.sketch({

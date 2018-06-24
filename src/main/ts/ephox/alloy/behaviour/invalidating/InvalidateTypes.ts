@@ -3,7 +3,6 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Future, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
@@ -15,7 +14,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
-export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
+export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
   invalidClass: string;
   getRoot?: (comp: AlloyComponent) => Option<Element>;
   notify?: {
@@ -25,15 +24,15 @@ export interface InvalidatingConfigSpec extends BehaviourConfigSpec {
     onValid?: (comp: AlloyComponent) => void;
     onInvalid?: (comp: AlloyComponent, err: string) => void;
     onValidate?: (comp: AlloyComponent) => void;
-  }
+  };
   validator?: {
     validate: (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: string;
     validateOnLoad?: boolean;
-  }
+  };
 }
 
-export interface InvalidatingConfig extends BehaviourConfigDetail {
+export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   invalidClass: () => string;
   notify?: () => Option<{
     getContainer?: () => (input: AlloyComponent) => Option<Element>;
@@ -43,7 +42,7 @@ export interface InvalidatingConfig extends BehaviourConfigDetail {
     onValidate: () => (comp: AlloyComponent) => void;
   }>;
   onEvent?: () => string;
-  getRoot?: () => (comp: AlloyComponent) => Option<Element>
+  getRoot?: () => (comp: AlloyComponent) => Option<Element>;
   validator: () => Option<{
     validate: () => (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: () => string;

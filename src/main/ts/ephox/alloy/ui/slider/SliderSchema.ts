@@ -26,7 +26,7 @@ const SliderSchema: FieldProcessorAdt[] = [
 
   FieldSchema.state('value', (spec: SliderSpec) => { 
     return Cell({
-      x: spec.minX, 
+      x: spec.minX,
       y: spec.minY
     });
   }),
@@ -35,7 +35,7 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('rounded', true)
 ].concat(! isTouch ? [
   // Only add if not on a touch device
-  FieldSchema.state('mouseIsDown', () => { return Cell(false); })
+  FieldSchema.state('mouseIsDown', () => Cell(false))
 ] : [ ]);
 
 export {

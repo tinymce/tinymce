@@ -54,4 +54,4 @@ export default () => {
     assertEq,
     sAssertSortedEq
   };
-}
+};

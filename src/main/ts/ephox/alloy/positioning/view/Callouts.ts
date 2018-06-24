@@ -1,11 +1,10 @@
 import { RepositionDecision } from '../../positioning/view/Reposition';
 import { Fun, Option } from '@ephox/katamari';
-import { Classes, Css, Height, Width } from '@ephox/sugar';
+import { Classes, Css, Height, Width, Element } from '@ephox/sugar';
 
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
-import { Element } from '@ephox/sugar';
 import { AnchorElement, AnchorBox } from '../../positioning/layout/Layout';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
@@ -49,7 +48,7 @@ const setHeight = (element, decision, options) => {
 };
 
 const position = (element, decision, options) => {
-  const addPx = (num) => { return num + 'px'; };
+  const addPx = (num) => num + 'px';
 
   const newPosition = Origins.reposition(options.origin(), decision);
   Css.setOptions(element, {

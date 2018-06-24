@@ -75,12 +75,12 @@ const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
       detail.dom().attributes()
     ),
     styles: detail.dom().styles(),
-    domChildren: Arr.map(detail.components(), (comp) => { return comp.element(); })
+    domChildren: Arr.map(detail.components(), (comp) => comp.element())
   };
 
   return NuDefinition(Merger.deepMerge(base,
-    detail.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
-    detail.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
+    detail.dom().innerHtml().map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
+    detail.dom().value().map((h) => Objects.wrap('value', h)).getOr({ })
   ));
 };
 

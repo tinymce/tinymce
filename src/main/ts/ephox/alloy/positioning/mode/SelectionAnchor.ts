@@ -1,4 +1,4 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
 import { Direction, Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
@@ -16,9 +16,8 @@ import * as ContainerOffsets from './ContainerOffsets';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { SugarRange } from '../../alien/TypeDefinitions';
-import { AnchorLayout } from '../layout/Layout';
 
-const point: (element: Element, offset: number) => {element: () => Element; offset: () => number;} = Struct.immutable('element', 'offset');
+const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
 const descendOnce = (element, offset) => {
@@ -68,7 +67,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
     });
   });
 
-  return selectionBox.map(box => {
+  return selectionBox.map((box) => {
     const points = [ rootPoint, box.point() ];
     const topLeft = Origins.cata(origin,
       () => {
@@ -93,19 +92,19 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
       return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
     });
 
-    const layoutsLtr = (): AnchorLayout[] => {
+    const layoutsLtr = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
         [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const layoutsRtl = (): AnchorLayout[] => {
+    const layoutsRtl = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
         [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const getLayouts: (elem: Element) => AnchorLayout[] =
+    const getLayouts: (elem: Element) => Layout.AnchorLayout[] =
       Direction.onDirection(layoutsLtr(), layoutsRtl());
     const layouts = targetElement.map(getLayouts).getOrThunk(layoutsLtr);
 

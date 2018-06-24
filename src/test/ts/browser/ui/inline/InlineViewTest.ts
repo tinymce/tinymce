@@ -14,8 +14,6 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return Sinks.relativeSink();
 

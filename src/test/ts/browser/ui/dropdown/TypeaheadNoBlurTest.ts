@@ -16,8 +16,6 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 

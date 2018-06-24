@@ -8,8 +8,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) => {
 
-
-
   const inner = Memento.record({
     dom: { tag: 'span', innerHtml: 'inner' }
   });

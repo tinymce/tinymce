@@ -10,8 +10,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, failure) => {
 
-
-
   // The purpose of this test is to check that when a component has
   // keying and focusing, that the keying behaviour's focusIn fires
   // after the focusing

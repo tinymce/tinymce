@@ -96,7 +96,7 @@ const thumbPart = PartType.required({
 
 const spectrumPart = PartType.required({
   schema: [
-    FieldSchema.state('mouseIsDown', () => { return Cell(false); })
+    FieldSchema.state('mouseIsDown', () => Cell(false))
   ],
   name: 'spectrum',
   overrides (detail: SliderDetail) {
@@ -194,4 +194,4 @@ export default [
   brEdgePart,
   thumbPart,
   spectrumPart
-] as PartType.PartTypeAdt[]
+] as PartType.PartTypeAdt[];

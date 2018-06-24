@@ -89,13 +89,10 @@ test(
     var fixedBottom = Option.some(306); // 500 - 91 - 103
     var none = Option.none();
 
-
-
     check(Reposition.css('fixed', fixedLeft, fixedTop, none, none), fixedOrigin, makeOnscreen(Direction.southeast()));
     check(Reposition.css('fixed', none, fixedTop, fixedRight, none), fixedOrigin, makeOnscreen(Direction.southwest()));
     check(Reposition.css('fixed', fixedLeft, none, none, fixedBottom), fixedOrigin, makeOnscreen(Direction.northeast()));
     check(Reposition.css('fixed', none, none, fixedRight, fixedBottom), fixedOrigin, makeOnscreen(Direction.northwest()));
-
 
     // -5 is zero minus origin x
     // -10 is zero minus origin y
@@ -106,7 +103,6 @@ test(
     // -197 is distance from the right of origin to right of popup: 500 - (600 - 5) - 102
     var expectedBeyondTopRight = Reposition.css('fixed', none, Option.some(-10), Option.some(-197), none);
     check(expectedBeyondTopRight, fixedOrigin, makeDecision(600, 0, 102, 103, Direction.southwest()));
-
 
     // -5 is zero minus origin x
     // -193 is distance from bottom of origin to bottom of popup: 500 - (600 - 10) - 103

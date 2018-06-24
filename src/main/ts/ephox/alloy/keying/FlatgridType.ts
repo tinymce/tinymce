@@ -13,11 +13,9 @@ import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 import { FlatgridConfig, FlatgridState, KeyRuleHandler } from '../keying/KeyingModeTypes';
-import { ElementMover } from '../navigation/DomMovement';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -45,7 +43,7 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
   });
 };
 
-const doMove = (cycle): ElementMover<FlatgridConfig, FlatgridState> => {
+const doMove = (cycle): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => {
   return (element, focused, gridConfig, gridState) => {
     return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind((identified) => {
       return cycle(
@@ -72,7 +70,7 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-const getRules: () => KeyRules.KeyRule<FlatgridConfig, FlatgridState>[] = Fun.constant([
+const getRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),

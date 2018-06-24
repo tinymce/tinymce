@@ -23,7 +23,7 @@ export interface TieredMenuDetail extends SingleSketchDetail {
     backgroundMenu: () => string;
     selectedMenu: () => string;
     selectedItem: () => string;
-  }
+  };
 
   onEscape: () => (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
   onExecute: () => (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
@@ -39,12 +39,11 @@ export interface TieredMenuDetail extends SingleSketchDetail {
 
   eventOrder: () => Record<string, string[]>;
 
-
   data: () => {
     primary: () => string;
     expansions: () => Record<string, string>;
     menus: () => Record<string, PartialMenuSpec>;
-  }
+  };
 }
 
 export interface TieredMenuSpec extends SingleSketchSpec {
@@ -72,7 +71,7 @@ export interface TieredMenuSpec extends SingleSketchSpec {
     primary: string;
     expansions: Record<string, string>;
     menus: Record<string, PartialMenuSpec>;
-  }
+  };
 
   markers: {
     item: string;
@@ -80,7 +79,7 @@ export interface TieredMenuSpec extends SingleSketchSpec {
     backgroundMenu: string;
     selectedMenu: string;
     selectedItem: string;
-  }
+  };
 }
 
 export type TieredMenuRecord = Record<string, PartialMenuSpec>;

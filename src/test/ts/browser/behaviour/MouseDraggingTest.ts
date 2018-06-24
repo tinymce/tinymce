@@ -13,8 +13,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
-
-
   const subject = Memento.record(
     Container.sketch({
       dom: {

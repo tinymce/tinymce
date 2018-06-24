@@ -22,7 +22,6 @@ export interface SliderDetail extends CompositeSketchDetail {
   components: () => AlloySpec[ ];
   sliderBehaviours: () => SketchBehaviours;
 
-
   mouseIsDown: () => Cell<boolean>;
   value: () => Cell<SliderValue>;
   axisHorizontal?: () => boolean;

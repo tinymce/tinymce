@@ -39,7 +39,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
     blocker: {
       dom?: Partial<RawDomSchema>;
     }
-  }
+  };
 }
 
 export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, ModalDialogDetail> {

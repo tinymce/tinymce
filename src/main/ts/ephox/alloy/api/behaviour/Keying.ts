@@ -20,7 +20,6 @@ export type KeyingConfigSpec =
   AcylicConfigSpec | CyclicConfigSpec | FlowConfigSpec | FlatgridConfigSpec |
   MatrixConfigSpec | ExecutingConfigSpec | MenuConfigSpec | SpecialConfigSpec;
 
-
 // TODO: dynamic type, TODO: group these into their KeyingModes
 export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
 

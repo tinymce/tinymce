@@ -74,7 +74,6 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
 
 };
 
-
 const ExpandableForm = Sketcher.composite({
   name: 'ExpandableForm',
   configFields: ExpandableFormSchema.schema(),

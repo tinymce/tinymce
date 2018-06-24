@@ -20,8 +20,6 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('TypeaheadTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 

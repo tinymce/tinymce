@@ -1,5 +1,5 @@
-import { SugarDocument } from "ephox/alloy/alien/TypeDefinitions";
-import { Option } from "@ephox/katamari";
+import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+import { Option } from '@ephox/katamari';
 import { Body, Element, Traverse} from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 

@@ -28,7 +28,7 @@ const getCurried = (descHandler: CurriedHandler): Function => {
 
 const getUncurried = (descHandler: UncurriedHandler): Function => {
   return descHandler.handler;
-}
+};
 
 export {
   curried,

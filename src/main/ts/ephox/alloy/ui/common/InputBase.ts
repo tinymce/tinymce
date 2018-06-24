@@ -34,9 +34,8 @@ const focusBehaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRec
         input.dom().setSelectionRange(0, value.length);
       }
     })
-  ])
+  ]);
 };
-
 
 const behaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord => {
   return Merger.deepMerge(

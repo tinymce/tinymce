@@ -20,7 +20,7 @@ const isSubstitute = (uiType) => {
 };
 
 const subPlaceholder = (owner, detail, compSpec, placeholders) => {
-  if (owner.exists((o) => { return o !== compSpec.owner; })) { return adt.single(true, Fun.constant(compSpec)); }
+  if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
   return Objects.readOptFrom(placeholders, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +

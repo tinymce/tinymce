@@ -12,7 +12,6 @@ import { console } from '@ephox/dom-globals';
 import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-
 const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
   const setGroups = (toolbar, groups) => {
     getGroupContainer(toolbar).fold(() => {

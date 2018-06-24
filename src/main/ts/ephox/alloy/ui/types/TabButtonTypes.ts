@@ -26,7 +26,7 @@ export interface TabButtonSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   tabButtonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
-  domModification?: DomModificationSpec
+  domModification?: DomModificationSpec;
 }
 
-export interface TabButtonSketcher extends SingleSketch<TabButtonSpec, TabButtonDetail> { };
+export interface TabButtonSketcher extends SingleSketch<TabButtonSpec, TabButtonDetail> { }
