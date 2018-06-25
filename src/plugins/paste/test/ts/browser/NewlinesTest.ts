@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Newlines from 'tinymce/plugins/paste/core/Newlines';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
@@ -61,7 +61,7 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
     }
   );
 
-  Obj.each(textCases, function (c) {
+  Arr.each(textCases, function (c) {
     Assertions.assertEq(c.label || 'Asserting: ' + c.content, c.isText, Newlines.isPlainText(c.content));
   });
 });
