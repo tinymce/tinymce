@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         tinyApis.sSetSelection(start, soffset, start, soffset),
         Waiter.sTryUntil(
           label,
-          sAssertChanges('checking changes', expected),
+          sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected),
           10,
           1000
         ),
@@ -46,8 +46,14 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
     };
 
     const sTestChanges = GeneralSteps.sequence([
-      // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p>'
-      tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p><p>This is the third.</p>'),
+      // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p><p>Spanning |multiple</p><p>paragraphs| now</p>'
+      tinyApis.sSetContent([
+        '<p>This is the first paragraph</p>',
+        '<p>This is the second.</p>',
+        '<p>This is the third.</p>',
+        '<p>Spanning multiple</p>',
+        '<p>paragraphs now</p>'
+      ].join('')),
       tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 0, 0 ], 'This is'.length),
       sAnnotate(editor, 'alpha', 'id-one', { anything: 'comment-1' }),
 
@@ -57,6 +63,9 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
       tinyApis.sSetSelection([ 2, 0 ], 'This is the th'.length, [ 2, 0 ], 'This is the thir'.length),
       sAnnotate(editor, 'beta', 'id-three', { something: 'comment-three' }),
 
+      tinyApis.sSetSelection([ 3, 0 ], 'Spanning '.length, [ 4, 0 ], 'paragraphs'.length),
+      sAnnotate(editor, 'gamma', 'id-four', { something: 'comment-four' }),
+
       Step.wait(1000),
       sClearChanges,
 
@@ -65,7 +74,11 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
 
         `<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>`,
 
-        `<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>`
+        `<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>`,
+
+        `<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>`,
+
+        `<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">paragraphs</span> now</p>`
       ]),
 
       // Outside: p(0) > text(0) > "Th".length
@@ -213,15 +226,28 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
           }
         });
 
-        ed.annotator.annotationChanged((uid: string, name: string, dom: any) => {
-          if (uid === null || name === null || dom === null) {
+        ed.annotator.register('gamma', {
+          decorate: (uid, data) => {
+            return {
+              attributes: {
+                'data-test-something': data.something
+              },
+              classes: [ ]
+            };
+          }
+        });
+
+        ed.annotator.annotationChanged((uid: string, name: string, nodes: any[]) => {
+          if (uid === null || name === null || nodes.length === 0) {
             Assertions.assertEq(
               'Every value must be null if one is',
               true,
-              uid === null && name === null && dom === null
+              uid === null && name === null && nodes.length === 0
             );
           } else {
-            assertMarker(ed, { uid, name }, dom);
+            // In this test, gamma markers span multiple nodes
+            if (name === 'gamma') { Assertions.assertEq('Gamma annotations must have 2 nodes', 2, nodes.length); }
+            assertMarker(ed, { uid, name }, nodes);
           }
 
           changes.set(

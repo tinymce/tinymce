@@ -6,7 +6,7 @@ import * as Markings from './Markings';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string, element: any}> => {
+const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string, elements: any[]}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
@@ -31,10 +31,15 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
   };
 
   return closest.bind((c) => {
-    return getAttr(c, `${Markings.dataAnnotationId()}`).bind(
-      (uid) => getAttr(c, `${Markings.dataAnnotation()}`).map((name) => ({
-        uid, name, element: c
-      }))
+    return getAttr(c, `${Markings.dataAnnotationId()}`).bind((uid) =>
+      getAttr(c, `${Markings.dataAnnotation()}`).map((name) => {
+        const elements = findMarkers(editor, uid);
+        return {
+          uid,
+          name,
+          elements
+        };
+      })
     );
   });
 };

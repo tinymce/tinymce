@@ -26,13 +26,13 @@ export default function (editor): Annotator {
 
   const changeCallbacks = Cell([ ]);
 
-  const fireCallbacks = (name: string, uid: string, element: any): void => {
-    Arr.each(changeCallbacks.get(), (f) => f(name, uid, element !== null ? element.dom() : null));
+  const fireCallbacks = (name: string, uid: string, elements: any[]): void => {
+    Arr.each(changeCallbacks.get(), (f) => f(name, uid, Arr.map(elements, (elem) => elem.dom())));
   };
 
   const fireNoAnnotation = (): void => {
     // Surely there is a better API choice than this.
-    fireCallbacks(null, null, null);
+    fireCallbacks(null, null, [ ]);
   };
 
   const isDifferent = ({ uid, name }): boolean => {
@@ -49,10 +49,10 @@ export default function (editor): Annotator {
           lastAnnotation.set(Option.none());
         }
       },
-      ({ uid, name, element }) => {
+      ({ uid, name, elements }) => {
         if (isDifferent({ uid, name })) {
           lastAnnotation.set(Option.some({ uid, name }));
-          fireCallbacks(uid, name, element);
+          fireCallbacks(uid, name, elements);
         }
       }
     );

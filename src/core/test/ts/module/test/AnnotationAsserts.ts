@@ -21,21 +21,23 @@ const sAssertHtmlContent = (tinyApis, children: string[]) => {
   );
 };
 
-const assertMarker = (editor: Editor, expected, node: any) => {
+const assertMarker = (editor: Editor, expected, nodes: any[]) => {
   const { uid, name } = expected;
-  Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
-  Assertions.assertStructure(
-    'Checking wrapper has correct decoration',
-    ApproxStructure.build((s, str, arr) => {
-      return s.element('span', {
-        attrs: {
-          'data-mce-annotation': str.is(name),
-          'data-mce-annotation-uid': str.is(uid)
-        }
-      });
-    }),
-    Element.fromDom(node)
-  );
+  Arr.each(nodes, (node) => {
+    Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
+    Assertions.assertStructure(
+      'Checking wrapper has correct decoration',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('span', {
+          attrs: {
+            'data-mce-annotation': str.is(name),
+            'data-mce-annotation-uid': str.is(uid)
+          }
+        });
+      }),
+      Element.fromDom(node)
+    );
+  });
 };
 
 const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: string) => Step.sync(() => {
