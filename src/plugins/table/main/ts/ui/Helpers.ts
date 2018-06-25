@@ -50,7 +50,7 @@ function styleFieldHasFocus(e) {
   return e.control.rootControl.find('#style')[0].getEl().isEqualNode(document.activeElement);
 }
 
-const syncAdvancedStyleFields = function (editor, evt) {
+const syncAdvancedStyleFields = function (editor: Editor, evt) {
   if (styleFieldHasFocus(evt)) {
     updateAdvancedFields(editor, evt);
   } else {
@@ -58,7 +58,7 @@ const syncAdvancedStyleFields = function (editor, evt) {
   }
 };
 
-const updateStyleField = function (editor, evt) {
+const updateStyleField = function (editor: Editor, evt) {
   const dom = editor.dom;
   const rootControl = evt.control.rootControl;
   const data = rootControl.toJSON();
@@ -73,7 +73,7 @@ const updateStyleField = function (editor, evt) {
   rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
 };
 
-const updateAdvancedFields = function (editor, evt) {
+const updateAdvancedFields = function (editor: Editor, evt) {
   const dom = editor.dom;
   const rootControl = evt.control.rootControl;
   const data = rootControl.toJSON();
