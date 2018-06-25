@@ -20,7 +20,7 @@ let tags = {
         0x0110: 'Model',
         0x0131: 'Software',
         0x8769: 'ExifIFDPointer',
-        0x8825:	'GPSInfoIFDPointer'
+        0x8825: 'GPSInfoIFDPointer'
     },
     exif: {
         0x9000: 'ExifVersion',
@@ -32,7 +32,7 @@ let tags = {
         0x829D: 'FNumber',
         0x8827: 'ISOSpeedRatings',
         0x9201: 'ShutterSpeedValue',
-        0x9202: 'ApertureValue'	,
+        0x9202: 'ApertureValue',
         0x9207: 'MeteringMode',
         0x9208: 'LightSource',
         0x9209: 'Flash',
@@ -172,8 +172,9 @@ let tagDescs = {
     }
 };
 
-export default class ExifReader extends BinaryReader {
+export default class ExifReader {
 
+    private _reader: BinaryReader;
     private _idx: number;
 
     private _offsets: any = {
@@ -187,44 +188,106 @@ export default class ExifReader extends BinaryReader {
     private _tiffTags: any = {};
 
     constructor(ar: ArrayBuffer) {
-        super(ar);
 
         var self = this;
 
+        self._reader = new BinaryReader(ar);
         self._idx = self._offsets.tiffHeader;
 
         // Check if that's APP1 and that it has EXIF
-		if (self.SHORT(0) !== 0xFFE1 || self.STRING(4, 5).toUpperCase() !== "EXIF\0") {
-			throw new Error("Exif data cannot be read or not available.");
-		}
+        if (self.SHORT(0) !== 0xFFE1 || self.STRING(4, 5).toUpperCase() !== "EXIF\0") {
+            throw new Error("Exif data cannot be read or not available.");
+        }
 
-		// Set read order of multi-byte data
-		self.littleEndian = (self.SHORT(self._idx) == 0x4949);
+        // Set read order of multi-byte data
+        self._reader.littleEndian = (self.SHORT(self._idx) == 0x4949);
 
-		// Check if always present bytes are indeed present
-		if (self.SHORT(self._idx += 2) !== 0x002A) {
-			throw new Error("Invalid Exif data.");
-		}
+        // Check if always present bytes are indeed present
+        if (self.SHORT(self._idx += 2) !== 0x002A) {
+            throw new Error("Invalid Exif data.");
+        }
 
-		self._offsets.IFD0 = self._offsets.tiffHeader + self.LONG(self._idx += 2);
-		self._tiffTags = self.extractTags(self._offsets.IFD0, tags.tiff);
+        self._offsets.IFD0 = self._offsets.tiffHeader + self.LONG(self._idx += 2);
+        self._tiffTags = self.extractTags(self._offsets.IFD0, tags.tiff);
 
-		if ('ExifIFDPointer' in self._tiffTags) {
-			self._offsets.exifIFD = self._offsets.tiffHeader + self._tiffTags.ExifIFDPointer;
-			delete self._tiffTags.ExifIFDPointer;
-		}
+        if ('ExifIFDPointer' in self._tiffTags) {
+            self._offsets.exifIFD = self._offsets.tiffHeader + self._tiffTags.ExifIFDPointer;
+            delete self._tiffTags.ExifIFDPointer;
+        }
 
-		if ('GPSInfoIFDPointer' in self._tiffTags) {
-			self._offsets.gpsIFD = self._offsets.tiffHeader + self._tiffTags.GPSInfoIFDPointer;
-			delete self._tiffTags.GPSInfoIFDPointer;
-		}
+        if ('GPSInfoIFDPointer' in self._tiffTags) {
+            self._offsets.gpsIFD = self._offsets.tiffHeader + self._tiffTags.GPSInfoIFDPointer;
+            delete self._tiffTags.GPSInfoIFDPointer;
+        }
 
-		// check if we have a thumb as well
-		var IFD1Offset = self.LONG(self._offsets.IFD0 + self.SHORT(self._offsets.IFD0) * 12 + 2);
-		if (IFD1Offset) {
-			self._offsets.IFD1 = self._offsets.tiffHeader + IFD1Offset;
-		}
+        // check if we have a thumb as well
+        var IFD1Offset = self.LONG(self._offsets.IFD0 + self.SHORT(self._offsets.IFD0) * 12 + 2);
+        if (IFD1Offset) {
+            self._offsets.IFD1 = self._offsets.tiffHeader + IFD1Offset;
+        }
     }
+
+    // these accessors are needed to deal with the "inherited" littleEndian value
+    public get littleEndian():boolean {
+        return this._reader.littleEndian;
+    }
+
+    public set littleEndian(isLittleEndian: boolean) {
+        this._reader.littleEndian = isLittleEndian;
+    }
+
+    // The following methods are "inherited" from BinaryReader
+    readByteAt(idx) {
+        return this._reader.readByteAt(idx);
+    }
+
+    read(idx, size) {
+        return this._reader.read(idx, size);
+    }
+
+    BYTE(idx) {
+        return this._reader.BYTE(idx);
+    }
+
+    SHORT(idx) {
+        return this._reader.SHORT(idx);
+    }
+
+    LONG(idx) {
+        return this._reader.LONG(idx);
+    }
+
+    SLONG(idx) {
+        return this._reader.SLONG(idx);
+    }
+
+    CHAR(idx) {
+        return this._reader.CHAR(idx);
+    }
+
+    STRING(idx, count) {
+        return this._reader.STRING(idx, count);
+    }
+
+    SEGMENT(idx, size) {
+        return this._reader.SEGMENT(idx, size);
+    }
+
+    asArray(type, idx, count) {
+        // I have to override asArray because of the 'this[type]'
+        var values = [];
+
+        for (var i = 0; i < count; i++) {
+            values[i] = this[type](idx + i);
+        }
+        return values;
+    }
+
+    length() {
+        return this._reader.length();
+    }
+
+    // End of "inherited" methods
 
     UNDEFINED() {
         return this.BYTE.apply(this, arguments);
@@ -253,7 +316,7 @@ export default class ExifReader extends BinaryReader {
         if (self._offsets.exifIFD) {
             try {
                 Exif = self.extractTags(self._offsets.exifIFD, tags.exif);
-            } catch(ex) {
+            } catch (ex) {
                 return null;
             }
 
@@ -299,7 +362,7 @@ export default class ExifReader extends BinaryReader {
                 if ('JPEGInterchangeFormat' in IFD1Tags) {
                     return self.SEGMENT(self._offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
                 }
-            } catch (ex) {}
+            } catch (ex) { }
         }
         return null;
     }
@@ -320,14 +383,14 @@ export default class ExifReader extends BinaryReader {
         };
 
         var sizes = {
-            'BYTE' 		: 1,
-            'UNDEFINED'	: 1,
-            'ASCII'		: 1,
-            'SHORT'		: 2,
-            'LONG' 		: 4,
-            'RATIONAL' 	: 8,
-            'SLONG'		: 4,
-            'SRATIONAL'	: 8
+            'BYTE'      : 1,
+            'UNDEFINED' : 1,
+            'ASCII'     : 1,
+            'SHORT'     : 2,
+            'LONG'      : 4,
+            'RATIONAL'  : 8,
+            'SLONG'     : 4,
+            'SRATIONAL' : 8
         };
 
         length = self.SHORT(IFD_offset);
@@ -338,7 +401,7 @@ export default class ExifReader extends BinaryReader {
             values = [];
 
             // Set binary reader pointer to beginning of the next tag
-            offset = IFD_offset + 2 + i*12;
+            offset = IFD_offset + 2 + i * 12;
 
             tag = tags2extract[self.SHORT(offset)];
 
@@ -346,8 +409,8 @@ export default class ExifReader extends BinaryReader {
                 continue; // Not the tag we requested
             }
 
-            type = types[self.SHORT(offset+=2)];
-            count = self.LONG(offset+=2);
+            type = types[self.SHORT(offset += 2)];
+            count = self.LONG(offset += 2);
             size = sizes[type];
 
             if (!size) {
