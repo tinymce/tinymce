@@ -101,14 +101,6 @@ const halfOf = (bounds: ClientRect, ledgeProperty: string, redgeProperty: string
   return (bounds[redgeProperty] - bounds[ledgeProperty]) / 2
 };
 
-const centerX = (bounds: ClientRect): number => {
-  return halfOf(bounds, 'left', 'right');
-};
-
-const centerY = (bounds: ClientRect): number => {
-  return halfOf(bounds, 'top', 'bottom');
-};
-
 const halfX = (bounds: ClientRect, min: number, max: number, step: number, snapToGrid: boolean, snapStart: Option<number>, rounded: boolean): number => {
   return findValueOf(bounds, min, max, halfOf(bounds, 'left', 'right') + bounds.left, step, snapToGrid, snapStart, rounded, false, false, 'left', 'right', 'width');
 };
@@ -117,14 +109,32 @@ const halfY = (bounds: ClientRect, min: number, max: number, step: number, snapT
   return findValueOf(bounds, min, max, halfOf(bounds, 'top', 'bottom') + bounds.top, step, snapToGrid, snapStart, rounded, false, false, 'top', 'bottom', 'height');
 };
 
+const centerOf = (bounds: ClientRect, ledgeProperty: string, redgeProperty: string): number => {
+  return (bounds[ledgeProperty] + bounds[redgeProperty]) / 2;
+};
+
+const centerY = (bounds: ClientRect): number => {
+  return centerOf(bounds, 'top', 'bottom');
+};
+
+const centerX = (bounds: ClientRect): number => {
+  return centerOf(bounds, 'left', 'right');
+};
+
 const findOffsetOfValue = (bounds: ClientRect, min: number, max: number, value: number, getCentre: (bounds: ClientRect) => number, ledge: Option<AlloyComponent>, redge: Option<AlloyComponent>, edgeProperty: string, lengthProperty:string): number => {
   const range = max - min;
   if (value < min) {
     return ledge.fold(() => 0, 
-      (_edge) => getCentre(bounds) - bounds[edgeProperty]);
+      (edge) => {
+        const edgeBounds = edge.element().dom().getBoundingClientRect();
+        return getCentre(edgeBounds) - bounds[edgeProperty]
+      });
   } else if (value > max) {
     return redge.fold(() => bounds[edgeProperty],
-      (_edge) => getCentre(bounds) - bounds[edgeProperty]);
+      (edge) => {
+        const edgeBounds = edge.element().dom().getBoundingClientRect();
+        return getCentre(edgeBounds) - bounds[edgeProperty]
+      });
   } else {
     // position along the slider
     return (value - min) / range * bounds[lengthProperty];
