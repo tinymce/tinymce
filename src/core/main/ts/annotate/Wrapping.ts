@@ -1,14 +1,14 @@
+import { Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option } from '@ephox/katamari';
-import { Attr, Class, Classes, Element, Insert, Node, Remove, Replication, Traverse } from '@ephox/sugar';
+import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse } from '@ephox/sugar';
+import { AnnotatorSettings } from 'tinymce/core/annotate/AnnotationsRegistry';
 import { Editor } from 'tinymce/core/api/Editor';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import ExpandRange from 'tinymce/core/fmt/ExpandRange';
 
 import RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';
-import { findMarkers } from './Identification';
 import * as Markings from './Markings';
-import { Range } from '@ephox/dom-globals';
 
 export type DecoratorData = Record<string, any>;
 
@@ -104,15 +104,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   return newWrappers;
 };
 
-export interface Annotation {
-  name: string;
-  settings: {
-    decorate: (string, { }) => { attributes: { }, classes: string[] },
-    persistent?: boolean;
-  };
-}
-
-const annotateWithBookmark = (editor: Editor, { name, settings }: Annotation, data: { }): void => {
+const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: { }): void => {
   editor.undoManager.transact(() => {
     const initialRng = editor.selection.getRng();
     if (initialRng.collapsed) {
@@ -126,12 +118,6 @@ const annotateWithBookmark = (editor: Editor, { name, settings }: Annotation, da
   });
 };
 
-const remove = (editor, cUid): void => {
-  const wrappers = findMarkers(editor, cUid);
-  Arr.each(wrappers, Remove.unwrap);
-};
-
 export {
-  annotateWithBookmark,
-  remove
+  annotateWithBookmark
 };

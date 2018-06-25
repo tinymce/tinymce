@@ -1,4 +1,4 @@
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -68,6 +68,5 @@ const findAll = (editor: Editor, name: string): Record<string, Element[]> => {
 export {
   identify,
   isAnnotation,
-  findMarkers,
   findAll
 };

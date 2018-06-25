@@ -1,8 +1,10 @@
-import { Arr, Cell, Option, Throttler, Obj } from '@ephox/katamari';
+import { Arr, Obj, Option } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
-import { findMarkers, identify, findAll } from 'tinymce/core/annotate/Identification';
+import * as AnnotationChanges from 'tinymce/core/annotate/AnnotationChanges';
+import * as AnnotationFilter from 'tinymce/core/annotate/AnnotationFilter';
+import { create } from 'tinymce/core/annotate/AnnotationsRegistry';
+import { findAll, identify } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/annotate/Wrapping';
-import * as Markings from 'tinymce/core/annotate/Markings';
 
 export interface Annotator {
   register: (name: string, settings: AnnotatorSettings) => void;
@@ -19,69 +21,9 @@ export interface AnnotatorSettings {
 }
 
 export default function (editor): Annotator {
-
-  const annotations = { };
-
-  const lastAnnotation = Cell(Option.none());
-
-  const changeCallbacks = Cell([ ]);
-
-  const fireCallbacks = (name: string, uid: string, elements: any[]): void => {
-    Arr.each(changeCallbacks.get(), (f) => f(name, uid, Arr.map(elements, (elem) => elem.dom())));
-  };
-
-  const fireNoAnnotation = (): void => {
-    // Surely there is a better API choice than this.
-    fireCallbacks(null, null, [ ]);
-  };
-
-  const isDifferent = ({ uid, name }): boolean => {
-    return lastAnnotation.get().forall(({ uid: lastUid, name: lastName }) => {
-      return uid !== lastUid || name !== lastName;
-    });
-  };
-
-  const onNodeChange = Throttler.last(() => {
-    identify(editor, Option.none()).fold(
-      () => {
-        if (lastAnnotation.get().isSome()) {
-          fireNoAnnotation();
-          lastAnnotation.set(Option.none());
-        }
-      },
-      ({ uid, name, elements }) => {
-        if (isDifferent({ uid, name })) {
-          lastAnnotation.set(Option.some({ uid, name }));
-          fireCallbacks(uid, name, elements);
-        }
-      }
-    );
-  }, 30);
-
-  editor.on('remove', () => {
-    onNodeChange.cancel();
-  });
-
-  editor.on('nodeChange', () => {
-    onNodeChange.throttle();
-  });
-
-  const identifyParserNode = (span): Option<{ name: string, settings: AnnotatorSettings }> => {
-    return Option.from(span.attributes.map[Markings.dataAnnotation()]).bind((n) => {
-      return Option.from(annotations[n]);
-    });
-  };
-
-  editor.on('init', () => {
-    editor.serializer.addNodeFilter('span', (spans) => {
-      Arr.each(spans, (span) => {
-        identifyParserNode(span).each((info) => {
-          const { settings } = info;
-          if (settings.persistent === false) { span.unwrap(); }
-        });
-      });
-    });
-  });
+  const registry = create();
+  AnnotationFilter.setup(editor, registry);
+  const changes = AnnotationChanges.setup(editor, registry);
 
   return {
     /**
@@ -91,11 +33,8 @@ export default function (editor): Annotator {
      * @param {String} name the name of the annotation
      * @param {Object} settings settings for the annotation (e.g. decorate)
      */
-    register: (name: string, settings: { }) => {
-      annotations[name] = {
-        name,
-        settings
-      };
+    register: (name: string, settings: AnnotatorSettings) => {
+      registry.register(name, settings);
     },
 
     /**
@@ -105,10 +44,9 @@ export default function (editor): Annotator {
      * annotation
      */
     annotate: (name: string, data: { }) => {
-      if (annotations.hasOwnProperty(name)) {
-        const annotator = annotations[name];
-        annotateWithBookmark(editor, annotator, data);
-      }
+      registry.lookup(name).each((settings) => {
+        annotateWithBookmark(editor, name, settings, data);
+      });
     },
 
     /**
@@ -119,9 +57,7 @@ export default function (editor): Annotator {
      * supplied, and the wrapping elements
      */
     annotationChanged: (f: (uid: string, name: string, element: any) => void): void => {
-      changeCallbacks.set(
-        changeCallbacks.get().concat([ f ])
-      );
+      changes.addListener(f);
     },
 
     /**
@@ -130,9 +66,8 @@ export default function (editor): Annotator {
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
-      identify(editor, Option.some(name)).each(({ uid }) => {
-        const markers = findMarkers(editor, uid);
-        Arr.each(markers, Remove.unwrap);
+      identify(editor, Option.some(name)).each(({ elements }) => {
+        Arr.each(elements, Remove.unwrap);
       });
     },
 
