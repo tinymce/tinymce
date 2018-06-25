@@ -227,23 +227,7 @@ export default class ExifReader {
         }
     }
 
-    // these accessors are needed to deal with the "inherited" littleEndian value
-    public get littleEndian():boolean {
-        return this._reader.littleEndian;
-    }
-
-    public set littleEndian(isLittleEndian: boolean) {
-        this._reader.littleEndian = isLittleEndian;
-    }
-
     // The following methods are "inherited" from BinaryReader
-    readByteAt(idx) {
-        return this._reader.readByteAt(idx);
-    }
-
-    read(idx, size) {
-        return this._reader.read(idx, size);
-    }
 
     BYTE(idx) {
         return this._reader.BYTE(idx);
