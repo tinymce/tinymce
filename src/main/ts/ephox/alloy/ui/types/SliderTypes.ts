@@ -52,8 +52,8 @@ export interface SliderSpec extends CompositeSketchSpec {
 
   minX: number;
   maxX: number;
-  minY: number;
-  maxY: number;
+  minY?: number;
+  maxY?: number;
   stepSize?: number;
   snapToGrid?: boolean;
   snapStart?: number;

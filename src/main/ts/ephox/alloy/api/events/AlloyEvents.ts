@@ -6,7 +6,6 @@ import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
-import { Arr } from '@ephox/katamari';
 
 export type AlloyEventRecord = Record<string, AlloyEventHandler<EventFormat>>;
 

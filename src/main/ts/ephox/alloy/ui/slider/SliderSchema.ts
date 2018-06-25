@@ -12,8 +12,8 @@ const isTouch = PlatformDetection.detect().deviceType.isTouch();
 const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('minX'),
   FieldSchema.strict('maxX'),
-  FieldSchema.strict('minY'),
-  FieldSchema.strict('maxY'),
+  FieldSchema.defaulted('minY', 0),
+  FieldSchema.defaulted('maxY', 100),
   FieldSchema.defaulted('stepSize', 1),
   FieldSchema.defaulted('onChange', Fun.noop),
   FieldSchema.defaulted('onInit', Fun.noop),
