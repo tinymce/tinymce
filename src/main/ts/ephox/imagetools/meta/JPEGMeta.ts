@@ -26,6 +26,7 @@ var extractFrom = function (blob) {
                 meta.rawHeaders = headers;
                 return meta;
             }
+            return Promise.reject('Image was not a jpeg');
         } catch (ex) {
             return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`);
         }
@@ -70,6 +71,6 @@ var extractHeaders = function (br: BinaryReader) {
 };
 
 
-export default <any> {
+export default {
     extractFrom
 };
