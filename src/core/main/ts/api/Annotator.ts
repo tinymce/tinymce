@@ -116,7 +116,7 @@ export default function (editor): Annotator {
      * current selection changes
      * @param {function} f: the callback function invoked with the
      * uid for the current annotation and the name of the current annotation
-     * supplied, and the wrapping element
+     * supplied, and the wrapping elements
      */
     annotationChanged: (f: (uid: string, name: string, element: any) => void): void => {
       changeCallbacks.set(
@@ -139,7 +139,7 @@ export default function (editor): Annotator {
     /**
      * Retrieve all the annotations for a given name
      * @param {String} name the name of the annotations to retrieve
-     * @return {Object} an index of annotations from uid => DOM node
+     * @return {Object} an index of annotations from uid => DOM nodes
      */
     getAll: (name: string): Record<string, any> => {
       const directory = findAll(editor, name);
