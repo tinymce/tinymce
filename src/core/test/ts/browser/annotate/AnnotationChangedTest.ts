@@ -66,6 +66,9 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
       tinyApis.sSetSelection([ 3, 0 ], 'Spanning '.length, [ 4, 0 ], 'paragraphs'.length),
       sAnnotate(editor, 'gamma', 'id-four', { something: 'comment-four' }),
 
+      tinyApis.sSetSelection([ 4, 0, 0 ], 'par'.length, [ 4, 0, 0 ], 'parag'.length ),
+      sAnnotate(editor, 'delta', 'id-five', { something: 'comment-five' }),
+
       Step.wait(1000),
       sClearChanges,
 
@@ -78,7 +81,9 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
 
         `<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>`,
 
-        `<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">paragraphs</span> now</p>`
+        `<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">par` +
+          `<span data-mce-annotation="delta" data-test-something="comment-five" data-mce-annotation-uid="id-five" class="mce-annotation delta-test">ag</span>` +
+          `raphs</span> now</p>`
       ]),
 
       // Outside: p(0) > text(0) > "Th".length
@@ -97,6 +102,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'No annotation at cursor',
         [ 0, 0 ], 'Th'.length,
         [
+          { state: false, name: 'delta', uid: null },
           { state: false, name: 'gamma', uid: null }
         ]
       ),
@@ -105,6 +111,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'At annotation alpha, id = id-one',
         [ 0, 1, 0 ], 'i'.length,
         [
+          { state: false, name: 'delta', uid: null },
           { state: false, name: 'gamma', uid: null },
           { state: true, name: 'alpha', uid: 'id-one' }
         ]
@@ -114,6 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'At annotation alpha, id = id-two',
         [ 1, 1, 0 ], 'hi'.length,
         [
+          { state: false, name: 'delta', uid: null },
           { state: false, name: 'gamma', uid: null },
           { state: true, name: 'alpha', uid: 'id-one' },
           { state: true, name: 'alpha', uid: 'id-two' }
@@ -127,6 +135,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'Moving selection within the same marker (alpha id-two) ... shoud not fire change',
         sAssertChanges('checking changes',
           [
+            { state: false, name: 'delta', uid: null },
             { state: false, name: 'gamma', uid: null },
             { state: true, name: 'alpha', uid: 'id-one' },
             { state: true, name: 'alpha', uid: 'id-two' }
@@ -140,6 +149,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'Outside annotations again',
         [ 1, 2 ], ' the '.length,
         [
+          { state: false, name: 'delta', uid: null },
           { state: false, name: 'gamma', uid: null },
           { state: true, name: 'alpha', uid: 'id-one' },
           { state: true, name: 'alpha', uid: 'id-two' },
@@ -151,6 +161,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'Inside annotation beta, id = id-three',
         [ 2, 1, 0 ], 'i'.length,
         [
+          { state: false, name: 'delta', uid: null },
           { state: false, name: 'gamma', uid: null },
           { state: true, name: 'alpha', uid: 'id-one' },
           { state: true, name: 'alpha', uid: 'id-two' },
@@ -164,6 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'Moving selection outside all annotations. Should fire null',
         sAssertChanges('checking changes',
           [
+            { state: false, name: 'delta', uid: null },
             { state: false, name: 'gamma', uid: null },
             { state: true, name: 'alpha', uid: 'id-one' },
             { state: true, name: 'alpha', uid: 'id-two' },
@@ -183,12 +195,45 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         'Moving selection outside all annotations (again). Should NOT fire null because it already has',
         sAssertChanges('checking changes',
           [
+            { state: false, name: 'delta', uid: null },
             { state: false, name: 'gamma', uid: null },
             { state: true, name: 'alpha', uid: 'id-one' },
             { state: true, name: 'alpha', uid: 'id-two' },
             { state: false, name: 'alpha', uid: null },
             { state: true, name: 'beta', uid: 'id-three' },
             { state: false, name: 'beta', uid: null }
+          ]
+        ),
+        10,
+        1000
+      ),
+      sClearChanges,
+
+      tinyApis.sSetSelection([ 4, 0, 1, 0 ], 'a'.length, [ 4, 0, 1, 0 ], 'a'.length),
+      // Give it time to throttle a node change.
+      Step.wait(400),
+      Waiter.sTryUntil(
+        'Moving selection inside delta (which is inside gamma)',
+        sAssertChanges('checking changes',
+          [
+            { state: true, name: 'delta', uid: 'id-five' },
+            { state: true, name: 'gamma', uid: 'id-four' }
+          ]
+        ),
+        10,
+        1000
+      ),
+
+      tinyApis.sSetSelection([ 4, 0, 0 ], 'p'.length, [ 4, 0, 0 ], 'p'.length),
+      // Give it time to throttle a node change.
+      Step.wait(400),
+      Waiter.sTryUntil(
+        'Moving selection inside just gamma (but not delta)',
+        sAssertChanges('checking changes',
+          [
+            { state: true, name: 'delta', uid: 'id-five' },
+            { state: true, name: 'gamma', uid: 'id-four' },
+            { state: false, name: 'delta', uid: null }
           ]
         ),
         10,
@@ -237,6 +282,17 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
           }
         });
 
+        ed.annotator.register('delta', {
+          decorate: (uid, data) => {
+            return {
+              attributes: {
+                'data-test-something': data.something
+              },
+              classes: [ 'delta-test' ]
+            };
+          }
+        });
+
         // NOTE: Have to use old function syntax here when accessing "arguments"
         const listener = function (state, name, obj) {
           // NOTE: These failures won't stop the tests, but they will stop it before it updates
@@ -261,6 +317,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         ed.annotator.annotationChanged('alpha', listener);
         ed.annotator.annotationChanged('beta', listener);
         ed.annotator.annotationChanged('gamma', listener);
+        ed.annotator.annotationChanged('delta', listener);
       });
     }
   }, success, failure);
