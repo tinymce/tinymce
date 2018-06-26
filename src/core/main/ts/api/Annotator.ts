@@ -6,10 +6,12 @@ import { create } from 'tinymce/core/annotate/AnnotationsRegistry';
 import { findAll, identify } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/annotate/Wrapping';
 
+export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
+
 export interface Annotator {
   register: (name: string, settings: AnnotatorSettings) => void;
   annotate: (name: string, data: DecoratorData) => void;
-  annotationChanged: (f: (uid: string, name: string, node: any) => void) => void;
+  annotationChanged: (name: string, f: AnnotationListenerApi) => void;
   remove: (name: string) => void;
   // TODO: Use stronger types for Nodes when available.
   getAll: (name: string) => Record<string, any>;
@@ -56,8 +58,8 @@ export default function (editor): Annotator {
      * uid for the current annotation and the name of the current annotation
      * supplied, and the wrapping elements
      */
-    annotationChanged: (f: (uid: string, name: string, element: any) => void): void => {
-      changes.addListener(f);
+    annotationChanged: (name: string, f: AnnotationListenerApi) => {
+      changes.addListener(name, f);
     },
 
     /**

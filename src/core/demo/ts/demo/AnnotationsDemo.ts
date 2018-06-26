@@ -43,11 +43,13 @@ export default function () {
         onpostrender: (ctrl) => {
           const button = ctrl.control;
           ed.on('init', () => {
-            ed.annotator.annotationChanged((uid, name) => {
-              if (uid === null || name === null) {
+            ed.annotator.annotationChanged('alpha', (state, name, obj) => {
+              if (! state) {
+                console.log('inactive');
                 button.active(false);
               } else {
-                button.active(name === 'alpha');
+                console.log('active', obj.uid);
+                button.active(true);
               }
             });
           });
