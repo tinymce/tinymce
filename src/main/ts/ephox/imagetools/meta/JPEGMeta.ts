@@ -21,6 +21,8 @@ var extractFrom = function (blob) {
                         gps: exifReader.GPS(),
                         thumb: exifReader.thumb()
                     };
+                } else {
+                    return Promise.reject('Headers did not include required information');
                 }
 
                 meta.rawHeaders = headers;
