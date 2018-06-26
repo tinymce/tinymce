@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
     };
 
     const sTestChanges = GeneralSteps.sequence([
-      // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p><p>Spanning |multiple</p><p>paragraphs| now</p>'
+      // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p><p>Spanning |multiple</p><p>par||ag||raphs| now</p>'
       tinyApis.sSetContent([
         '<p>This is the first paragraph</p>',
         '<p>This is the second.</p>',
