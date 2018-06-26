@@ -297,7 +297,6 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (succ
         const listener = function (state, name, obj) {
           // NOTE: These failures won't stop the tests, but they will stop it before it updates
           // the changes in changes.set
-          console.log('heard something', arguments);
           if (state === false) {
             Assertions.assertEq('Argument count must be "2" (state, name) if state is false', 2, arguments.length);
           } else {

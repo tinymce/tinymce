@@ -58,9 +58,7 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
   const onNodeChange = Throttler.last(() => {
     const callbackMap = changeCallbacks.get();
     const annotations = Arr.sort(Obj.keys(callbackMap));
-    console.log('sorted', annotations);
     Arr.each(annotations, (name) => {
-      // console.log('name', name, callbackMap);
       updateCallbacks(name, (data) => {
         const prev = data.previous.get();
         identify(editor, Option.some(name)).fold(
@@ -86,8 +84,6 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
         };
       });
     });
-    // identify(editor, Option.none())
-    // );
   }, 30);
 
   editor.on('remove', () => {
