@@ -41,6 +41,8 @@ export default function (editor): Annotator {
 
     /**
      * Applies the annotation at the current selection using data
+     *
+     * @method annotate
      * @param {String} name the name of the annotation to apply
      * @param {Object} data information to pass through to this particular
      * annotation
@@ -52,19 +54,22 @@ export default function (editor): Annotator {
     },
 
     /**
-     * Adds a listener that is notified when the annotation at the
-     * current selection changes
-     * @param {function} f: the callback function invoked with the
-     * uid for the current annotation and the name of the current annotation
-     * supplied, and the wrapping elements
+     * Executes the specified callback when the current selection matches the annotation or not.
+     *
+     * @method annotationChanged
+     * @param {String} name Name of annotation to listen for
+     * @param {function} callback Calback with (state, name, and data) fired when the annotation
+     * at the cursor changes. If state if false, data will not be provided.
      */
-    annotationChanged: (name: string, f: AnnotationListenerApi) => {
-      changes.addListener(name, f);
+    annotationChanged: (name: string, callback: AnnotationListenerApi) => {
+      changes.addListener(name, callback);
     },
 
     /**
      * Removes any annotations from the current selection that match
      * the name
+     *
+     * @param remove
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
@@ -75,6 +80,8 @@ export default function (editor): Annotator {
 
     /**
      * Retrieve all the annotations for a given name
+     *
+     * @method getAll
      * @param {String} name the name of the annotations to retrieve
      * @return {Object} an index of annotations from uid => DOM nodes
      */
