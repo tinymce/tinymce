@@ -5,7 +5,17 @@ export interface Experimental {
 }
 
 export default function (editor): Experimental {
-  return {
-    annotator: Annotator(editor)
-  };
+  const annotator = Annotator(editor);
+  const experimental = { };
+
+  Object.defineProperty(experimental, 'annotator', {
+    get: () => {
+      // tslint:disable no-console
+      console.warn('Using experimental API: annotator');
+      // tslint:enable no-console
+      return annotator;
+    }
+  });
+
+  return experimental as Experimental;
 }
