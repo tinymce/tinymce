@@ -96,6 +96,7 @@ import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
 import { TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
+import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
@@ -206,5 +207,8 @@ export {
   NativeSimulatedEvent,
   CustomSimulatedEvent,
   ReceivingEvent,
-  SugarEvent
+  SugarEvent,
+
+  // types
+  TieredMenuTypes
 };
