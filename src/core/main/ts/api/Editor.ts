@@ -29,7 +29,7 @@ import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UndoManager } from 'tinymce/core/api/UndoManager';
-import { Annotator } from 'tinymce/core/api/Annotator';
+import { Experimental } from 'tinymce/core/api/Experimental';
 import { HTMLElement, Document, Window } from '@ephox/dom-globals';
 
 /**
@@ -62,7 +62,7 @@ export type AnyFunction = (...x: any[]) => any;
 
 export interface Editor {
   $: any;
-  annotator: Annotator;
+  experimental: Experimental;
   baseURI: any;
   bodyElement: HTMLElement;
   bookmark: any;

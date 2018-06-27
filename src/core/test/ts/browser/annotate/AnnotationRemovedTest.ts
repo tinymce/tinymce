@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
       ),
 
       Step.sync(() => {
-        editor.annotator.remove('alpha');
+        editor.experimental.annotator.remove('alpha');
       }),
 
       // Need to wait because nothing should have changed. If we don't wait, we'll get
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
 
       tinyApis.sSetSelection(inside3.path, inside3.offset, inside3.path, inside3.offset),
       Step.sync(() => {
-        editor.annotator.remove('beta');
+        editor.experimental.annotator.remove('beta');
       }),
       Waiter.sTryUntil(
         'removed beta',
@@ -124,7 +124,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
 
       tinyApis.sSetSelection(inside1.path, inside1.offset, inside1.path, inside1.offset),
       Step.sync(() => {
-        editor.annotator.remove('alpha');
+        editor.experimental.annotator.remove('alpha');
       }),
 
       Waiter.sTryUntil(
@@ -157,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
     skin_url: '/project/js/tinymce/skins/lightgray',
     setup: (ed: Editor) => {
       ed.on('init', () => {
-        ed.annotator.register('alpha', {
+        ed.experimental.annotator.register('alpha', {
           decorate: (uid, data) => {
             return {
               attributes: {
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (succ
           }
         });
 
-        ed.annotator.register('beta', {
+        ed.experimental.annotator.register('beta', {
           decorate: (uid, data) => {
             return {
               attributes: {
