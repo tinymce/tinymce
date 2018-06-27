@@ -6,7 +6,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { sAnnotate, sAssertHtmlContent, sAssertGetAll } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationRemovedTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (success, failure) => {
   ModernTheme();
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {

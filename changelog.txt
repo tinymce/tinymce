@@ -1,3 +1,6 @@
+Version 4.8.0 (2018-06-27)
+    Added new "experimental" object in editor, with initial annotator API
+
 Version 4.7.13 (2018-05-16)
     Fixed a bug where Edge 17 wouldn't be able to select images or tables. #TINY-1679
     Fixed issue where whitespace wasn't preserved when the editor was initialized on pre elements. #TINY-1649

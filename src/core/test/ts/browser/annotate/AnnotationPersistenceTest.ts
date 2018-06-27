@@ -7,7 +7,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { sAnnotate } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationPersistenceTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (success, failure) => {
   ModernTheme();
 
   const sUndoLevel = (editor: Editor) => Step.sync(() => {

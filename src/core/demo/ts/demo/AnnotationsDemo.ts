@@ -17,7 +17,9 @@ export default function () {
   const button = document.createElement('button');
   button.innerHTML = 'Get all annotations';
   button.addEventListener('click', () => {
+    // tslint:disable no-console
     console.log('annotations', tinymce.activeEditor.experimental.annotator.getAll('alpha'));
+    // tslint:enable no-console
   });
   document.body.appendChild(button);
 
@@ -45,10 +47,8 @@ export default function () {
           ed.on('init', () => {
             ed.experimental.annotator.annotationChanged('alpha', (state, name, obj) => {
               if (! state) {
-                console.log('inactive');
                 button.active(false);
               } else {
-                console.log('active', obj.uid);
                 button.active(true);
               }
             });

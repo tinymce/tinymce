@@ -7,7 +7,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { assertMarker, sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
-UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotationChangedTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (success, failure) => {
 
   ModernTheme();
 
