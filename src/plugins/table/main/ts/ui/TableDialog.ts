@@ -121,7 +121,9 @@ const onSubmitTableForm = function (editor, tableElm, evt) {
   let captionElm;
   let data;
 
-  Helpers.updateStyleField(editor, evt);
+  if (hasAdvancedTableTab(editor)) {
+    Helpers.syncAdvancedStyleFields(editor, evt);
+  }
   data = evt.control.rootControl.toJSON();
 
   if (data.class === false) {
