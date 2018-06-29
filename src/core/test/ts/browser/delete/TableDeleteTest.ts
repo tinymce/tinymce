@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step, Keyboard, Keys } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox/sugar';
@@ -52,6 +52,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
       const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
+  };
+
+  const sKeyboardBackspace = function (editor) {
+    return Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -120,6 +124,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
             sDelete(editor),
             sAssertRawNormalizedContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td></tr></tbody></table>')
           ]))
+        ])),
+
+        Logger.t('Delete partial selection across cells', GeneralSteps.sequence([
+          tinyApis.sSetRawContent('<table><tbody><tr><td><p>aa</p></td><td><p>bb</p></td><td><p>cc</p></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0, 0], 1, [0, 0, 0, 1, 0, 0], 1),
+          sKeyboardBackspace(editor),
+          sAssertRawNormalizedContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td><td><br data-mce-bogus="1"></td><td><p>cc</p></td></tr></tbody></table>')
         ]))
       ])),
 
