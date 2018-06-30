@@ -29,8 +29,6 @@ export default (): void => {
       },
       minX: 20,
       maxX: 100,
-      minY: -1,
-      maxY: -1,
       getInitialValue: Fun.constant({
         x: Fun.constant(80),
         y: Fun.constant(-1)
@@ -73,8 +71,6 @@ export default (): void => {
 
       minX: 0,
       maxX: 100,
-      minY: -1,
-      maxY: -1,
       getInitialValue: Fun.constant({
         x: Fun.constant(35),
         y: Fun.constant(-1)
@@ -85,15 +81,14 @@ export default (): void => {
       onDragStart(_, thumb) { Toggling.on(thumb); },
       onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onInit(slider, thumb, detail) {
+      onChange(_slider, thumb, value) {
         Replacing.set(thumb, [
-          GuiFactory.text(detail.value().get().toString())
+          GuiFactory.text(value.x().toString())
         ]);
       },
-
-      onChange(slider, thumb, detail) {
+      onInit(_slider, thumb, _spectrum, value) {
         Replacing.set(thumb, [
-          GuiFactory.text(detail.value().get().toString())
+          GuiFactory.text(value.x().toString())
         ]);
       },
 
@@ -129,6 +124,11 @@ export default (): void => {
     })
   );
 
+  const setColor = (thumb, hue) => {
+    const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
+    Css.set(thumb.element(), 'background', color);
+  };
+
   const hueSlider = HtmlDisplay.section(
     gui,
     'This is a basic color slider with a sliding thumb and edges',
@@ -141,29 +141,18 @@ export default (): void => {
       },
       minX: 0,
       maxX: 360,
-      minY: -1,
-      maxY: -1,
       getInitialValue: Fun.constant({
         x: Fun.constant(120),
         y: Fun.constant(-1)
       }),
       stepSize: 10,
 
-      onChange(slider, thumb, detail) {
-        const getColor = (hue) => {
-          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
-        };
-
-        Css.set(thumb.element(), 'background', getColor(detail.value().get()));
+      onChange(_slider, thumb, value) {
+        setColor(thumb, value.x());
       },
 
-      // TODO: Remove duplication in demo.
-      onInit(slider, thumb, detail) {
-        const getColor = (hue) => {
-          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
-        };
-
-        Css.set(thumb.element(), 'background', getColor(detail.value().get()));
+      onInit(_slider, thumb, _spectrum, value) {
+        setColor(thumb, value.x());
       },
 
       components: [
@@ -278,24 +267,19 @@ export default (): void => {
         'flex-wrap': 'wrap'
       }
     },
-    minX: 0,
-    maxX: 100,
-    minY: 0,
-    maxY: 100,
     rounded: false,
-    axisVertical: true,
+    axes: ['horizontal', 'vertical'],
     getInitialValue: Fun.constant({
       x: Fun.constant(101),
       y: Fun.constant(-1)
     }),
-    onChange(slider, thumb, detail) {
-      setPreviewColour(slider, detail.value().get().x(), detail.value().get().y())
+    onChange(slider, thumb, value) {
+      setPreviewColour(slider, value.x(), value.y())
     },
 
-    onInit(slider, thumb, detail) {
-      const spectrum = AlloyParts.getPart(slider, detail, 'spectrum').getOrDie();
+    onInit(slider, thumb, spectrum, value) {
       setColour(spectrum);
-      setPreviewColour(slider, detail.value().get().x(), detail.value().get().y())
+      setPreviewColour(slider, value.x(), value.y())
     },
 
     components: [

@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { ClientRect, HTMLElement } from '@ephox/dom-globals';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Option, Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -14,15 +14,12 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderActions from './SliderActions';
+import { horizontal } from 'ephox/alloy/navigation/DomNavigation';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = (name: string, _action: (comp: AlloyComponent, b: ClientRect, d: SliderDetail) => void) => {
-  const action = (comp: AlloyComponent, d: SliderDetail) => {
-    const bounds = comp.element().dom().getBoundingClientRect();
-    _action(comp, bounds, d);
-  };
+const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) => void) => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides (detail: SliderDetail) {
@@ -99,30 +96,32 @@ const spectrumPart = PartType.required({
   ],
   name: 'spectrum',
   overrides (detail: SliderDetail) {
+    const isH = detail.isHorizontal();
+    const isV = detail.isVertical();
+    const is2D = detail.isTwoD();
 
     const moveToX = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      const domElem = spectrum.element().dom() as HTMLElement;
-      const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
-      SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      SliderActions.setXFromEvent(spectrum, detail, simulatedEvent);
     };
 
     const moveToY = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      const domElem = spectrum.element().dom() as HTMLElement;
-      const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
-      SliderActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      SliderActions.setYFromEvent(spectrum, detail, simulatedEvent);
     };
 
-    const moveTo = function (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
-      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      SliderActions.setCoordsFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
-      // If you said no to both axes, don't expect any movement /shrug.
-      if (detail.axisHorizontal()) {
-        moveToX(spectrum, simulatedEvent);
-      } 
-      if (detail.axisVertical()) {
-        moveToY(spectrum, simulatedEvent);
-      }
+    const moveToCoords = function (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
+      SliderActions.setCoordsFromEvent(spectrum, detail, simulatedEvent);
     };
+
+    // If the axes array contains neither horizontal or vertical, then no movement.
+    var moveTo = Fun.noop;
+
+    if (is2D) {
+      moveTo = moveToCoords
+    } else if (isH) {
+      moveTo = moveToX
+    } else if (isV) {
+      moveTo = moveToY
+    }
 
     const touchEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.touchstart(), moveTo),
@@ -142,7 +141,7 @@ const spectrumPart = PartType.required({
         Keying.config({
           mode: 'special',
           onLeft (spectrum) {
-            if (detail.axisHorizontal()) {
+            if (isH) {
               SliderActions.moveLeft(spectrum, detail);
               return Option.some(true);
             } else {
@@ -150,7 +149,7 @@ const spectrumPart = PartType.required({
             }
           },
           onRight (spectrum) {
-            if (detail.axisHorizontal()) {
+            if (isH) {
               SliderActions.moveRight(spectrum, detail);
               return Option.some(true);
             } else {
@@ -158,7 +157,7 @@ const spectrumPart = PartType.required({
             }
           },
           onDown (spectrum) {
-            if (detail.axisVertical()) {
+            if (isV) {
               SliderActions.moveDown(spectrum, detail);
               return Option.some(true);
             } else {
@@ -166,7 +165,7 @@ const spectrumPart = PartType.required({
             }
           },
           onUp (spectrum) {
-            if (detail.axisVertical()) {
+            if (isV) {
               SliderActions.moveUp(spectrum, detail);
               return Option.some(true);
             } else {
