@@ -82,7 +82,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     },
     { }
   );
-
+/*
   Jsc.syncProperty(
     'Finding value of snapped always results in a factorable value',
     [
@@ -154,4 +154,5 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       return true;
     }
   );
+  */
 });

@@ -10,60 +10,32 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SliderActions from './SliderActions';
-import * as SliderModel from './SliderModel';
+import * as SliderValues from './SliderValues';
 
-import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { ClientRect } from '@ephox/dom-globals';
-import { Slider } from 'ephox/alloy/api/Main';
-
-import { * } from './SliderValues';
+import { console } from '@ephox/dom-globals';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, components, spec, externals) => {
-  const getThumb = (component: AlloyComponent): AlloyComponent => {
-    return AlloyParts.getPartOrDie(component, detail, 'thumb');
-  };
-  const getSpectrum = (component: AlloyComponent): AlloyComponent => {
-    return AlloyParts.getPartOrDie(component, detail, 'spectrum');
-  };
-
-  const getXOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
-    return SliderModel.findOffsetOfValue(spectrumBounds, minX, detail.maxX(), detail.value().get().x(), SliderModel.centerX, AlloyParts.getPart(slider, detail, 'left-edge'), AlloyParts.getPart(slider, detail, 'right-edge'), 'left', 'width');
-  }
-
-  const getYOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
-    return SliderModel.findOffsetOfValue(spectrumBounds, detail.minY(), detail.maxY(), detail.value().get().y(), SliderModel.centerY, AlloyParts.getPart(slider, detail, 'top-edge'), AlloyParts.getPart(slider, detail, 'bottom-edge'), 'top', 'height');
-  };
-
-  const getPos = (slider: AlloyComponent, getOffset: (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail) => number, edgeProperty: string): number => {
-    const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
-    const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-    const sliderBounds = slider.element().dom().getBoundingClientRect();
-
-    const offset = getOffset(slider, spectrumBounds, detail);
-    return (spectrumBounds[edgeProperty] - sliderBounds[edgeProperty]) + offset;
-  };
-
-  const getXPos = (slider: AlloyComponent): number => {
-    return getPos(slider, getXOffset, 'left');
-  };
+  const getThumb = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'thumb');
+  const getSpectrum = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'spectrum');
+  const getLeftEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
+  const getRightEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'right-edge');
+  const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
+  const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
   const setXPos = (slider: AlloyComponent, thumb: AlloyComponent): void => {
-    const pos = getXPos(slider);
+    const pos = SliderValues.findXPos(slider, getSpectrum(slider), getLeftEdge(slider), getRightEdge(slider), detail);
     const thumbRadius = Width.get(thumb.element()) / 2;
     Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
   };
 
-  const getYPos = (slider: AlloyComponent): number => {
-    return getPos(slider, getYOffset, 'top');
-  };
-
   const setYPos = (slider: AlloyComponent, thumb: AlloyComponent): void => {
-    const pos = getYPos(slider);
+    const pos = SliderValues.findYPos(slider, getSpectrum(slider), getTopEdge(slider), getBottomEdge(slider), detail);
     const thumbRadius = Height.get(thumb.element()) / 2;
     Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
   };

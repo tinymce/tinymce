@@ -10,8 +10,8 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { SliderValue, SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderModel from './SliderModel';
 
-import { minX, maxX, minY, maxY, currentX, currentY } from './SliderValues';
-import * as EdgePosition from './EdgePositions';
+import { minX, maxX, minY, maxY, currentX, currentY, findX, findY } from './SliderValues';
+import * as SliderPosition from './SliderPositions';
 
 const _sliderChangeEvent = 'slider.change.value';
 
@@ -53,138 +53,104 @@ const fireSliderChange = (component: AlloyComponent, value: SliderValue): void =
 
 // North West
 const setToTLedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.topLeft(edge, detail));
+  fireSliderChange(edge, SliderPosition.topLeft(detail));
 };
 
 // North
 const setToTedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.top(edge, detail));
+  fireSliderChange(edge, SliderPosition.top(detail));
 };
 
 //North East
 const setToTRedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.topRight(edge, detail));
+  fireSliderChange(edge, SliderPosition.topRight(detail));
 };
 
 // East
 const setToRedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.right(edge, detail));
+  fireSliderChange(edge, SliderPosition.right(detail));
 };
 
 // South East
 const setToBRedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.bottomRight(edge, detail));
+  fireSliderChange(edge, SliderPosition.bottomRight(detail));
 };
 
 // South
 const setToBedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.bottom(edge, detail));
+  fireSliderChange(edge, SliderPosition.bottom(detail));
 };
 
 // South West
 const setToBLedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.bottomLeft(edge, detail));
+  fireSliderChange(edge, SliderPosition.bottomLeft(detail));
 };
 
 // West
 const setToLedge = (edge: AlloyComponent, detail: SliderDetail): void => {
-  fireSliderChange(edge, EdgePosition.left(edge, detail));
+  fireSliderChange(edge, SliderPosition.left(detail));
 };
 
 const setToX = (spectrum: AlloyComponent, detail: SliderDetail, xValue: number): void => {
-  const bounds = 
-  const val = {
-    x: Fun.constant(findX()),
-    y: Fun.constant(currentY(detail))
-  };
+  const val = SliderPosition.sliderValue(findX(spectrum, detail, xValue), currentY(detail));
   fireSliderChange(spectrum, val);
 };
 
 const setToY = (spectrum: AlloyComponent, detail: SliderDetail, yValue: number): void => {
-  const value = SliderModel.findValueOfY(
-    spectrumBounds, minY(detail), maxY(detail), yValue, detail.stepSize(),
-    detail.snapToGrid(), detail.snapStart(), detail.rounded(), hasLedge, hasRedge
-  );
-
-  const val = {
-    x: Fun.constant(value),
-    y: Fun.constant(currentY(detail))
-  };
+  const val = SliderPosition.sliderValue(currentX(detail), findY(spectrum, detail, yValue));
   fireSliderChange(spectrum, val);
 };
 
-const setToCoords = (spectrum: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail, coords: SugarPosition): void => {
-  const xValue = SliderModel.findValueOfX(
-    spectrumBounds, minX(detail), maxX(detail), coords.left(), detail.stepSize(),
-    detail.snapToGrid(), detail.snapStart(), detail.rounded(), hasLedge, hasRedge
-  );
+const setToCoords = (spectrum: AlloyComponent, detail: SliderDetail, coords: SugarPosition): void => {
+  const x = findX(spectrum, detail, coords.left());
+  const y = findY(spectrum, detail, coords.top());
+  const val = SliderPosition.sliderValue(x, y);
 
-  const yValue = SliderModel.findValueOfY(
-    spectrumBounds, minY(detail), maxY(detail), coords.top(), detail.stepSize(),
-    detail.snapToGrid(), detail.snapStart(), detail.rounded(), hasTedge, hasBedge
-  );
-
-  const val = {
-    x: Fun.constant(xValue),
-    y: Fun.constant(yValue)
-  };
   fireSliderChange(spectrum, val);
 };
 
-const setXFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<number> => {
+const setXFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, simulatedEvent: NativeSimulatedEvent): Option<number> => {
   return getEventX(simulatedEvent).map(function (xValue) {
-    setToX(spectrum, spectrumBounds, detail, xValue);
+    setToX(spectrum, detail, xValue);
     return xValue;
   });
 };
 
-const setYFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<number> => {
+const setYFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, simulatedEvent: NativeSimulatedEvent): Option<number> => {
   return getEventY(simulatedEvent).map(function (yValue) {
-    setToY(spectrum, spectrumBounds, detail, yValue);
+    setToY(spectrum, detail, yValue);
     return yValue;
   });
 };
 
-const setCoordsFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, spectrumBounds: ClientRect, simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
+const setCoordsFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, simulatedEvent: NativeSimulatedEvent): Option<SugarPosition> => {
   return getEventSource(simulatedEvent).map(function (coords) {
-    setToCoords(spectrum, spectrumBounds, detail, coords);
+    setToCoords(spectrum, detail, coords);
     return coords;
   });
 };
 
 const moveRight = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newX = SliderModel.increaseBy(currentX(detail), minX(detail), maxX(detail), detail.stepSize());
-  const val = {
-    x: Fun.constant(newX),
-    y: Fun.constant(currentY(detail))
-  };
+  const val = SliderPosition.sliderValue(newX, currentY(detail));
   fireSliderChange(spectrum, val);
 };
 
 const moveLeft = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newX = SliderModel.reduceBy(currentX(detail), minX(detail), maxX(detail), detail.stepSize());
-  const val = {
-    x: Fun.constant(newX),
-    y: Fun.constant(currentY(detail))
-  };
+  const val = SliderPosition.sliderValue(newX, currentY(detail));
   fireSliderChange(spectrum, val);
 };
 
 const moveDown = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newY = SliderModel.increaseBy(currentY(detail), minY(detail), maxY(detail), detail.stepSize());
-  const val = {
-    x: Fun.constant(currentX(detail)),
-    y: Fun.constant(newY)
-  };
+  const val = SliderPosition.sliderValue(currentX(detail), newY);
   fireSliderChange(spectrum, val);
 };
 
 const moveUp = (spectrum: AlloyComponent, detail: SliderDetail): void => {
   const newY = SliderModel.reduceBy(detail.value().get().y(), minY(detail), maxY(detail), detail.stepSize());
-  const val = {
-    x: Fun.constant(currentX(detail)),
-    y: Fun.constant(newY)
-  };
+  const val = SliderPosition.sliderValue(currentX(detail), newY);
   fireSliderChange(spectrum, val);
 };
 
