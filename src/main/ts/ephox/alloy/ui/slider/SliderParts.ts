@@ -1,5 +1,4 @@
 import { FieldSchema } from '@ephox/boulder';
-import { ClientRect, HTMLElement } from '@ephox/dom-globals';
 import { Cell, Fun, Option, Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -14,7 +13,6 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderActions from './SliderActions';
-import { horizontal } from 'ephox/alloy/navigation/DomNavigation';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -41,29 +39,29 @@ const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) 
   });
 };
 
-// When the user touches the left edge, it should move the thumb
-const ledgePart = edgePart('left', SliderActions.setToLedge);
-
-// When the user touches the right edge, it should move the thumb
-const redgePart = edgePart('right', SliderActions.setToRedge);
+// When the user touches the top left edge, it should move the thumb
+const tlEdgePart = edgePart('top-left', SliderActions.setToTLedge);
 
 // When the user touches the top edge, it should move the thumb
 const tedgePart = edgePart('top', SliderActions.setToTedge);
 
-// When the user touches the right edge, it should move the thumb
-const bedgePart = edgePart('bottom', SliderActions.setToBedge);
-
-// When the user touches the top left edge, it should move the thumb
-const tlEdgePart = edgePart('top-left', SliderActions.setToTLedge);
-
 // When the user touches the top right edge, it should move the thumb
 const trEdgePart = edgePart('top-right', SliderActions.setToTRedge);
+
+// When the user touches the right edge, it should move the thumb
+const redgePart = edgePart('right', SliderActions.setToRedge);
+
+// When the user touches the bottom right edge, it should move the thumb
+const brEdgePart = edgePart('bottom-right', SliderActions.setToBRedge);
+
+// When the user touches the bottom edge, it should move the thumb
+const bedgePart = edgePart('bottom', SliderActions.setToBedge);
 
 // When the user touches the bottom left edge, it should move the thumb
 const blEdgePart = edgePart('bottom-left', SliderActions.setToBLedge);
 
-// When the user touches the bottom right edge, it should move the thumb
-const brEdgePart = edgePart('bottom-right', SliderActions.setToBRedge);
+// When the user touches the left edge, it should move the thumb
+const ledgePart = edgePart('left', SliderActions.setToLedge);
 
 // The thumb part needs to have position absolute to be positioned correctly
 const thumbPart = PartType.required({

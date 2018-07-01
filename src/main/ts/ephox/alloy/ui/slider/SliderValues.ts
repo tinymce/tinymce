@@ -207,6 +207,7 @@ export {
   min1Y,
   maxY,
   max1Y,
+  step,
   currentX,
   currentY,
   halfX,

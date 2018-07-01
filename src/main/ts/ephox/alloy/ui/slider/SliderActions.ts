@@ -10,7 +10,7 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { SliderValue, SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderModel from './SliderModel';
 
-import { minX, maxX, minY, maxY, currentX, currentY, findX, findY } from './SliderValues';
+import { minX, maxX, minY, maxY, currentX, step, currentY, findX, findY } from './SliderValues';
 import * as SliderPosition from './SliderPositions';
 
 const _sliderChangeEvent = 'slider.change.value';
@@ -131,25 +131,25 @@ const setCoordsFromEvent = (spectrum: AlloyComponent, detail: SliderDetail, simu
 };
 
 const moveRight = (spectrum: AlloyComponent, detail: SliderDetail): void => {
-  const newX = SliderModel.increaseBy(currentX(detail), minX(detail), maxX(detail), detail.stepSize());
+  const newX = SliderModel.increaseBy(currentX(detail), minX(detail), maxX(detail), step(detail));
   const val = SliderPosition.sliderValue(newX, currentY(detail));
   fireSliderChange(spectrum, val);
 };
 
 const moveLeft = (spectrum: AlloyComponent, detail: SliderDetail): void => {
-  const newX = SliderModel.reduceBy(currentX(detail), minX(detail), maxX(detail), detail.stepSize());
+  const newX = SliderModel.reduceBy(currentX(detail), minX(detail), maxX(detail), step(detail));
   const val = SliderPosition.sliderValue(newX, currentY(detail));
   fireSliderChange(spectrum, val);
 };
 
 const moveDown = (spectrum: AlloyComponent, detail: SliderDetail): void => {
-  const newY = SliderModel.increaseBy(currentY(detail), minY(detail), maxY(detail), detail.stepSize());
+  const newY = SliderModel.increaseBy(currentY(detail), minY(detail), maxY(detail), step(detail));
   const val = SliderPosition.sliderValue(currentX(detail), newY);
   fireSliderChange(spectrum, val);
 };
 
 const moveUp = (spectrum: AlloyComponent, detail: SliderDetail): void => {
-  const newY = SliderModel.reduceBy(detail.value().get().y(), minY(detail), maxY(detail), detail.stepSize());
+  const newY = SliderModel.reduceBy(currentY(detail), minY(detail), maxY(detail), step(detail));
   const val = SliderPosition.sliderValue(currentX(detail), newY);
   fireSliderChange(spectrum, val);
 };

@@ -16,7 +16,6 @@ import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { console } from '@ephox/dom-globals';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
@@ -76,7 +75,9 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
     } 
     
     if (detail.isHorizontal || detail.isVertical) {
-      refresh(slider)
+      refresh(slider);
+      const thumb = getThumb(slider);
+      detail.onChange()(slider, thumb, newValue);
       return Option.some(true);
     } else {
       return Option.none();
