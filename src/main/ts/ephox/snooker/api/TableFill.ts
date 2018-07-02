@@ -50,6 +50,7 @@ var cloneFormats = function (oldCell, newCell, formats) {
     // Add the matched ancestors to the new cell, then return the new cell.
     return Arr.foldr(parents, function (last, parent) {
       var clonedFormat = Replication.shallow(parent);
+      Attr.remove(clonedFormat, 'contenteditable');
       Insert.append(last, clonedFormat);
       return clonedFormat;
     }, newCell);
