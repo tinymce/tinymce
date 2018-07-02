@@ -1,47 +1,41 @@
-import { Assertions, GeneralSteps, Pipeline, Logger, Step } from '@ephox/agar';
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import ViewBlock from '../module/test/ViewBlock';
+import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
+import { window } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) =>  {
-  const viewBlock = ViewBlock();
-
   Theme();
 
-  const sCreateInlineEditors = function (html) {
-    return Step.async(function (done) {
-      viewBlock.update(html);
-
-      EditorManager.init({
-        selector: '.tinymce',
-        inline: true,
-        skin_url: '/project/js/tinymce/skins/lightgray'
-      }).then(function () {
-        done();
-      });
-    });
+  const settings = {
+    inline: true,
+    skin_url: '/project/js/tinymce/skins/lightgray'
   };
 
-  const sRemoveEditors = Step.sync(function () {
-    EditorManager.remove();
+  const cAssertBogusNotExist = Chain.on((val, next, die) => {
+    UiFinder.findIn(Element.fromDom(window.document.body), '[data-mce-bogus]').fold(
+      () => {
+        next(Chain.wrap(val));
+      },
+      () => {
+        die('Should not be any data-mce-bogus tags present');
+      }
+    );
   });
 
-  viewBlock.attach();
+  const cRemoveEditor = Chain.op((editor) => editor.remove());
+
   Pipeline.async({}, [
-    Logger.t('Removing inline editor should remove all data-mce-bogus tags', GeneralSteps.sequence([
-      sCreateInlineEditors('<div class="tinymce"></div>'),
-      Step.sync(function () {
-        EditorManager.get(0).getBody().innerHTML = '<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>';
-      }),
-      sRemoveEditors,
-      Step.sync(function () {
-        const bogusEl = viewBlock.get().querySelector('[data-mce-bogus]');
-        Assertions.assertEq('Should not be any data-mce-bogus tags present', false, !!bogusEl);
-      }),
-    ]))
+    Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [
+        McEditor.cFromHtml('<div></div>', settings),
+        ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
+        cRemoveEditor,
+        cAssertBogusNotExist,
+        McEditor.cRemove,
+      ]),
+    )
   ], function () {
-    viewBlock.detach();
     success();
   }, failure);
 });
