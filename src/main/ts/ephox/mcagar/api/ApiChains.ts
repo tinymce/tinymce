@@ -130,6 +130,7 @@ export default {
   cSetSelectionFrom: cSetSelectionFrom,
   cSetSelection: cSetSelection,
   cSetSetting: cSetSetting,
+  cSetRawContent: cSetRawContent,
   cDeleteSetting: cDeleteSetting,
   cSetCursor: cSetCursor,
   cSelect: cSelect,
