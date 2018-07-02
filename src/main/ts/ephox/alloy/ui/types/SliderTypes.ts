@@ -1,3 +1,4 @@
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { Cell, Option } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
@@ -11,46 +12,70 @@ export interface SliderValue {
   y: () => number
 };
 
+export interface SliderModelDetailParts {
+  getThumb: (component: AlloyComponent) => AlloyComponent,
+  getSpectrum: (component: AlloyComponent) => AlloyComponent,
+  getLeftEdge: (component: AlloyComponent) => Option<AlloyComponent>,
+  getRightEdge: (component: AlloyComponent) => Option<AlloyComponent>,
+  getTopEdge: (component: AlloyComponent) => Option<AlloyComponent>,
+  getBottomEdge: (component: AlloyComponent) => Option<AlloyComponent>
+}
+
+// TODO: Fully type these out.
+export interface SliderModelDetailManager {
+  setValueTo: (spectrum: AlloyComponent, value: SliderValue) => void,
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => number | SliderValue,
+  setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void,
+  onLeft,
+  onRight,
+  onUp,
+  onDown,
+  edgeActions
+}
+
+export interface SliderModelDetail {
+  minX?: () => number,
+  maxX?: () => number,
+  minY?: () => number,
+  maxY?: () => number,
+  value: () => Cell<number | SliderValue>,
+  getInitialValue: () => () => number | SliderValue,
+  manager: () => any
+}
+
 export interface SliderDetail extends CompositeSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[];
   sliderBehaviours: () => SketchBehaviours;
 
-  value: () => Cell<SliderValue>;
+  model: () => SliderModelDetail,
   rounded?: () => boolean;
-
-  minX: () => number;
-  maxX: () => number;
-  minY: () => number;
-  maxY: () => number;
   stepSize: () => number;
   snapToGrid: () => boolean;
   snapStart: () => Option<number>;
 
-  onChange: () => (component: AlloyComponent, thumb: AlloyComponent, value: SliderValue) => void;
+  onChange: () => (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
   onDragStart: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  getInitialValue: () => () => SliderValue;
-  onInit: () => (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: SliderValue) => void;
+  onInit: () => (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: number | SliderValue) => void;
 
   mouseIsDown: () => Cell<boolean>;
-  isHorizontal: () => Cell<boolean>;
-  isVertical: () => Cell<boolean>;
-  isTwoD: () => Cell<boolean>;
 }
 
 export interface HorizontalSliderSpecMode {
   mode: string;
   minX?: number;
   maxX?: number;
+  getInitialValue: () => number;
 }
 
 export interface VerticalSliderSpecMode {
   mode: string;
   minY?: number;
   maxY?: number;
+  getInitialValue: () => number;
 }
 
 export interface TwoDSliderSpecMode {
@@ -59,6 +84,7 @@ export interface TwoDSliderSpecMode {
   maxX?: number;
   minY?: number;
   maxY?: number;
+  getInitialValue: () => SliderValue;
 }
 
 export interface SliderSpec extends CompositeSketchSpec {
@@ -67,7 +93,7 @@ export interface SliderSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   sliderBehaviours?: AlloyBehaviourRecord;
 
-  'morgan-model': HorizontalSliderSpecMode | VerticalSliderSpecMode | TwoDSliderSpecMode,
+  model: HorizontalSliderSpecMode | VerticalSliderSpecMode | TwoDSliderSpecMode,
   stepSize?: number;
   snapToGrid?: boolean;
   snapStart?: number;
@@ -77,7 +103,6 @@ export interface SliderSpec extends CompositeSketchSpec {
   onDragStart?: (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd?: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  getInitialValue: () => SliderValue;
   onInit?: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: SliderValue) => void;
 }
 

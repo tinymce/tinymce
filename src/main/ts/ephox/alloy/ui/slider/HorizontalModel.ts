@@ -5,8 +5,9 @@ import * as SliderModel from './SliderModel';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+import * as EdgeActions from './EdgeActions';
 
 import { minX, maxX, currentValue, step, snap, snapStart, xRange, rounded, hasLedge, hasRedge } from './SliderValues';
 import { getMinXBounds, getMaxXBounds, getXScreenRange, getXCenterOffSetOf } from './SliderOffsets';
@@ -106,6 +107,17 @@ const onRight = moveBy(1);
 const onUp = Option.none;
 const onDown = onUp;
 
+const edgeActions = Fun.constant({
+  'top-left': Fun.noop,
+  'top': EdgeActions.setToTedge, // This is deliberate
+  'top-right': Fun.noop,
+  'right': EdgeActions.setToRedge,
+  'bottom-right': Fun.noop,
+  'bottom': EdgeActions.setToBedge, // This is too
+  'bottom-left': Fun.noop,
+  'left': EdgeActions.setToLedge
+});
+
 export {
   setValueTo,
   findValueOfOffset,
@@ -116,5 +128,6 @@ export {
   onLeft,
   onRight,
   onUp,
-  onDown
+  onDown,
+  edgeActions
 }

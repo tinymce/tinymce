@@ -8,17 +8,17 @@ const t = 'top',
       l = 'left';
 
 // Values
-const minX = (detail: SliderDetail): number => detail['morgan-model']().minX();
-const minY = (detail: SliderDetail): number => detail['morgan-model']().minY();
+const minX = (detail: SliderDetail): number => detail.model().minX();
+const minY = (detail: SliderDetail): number => detail.model().minY();
 
-const min1X = (detail: SliderDetail): number => detail['morgan-model']().minX() - 1;
-const min1Y = (detail: SliderDetail): number => detail['morgan-model']().minY() - 1;
+const min1X = (detail: SliderDetail): number => detail.model().minX() - 1;
+const min1Y = (detail: SliderDetail): number => detail.model().minY() - 1;
 
-const maxX = (detail: SliderDetail): number => detail['morgan-model']().maxX();
-const maxY = (detail: SliderDetail): number => detail['morgan-model']().maxY();
+const maxX = (detail: SliderDetail): number => detail.model().maxX();
+const maxY = (detail: SliderDetail): number => detail.model().maxY();
 
-const max1X = (detail: SliderDetail): number => detail['morgan-model']().maxX() + 1;
-const max1Y = (detail: SliderDetail): number => detail['morgan-model']().maxY() + 1;
+const max1X = (detail: SliderDetail): number => detail.model().maxX() + 1;
+const max1Y = (detail: SliderDetail): number => detail.model().maxY() + 1;
 
 const range = (detail: SliderDetail, max: (detail: SliderDetail) => number, min: (detail: SliderDetail) => number): number => max(detail) - min(detail);
 
@@ -43,7 +43,7 @@ const hasTedge = (detail: SliderDetail): boolean => hasEdge(detail, t);
 const hasBedge = (detail: SliderDetail): boolean => hasEdge(detail, b);
 
 // Ew, any
-const currentValue = (detail: SliderDetail): any => detail['morgan-model']().value().get();
+const currentValue = (detail: SliderDetail): any => detail.model().value().get();
 
 export {
   minX,

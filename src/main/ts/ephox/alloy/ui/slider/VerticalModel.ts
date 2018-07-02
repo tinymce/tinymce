@@ -5,11 +5,12 @@ import * as SliderModel from './SliderModel';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
 import { minY, maxY, currentValue, step, snap, snapStart, yRange, rounded, hasTedge, hasBedge } from './SliderValues';
 import { getMinYBounds, getMaxYBounds, getYScreenRange, getYCenterOffSetOf } from './SliderOffsets';
+import * as EdgeActions from './EdgeActions';
 
 const fireSliderChange = (spectrum: AlloyComponent, value: number): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
@@ -52,7 +53,7 @@ const findValueOfOffset = (spectrum, detail, top) => {
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent) => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map(function (p) {
-    return p.left();
+    return p.top();
   });
 };
 
@@ -101,10 +102,21 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
 };
 
-const onLeft = moveBy(-1);
-const onRight = moveBy(1);
-const onUp = Option.none;
-const onDown = onUp;
+const onLeft = Fun.noop;
+const onRight = onLeft;
+const onUp = moveBy(-1);
+const onDown = moveBy(1);
+
+const edgeActions = Fun.constant({
+  'top-left': Fun.noop,
+  'top': EdgeActions.setToTedge,
+  'top-right': Fun.noop,
+  'right': EdgeActions.setToRedge, // This is deliberate
+  'bottom-right': Fun.noop,
+  'bottom': EdgeActions.setToBedge,
+  'bottom-left': Fun.noop,
+  'left': EdgeActions.setToLedge // This is too
+});
 
 export {
   setValueTo,
@@ -116,5 +128,6 @@ export {
   onLeft,
   onRight,
   onUp,
-  onDown
+  onDown,
+  edgeActions
 }

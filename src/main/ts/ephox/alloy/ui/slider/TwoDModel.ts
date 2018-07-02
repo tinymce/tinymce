@@ -2,7 +2,7 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 import * as ModelCommon from './ModelCommon';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail, SliderValue } from '../../ui/types/SliderTypes';
+import { SliderDetail, SliderValue, SliderModelDetailParts } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Fun } from '@ephox/katamari';
 import { Css, Width, Height } from '@ephox/sugar';
@@ -10,6 +10,8 @@ import { Css, Width, Height } from '@ephox/sugar';
 import * as HorizontalModel from './HorizontalModel';
 import * as VerticalModel from './VerticalModel';
 import { currentValue } from './SliderValues';
+import * as EdgeActions from './EdgeActions';
+import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 const fireSliderChange = (spectrum: AlloyComponent, value: SliderValue): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
@@ -23,9 +25,9 @@ const sliderValue = (x: number, y: number): SliderValue => {
 };
 
 // Which does a SET. Fire change at the end
-const setValueTo = (spectrum, detail, value) => {
-  const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.x());
-  const yValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.y());
+const setValueTo = (spectrum: AlloyComponent, detail: SliderDetail, value: SugarPosition): SliderValue => {
+  const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left());
+  const yValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.top());
   const val = sliderValue(xValue, yValue);
   fireSliderChange(spectrum, val);
   return val;
@@ -33,13 +35,10 @@ const setValueTo = (spectrum, detail, value) => {
 
 // get event data
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent) => {
-  const pos = ModelCommon.getEventSource(simulatedEvent);
-  return pos.map(function (p) {
-    return p.left();
-  });
+  return ModelCommon.getEventSource(simulatedEvent);
 };
 
-const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, edges: any) => {
+const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, edges: SliderModelDetailParts) => {
   const value = currentValue(detail);
   const xPos = HorizontalModel.findPositionOfValue(
     slider,
@@ -53,8 +52,8 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
     slider,
     edges.getSpectrum(slider),
     value.y(),
-    edges.getLeftEdge(slider),
-    edges.getRightEdge(slider),
+    edges.getTopEdge(slider),
+    edges.getBottomEdge(slider),
     detail
   );
   const thumbXRadius = Width.get(thumb.element()) / 2;
@@ -68,6 +67,17 @@ const onRight = HorizontalModel.onLeft;
 const onUp = VerticalModel.onUp;
 const onDown = VerticalModel.onDown;
 
+const edgeActions = Fun.constant({
+  'top-left': EdgeActions.setToTLedgeXY,
+  'top': EdgeActions.setToTedgeXY,
+  'top-right': EdgeActions.setToTRedgeXY,
+  'right': EdgeActions.setToRedgeXY,
+  'bottom-right': EdgeActions.setToBRedgeXY,
+  'bottom': EdgeActions.setToBedgeXY,
+  'bottom-left': EdgeActions.setToBLedgeXY,
+  'left': EdgeActions.setToLedgeXY
+});
+
 export {
   setValueTo,
   getValueFromEvent,
@@ -76,5 +86,6 @@ export {
   onLeft,
   onRight,
   onUp,
-  onDown
+  onDown,
+  edgeActions
 }

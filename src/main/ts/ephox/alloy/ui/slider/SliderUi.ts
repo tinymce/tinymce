@@ -8,7 +8,8 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
-import * as SliderActions from './SliderActions';
+import * as EdgeActions from './EdgeActions';
+import * as ModelCommon from './ModelCommon';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
@@ -25,7 +26,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
   const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
   const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
-  const modelDetail = detail['morgan-model']();
+  const modelDetail = detail.model();
   const model = modelDetail.manager();
 
   const refresh = (slider: AlloyComponent, thumb: AlloyComponent): void => {
@@ -87,7 +88,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
               store: {
                 mode: 'manual',
                 getValue (_) {
-                  return detail.value().get();
+                  return detail.model().value().get();
                 }
               }
             })
@@ -99,19 +100,20 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run<CustomEvent>(SliderActions.sliderChangeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached((slider, simulatedEvent) => {
           // Set the initial value
-          detail.value().set(detail.getInitialValue()());
+          const getInitial = modelDetail.getInitialValue();
+          modelDetail.value().set(getInitial());
           const thumb = getThumb(slider);
 
           refresh(slider, thumb);
           
           const spectrum = getSpectrum(slider);
           // Call onInit instead of onChange for the first value.
-          detail.onInit()(slider, thumb, spectrum, detail.value().get());
+          detail.onInit()(slider, thumb, spectrum, modelDetail.value().get());
         })
       ].concat(uiEventsArr)
     ),

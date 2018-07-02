@@ -6,20 +6,19 @@ import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
-import * as SliderActions from './SliderActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) => void) => {
+const edgePart = (name: string) => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides (detail: SliderDetail) {
+      const action = detail.model().manager().edgeActions()[name];
       const touchEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
       ]);
@@ -39,28 +38,28 @@ const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) 
 };
 
 // When the user touches the top left edge, it should move the thumb
-const tlEdgePart = edgePart('top-left', SliderActions.setToTLedge);
+const tlEdgePart = edgePart('top-left');
 
 // When the user touches the top edge, it should move the thumb
-const tedgePart = edgePart('top', SliderActions.setToTedge);
+const tedgePart = edgePart('top');
 
 // When the user touches the top right edge, it should move the thumb
-const trEdgePart = edgePart('top-right', SliderActions.setToTRedge);
+const trEdgePart = edgePart('top-right');
 
 // When the user touches the right edge, it should move the thumb
-const redgePart = edgePart('right', SliderActions.setToRedge);
+const redgePart = edgePart('right');
 
 // When the user touches the bottom right edge, it should move the thumb
-const brEdgePart = edgePart('bottom-right', SliderActions.setToBRedge);
+const brEdgePart = edgePart('bottom-right');
 
 // When the user touches the bottom edge, it should move the thumb
-const bedgePart = edgePart('bottom', SliderActions.setToBedge);
+const bedgePart = edgePart('bottom');
 
 // When the user touches the bottom left edge, it should move the thumb
-const blEdgePart = edgePart('bottom-left', SliderActions.setToBLedge);
+const blEdgePart = edgePart('bottom-left');
 
 // When the user touches the left edge, it should move the thumb
-const ledgePart = edgePart('left', SliderActions.setToLedge);
+const ledgePart = edgePart('left');
 
 // The thumb part needs to have position absolute to be positioned correctly
 const thumbPart = PartType.required({
@@ -93,7 +92,7 @@ const spectrumPart = PartType.required({
   ],
   name: 'spectrum',
   overrides (detail: SliderDetail) {
-    const modelDetail = detail['morgan-model']();
+    const modelDetail = detail.model();
     const model = modelDetail.manager();
 
     const setValueTo = (component, simulatedEvent) => {
@@ -121,16 +120,20 @@ const spectrumPart = PartType.required({
           {
             mode: 'special',
             onLeft: (spectrum) => {
-              return model.onLeft(spectrum, detail);
+              model.onLeft(spectrum, detail);
+              return Option.some(true);
             },
             onRight: (spectrum) => {
-              return model.onRight(spectrum, detail);
+              model.onRight(spectrum, detail);
+              return Option.some(true);
             },
             onUp: (spectrum) => {
-              return model.onUp(spectrum, detail);
+              model.onUp(spectrum, detail);
+              return Option.some(true);
             },
             onDown: (spectrum) => {
-              return model.onDown(spectrum, detail);
+              model.onDown(spectrum, detail);
+              return Option.some(true);
             }
           }
         ),

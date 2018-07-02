@@ -22,21 +22,21 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('snapToGrid', false),
   FieldSchema.defaulted('rounded', true),
   FieldSchema.option('snapStart'),
-  FieldSchema.strict('getInitialValue'),
-
-  FieldSchema.strictOf('morgan-model', ValueSchema.choose(
+  FieldSchema.strictOf('model', ValueSchema.choose(
     'mode',
     {
       x: [
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.state('value', (spec) => Cell(spec.mode.minX)),
+        FieldSchema.strict('getInitialValue'),
         Fields.output('manager', HorizontalModel)
       ],
       y: [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec) => Cell(spec.mode.minY)),
+        FieldSchema.strict('getInitialValue'),
         Fields.output('manager', VerticalModel)
       ],
       xy: [
@@ -44,6 +44,11 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
+        FieldSchema.state('value', (spec) => Cell({
+          x: Fun.constant(spec.mode.minX), 
+          y: Fun.constant(spec.mode.minY)
+        })),
+        FieldSchema.strict('getInitialValue'),
         Fields.output('manager', TwoDModel)
       ]
     }
