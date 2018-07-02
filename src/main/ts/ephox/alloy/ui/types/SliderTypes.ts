@@ -18,7 +18,6 @@ export interface SliderDetail extends CompositeSketchDetail {
   sliderBehaviours: () => SketchBehaviours;
 
   value: () => Cell<SliderValue>;
-  axes: () => string[];
   rounded?: () => boolean;
 
   minX: () => number;
@@ -42,17 +41,33 @@ export interface SliderDetail extends CompositeSketchDetail {
   isTwoD: () => Cell<boolean>;
 }
 
+export interface HorizontalSliderSpecMode {
+  mode: string;
+  minX?: number;
+  maxX?: number;
+}
+
+export interface VerticalSliderSpecMode {
+  mode: string;
+  minY?: number;
+  maxY?: number;
+}
+
+export interface TwoDSliderSpecMode {
+  mode: string;
+  minX?: number;
+  maxX?: number;
+  minY?: number;
+  maxY?: number;
+}
+
 export interface SliderSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
   sliderBehaviours?: AlloyBehaviourRecord;
 
-  axes?: string[];
-  minX?: number;
-  maxX?: number;
-  minY?: number;
-  maxY?: number;
+  'morgan-model': HorizontalSliderSpecMode | VerticalSliderSpecMode | TwoDSliderSpecMode,
   stepSize?: number;
   snapToGrid?: boolean;
   snapStart?: number;

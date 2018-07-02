@@ -1,6 +1,5 @@
 import { Arr, Fun, Merger, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Width, Height } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
@@ -10,7 +9,6 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SliderActions from './SliderActions';
-import * as SliderValues from './SliderValues';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
@@ -27,61 +25,26 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
   const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
   const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
-  const setXPos = (slider: AlloyComponent, thumb: AlloyComponent): void => {
-    const pos = SliderValues.findXPos(slider, getSpectrum(slider), getLeftEdge(slider), getRightEdge(slider), detail);
-    const thumbRadius = Width.get(thumb.element()) / 2;
-    Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
-  };
+  const modelDetail = detail['morgan-model']();
+  const model = modelDetail.manager();
 
-  const setYPos = (slider: AlloyComponent, thumb: AlloyComponent): void => {
-    const pos = SliderValues.findYPos(slider, getSpectrum(slider), getTopEdge(slider), getBottomEdge(slider), detail);
-    const thumbRadius = Height.get(thumb.element()) / 2;
-    Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
-  };
-
-  const setXYPos = (slider: AlloyComponent, thumb: AlloyComponent): void => {
-    setXPos(slider, thumb);
-    setYPos(slider, thumb);
-  };
-
-  const refresh = (slider: AlloyComponent): void => {
-    const thumb = getThumb(slider);
-
-    if (detail.isTwoD()) {
-      setXYPos(slider, thumb);
-    } else if (detail.isHorizontal()) {
-      setXPos(slider, thumb);
-    } else if (detail.isVertical()) {
-      setYPos(slider, thumb);
-    }
-  };
-
-  const setValue = (x: number, y: number): void => {
-    detail.value().set({
-      x: Fun.constant(x),
-      y: Fun.constant(y)
+  const refresh = (slider: AlloyComponent, thumb: AlloyComponent): void => {
+    model.setPositionFromValue(slider, thumb, detail, {
+      getLeftEdge,
+      getRightEdge,
+      getTopEdge,
+      getBottomEdge,
+      getSpectrum
     });
   };
 
-  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
-    const oldValue = detail.value().get();
+  const changeValue = (slider: AlloyComponent, newValue): Option<boolean> => {
+    modelDetail.value().set(newValue);
     
-    if (detail.isTwoD()) {
-      setValue(newValue.x(), newValue.y());
-    } else if (detail.isHorizontal()) {
-      setValue(newValue.x(), oldValue.y());
-    } else if (detail.isVertical()) {
-      setValue(oldValue.x(), newValue.y());
-    } 
-    
-    if (detail.isHorizontal || detail.isVertical) {
-      refresh(slider);
-      const thumb = getThumb(slider);
-      detail.onChange()(slider, thumb, newValue);
-      return Option.some(true);
-    } else {
-      return Option.none();
-    }
+    const thumb = getThumb(slider);
+    refresh(slider, thumb);
+    detail.onChange()(slider, thumb, newValue);
+    return Option.some(true);
   };
 
   const uiEventsArr = isTouch ? [
@@ -142,9 +105,10 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
         AlloyEvents.runOnAttached((slider, simulatedEvent) => {
           // Set the initial value
           detail.value().set(detail.getInitialValue()());
-          refresh(slider);
-
           const thumb = getThumb(slider);
+
+          refresh(slider, thumb);
+          
           const spectrum = getSpectrum(slider);
           // Call onInit instead of onChange for the first value.
           detail.onInit()(slider, thumb, spectrum, detail.value().get());

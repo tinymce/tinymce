@@ -9,7 +9,6 @@ import { Keying } from '../../api/behaviour/Keying';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
 import * as SliderActions from './SliderActions';
@@ -94,83 +93,47 @@ const spectrumPart = PartType.required({
   ],
   name: 'spectrum',
   overrides (detail: SliderDetail) {
-    const isH = detail.isHorizontal();
-    const isV = detail.isVertical();
-    const is2D = detail.isTwoD();
+    const modelDetail = detail['morgan-model']();
+    const model = modelDetail.manager();
 
-    const moveToX = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      SliderActions.setXFromEvent(spectrum, detail, simulatedEvent);
-    };
-
-    const moveToY = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      SliderActions.setYFromEvent(spectrum, detail, simulatedEvent);
-    };
-
-    const moveToCoords = function (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
-      SliderActions.setCoordsFromEvent(spectrum, detail, simulatedEvent);
-    };
-
-    // If the axes array contains neither horizontal or vertical, then no movement.
-    var moveTo = Fun.noop;
-
-    if (is2D) {
-      moveTo = moveToCoords
-    } else if (isH) {
-      moveTo = moveToX
-    } else if (isV) {
-      moveTo = moveToY
-    }
+    const setValueTo = (component, simulatedEvent) => {
+      return model.getValueFromEvent(simulatedEvent).map(function (value) {
+        return model.setValueTo(component, detail, value);
+      });
+    } ;
 
     const touchEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.touchstart(), moveTo),
-      AlloyEvents.run(NativeEvents.touchmove(), moveTo)
+      AlloyEvents.run(NativeEvents.touchstart(), setValueTo),
+      AlloyEvents.run(NativeEvents.touchmove(), setValueTo)
     ]);
 
     const mouseEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.mousedown(), moveTo),
+      AlloyEvents.run(NativeEvents.mousedown(), setValueTo),
       AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
-        if (detail.mouseIsDown().get()) { moveTo(spectrum, se); }
+        if (detail.mouseIsDown().get()) { setValueTo(spectrum, se); }
       })
     ]);
 
     return {
       behaviours: Behaviour.derive(isTouch ? [ ] : [
         // Move left and right along the spectrum
-        Keying.config({
-          mode: 'special',
-          onLeft (spectrum) {
-            if (isH) {
-              SliderActions.moveLeft(spectrum, detail);
-              return Option.some(true);
-            } else {
-              return Option.none();
-            }
-          },
-          onRight (spectrum) {
-            if (isH) {
-              SliderActions.moveRight(spectrum, detail);
-              return Option.some(true);
-            } else {
-              return Option.none();
-            }
-          },
-          onDown (spectrum) {
-            if (isV) {
-              SliderActions.moveDown(spectrum, detail);
-              return Option.some(true);
-            } else {
-              return Option.none();
-            }
-          },
-          onUp (spectrum) {
-            if (isV) {
-              SliderActions.moveUp(spectrum, detail);
-              return Option.some(true);
-            } else {
-              return Option.none();
+        Keying.config(
+          {
+            mode: 'special',
+            onLeft: (spectrum) => {
+              return model.onLeft(spectrum, detail);
+            },
+            onRight: (spectrum) => {
+              return model.onRight(spectrum, detail);
+            },
+            onUp: (spectrum) => {
+              return model.onUp(spectrum, detail);
+            },
+            onDown: (spectrum) => {
+              return model.onDown(spectrum, detail);
             }
           }
-        }),
+        ),
         Focusing.config({ })
       ]),
 
