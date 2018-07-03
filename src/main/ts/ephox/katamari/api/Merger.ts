@@ -22,7 +22,7 @@ const baseMerge = function (merger: MergeStrategy): (...objs: {}[]) => any {
     const ret = {};
     for (let j = 0; j < objects.length; j++) {
       const curObject = objects[j];
-      for (const key in curObject) if (curObject.hasOwnProperty(key)) {
+      for (const key in curObject) if (Object.prototype.hasOwnProperty.call(curObject, key)) {
         ret[key] = merger(ret[key], curObject[key]);
       }
     }

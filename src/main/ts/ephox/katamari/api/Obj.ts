@@ -4,25 +4,7 @@ import { Option } from './Option';
 // http://jsperf.com/object-keys-iteration/107
 //
 // Use the native keys if it is available (IE9+), otherwise fall back to manually filtering
-export const keys = (function () {
-  const fastKeys = Object.keys;
-
-  // This technically means that 'each' and 'find' on IE8 iterate through the object twice.
-  // This code doesn't run on IE8 much, so it's an acceptable tradeoff.
-  // If it becomes a problem we can always duplicate the feature detection inside each and find as well.
-  const slowKeys = function (o: {}) {
-    const r: string[] = [];
-    for (const i in o) {
-      if (o.hasOwnProperty(i)) {
-        r.push(i);
-      }
-    }
-    return r;
-  };
-
-  return fastKeys === undefined ? slowKeys : fastKeys;
-})();
-
+export const keys = Object.keys;
 
 export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => void) {
   const props = keys(obj);
