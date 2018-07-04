@@ -2,7 +2,6 @@ import { Option } from '@ephox/katamari';
 import DocumentPosition from '../dom/DocumentPosition';
 import Element from '../node/Element';
 import Fragment from '../node/Fragment';
-import Traverse from '../search/Traverse';
 import Selection from './Selection';
 import NativeRange from '../../selection/core/NativeRange';
 import SelectionDirection from '../../selection/core/SelectionDirection';
@@ -27,6 +26,11 @@ var findWithin = function (win, selection, selector) {
   return Within.find(win, selection, selector);
 };
 
+var setLegacyRtlRange = function (win, selection, start, soffset, finish, foffset) {
+    selection.collapse(start.dom(), soffset);
+    selection.extend(finish.dom(), foffset);
+};
+
 var setRangeFromRelative = function (win, relative) {
   return SelectionDirection.diagnose(win, relative).match({
     ltr: function (start, soffset, finish, foffset) {
@@ -38,8 +42,13 @@ var setRangeFromRelative = function (win, relative) {
       if (selection.setBaseAndExtent) {
         selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
       } else if (selection.extend) {
-        selection.collapse(start.dom(), soffset);
-        selection.extend(finish.dom(), foffset);
+        // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
+        try {
+          setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
+        } catch (e) {
+          // If it does fail, try again with ltr.
+          doSetRange(win, finish, foffset, start, soffset);
+        }
       } else {
         doSetRange(win, finish, foffset, start, soffset);
       }
