@@ -14,7 +14,7 @@ UnitTest.test('CloneFormatsTest', function() {
   var noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 
   var cellElement = Element.fromTag('td');
-  var cellContent = Element.fromHtml('<strong><em>stuff</em></strong>');
+  var cellContent = Element.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
   Insert.append(cellElement, cellContent);
   var cell = {
     element: Fun.constant(cellElement),
