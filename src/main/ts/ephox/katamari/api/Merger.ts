@@ -2,6 +2,8 @@ import * as Type from './Type';
 
 type MergeStrategy = (old: any, nu: any) => any;
 
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
 const shallow = function (old: any, nu: any) {
   return nu;
 };
@@ -22,7 +24,7 @@ const baseMerge = function (merger: MergeStrategy): (...objs: {}[]) => any {
     const ret = {};
     for (let j = 0; j < objects.length; j++) {
       const curObject = objects[j];
-      for (const key in curObject) if (Object.prototype.hasOwnProperty.call(curObject, key)) {
+      for (const key in curObject) if (hasOwnProperty.call(curObject, key)) {
         ret[key] = merger(ret[key], curObject[key]);
       }
     }
