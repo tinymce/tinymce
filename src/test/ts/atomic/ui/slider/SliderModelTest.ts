@@ -107,7 +107,6 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - data.min) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -142,7 +141,6 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -176,7 +174,6 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
@@ -210,7 +207,6 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1

@@ -10,9 +10,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
-import { AlloyParts, Memento, Focusing } from 'ephox/alloy/api/Main';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { document } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();
@@ -220,6 +218,6 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    // if (!isTouch) { Keying.focusIn(hueSlider); }
+    if (!isTouch) { Keying.focusIn(hueSlider); }
   });
 };
