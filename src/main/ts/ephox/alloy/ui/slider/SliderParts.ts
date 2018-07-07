@@ -120,20 +120,16 @@ const spectrumPart = PartType.required({
           {
             mode: 'special',
             onLeft: (spectrum) => {
-              model.onLeft(spectrum, detail);
-              return Option.some(true);
+              return model.onLeft(spectrum, detail);
             },
             onRight: (spectrum) => {
-              model.onRight(spectrum, detail);
-              return Option.some(true);
+              return model.onRight(spectrum, detail);
             },
             onUp: (spectrum) => {
-              model.onUp(spectrum, detail);
-              return Option.some(true);
+              return model.onUp(spectrum, detail);
             },
             onDown: (spectrum) => {
-              model.onDown(spectrum, detail);
-              return Option.some(true);
+              return model.onDown(spectrum, detail);
             }
           }
         ),

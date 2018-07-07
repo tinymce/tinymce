@@ -63,7 +63,7 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
 };
 
 const onLeft = HorizontalModel.onLeft;
-const onRight = HorizontalModel.onLeft;
+const onRight = HorizontalModel.onRight;
 const onUp = VerticalModel.onUp;
 const onDown = VerticalModel.onDown;
 

@@ -27,7 +27,7 @@ const setValueTo = (spectrum, detail, value) => {
 const moveBy = (direction) => (spectrum, detail) => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
   const newValue = f(currentValue(detail), minY(detail), maxY(detail), step(detail));
-  return setValueTo(spectrum, detail, newValue);
+  return Option.some(setValueTo(spectrum, detail, newValue));
 };
 
 const findValueOfOffset = (spectrum, detail, top) => {
@@ -102,8 +102,8 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
 };
 
-const onLeft = Fun.noop;
-const onRight = onLeft;
+const onLeft = Option.none;
+const onRight = Option.none;
 const onUp = moveBy(-1);
 const onDown = moveBy(1);
 
