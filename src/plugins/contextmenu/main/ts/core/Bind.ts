@@ -21,12 +21,12 @@ const setup = function (editor, visibleState, menu) {
   let isEmptySelection = false;
   // 监听鼠标右键（判断是否是右键）
   editor.on('mousedown', function (e) {
-    isEmptySelection = false
+    isEmptySelection = false;
     // 右键事件
-    const isRightClick = e.buttons === 2 || e.which === 3
+    const isRightClick = e.buttons === 2 || e.which === 3;
     if (isRightClick) {
-      const selectValue = document.getSelection().toString()
-      isEmptySelection = selectValue.length === 0
+      const selectValue = document.getSelection().toString();
+      isEmptySelection = selectValue.length === 0;
     }
   });
   // 选区事件（禁止自动选区）

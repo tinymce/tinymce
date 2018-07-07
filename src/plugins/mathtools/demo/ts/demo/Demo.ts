@@ -24,8 +24,7 @@ tinymce.init({
   image_caption: true,
   height: 600,
   extended_valid_elements: 'span[*],svg[*],defs[*],path[*],g[*],use[*],text[*],rect[*],tspan[*],line[*],circle[*],ellipse[*]',
-  toolbar1: 'undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
- 
+  toolbar1: 'undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons'
 });
 
 export {};

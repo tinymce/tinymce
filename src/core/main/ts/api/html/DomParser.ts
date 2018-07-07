@@ -44,7 +44,7 @@ export default function (settings?, schema = Schema()) {
   const attributeFilters = [];
   let matchedNodes = {};
   let matchedAttributes = {};
-  
+
   settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
