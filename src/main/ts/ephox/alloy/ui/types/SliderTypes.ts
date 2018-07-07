@@ -21,16 +21,26 @@ export interface SliderModelDetailParts {
   getBottomEdge: (component: AlloyComponent) => Option<AlloyComponent>
 }
 
-// TODO: Fully type these out.
-export interface SliderModelDetailManager {
+export interface EdgeActions {
+  'top-left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'top': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'top-right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'bottom-right': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'bottom': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'bottom-left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>,
+  'left': Option<(edge: AlloyComponent, detail: SliderDetail) => void>
+}
+
+export interface Manager {
   setValueTo: (spectrum: AlloyComponent, value: SliderValue) => void,
   getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => number | SliderValue,
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void,
-  onLeft,
-  onRight,
-  onUp,
-  onDown,
-  edgeActions
+  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
+  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
+  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
+  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
+  edgeActions: () => EdgeActions
 }
 
 export interface SliderModelDetail {

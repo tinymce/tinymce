@@ -1,40 +1,40 @@
 import { ClientRect } from '@ephox/dom-globals';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const t = 'top',
-      r = 'right',
-      b = 'bottom',
-      l = 'left',
-      w = 'width',
-      h = 'height';
+const top = 'top',
+      right = 'right',
+      bottom = 'bottom',
+      left = 'left',
+      width = 'width',
+      height = 'height';
 
-// Offsets
+// Screen offsets from bounding client rect
 const getBounds = (component: AlloyComponent): ClientRect => component.element().dom().getBoundingClientRect();
 const getBoundsProperty = (bounds: ClientRect, property: string): number => bounds[property];
 
 const getMinXBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, l);
+  return getBoundsProperty(bounds, left);
 };
 const getMaxXBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, r);
+  return getBoundsProperty(bounds, right);
 };
 const getMinYBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, t);
+  return getBoundsProperty(bounds, top);
 };
 const getMaxYBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, b);
+  return getBoundsProperty(bounds, bottom);
 };
 const getXScreenRange = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, w);
+  return getBoundsProperty(bounds, width);
 };
 const getYScreenRange = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
-  return getBoundsProperty(bounds, h);
+  return getBoundsProperty(bounds, height);
 };
 
 const getCenterOffsetOf = (componentMinEdge: number, componentMaxEdge: number, spectrumMinEdge: number): number => 
@@ -43,17 +43,17 @@ const getCenterOffsetOf = (componentMinEdge: number, componentMaxEdge: number, s
 const getXCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent): number => {
   const componentBounds = getBounds(component);
   const spectrumBounds = getBounds(spectrum);
-  const componentMinEdge = getBoundsProperty(componentBounds, l);
-  const componentMaxEdge = getBoundsProperty(componentBounds, r);
-  const spectrumMinEdge = getBoundsProperty(spectrumBounds, l);
+  const componentMinEdge = getBoundsProperty(componentBounds, left);
+  const componentMaxEdge = getBoundsProperty(componentBounds, right);
+  const spectrumMinEdge = getBoundsProperty(spectrumBounds, left);
   return getCenterOffsetOf(componentMinEdge, componentMaxEdge, spectrumMinEdge);
 };
 const getYCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent): number => {
   const componentBounds = getBounds(component);
   const spectrumBounds = getBounds(spectrum);
-  const componentMinEdge = getBoundsProperty(componentBounds, t);
-  const componentMaxEdge = getBoundsProperty(componentBounds, b);
-  const spectrumMinEdge = getBoundsProperty(spectrumBounds, t);
+  const componentMinEdge = getBoundsProperty(componentBounds, top);
+  const componentMaxEdge = getBoundsProperty(componentBounds, bottom);
+  const spectrumMinEdge = getBoundsProperty(spectrumBounds, top);
   return getCenterOffsetOf(componentMinEdge, componentMaxEdge, spectrumMinEdge);
 };
 

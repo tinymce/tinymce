@@ -12,25 +12,13 @@ import * as EdgeActions from './EdgeActions';
 import { minX, maxX, currentValue, step, snap, snapStart, xRange, rounded, hasLedge, hasRedge } from './SliderValues';
 import { getMinXBounds, getMaxXBounds, getXScreenRange, getXCenterOffSetOf } from './SliderOffsets';
 
+// fire slider change event with x value
 const fireSliderChange = (spectrum: AlloyComponent, value: number): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
-// Which does a SET. Fire change at the end
-const setValueTo = (spectrum, detail, value) => {
-  const xValue = findValueOfOffset(spectrum, detail, value);
-  fireSliderChange(spectrum, xValue);
-  return xValue;
-};
-
-// Which does a delta (step size). Fire change at the end
-const moveBy = (direction) => (spectrum, detail) => {
-  const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const newValue = f(currentValue(detail), minX(detail), maxX(detail), step(detail));
-  return Option.some(setValueTo(spectrum, detail, newValue));
-};
-
-const findValueOfOffset = (spectrum, detail, left) => {
+// find the value of the x offset of where the mouse was clicked from the model.
+const findValueOfOffset = (spectrum: AlloyComponent, detail: SliderDetail, left: number): number => {
   const args = {
     min: minX(detail),
     max: maxX(detail),
@@ -49,14 +37,29 @@ const findValueOfOffset = (spectrum, detail, left) => {
   return SliderModel.findValueOf(args);
 };
 
-// get event data
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent) => {
+// find the value and fire a slider change event, returning the value
+const setValueTo = (spectrum: AlloyComponent, detail: SliderDetail, value: number): number => {
+  const xValue = findValueOfOffset(spectrum, detail, value);
+  fireSliderChange(spectrum, xValue);
+  return xValue;
+};
+
+// move in a direction by step size. Fire change at the end
+const moveBy = (direction: number) => (spectrum: AlloyComponent, detail: SliderDetail): Option<number> => {
+  const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
+  const newValue = f(currentValue(detail), minX(detail), maxX(detail), step(detail));
+  return Option.some(setValueTo(spectrum, detail, newValue));
+};
+
+// get x offset from event
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map(function (p) {
     return p.left();
   });
 };
 
+// find the x offset of a given value from the model
 const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>): number => {
   const minOffset = 0;
   const maxOffset = getXScreenRange(spectrum);
@@ -82,13 +85,14 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value
   return SliderModel.findOffsetOfValue(args);
 };
 
-// Model Value -> View position
-const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>, detail: SliderDetail) => {
+// find left offset for absolute positioning from a given value
+const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>, detail: SliderDetail): number => {
   const offset = findOffsetOfValue(spectrum, detail, value, minEdge, maxEdge);
   return (getMinXBounds(spectrum) - getMinXBounds(slider)) + offset;
 };
 
-const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, edges: any) => {
+// update the position of the thumb from the slider's current value
+const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, edges: any): void => {
   const value = currentValue(detail);
   const pos = findPositionOfValue(
     slider,
@@ -102,20 +106,22 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
 };
 
+// Key Events
 const onLeft = moveBy(-1);
 const onRight = moveBy(1);
 const onUp = Option.none;
 const onDown = Option.none;
 
+// Edge Click Actions
 const edgeActions = Fun.constant({
-  'top-left': Fun.noop,
-  'top': EdgeActions.setToTedge, // This is deliberate
-  'top-right': Fun.noop,
-  'right': EdgeActions.setToRedge,
-  'bottom-right': Fun.noop,
-  'bottom': EdgeActions.setToBedge, // This is too
-  'bottom-left': Fun.noop,
-  'left': EdgeActions.setToLedge
+  'top-left': Option.none(),
+  'top': Option.none(),
+  'top-right': Option.none(),
+  'right': Option.some(EdgeActions.setToRedge),
+  'bottom-right': Option.none(),
+  'bottom': Option.none(),
+  'bottom-left': Option.none(),
+  'left': Option.some(EdgeActions.setToLedge)
 });
 
 export {

@@ -8,17 +8,17 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
-import * as EdgeActions from './EdgeActions';
 import * as ModelCommon from './ModelCommon';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
+import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, components, spec, externals) => {
+const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: SliderDetail, components: AlloySpec[], _spec: SliderSpec, _externals) => {
   const getThumb = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'thumb');
   const getSpectrum = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'spectrum');
   const getLeftEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
@@ -48,24 +48,28 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
     return Option.some(true);
   };
 
-  const uiEventsArr = isTouch ? [
-    AlloyEvents.run(NativeEvents.touchstart(), (slider, _simulatedEvent) => {
+  const touchEvents = [
+    AlloyEvents.run(NativeEvents.touchstart(), (slider: AlloyComponent, _simulatedEvent) => {
       detail.onDragStart()(slider, getThumb(slider));
     }),
-    AlloyEvents.run(NativeEvents.touchend(), (slider, _simulatedEvent) => {
+    AlloyEvents.run(NativeEvents.touchend(), (slider: AlloyComponent, _simulatedEvent) => {
       detail.onDragEnd()(slider, getThumb(slider));
     })
-  ] : [
-    AlloyEvents.run(NativeEvents.mousedown(), (slider, simulatedEvent) => {
+  ];
+
+  const mouseEvents = [
+    AlloyEvents.run(NativeEvents.mousedown(), (slider: AlloyComponent, simulatedEvent) => {
       simulatedEvent.stop();
       detail.onDragStart()(slider, getThumb(slider));
       detail.mouseIsDown().set(true);
     }),
-    AlloyEvents.run(NativeEvents.mouseup(), (slider, simulatedEvent) => {
+    AlloyEvents.run(NativeEvents.mouseup(), (slider: AlloyComponent, _simulatedEvent) => {
       detail.onDragEnd()(slider, getThumb(slider));
       detail.mouseIsDown().set(false);
     })
   ];
+
+  const uiEventsArr = isTouch ? touchEvents : mouseEvents;
 
   return {
     uid: detail.uid(),

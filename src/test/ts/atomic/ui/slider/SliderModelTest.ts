@@ -82,7 +82,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     },
     { }
   );
-/*
+
   Jsc.syncProperty(
     'Finding value of snapped always results in a factorable value',
     [
@@ -91,7 +91,23 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue) => {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
+      const args = {
+        min: data.min,
+        max: data.max,
+        range: data.max - data.min,
+        value: xValue,
+        step: data.stepSize,
+        snap: true,
+        snapStart: Option.none(),
+        rounded: data.rounded,
+        hasMinEdge: data.hasLedge,
+        hasMaxEdge: data.hasRedge,
+        minBound: bounds.left,
+        maxBound: bounds.right,
+        screenRange: bounds.width
+      };
+      const newValue = SliderModel.findValueOf(args);
+      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - data.min) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -110,7 +126,23 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue, snapOffset) => {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min), data.rounded, data.hasLedge, data.hasRedge);
+      const args = {
+        min: data.min,
+        max: data.max,
+        range: data.max - data.min,
+        value: xValue,
+        step: data.stepSize,
+        snap: true,
+        snapStart: Option.some(snapOffset + data.min),
+        rounded: data.rounded,
+        hasMinEdge: data.hasLedge,
+        hasMaxEdge: data.hasRedge,
+        minBound: bounds.left,
+        maxBound: bounds.right,
+        screenRange: bounds.width
+      };
+      const newValue = SliderModel.findValueOf(args);
+      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min), data.rounded, data.hasLedge, data.hasRedge);
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -128,7 +160,23 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue) => {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
+      const args = {
+        min: data.min,
+        max: data.max,
+        range: data.max - data.min,
+        value: xValue,
+        step: data.stepSize,
+        snap: data.snapToGrid,
+        snapStart: Option.none(),
+        rounded: data.rounded,
+        hasMinEdge: data.hasLedge,
+        hasMaxEdge: data.hasRedge,
+        minBound: bounds.left,
+        maxBound: bounds.right,
+        screenRange: bounds.width
+      };
+      const newValue = SliderModel.findValueOf(args);
+      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none(), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
@@ -146,7 +194,23 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       Jsc.nat
     ],
     (data, bounds, xValue, snapOffset) => {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max), data.rounded, data.hasLedge, data.hasRedge);
+      const args = {
+        min: data.min,
+        max: data.max,
+        range: data.max - data.min,
+        value: xValue,
+        step: data.stepSize,
+        snap: data.snapToGrid,
+        snapStart: Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max),
+        rounded: data.rounded,
+        hasMinEdge: data.hasLedge,
+        hasMaxEdge: data.hasRedge,
+        minBound: bounds.left,
+        maxBound: bounds.right,
+        screenRange: bounds.width
+      };
+      const newValue = SliderModel.findValueOf(args);
+      // const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max), data.rounded, data.hasLedge, data.hasRedge);
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
@@ -154,5 +218,4 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       return true;
     }
   );
-  */
 });

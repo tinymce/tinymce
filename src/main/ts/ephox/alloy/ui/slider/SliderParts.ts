@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Cell, Fun, Option, Arr } from '@ephox/katamari';
+import { Cell, Fun} from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -10,29 +10,40 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = (name: string) => {
+const edgePart = (name: string): PartType.PartTypeAdt => {
   return PartType.optional({
     name: '' + name + '-edge',
-    overrides (detail: SliderDetail) {
+    overrides(detail: SliderDetail) {
       const action = detail.model().manager().edgeActions()[name];
-      const touchEvents = AlloyEvents.derive([
-        AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
-      ]);
+      // Not all edges have actions for all sliders.  
+      // A horizontal slider will only have left and right, for instance,
+      // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
+      return action.fold(() => {
+        return {};
+      },
+        (a) => {
+          const touchEvents = AlloyEvents.derive([
+            AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [detail])
+          ]);
 
-      const mouseEvents = AlloyEvents.derive([
-        AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [ detail ]),
-        AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det) => {
-          if (det.mouseIsDown().get()) { action (l, det); }
-        }, [ detail ])
-      ]);
+          const mouseEvents = AlloyEvents.derive([
+            AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [detail]),
+            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det) => {
+              if (det.mouseIsDown().get()) { action(l, det); }
+            }, [detail])
+          ]);
 
-      return {
-        events: isTouch ? touchEvents : mouseEvents
-      };
+          return {
+            events: isTouch ? touchEvents : mouseEvents
+          }
+        }
+      );
     }
   });
 };
@@ -69,7 +80,7 @@ const thumbPart = PartType.required({
       styles: { position: 'absolute' }
     }
   }),
-  overrides (detail: SliderDetail) {
+  overrides(detail: SliderDetail) {
     return {
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
@@ -91,15 +102,15 @@ const spectrumPart = PartType.required({
     FieldSchema.state('mouseIsDown', () => Cell(false))
   ],
   name: 'spectrum',
-  overrides (detail: SliderDetail) {
+  overrides(detail: SliderDetail) {
     const modelDetail = detail.model();
     const model = modelDetail.manager();
 
-    const setValueTo = (component, simulatedEvent) => {
+    const setValueTo = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
       return model.getValueFromEvent(simulatedEvent).map(function (value) {
         return model.setValueTo(component, detail, value);
       });
-    } ;
+    };
 
     const touchEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.touchstart(), setValueTo),
@@ -114,7 +125,7 @@ const spectrumPart = PartType.required({
     ]);
 
     return {
-      behaviours: Behaviour.derive(isTouch ? [ ] : [
+      behaviours: Behaviour.derive(isTouch ? [] : [
         // Move left and right along the spectrum
         Keying.config(
           {
@@ -133,7 +144,7 @@ const spectrumPart = PartType.required({
             }
           }
         ),
-        Focusing.config({ })
+        Focusing.config({})
       ]),
 
       events: isTouch ? touchEvents : mouseEvents
