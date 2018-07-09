@@ -18,7 +18,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'slider-test' ]
+          classes: [ 'horizontal-slider-test' ]
         },
         model: {
           mode: 'x',
@@ -30,10 +30,10 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
         snapToGrid: true,
 
         components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'slider-test-left-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'slider-test-spectrum' ] } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'slider-test-right-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'slider-test-thumb' ] } })
+          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ] } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ] } }),
+          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ] } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ] } })
         ]
       })
     );
@@ -49,10 +49,10 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-thumb'), 'thumb'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-left-edge'), 'ledge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-right-edge'), 'redge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-spectrum'), 'spectrum'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-thumb'), 'thumb'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-left-edge'), 'ledge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-right-edge'), 'redge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-spectrum'), 'spectrum'),
 
       NamedChain.direct('thumb', cGetComponent, 'thumbComp'),
       NamedChain.direct('ledge', cGetComponent, 'ledgeComp'),
@@ -113,11 +113,11 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     return [
       GuiSetup.mAddStyles(doc, [
-        '.slider-test { border: 1px solid blue; height: 20px; display: flex; }',
-        '.slider-test-left-edge { width: 40px; height: 20px; background: black }',
-        '.slider-test-right-edge { width: 40px; height: 20px; background: white }',
-        '.slider-test-spectrum { background: green; width: 150px; }',
-        '.slider-test-thumb { width: 20px; height: 20px; background: gray; }'
+        '.horizontal-slider-test { border: 1px solid blue; height: 20px; display: flex; }',
+        '.horizontal-slider-test-left-edge { width: 40px; height: 20px; background: black }',
+        '.horizontal-slider-test-right-edge { width: 40px; height: 20px; background: white }',
+        '.horizontal-slider-test-spectrum { background: green; width: 150px; }',
+        '.horizontal-slider-test-thumb { width: 20px; height: 20px; background: gray; }'
       ]),
 
       Logger.t(
@@ -170,7 +170,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
         ])
       ),
 
-      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.slider-test-spectrum'),
+      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.horizontal-slider-test-spectrum'),
       Keyboard.sKeydown(doc, Keys.right(), {}),
 
       Logger.t(
