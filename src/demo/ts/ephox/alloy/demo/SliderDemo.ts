@@ -11,6 +11,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
+import { SliderValueX } from 'ephox/alloy/ui/types/SliderTypes';
 
 export default (): void => {
   const gui = Gui.create();
@@ -29,7 +30,7 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant(80)
+        getInitialValue: Fun.constant({x: Fun.constant(80)})
       },
       stepSize: 10,
       snapToGrid: true,
@@ -70,7 +71,7 @@ export default (): void => {
         mode: 'x',
         minX: 0,
         maxX: 100,
-        getInitialValue: Fun.constant(35)
+        getInitialValue: Fun.constant({x: Fun.constant(35)})
       },
       
       stepSize: 40,
@@ -79,14 +80,14 @@ export default (): void => {
       onDragStart(_, thumb) { Toggling.on(thumb); },
       onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onChange(_slider, thumb, value) {
+      onChange(_slider, thumb, value: SliderValueX) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.toString())
+          GuiFactory.text(value.x().toString())
         ]);
       },
-      onInit(_slider, thumb, _spectrum, value) {
+      onInit(_slider, thumb, _spectrum, value: SliderValueX) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.toString())
+          GuiFactory.text(value.x().toString())
         ]);
       },
 
@@ -141,16 +142,16 @@ export default (): void => {
         mode: 'x',
         minX: 0,
         maxX: 360,
-        getInitialValue: Fun.constant(120)
+        getInitialValue: Fun.constant({x: Fun.constant(120)})
       },
       stepSize: 10,
 
-      onChange(_slider, thumb, value) {
-        setColor(thumb, value);
+      onChange(_slider, thumb, value: SliderValueX) {
+        setColor(thumb, value.x());
       },
 
-      onInit(_slider, thumb, _spectrum, value) {
-        setColor(thumb, value);
+      onInit(_slider, thumb, _spectrum, value: SliderValueX) {
+        setColor(thumb, value.x());
       },
 
       components: [
@@ -218,6 +219,6 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (!isTouch) { Keying.focusIn(hueSlider); }
+    if (!isTouch) { Keying.focusIn(slider1); }
   });
 };

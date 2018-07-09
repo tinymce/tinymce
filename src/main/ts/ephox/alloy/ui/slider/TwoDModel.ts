@@ -2,23 +2,23 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 import * as ModelCommon from './ModelCommon';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail, SliderValue, SliderModelDetailParts } from '../../ui/types/SliderTypes';
+import { SliderDetail, SliderValueXY, SliderModelDetailParts } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Fun, Option } from '@ephox/katamari';
 import { Css, Width, Height } from '@ephox/sugar';
 
 import * as HorizontalModel from './HorizontalModel';
 import * as VerticalModel from './VerticalModel';
-import { currentValue } from './SliderValues';
+import { maxX, maxY, minX, minY, currentValue } from './SliderValues';
 import * as EdgeActions from './EdgeActions';
 import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 // fire slider change event with xy value
-const fireSliderChange = (spectrum: AlloyComponent, value: SliderValue): void => {
+const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
-const sliderValue = (x: number, y: number): SliderValue => {
+const sliderValue = (x: number, y: number): SliderValueXY => {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y)
@@ -27,12 +27,26 @@ const sliderValue = (x: number, y: number): SliderValue => {
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
 // then fire a slider change event with those values, returning the values
-const setValueTo = (spectrum: AlloyComponent, detail: SliderDetail, value: SugarPosition): SliderValue => {
+const setValueFrom = (spectrum: AlloyComponent, detail: SliderDetail, value: SugarPosition): SliderValueXY => {
   const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left());
   const yValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.top());
   const val = sliderValue(xValue, yValue);
   fireSliderChange(spectrum, val);
   return val;
+};
+
+// fire a slider change event with the minimum value
+const setToMin = (spectrum: AlloyComponent, detail: SliderDetail): void => {
+  const mX = minX(detail);
+  const mY = minY(detail);
+  fireSliderChange(spectrum, sliderValue(mX, mY));
+};
+
+// fire a slider change event with the maximum value
+const setToMax = (spectrum: AlloyComponent, detail: SliderDetail): void => {
+  const mX = maxX(detail);
+  const mY = maxY(detail);
+  fireSliderChange(spectrum, sliderValue(mX, mY));
 };
 
 // get event data as a SugarPosition
@@ -84,7 +98,7 @@ const edgeActions = Fun.constant({
 });
 
 export {
-  setValueTo,
+  setValueFrom,
   getValueFromEvent,
   setPositionFromValue,
 

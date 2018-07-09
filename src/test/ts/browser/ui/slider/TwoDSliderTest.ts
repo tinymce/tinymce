@@ -8,7 +8,7 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
-UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
+UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) => {
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
@@ -21,10 +21,12 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
           classes: [ 'slider-test' ]
         },
         model: {
-          mode: 'x',
+          mode: 'xy',
           minX: 50,
-          getInitialValue: Fun.constant(200),
-          maxX: 200
+          maxX: 200,
+          getInitialValue: Fun.constant({x: Fun.constant(200), y: Fun.constant(200)}),
+          minY: 50,
+          maxY: 200
         },
         stepSize: 10,
         snapToGrid: true,
@@ -101,13 +103,13 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
     const cCheckValue = (expected) => {
       return Chain.op((parts) => {
         const v = Representing.getValue(parts.sliderComp);
-        RawAssertions.assertEq('Checking slider value', expected, v);
+        RawAssertions.assertEq('Checking slider value', expected, v.x());
       });
     };
 
     const sAssertValue = (label, expected) => {
       return Logger.t(label, Step.sync(() => {
-        RawAssertions.assertEq(label, expected, Representing.getValue(component));
+        RawAssertions.assertEq(label, expected, Representing.getValue(component).x());
       }));
     };
 

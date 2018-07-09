@@ -3,7 +3,7 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as ModelCommon from './ModelCommon';
 import * as SliderModel from './SliderModel';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail } from '../../ui/types/SliderTypes';
+import { SliderDetail, SliderValueY } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Fun } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
@@ -13,8 +13,14 @@ import { getMinYBounds, getMaxYBounds, getYScreenRange, getYCenterOffSetOf } fro
 import * as EdgeActions from './EdgeActions';
 
 // fire slider change event with y value
-const fireSliderChange = (spectrum: AlloyComponent, value: number): void => {
+const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
+};
+
+const sliderValue = (y: number): SliderValueY => {
+  return {
+    y: Fun.constant(y)
+  }
 };
 
 // find the value of the y offset of where the mouse was clicked from the model.
@@ -38,17 +44,35 @@ const findValueOfOffset = (spectrum: AlloyComponent, detail: SliderDetail, top: 
 };
 
 // find the value and fire a slider change event, returning the value
-const setValueTo = (spectrum: AlloyComponent, detail: SliderDetail, value: number): number => {
-  const xValue = findValueOfOffset(spectrum, detail, value);
-  fireSliderChange(spectrum, xValue);
-  return xValue;
+const setValueFrom = (spectrum: AlloyComponent, detail: SliderDetail, value: number): number => {
+  const yValue = findValueOfOffset(spectrum, detail, value);
+  const sliderVal = sliderValue(yValue);
+  fireSliderChange(spectrum, sliderVal);
+  return yValue;
+};
+
+// fire a slider change event with the minimum value
+const setToMin = (spectrum: AlloyComponent, detail: SliderDetail): void => {
+  const min = minY(detail);
+  fireSliderChange(spectrum, sliderValue(min));
+};
+
+// fire a slider change event with the maximum value
+const setToMax = (spectrum: AlloyComponent, detail: SliderDetail): void => {
+  const max = maxY(detail);
+  fireSliderChange(spectrum, sliderValue(max));
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number) => (spectrum: AlloyComponent, detail: SliderDetail): Option<number> => {
+const moveBy = (direction: number, spectrum: AlloyComponent, detail: SliderDetail): Option<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const newValue = f(currentValue(detail), minY(detail), maxY(detail), step(detail));
-  return Option.some(setValueTo(spectrum, detail, newValue));
+  const yValue = f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
+  fireSliderChange(spectrum, sliderValue(yValue));
+  return Option.some(yValue);
+};
+
+const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: SliderDetail): Option<boolean> => {
+  return moveBy(direction, spectrum, detail).map(() => true);
 };
 
 // get y offset from event
@@ -97,7 +121,7 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   const pos = findPositionOfValue(
     slider,
     edges.getSpectrum(slider),
-    value,
+    value.y(),
     edges.getTopEdge(slider),
     edges.getBottomEdge(slider),
     detail
@@ -109,8 +133,8 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
 // Key Events
 const onLeft = Option.none;
 const onRight = Option.none;
-const onUp = moveBy(-1);
-const onDown = moveBy(1);
+const onUp = handleMovement(-1);
+const onDown = handleMovement(1);
 
 // Edge Click Actions
 const edgeActions = Fun.constant({
@@ -125,7 +149,9 @@ const edgeActions = Fun.constant({
 });
 
 export {
-  setValueTo,
+  setValueFrom,
+  setToMin,
+  setToMax,
   findValueOfOffset,
   getValueFromEvent,
   findPositionOfValue,

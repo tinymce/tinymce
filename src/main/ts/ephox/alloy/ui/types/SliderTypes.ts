@@ -6,14 +6,24 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
-export interface SliderValue {
+export interface SliderValueX {
+  x: () => number
+}
+
+export interface SliderValueY {
+  y: () => number
+}
+
+export interface SliderValueXY {
   x: () => number,
   y: () => number
-};
+}
+
+export type SliderValue = SliderValueX | SliderValueY | SliderValueXY;
 
 export interface SliderModelDetailParts {
-  getThumb: (component: AlloyComponent) => AlloyComponent,
   getSpectrum: (component: AlloyComponent) => AlloyComponent,
   getLeftEdge: (component: AlloyComponent) => Option<AlloyComponent>,
   getRightEdge: (component: AlloyComponent) => Option<AlloyComponent>,
@@ -33,13 +43,15 @@ export interface EdgeActions {
 }
 
 export interface Manager {
-  setValueTo: (spectrum: AlloyComponent, value: SliderValue) => void,
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => number | SliderValue,
+  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void,
+  setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void,
+  setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void,
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | SugarPosition>,
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void,
-  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
-  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
-  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
-  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Option<number>,
+  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>,
+  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>,
+  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>,
+  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>,
   edgeActions: () => EdgeActions
 }
 
@@ -48,9 +60,9 @@ export interface SliderModelDetail {
   maxX?: () => number,
   minY?: () => number,
   maxY?: () => number,
-  value: () => Cell<number | SliderValue>,
-  getInitialValue: () => () => number | SliderValue,
-  manager: () => any
+  value: () => Cell<SliderValue>,
+  getInitialValue: () => () => SliderValue,
+  manager: () => Manager
 }
 
 export interface SliderDetail extends CompositeSketchDetail {
@@ -75,26 +87,26 @@ export interface SliderDetail extends CompositeSketchDetail {
 }
 
 export interface HorizontalSliderSpecMode {
-  mode: string;
+  mode: 'x';
   minX?: number;
   maxX?: number;
-  getInitialValue: () => number;
+  getInitialValue: () => SliderValueX;
 }
 
 export interface VerticalSliderSpecMode {
-  mode: string;
+  mode: 'y';
   minY?: number;
   maxY?: number;
-  getInitialValue: () => number;
+  getInitialValue: () => SliderValueY;
 }
 
 export interface TwoDSliderSpecMode {
-  mode: string;
+  mode: 'xy';
   minX?: number;
   maxX?: number;
   minY?: number;
   maxY?: number;
-  getInitialValue: () => SliderValue;
+  getInitialValue: () => SliderValueXY;
 }
 
 export interface SliderSpec extends CompositeSketchSpec {

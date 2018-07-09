@@ -12,7 +12,7 @@ import * as ModelCommon from './ModelCommon';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
+import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 
@@ -39,13 +39,21 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     });
   };
 
-  const changeValue = (slider: AlloyComponent, newValue): Option<boolean> => {
+  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
     modelDetail.value().set(newValue);
     
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange()(slider, thumb, newValue);
     return Option.some(true);
+  };
+
+  const resetToMin = (slider: AlloyComponent) => {
+    model.setToMin(slider, detail);
+  };
+
+  const resetToMax = (slider: AlloyComponent) => {
+    model.setToMax(slider, detail);
   };
 
   const touchEvents = [
@@ -123,6 +131,8 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     ),
 
     apis: {
+      resetToMin,
+      resetToMax,
       changeValue,
       refresh
     },
