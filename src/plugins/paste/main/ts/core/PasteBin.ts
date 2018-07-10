@@ -22,12 +22,12 @@ const getPasteBinParent = (editor: Editor): Element => {
 
 const isExternalPasteBin = (editor: Editor) => getPasteBinParent(editor) !== editor.getBody();
 
-const delegatePasteEvents = (editor: Editor, pasteBinElm: Element) => {
+const delegatePasteEvents = (editor: Editor, pasteBinElm: Element, pasteBinDefaultContent: string) => {
   if (isExternalPasteBin(editor)) {
     editor.dom.bind(pasteBinElm, 'paste keyup', function (e) {
-      setTimeout(() => {
+      if (!isDefault(editor, pasteBinDefaultContent)) {
         editor.fire('paste');
-      }, 0);
+      }
     });
   }
 };
@@ -62,7 +62,7 @@ const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => 
     e.stopPropagation();
   });
 
-  delegatePasteEvents(editor, pasteBinElm);
+  delegatePasteEvents(editor, pasteBinElm, pasteBinDefaultContent);
 
   pasteBinElm.focus();
   editor.selection.select(pasteBinElm, true);
