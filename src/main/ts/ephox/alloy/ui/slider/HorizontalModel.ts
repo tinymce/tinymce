@@ -9,7 +9,7 @@ import { Option, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 import * as EdgeActions from './EdgeActions';
 
-import { minX, maxX, currentValue, step, snap, snapStart, xRange, rounded, hasLedge, hasRedge } from './SliderValues';
+import { minX, maxX, currentValue, step, snap, snapStart, xRange, rounded, hasLEdge, hasREdge } from './SliderValues';
 import { getMinXBounds, getMaxXBounds, getXScreenRange, getXCenterOffSetOf } from './SliderOffsets';
 
 // fire slider change event with x value
@@ -34,8 +34,8 @@ const findValueOfOffset = (spectrum: AlloyComponent, detail: SliderDetail, left:
     snap: snap(detail),
     snapStart: snapStart(detail),
     rounded: rounded(detail),
-    hasMinEdge: hasLedge(detail),
-    hasMaxEdge: hasRedge(detail),
+    hasMinEdge: hasLEdge(detail),
+    hasMaxEdge: hasREdge(detail),
     minBound: getMinXBounds(spectrum),
     maxBound: getMaxXBounds(spectrum),
     screenRange: getXScreenRange(spectrum)
@@ -97,8 +97,8 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value
     max: maxX(detail),
     range: xRange(detail),
     value,
-    hasMinEdge: hasLedge(detail),
-    hasMaxEdge: hasRedge(detail),
+    hasMinEdge: hasLEdge(detail),
+    hasMaxEdge: hasREdge(detail),
     minBound: getMinXBounds(spectrum),
     minOffset,
     maxBound: getMaxXBounds(spectrum),
@@ -141,11 +141,11 @@ const edgeActions = Fun.constant({
   'top-left': Option.none(),
   'top': Option.none(),
   'top-right': Option.none(),
-  'right': Option.some(EdgeActions.setToRedge),
+  'right': Option.some(EdgeActions.setToREdge),
   'bottom-right': Option.none(),
   'bottom': Option.none(),
   'bottom-left': Option.none(),
-  'left': Option.some(EdgeActions.setToLedge)
+  'left': Option.some(EdgeActions.setToLEdge)
 });
 
 export {

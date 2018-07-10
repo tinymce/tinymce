@@ -36,11 +36,11 @@ const rounded = (detail: SliderDetail): boolean => detail.rounded();
 // Not great but... /shrug
 const hasEdge = (detail: SliderDetail, edgeName: string): boolean => detail[edgeName + '-edge'] !== undefined;
 
-const hasLedge = (detail: SliderDetail): boolean => hasEdge(detail, l);
-const hasRedge = (detail: SliderDetail): boolean => hasEdge(detail, r);
+const hasLEdge = (detail: SliderDetail): boolean => hasEdge(detail, l);
+const hasREdge = (detail: SliderDetail): boolean => hasEdge(detail, r);
 
-const hasTedge = (detail: SliderDetail): boolean => hasEdge(detail, t);
-const hasBedge = (detail: SliderDetail): boolean => hasEdge(detail, b);
+const hasTEdge = (detail: SliderDetail): boolean => hasEdge(detail, t);
+const hasBEdge = (detail: SliderDetail): boolean => hasEdge(detail, b);
 
 // Ew, any
 const currentValue = (detail: SliderDetail): any => detail.model().value().get();
@@ -58,10 +58,10 @@ export {
   snap,
   snapStart,
   rounded,
-  hasLedge,
-  hasRedge,
-  hasTedge,
-  hasBedge,
+  hasLEdge,
+  hasREdge,
+  hasTEdge,
+  hasBEdge,
   currentValue,
   xRange,
   yRange,

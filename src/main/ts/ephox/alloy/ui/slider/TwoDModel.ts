@@ -104,14 +104,14 @@ const onDown = handleMovement(1, true);
 
 // Edge Click Actions
 const edgeActions = Fun.constant({
-  'top-left': Option.some(EdgeActions.setToTLedgeXY),
-  'top': Option.some(EdgeActions.setToTedgeXY),
-  'top-right': Option.some(EdgeActions.setToTRedgeXY),
-  'right': Option.some(EdgeActions.setToRedgeXY),
-  'bottom-right': Option.some(EdgeActions.setToBRedgeXY),
-  'bottom': Option.some(EdgeActions.setToBedgeXY),
-  'bottom-left': Option.some(EdgeActions.setToBLedgeXY),
-  'left': Option.some(EdgeActions.setToLedgeXY)
+  'top-left': Option.some(EdgeActions.setToTLEdgeXY),
+  'top': Option.some(EdgeActions.setToTEdgeXY),
+  'top-right': Option.some(EdgeActions.setToTREdgeXY),
+  'right': Option.some(EdgeActions.setToREdgeXY),
+  'bottom-right': Option.some(EdgeActions.setToBREdgeXY),
+  'bottom': Option.some(EdgeActions.setToBEdgeXY),
+  'bottom-left': Option.some(EdgeActions.setToBLEdgeXY),
+  'left': Option.some(EdgeActions.setToLEdgeXY)
 });
 
 export {
