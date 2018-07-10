@@ -99,6 +99,8 @@ const edgeActions = Fun.constant({
 
 export {
   setValueFrom,
+  setToMin,
+  setToMax,
   getValueFromEvent,
   setPositionFromValue,
 
