@@ -9,6 +9,7 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConf
   isOn?: (component: AlloyComponent) => boolean;
   on?: (component: AlloyComponent) => void;
   off?: (component: AlloyComponent) => void;
+  set?: (component: AlloyComponent, state: boolean) => void;
 }
 
 export interface AriaTogglingConfig {
