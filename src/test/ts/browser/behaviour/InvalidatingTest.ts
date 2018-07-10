@@ -99,11 +99,11 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         label,
         Step.control(
           Assertions.sAssertEq(
-            'Checking structure after marking invalid',
+            'Checking invalid status is: ' + expected,
             Invalidating.isInvalid(comp),
             expected
           ),
-          Guard.tryUntil('invalid', 100, 100)
+          Guard.tryUntil('invalid status was not: ' + expected, 100, 100)
         )
       )
     };
