@@ -131,16 +131,15 @@ export default (): void => {
     'This is a basic color slider with a sliding thumb and edges',
     Slider.sketch({
       dom: {
-        tag: 'div',
-        styles: {
-          border: '1px solid black'
-        }
+        tag: 'div'
       },
       model: {
-        mode: 'x',
+        mode: 'xy',
         minX: 0,
         maxX: 360,
-        getInitialValue: Fun.constant({x: Fun.constant(120)})
+        minY: 0,
+        maxY: 360,
+        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
       },
       stepSize: 10,
 
@@ -158,7 +157,8 @@ export default (): void => {
             tag: 'div',
             styles: {
               display: 'flex',
-              'flex-wrap': 'wrap'
+              width: '540px',
+              border: '1px solid black'
             }
           },
           components: [
@@ -186,8 +186,8 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  width: '120px',
-                  height: '20px',
+                  width: '20px',
+                  height: '500px',
                   background: 'white'
                 }
               }
