@@ -18,7 +18,12 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'horizontal-slider-test' ]
+          classes: [ 'horizontal-slider-test' ],
+          styles: {
+            border: '1px solid black',
+            height: '20px',
+            display: 'flex'
+          }
         },
         model: {
           mode: 'x',
@@ -30,10 +35,25 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
         snapToGrid: true,
 
         components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ] } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ] } })
+          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
+            width: '40px',
+            height: '20px',
+            background: 'black'
+          } } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: { 
+            height: '150px',
+            background: 'green'
+          } } }),
+          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
+            width: '40px',
+            height: '20px',
+            background: 'white'
+          } } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
+            width: '20px',
+            height: '20px',
+            background: 'gray'
+          } } })
         ]
       })
     );
@@ -112,14 +132,6 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     };
 
     return [
-      GuiSetup.mAddStyles(doc, [
-        '.horizontal-slider-test { border: 1px solid blue; height: 20px; display: flex; }',
-        '.horizontal-slider-test-left-edge { width: 40px; height: 20px; background: black }',
-        '.horizontal-slider-test-right-edge { width: 40px; height: 20px; background: white }',
-        '.horizontal-slider-test-spectrum { background: green; width: 150px; }',
-        '.horizontal-slider-test-thumb { width: 20px; height: 20px; background: gray; }'
-      ]),
-
       Logger.t(
         'Initial-Value: Checking that the thumb now overlaps the right edge at max',
         Waiter.sTryUntil(

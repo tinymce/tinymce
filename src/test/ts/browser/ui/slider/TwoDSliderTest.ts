@@ -18,7 +18,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'slider-test' ]
+          classes: [ 'twod-slider-test' ]
         },
         model: {
           mode: 'xy',
@@ -32,10 +32,10 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
         snapToGrid: true,
 
         components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'slider-test-left-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'slider-test-spectrum' ] } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'slider-test-right-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'slider-test-thumb' ] } })
+          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-left-edge' ] } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'twod-slider-test-spectrum' ] } }),
+          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-right-edge' ] } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'twod-slider-test-thumb' ] } })
         ]
       })
     );
@@ -51,10 +51,10 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-thumb'), 'thumb'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-left-edge'), 'ledge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-right-edge'), 'redge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-spectrum'), 'spectrum'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-thumb'), 'thumb'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-left-edge'), 'ledge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-right-edge'), 'redge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-spectrum'), 'spectrum'),
 
       NamedChain.direct('thumb', cGetComponent, 'thumbComp'),
       NamedChain.direct('ledge', cGetComponent, 'ledgeComp'),
@@ -115,11 +115,11 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     return [
       GuiSetup.mAddStyles(doc, [
-        '.slider-test { border: 1px solid blue; height: 20px; display: flex; }',
-        '.slider-test-left-edge { width: 40px; height: 20px; background: black }',
-        '.slider-test-right-edge { width: 40px; height: 20px; background: white }',
-        '.slider-test-spectrum { background: green; width: 150px; }',
-        '.slider-test-thumb { width: 20px; height: 20px; background: gray; }'
+        '.twod-slider-test { border: 1px solid blue; height: 20px; display: flex; }',
+        '.twod-slider-test-left-edge { width: 40px; height: 20px; background: black }',
+        '.twod-slider-test-right-edge { width: 40px; height: 20px; background: white }',
+        '.twod-slider-test-spectrum { background: green; width: 150px; }',
+        '.twod-slider-test-thumb { width: 20px; height: 20px; background: gray; }'
       ]),
 
       Logger.t(
@@ -172,7 +172,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
         ])
       ),
 
-      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.slider-test-spectrum'),
+      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.twod-slider-test-spectrum'),
       Keyboard.sKeydown(doc, Keys.right(), {}),
 
       Logger.t(

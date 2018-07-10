@@ -7,6 +7,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { Element, Insert, Html } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failure) => {
 
@@ -18,7 +19,13 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'vertical-slider-test' ]
+          classes: [ 'vertical-slider-test' ],
+          styles: {
+            border: '1px solid black',
+            width: '20px',
+            display: 'flex',
+            'flex-direction': 'column'
+          }
         },
         model: {
           mode: 'y',
@@ -30,10 +37,25 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
         snapToGrid: true,
 
         components: [
-          Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ] } }),
-          Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ] } })
+          Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ], styles: {
+            height: '40px',
+            width: '20px',
+            background: 'black'
+          } } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: { 
+            height: '150px',
+            background: 'green'
+          } } }),
+          Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
+            height: '40px',
+            width: '20px',
+            background: 'white'
+          } } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
+            height: '20px',
+            width: '20px',
+            background: 'gray'
+          } } })
         ]
       })
     );
@@ -112,14 +134,6 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
     };
 
     return [
-      GuiSetup.mAddStyles(doc, [
-        '.vertical-slider-test { border: 1px solid blue; width: 20px; display: flex; flex-direction: column; }',
-        '.vertical-slider-test-top-edge { height: 40px; width: 20px; background: black }',
-        '.vertical-slider-test-bottom-edge { height: 40px; width: 20px; background: white }',
-        '.vertical-slider-test-spectrum { background: green; height: 150px; }',
-        '.vertical-slider-test-thumb { height: 20px; width: 20px; background: gray; }'
-      ]),
-
       Logger.t(
         'Initial-Value: Checking that the thumb now overlaps the bottom edge at max',
         Waiter.sTryUntil(
