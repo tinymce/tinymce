@@ -10,7 +10,8 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
+import { SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
 
 export default (): void => {
   const gui = Gui.create();
@@ -25,9 +26,12 @@ export default (): void => {
       dom: {
         tag: 'div'
       },
-      min: 20,
-      max: 100,
-      getInitialValue: Fun.constant(80),
+      model: {
+        mode: 'x',
+        minX: 20,
+        maxX: 100,
+        getInitialValue: Fun.constant({x: Fun.constant(80)})
+      },
       stepSize: 10,
       snapToGrid: true,
 
@@ -63,25 +67,25 @@ export default (): void => {
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
-
-      min: 0,
-      max: 100,
-      getInitialValue: Fun.constant(35),
+      model: {
+        mode: 'y',
+        getInitialValue: Fun.constant({y: Fun.constant(35)})
+      },
+      
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart (_, thumb) { Toggling.on(thumb); },
-      onDragEnd (_, thumb) { Toggling.off(thumb); },
+      onDragStart(_, thumb) { Toggling.on(thumb); },
+      onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onInit (slider, thumb, value) {
+      onChange(_slider, thumb, value: SliderValueY) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.toString())
+          GuiFactory.text(value.y().toString())
         ]);
       },
-
-      onChange (slider, thumb, value) {
+      onInit(_slider, thumb, _spectrum, value: SliderValueY) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.toString())
+          GuiFactory.text(value.y().toString())
         ]);
       },
 
@@ -90,7 +94,7 @@ export default (): void => {
           dom: {
             tag: 'div',
             styles: {
-              width: '300px', background: 'green', height: '20px'
+              width: '20px', background: 'green', height: '300px'
             }
           }
         }),
@@ -107,7 +111,7 @@ export default (): void => {
             }
           },
           behaviours: Behaviour.derive([
-            Replacing.config({ }),
+            Replacing.config({}),
             Toggling.config({
               toggleClass: 'thumb-pressed'
             })
@@ -117,36 +121,34 @@ export default (): void => {
     })
   );
 
+  const setColor = (thumb, hue) => {
+    const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
+    Css.set(thumb.element(), 'background', color);
+  };
+
   const hueSlider = HtmlDisplay.section(
     gui,
     'This is a basic color slider with a sliding thumb and edges',
     Slider.sketch({
       dom: {
-        tag: 'div',
-        styles: {
-          border: '1px solid black'
-        }
+        tag: 'div'
       },
-      min: 0,
-      max: 360,
-      getInitialValue: Fun.constant(120),
+      model: {
+        mode: 'xy',
+        minX: 0,
+        maxX: 360,
+        minY: 0,
+        maxY: 360,
+        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
+      },
       stepSize: 10,
 
-      onChange (slider, thumb, value) {
-        const getColor = (hue) => {
-          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
-        };
-
-        Css.set(thumb.element(), 'background', getColor(value));
+      onChange(_slider, thumb, value: SliderValueX) {
+        setColor(thumb, value.x());
       },
 
-      // TODO: Remove duplication in demo.
-      onInit (slider, thumb, value) {
-        const getColor = (hue) => {
-          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
-        };
-
-        Css.set(thumb.element(), 'background', getColor(value));
+      onInit(_slider, thumb, _spectrum, value: SliderValueX) {
+        setColor(thumb, value.x());
       },
 
       components: [
@@ -154,7 +156,9 @@ export default (): void => {
           dom: {
             tag: 'div',
             styles: {
-              display: 'flex'
+              display: 'flex',
+              width: '540px',
+              border: '1px solid black'
             }
           },
           components: [
@@ -162,8 +166,8 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  width: '120px',
-                  height: '20px',
+                  width: '20px',
+                  height: '500px',
                   background: 'black'
                 }
               }
@@ -172,10 +176,9 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  'height': '20px',
+                  'height': '500px',
                   'background': 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
-                  'display': 'flex',
-                  'flex-grow': '1'
+                  'width': '500px'
                 }
               }
             }),
@@ -183,8 +186,8 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  width: '120px',
-                  height: '20px',
+                  width: '20px',
+                  height: '500px',
                   background: 'white'
                 }
               }
@@ -194,7 +197,7 @@ export default (): void => {
         Slider.parts().thumb({
           dom: {
             tag: 'div',
-            classes: [ 'demo-sliding-thumb' ],
+            classes: ['demo-sliding-thumb'],
             styles: {
               'height': '30px',
               'width': '10px',
@@ -214,6 +217,6 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (! isTouch) { Keying.focusIn(slider1); }
+    if (!isTouch) { Keying.focusIn(slider1); }
   });
 };

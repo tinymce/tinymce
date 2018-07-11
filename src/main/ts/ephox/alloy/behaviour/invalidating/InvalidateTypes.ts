@@ -7,9 +7,10 @@ import { Element } from '@ephox/sugar';
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
   markValid: (component: AlloyComponent) => void;
+  isInvalid: (component: AlloyComponent) => boolean;
   markInvalid: (component: AlloyComponent) => void;
-  query: <T>(Component: AlloyComponent) => Future<T>;
-  run: <T>(Component: AlloyComponent) => Future<T>;
+  query: <T>(component: AlloyComponent) => Future<T>;
+  run: <T>(component: AlloyComponent) => Future<T>;
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
