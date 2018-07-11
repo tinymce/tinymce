@@ -300,10 +300,14 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
+    const isPasteBin = (node: HTMLElement): boolean => {
+      return node.id === 'mcepastebin';
+    };
+
     editor.on('AfterSetSelectionRange', function (e) {
       const rng = e.range;
 
-      if (!isRangeInCaretContainer(rng)) {
+      if (!isRangeInCaretContainer(rng) && !isPasteBin(rng.startContainer.parentNode)) {
         hideFakeCaret();
       }
 
