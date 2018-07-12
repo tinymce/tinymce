@@ -8,7 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Fun } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
-import { minY, maxY, currentValue, step, snap, snapStart, yRange, rounded, hasTedge, hasBedge } from './SliderValues';
+import { minY, maxY, currentValue, step, snap, snapStart, yRange, rounded, hasTEdge, hasBEdge } from './SliderValues';
 import { getMinYBounds, getMaxYBounds, getYScreenRange, getYCenterOffSetOf } from './SliderOffsets';
 import * as EdgeActions from './EdgeActions';
 
@@ -34,8 +34,8 @@ const findValueOfOffset = (spectrum: AlloyComponent, detail: SliderDetail, top: 
     snap: snap(detail),
     snapStart: snapStart(detail),
     rounded: rounded(detail),
-    hasMinEdge: hasTedge(detail),
-    hasMaxEdge: hasBedge(detail),
+    hasMinEdge: hasTEdge(detail),
+    hasMaxEdge: hasBEdge(detail),
     minBound: getMinYBounds(spectrum),
     maxBound: getMaxYBounds(spectrum),
     screenRange: getYScreenRange(spectrum)
@@ -97,8 +97,8 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value
     max: maxY(detail),
     range: yRange(detail),
     value,
-    hasMinEdge: hasTedge(detail),
-    hasMaxEdge: hasBedge(detail),
+    hasMinEdge: hasTEdge(detail),
+    hasMaxEdge: hasBEdge(detail),
     minBound: getMinYBounds(spectrum),
     minOffset,
     maxBound: getMaxYBounds(spectrum),
@@ -139,11 +139,11 @@ const onDown = handleMovement(1);
 // Edge Click Actions
 const edgeActions = Fun.constant({
   'top-left': Option.none(),
-  'top': Option.some(EdgeActions.setToTedge),
+  'top': Option.some(EdgeActions.setToTEdge),
   'top-right': Option.none(),
   'right': Option.none(),
   'bottom-right': Option.none(),
-  'bottom': Option.some(EdgeActions.setToBedge),
+  'bottom': Option.some(EdgeActions.setToBEdge),
   'bottom-left': Option.none(),
   'left': Option.none()
 });

@@ -25,7 +25,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     })
   });
 
-  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool, Jsc.bool]).smap(
+  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool]).smap(
     (arr) => {
       return {
         min: arr[0].min,
@@ -33,9 +33,9 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: arr[0].value,
         stepSize: arr[1],
         snapToGrid: arr[2],
-        rounded: arr[3],
-        hasLedge: arr[4],
-        hasRedge: arr[5]
+        rounded: true, // Difficult to test with this off
+        hasLedge: arr[3],
+        hasRedge: arr[4]
       };
     },
     (r) => {
@@ -108,9 +108,8 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       };
       const newValue = SliderModel.findValueOf(args);
       const f = Math.abs((newValue - data.min) / data.stepSize);
-      RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
-        Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
-      );
+      const actual = Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1;
+      RawAssertions.assertEq('Checking factors correctly', true, actual);
       return true;
     },
     { }
@@ -143,7 +142,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       const newValue = SliderModel.findValueOf(args);
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
-        Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
+        Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1
       );
       return true;
     },

@@ -98,12 +98,14 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       return Logger.t(
         label,
         Step.control(
-          Assertions.sAssertEq(
-            'Checking structure after marking invalid',
-            Invalidating.isInvalid(comp),
-            expected
-          ),
-          Guard.tryUntil('invalid', 100, 100)
+          Step.sync(() => {
+            Assertions.assertEq(
+              'Checking invalid status is: ' + expected,
+              expected,
+              Invalidating.isInvalid(comp)
+            )
+          }),
+          Guard.tryUntil('invalid status was not: ' + expected, 100, 100)
         )
       )
     };

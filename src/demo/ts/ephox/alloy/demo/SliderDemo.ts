@@ -11,7 +11,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
-import { SliderValueX } from 'ephox/alloy/ui/types/SliderTypes';
+import { SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
 
 export default (): void => {
   const gui = Gui.create();
@@ -68,10 +68,8 @@ export default (): void => {
     Slider.sketch({
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
       model: {
-        mode: 'x',
-        minX: 0,
-        maxX: 100,
-        getInitialValue: Fun.constant({x: Fun.constant(35)})
+        mode: 'y',
+        getInitialValue: Fun.constant({y: Fun.constant(35)})
       },
       
       stepSize: 40,
@@ -80,14 +78,14 @@ export default (): void => {
       onDragStart(_, thumb) { Toggling.on(thumb); },
       onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onChange(_slider, thumb, value: SliderValueX) {
+      onChange(_slider, thumb, value: SliderValueY) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.x().toString())
+          GuiFactory.text(value.y().toString())
         ]);
       },
-      onInit(_slider, thumb, _spectrum, value: SliderValueX) {
+      onInit(_slider, thumb, _spectrum, value: SliderValueY) {
         Replacing.set(thumb, [
-          GuiFactory.text(value.x().toString())
+          GuiFactory.text(value.y().toString())
         ]);
       },
 
@@ -96,7 +94,7 @@ export default (): void => {
           dom: {
             tag: 'div',
             styles: {
-              width: '300px', background: 'green', height: '20px'
+              width: '20px', background: 'green', height: '300px'
             }
           }
         }),
@@ -133,16 +131,15 @@ export default (): void => {
     'This is a basic color slider with a sliding thumb and edges',
     Slider.sketch({
       dom: {
-        tag: 'div',
-        styles: {
-          border: '1px solid black'
-        }
+        tag: 'div'
       },
       model: {
-        mode: 'x',
+        mode: 'xy',
         minX: 0,
         maxX: 360,
-        getInitialValue: Fun.constant({x: Fun.constant(120)})
+        minY: 0,
+        maxY: 360,
+        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
       },
       stepSize: 10,
 
@@ -159,7 +156,9 @@ export default (): void => {
           dom: {
             tag: 'div',
             styles: {
-              display: 'flex'
+              display: 'flex',
+              width: '540px',
+              border: '1px solid black'
             }
           },
           components: [
@@ -167,8 +166,8 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  width: '120px',
-                  height: '20px',
+                  width: '20px',
+                  height: '500px',
                   background: 'black'
                 }
               }
@@ -177,10 +176,9 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  'height': '20px',
+                  'height': '500px',
                   'background': 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
-                  'display': 'flex',
-                  'flex-grow': '1'
+                  'width': '500px'
                 }
               }
             }),
@@ -188,8 +186,8 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  width: '120px',
-                  height: '20px',
+                  width: '20px',
+                  height: '500px',
                   background: 'white'
                 }
               }

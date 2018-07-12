@@ -18,7 +18,13 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'twod-slider-test' ]
+          classes: [ 'twod-slider-test' ],
+          styles: {
+            height: '200px',
+            width: '200px',
+            display: 'flex',
+            'flex-wrap': 'wrap'
+          }
         },
         model: {
           mode: 'xy',
@@ -32,10 +38,56 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
         snapToGrid: true,
 
         components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-left-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'twod-slider-test-spectrum' ] } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-right-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'twod-slider-test-thumb' ] } })
+          Slider.parts()['top-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-left-edge' ], styles: {
+            width: '25px',
+            height: '25px',
+            background: 'black'
+          } } }),
+          Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-edge' ], styles: {
+            width: '150px',
+            height: '25px',
+            background: 'white'
+          } } }),
+          Slider.parts()['top-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-top-right-edge' ], styles: {
+            width: '25px',
+            height: '25px',
+            background: 'black'
+          } } }),
+          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-left-edge' ], styles: {
+            width: '25px',
+            height: '150px',
+            background: 'white'
+          } } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'twod-slider-test-spectrum' ], styles: {
+            width: '150px',
+            height: '150px',
+            background: 'green'
+          } } }),
+          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-right-edge' ], styles: {
+            width: '25px',
+            height: '150px',
+            background: 'white'
+          } } }),
+          Slider.parts()['bottom-left-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-left-edge' ], styles: {
+            width: '25px',
+            height: '25px',
+            background: 'black'
+          } } }),
+          Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-edge' ], styles: {
+            width: '150px',
+            height: '25px',
+            background: 'white'
+          } } }),
+          Slider.parts()['bottom-right-edge']({ dom: { tag: 'div', classes: [ 'twod-slider-test-bottom-right-edge' ], styles: {
+            width: '25px',
+            height: '25px',
+            background: 'black'
+          } } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'twod-slider-test-thumb' ], styles: {
+            width: '20px',
+            height: '20px',
+            background: 'gray'
+          } } })
         ]
       })
     );
@@ -52,8 +104,10 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
       NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-thumb'), 'thumb'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-top-edge'), 'tedge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-left-edge'), 'ledge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-right-edge'), 'redge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-bottom-edge'), 'bedge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.twod-slider-test-spectrum'), 'spectrum'),
 
       NamedChain.direct('thumb', cGetComponent, 'thumbComp'),
@@ -65,6 +119,8 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       NamedChain.direct('thumb', cGetBounds, 'thumbRect'),
       NamedChain.direct('ledge', cGetBounds, 'ledgeRect'),
       NamedChain.direct('redge', cGetBounds, 'redgeRect'),
+      NamedChain.direct('tedge', cGetBounds, 'tedgeRect'),
+      NamedChain.direct('bedge', cGetBounds, 'bedgeRect'),
       NamedChain.direct('slider', cGetBounds, 'sliderRect'),
       NamedChain.direct('spectrum', cGetBounds, 'spectrumRect'),
       NamedChain.bundle(Result.value)
@@ -88,6 +144,25 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
+
+    const cCheckThumbAtTop = Chain.op((parts) => {
+      RawAssertions.assertEq(
+        'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
+          '), Top-Edge: (' + parts.tedgeRect.top + '->' + parts.tedgeRect.bottom + ')',
+        true,
+        parts.tedgeRect.bottom > parts.thumbRect.top && parts.tedgeRect.top < parts.thumbRect.top
+      );
+    });
+
+    const cCheckThumbAtBottom = Chain.op((parts) => {
+      RawAssertions.assertEq(
+        'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
+          '), Bottom-Edge: (' + parts.bedgeRect.top + '->' + parts.bedgeRect.bottom + ')',
+        true,
+        parts.bedgeRect.top < parts.thumbRect.bottom && parts.tedgeRect.top < parts.bedgeRect.top
+      );
+    });
+
     const cCheckThumbPastRight = Chain.op((parts) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
@@ -100,36 +175,44 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
+    const cCheckThumbPastBottom = Chain.op((parts) => {
+      RawAssertions.assertEq('Checking thumb past end of spectrum', true,
+        parts.thumbRect.top > parts.spectrumRect.bottom
+      );
+    });
+
+    const cCheckThumbBeforeTop = Chain.op((parts) => {
+      RawAssertions.assertEq('Checking thumb before start of spectrum', true,
+        parts.thumbRect.bottom < parts.spectrumRect.top
+      );
+    });
+
     const cCheckValue = (expected) => {
       return Chain.op((parts) => {
         const v = Representing.getValue(parts.sliderComp);
-        RawAssertions.assertEq('Checking slider value', expected, v.x());
+        RawAssertions.assertEq('Checking slider value', expected.x, v.x());
+        RawAssertions.assertEq('Checking slider value', expected.y, v.y());
       });
     };
 
     const sAssertValue = (label, expected) => {
       return Logger.t(label, Step.sync(() => {
-        RawAssertions.assertEq(label, expected, Representing.getValue(component).x());
+        const v = Representing.getValue(component);
+        RawAssertions.assertEq(label, expected.x, v.x());
+        RawAssertions.assertEq(label, expected.y, v.y());
       }));
     };
 
     return [
-      GuiSetup.mAddStyles(doc, [
-        '.twod-slider-test { border: 1px solid blue; height: 20px; display: flex; }',
-        '.twod-slider-test-left-edge { width: 40px; height: 20px; background: black }',
-        '.twod-slider-test-right-edge { width: 40px; height: 20px; background: white }',
-        '.twod-slider-test-spectrum { background: green; width: 150px; }',
-        '.twod-slider-test-thumb { width: 20px; height: 20px; background: gray; }'
-      ]),
-
       Logger.t(
-        'Initial-Value: Checking that the thumb now overlaps the right edge at max',
+        'Initial-Value: Checking that the thumb now overlaps the right and bottom edges at max',
         Waiter.sTryUntil(
           'Initial load can take a while',
           Chain.asStep({}, [
             cGetParts,
             cCheckThumbAtRight,
-            cCheckValue(200)
+            cCheckThumbAtBottom,
+            cCheckValue({x: 200, y: 200})
           ]),
           100,
           1000
@@ -141,11 +224,12 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       }),
 
       Logger.t(
-        'Checking that the thumb now overlaps the left edge at min',
+        'Checking that the thumb now overlaps the top and left edges at min',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbAtLeft,
-          cCheckValue(50)
+          cCheckThumbAtTop,
+          cCheckValue({x: 50, y: 50})
         ])
       ),
 
@@ -154,11 +238,12 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       }),
 
       Logger.t(
-        'Checking that the thumb now overlaps the right edge at max',
+        'Checking that the thumb now overlaps the right and bottom edges at max',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbAtRight,
-          cCheckValue(200)
+          cCheckThumbAtBottom,
+          cCheckValue({x: 200, y: 200})
         ])
       ),
 
@@ -176,20 +261,44 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       Keyboard.sKeydown(doc, Keys.right(), {}),
 
       Logger.t(
-        'Checking that the thumb is past the max',
+        'Checking that the thumb is past the right max',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbPastRight,
-          cCheckValue(201)
+          cCheckThumbAtBottom,
+          cCheckValue({x: 201, y: 200})
         ])
       ),
       Keyboard.sKeydown(doc, Keys.right(), { }),
       Logger.t(
-        'Pressed right at right edge. Checking that the thumb is still past the max and value has not changed',
+        'Pressed right at right edge. Checking that the thumb is still past the right max and value has not changed',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbPastRight,
-          cCheckValue(201)
+          cCheckThumbAtBottom,
+          cCheckValue({x: 201, y: 200})
+        ])
+      ),
+
+      Keyboard.sKeydown(doc, Keys.down(), { }),
+      Logger.t(
+        'Pressed down at right edge. Checking that the thumb is past the right and bottom max',
+        Chain.asStep({}, [
+          cGetParts,
+          cCheckThumbPastRight,
+          cCheckThumbPastBottom,
+          cCheckValue({x: 201, y: 201})
+        ])
+      ),
+
+      Keyboard.sKeydown(doc, Keys.down(), { }),
+      Logger.t(
+        'Pressed down at right edge. Checking that the thumb is still past the right and bottom max and value has not changed',
+        Chain.asStep({}, [
+          cGetParts,
+          cCheckThumbPastRight,
+          cCheckThumbPastBottom,
+          cCheckValue({x: 201, y: 201})
         ])
       ),
 
@@ -199,55 +308,72 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbAtRight,
-          cCheckValue(200)
+          cCheckThumbPastBottom,
+          cCheckValue({x: 200, y: 201})
         ])
       ),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 190 (step size)', 190),
+      sAssertValue('200 -> 190 (step size)', {x: 190, y: 201}),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 180 (step size)', 180),
+      sAssertValue('200 -> 180 (step size)', {x: 180, y: 201}),
 
       Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
-      sAssertValue('min: 50', 50),
+      sAssertValue('min: 50', {x: 50, y: 50}),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
       Logger.t(
-        'Checking that the thumb is before the min',
+        'Checking that the thumb is before the left min',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbBeforeLeft,
-          cCheckValue(49)
+          cCheckThumbAtTop,
+          cCheckValue({x: 49, y: 50})
         ])
       ),
 
       Keyboard.sKeydown(doc, Keys.left(), { }),
       Logger.t(
-        'Checking that the thumb is *still* before the min',
+        'Checking that the thumb is *still* before the left min',
         Chain.asStep({}, [
           cGetParts,
           cCheckThumbBeforeLeft,
-          cCheckValue(49)
+          cCheckThumbAtTop,
+          cCheckValue({x: 49, y: 50})
         ])
       ),
 
-      Keyboard.sKeydown(doc, Keys.right(), {}),
+      Keyboard.sKeydown(doc, Keys.up(), { }),
+      Logger.t(
+        'Checking that the thumb is *still* before the left min and now before the top min',
+        Chain.asStep({}, [
+          cGetParts,
+          cCheckThumbBeforeLeft,
+          cCheckThumbBeforeTop,
+          cCheckValue({x: 49, y: 49})
+        ])
+      ),
+
+      Keyboard.sKeydown(doc, Keys.down(), {}),
       Logger.t(
         'Checking that the thumb is at the left edge',
         Chain.asStep({}, [
-          cGetParts, cCheckThumbAtLeft, cCheckValue(50)
+          cGetParts, 
+          cCheckThumbBeforeLeft,
+          cCheckThumbAtTop,
+          cCheckValue({x: 49, y: 50})
         ])
       ),
 
-      Keyboard.sKeydown(doc, Keys.right(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', 60),
+      Keyboard.sKeydown(doc, Keys.down(), {}),
+      sAssertValue('Checking that the thumb is now one step further right', {x: 49, y: 60}),
 
-      Keyboard.sKeydown(doc, Keys.right(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', 70)
+      Keyboard.sKeydown(doc, Keys.down(), {}),
+      sAssertValue('Checking that the thumb is now one step further right', {x: 49, y: 70})
     ];
   }, () => { success(); }, failure);
 });
