@@ -21,7 +21,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onHoverOff: () => (comp: AlloyComponent) => void;
   toggleClass: () => string;
 
-  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
+  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string, surplus: { } }) => void;
   onTap: () => (comp: AlloyComponent) => void;
 
   menuTransition: () => Option<{ property: string; transitionClass: string }>;
@@ -50,7 +50,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   onHoverOff?: (comp: AlloyComponent) => void;
   toggleClass: string;
 
-  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
+  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string, surplus: {} }) => void;
   onTap?: (comp: AlloyComponent) => void;
 
   menuTransition?: { property: string, transitionClass: string };

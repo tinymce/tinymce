@@ -81,9 +81,9 @@ const section = (gui, instructions, spec) => {
 
   const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
-      gui.broadcastOn([ 'dismiss.popups' ], {
-        target: evt.target()
-      });
+      // gui.broadcastOn([ 'dismiss.popups' ], {
+      //   target: evt.target()
+      // });
     }
   });
 

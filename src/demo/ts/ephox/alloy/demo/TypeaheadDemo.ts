@@ -1,4 +1,4 @@
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -84,7 +84,20 @@ export default (): void => {
           if (index > -1) {
             const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
               d.substring(index + text.length);
-            return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
+            return [
+              {
+                'type': 'item',
+                'data': {
+                  value: d,
+                  text: Strings.capitalize(d),
+                  html,
+                  surplus: {
+                    'difference': 'dog'
+                  }
+                },
+                'item-class': 'class-' + d
+              }
+            ];
           } else {
             return [ ];
           }

@@ -9,6 +9,7 @@ import { DomModification, DomModificationSpec } from '../../dom/DomModification'
 export interface ItemDataTuple {
   value: string;
   text: string;
+  surplus?: any;
 }
 
 export type ItemSpec = WidgetItemSpec | SeparatorItemSpec | NormalItemSpec;
@@ -58,7 +59,7 @@ export interface NormalItemSpec {
 }
 
 export interface NormalItemDetail extends ItemDetail {
-  data: () => RawDomSchema;
+  data: () => ItemDataTuple;
   components: () => AlloySpec[];
   dom: () => RawDomSchema;
   // INVESTIGATE: () => this might not be right

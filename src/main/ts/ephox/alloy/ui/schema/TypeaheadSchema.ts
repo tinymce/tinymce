@@ -17,7 +17,7 @@ import { TypeaheadDetail, TypeaheadData } from '../../ui/types/TypeaheadTypes';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-import { HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
+import { HTMLInputElement, HTMLTextAreaElement, console } from '@ephox/dom-globals';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -28,12 +28,14 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 
   Fields.onKeyboardHandler('onExecute'),
   FieldSchema.defaulted('matchWidth', true),
-  FieldSchema.defaulted('dismissOnBlur', true),
+  FieldSchema.defaulted('dismissOnBlur', false),
   Fields.markers([ 'openClass' ]),
 
   SketchBehaviours.field('typeaheadBehaviours', [
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
+
+  FieldSchema.defaulted('dataset', { }),
 
   FieldSchema.state('previewing', () => {
     return Cell(true);
@@ -53,22 +55,33 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     ],
     name: 'menu',
     overrides (detail: TypeaheadDetail) {
+      const setValueFromItem = (input: AlloyComponent, item: AlloyComponent) => {
+        const itemData = Representing.getValue(item);
+        console.log('itemData...', itemData);
+        Representing.setValue(input, itemData.text);
+      }
+
+
       return {
         fakeFocus: true,
         onHighlight (menu: AlloyComponent, item: AlloyComponent): void {
           if (! detail.previewing().get()) {
             menu.getSystem().getByUid(detail.uid()).each((input) => {
-              Representing.setValueFrom(input, item);
+              setValueFromItem(input, item);
             });
           } else {
             // Highlight the rest of the text so that the user types over it.
             menu.getSystem().getByUid(detail.uid()).each((input) => {
               const currentValue = Representing.getValue(input);
+              console.log('currentValue', currentValue);
               const currentText = getText(currentValue);
+              console.log('currentText', currentText);
               const nextValue = Representing.getValue(item);
+              console.log('nextValue', nextValue);
               const nextText = getText(nextValue);
+              console.log('nextText', nextText);
               if (Strings.startsWith(nextText, currentText)) {
-                Representing.setValue(input, nextValue);
+                Representing.setValue(input, nextValue.text);
                 const inputEl = input.element().dom() as HTMLInputElement;
                 inputEl.setSelectionRange(currentValue.length, nextValue.text.length);
               }
@@ -84,7 +97,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             // Closing the sandbox takes the item out of the system, so keep a reference.
             Sandboxing.close(sandbox);
             return system.getByUid(detail.uid()).toOption().bind((input) => {
-              Representing.setValueFrom(input, item);
+              setValueFromItem(input, item);
               const currentValue: { value: string, text: string } = Representing.getValue(input);
 
               // Typeaheads, really shouldn't be textareas.
@@ -98,7 +111,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
         onHover (menu: AlloyComponent, item: AlloyComponent): void {
           menu.getSystem().getByUid(detail.uid()).each((input) => {
-            Representing.setValueFrom(input, item);
+            setValueFromItem(input, item);
           });
         }
       };

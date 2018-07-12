@@ -1,4 +1,4 @@
-import { Fun, Merger, Option, Cell } from '@ephox/katamari';
+import { Fun, Merger, Option, Cell, Arr, Obj } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -25,6 +25,7 @@ import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/Ty
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarEvent, TieredData } from '../../api/Main';
 import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
+import { Objects } from '@ephox/boulder';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
@@ -33,6 +34,16 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     simulatedEvent: SimulatedEvent<SugarEvent>,
     highlighter: (comp: AlloyComponent) => void
   ) => {
+    /*
+     * If we have an open Sandbox with an active menu,
+     * but no highlighted item, then highlight the menu
+     *
+     * If we have an open Sandbox with an active menu,
+     * and there is a highlighted item, simulated a keydown
+     * on the menu
+     *
+     * If we have a closed sandbox, open the sandbox
+     */
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each((menu) => {
@@ -55,10 +66,25 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const dataByValue = Cell({ });
+  const dataByValue = Cell(detail.dataset());
+
+  // TODO: Update text.
   const dataByText = Cell({ });
 
   const mapFetch = (tdata: TieredData): TieredData => {
+    const currentDataByValue = dataByValue.get();
+    const newDataByValue = { };
+    Obj.each(tdata.menus, (menuData) => {
+      Arr.each(menuData.items, (itemData) => {
+        if (itemData.type === 'item') {
+          newDataByValue[itemData.data.value] = itemData.data;
+        }
+      })
+    })
+    dataByValue.set(
+      Merger.deepMerge(currentDataByValue, newDataByValue)
+    )
+    console.log('Now', dataByValue.get());
     return tdata;
   };
 
@@ -70,11 +96,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         mode: 'manual',
         getValue (typeahead: AlloyComponent): TypeaheadData {
           const dataKey = Value.get(typeahead.element());
+          console.log('looking up', dataKey);
           return {
             value: dataKey,
-            surplus: {
-              text: dataKey
-            }
+            surplus: Objects.readOptFrom(dataByValue.get(), dataKey).getOr({ })
           }
         },
         setValue: (typeahead: AlloyComponent, v: string) => {
@@ -117,6 +142,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;
+                    console.log('highlightBy', itemData);
                     return itemData.value === pv.value;
                   });
 

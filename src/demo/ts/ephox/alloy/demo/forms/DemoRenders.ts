@@ -11,7 +11,9 @@ import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/type
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strict('text')
+    FieldSchema.strict('text'),
+    FieldSchema.defaulted('html', ''),
+    FieldSchema.defaulted('surplus', { })
   ]),
   FieldSchema.strict('type')
 ]);

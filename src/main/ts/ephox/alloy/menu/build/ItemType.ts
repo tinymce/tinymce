@@ -14,8 +14,10 @@ import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
 import { AlloySpec } from '../../api/Main';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
+import { console } from '@ephox/dom-globals';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
+  console.log('builder', detail.data());
   return {
     dom: Merger.deepMerge(
       detail.dom(),

@@ -20,6 +20,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   dismissOnBlur: () => boolean;
 
   data: () => Option<string>;
+  dataset: () => Record<string, any>;
 
   markers: () => {
     openClass: () => string;
@@ -56,6 +57,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
   data?: string;
+  dataset?: Record<string, any>;
 }
 
 export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec, TypeaheadDetail> { }
