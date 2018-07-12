@@ -1,0 +1,120 @@
+import { FocusTools, Step, Keyboard, Keys, Keys } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Id, Result } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ComponentApi, AlloyTriggers, NativeEvents } from 'ephox/alloy/api/Main';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { TieredData, tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as Sinks from 'ephox/alloy/test/Sinks';
+import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
+
+UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (success, failure) => {
+  const typeaheadMarkers = {
+    openClass: 'test-typeahead-open'
+  };
+
+  GuiSetup.setup((store, doc, body) => {
+    const sink = Sinks.relativeSink();
+
+    const fetch = (input: ComponentApi.AlloyComponent): Future<TieredData> => {
+      const future = Future.pure([
+        { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+        { type: 'item', data: { value: 'beta', text: 'Beta' } },
+        { type: 'item', data: { value: 'gamma', text: 'Gamma' } }
+      ]);
+
+
+
+      return future.map((items) => {
+        const menu = TestDropdownMenu.renderMenu({
+          value: Id.generate('single-menu-value'),
+          items: Arr.map(items, TestDropdownMenu.renderItem)
+        });
+        return TieredMenu.singleData('overlord', menu);
+      });
+    }
+
+    return GuiFactory.build(
+      Container.sketch({
+        components: [
+          GuiFactory.premade(sink),
+
+          Typeahead.sketch({
+            uid: 'test-type-with-selectover',
+            inputClasses: [ 'with-selectover' ],
+            minChars: 2,
+            model: {
+              selectsOver: true,
+            },
+            markers: typeaheadMarkers,
+            data: 'initial-value',
+            fetch: fetch,
+            lazySink () { return Result.value(sink); },
+            parts: {
+              menu: TestDropdownMenu.part(store)
+            }
+          }),
+
+          Typeahead.sketch({
+            uid: 'test-type-with-NO-selectover',
+            inputClasses: [ 'without-selectover' ],
+            minChars: 2,
+            model: {
+              selectsOver: false,
+            },
+            markers: typeaheadMarkers,
+            data: 'initial-value',
+            fetch: fetch,
+            lazySink () { return Result.value(sink); },
+            parts: {
+              menu: TestDropdownMenu.part(store)
+            }
+          })
+        ],
+
+        containerBehaviours: Behaviour.derive([
+          Focusing.config({ })
+        ])
+      })
+    );
+
+  }, (doc, body, gui, component, store) => {
+    const testWithSelector = () => {
+      const typeahead = gui.getByUid('test-type-with-selectover').getOrDie();
+
+      const steps = TestTypeaheadSteps(doc, gui, typeahead);
+
+      return [
+        FocusTools.sSetFocus('Focusing typeahead with selectover', gui.element(), '.with-selectover'),
+        FocusTools.sSetActiveValue(doc, 'al'),
+        steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
+        steps.sWaitForMenu('"Typing" should activate menu'),
+        steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
+
+        FocusTools.sSetActiveValue(doc, 'Al'),
+        steps.sTriggerInputEvent('Simulate typing to show menu with "Al"'),
+        steps.sWaitForMenu('"Typing" should activate menu and select over because of matching text'),
+
+        steps.sAssertValue('Should change to "Alpha" with it selected over', 'Alpha'),
+        steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length)
+      ];
+    }
+
+    return [
+      GuiSetup.mAddStyles(doc, [
+        '.selected-item { background-color: #cadbee; }'
+      ]),
+    ].concat(
+      testWithSelector()
+    ).concat([
+      GuiSetup.mRemoveStyles
+    ])
+  }, success, failure);
+});

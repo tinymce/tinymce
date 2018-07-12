@@ -14,7 +14,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
-UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', (success, failure) => {
+UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();

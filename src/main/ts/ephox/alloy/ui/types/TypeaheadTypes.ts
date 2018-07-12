@@ -19,12 +19,12 @@ export interface TypeaheadModelDetail {
 
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
-  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   minChars: () => number;
 
   model: () => TypeaheadModelDetail;
   sandboxClasses: () => string[];
+
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -48,10 +48,12 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
   fetch: (comp: AlloyComponent) => Future<TieredData>;
-  dom: RawDomSchema;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
+  inputClasses?: string[];
+  inputAttributes?: { };
+  inputStyles?: { };
 
   minChars?: number;
   markers: {

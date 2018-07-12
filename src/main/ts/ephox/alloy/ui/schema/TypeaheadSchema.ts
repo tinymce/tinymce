@@ -30,6 +30,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   ]),
 
   Fields.onKeyboardHandler('onExecute'),
+  FieldSchema.defaulted('inputClasses', [ ]),
+  FieldSchema.defaulted('inputAttributes', { }),
+  FieldSchema.defaulted('inputStyles', { }),
   FieldSchema.defaulted('matchWidth', true),
   FieldSchema.defaulted('dismissOnBlur', true),
   Fields.markers([ 'openClass' ]),
