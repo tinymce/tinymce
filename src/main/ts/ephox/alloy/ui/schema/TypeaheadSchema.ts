@@ -13,7 +13,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
-import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
+import { TypeaheadDetail, TypeaheadData } from '../../ui/types/TypeaheadTypes';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
@@ -42,6 +42,10 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   InputBase.schema()
 ));
 
+const getText = (data: TypeaheadData): string => {
+  return data.surplus !== undefined && data.surplus.text !== undefined ? data.surplus.text : data.value;
+}
+
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
@@ -59,9 +63,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           } else {
             // Highlight the rest of the text so that the user types over it.
             menu.getSystem().getByUid(detail.uid()).each((input) => {
-              const currentValue = Representing.getValue(input).text;
+              const currentValue = Representing.getValue(input);
+              const currentText = getText(currentValue);
               const nextValue = Representing.getValue(item);
-              if (Strings.startsWith(nextValue.text, currentValue)) {
+              const nextText = getText(nextValue);
+              if (Strings.startsWith(nextText, currentText)) {
                 Representing.setValue(input, nextValue);
                 const inputEl = input.element().dom() as HTMLInputElement;
                 inputEl.setSelectionRange(currentValue.length, nextValue.text.length);

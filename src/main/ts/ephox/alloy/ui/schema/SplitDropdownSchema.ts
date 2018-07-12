@@ -16,7 +16,6 @@ import * as PartType from '../../parts/PartType';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
-
   Fields.onStrictHandler('onExecute'),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),

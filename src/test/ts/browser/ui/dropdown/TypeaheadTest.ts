@@ -39,10 +39,7 @@ UnitTest.asynctest('TypeaheadTest', (success, failure) => {
             dom: {
               tag: 'input'
             },
-            data: {
-              value: 'initial-value',
-              text: 'initial-value'
-            },
+            data: 'initial-value',
 
             fetch (input) {
               const text = Value.get(input.element());

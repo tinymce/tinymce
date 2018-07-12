@@ -9,7 +9,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail<TypeaheadData> {
+export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
@@ -19,7 +19,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: () => boolean;
 
-  data: () => Option<TypeaheadData>;
+  data: () => Option<string>;
 
   markers: () => {
     openClass: () => string;
@@ -29,7 +29,9 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
 
 export interface TypeaheadData {
   value: string;
-  text: string;
+  surplus: {
+    text: string;
+  }
 }
 
 export interface TypeaheadSpec extends CompositeSketchSpec {
@@ -53,7 +55,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   dismissOnBlur?: boolean;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
-  data?: TypeaheadData;
+  data?: string;
 }
 
 export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec, TypeaheadDetail> { }

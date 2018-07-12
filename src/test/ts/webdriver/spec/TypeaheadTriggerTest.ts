@@ -26,10 +26,7 @@ UnitTest.asynctest('TypeaheadSpecTest', (success, failure) => {
             dom: {
               tag: 'input'
             },
-            data: {
-              value: 'initial-value',
-              text: 'initial-value'
-            },
+            data: 'initial-value',
 
             markers: {
               openClass: 'test-typeahead-open'

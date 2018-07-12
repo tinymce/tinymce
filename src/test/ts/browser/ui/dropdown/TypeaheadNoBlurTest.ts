@@ -37,10 +37,7 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', (success, f
             dom: {
               tag: 'input'
             },
-            data: {
-              value: 'initial-value',
-              text: 'initial-value'
-            },
+            data: 'initial-value',
 
             fetch (input) {
               const text = Value.get(input.element());

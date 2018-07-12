@@ -1,4 +1,4 @@
-import { Fun, Merger, Option } from '@ephox/katamari';
+import { Fun, Merger, Option, Cell } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -19,14 +19,15 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
 import { EventFormat, SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
-import { HTMLInputElement } from '@ephox/dom-globals';
+import { HTMLInputElement, console } from '@ephox/dom-globals';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarEvent } from '../../api/Main';
+import { SugarEvent, TieredData } from '../../api/Main';
 import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
+  console.log('Making a typeahead');
   const navigateList = (
     comp: AlloyComponent,
     simulatedEvent: SimulatedEvent<SugarEvent>,
@@ -46,7 +47,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
-      DropdownUtils.open(detail, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
+      DropdownUtils.open(detail, mapFetch, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
     }
   };
 
@@ -54,21 +55,40 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
+  const dataByValue = Cell({ });
+  const dataByText = Cell({ });
+
+  const mapFetch = (tdata: TieredData): TieredData => {
+    return tdata;
+  };
+
+
   const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
       store: {
-        mode: 'dataset',
-        getDataKey (typeahead: AlloyComponent): string {
-          return Value.get(typeahead.element());
+        mode: 'manual',
+        getValue (typeahead: AlloyComponent): TypeaheadData {
+          const dataKey = Value.get(typeahead.element());
+          return {
+            value: dataKey,
+            surplus: {
+              text: dataKey
+            }
+          }
         },
-        initialValue: detail.data().getOr(undefined),
-        getFallbackEntry (key: string): TypeaheadData {
-          return { value: key, text: key };
+        setValue: (typeahead: AlloyComponent, v: string) => {
+          Value.set(typeahead.element(), v);
         },
-        setData (typeahead: AlloyComponent, data: TypeaheadData) {
-          Value.set(typeahead.element(), data.text);
-        }
+        initialValue: detail.data().getOr(''),
+        // getFallbackEntry (key: string): TypeaheadData {
+        //   console.log('typeahead.getFallbackEntry', key);
+        //   return { value: key, text: key };
+        // },
+        // setData (typeahead: AlloyComponent, data: TypeaheadData) {
+        //   console.log('typeahead.setData', data);
+        //   Value.set(typeahead.element(), data.text);
+        // }
       }
     }),
     Streaming.config({
@@ -110,7 +130,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             };
 
             const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
-            DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
+            DropdownUtils.open(detail, mapFetch, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
       }
@@ -137,7 +157,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const currentValue = Representing.getValue(comp) as TypeaheadData;
         detail.onExecute()(sandbox, comp, currentValue);
         const input = comp.element().dom() as HTMLInputElement;
-        input.setSelectionRange(currentValue.text.length, currentValue.text.length);
+        const text = currentValue.surplus !== undefined && currentValue.surplus.text !== undefined ? currentValue.surplus.text : currentValue.value;
+        input.setSelectionRange(text.length, text.length);
         return Option.some(true);
       }
     }),
@@ -181,7 +202,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.runOnExecute((comp) => {
         const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
         const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, mapFetch, anchor, comp, externals, onOpenSync).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
