@@ -61,7 +61,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
           }),
 
           Typeahead.sketch({
-            uid: 'test-type-with-NO-selectover',
+            uid: 'test-type-without-selectover',
             inputClasses: [ 'without-selectover' ],
             minChars: 2,
             model: {
@@ -103,7 +103,32 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sWaitForMenu('"Typing" should activate menu and select over because of matching text'),
 
         steps.sAssertValue('Should change to "Alpha" with it selected over', 'Alpha'),
-        steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length)
+        steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length),
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test'),
+      ];
+    }
+
+    const testWithoutSelector = () => {
+      const typeahead = gui.getByUid('test-type-without-selectover').getOrDie();
+
+      const steps = TestTypeaheadSteps(doc, gui, typeahead);
+
+      return [
+        FocusTools.sSetFocus('Focusing typeahead without selectover', gui.element(), '.without-selectover'),
+        FocusTools.sSetActiveValue(doc, 'al'),
+        steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
+        steps.sWaitForMenu('"Typing" should activate menu'),
+        steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
+
+        FocusTools.sSetActiveValue(doc, 'Al'),
+        steps.sTriggerInputEvent('Simulate typing to show menu with "Al"'),
+        steps.sWaitForMenu('"Typing" should activate menu and not select over because the setting is false'),
+
+        steps.sAssertValue('Should keep it as "Al" with selection at end of input', 'Al'),
+        steps.sAssertTextSelection('No select over. So "Al"', 'Al'.length, 'Al'.length)
       ];
     }
 
@@ -112,7 +137,8 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         '.selected-item { background-color: #cadbee; }'
       ]),
     ].concat(
-      testWithSelector()
+      testWithSelector(),
+      testWithoutSelector()
     ).concat([
       GuiSetup.mRemoveStyles
     ])
