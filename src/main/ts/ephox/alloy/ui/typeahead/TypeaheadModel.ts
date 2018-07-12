@@ -4,13 +4,7 @@ import { Attr, Value } from '@ephox/sugar';
 
 import { Representing } from '../../api/behaviour/Representing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TypeaheadData } from '../../ui/types/TypeaheadTypes';
-
-export interface TypeaheadModelDetail {
-  getDisplayText: () => (item: TypeaheadData) => string;
-  getMatchingText: () => (excerpt: string, item: TypeaheadData) => string;
-  selectsOver: () => boolean;
-}
+import { TypeaheadModelDetail } from '../../ui/types/TypeaheadTypes';
 
 // When showing a value in an input field, which part of the item do we use?
 const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent) => {

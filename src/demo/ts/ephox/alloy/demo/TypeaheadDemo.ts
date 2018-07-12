@@ -21,7 +21,7 @@ export default (): void => {
 
   gui.add(sink);
 
-  const dataset = [
+  const dataset = Arr.map([
     'ant',
     'bison',
     'cat',
@@ -48,7 +48,12 @@ export default (): void => {
     'x',
     'yak',
     'zebra'
-  ];
+  ], (s) => {
+    return {
+      value: s,
+      text: Strings.capitalize(s)
+    }
+  });
 
   const lazySink = () => {
     return Result.value(sink);
@@ -81,10 +86,7 @@ export default (): void => {
       dataset: {
         'bison': {
           value: 'bison',
-          text: 'Bison',
-          surplus: {
-            'M': 'B'
-          }
+          text: 'Bison'
         }
       },
 
@@ -92,20 +94,20 @@ export default (): void => {
         const text = Value.get(input.element());
         console.log('text', text);
         const matching = Arr.bind(dataset, (d) => {
-          const index = d.indexOf(text.toLowerCase());
+          const lText = d.text.toLowerCase();
+          const index = lText.indexOf(text.toLowerCase());
           if (index > -1) {
-            const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
-              d.substring(index + text.length);
+
+            const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + text.length) + '</strong>' +
+              d.text.substring(index + text.length);
             return [
               {
                 'type': 'item',
                 'data': {
-                  value: d,
-                  text: Strings.capitalize(d),
+                  value: d.value,
+                  text: d.text,
                   html,
-                  surplus: {
-                    'difference': 'dog'
-                  }
+                  'bonus-demo-content': 'caterpillar'
                 },
                 'item-class': 'class-' + d
               }

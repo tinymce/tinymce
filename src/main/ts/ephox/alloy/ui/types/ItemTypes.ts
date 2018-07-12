@@ -9,7 +9,6 @@ import { DomModification, DomModificationSpec } from '../../dom/DomModification'
 export interface ItemDataTuple {
   value: string;
   text: string;
-  surplus?: Record<string, any>;
 }
 
 export type ItemSpec = WidgetItemSpec | SeparatorItemSpec | NormalItemSpec;

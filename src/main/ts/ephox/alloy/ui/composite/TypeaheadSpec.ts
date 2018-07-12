@@ -108,14 +108,16 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         getValue (typeahead: AlloyComponent): TypeaheadData {
           const dataKey = Value.get(typeahead.element());
           console.log('looking up', dataKey);
-          return Objects.readOptFrom(dataByValue.get(), dataKey).fold(
-            () => ({
-              value: dataKey,
-              text: dataKey,
-              surplus: { }
-            }),
-            (valueData: TypeaheadData) => (valueData)
-          )
+          const optValueData =  Objects.readOptFrom(dataByValue.get(), dataKey).orThunk(
+            () => Objects.readOptFrom(dataByText.get(), dataKey)
+          );
+          return optValueData.fold(
+              () => ({
+                value: dataKey,
+                text: dataKey
+              }),
+              (valueData: TypeaheadData) => (valueData)
+            )
         },
         setValue: (typeahead: AlloyComponent, v: string) => {
           Value.set(typeahead.element(), v);

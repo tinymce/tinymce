@@ -13,7 +13,7 @@ const demoItem = ValueSchema.objOf([
     FieldSchema.strict('value'),
     FieldSchema.strict('text'),
     FieldSchema.defaulted('html', ''),
-    FieldSchema.defaulted('surplus', { })
+    FieldSchema.defaulted('bonus-demo-content', { })
   ]),
   FieldSchema.strict('type')
 ]);
@@ -76,7 +76,7 @@ const item = (itemSpec): ItemSpec => {
   return {
     type: spec.type,
     data: spec.data,
-    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + spec.data.text + '</div>'),
+    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + (spec.data.html !== undefined ? spec.data.html : spec.data.text) + '</div>'),
     components: [ ]
   };
 };

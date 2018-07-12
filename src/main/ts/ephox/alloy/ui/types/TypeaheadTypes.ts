@@ -1,14 +1,22 @@
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
-import { InputDetail } from '../../ui/types/InputTypes';
-import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
+import { InputDetail } from '../../ui/types/InputTypes';
+import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+
+
+export interface TypeaheadModelDetail {
+  getDisplayText: () => (item: TypeaheadData) => string;
+  getMatchingText: () => (excerpt: string, item: TypeaheadData) => string;
+  selectsOver: () => boolean;
+}
+
 
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
@@ -16,11 +24,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   components: () => AlloySpec[ ];
   minChars: () => number;
 
-  model: () => {
-    getDisplayText: () => (itemData: TypeaheadData) => string;
-    getMatchingText: () => (itemData: TypeaheadData) => string;
-    selectsOver: () => boolean;
-  },
+  model: () => TypeaheadModelDetail;
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -35,7 +39,9 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   previewing: () => Cell<boolean>;
 }
 
-export type TypeaheadData = ItemDataTuple;
+export interface TypeaheadData extends ItemDataTuple {
+  [key: string]: any;
+}
 
 export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
