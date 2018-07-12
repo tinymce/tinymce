@@ -131,6 +131,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpe
   return {
     dom: {
       tag: 'div',
+      classes: detail.sandboxClasses(),
       attributes: {
         id: ariaOwner.id()
       }

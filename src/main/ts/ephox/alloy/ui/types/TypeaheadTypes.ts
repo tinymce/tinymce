@@ -1,5 +1,5 @@
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -13,7 +13,6 @@ import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 export interface TypeaheadModelDetail {
   getDisplayText: () => (item: TypeaheadData) => string;
-  getMatchingText: () => (excerpt: string, item: TypeaheadData) => string;
   selectsOver: () => boolean;
 }
 
@@ -25,6 +24,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   minChars: () => number;
 
   model: () => TypeaheadModelDetail;
+  sandboxClasses: () => string[];
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -51,6 +51,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
+  sandboxClasses?: string[];
 
   minChars?: number;
   markers: {
@@ -59,7 +60,6 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
 
   model?: {
     getDisplayText?: (itemData: TypeaheadData) => string;
-    getMatchingText?: (itemData: TypeaheadData) => string;
     selectsOver?: boolean;
   },
 

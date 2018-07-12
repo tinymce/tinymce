@@ -25,7 +25,7 @@ import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
-import { setCursorAtEnd } from 'ephox/alloy/ui/typeahead/TypeaheadModel';
+import { setCursorAtEnd } from '../../ui/typeahead/TypeaheadModel';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');

@@ -1,6 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
-import { attemptSelectOver, setValueFromItem } from 'ephox/alloy/ui/typeahead/TypeaheadModel';
+import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -20,6 +20,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
+  FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onHandler('onOpen'),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
