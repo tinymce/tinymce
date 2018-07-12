@@ -16,6 +16,12 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   components: () => AlloySpec[ ];
   minChars: () => number;
 
+  model: () => {
+    getDisplayText: () => (itemData: TypeaheadData) => string;
+    getMatchingText: () => (itemData: TypeaheadData) => string;
+    selectsOver: () => boolean;
+  },
+
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: () => boolean;
@@ -44,6 +50,12 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   markers: {
     openClass: string;
   };
+
+  model?: {
+    getDisplayText?: (itemData: TypeaheadData) => string;
+    getMatchingText?: (itemData: TypeaheadData) => string;
+    selectsOver?: boolean;
+  },
 
   parts: {
     menu: Partial<TieredMenuSpec>;

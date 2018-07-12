@@ -1,4 +1,6 @@
-import { Fun, Merger, Option, Cell, Arr, Obj } from '@ephox/katamari';
+import { Objects } from '@ephox/boulder';
+import { console, HTMLInputElement } from '@ephox/dom-globals';
+import { Arr, Cell, Fun, Merger, Obj, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -11,22 +13,19 @@ import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import * as InputBase from '../common/InputBase';
-
-import { EventFormat, SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
-import { HTMLInputElement, console } from '@ephox/dom-globals';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarEvent, TieredData } from '../../api/Main';
-import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
-import { Objects } from '@ephox/boulder';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
+import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
+import * as InputBase from '../common/InputBase';
+import { setCursorAtEnd } from 'ephox/alloy/ui/typeahead/TypeaheadModel';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
@@ -128,14 +127,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             (valData) => getText(valData)
           );
         }).getOr('')
-        // getFallbackEntry (key: string): TypeaheadData {
-        //   console.log('typeahead.getFallbackEntry', key);
-        //   return { value: key, text: key };
-        // },
-        // setData (typeahead: AlloyComponent, data: TypeaheadData) {
-        //   console.log('typeahead.setData', data);
-        //   Value.set(typeahead.element(), data.text);
-        // }
       }
     }),
     Streaming.config({
@@ -204,9 +195,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
         const currentValue = Representing.getValue(comp) as TypeaheadData;
         detail.onExecute()(sandbox, comp, currentValue);
-        const input = comp.element().dom() as HTMLInputElement;
-        const text = currentValue.text !== undefined ? currentValue.text : currentValue.value;
-        input.setSelectionRange(text.length, text.length);
+        setCursorAtEnd(comp);
         return Option.some(true);
       }
     }),
