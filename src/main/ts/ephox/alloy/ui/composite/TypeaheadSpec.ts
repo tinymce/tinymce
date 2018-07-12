@@ -26,6 +26,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarEvent, TieredData } from '../../api/Main';
 import { AnchorSpec, HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { Objects } from '@ephox/boulder';
+import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
@@ -67,26 +68,37 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
   const dataByValue = Cell(detail.dataset());
+  console.log('now dataByValue', dataByValue.get());
 
   // TODO: Update text.
   const dataByText = Cell({ });
 
   const mapFetch = (tdata: TieredData): TieredData => {
     const currentDataByValue = dataByValue.get();
+    const currentDataByText = dataByText.get();
     const newDataByValue = { };
+    const newDataByText = { };
     Obj.each(tdata.menus, (menuData) => {
       Arr.each(menuData.items, (itemData) => {
         if (itemData.type === 'item') {
           newDataByValue[itemData.data.value] = itemData.data;
+          newDataByText[itemData.data.text] = itemData.data;
         }
       })
     })
     dataByValue.set(
       Merger.deepMerge(currentDataByValue, newDataByValue)
-    )
+    );
+    dataByText.set(
+      Merger.deepMerge(currentDataByText, newDataByText)
+    );
     console.log('Now', dataByValue.get());
     return tdata;
   };
+
+  const getText = (valData: { value: string, text?: string }): string => {
+    return valData.text !== undefined ? valData.text : valData.value;
+  }
 
 
   const behaviours = Behaviour.derive([
@@ -97,15 +109,25 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         getValue (typeahead: AlloyComponent): TypeaheadData {
           const dataKey = Value.get(typeahead.element());
           console.log('looking up', dataKey);
-          return {
-            value: dataKey,
-            surplus: Objects.readOptFrom(dataByValue.get(), dataKey).getOr({ })
-          }
+          return Objects.readOptFrom(dataByValue.get(), dataKey).fold(
+            () => ({
+              value: dataKey,
+              text: dataKey,
+              surplus: { }
+            }),
+            (valueData: TypeaheadData) => (valueData)
+          )
         },
         setValue: (typeahead: AlloyComponent, v: string) => {
           Value.set(typeahead.element(), v);
         },
-        initialValue: detail.data().getOr(''),
+        initialValue: detail.data().map((dataKey) => {
+          console.log('dataKey for initial value', dataKey);
+          return Objects.readOptFrom(dataByValue.get(), dataKey).fold(
+            () => dataKey,
+            (valData) => getText(valData)
+          );
+        }).getOr('')
         // getFallbackEntry (key: string): TypeaheadData {
         //   console.log('typeahead.getFallbackEntry', key);
         //   return { value: key, text: key };
@@ -183,7 +205,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const currentValue = Representing.getValue(comp) as TypeaheadData;
         detail.onExecute()(sandbox, comp, currentValue);
         const input = comp.element().dom() as HTMLInputElement;
-        const text = currentValue.surplus !== undefined && currentValue.surplus.text !== undefined ? currentValue.surplus.text : currentValue.value;
+        const text = currentValue.text !== undefined ? currentValue.text : currentValue.value;
         input.setSelectionRange(text.length, text.length);
         return Option.some(true);
       }

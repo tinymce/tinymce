@@ -76,6 +76,18 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
+      data: 'bison',
+
+      dataset: {
+        'bison': {
+          value: 'bison',
+          text: 'Bison',
+          surplus: {
+            'M': 'B'
+          }
+        }
+      },
+
       fetch (input) {
         const text = Value.get(input.element());
         console.log('text', text);
@@ -118,7 +130,7 @@ export default (): void => {
       },
       onExecute (sandbox, item, itemValue) {
         const value = Representing.getValue(item);
-        console.log('*** typeahead menu demo execute on: ' + value + ' ***');
+        console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);
       }
     })

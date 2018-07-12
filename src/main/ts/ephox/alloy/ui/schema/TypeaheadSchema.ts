@@ -44,10 +44,6 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   InputBase.schema()
 ));
 
-const getText = (data: TypeaheadData): string => {
-  return data.surplus !== undefined && data.surplus.text !== undefined ? data.surplus.text : data.value;
-}
-
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
@@ -74,11 +70,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             menu.getSystem().getByUid(detail.uid()).each((input) => {
               const currentValue = Representing.getValue(input);
               console.log('currentValue', currentValue);
-              const currentText = getText(currentValue);
+              const currentText = currentValue.text;
               console.log('currentText', currentText);
               const nextValue = Representing.getValue(item);
               console.log('nextValue', nextValue);
-              const nextText = getText(nextValue);
+              const nextText = nextValue.text;
               console.log('nextText', nextText);
               if (Strings.startsWith(nextText, currentText)) {
                 Representing.setValue(input, nextValue.text);

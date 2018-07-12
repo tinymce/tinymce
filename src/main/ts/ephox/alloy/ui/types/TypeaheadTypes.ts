@@ -8,6 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
 
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
@@ -28,12 +29,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   previewing: () => Cell<boolean>;
 }
 
-export interface TypeaheadData {
-  value: string;
-  surplus: {
-    text: string;
-  }
-}
+export type TypeaheadData = ItemDataTuple;
 
 export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
