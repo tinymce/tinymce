@@ -94,6 +94,30 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       return sCheckInvalidOf(label, component);
     };
 
+    const sCheckIsInvalidOf = (label, comp, expected) => {
+      return Logger.t(
+        label,
+        Step.control(
+          Step.sync(() => {
+            Assertions.assertEq(
+              'Checking invalid status is: ' + expected,
+              expected,
+              Invalidating.isInvalid(comp)
+            )
+          }),
+          Guard.tryUntil('invalid status was not: ' + expected, 100, 100)
+        )
+      )
+    };
+
+    const sCheckIsValid = (label) => {
+      return sCheckIsInvalidOf(label, component, false);
+    };
+
+    const sCheckIsInvalid = (label) => {
+      return sCheckIsInvalidOf(label, component, true);
+    };
+
     const sValidate = GeneralSteps.sequence([
       Step.sync(() => {
         AlloyTriggers.emit(component, 'custom.test.validate');
@@ -154,12 +178,14 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       }),
 
       sCheckValid('after 1xmarkValid, should be valid'),
+      sCheckIsValid('the isInvalid API should return false'),
 
       Step.sync(() => {
         Invalidating.markInvalid(component);
       }),
 
       sCheckInvalid('after markInvalid, should be invalid'),
+      sCheckIsInvalid('the isInvalid API should return true'),
 
       UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
       sValidate,
