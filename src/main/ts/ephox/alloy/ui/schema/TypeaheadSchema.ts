@@ -15,6 +15,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { TypeaheadData, TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
+import { Highlighting } from '../../api/behaviour/Highlighting';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -66,9 +67,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           } else {
             // Highlight the rest of the text so that the user types over it.
             menu.getSystem().getByUid(detail.uid()).each((input) => {
-              attemptSelectOver(detail.model(), input, item).each((fn) => {
-                fn();
-              })
+              attemptSelectOver(detail.model(), input, item).fold(
+                // If we are in "previewing" mode, and we can't select over the
+                // thing that is first, then clear the highlight
+                // Hopefully, this doesn't cause a flicker. Find a better
+                // way to do this.
+                () => Highlighting.dehighlight(menu, item),
+                ((fn) => fn())
+              )
             });
           }
           detail.previewing().set(false);

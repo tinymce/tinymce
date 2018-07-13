@@ -43,7 +43,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
      * on the menu
      *
      * If we have a closed sandbox, open the sandbox
+     *
+     * Regardless, this is a user initiated action. End previewing.
      */
+    detail.previewing().set(false);
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each((menu) => {
@@ -116,7 +119,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             const onOpenSync = (_sandbox) => {
               Composing.getCurrent(sandbox).each((menu) => {
                 previousValue.fold(() => {
-                  Highlighting.highlightFirst(menu);
+                  if (detail.model().selectsOver()) Highlighting.highlightFirst(menu);
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;
