@@ -25,7 +25,6 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
     FieldSchema.defaulted('getDisplayText', (itemData) => itemData.text),
-    FieldSchema.defaulted('getMatchingText', (itemData) => itemData.text),
     FieldSchema.defaulted('selectsOver', true)
   ]),
 
@@ -41,7 +40,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.defaulted('dataset', { }),
+  FieldSchema.defaulted('dataset', [ ]),
 
   FieldSchema.state('previewing', () => {
     return Cell(true);

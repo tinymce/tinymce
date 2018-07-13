@@ -17,9 +17,14 @@ const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repS
   return repConfig.store().manager().getValue(component, repConfig, repState);
 };
 
+const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => {
+  return repState;
+}
+
 export {
   onLoad,
   onUnload,
   setValue,
-  getValue
+  getValue,
+  getState
 };

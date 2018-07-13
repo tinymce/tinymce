@@ -5,11 +5,13 @@ import TestStore from './TestStore';
 import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
 import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
 import { document, console } from '@ephox/dom-globals';
+import * as Debugging from '../../../../../../main/ts/ephox/alloy/debugging/Debugging';
 
 const setup = (createComponent, f, success, failure) => {
   const store = TestStore();
 
   const gui = Gui.create();
+  Debugging.registerInspector('GuiSetup', gui);
 
   const doc = Element.fromDom(document);
   const body = Element.fromDom(document.body);

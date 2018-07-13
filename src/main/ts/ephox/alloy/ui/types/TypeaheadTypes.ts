@@ -31,7 +31,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   dismissOnBlur: () => boolean;
 
   data: () => Option<string>;
-  dataset: () => Record<string, any>;
+  dataset: () => TypeaheadData[];
 
   markers: () => {
     openClass: () => string;

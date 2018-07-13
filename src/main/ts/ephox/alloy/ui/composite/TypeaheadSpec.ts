@@ -26,6 +26,7 @@ import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import { setCursorAtEnd } from '../../ui/typeahead/TypeaheadModel';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
@@ -58,7 +59,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
-      DropdownUtils.open(detail, mapFetch, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
+      DropdownUtils.open(detail, mapFetch(comp), anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
     }
   };
 
@@ -66,69 +67,32 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const dataByValue = Cell(detail.dataset());
-  console.log('now dataByValue', dataByValue.get());
+  const mapFetch = (comp: AlloyComponent) => (tdata: TieredData): TieredData => {
+    const menus = Obj.values(tdata.menus);
+    const items = Arr.bind(menus, (menu) => {
+      return Arr.filter(menu.items, (item) => item.type === 'item');
+    });
 
-  // TODO: Update text.
-  const dataByText = Cell({ });
-
-  const mapFetch = (tdata: TieredData): TieredData => {
-    const currentDataByValue = dataByValue.get();
-    const currentDataByText = dataByText.get();
-    const newDataByValue = { };
-    const newDataByText = { };
-    Obj.each(tdata.menus, (menuData) => {
-      Arr.each(menuData.items, (itemData) => {
-        if (itemData.type === 'item') {
-          newDataByValue[itemData.data.value] = itemData.data;
-          newDataByText[itemData.data.text] = itemData.data;
-        }
-      })
-    })
-    dataByValue.set(
-      Merger.deepMerge(currentDataByValue, newDataByValue)
-    );
-    dataByText.set(
-      Merger.deepMerge(currentDataByText, newDataByText)
-    );
-    console.log('Now', dataByValue.get());
+    const repState = Representing.getState(comp) as DatasetRepresentingState;
+    repState.update(items);
     return tdata;
   };
-
-  const getText = (valData: { value: string, text?: string }): string => {
-    return valData.text !== undefined ? valData.text : valData.value;
-  }
-
 
   const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
       store: {
-        mode: 'manual',
-        getValue (typeahead: AlloyComponent): TypeaheadData {
-          const dataKey = Value.get(typeahead.element());
-          console.log('looking up', dataKey);
-          const optValueData =  Objects.readOptFrom(dataByValue.get(), dataKey).orThunk(
-            () => Objects.readOptFrom(dataByText.get(), dataKey)
-          );
-          return optValueData.fold(
-              () => ({
-                value: dataKey,
-                text: dataKey
-              }),
-              (valueData: TypeaheadData) => (valueData)
-            )
+        mode: 'dataset',
+        getDataKey: (comp) => Value.get(comp.element()),
+        getFallbackEntry: (itemString) => ({
+          value: itemString,
+          text: itemString
+        }),
+        setValue: (comp, data) => {
+          Value.set(comp.element(), detail.model().getDisplayText()(data));
         },
-        setValue: (typeahead: AlloyComponent, v: string) => {
-          Value.set(typeahead.element(), v);
-        },
-        initialValue: detail.data().map((dataKey) => {
-          console.log('dataKey for initial value', dataKey);
-          return Objects.readOptFrom(dataByValue.get(), dataKey).fold(
-            () => dataKey,
-            (valData) => getText(valData)
-          );
-        }).getOr('')
+        initialValue: detail.data().getOr(''),
+        initialDataset: detail.dataset()
       }
     }),
     Streaming.config({
@@ -171,7 +135,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             };
 
             const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
-            DropdownUtils.open(detail, mapFetch, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
+            DropdownUtils.open(detail, mapFetch(component), anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
       }
@@ -241,7 +205,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.runOnExecute((comp) => {
         const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
         const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, mapFetch, anchor, comp, externals, onOpenSync).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, mapFetch(comp), anchor, comp, externals, onOpenSync).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {

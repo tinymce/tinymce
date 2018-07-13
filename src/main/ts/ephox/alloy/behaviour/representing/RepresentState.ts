@@ -1,8 +1,11 @@
-import { Cell } from '@ephox/katamari';
+import { Cell, Arr, Merger, Option } from '@ephox/katamari';
 
 import { BehaviourState, nuState } from '../common/BehaviourState';
+import { Objects } from '@ephox/boulder';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { RepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
 
-const memory = () => {
+const memory = (): RepresentingState => {
   const data = Cell(null);
 
   const readState = () => {
@@ -29,7 +32,7 @@ const memory = () => {
   });
 };
 
-const manual = () => {
+const manual = (): RepresentingState => {
   const readState = () => {
 
   };
@@ -39,21 +42,60 @@ const manual = () => {
   });
 };
 
-const dataset = () => {
-  const data = Cell({ });
+export interface DatasetRepresentingState extends RepresentingState {
+  lookup: <T extends ItemDataTuple>(itemString: string) => Option<T>;
+  update: <T extends ItemDataTuple>(items: T[]) => void;
+  clear: () => void;
+}
+
+const dataset = (): DatasetRepresentingState => {
+  const dataByValue = Cell({ });
+  const dataByText = Cell({ });
 
   const readState = () => {
     return {
       mode: 'dataset',
-      dataset: data.get()
+      dataByValue: dataByValue.get(),
+      dataByText: dataByText.get()
     };
   };
 
+  const clear = (): void => {
+    dataByValue.set({ });
+    dataByText.set({ });
+  };
+
+  // itemString can be matching value or text.
+  const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => {
+    return Objects.readOptFrom(dataByValue.get(), itemString).orThunk(() => {
+      return Objects.readOptFrom(dataByText.get(), itemString);
+    });
+  };
+
+  const update = <T extends ItemDataTuple>(items: T[]): void => {
+    const currentDataByValue = dataByValue.get();
+    const currentDataByText = dataByText.get();
+    const newDataByValue = { };
+    const newDataByText = { };
+    Arr.each(items, (item) => {
+      newDataByValue[item.value] = item;
+      newDataByText[item.text] = item;
+    });
+
+    dataByValue.set(
+      Merger.deepMerge(currentDataByValue, newDataByValue)
+    );
+    dataByText.set(
+      Merger.deepMerge(currentDataByText, newDataByText)
+    );
+  }
+
   return nuState({
     readState,
-    set: data.set,
-    get: data.get
-  });
+    lookup,
+    update,
+    clear
+  }) as DatasetRepresentingState;
 };
 
 const init = (spec) => {
