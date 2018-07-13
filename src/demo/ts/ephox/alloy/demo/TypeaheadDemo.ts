@@ -10,6 +10,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
+import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 export default (): void => {
   const gui = Gui.create();
@@ -59,9 +61,8 @@ export default (): void => {
     return Result.value(sink);
   };
 
-  HtmlDisplay.section(gui,
-    'An example of a typeahead component',
-    Typeahead.sketch({
+  const sketchTypeahead = (model: { selectsOver: boolean, getDisplayText: (data: TypeaheadData) => string }) => {
+    return Typeahead.sketch({
       minChars: 1,
       lazySink,
 
@@ -79,6 +80,8 @@ export default (): void => {
       },
 
       data: 'bison',
+
+      model,
 
       dataset: [{
         value: 'bison',
@@ -130,6 +133,23 @@ export default (): void => {
         console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);
       }
+    })
+  }
+
+  HtmlDisplay.section(gui,
+    'An example of a typeahead component',
+    Container.sketch({
+      components: [
+         sketchTypeahead({
+           selectsOver: true,
+           getDisplayText: (itemData) => itemData.text
+         }),
+
+        sketchTypeahead({
+          selectsOver: false,
+          getDisplayText: (itemData) => itemData.value
+        })
+      ]
     })
   );
 };
