@@ -80,12 +80,10 @@ export default (): void => {
 
       data: 'bison',
 
-      dataset: {
-        'bison': {
-          value: 'bison',
-          text: 'Bison'
-        }
-      },
+      dataset: [{
+        value: 'bison',
+        text: 'Bison'
+      }],
 
       fetch (input) {
         const text = Value.get(input.element());
