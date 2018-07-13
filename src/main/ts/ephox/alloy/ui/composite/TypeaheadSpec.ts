@@ -1,7 +1,7 @@
-import { Objects } from '@ephox/boulder';
-import { console, HTMLInputElement } from '@ephox/dom-globals';
-import { Arr, Cell, Fun, Merger, Obj, Option } from '@ephox/katamari';
+import { console } from '@ephox/dom-globals';
+import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -23,10 +23,9 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
+import { setCursorAtEnd } from '../../ui/typeahead/TypeaheadModel';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
-import { setCursorAtEnd } from '../../ui/typeahead/TypeaheadModel';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
