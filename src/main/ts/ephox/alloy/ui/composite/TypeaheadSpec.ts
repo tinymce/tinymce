@@ -77,7 +77,9 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     });
 
     const repState = Representing.getState(comp) as DatasetRepresentingState;
-    repState.update(items);
+    repState.update(
+      Arr.map(items, (item) => item.data)
+    );
     return tdata;
   };
 
