@@ -34,9 +34,6 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               openClass: 'test-typeahead-open'
             },
 
-            dom: {
-              tag: 'input'
-            },
             data: 'initial-value',
 
             fetch (input) {

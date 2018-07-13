@@ -23,9 +23,6 @@ UnitTest.asynctest('TypeaheadSpecTest', (success, failure) => {
           Typeahead.sketch({
             uid: 'test-type',
             minChars: 2,
-            dom: {
-              tag: 'input'
-            },
             data: 'initial-value',
 
             markers: {

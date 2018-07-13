@@ -36,9 +36,6 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               openClass: 'test-typeahead-open'
             },
 
-            dom: {
-              tag: 'input'
-            },
             data: 'initial-value',
 
             fetch (input) {

@@ -64,9 +64,6 @@ export default (): void => {
     Typeahead.sketch({
       minChars: 1,
       lazySink,
-      dom: {
-        tag: 'input'
-      },
 
       parts: {
         menu: {

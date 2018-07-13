@@ -1,4 +1,4 @@
-import { FocusTools, Step, Keyboard, Keys, Keys } from '@ephox/agar';
+import { FocusTools, Step, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Id, Result } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
