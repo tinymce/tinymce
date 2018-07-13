@@ -2,7 +2,7 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<RepresentingConfigSpec, RepresentingConfig> {
   config: (config: RepresentingConfigSpec) => Behaviour.NamedConfiguredBehaviour<RepresentingConfigSpec, RepresentingConfig>;

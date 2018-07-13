@@ -3,7 +3,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { DatasetStoreConfig } from '../../behaviour/representing/RepresentingTypes';
 import * as Fields from '../../data/Fields';
 import { dataset as datasetState, DatasetRepresentingState } from './RepresentState';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const setValue = (component: AlloyComponent, repConfig, repState: DatasetRepresentingState, data) => {
   const store = repConfig.store() as DatasetStoreConfig<any>;

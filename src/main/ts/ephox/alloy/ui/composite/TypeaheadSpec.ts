@@ -1,7 +1,7 @@
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
+import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';

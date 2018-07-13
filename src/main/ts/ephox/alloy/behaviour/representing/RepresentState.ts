@@ -3,7 +3,7 @@ import { Cell, Arr, Merger, Option } from '@ephox/katamari';
 import { BehaviourState, nuState } from '../common/BehaviourState';
 import { Objects } from '@ephox/boulder';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { RepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
+import { RepresentingState } from '../../behaviour/representing/RepresentingTypes';
 
 const memory = (): RepresentingState => {
   const data = Cell(null);
