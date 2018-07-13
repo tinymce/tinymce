@@ -14,25 +14,22 @@ const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, it
   setCursorAtEnd(input);
 }
 
-const setCursorAtEnd = (input: AlloyComponent): void => {
-  // Only do for valid input types.
+const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
   const el = input.element();
   const value = Value.get(el);
   const node = el.dom() as HTMLInputElement;
+  // Only do for valid input types.
   if (Attr.get(el, 'type') !== 'number') {
-    node.setSelectionRange(value.length, value.length);
+    f(node, value);
   }
+};
+
+const setCursorAtEnd = (input: AlloyComponent): void => {
+  setSelectionOn(input, (node, value) => node.setSelectionRange(value.length, value.length));
 }
 
-// DUPE
 const setSelectionToEnd = (input: AlloyComponent, startOffset: number): void => {
-  // Only do for valid input types.
-  const el = input.element();
-  const value = Value.get(el);
-  const node = el.dom() as HTMLInputElement;
-  if (Attr.get(el, 'type') !== 'number') {
-    node.setSelectionRange(startOffset, value.length);
-  }
+  setSelectionOn(input, (node, value) => node.setSelectionRange(startOffset, value.length));
 }
 
 const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Option<() => void> => {

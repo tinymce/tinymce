@@ -120,7 +120,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;
-                    console.log('highlightBy', itemData);
                     return itemData.value === pv.value;
                   });
 
