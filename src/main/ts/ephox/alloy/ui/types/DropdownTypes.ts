@@ -1,4 +1,5 @@
 import { Future, Option, Result } from '@ephox/katamari';
+// TODO: Fix this.
 import { TieredData } from '../../api/Main';
 import { TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 

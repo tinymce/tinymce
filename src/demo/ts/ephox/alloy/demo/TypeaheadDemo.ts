@@ -61,7 +61,11 @@ export default (): void => {
     return Result.value(sink);
   };
 
-  const sketchTypeahead = (model: { selectsOver: boolean, getDisplayText: (data: TypeaheadData) => string }) => {
+  const sketchTypeahead = (model: {
+    selectsOver: boolean,
+    getDisplayText: (data: TypeaheadData) => string,
+    populateFromBrowse: boolean
+  }) => {
     return Typeahead.sketch({
       minChars: 1,
       lazySink,
@@ -142,12 +146,20 @@ export default (): void => {
       components: [
          sketchTypeahead({
            selectsOver: true,
-           getDisplayText: (itemData) => itemData.text
+           getDisplayText: (itemData) => itemData.text,
+           populateFromBrowse: true,
          }),
 
         sketchTypeahead({
           selectsOver: false,
-          getDisplayText: (itemData) => itemData.value
+          getDisplayText: (itemData) => itemData.value,
+          populateFromBrowse: true,
+        }),
+
+        sketchTypeahead({
+          selectsOver: false,
+          getDisplayText: (itemData) => itemData.value,
+          populateFromBrowse: false,
         })
       ]
     })

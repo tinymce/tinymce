@@ -1,6 +1,6 @@
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import { Value, Focus } from '@ephox/sugar';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -18,12 +18,13 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
+// TODO: Fix this.
 import { SugarEvent, TieredData } from '../../api/Main';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
-import { setCursorAtEnd } from '../../ui/typeahead/TypeaheadModel';
+import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 
@@ -159,8 +160,23 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       },
       onEnter (comp, simulatedEvent) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
-        if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
+        if (Sandboxing.isOpen(sandbox)) {
+
+          // If we have a current selection in the menu, and we aren't
+          // previewing, copy the item data into the input
+          Composing.getCurrent(sandbox).each((menu) => {
+            Highlighting.getHighlighted(menu).each((item) => {
+              if (detail.previewing().get() === false) {
+                setValueFromItem(detail.model(), comp, item);
+              }
+            });
+          });
+          Sandboxing.close(sandbox);
+        }
         const currentValue = Representing.getValue(comp) as TypeaheadData;
+
+
+
         detail.onExecute()(sandbox, comp, currentValue);
         setCursorAtEnd(comp);
         return Option.some(true);
@@ -211,7 +227,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
         const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-        Sandboxing.close(sandbox);
+        // Only close the sandbox if the focus isn't inside it!
+        if (Focus.search(sandbox.element()).isNone()) {
+          Sandboxing.close(sandbox);
+        }
       })
     ] : [ ]))
   };

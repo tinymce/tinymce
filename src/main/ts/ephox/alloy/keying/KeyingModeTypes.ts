@@ -3,6 +3,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
 import { FocusManager } from '../api/focus/FocusManagers';
+// TODO: Fix this.
 import { BehaviourState } from '../api/Main';
 import { Stateless } from '../behaviour/common/BehaviourState';
 

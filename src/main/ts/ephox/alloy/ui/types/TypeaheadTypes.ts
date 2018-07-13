@@ -14,6 +14,7 @@ import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 export interface TypeaheadModelDetail {
   getDisplayText: () => (item: TypeaheadData) => string;
   selectsOver: () => boolean;
+  populateFromBrowse: () => boolean;
 }
 
 
@@ -63,6 +64,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   model?: {
     getDisplayText?: (itemData: TypeaheadData) => string;
     selectsOver?: boolean;
+    populateFromBrowser?: boolean;
   },
 
   parts: {
