@@ -12,7 +12,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-UnitTest.asynctest('TypeaheadSpecTest', (success, failure) => {
+UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 
