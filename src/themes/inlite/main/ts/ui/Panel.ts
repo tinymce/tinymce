@@ -95,7 +95,7 @@ export const create = (): InlitePanel => {
       panel.classes.toggle('arrow-left', true);
       panel.classes.toggle('arrow-right', false);
     } else if (relPos === 'cl') {
-      panel.classes.toggle('arrow-left', true);
+      panel.classes.toggle('arrow-left', false);
       panel.classes.toggle('arrow-right', true);
     } else {
       Tools.each({
