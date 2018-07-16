@@ -1,9 +1,11 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Options, Cell, Merger, Unique } from '@ephox/katamari';
 
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
 import { console, window } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
+import { init } from 'ephox/alloy/dragging/common/DragState';
 
 const unknown = 'unknown';
 
@@ -18,7 +20,68 @@ const debugging: any = true;
 
 const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-const eventsMonitored: any = [ ];
+enum EventConfiguration {
+  STOP,
+  NORMAL,
+  LOGGING
+};
+
+const eventConfig = Cell<Record<string, EventConfiguration>>({ });
+
+export type EventProcessor = (logger: any) => boolean;
+
+const makeEventLogger = (eventName: string, initialTarget: Element) => {
+  const sequence = [ ];
+
+  return {
+    logEventCut (name, target, purpose) {
+      sequence.push({ outcome: 'cut', target, purpose });
+    },
+    logEventStopped (name, target, purpose) {
+      sequence.push({ outcome: 'stopped', target, purpose });
+    },
+    logNoParent (name, target, purpose) {
+      sequence.push({ outcome: 'no-parent', target, purpose });
+    },
+    logEventNoHandlers (name, target) {
+      sequence.push({ outcome: 'no-handlers-left', target });
+    },
+    logEventResponse (name, target, purpose) {
+      sequence.push({ outcome: 'response', purpose, target });
+    },
+    write () {
+      if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
+      console.log(eventName, {
+        event: eventName,
+        target: initialTarget.dom(),
+        sequence: Arr.map(sequence, (s) => {
+          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+        })
+      });
+    }
+  };
+};
+
+const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
+  const status = Objects.readOptFrom(eventConfig.get(), eventName).getOr(
+    EventConfiguration.NORMAL
+  );
+
+  switch (status) {
+    case EventConfiguration.NORMAL:
+      return f(noLogger());
+    case EventConfiguration.LOGGING: {
+      console.log('Starting to do logging on ', eventName);
+      const logger = makeEventLogger(eventName, initialTarget);
+      const output = f(logger);
+      logger.write();
+      return output;
+    }
+    case EventConfiguration.STOP:
+      // Does not even run the function to trigger event and listen to handlers
+      return true;
+  }
+}
 
 // Ignore these files in the error stack
 const path = [
@@ -52,42 +115,8 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = (eventName, initialTarget, f) => {
-  const logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (() => {
-    const sequence = [ ];
-
-    return {
-      logEventCut (name, target, purpose) {
-        sequence.push({ outcome: 'cut', target, purpose });
-      },
-      logEventStopped (name, target, purpose) {
-        sequence.push({ outcome: 'stopped', target, purpose });
-      },
-      logNoParent (name, target, purpose) {
-        sequence.push({ outcome: 'no-parent', target, purpose });
-      },
-      logEventNoHandlers (name, target) {
-        sequence.push({ outcome: 'no-handlers-left', target });
-      },
-      logEventResponse (name, target, purpose) {
-        sequence.push({ outcome: 'response', purpose, target });
-      },
-      write () {
-        if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
-        console.log(eventName, {
-          event: eventName,
-          target: initialTarget.dom(),
-          sequence: Arr.map(sequence, (s) => {
-            if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
-          })
-        });
-      }
-    };
-  })() : ignoreEvent;
-
-  const output = f(logger);
-  logger.write();
-  return output;
+const monitorEvent = (eventName, initialTarget, f): boolean => {
+  return processEvent(eventName, initialTarget, f);
 };
 
 const inspectorInfo = (comp) => {
@@ -120,7 +149,16 @@ const getOrInitConnection = () => {
   // The format of the global is going to be:
   // lookup(uid) -> Option { name => data }
   // systems: Set AlloyRoots
-  if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) { return window[CHROME_INSPECTOR_GLOBAL]; } else {
+  if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) {
+    return window[CHROME_INSPECTOR_GLOBAL];
+  } else {
+    const setEventStatus = (eventName: string, status: EventConfiguration) => {
+      const evs = eventConfig.get();
+      evs[eventName] = status;
+      eventConfig.set(evs);
+      console.log('now', evs);
+    };
+
     window[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
       lookup (uid) {
@@ -132,6 +170,18 @@ const getOrInitConnection = () => {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
           });
         });
+      },
+
+      events: {
+        setToNormal: (eventName: string) => {
+          setEventStatus(eventName, EventConfiguration.NORMAL);
+        },
+        setToLogging: (eventName: string) => {
+          setEventStatus(eventName, EventConfiguration.LOGGING);
+        },
+        setToStop: (eventName: string) => {
+          setEventStatus(eventName, EventConfiguration.STOP);
+        }
       }
     };
     return window[CHROME_INSPECTOR_GLOBAL];
