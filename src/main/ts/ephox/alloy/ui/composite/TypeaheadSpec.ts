@@ -27,6 +27,7 @@ import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
+import { NormalItemSpec } from '../../ui/types/ItemTypes';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   console.log('Making a typeahead');
@@ -74,7 +75,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     const menus = Obj.values(tdata.menus);
     const items = Arr.bind(menus, (menu) => {
       return Arr.filter(menu.items, (item) => item.type === 'item');
-    });
+    }) as Array<NormalItemSpec>;
 
     const repState = Representing.getState(comp) as DatasetRepresentingState;
     repState.update(
