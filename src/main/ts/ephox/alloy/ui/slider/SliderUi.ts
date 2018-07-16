@@ -115,7 +115,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
         AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
-        AlloyEvents.runOnInit((slider, simulatedEvent) => {
+        AlloyEvents.runOnAttached((slider, simulatedEvent) => {
           // Set the initial value
           const getInitial = modelDetail.getInitialValue();
           modelDetail.value().set(getInitial());
