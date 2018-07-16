@@ -5,6 +5,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import { MutationObserver, document } from '@ephox/dom-globals';
+import * as Channels from 'ephox/alloy/api/messages/Channels';
 
 const register = Thunk.cached((gui) => {
   Debugging.registerInspector('htmldisplay', gui);
@@ -81,7 +82,7 @@ const section = (gui, instructions, spec) => {
 
   const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
-      gui.broadcastOn([ 'dismiss.popups' ], {
+      gui.broadcastOn([ Channels.dismissPopups() ], {
         target: evt.target()
       });
     }

@@ -58,7 +58,7 @@ export interface NormalItemSpec {
 }
 
 export interface NormalItemDetail extends ItemDetail {
-  data: () => RawDomSchema;
+  data: () => ItemDataTuple;
   components: () => AlloySpec[];
   dom: () => RawDomSchema;
   // INVESTIGATE: () => this might not be right

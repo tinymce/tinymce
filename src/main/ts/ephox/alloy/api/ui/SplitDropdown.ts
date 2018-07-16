@@ -30,7 +30,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
   const action = (component) => {
     const anchor: AnchorSpec = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
 
   const executeOnButton = (comp) => {

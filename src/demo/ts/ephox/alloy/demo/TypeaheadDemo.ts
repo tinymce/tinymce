@@ -1,4 +1,4 @@
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -10,6 +10,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
+import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 export default (): void => {
   const gui = Gui.create();
@@ -21,7 +23,7 @@ export default (): void => {
 
   gui.add(sink);
 
-  const dataset = [
+  const dataset = Arr.map([
     'ant',
     'bison',
     'cat',
@@ -48,20 +50,25 @@ export default (): void => {
     'x',
     'yak',
     'zebra'
-  ];
+  ], (s) => {
+    return {
+      value: s,
+      text: Strings.capitalize(s)
+    }
+  });
 
   const lazySink = () => {
     return Result.value(sink);
   };
 
-  HtmlDisplay.section(gui,
-    'An example of a typeahead component',
-    Typeahead.sketch({
+  const sketchTypeahead = (model: {
+    selectsOver: boolean,
+    getDisplayText: (data: TypeaheadData) => string,
+    populateFromBrowse: boolean
+  }) => {
+    return Typeahead.sketch({
       minChars: 1,
       lazySink,
-      dom: {
-        tag: 'input'
-      },
 
       parts: {
         menu: {
@@ -76,15 +83,37 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
+      data: 'bison',
+
+      model,
+
+      dataset: [{
+        value: 'bison',
+        text: 'Bison'
+      }],
+
       fetch (input) {
         const text = Value.get(input.element());
         console.log('text', text);
         const matching = Arr.bind(dataset, (d) => {
-          const index = d.indexOf(text.toLowerCase());
+          const lText = d.text.toLowerCase();
+          const index = lText.indexOf(text.toLowerCase());
           if (index > -1) {
-            const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
-              d.substring(index + text.length);
-            return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
+
+            const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + text.length) + '</strong>' +
+              d.text.substring(index + text.length);
+            return [
+              {
+                'type': 'item',
+                'data': {
+                  value: d.value,
+                  text: d.text,
+                  html,
+                  'bonus-demo-content': 'caterpillar'
+                },
+                'item-class': 'class-' + d
+              }
+            ];
           } else {
             return [ ];
           }
@@ -105,9 +134,34 @@ export default (): void => {
       },
       onExecute (sandbox, item, itemValue) {
         const value = Representing.getValue(item);
-        console.log('*** typeahead menu demo execute on: ' + value + ' ***');
+        console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);
       }
+    })
+  }
+
+  HtmlDisplay.section(gui,
+    'An example of a typeahead component',
+    Container.sketch({
+      components: [
+         sketchTypeahead({
+           selectsOver: true,
+           getDisplayText: (itemData) => itemData.text,
+           populateFromBrowse: true,
+         }),
+
+        sketchTypeahead({
+          selectsOver: false,
+          getDisplayText: (itemData) => itemData.value,
+          populateFromBrowse: true,
+        }),
+
+        sketchTypeahead({
+          selectsOver: false,
+          getDisplayText: (itemData) => itemData.value,
+          populateFromBrowse: false,
+        })
+      ]
     })
   );
 };
