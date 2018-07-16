@@ -10,9 +10,11 @@ export interface FocusingBehaviour extends Behaviour.AlloyBehaviour<FocusingConf
 export interface FocusingConfigSpec extends Behaviour.BehaviourConfigSpec {
   onFocus?: (comp: AlloyComponent) => void;
   ignore?: boolean;
+  stopMousedown?: boolean;
 }
 
 export interface FocusingConfig extends Behaviour.BehaviourConfigDetail {
   ignore: () => boolean;
+  stopMousedown: () => boolean;
   onFocus: () => (comp: AlloyComponent) => void;
 }

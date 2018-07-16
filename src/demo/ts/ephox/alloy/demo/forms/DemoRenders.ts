@@ -11,7 +11,9 @@ import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/type
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strict('text')
+    FieldSchema.strict('text'),
+    FieldSchema.defaulted('html', ''),
+    FieldSchema.defaulted('bonus-demo-content', { })
   ]),
   FieldSchema.strict('type')
 ]);
@@ -74,7 +76,7 @@ const item = (itemSpec): ItemSpec => {
   return {
     type: spec.type,
     data: spec.data,
-    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + spec.data.text + '</div>'),
+    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + (spec.data.html !== undefined ? spec.data.html : spec.data.text) + '</div>'),
     components: [ ]
   };
 };

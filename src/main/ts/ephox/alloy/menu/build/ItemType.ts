@@ -12,7 +12,8 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
-import { AlloySpec } from '../../api/Main';
+// TODO: Fix this.
+import { AlloySpec, AddEventsBehaviour } from '../../api/Main';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
@@ -38,6 +39,11 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
         }),
         Focusing.config({
           ignore: detail.ignoreFocus(),
+          // Rationale: because nothing is focusable, when you click
+          // on the items to choose them, the focus jumps to the first
+          // focusable outer container ... often the body. If we prevent
+          // mouseDown ... that doesn't happen. But only tested on Chrome/FF.
+          stopMousedown: detail.ignoreFocus(),
           onFocus (component) {
             ItemEvents.onFocus(component);
           }
@@ -50,21 +56,24 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
             mode: 'memory',
             initialValue: detail.data()
           }
-        })
+        }),
+
+        AddEventsBehaviour.config('item-type-events', [
+          // Trigger execute when clicked
+          AlloyEvents.run(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
+
+          // Like button, stop mousedown propagating up the DOM tree.
+          AlloyEvents.cutter(NativeEvents.mousedown()),
+
+          AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
+
+          AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
+        ])
       ]),
-      detail.itemBehaviours()
+      detail.itemBehaviours(),
+
+
     ),
-    events: AlloyEvents.derive([
-      // Trigger execute when clicked
-      AlloyEvents.runWithTarget(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
-
-      // Like button, stop mousedown propagating up the DOM tree.
-      AlloyEvents.cutter(NativeEvents.mousedown()),
-
-      AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
-
-      AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
-    ]),
     components: detail.components(),
 
     domModification: detail.domModification(),
