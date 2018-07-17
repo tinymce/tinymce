@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
@@ -17,8 +17,10 @@ import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
-UnitTest.asynctest('TypeaheadTest', (success, failure) => {
+UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
@@ -36,13 +38,7 @@ UnitTest.asynctest('TypeaheadTest', (success, failure) => {
               openClass: 'test-typeahead-open'
             },
 
-            dom: {
-              tag: 'input'
-            },
-            data: {
-              value: 'initial-value',
-              text: 'initial-value'
-            },
+            data: 'initial-value',
 
             fetch (input) {
               const text = Value.get(input.element());
@@ -118,6 +114,16 @@ UnitTest.asynctest('TypeaheadTest', (success, failure) => {
         item('peo1'),
         item('peo2')
       ]),
+
+      Step.sync(() => {
+        // Check that the representing state has keys of peo1, peo2 etc.
+        const repState = Representing.getState(typeahead) as DatasetRepresentingState;
+        const peo1Data = repState.lookup('peo1').getOrDie('Should have dataset data for peo1 now');
+        Assertions.sAssertEq('Checking peo1Data', { value: 'peo1', text: 'Peo1' }, peo1Data);
+
+        const peo2Data = repState.lookup('peo2').getOrDie('Should have dataset data for peo2 now');
+        Assertions.sAssertEq('Checking peo2Data', { value: 'peo2', text: 'Peo2' }, peo2Data);
+      }),
 
       Keyboard.sKeydown(doc, Keys.enter(), { }),
       steps.sAssertValue('Value after <enter>', 'peo2'),

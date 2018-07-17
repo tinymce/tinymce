@@ -1,46 +1,52 @@
-import { FieldSchema, Objects, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 
+import { DatasetStoreConfig } from '../../behaviour/representing/RepresentingTypes';
 import * as Fields from '../../data/Fields';
-import * as RepresentState from './RepresentState';
+import { dataset as datasetState, DatasetRepresentingState } from './RepresentState';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const setValue = (component, repConfig, repState, data) => {
-  // TODO FIX: Rewrite this mode. I don't think it makes any sense.
-  const dataKey = repConfig.store().getDataKey();
-  repState.set({ });
-  repConfig.store().setData()(component, data);
+const setValue = (component: AlloyComponent, repConfig, repState: DatasetRepresentingState, data) => {
+  const store = repConfig.store() as DatasetStoreConfig<any>;
+  const allData = repState.lookup(data).fold(() => {
+    return store.getFallbackEntry()(data);
+  }, (d) => d);
+  store.setValue()(component, allData);
   repConfig.onSetValue()(component, data);
 };
 
-const getValue = (component, repConfig, repState) => {
-  const key = repConfig.store().getDataKey()(component);
-  const dataset = repState.get();
-  return Objects.readOptFrom(dataset, key).fold(() => {
-    return repConfig.store().getFallbackEntry()(key);
+const getValue = (component: AlloyComponent, repConfig, repState: DatasetRepresentingState) => {
+  const store = repConfig.store() as DatasetStoreConfig<any>;
+  const key = store.getDataKey()(component);
+  return repState.lookup(key).fold(() => {
+    return store.getFallbackEntry()(key);
   }, (data) => {
     return data;
   });
 };
 
-const onLoad = (component, repConfig, repState) => {
-  repConfig.store().initialValue().each((data) => {
+const onLoad = (component: AlloyComponent, repConfig, repState: DatasetRepresentingState) => {
+  const store = repConfig.store() as DatasetStoreConfig<any>;
+  repState.update(store.initialDataset());
+  store.initialValue().each((data) => {
     setValue(component, repConfig, repState, data);
   });
 };
 
-const onUnload = (component, repConfig, repState) => {
-  repState.set({ });
+const onUnload = (component: AlloyComponent, repConfig, repState: DatasetRepresentingState) => {
+  repState.clear();
 };
 
 export default [
   FieldSchema.option('initialValue'),
   FieldSchema.strict('getFallbackEntry'),
   FieldSchema.strict('getDataKey'),
-  FieldSchema.strict('setData'),
+  FieldSchema.strict('setValue'),
+  FieldSchema.defaulted('initialDataset', [ ]),
   Fields.output('manager', {
     setValue,
     getValue,
     onLoad,
     onUnload,
-    state: RepresentState.dataset
+    state: datasetState
   })
 ];

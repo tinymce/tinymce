@@ -1,18 +1,19 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import * as FocusApis from './FocusApis';
-import * as DomModification from '../../dom/DomModification';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import { FocusingConfig } from '../../behaviour/focusing/FocusingTypes';
-import { EventFormat } from '../../events/SimulatedEvent';
+import * as DomModification from '../../dom/DomModification';
+import * as FocusApis from './FocusApis';
 
 // TODO: DomModification types
 const exhibit = (base: { }, focusConfig: FocusingConfig): any => {
-  if (focusConfig.ignore()) { return DomModification.nu({ }); } else { return DomModification.nu({
+  const mod = focusConfig.ignore() ? { } : {
     attributes: {
       tabindex: '-1'
     }
-  });
-  }
+  };
+
+  return DomModification.nu(mod);
 };
 
 const events = (focusConfig: FocusingConfig): AlloyEvents.AlloyEventRecord => {
@@ -21,7 +22,15 @@ const events = (focusConfig: FocusingConfig): AlloyEvents.AlloyEventRecord => {
       FocusApis.focus(component, focusConfig);
       simulatedEvent.stop();
     })
-  ]);
+  ].concat(focusConfig.stopMousedown() ? [
+    AlloyEvents.run(NativeEvents.mousedown(), (_, simulatedEvent) => {
+      // This setting is often used in tandem with ignoreFocus. Basically, if you
+      // don't prevent default on a menu that has fake focus, then it can transfer
+      // focus to the outer body when they click on it, which can break things
+      // which dismiss on blur (e.g. typeahead)
+      simulatedEvent.event().prevent();
+    })
+  ] : [ ]));
 };
 
 export {

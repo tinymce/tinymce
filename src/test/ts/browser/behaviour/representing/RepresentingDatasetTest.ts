@@ -8,6 +8,9 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { compare } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Results';
+import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -20,18 +23,16 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
           Representing.config({
             store: {
               mode: 'dataset',
-              initialValue: {
-                value: 'dog',
-                text: 'Dog'
-              },
-              setData (component, data) {
-                Value.set(component.element(), data.text);
-              },
+              initialValue: 'dog',
+              initialDataset: [ { value: 'dog', text: 'Dog' } ],
               getDataKey (component) {
                 return Value.get(component.element());
               },
               getFallbackEntry (key) {
                 return { value: key.toLowerCase(), text: key };
+              },
+              setValue: (comp, data) => {
+                Value.set(comp.element(), data.text);
               }
             }
           })
@@ -39,11 +40,18 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    const sAssertValue = (label, expected) => {
+    const sAssertRepValue = (label, expected) => {
       return Step.sync(() => {
         const v = Representing.getValue(component);
         Assertions.assertEq(label, expected, v);
       });
+    };
+
+    const sUpdateDataset = (newItems: TypeaheadData[]) => {
+      return Step.sync(() => {
+        const repState = Representing.getState(component) as DatasetRepresentingState;
+        repState.update(newItems);
+      })
     };
 
     return [
@@ -57,7 +65,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element()
       ),
 
-      sAssertValue('Checking represented value on load', { value: 'dog', text: 'Dog' }),
+      sAssertRepValue('Checking represented value on load', { value: 'dog', text: 'Dog' }),
 
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'Cat'),
@@ -66,21 +74,28 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         AlloyTriggers.emit(component, NativeEvents.input());
       }),
 
-      sAssertValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
+      sAssertRepValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
 
       Step.sync(() => {
-        Representing.setValue(component, {
-          value: 'elephant',
-          text: 'Elephant'
-        });
+        Representing.setValue(component, 'elephant');
       }),
 
-      sAssertValue('Checking represented value after setValue', { value: 'elephant', text: 'Elephant' }),
+      sAssertRepValue('Checking represented value after setValue but before update', { value: 'elephant', text: 'elephant' }),
+
+      sUpdateDataset([
+        { value: 'elephant', text: 'Baby Elephant Walk' }
+      ]),
+
+      Step.sync(() => {
+        Representing.setValue(component, 'elephant');
+      }),
+
+      sAssertRepValue('Checking represented value after setValue but after update', { value: 'elephant', text: 'Baby Elephant Walk' }),
       Assertions.sAssertStructure(
-        'Value should be "Elephant"',
+        'Value should be "Baby Elephant Walk"',
         ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
-            value: str.is('Elephant')
+            value: str.is('Baby Elephant Walk')
           });
         }),
         component.element()

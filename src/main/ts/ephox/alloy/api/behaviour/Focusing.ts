@@ -1,9 +1,8 @@
-import * as Behaviour from './Behaviour';
 import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
-import FocusSchema from '../../behaviour/focusing/FocusSchema';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { FocusingBehaviour } from '../../behaviour/focusing/FocusingTypes';
+import FocusSchema from '../../behaviour/focusing/FocusSchema';
+import * as Behaviour from './Behaviour';
 
 const Focusing = Behaviour.create({
   fields: FocusSchema,

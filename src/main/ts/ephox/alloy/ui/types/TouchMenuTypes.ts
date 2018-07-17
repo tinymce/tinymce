@@ -1,5 +1,5 @@
 import { Future, Option, Result } from '@ephox/katamari';
-import { ItemSpec } from '../../ui/types/ItemTypes';
+import { ItemSpec, ItemDataTuple } from '../../ui/types/ItemTypes';
 import { TabviewSpec } from '../../ui/types/TabviewTypes';
 import { PartialMenuSpec } from '../../ui/types/TieredMenuTypes';
 
@@ -20,8 +20,10 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onHoverOn: () => (comp: AlloyComponent) => void;
   onHoverOff: () => (comp: AlloyComponent) => void;
   toggleClass: () => string;
+  sandboxClasses: () => string[];
 
-  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
+
+  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap: () => (comp: AlloyComponent) => void;
 
   menuTransition: () => Option<{ property: string; transitionClass: string }>;
@@ -45,12 +47,13 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   touchmenuBehaviours?: AlloyBehaviourRecord;
+  sandboxClasses?: string[];
 
   onHoverOn?: (comp: AlloyComponent) => void;
   onHoverOff?: (comp: AlloyComponent) => void;
   toggleClass: string;
 
-  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
+  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap?: (comp: AlloyComponent) => void;
 
   menuTransition?: { property: string, transitionClass: string };

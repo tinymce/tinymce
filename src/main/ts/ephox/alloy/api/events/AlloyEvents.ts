@@ -6,6 +6,8 @@ import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
+import * as TransformFind from '../../alien/TransformFind';
+import { Fun } from '@ephox/katamari';
 
 export type AlloyEventRecord = Record<string, AlloyEventHandler<EventFormat>>;
 
@@ -119,9 +121,23 @@ const redirectToPart = function <T extends EventFormat>(name, detail, partName):
 const runWithTarget = function <T extends EventFormat>(name, f): AlloyEventKeyAndHandler<T> {
   return run(name, (component, simulatedEvent) => {
     const ev: T = simulatedEvent.event();
-    component.getSystem().getByDom(ev.target()).each((target) => {
-      f(component, target, simulatedEvent);
-    });
+
+    const target = component.getSystem().getByDom(ev.target()).fold(
+      // If we don't find an alloy component for the target, I guess we go up the tree
+      // until we find an alloy component? Performance concern?
+      // TODO: Write tests for this.
+      () => {
+        const closest = TransformFind.closest(ev.target(), (el) => {
+          return component.getSystem().getByDom(el).toOption();
+        }, Fun.constant(false));
+
+        // If we still found nothing ... fire on component itself;
+        return closest.getOr(component);
+      },
+      (c) => c
+    );
+
+    f(component, target, simulatedEvent);
   });
 };
 

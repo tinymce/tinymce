@@ -29,6 +29,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
+  FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onKeyboardHandler('onExecute'),
   Fields.onHandler('onTap'),
   Fields.onHandler('onHoverOn'),
