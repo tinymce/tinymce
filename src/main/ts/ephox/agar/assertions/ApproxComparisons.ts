@@ -1,32 +1,30 @@
-import RawAssertions from '../api/RawAssertions';
-import { Arr } from '@ephox/katamari';
-import { Id } from '@ephox/katamari';
+import { Arr, Fun, Id, Strings } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Fun } from '@ephox/katamari';
-import { Strings } from '@ephox/katamari';
 
-var missing: string = Id.generate('missing');
+import { assertEq } from '../api/RawAssertions';
 
-var dieWith = function (message) {
+const missingValuePlaceholder: string = Id.generate('missing');
+
+const dieWith = function (message: string) {
   return Fun.die(message);
 };
 
-var assertOnBool = function (c, label, value) {
-  var strValue = value === missing ? '{missing}' : value;
-  RawAssertions.assertEq(
+const assertOnBool = function (c: boolean, label: string, value: any) {
+  const strValue = value === missingValuePlaceholder ? '{missing}' : value;
+  assertEq(
     label + ', Actual value: ' + Json.stringify(strValue),
     true,
     c
   );
 };
 
-var is = function (target: string) {
-  var compare = function (actual: string) {
+const is = function (target: string) {
+  const compare = function (actual: string) {
     return target === actual;
   };
 
-  var strAssert = function (label: string, actual: string) {
-    var c = compare(actual);
+  const strAssert = function (label: string, actual: string) {
+    const c = compare(actual);
     assertOnBool(c, label + '\nExpected value: ' + target, actual);
   };
 
@@ -37,14 +35,14 @@ var is = function (target: string) {
   };
 };
 
-var startsWith = function (target: string) {
-  var compare = function (actual: string) {
+const startsWith = function (target: string) {
+  const compare = function (actual: string) {
     return Strings.startsWith(actual, target);
   };
 
-  var strAssert = function (label: string, actual: string) {
-    var c = compare(actual);
-    assertOnBool(c, label + '\nExpected value: ' +  'startsWith(' + target + ')', actual);
+  const strAssert = function (label: string, actual: string) {
+    const c = compare(actual);
+    assertOnBool(c, label + '\nExpected value: ' + 'startsWith(' + target + ')', actual);
   };
 
   return {
@@ -54,14 +52,14 @@ var startsWith = function (target: string) {
   };
 };
 
-var contains = function (target: string) {
-  var compare = function (actual: string) {
+const contains = function (target: string) {
+  const compare = function (actual: string) {
     return Strings.contains(actual, target);
   };
 
-  var strAssert = function (label: string, actual: string) {
-    var c = compare(actual);
-    assertOnBool(c, label + '\nExpected value: ' +  'contains(' + target + ')', actual);
+  const strAssert = function (label: string, actual: string) {
+    const c = compare(actual);
+    assertOnBool(c, label + '\nExpected value: ' + 'contains(' + target + ')', actual);
   };
 
   return {
@@ -71,13 +69,13 @@ var contains = function (target: string) {
   };
 };
 
-var none = function (message: string) {
-  var compare = function (actual: string) {
-    return actual === missing;
+const none = function (message: string) {
+  const compare = function (actual: string) {
+    return actual === missingValuePlaceholder;
   };
 
-  var strAssert = function (label: string, actual) {
-    var c = compare(actual);
+  const strAssert = function (label: string, actual) {
+    const c = compare(actual);
     assertOnBool(c, label + '\nExpected ' + message, actual);
   };
 
@@ -88,13 +86,13 @@ var none = function (message: string) {
   };
 };
 
-var has = function (target) {
-  var compare = function (t) {
+const has = function <T>(target: T) {
+  const compare = function (t: T) {
     return t === target;
   };
 
-  var arrAssert = function (label, array) {
-    var matching = Arr.exists(array, compare);
+  const arrAssert = function (label: string, array: T[]) {
+    const matching = Arr.exists(array, compare);
     assertOnBool(matching, label + 'Expected array to contain: ' + target, array);
   };
 
@@ -105,13 +103,13 @@ var has = function (target) {
   };
 };
 
-var hasPrefix = function (prefix) {
-  var compare = function (t) {
+const hasPrefix = function (prefix: string) {
+  const compare = function (t: string) {
     return Strings.startsWith(t, prefix);
   };
 
-  var arrAssert = function (label, array) {
-    var matching = Arr.exists(array, compare);
+  const arrAssert = function (label: string, array: string[]) {
+    const matching = Arr.exists(array, compare);
     assertOnBool(matching, label + 'Expected array to contain something with prefix: ' + prefix, array);
   };
 
@@ -122,14 +120,14 @@ var hasPrefix = function (prefix) {
   };
 };
 
-var not = function (target) {
-  var compare = function (actual) {
+const not = function <T>(target: T) {
+  const compare = function (actual: T) {
     return target !== actual;
   };
 
-  var arrAssert = function (label, array) {
+  const arrAssert = function (label: string, array: T[]) {
     // For not, all have to pass the comparison
-    var matching = Arr.forall(array, compare);
+    const matching = Arr.forall(array, compare);
     assertOnBool(matching, label + 'Expected array to not contain: ' + target, array);
   };
 
@@ -140,7 +138,9 @@ var not = function (target) {
   };
 };
 
-export default {
+const missing = Fun.constant(missingValuePlaceholder);
+
+export {
   is,
   startsWith,
   contains,
@@ -150,5 +150,5 @@ export default {
   hasPrefix,
   not,
 
-  missing: Fun.constant(missing)
+  missing
 };

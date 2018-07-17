@@ -1,41 +1,40 @@
-import Chain from 'ephox/agar/api/Chain';
-import GeneralSteps from 'ephox/agar/api/GeneralSteps';
-import Logger from 'ephox/agar/api/Logger';
-import NamedChain from 'ephox/agar/api/NamedChain';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import RawAssertions from 'ephox/agar/api/RawAssertions';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
-import { Merger } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
 import { UnitTest } from '@ephox/bedrock';
+import { Merger, Result } from '@ephox/katamari';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
+import * as Logger from 'ephox/agar/api/Logger';
+import { NamedChain } from 'ephox/agar/api/NamedChain';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as RawAssertions from 'ephox/agar/api/RawAssertions';
+import StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('NamedChainTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cIsEqual = function (expected) {
+  const cIsEqual = function (expected) {
     return Chain.on(function (actual, next, die) {
       if (expected === actual) next(Chain.wrap(actual));
       else die('Unexpected input. Expected: ' + expected + ', Actual: ' + actual);
     });
   };
 
-  var addLetters = function (s) {
+  const addLetters = function (s) {
     return Chain.mapper(function (input) {
       return input + s;
     });
   };
 
-  var mult10 = Chain.mapper(function (input) {
+  const mult10 = Chain.mapper(function (input: number) {
     return input * 10;
   });
 
-  var doubleNum = Chain.mapper(function (input) {
+  const doubleNum = Chain.mapper(function (input: number) {
     return input * 2;
   });
 
-  var wrapObj = function (k, v) {
-    var r = { };
+  const wrapObj = function (k, v) {
+    const r = { };
     r[k] = v;
     return r;
   };

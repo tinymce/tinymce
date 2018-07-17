@@ -1,29 +1,31 @@
-import Pipeline from './Pipeline';
-import Step from './Step';
+import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
+import { Pipeline } from './Pipeline';
+import * as Step from './Step';
 
 // This module needs tests
-var sequence = function (steps, delay?) {
-  return Step.stateful(function (value, next, die) {
-    Pipeline.async(value, steps, next, die, delay);
+const sequence = function (steps: RunFn<any, any>[], delay_doNotUse?: number) {
+  return Step.stateful<any, any>(function (value, next, die) {
+    Pipeline.async(value, steps, next, die, delay_doNotUse);
   });
 };
 
-var repeat = function (amount, step) {
-  var steps = [];
-  for (var i = 0; i < amount; i++) {
+const repeat = function <T>(amount: number, step: RunFn<T, T>): RunFn<T, T>[] {
+  const steps: RunFn<T, T>[] = [];
+  for (let i = 0; i < amount; i++) {
     steps.push(step);
   }
   return steps;
 };
 
-var sequenceRepeat = function (amount, step) {
-  var steps = repeat(amount, step);
+const sequenceRepeat = function <T>(amount: number, step: RunFn<T, T>): RunFn<T, T> {
+  const steps = repeat(amount, step);
   return sequence(steps);
 };
 
-var repeatUntil = function (label, repeatStep, successStep, numAttempts) {
-  return Step.stateful(function (value, next, die) {
-    var again = function (num) {
+// TODO deprecate? This function is weird and we don't seem to use it.
+const repeatUntil = function <T, U>(label: string, repeatStep: RunFn<T, T>, successStep: RunFn<T, U>, numAttempts: number) {
+  return Step.stateful(function (value: T, next: NextFn<U>, die: DieFn) {
+    const again = function (num: number) {
       if (num <= 0) {
         die(label + '\nRan out of attempts');
       } else {
@@ -39,15 +41,15 @@ var repeatUntil = function (label, repeatStep, successStep, numAttempts) {
   });
 };
 
-var waitForPredicate = function (label, interval, amount, predicate) {
-  return Step.async(function (next, die) {
+const waitForPredicate = function <T>(label: string, interval: number, amount: number, predicate: () => boolean) {
+  return Step.async<T>(function (next, die) {
     if (predicate()) {
       // Must use a setTimeout here otherwise FontSizeTest gets 'too much recursion' on Firefox
       setTimeout(function () { next(); });
       return;
     }
-    var counter = 0;
-    var timer = setInterval(function () {
+    let counter = 0;
+    const timer = setInterval(function () {
       counter += interval;
       try {
         if (predicate()) {
@@ -70,10 +72,10 @@ var waitForPredicate = function (label, interval, amount, predicate) {
   });
 };
 
-export default {
-  sequence: sequence,
-  repeatUntil: repeatUntil,
-  waitForPredicate: waitForPredicate,
-  repeat: repeat,
-  sequenceRepeat: sequenceRepeat
+export {
+  sequence,
+  repeatUntil,
+  waitForPredicate,
+  repeat,
+  sequenceRepeat
 };

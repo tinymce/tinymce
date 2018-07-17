@@ -1,58 +1,51 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Classes } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import ApproxComparisons from '../assertions/ApproxComparisons';
-import ApproxStructures from '../assertions/ApproxStructures';
+import { Arr, Obj } from '@ephox/katamari';
+import { Attr, Classes, Css, Element, Node, Traverse } from '@ephox/sugar';
 
-var build = function (f) {
-  var strApi = {
-    is: ApproxComparisons.is,
-    startsWith: ApproxComparisons.startsWith,
-    contains: ApproxComparisons.contains,
-    none: ApproxComparisons.none
-  };
+import * as ApproxComparisons from '../assertions/ApproxComparisons';
+import * as ApproxStructures from '../assertions/ApproxStructures';
 
-  var arrApi = {
-    not: ApproxComparisons.not,
-    has: ApproxComparisons.has,
-    hasPrefix: ApproxComparisons.hasPrefix
-  };
-
-  return f(
-    {
-      element: ApproxStructures.element,
-      text: ApproxStructures.text,
-      anything: ApproxStructures.anything
-    },
-    strApi,
-    arrApi
-  );
+const structApi = {
+  element: ApproxStructures.element,
+  text: ApproxStructures.text,
+  anything: ApproxStructures.anything
 };
 
-var getAttrsExcept = function (node, exclude) {
+const strApi = {
+  is: ApproxComparisons.is,
+  startsWith: ApproxComparisons.startsWith,
+  contains: ApproxComparisons.contains,
+  none: ApproxComparisons.none
+};
+
+const arrApi = {
+  not: ApproxComparisons.not,
+  has: ApproxComparisons.has,
+  hasPrefix: ApproxComparisons.hasPrefix
+};
+
+const build = function <T>(f: (struct: typeof structApi, str: typeof strApi, arr: typeof arrApi) => T): T {
+  return f(structApi, strApi, arrApi);
+};
+
+const getAttrsExcept = function (node: Element, exclude: string[]) {
   return Obj.bifilter(Attr.clone(node), function (value, key) {
     return !Arr.contains(exclude, key);
   }).t;
 };
 
-var toAssertableObj = function (obj) {
+const toAssertableObj = function (obj: Record<string, any>) {
   return Obj.map(obj, function (value) {
     return ApproxComparisons.is(value);
   });
 };
 
-var toAssertableArr = function (arr) {
+const toAssertableArr = function (arr: string[]) {
   return Arr.map(arr, function (value) {
     return ApproxComparisons.has(value);
   });
 };
 
-var fromElement = function (node) {
+const fromElement = function (node: Element): ApproxStructures.StructAssert {
   if (Node.isElement(node)) {
     return ApproxStructures.element(Node.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),
@@ -65,12 +58,12 @@ var fromElement = function (node) {
   }
 };
 
-var fromHtml = function (html) {
+const fromHtml = function (html: string) {
   return fromElement(Element.fromHtml(html));
 };
 
-export default {
-  build: build,
-  fromHtml: fromHtml,
-  fromElement: fromElement
+export {
+  build,
+  fromHtml,
+  fromElement
 };

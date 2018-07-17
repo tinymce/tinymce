@@ -1,29 +1,27 @@
-import Chain from './Chain';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Result } from '@ephox/katamari';
 
-var inputName = Id.generate('input-name');
+import { DieFn, NextFn } from '../pipe/Pipe';
+import { Chain, Wrap } from './Chain';
 
-var asChain = function (chains) {
+const inputNameId = Id.generate('input-name');
+
+const asChain = function <T>(chains: Chain<any, any>[]): Chain<T, any> {
   return Chain.fromChains([
-    Chain.mapper(function (input) {
-      return wrapSingle(inputName, input);
+    Chain.mapper(function (input: T) {
+      return wrapSingle(inputNameId, input);
     })
   ].concat(chains));
 };
 
 // Write merges in its output into input because it knows that it was
 // given a complete input.
-var write = function (name, chain) {
-  return Chain.on(function (input, next, die) {
-    chain.runChain(Chain.wrap(input), function (output) {
-      var self = wrapSingle(name, Chain.unwrap(output));
+const write = function <K extends string, T, U>(name: K, chain: Chain<T, U>) {
+  return Chain.on(function (input: T, next: NextFn<Wrap<T & { [key in K]: U; }>>, die: DieFn) {
+    chain.runChain(Chain.wrap(input), function (output: Wrap<U>) {
+      const self = wrapSingle(name, Chain.unwrap(output));
       return next(
         Chain.wrap(
-          Merger.deepMerge(input, self)
+          Merger.deepMerge(input, self) as T & { [key in K]: U; }
         )
       );
     }, die);
@@ -32,61 +30,61 @@ var write = function (name, chain) {
 
 // Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
-var partialWrite = function (name, chain) {
-  return Chain.on(function (input, next, die) {
-    chain.runChain(Chain.wrap(input), function (output) {
-      var self = wrapSingle(name, Chain.unwrap(output));
+const partialWrite = function <K extends string, T, U>(name: K, chain: Chain<T, U>) {
+  return Chain.on(function (input: T, next: NextFn<Wrap<{ [key in K]: U; }>>, die: DieFn) {
+    chain.runChain(Chain.wrap(input), function (output: Wrap<U>) {
+      const self = wrapSingle(name, Chain.unwrap(output));
       return next(Chain.wrap(self));
     }, die);
   });
 };
 
-var wrapSingle = function (name, value) {
-  var r = {};
-  r[name] = value;
-  return r;
+const wrapSingle = function <K extends string, T>(name: K, value: T): { [key in K]: T } {
+  return {
+    [name]: value
+  } as { [key in K]: T };
 };
 
-var combine = function (input, name, value) {
+const combine = function <K extends string, T, U>(input: T, name: K, value: U): T & { [name in K]: U } {
   return Merger.deepMerge(input, wrapSingle(name, value));
 };
 
-var process = function (name, chain) {
-  return Chain.on(function (input, next, die) {
-    var part = Chain.wrap(input[name]);
+const process = function <T, U>(name: keyof T, chain: Chain<T[keyof T], U>) {
+  return Chain.on(function (input: T, next: NextFn<Wrap<T & U>>, die) {
+    const part = Chain.wrap(input[name]);
     chain.runChain(part, function (other) {
-      var merged = Merger.deepMerge(input, Chain.unwrap(other));
+      const merged: T & U = Merger.deepMerge(input, Chain.unwrap(other));
       next(Chain.wrap(merged));
     }, die);
   });
 };
 
-var direct = function (inputName, chain, outputName) {
+const direct = function <T, U>(inputName: keyof T, chain: Chain<T[keyof T], U>, outputName: string) {
   return process(inputName, partialWrite(outputName, chain));
 };
 
-var overwrite = function (inputName, chain) {
+const overwrite = function <T, U>(inputName: keyof T & string, chain: Chain<T[keyof T], U>) {
   return direct(inputName, chain, inputName);
 };
 
-var writeValue = function (name, value) {
-  return Chain.mapper(function (input) {
-    var wv = combine(input, name, value);
+const writeValue = function <K extends string, U, T = {}>(name: K, value: U) {
+  return Chain.mapper(function (input: T) {
+    const wv = combine(input, name, value);
     return wv;
   });
 };
 
-var read = function (name, chain) {
-  return Chain.on(function (input, next, die) {
+const read = function <T>(name: keyof T, chain: Chain<T[keyof T], any>) {
+  return Chain.on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn) {
     chain.runChain(Chain.wrap(input[name]), function () {
       return next(Chain.wrap(input));
     }, die);
   });
 };
 
-var merge = function (names, combinedName) {
-  return Chain.mapper(function (input) {
-    var r = {};
+const merge = function <T>(names: (keyof T & string)[], combinedName: string) {
+  return Chain.mapper(function (input: T) {
+    const r: Record<string, T[keyof T]> = {};
     Arr.each(names, function (name) {
       r[name] = input[name];
     });
@@ -94,34 +92,36 @@ var merge = function (names, combinedName) {
   });
 };
 
-var bundle = function (f) {
+const bundle = function <T, U, E>(f: (input: T) => Result<U, E>) {
   return Chain.binder(f);
 };
 
-var output = function (name) {
-  return bundle(function (input) {
+const output = function <T>(name: keyof T) {
+  return bundle(function (input: T): Result<T[keyof T], string> {
     return input.hasOwnProperty(name) ? Result.value(input[name]) : Result.error(name + ' is not a field in the index object.');
   });
 };
 
-var outputInput = output(inputName);
+const outputInput = output<any>(inputNameId);
 
-var pipeline = function (namedChains, onSuccess, onFailure, delay?) {
-  Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay);
+const pipeline = function (namedChains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, delay_doNotUse?: number) {
+  Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay_doNotUse);
 };
 
-export default {
-  inputName: Fun.constant(inputName),
-  asChain: asChain,
-  write: write,
-  direct: direct,
-  writeValue: writeValue,
-  overwrite: overwrite,
-  read: read,
-  merge: merge,
-  bundle: bundle,
-  output: output,
-  outputInput: outputInput,
+const inputName = () => inputNameId;
 
-  pipeline: pipeline
+export const NamedChain = {
+  inputName,
+  asChain,
+  write,
+  direct,
+  writeValue,
+  overwrite,
+  read,
+  merge,
+  bundle,
+  output,
+  outputInput,
+
+  pipeline
 };

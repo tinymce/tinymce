@@ -1,5 +1,7 @@
-var delay = function (amount) {
-  return function (next, die) {
+import { DieFn } from './Pipe';
+
+const delay = function (amount: number) {
+  return function (next: () => void, die: DieFn) {
     setTimeout(function () {
       next();
     }, amount);
@@ -7,13 +9,13 @@ var delay = function (amount) {
 };
 
 // Not really async, but can fail.
-var fail = function (message) {
-  return function (next, die) {
+const fail = function (message: string) {
+  return function (next: () => void, die: DieFn) {
     die('Fake failure: ' + message);
   };
 };
 
-export default {
-  delay: delay,
-  fail: fail
+export {
+  delay,
+  fail
 };

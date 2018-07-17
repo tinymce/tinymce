@@ -1,17 +1,15 @@
 import { Merger } from '@ephox/katamari';
 
+export const GroupStore = function () {
+  const data: Record<string, any[]> = {};
 
-
-export default function () {
-  var data = {};
-
-  var record = function (prop, elem) {
-    var d = data[prop] !== undefined ? data[prop] : [ ];
+  const record = function (prop: string, elem: any) {
+    let d = data[prop] !== undefined ? data[prop] : [];
     d = d.concat(elem);
     data[prop] = d;
   };
 
-  var get = function () {
+  const get = function (): Record<string, any[]> {
     return Merger.deepMerge({}, data);
   };
 

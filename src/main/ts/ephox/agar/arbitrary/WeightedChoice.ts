@@ -1,43 +1,52 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option, Struct } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-var weighted = Struct.immutable('list', 'total');
+interface WeightedItem {
+  weight: number;
+}
 
-var choose = function (candidates) {
-  var result = Arr.foldl(candidates, function (rest, d) {
-    var newTotal = rest.total + d.weight;
-    var merged = Merger.merge(d, {
+interface AccWeightItem extends WeightedItem {
+  accWeight: number;
+}
+
+interface WeightedList<T> {
+  list: () => (T & AccWeightItem)[];
+  total: () => number;
+}
+
+const weighted: <T> (list: (T & AccWeightItem)[], total: number) => WeightedList<T> = Struct.immutable('list', 'total');
+
+const choose = function <T extends WeightedItem>(candidates: T[]) {
+  const result = Arr.foldl(candidates, function (rest, d) {
+    const newTotal = rest.total + d.weight;
+    const merged: T & AccWeightItem = Merger.merge(d, {
       accWeight: newTotal
     });
     return {
       total: newTotal,
-      list: rest.list.concat([ merged ])
+      list: rest.list.concat([merged])
     };
-  }, { list: [ ], total: 0 });
+  }, { list: <(T & AccWeightItem)[]>[], total: 0 });
 
   return weighted(result.list, result.total);
 };
 
-var gChoose = function (weighted) {
+const gChoose = function <T>(weighted: WeightedList<T>) {
   return Jsc.number(0, weighted.total()).generator.map(function (w) {
-    var raw = Arr.find(weighted.list(), function (d) {
+    const raw = Arr.find(weighted.list(), function (d) {
       return w <= d.accWeight;
     });
 
-    var keys = raw.map(Obj.keys).getOr([ ]) as any[];
-    return keys.length === [ 'weight', 'accWeight' ].length ? Option.none() : raw;
+    const keys = raw.map(Obj.keys).getOr([]) as any[];
+    return keys.length === ['weight', 'accWeight'].length ? Option.none() : raw;
   });
 };
 
-var generator = function (candidates) {
-  var list = choose(candidates);
+const generator = function <T extends WeightedItem>(candidates: T[]) {
+  const list = choose(candidates);
   return gChoose(list);
 };
 
-export default {
+export const WeightedChoice = {
   generator: generator
 };

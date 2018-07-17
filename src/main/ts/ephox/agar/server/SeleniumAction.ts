@@ -1,17 +1,15 @@
-import Step from '../api/Step';
-import { Ajax } from '@ephox/jax';
-import { ContentType } from '@ephox/jax';
-import { Credentials } from '@ephox/jax';
-import { ResponseType } from '@ephox/jax';
+import { Ajax, ContentType, Credentials, ResponseType } from '@ephox/jax';
 
-var sPerform = function (path, info) {
-  return Step.async(function (next, die) {
+import * as Step from '../api/Step';
+
+const sPerform = function <T>(path: string, info: any) {
+  return Step.async<T>(function (next, die) {
     Ajax.post(
       path,
       ContentType.json(info),
       ResponseType.json(),
       Credentials.none(),
-      { }
+      {}
     ).get(function (res) {
       res.fold(die, function () {
         next();
@@ -20,6 +18,6 @@ var sPerform = function (path, info) {
   });
 };
 
-export default {
-  sPerform: sPerform
+export {
+  sPerform
 };

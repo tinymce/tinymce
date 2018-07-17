@@ -1,20 +1,20 @@
-import RawAssertions from './RawAssertions';
-import Truncate from '../alien/Truncate';
-import Chain from './Chain';
-import Logger from './Logger';
-import Step from './Step';
-import UiFinder from './UiFinder';
-import ApproxStructure from './ApproxStructure';
-import Differ from '../assertions/Differ';
 import { Obj } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 
-var assertEq = RawAssertions.assertEq;
+import * as Truncate from '../alien/Truncate';
+import { StructAssert } from '../assertions/ApproxStructures';
+import * as Differ from '../assertions/Differ';
+import { RunFn } from '../pipe/Pipe';
+import * as ApproxStructure from './ApproxStructure';
+import { Chain } from './Chain';
+import * as Logger from './Logger';
+import { assertEq } from './RawAssertions';
+import * as Step from './Step';
+import * as UiFinder from './UiFinder';
 
 // Note, this requires changes to tunic
-var textError = function (label, expected, actual) {
-  var err = new Error(label);
+const textError = function (label: string, expected: string, actual: string) {
+  const err = new Error(label);
   return ({
     diff: {
       expected: expected,
@@ -28,38 +28,36 @@ var textError = function (label, expected, actual) {
   });
 };
 
-var assertHtml = function (label, expected, actual) {
+const assertHtml = function (label: string, expected: string, actual: string) {
   if (expected !== actual) throw textError(label, expected, actual);
 };
 
-var assertHtmlStructure = function (label, expected, actual) {
-  return assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
+const assertHtmlStructure = function (label: string, expected: string, actual: string) {
+  assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
 };
 
-var assertPresence = function (label, expected, container) {
-  Obj.each(expected, function (num, selector) {
-    var actual = UiFinder.findAllIn(container, selector).length;
+const assertPresence = function (label: string, expected: Record<string, number>, container: Element) {
+  Obj.each(expected, function (num: number, selector: string) {
+    const actual = UiFinder.findAllIn(container, selector).length;
     assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
   });
 };
 
-var assertStructure = function (label, expected, container) {
+const assertStructure = function (label: string, expected: StructAssert, container: Element) {
   Logger.sync(label, function () {
     expected.doAssert(container);
   });
 };
 
-var toStep = function (method) {
-  return function (..._args) {
-    var args = arguments;
-    return Step.sync(function () {
-      var sArgs = Array.prototype.slice.call(args, 0);
-      method.apply(undefined, sArgs);
+const toStep = function (method: Function) {
+  return function (...args: any[]) {
+    return Step.sync<any>(function () {
+      method.apply(undefined, args);
     });
   };
 };
 
-var assertDomEq = function (label, expected, actual) {
+const assertDomEq = function (label: string, expected: Element, actual: Element) {
   assertEq(
     label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual),
     true,
@@ -67,44 +65,48 @@ var assertDomEq = function (label, expected, actual) {
   );
 };
 
-var sAssertEq = function (label, a, b) {
-  return Step.sync(function () {
+const sAssertEq = function <T, V>(label: string, a: V, b: V) {
+  return Step.sync<T>(function () {
     assertEq(label, a, b);
   });
 };
 
-var cAssertEq = function (label, expected) {
-  return Chain.op(function (actual) {
+const cAssertEq = function <T>(label: string, expected: T) {
+  return Chain.op(function (actual: T) {
     assertEq(label, expected, actual);
   });
 };
 
-var cAssertHtml = function (label, expected) {
-  return Chain.op(function (actual) {
+const cAssertHtml = function (label: string, expected: string) {
+  return Chain.op(function (actual: string) {
     assertHtml(label, expected, actual);
   });
 };
 
-var cAssertDomEq = function (label, expected) {
-  return Chain.op(function (actual) {
+const cAssertDomEq = function (label: string, expected: Element) {
+  return Chain.op(function (actual: Element) {
     assertDomEq(label, expected, actual);
   });
 };
 
-export default {
-  assertHtml: assertHtml,
-  assertHtmlStructure: assertHtmlStructure,
-  assertPresence: assertPresence,
-  assertStructure: assertStructure,
-  assertEq: assertEq,
-  assertDomEq: assertDomEq,
+const sAssertHtml: <T> (label: string, expected: string, actual: string) => RunFn<T, T> = toStep(assertHtml);
+const sAssertPresence: <T> (label: string, expected: Record<string, number>, container: Element) => RunFn<T, T> = toStep(assertPresence);
+const sAssertStructure: <T> (label: string, expected: StructAssert, container: Element) => RunFn<T, T> = toStep(assertStructure);
 
-  sAssertHtml: toStep(assertHtml),
-  sAssertPresence: toStep(assertPresence),
-  sAssertStructure: toStep(assertStructure),
-  sAssertEq: sAssertEq,
+export {
+  assertHtml,
+  assertHtmlStructure,
+  assertPresence,
+  assertStructure,
+  assertEq,
+  assertDomEq,
 
-  cAssertHtml: cAssertHtml,
-  cAssertEq: cAssertEq,
-  cAssertDomEq: cAssertDomEq
+  sAssertHtml,
+  sAssertPresence,
+  sAssertStructure,
+  sAssertEq,
+
+  cAssertHtml,
+  cAssertEq,
+  cAssertDomEq
 };

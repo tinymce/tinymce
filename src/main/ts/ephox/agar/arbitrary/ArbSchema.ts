@@ -1,7 +1,8 @@
-import ArbNodes from './ArbNodes';
 import Jsc from '@ephox/wrap-jsverify';
 
-var formatting = {
+import ArbNodes from './ArbNodes';
+
+const formatting = {
   type: 'composite',
   tags: {
     'p': { weight: 1 },
@@ -15,7 +16,7 @@ var formatting = {
   }
 };
 
-var inline = {
+const inline = {
   type: 'composite',
   recursionDepth: 3,
   // Underline, strikethrough
@@ -37,7 +38,7 @@ var inline = {
   }
 };
 
-var container = {
+const container = {
   type: 'composite',
   recursionDepth: 3,
   tags: {
@@ -53,7 +54,7 @@ var container = {
   }
 };
 
-var listitem = {
+const listitem = {
   type: 'composite',
   recursionDepth: 5,
   tag: 'li',
@@ -64,7 +65,7 @@ var listitem = {
   }
 };
 
-var list = {
+const list = {
   type: 'composite',
   recursionDepth: 5,
   tags: {
@@ -77,7 +78,7 @@ var list = {
   }
 };
 
-var table = {
+const table = {
   type: 'structure',
   tag: 'table',
   components: {
@@ -88,7 +89,7 @@ var table = {
   }
 };
 
-var tbody = {
+const tbody = {
   type: 'composite',
   tag: 'tbody',
   components: {
@@ -97,7 +98,7 @@ var tbody = {
   }
 };
 
-var thead = {
+const thead = {
   type: 'composite',
   tag: 'thead',
   components: {
@@ -106,7 +107,7 @@ var thead = {
   }
 };
 
-var tfoot = {
+const tfoot = {
   type: 'composite',
   tag: 'tfoot',
   components: {
@@ -115,7 +116,7 @@ var tfoot = {
   }
 };
 
-var tr = {
+const tr = {
   type: 'composite',
   tag: 'tr',
   components: {
@@ -124,7 +125,7 @@ var tr = {
   }
 };
 
-var tablecell = {
+const tablecell = {
   type: 'composite',
   tags: {
     th: { weight: 1.0 },
@@ -137,7 +138,7 @@ var tablecell = {
   }
 };
 
-var caption = {
+const caption = {
   type: 'composite',
   tag: 'caption',
   components: {
@@ -147,39 +148,39 @@ var caption = {
   }
 };
 
-var image = {
+const image = {
   type: 'arbitrary',
   // INVESTIGATE: Represent these without this import (not sure if good idea)
   component: ArbNodes.elementOfArb(Jsc.elements([ 'img' ]))
 };
 
-var netext = {
+const netext = {
   type: 'arbitrary',
   component: ArbNodes.textOfArb(Jsc.nestring)
 };
 
-var anytext = {
+const anytext = {
   type: 'arbitrary',
   component: ArbNodes.textOfArb(Jsc.string)
 };
 
 // TODO: Br?
-var whitespace = {
+const whitespace = {
   type: 'arbitrary',
   component: ArbNodes.textOfArb(Jsc.elements([ ' ', '\n' ]))
 };
 
-var zerowidth = {
+const zerowidth = {
   type: 'arbitrary',
   component: ArbNodes.textOfArb(Jsc.constant('\uFEFF'))
 };
 
-var zerowidths = {
+const zerowidths = {
   type: 'arbitrary',
   component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', '\uFEFF' ]))
 };
 
-var comment = {
+const comment = {
   type: 'arbitrary',
   component: ArbNodes.comment
 };

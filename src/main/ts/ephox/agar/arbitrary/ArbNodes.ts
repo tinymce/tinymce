@@ -1,19 +1,17 @@
-import Truncate from '../alien/Truncate';
-import { Comment } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
+import { Comment, Element, Node, Text } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-var createTag = function (name) {
-  var partial = name.split('-');
-  var tag = partial.length > 0  ? partial[0] : name;
+import * as Truncate from '../alien/Truncate';
+
+const createTag = function (name) {
+  const partial = name.split('-');
+  const tag = partial.length > 0  ? partial[0] : name;
   return Element.fromTag(tag);
 };
 
-var comment = Jsc.string.smap(
+const comment = Jsc.string.smap(
   function (s) {
-    var raw = document.createComment(s);
+    const raw = document.createComment(s);
     return Element.fromDom(raw);
   },
   Comment.get,
@@ -22,19 +20,19 @@ var comment = Jsc.string.smap(
   }
 );
 
-var elementOfArb = function (arb) {
+const elementOfArb = function (arb) {
   return arb.smap(createTag, Node.name, Truncate.getHtml);
 };
 
-var elementOf = function (tag) {
+const elementOf = function (tag) {
   return createTag(tag);
 };
 
-var textOfArb = function (arb) {
+const textOfArb = function (arb) {
   return arb.smap(Element.fromText, Text.get, Text.get);
 };
 
-var textOf = function (s) {
+const textOf = function (s) {
   return Element.fromText(s);
 };
 

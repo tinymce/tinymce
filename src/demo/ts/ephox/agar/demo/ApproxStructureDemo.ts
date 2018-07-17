@@ -1,6 +1,6 @@
-import ApproxStructure from 'ephox/agar/api/ApproxStructure';
-import Assertions from 'ephox/agar/api/Assertions';
-import Pipeline from 'ephox/agar/api/Pipeline';
+import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
 import DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Class } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';

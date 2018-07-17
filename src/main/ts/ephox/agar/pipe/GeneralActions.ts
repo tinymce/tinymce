@@ -1,17 +1,17 @@
-var log = function (message) {
+const log = function (message: string) {
   return function () {
     console.log(message);
   };
 };
 
-var debug = function () {
+const debug = function () {
   debugger;
 };
 
-var pass = function () { };
+const pass = function () { };
 
-export default {
-  log: log,
-  debug: debug,
-  pass: pass
+export {
+  log,
+  debug,
+  pass
 };

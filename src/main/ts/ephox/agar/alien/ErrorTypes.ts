@@ -1,14 +1,13 @@
-import { Type } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Merger, Type } from '@ephox/katamari';
 
-var enrichWith = function (label, err) {
+const enrichWith = function (label: string, err: any) {
   if (Type.isString(err)) return label + '\n' + err;
   else if (err.name === 'HtmlAssertion') {
     return Merger.deepMerge(err, {
       message: label + '\n' + err.message
     });
   } else if (Type.isObject(err) && err.message !== undefined) {
-    var newError = new Error(err);
+    const newError = new Error(err);
     newError.stack = err.stack;
     newError.message = label + '\n' + newError.message;
     return newError;
@@ -16,6 +15,6 @@ var enrichWith = function (label, err) {
   else return err;
 };
 
-export default {
-  enrichWith: enrichWith
+export {
+  enrichWith
 };

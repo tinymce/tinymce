@@ -1,4 +1,4 @@
-import Truncate from '../alien/Truncate';
+import * as Truncate from '../alien/Truncate';
 import GenSelection from '../arbitrary/GenSelection';
 import TagDecorator from '../arbitrary/TagDecorator';
 import { Hierarchy } from '@ephox/sugar';

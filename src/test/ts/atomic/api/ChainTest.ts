@@ -1,45 +1,45 @@
-import Chain from 'ephox/agar/api/Chain';
-import Logger from 'ephox/agar/api/Logger';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import Step from 'ephox/agar/api/Step';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
 import { UnitTest } from '@ephox/bedrock';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as Logger from 'ephox/agar/api/Logger';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as Step from 'ephox/agar/api/Step';
+import StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('ChainTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cIsEqual = function (expected) {
+  const cIsEqual = function (expected) {
     return Chain.on(function (actual, next, die) {
       if (expected === actual) next(Chain.wrap(actual));
       else die('Cat is not a dog');
     });
   };
 
-  var cIsEqualAndChange = function (expected, newValue) {
+  const cIsEqualAndChange = function (expected, newValue) {
     return Chain.on(function (actual, next, die) {
       if (expected === actual) next(Chain.wrap(newValue));
       else die('Cat is not a dog');
     });
   };
 
-  var acc = function (ch) {
+  const acc = function (ch) {
     return Chain.on(function (input, next, die) {
       next(Chain.wrap(input + ch));
     });
   };
-  var testInputValueFails = StepAssertions.testStepsFail(
+  const testInputValueFails = StepAssertions.testStepsFail(
     'Output value is not a chain: dog', 
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie) {
-          cNext('dog');
+          cNext(<any>'dog');
         })
       ])
     ]
   );
 
-  var testInputValuePasses = StepAssertions.testStepsPass(
+  const testInputValuePasses = StepAssertions.testStepsPass(
     {},
     [
       Chain.asStep({}, [
@@ -50,7 +50,7 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
-  var testChainingFails = StepAssertions.testStepsFail(
+  const testChainingFails = StepAssertions.testStepsFail(
     'Cat is not a dog',
     [
       Chain.asStep({}, [
@@ -60,7 +60,7 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
-  var testChainingPasses = StepAssertions.testStepsPass(
+  const testChainingPasses = StepAssertions.testStepsPass(
     {},
     [
       Chain.asStep('value', [
@@ -70,7 +70,7 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
-  var testChainingFailsBecauseChanges = StepAssertions.testStepsFail(
+  const testChainingFailsBecauseChanges = StepAssertions.testStepsFail(
    'Cat is not a dog',
    [
      Chain.asStep('value', [
@@ -81,7 +81,7 @@ UnitTest.asynctest('ChainTest', function() {
    ]
  );
 
-  var testChainParentPasses = StepAssertions.testStepsPass(
+  const testChainParentPasses = StepAssertions.testStepsPass(
     {},
     [
       Chain.asStep({}, [
@@ -97,7 +97,7 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
-  var testChainParentAcc = StepAssertions.testChain(
+  const testChainParentAcc = StepAssertions.testChain(
     'Sentence: ',
     Chain.fromParent(
       Chain.inject('Sentence: '), [
@@ -109,7 +109,7 @@ UnitTest.asynctest('ChainTest', function() {
     )
   );
 
-  var testChainAcc = StepAssertions.testChain(
+  const testChainAcc = StepAssertions.testChain(
     'Sentence: This',
     Chain.fromChainsWith('Sentence: ', [
       acc('T'),
@@ -119,13 +119,13 @@ UnitTest.asynctest('ChainTest', function() {
     ])
   );
 
-  var testChainEnforcesInput = StepAssertions.testStepsFail(
+  const testChainEnforcesInput = StepAssertions.testStepsFail(
     'Input Value is not a chain: raw.input',
     [
       Step.async(function (next, die) {
-        Chain.on(function (input, n, d) {
+        Chain.on(function (input: any, n, d) {
           n(input);
-        }).runChain('raw.input', next, die);
+        }).runChain(<any>'raw.input', next, die);
       })
     ]
   );

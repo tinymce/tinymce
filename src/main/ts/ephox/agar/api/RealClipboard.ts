@@ -1,31 +1,33 @@
-import RealKeys from './RealKeys';
-import SeleniumAction from '../server/SeleniumAction';
 import { PlatformDetection } from '@ephox/sand';
 
-var platform = PlatformDetection.detect();
+import { KeyModifiers } from '../keyboard/FakeKeys';
+import * as SeleniumAction from '../server/SeleniumAction';
+import { RealKeys } from './RealKeys';
 
-var sImportToClipboard = function (filename) {
-  return SeleniumAction.sPerform('/clipboard', {
+const platform = PlatformDetection.detect();
+
+const sImportToClipboard = function <T>(filename: string) {
+  return SeleniumAction.sPerform<T>('/clipboard', {
     'import': filename
   });
 };
 
-var sCopy = function (selector) {
-  var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
-  return RealKeys.sSendKeysOn(selector, [
+const sCopy = function <T>(selector: string) {
+  const modifiers: KeyModifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  return RealKeys.sSendKeysOn<T>(selector, [
     RealKeys.combo(modifiers, 'c')
   ]);
 };
 
-var sPaste = function (selector) {
-  var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
-  return RealKeys.sSendKeysOn(selector, [
+const sPaste = function <T>(selector: string) {
+  const modifiers: KeyModifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  return RealKeys.sSendKeysOn<T>(selector, [
     RealKeys.combo(modifiers, 'v')
   ]);
 };
 
-export default {
-  sImportToClipboard: sImportToClipboard,
-  sCopy: sCopy,
-  sPaste: sPaste
+export {
+  sImportToClipboard,
+  sCopy,
+  sPaste
 };

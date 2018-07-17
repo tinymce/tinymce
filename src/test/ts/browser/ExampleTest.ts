@@ -1,32 +1,25 @@
-import Chain from 'ephox/agar/api/Chain';
-import Guard from 'ephox/agar/api/Guard';
-import Mouse from 'ephox/agar/api/Mouse';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import UiFinder from 'ephox/agar/api/UiFinder';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { Class, Css, DomEvent, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as Guard from 'ephox/agar/api/Guard';
+import * as Mouse from 'ephox/agar/api/Mouse';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('Example for Tutorial', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Example for Tutorial', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var makeSource = function () {
-    var editor = Element.fromTag('div');
+  const makeSource = function () {
+    const editor = Element.fromTag('div');
     Class.add(editor, 'editor');
     // Css.set(editor, 'display', 'none');
 
-    var showButton = Element.fromTag('button');
+    const showButton = Element.fromTag('button');
     Class.add(showButton, 'show');
     Html.set(showButton, 'Show');
 
-    var dialog = Element.fromTag('div');
+    const dialog = Element.fromTag('div');
     Class.add(dialog, 'dialog');
     Css.setAll(dialog, {
       width: '300px',
@@ -37,14 +30,14 @@ UnitTest.asynctest('Example for Tutorial', function() {
       top: '100px',
       background: 'white'
     });
-    var dialogContent = Element.fromTag('textarea');
+    const dialogContent = Element.fromTag('textarea');
     Html.set(dialogContent, 'Look at this dialog ... wow!');
 
-    var cancelButton = Element.fromTag('button');
+    const cancelButton = Element.fromTag('button');
     Html.set(cancelButton, 'Cancel');
     Class.add(cancelButton, 'cancel');
 
-    InsertAll.append(dialog, [ dialogContent, cancelButton ]);
+    InsertAll.append(dialog, [dialogContent, cancelButton]);
 
     Insert.append(editor, showButton);
 
@@ -52,14 +45,14 @@ UnitTest.asynctest('Example for Tutorial', function() {
       Insert.append(Element.fromDom(document.body), editor);
     }, 1000);
 
-    var onClick = DomEvent.bind(showButton, 'click', function () {
+    const onClick = DomEvent.bind(showButton, 'click', function () {
       setTimeout(function () {
         Insert.append(editor, dialog);
       }, 1000);
       onClick.unbind();
     });
 
-    var onCancel = DomEvent.bind(cancelButton, 'click', function () {
+    const onCancel = DomEvent.bind(cancelButton, 'click', function () {
       setTimeout(function () {
         Remove.remove(dialog);
       }, 1000);
@@ -69,9 +62,9 @@ UnitTest.asynctest('Example for Tutorial', function() {
     return editor;
   };
 
-  var source = makeSource();
+  const source = makeSource();
 
-  var body = Element.fromDom(document.body);
+  const body = Element.fromDom(document.body);
 
   Pipeline.async({}, [
     // Inject as the first input: body
@@ -90,7 +83,7 @@ UnitTest.asynctest('Example for Tutorial', function() {
     ])
   ], function () {
     Remove.remove(source);
-    success();      
+    success();
   }, failure);
 });
 

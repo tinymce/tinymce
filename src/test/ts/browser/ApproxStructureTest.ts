@@ -1,22 +1,22 @@
-import ApproxStructure from 'ephox/agar/api/ApproxStructure';
-import Assertions from 'ephox/agar/api/Assertions';
-import { Element } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
+import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
+import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.asynctest('ApproxStructureTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ApproxStructureTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+  const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
-      '<span data-ephox-id="blah" class="disabled">span</span>' +
+    '<span data-ephox-id="blah" class="disabled">span</span>' +
     '</div>' +
-    'words' + 
+    'words' +
     '<span></span>' +
-  '</div>';
+    '</div>';
 
-  var check = function (expected, input) {
-    var target = Element.fromHtml(input);
+  const check = function (expected, input) {
+    const target = Element.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 

@@ -1,8 +1,8 @@
-import Assertions from 'ephox/agar/api/Assertions';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.test('AssertionsTest', function() {
-  var replaceTokens = function (str, values) {
+UnitTest.test('AssertionsTest', function () {
+  const replaceTokens = function (str, values) {
     return str.replace(/\{\{(\w+)\}\}/gi, function ($0, $1) {
       return values[$1] ? values[$1] : '';
     });
@@ -27,17 +27,17 @@ UnitTest.test('AssertionsTest', function() {
   }
 
   try {
-    var v1 = {
+    const v1 = {
       'style': 'display: block; float: left;',
       'class': 'class1 class2'
     };
 
-    var v2 = {
+    const v2 = {
       'style': 'float: left; display: block;',
       'class': 'class2 class1'
     };
 
-    var html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
+    const html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
 
     Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
   } catch (err) {

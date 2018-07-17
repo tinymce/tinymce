@@ -1,21 +1,20 @@
-import Assertions from 'ephox/agar/api/Assertions';
-import Chain from 'ephox/agar/api/Chain';
-import FocusTools from 'ephox/agar/api/FocusTools';
-import Guard from 'ephox/agar/api/Guard';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import RawAssertions from 'ephox/agar/api/RawAssertions';
-import Step from 'ephox/agar/api/Step';
-import DomContainers from 'ephox/agar/test/DomContainers';
-import { Element } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { Element, Value } from '@ephox/sugar';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as FocusTools from 'ephox/agar/api/FocusTools';
+import * as Guard from 'ephox/agar/api/Guard';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as RawAssertions from 'ephox/agar/api/RawAssertions';
+import * as Step from 'ephox/agar/api/Step';
+import DomContainers from 'ephox/agar/test/DomContainers';
 
-UnitTest.asynctest('FocusToolsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FocusToolsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var doc = Element.fromDom(document);
-  var docNode = Element.fromDom(document.documentElement);
+  const doc = Element.fromDom(document);
+  const docNode = Element.fromDom(document.documentElement);
 
   Pipeline.async({}, [
     DomContainers.mSetup,
@@ -43,7 +42,7 @@ UnitTest.asynctest('FocusToolsTest', function() {
       FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die);
     }),
     FocusTools.sTryOnSelector(
-      'Should be on div[test-id] input', 
+      'Should be on div[test-id] input',
       doc,
       'div[test-id] input'
     ),

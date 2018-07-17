@@ -1,50 +1,45 @@
-import Assertions from 'ephox/agar/api/Assertions';
-import Chain from 'ephox/agar/api/Chain';
-import Guard from 'ephox/agar/api/Guard';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import RealClipboard from 'ephox/agar/api/RealClipboard';
-import RealKeys from 'ephox/agar/api/RealKeys';
-import RealMouse from 'ephox/agar/api/RealMouse';
-import Step from 'ephox/agar/api/Step';
-import UiControls from 'ephox/agar/api/UiControls';
-import UiFinder from 'ephox/agar/api/UiFinder';
-import Waiter from 'ephox/agar/api/Waiter';
-import { PlatformDetection } from '@ephox/sand';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
+import { Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as Guard from 'ephox/agar/api/Guard';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as RealClipboard from 'ephox/agar/api/RealClipboard';
+import { RealKeys } from 'ephox/agar/api/RealKeys';
+import * as RealMouse from 'ephox/agar/api/RealMouse';
+import * as Step from 'ephox/agar/api/Step';
+import * as UiControls from 'ephox/agar/api/UiControls';
+import * as UiFinder from 'ephox/agar/api/UiFinder';
+import * as Waiter from 'ephox/agar/api/Waiter';
 
-UnitTest.asynctest('Real Effects Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Real Effects Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var head = Element.fromDom(document.head);
-  var body = Element.fromDom(document.body);
+  const head = Element.fromDom(document.head);
+  const body = Element.fromDom(document.body);
 
-  var container = Element.fromTag('div');
+  const container = Element.fromTag('div');
 
-  var platform = PlatformDetection.detect();
+  const platform = PlatformDetection.detect();
 
-  var sCreateWorld = Step.sync(function () {
-    var input = Element.fromTag('input');
+  const sCreateWorld = Step.sync(function () {
+    const input = Element.fromTag('input');
     Insert.append(container, input);
 
-    var css = Element.fromTag('style');
+    const css = Element.fromTag('style');
     Html.set(css, 'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }');
     Insert.append(head, css);
 
-    var button = Element.fromTag('button');
+    const button = Element.fromTag('button');
     Class.add(button, 'test');
     Html.set(button, 'Mouse over me');
     Insert.append(container, button);
     Insert.append(body, container);
   });
 
-  var sCheckInput = function (label, expected) {
+  const sCheckInput = function (label, expected) {
     return Chain.asStep(body, [
       Chain.control(
         UiFinder.cFindIn('input'),
@@ -55,11 +50,11 @@ UnitTest.asynctest('Real Effects Test', function() {
     ]);
   };
 
-  var sCheckButtonBorder = function (label, expected) {
+  const sCheckButtonBorder = function (label, expected) {
     return Chain.asStep(body, [
       UiFinder.cFindIn('button.test'),
       Chain.mapper(function (button) {
-        var prop = platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
+        const prop = platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
         return Css.get(button, prop);
       }),
       Assertions.cAssertEq(label + '\nChecking color of button border', expected)

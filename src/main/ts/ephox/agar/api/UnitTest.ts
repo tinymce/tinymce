@@ -1,6 +1,6 @@
 import { Global } from '@ephox/katamari';
 
-var register = function (name, test) {
+const register = function (name: string, test: (success: () => void, failure: (err) => void) => void) {
   if (typeof Global.__tests === 'undefined') {
     Global.__tests = [];
   }
@@ -8,12 +8,12 @@ var register = function (name, test) {
   Global.__tests.push({ name: name, test: test });
 };
 
-var asynctest = function (name, test) {
+const asynctest = function (name: string, test: (success: () => void, failure: (err) => void) => void) {
   register(name, test);
 };
 
-var test = function (name, test) {
-  register(name, function (success, failure) {
+const test = function (name: string, test: () => void) {
+  register(name, function (success: () => void, failure: (err) => void) {
     try {
       test();
       success();
@@ -23,10 +23,10 @@ var test = function (name, test) {
   });
 };
 
-var domtest = function (name, test) {
-  register(name, function (success, failure) {
+const domtest = function (name: string, test: () => Promise<any>) {
+  register(name, function (success: () => void, failure: (err) => void) {
     // This would later include setup/teardown of jsdoc for atomic tests
-    var promise = test();
+    const promise = test();
 
     if (!(promise instanceof Promise)) {
       throw 'dom tests must return a promise';
@@ -38,8 +38,8 @@ var domtest = function (name, test) {
   });
 };
 
-export default {
-  test: test,
-  asynctest: asynctest,
-  domtest: domtest
+export {
+  test,
+  asynctest,
+  domtest
 };

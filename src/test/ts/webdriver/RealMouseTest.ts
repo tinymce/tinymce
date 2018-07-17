@@ -1,42 +1,36 @@
-import Chain from 'ephox/agar/api/Chain';
-import Guard from 'ephox/agar/api/Guard';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import RawAssertions from 'ephox/agar/api/RawAssertions';
-import RealMouse from 'ephox/agar/api/RealMouse';
-import Step from 'ephox/agar/api/Step';
-import UiFinder from 'ephox/agar/api/UiFinder';
-import { PlatformDetection } from '@ephox/sand';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
+import { Attr, Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as Guard from 'ephox/agar/api/Guard';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as RawAssertions from 'ephox/agar/api/RawAssertions';
+import * as RealMouse from 'ephox/agar/api/RealMouse';
+import * as Step from 'ephox/agar/api/Step';
+import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('RealMouseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RealMouseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var detection = PlatformDetection.detect();
+  const detection = PlatformDetection.detect();
 
-  var style = document.createElement('style');
+  const style = document.createElement('style');
   style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
   document.head.appendChild(style);
 
-  var container = Element.fromTag('div');
-  var button = Element.fromTag('button');
+  const container = Element.fromTag('div');
+  const button = Element.fromTag('button');
   Attr.set(button, 'data-test', 'true');
   Html.set(button, 'hover-button');
   Insert.append(container, button);
 
-  var other = Element.fromTag('button');
+  const other = Element.fromTag('button');
   Class.add(other, 'other');
   Html.set(other, 'other-button');
   Insert.append(container, other);
 
-  var normal = Element.fromTag('button');
+  const normal = Element.fromTag('button');
   Html.set(normal, 'Normal');
   Insert.append(container, normal);
 
@@ -53,7 +47,7 @@ UnitTest.asynctest('RealMouseTest', function() {
       Chain.control(
         Chain.op(function (button) {
           // Geckodriver does not have support for API actions yet.
-          if (! detection.browser.isFirefox()) RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
+          if (!detection.browser.isFirefox()) RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
         }),
         Guard.tryUntil('Waiting for button to turn blue', 100, 2000)
       )

@@ -1,11 +1,11 @@
-import Logger from 'ephox/agar/api/Logger';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import Step from 'ephox/agar/api/Step';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as Logger from 'ephox/agar/api/Logger';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as Step from 'ephox/agar/api/Step';
 
-UnitTest.asynctest('StepTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('StepTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   return Pipeline.async({}, [
     Logger.t(
@@ -32,7 +32,7 @@ UnitTest.asynctest('StepTest', function() {
       'Expected: Fake failure: last test'
     );
   }, function (err) {
-    var expected = '[Basic API: Step.fail]\n\nFake failure: last test';
+    const expected = '[Basic API: Step.fail]\n\nFake failure: last test';
     assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
     success();
   });

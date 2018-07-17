@@ -1,13 +1,16 @@
-import ErrorTypes from '../alien/ErrorTypes';
-import Logger from './Logger';
+import * as ErrorTypes from '../alien/ErrorTypes';
+import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
+import * as Logger from './Logger';
 
-var nu = function (f) {
+export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn) => void;
+
+const nu = function <T, U, V>(f: GuardFn<T, U, V>) {
   return f;
 };
 
-var tryUntilNot = function (label, interval, amount) {
-  return nu(function (f, value, next, die) {
-    var repeat = function (n) {
+const tryUntilNot = function <T, U>(label: string, interval: number, amount: number) {
+  return nu<T, U, T>(function (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn) {
+    const repeat = function (n: number) {
       f(value, function (v) {
         if (n <= 0) die(new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label));
         else {
@@ -26,9 +29,9 @@ var tryUntilNot = function (label, interval, amount) {
   });
 };
 
-var tryUntil = function (label, interval, amount) {
-  return nu(function (f, value, next, die) {
-    var repeat = function (n) {
+const tryUntil = function <T, U>(label: string, interval: number, amount: number) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn) {
+    const repeat = function (n: number) {
       f(value, next, function (err) {
         if (n <= 0) die(ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err));
         else {
@@ -42,23 +45,23 @@ var tryUntil = function (label, interval, amount) {
   });
 };
 
-var timeout = function (label, limit) {
-  return nu(function (f, value, next, die) {
-    var passed = false;
-    var failed = false;
+const timeout = function <T, U>(label: string, limit: number) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn) {
+    let passed = false;
+    let failed = false;
 
-    var hasNotExited = function () {
+    const hasNotExited = function () {
       return passed === false && failed === false;
     };
 
-    var timer = setTimeout(function () {
+    const timer = setTimeout(function () {
       if (hasNotExited()) {
         failed = true;
         die('Hit the limit (' + limit + ') for: ' + label);
       }
     }, limit);
 
-    f(value, function (v) {
+    f(value, function (v: U) {
       clearTimeout(timer);
       if (hasNotExited()) {
         passed = true;
@@ -73,15 +76,15 @@ var timeout = function (label, limit) {
   });
 };
 
-var addLogging = function (label) {
-  return nu(function (f, value, next, die) {
+const addLogging = function <T, U>(label: string) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn) {
     return Logger.t(label, f)(value, next, die);
   });
 };
 
-export default {
-  timeout: timeout,
-  tryUntil: tryUntil,
-  tryUntilNot: tryUntilNot,
-  addLogging: addLogging
+export {
+  timeout,
+  tryUntil,
+  tryUntilNot,
+  addLogging
 };

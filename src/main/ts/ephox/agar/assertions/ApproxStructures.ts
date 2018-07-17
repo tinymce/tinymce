@@ -1,30 +1,44 @@
-import Truncate from '../alien/Truncate';
 import { assert } from '@ephox/bedrock';
-import RawAssertions from '../api/RawAssertions';
-import ApproxComparisons from './ApproxComparisons';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Classes } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 
-var element = function (tag, fields) {
-  var doAssert = function (actual) {
-    RawAssertions.assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
-    var attrs = fields.attrs !== undefined ? fields.attrs : { };
-    var classes = fields.classes !== undefined ? fields.classes : [ ];
-    var styles = fields.styles !== undefined ? fields.styles : { };
-    var html = fields.html !== undefined ? Option.some(fields.html) : Option.none();
-    var value = fields.value !== undefined ? Option.some(fields.value) : Option.none();
-    var children = fields.children !== undefined ? Option.some(fields.children) : Option.none();
+import * as Truncate from '../alien/Truncate';
+import { assertEq } from '../api/RawAssertions';
+import * as ApproxComparisons from './ApproxComparisons';
+
+export interface StringAssert {
+  show: () => void;
+  strAssert: (label: string, actual: string) => void;
+}
+
+export interface ArrayAssert {
+  show: () => void;
+  arrAssert: (label: string, array: any[]) => void;
+}
+
+export interface StructAssert {
+  doAssert: (actual: Element) => void;
+}
+
+export interface ElementFields {
+  attrs?: Record<string, StringAssert>;
+  classes?: ArrayAssert[];
+  styles?: Record<string, StringAssert>;
+  html?: StringAssert;
+  value?: StringAssert;
+  children?: StructAssert[];
+}
+
+const element = function (tag: string, fields: ElementFields): StructAssert {
+  const doAssert = function (actual: Element) {
+    assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+    const attrs = fields.attrs !== undefined ? fields.attrs : {};
+    const classes = fields.classes !== undefined ? fields.classes : [];
+    const styles = fields.styles !== undefined ? fields.styles : {};
+    const html = fields.html !== undefined ? Option.some(fields.html) : Option.none();
+    const value = fields.value !== undefined ? Option.some(fields.value) : Option.none();
+    const children = fields.children !== undefined ? Option.some(fields.children) : Option.none();
     assertAttrs(attrs, actual);
     assertClasses(classes, actual);
     assertStyles(styles, actual);
@@ -39,11 +53,11 @@ var element = function (tag, fields) {
   };
 };
 
-var text = function (s) {
-  var doAssert = function (actual) {
+const text = function (s: StringAssert): StructAssert {
+  const doAssert = function (actual: Element) {
     Text.getOption(actual).fold(function () {
       assert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
-    }, function (t) {
+    }, function (t: string) {
       if (s.strAssert === undefined) throw new Error(Json.stringify(s) + ' is not a *string assertion*');
       s.strAssert('Checking text content', t);
     });
@@ -54,14 +68,14 @@ var text = function (s) {
   };
 };
 
-var anything = {
+const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-var assertAttrs = function (expectedAttrs, actual) {
+const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actual: Element) {
   Obj.each(expectedAttrs, function (v, k) {
     if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
-    var actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
+    const actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
     v.strAssert(
       'Checking attribute: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
       actualValue
@@ -69,17 +83,17 @@ var assertAttrs = function (expectedAttrs, actual) {
   });
 };
 
-var assertClasses = function (expectedClasses, actual) {
-  var actualClasses = Classes.get(actual);
+const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element) {
+  const actualClasses = Classes.get(actual);
   Arr.each(expectedClasses, function (eCls) {
     if (eCls.arrAssert === undefined) throw new Error(Json.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
     eCls.arrAssert('Checking classes in ' + Truncate.getHtml(actual) + '\n', actualClasses);
   });
 };
 
-var assertStyles = function (expectedStyles, actual) {
+const assertStyles = function (expectedStyles: Record<string, StringAssert>, actual: Element) {
   Obj.each(expectedStyles, function (v, k) {
-    var actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
+    const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
     v.strAssert(
       'Checking style: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
@@ -88,15 +102,15 @@ var assertStyles = function (expectedStyles, actual) {
   });
 };
 
-var assertHtml = function (expectedHtml, actual) {
+const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element) {
   expectedHtml.each(function (expected) {
-    var actualHtml = Html.get(actual);
+    const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) throw new Error(Json.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
     expected.strAssert('Checking HTML of ' + Truncate.getHtml(actual), actualHtml);
   });
 };
 
-var assertValue = function (expectedValue, actual) {
+const assertValue = function (expectedValue: Option<StringAssert>, actual: Element) {
   expectedValue.each(function (v) {
     if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
     v.strAssert(
@@ -106,25 +120,27 @@ var assertValue = function (expectedValue, actual) {
   });
 };
 
-var assertChildren = function (expectedChildren, actual) {
+const assertChildren = function (expectedChildren: Option<StructAssert[]>, actual) {
   expectedChildren.each(function (expected) {
-    var children = Traverse.children(actual);
-    RawAssertions.assertEq(
+    const children = Traverse.children(actual);
+    assertEq(
       'Checking number of children of: ' + Truncate.getHtml(actual) + '\nComplete Structure: \n' + Html.getOuter(actual),
       expected.length,
       children.length
     );
     Arr.each(children, function (child, i) {
-      var exp = expected[i];
+      const exp = expected[i];
       if (exp.doAssert === undefined) throw new Error(Json.stringify(exp) + ' is not a *structure assertion*.\nSpecified in *expected* children of ' + Truncate.getHtml(actual));
       exp.doAssert(child);
     });
   });
 };
 
-export default {
+const anything = Fun.constant(anythingStruct);
+
+export {
   // Force anything to require invoking
-  anything: Fun.constant(anything),
-  element: element,
-  text: text
+  anything,
+  element,
+  text
 };

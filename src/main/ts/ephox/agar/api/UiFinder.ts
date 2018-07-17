@@ -1,50 +1,50 @@
-import Truncate from '../alien/Truncate';
-import Chain from './Chain';
-import Guard from './Guard';
-import Step from './Step';
-import UiSearcher from '../find/UiSearcher';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Visibility } from '@ephox/sugar';
+import { Fun, Result } from '@ephox/katamari';
+import { Element, Visibility } from '@ephox/sugar';
 
-var findIn = function (container, selector) {
+import * as Truncate from '../alien/Truncate';
+import * as UiSearcher from '../find/UiSearcher';
+import { Chain } from './Chain';
+import * as Guard from './Guard';
+import * as Step from './Step';
+
+const findIn = function (container: Element, selector: string): Result<Element, string> {
   return UiSearcher.findIn(container, selector);
 };
 
-var findAllIn = function (container, selector) {
+const findAllIn = function (container: Element, selector: string): Element[] {
   return UiSearcher.findAllIn(container, selector);
 };
 
-var cWaitFor = function (message, selector) {
+const cWaitFor = function (message: string, selector: string) {
   return cWaitForState(message, selector, Fun.constant(true));
 };
 
-var sWaitFor = (message, container, selector) =>
-  Chain.asStep(container, [cWaitFor(message, selector)]);
+const sWaitFor = <T>(message: string, container: Element, selector: string) =>
+  Chain.asStep<T, Element>(container, [cWaitFor(message, selector)]);
 
-var cWaitForVisible = function (message, selector) {
+const cWaitForVisible = function (message: string, selector: string) {
   return cWaitForState(message, selector, Visibility.isVisible);
 };
 
 // TODO: Perhaps create cWaitForNoState rather than Fun.not here?
-var cWaitForHidden = function (message, selector) {
+const cWaitForHidden = function (message: string, selector: string) {
   return cWaitForState(message, selector, Fun.not(Visibility.isVisible));
 };
 
-var sWaitForVisible = (message, container, selector) =>
-  Chain.asStep(container, [cWaitForVisible(message, selector)]);
+const sWaitForVisible = <T>(message: string, container: Element, selector: string) =>
+  Chain.asStep<T, Element>(container, [cWaitForVisible(message, selector)]);
 
-var sWaitForHidden = (message, container, selector) =>
-  Chain.asStep(container, [cWaitForHidden(message, selector)]);
+const sWaitForHidden = <T>(message: string, container: Element, selector: string) =>
+  Chain.asStep<T, Element>(container, [cWaitForHidden(message, selector)]);
 
-var cHasState = function (predicate) {
-  return Chain.binder(function (element) {
+const cHasState = function (predicate: (element: Element) => boolean) {
+  return Chain.binder(function (element: Element): Result<Element, string> {
     return predicate(element) ? Result.value(element) :
       Result.error(Truncate.getHtml(element) + ' did not match predicate: ' + predicate.toString());
   });
 };
 
-var cFindWithState = function (selector, predicate) {
+const cFindWithState = function (selector: string, predicate: (element: Element) => boolean): Chain<Element, Element> {
   return Chain.fromChains([
     cFindIn(selector),
     cHasState(predicate)
@@ -52,21 +52,21 @@ var cFindWithState = function (selector, predicate) {
 };
 
 // Wait for a selector to have state. Max wait time: 10 seconds.
-var cWaitForState = function (message, selector, predicate) {
+const cWaitForState = function (message: string, selector: string, predicate: (element: Element) => boolean): Chain<Element, Element> {
   return Chain.control(
     cFindWithState(selector, predicate),
     Guard.tryUntil(message, 10, 10000)
   );
 };
 
-var sExists = function (container, selector) {
-  return Step.async(function (next, die) {
+const sExists = function <T>(container: Element, selector: string) {
+  return Step.async<T>(function (next, die) {
     findIn(container, selector).fold(die, next);
   });
 };
 
-var sNotExists = function (container, selector) {
-  return Step.async(function (next, die) {
+const sNotExists = function <T>(container: Element, selector: string) {
+  return Step.async<T>(function (next, die) {
     findIn(container, selector).fold(function () {
       next();
     }, function () {
@@ -75,19 +75,19 @@ var sNotExists = function (container, selector) {
   });
 };
 
-var cFindIn = function (selector) {
-  return Chain.binder(function (container) {
+const cFindIn = function (selector: string) {
+  return Chain.binder(function (container: Element) {
     return findIn(container, selector);
   });
 };
 
-var cFindAllIn = function (selector) {
-  return Chain.mapper(function (container) {
+const cFindAllIn = function (selector: string) {
+  return Chain.mapper(function (container: Element) {
     return findAllIn(container, selector);
   });
 };
 
-export default {
+export {
   findIn,
   findAllIn,
 

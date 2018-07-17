@@ -1,31 +1,24 @@
-import Assertions from 'ephox/agar/api/Assertions';
-import Chain from 'ephox/agar/api/Chain';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import Step from 'ephox/agar/api/Step';
-import UiFinder from 'ephox/agar/api/UiFinder';
-import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { Class, Css, Element, Hierarchy, Html, Insert, Node, Remove } from '@ephox/sugar';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Chain } from 'ephox/agar/api/Chain';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import * as Step from 'ephox/agar/api/Step';
+import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('UiFinderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UiFinderTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var container = Element.fromHtml(
+  const container = Element.fromHtml(
     '<div>' +
-       '<p>this is something <strong>bold</strong> here</p>' +
-       '<p>there is something else here</p>' +
+    '<p>this is something <strong>bold</strong> here</p>' +
+    '<p>there is something else here</p>' +
     '</div>'
   );
   Insert.append(Element.fromDom(document.body), container);
 
-  var teardown = function () {
+  const teardown = function () {
     Remove.remove(container);
   };
 
@@ -54,16 +47,16 @@ UnitTest.asynctest('UiFinderTest', function() {
     ]),
 
     Step.sync(function () {
-      var result = UiFinder.findIn(container, 'strong').getOrDie();
+      const result = UiFinder.findIn(container, 'strong').getOrDie();
       Assertions.assertDomEq(
         'Checking findIn',
-        Hierarchy.follow(container, [ 0, 1 ]).getOrDie('Invalid test data'),
-        result          
+        Hierarchy.follow(container, [0, 1]).getOrDie('Invalid test data'),
+        result
       );
     }),
 
     Step.sync(function () {
-      var result = UiFinder.findAllIn(container, 'p');
+      const result = UiFinder.findAllIn(container, 'p');
       Assertions.assertEq('Checking findAllIn length', 2, result.length);
     }),
 

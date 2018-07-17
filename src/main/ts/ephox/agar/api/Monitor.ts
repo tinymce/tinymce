@@ -1,18 +1,16 @@
+export const Monitor = function <T>(initial: number, f: (...args) => T) {
+  let value = initial;
 
-
-export default function (initial, f) {
-  var value = initial;
-  var run = function () {
-    var args = Array.prototype.slice.call(arguments, 0);
+  const run = function (...args: any[]): T {
     value++;
     return f.apply(f, args);
   };
 
-  var get = function () {
+  const get = function () {
     return value;
   };
 
-  var clear = function () {
+  const clear = function () {
     value = initial;
   };
 

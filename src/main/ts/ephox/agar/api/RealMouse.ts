@@ -1,31 +1,31 @@
-import SeleniumAction from '../server/SeleniumAction';
+import * as SeleniumAction from '../server/SeleniumAction';
 
-var sActionOn = function (selector, type) {
-  return SeleniumAction.sPerform('/mouse', {
+const sActionOn = function <T>(selector: string, type: string) {
+  return SeleniumAction.sPerform<T>('/mouse', {
     selector: selector,
     type: type
   });
 };
 
-var sMoveToOn = function (selector) {
-  return sActionOn(selector, 'move');
+const sMoveToOn = function <T>(selector: string) {
+  return sActionOn<T>(selector, 'move');
 };
 
-var sDownOn = function (selector) {
-  return sActionOn(selector, 'down');
+const sDownOn = function <T>(selector: string) {
+  return sActionOn<T>(selector, 'down');
 };
 
-var sUpOn = function (selector) {
-  return sActionOn(selector, 'up');
+const sUpOn = function <T>(selector: string) {
+  return sActionOn<T>(selector, 'up');
 };
 
-var sClickOn = function (selector) {
-  return sActionOn(selector, 'click');
+const sClickOn = function <T>(selector: string) {
+  return sActionOn<T>(selector, 'click');
 };
 
-export default {
-  sMoveToOn: sMoveToOn,
-  sDownOn: sDownOn,
-  sUpOn: sUpOn,
-  sClickOn: sClickOn
+export {
+  sMoveToOn,
+  sDownOn,
+  sUpOn,
+  sClickOn
 };
