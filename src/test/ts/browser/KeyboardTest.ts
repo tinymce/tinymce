@@ -17,10 +17,10 @@ UnitTest.asynctest('KeyboardTest', function () {
       'Checking ' + type + ' event',
       {
         which: code,
-        ctrlKey: modifiers.ctrl || false,
-        shiftKey: modifiers.shift || false,
-        altKey: modifiers.alt || false,
-        metaKey: modifiers.meta || false,
+        ctrlKey: modifiers.ctrlKey || false,
+        shiftKey: modifiers.shiftKey || false,
+        altKey: modifiers.altKey || false,
+        metaKey: modifiers.metaKey || false,
         type: type
       }, {
         which: raw.which,
