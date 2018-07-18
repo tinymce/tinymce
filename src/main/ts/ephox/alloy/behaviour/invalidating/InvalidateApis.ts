@@ -21,7 +21,6 @@ const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/
   Class.remove(elem, invalidConfig.invalidClass());
   invalidConfig.notify().each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      Attr.remove(elem, 'aria-invalid');
       Attr.remove(elem, 'title');
     }
     notifyInfo.getContainer()(component).each((container) => {
@@ -37,8 +36,6 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
   Class.add(elem, invalidConfig.invalidClass());
   invalidConfig.notify().each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      // Setting aria-invalid true is good practice
-      Attr.set(component.element(), 'aria-invalid', true);
       // Setting the title on the element allows chrome to read it out properly
       Attr.set(component.element(), 'title', text);
       AriaVoice.shout(component.element(), text);
