@@ -142,7 +142,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     });
 
     const cHasClass = (clazz) => {
-      return Chain.binder((comp: { element: () => Element}) => {
+      return Chain.binder((comp: AlloyComponent) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
           Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
