@@ -1,13 +1,14 @@
 import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class } from '@ephox/sugar';
+import { Attr, Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { AlloyComponent } from '../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
@@ -74,11 +75,11 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       ]);
     };
 
-    const cHighlight = Chain.op((item) => {
+    const cHighlight = Chain.op((item: AlloyComponent) => {
       Highlighting.highlight(component, item);
     });
 
-    const cDehighlight = Chain.op((item) => {
+    const cDehighlight = Chain.op((item: AlloyComponent) => {
       Highlighting.dehighlight(component, item);
     });
 
@@ -141,7 +142,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     });
 
     const cHasClass = (clazz) => {
-      return Chain.binder((comp) => {
+      return Chain.binder((comp: { element: () => Element}) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
           Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);

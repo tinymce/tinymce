@@ -103,11 +103,11 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               'Checking invalid status is: ' + expected,
               expected,
               Invalidating.isInvalid(comp)
-            )
+            );
           }),
           Guard.tryUntil('invalid status was not: ' + expected, 100, 100)
         )
-      )
+      );
     };
 
     const sCheckIsValid = (label) => {
@@ -141,7 +141,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
     });
 
     const cCheckValidationFails = (label, expected) => {
-      return Chain.op((res) => {
+      return Chain.op((res: Result<any, any>) => {
         res.fold((err) => {
           Assertions.assertEq(label, expected, err);
         }, (val) => {
@@ -151,7 +151,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
     };
 
     const cCheckValidationPasses = (label, expected) => {
-      return Chain.op((res) => {
+      return Chain.op((res: Result<any, any>) => {
         res.fold((err) => {
           throw new Error(label + ': Unexpected error: ' + err);
         }, (val) => {

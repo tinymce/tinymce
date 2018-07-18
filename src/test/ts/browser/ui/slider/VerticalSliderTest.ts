@@ -21,9 +21,9 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
           tag: 'div',
           classes: [ 'vertical-slider-test' ],
           styles: {
-            border: '1px solid black',
-            width: '20px',
-            display: 'flex',
+            'border': '1px solid black',
+            'width': '20px',
+            'display': 'flex',
             'flex-direction': 'column'
           }
         },
@@ -42,7 +42,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
             width: '20px',
             background: 'black'
           } } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: { 
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
             height: '150px',
             background: 'green'
           } } }),
@@ -61,7 +61,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
     );
   }, (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper((elem) => {
+    const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();
     });
 
@@ -90,7 +90,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       NamedChain.bundle(Result.value)
     ]);
 
-    const cCheckThumbAtTop = Chain.op((parts) => {
+    const cCheckThumbAtTop = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Top-Edge: (' + parts.tedgeRect.top + '->' + parts.tedgeRect.bottom + ')',
@@ -99,7 +99,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       );
     });
 
-    const cCheckThumbAtBottom = Chain.op((parts) => {
+    const cCheckThumbAtBottom = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Bottom-Edge: (' + parts.bedgeRect.top + '->' + parts.bedgeRect.bottom + ')',
@@ -108,20 +108,20 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       );
     });
 
-    const cCheckThumbPastBottom = Chain.op((parts) => {
+    const cCheckThumbPastBottom = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.top > parts.spectrumRect.bottom
       );
     });
 
-    const cCheckThumbBeforeTop = Chain.op((parts) => {
+    const cCheckThumbBeforeTop = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.bottom < parts.spectrumRect.top
       );
     });
 
     const cCheckValue = (expected) => {
-      return Chain.op((parts) => {
+      return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
         RawAssertions.assertEq('Checking slider value', expected, v.y());
       });
