@@ -113,6 +113,10 @@ function trimHtml(html: string) {
     return '\u00a0';
   }
 
+  // 获取样式
+  const match = /<style type="text\/css">([^<]*)<\/style>/.exec(html);
+  const css = match && match[1];
+
   html = filter(html, [
     /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
     /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
@@ -121,6 +125,20 @@ function trimHtml(html: string) {
     /<br>$/i // Trailing BR elements
   ]);
 
+  // 有匹配样式进行匹配（例如从InDesign或者pages粘贴进来）
+  if (css) {
+    const cssObj = css2JSON(css);
+    html = html.replace(/<(\w+) class="(\w+)">/g, function (all, tag, className) {
+      const key = `${tag}.${className}`;
+      const value = cssObj[key];
+      let valueStr = '';
+      // 保留字体和颜色信息
+      ['font', 'color'].forEach(function (item) {
+        valueStr += value[item] ? `${item}: ${value[item]};` : '';
+      });
+      return `<${tag} style="${valueStr}">`;
+    });
+  }
   return html;
 }
 
@@ -135,6 +153,94 @@ function createIdGenerator(prefix: string) {
 
 const isMsEdge = function () {
   return navigator.userAgent.indexOf(' Edge/') !== -1;
+};
+
+const css2JSON = function (css) {
+  // Remove all comments from the css-file
+  // let open, close;
+  // while ((open = css.indexOf('/*')) !== -1 &&
+  //   (close = css.indexOf('*/')) !== -1) {
+  //   css = css.substring(0, open) + css.substring(close + 2);
+  // }
+
+  // Initialize the return value _json_.
+  const json = {};
+
+  // Each rule gets parsed and then removed from _css_ until all rules have been
+  // parsed.
+  while (css.length > 0) {
+    // Save the index of the first left bracket and first right bracket.
+    const lbracket = css.indexOf('{');
+    const rbracket = css.indexOf('}');
+
+    // ## Part 1: The declarations
+    //
+    // Transform the declarations to an object. For example, the declarations<br/>
+    //  `font: 'Times New Roman' 1em; color: #ff0000; margin-top: 1em;`<br/>
+    // result in the object<br/>
+    // `{"font": "'Times New Roman' 1em", "color": "#ff0000", "margin-top": "1em"}`.
+
+    // Helper method that transform an array to a object, by splitting each
+    // declaration (_font: Arial_) into key (_font_) and value(_Arial_).
+    const toObject = function (array) {
+      const ret = {};
+      array.forEach(function (elm) {
+        const index = elm.indexOf(':');
+        const property = elm.substring(0, index).trim();
+        const value = elm.substring(index + 1).trim();
+        ret[property] = value;
+      });
+      return ret;
+    };
+
+    // Split the declaration block of the first rule into an array and remove
+    // whitespace from each declaration.
+    let declarations = css.substring(lbracket + 1, rbracket)
+      .split(';')
+      .map(function (declaration) {
+        return declaration.trim();
+      })
+      .filter(function (declaration) {
+        return declaration.length > 0;
+      }); // Remove any empty ("") values from the array
+
+    // _declaration_ is now an array reado to be transformed into an object.
+    declarations = toObject(declarations);
+
+    // ## Part 2: The selectors
+    //
+    // Each selector in the selectors block will be associated with the
+    // declarations defined above. For example, `h1, p#bar {color: red}`<br/>
+    // result in the object<br/>
+    // {"h1": {color: red}, "p#bar": {color: red}}
+
+    // Split the selectors block of the first rule into an array and remove
+    // whitespace, e.g. `"h1, p#bar, span.foo"` get parsed to
+    // `["h1", "p#bar", "span.foo"]`.
+    const selectors = css.substring(0, lbracket)
+      .split(',')
+      .map(function (selector) {
+        return selector.trim();
+      });
+
+    // Iterate through each selector from _selectors_.
+    selectors.forEach(function (selector) {
+      // Initialize the json-object representing the declaration block of
+      // _selector_.
+      if (!json[selector]) {
+        json[selector] = {};
+      }
+      // Save the declarations to the right selector
+
+      Object.keys(declarations).forEach(function (key) {
+        json[selector][key] = declarations[key];
+      });
+    });
+    // Continue to next instance
+    css = css.slice(rbracket + 1).trim();
+  }
+  // return the json data
+  return json;
 };
 
 export default {
