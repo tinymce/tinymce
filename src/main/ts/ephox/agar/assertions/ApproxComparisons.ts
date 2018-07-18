@@ -69,7 +69,7 @@ const contains = function (target: string) {
   };
 };
 
-const none = function (message: string) {
+const none = function (message: string = "[[missing value]]") {
   const compare = function (actual: string) {
     return actual === missingValuePlaceholder;
   };
