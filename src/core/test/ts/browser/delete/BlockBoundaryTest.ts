@@ -4,6 +4,7 @@ import BlockBoundary from 'tinymce/core/delete/BlockBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () {
   const success = arguments[arguments.length - 2];
@@ -17,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () 
   };
 
   const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
@@ -27,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () 
   };
 
   const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset) {
-    return Chain.op(function (blockBoundaryOption) {
+    return Chain.op(function (blockBoundaryOption: Option<any>) {
       const fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
       const toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -40,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () 
   };
 
   const cAssertBlockBoundaryBlocks = function (fromBlockPath, toBlockPath) {
-    return Chain.op(function (blockBoundaryOption) {
+    return Chain.op(function (blockBoundaryOption: Option<any>) {
       const expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
       const expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -50,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () 
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption) {
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<any>) {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 

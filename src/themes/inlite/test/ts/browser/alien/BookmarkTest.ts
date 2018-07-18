@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.alien.BookmarkTest', function () {
   };
 
   const cAssertRangeEq = function (expected) {
-    return Chain.op(function (actual) {
+    return Chain.op(function (actual: any) {
       Assertions.assertDomEq('Not equal startContainer', expected.start(), TinyDom.fromDom(actual.startContainer));
       Assertions.assertEq('Not equal startOffset', expected.soffset(), actual.startOffset);
       Assertions.assertDomEq('Not equal endContainer', expected.finish(), TinyDom.fromDom(actual.endContainer));

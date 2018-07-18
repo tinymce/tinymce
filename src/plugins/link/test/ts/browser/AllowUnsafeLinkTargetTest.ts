@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', fun
 
     const cAssertDialogContents = function (data) {
       return Chain.on(function (element, next, die) {
-        getDialogByElement(element).fold(die, function (win) {
+        getDialogByElement(element).fold(() => die('No dialog assocated with element'), function (win) {
           Assertions.assertEq('asserting dialog contents', data, win.toJSON());
           next(Chain.wrap(element));
         });

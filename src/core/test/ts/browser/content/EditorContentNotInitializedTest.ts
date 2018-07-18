@@ -16,18 +16,18 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
 
   const cCreateEditor = Chain.on((_, next, die) => next(Chain.wrap(new Editor('editor', {}, EditorManager))));
 
-  const cSetContentAndAssertReturn = (content) => Chain.op((editor) => {
+  const cSetContentAndAssertReturn = (content) => Chain.op((editor: any) => {
     const actual = editor.setContent(content);
 
     RawAssertions.assertEq('should return what you tried to set', content, actual);
   });
-  const cGetAndAssertContent = (expected, tree?) => Chain.op((editor) => {
+  const cGetAndAssertContent = (expected, tree?) => Chain.op((editor: any) => {
     const actual = tree ? editor.getContent({format: 'tree'}) : editor.getContent();
 
     RawAssertions.assertEq('content should be equal', expected, actual);
   });
 
-  const cRemoveBodyElement = Chain.op((editor) => {
+  const cRemoveBodyElement = Chain.op((editor: any) => {
     const body = editor.getBody();
     body.parentNode.removeChild(body);
   });

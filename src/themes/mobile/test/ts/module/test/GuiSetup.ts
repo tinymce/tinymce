@@ -45,7 +45,7 @@ const mSetupKeyLogger = function (body) {
 };
 
 const mTeardownKeyLogger = function (body, expected) {
-  return Step.stateful(function (state, next, die) {
+  return Step.stateful(function (state: any, next, die) {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
     next({});
@@ -65,7 +65,7 @@ const mAddStyles = function (doc, styles) {
   });
 };
 
-const mRemoveStyles = Step.stateful(function (value, next, die) {
+const mRemoveStyles = Step.stateful(function (value: any, next, die) {
   Remove.remove(value.style);
   next(value);
 });

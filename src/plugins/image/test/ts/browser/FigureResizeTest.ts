@@ -12,17 +12,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function ()
   ModernTheme();
   ImagePlugin();
 
-  const cGetBody = Chain.mapper(function (editor) {
+  const cGetBody = Chain.mapper(function (editor: any) {
     return TinyDom.fromDom(editor.getBody());
   });
 
-  const cGetElementSize = Chain.mapper(function (elm) {
+  const cGetElementSize = Chain.mapper(function (elm: any) {
     const elmStyle = elm.dom().style;
     return { w: elmStyle.width, h: elmStyle.height };
   });
 
   const cDragHandleRight = function (px) {
-    return Chain.op(function (input) {
+    return Chain.op(function (input: any) {
       const dom = input.editor.dom;
       const target = input.resizeSE.dom();
       const pos = dom.getPos(target);

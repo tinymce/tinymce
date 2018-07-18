@@ -3,6 +3,7 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function () {
   const success = arguments[arguments.length - 2];
@@ -22,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function () {
   };
 
   const cMergeBlocks = function (forward, block1Path, block2Path) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const block1 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block1Path).getOrDie();
       const block2 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block2Path).getOrDie();
       return MergeBlocks.mergeBlocks(Element.fromDom(viewBlock.get()), forward, block1, block2);
@@ -30,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function () {
   };
 
   const cAssertPosition = function (expectedPath, expectedOffset) {
-    return Chain.op(function (position) {
+    return Chain.op(function (position: Option<any>) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), expectedPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected container', container, Element.fromDom(position.getOrDie().container()));

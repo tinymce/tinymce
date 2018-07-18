@@ -12,13 +12,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   ModernTheme();
 
   const cSetRawContent = function (html) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       editor.getBody().innerHTML = html;
     });
   };
 
   const cExpandRng = function (startPath, startOffset, endPath, endOffset, format, remove) {
-    return Chain.mapper(function (editor) {
+    return Chain.mapper(function (editor: any) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   };
 
   const cAssertRange = function (editor, startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (rng) {
+    return Chain.op(function (rng: any) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 

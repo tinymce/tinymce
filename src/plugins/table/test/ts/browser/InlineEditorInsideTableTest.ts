@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
       UiFinder.cFindIn('div.tinymce'),
       Mouse.cMouseOver,
       cNotExists(Body.body(), 'div[data-row="0"]')
-    ]), false),
+    ]), '_'),
     NamedChain.read('editor', Editor.cRemove),
     NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
   ], function () {

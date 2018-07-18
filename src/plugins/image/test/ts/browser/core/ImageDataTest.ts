@@ -7,7 +7,7 @@ import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html) => {
-    return Chain.op(function (elm) {
+    return Chain.op(function (elm: Element) {
       Html.set(elm, html);
     });
   };
@@ -27,38 +27,38 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     return Chain.inject(Element.fromDom(create(normalizeCss, data)));
   };
 
-  const cReadFromImage = Chain.mapper(function (elm) {
+  const cReadFromImage = Chain.mapper(function (elm: Element) {
     const img = Node.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
     return { model: read(normalizeCss, img.dom()), image: img, parent: elm };
   });
 
-  const cWriteToImage = Chain.op(function (data) {
+  const cWriteToImage = Chain.op(function (data: any) {
     write(normalizeCss, data.model, data.image.dom());
   });
 
   const cUpdateModel = (props) => {
-    return Chain.mapper(function (data) {
+    return Chain.mapper(function (data: any) {
       return { model: Merger.merge(data.model, props), image: data.image, parent: data.parent };
     });
   };
 
   const cAssertModel = (model) => {
-    return Chain.op(function (data) {
+    return Chain.op(function (data: any) {
       RawAssertions.assertEq('', model, data.model);
     });
   };
 
   const cAssertStructure = (structure) => {
-    return Chain.op(function (data) {
+    return Chain.op(function (data: any) {
       Assertions.assertStructure('', structure, data.parent);
     });
   };
 
-  const cAssertImage = Chain.op(function (data) {
+  const cAssertImage = Chain.op(function (data: any) {
     RawAssertions.assertEq('Should be an image', true, isImage(data.image.dom()));
   });
 
-  const cAssertFigure = Chain.op(function (data) {
+  const cAssertFigure = Chain.op(function (data: any) {
     RawAssertions.assertEq('Parent should be a figure', true, isFigure(data.image.dom().parentNode));
   });
 

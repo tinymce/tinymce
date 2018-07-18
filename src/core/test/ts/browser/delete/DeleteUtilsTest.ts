@@ -4,6 +4,7 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -17,14 +18,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
   };
 
   const cGetParentTextBlock = function (elementPath) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       return DeleteUtils.getParentBlock(Element.fromDom(viewBlock.get()), element);
     });
   };
 
   const cAssertBlock = function (elementPath) {
-    return Chain.op(function (actualBlock) {
+    return Chain.op(function (actualBlock: Option<any>) {
       const expectedBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
@@ -39,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
     });
   };
 
-  const cAssertNone = Chain.op(function (actualBlock) {
+  const cAssertNone = Chain.op(function (actualBlock: Option<any>) {
     Assertions.assertEq('Should be the none but got some', true, actualBlock.isNone());
   });
 

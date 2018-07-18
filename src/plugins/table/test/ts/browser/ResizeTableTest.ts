@@ -13,12 +13,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   Plugin();
   Theme();
 
-  const cGetBody = Chain.mapper(function (editor) {
+  const cGetBody = Chain.mapper(function (editor: any) {
     return TinyDom.fromDom(editor.getBody());
   });
 
   const cInsertTable = function (cols, rows) {
-    return Chain.mapper(function (editor) {
+    return Chain.mapper(function (editor: any) {
       return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
     });
   };
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     ]);
   };
 
-  const cGetWidth = Chain.mapper(function (input) {
+  const cGetWidth = Chain.mapper(function (input: any) {
     const editor = input.editor;
     const elm = input.element.dom();
     const rawWidth = editor.dom.getStyle(elm, 'width');
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
   };
 
-  const cAssertWidths = Chain.op(function (input) {
+  const cAssertWidths = Chain.op(function (input: any) {
     const expectedPx = input.widthBefore.px - 100;
     const expectedPercent = input.widthAfter.px / input.widthBefore.px * 100;
 
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     assertWithin(input.widthAfter.raw, expectedPercent - 1, expectedPercent + 1);
   });
 
-  const cBindResizeEvents = Chain.mapper(function (input) {
+  const cBindResizeEvents = Chain.mapper(function (input: any) {
     const objectResizeStart = (e) => {
       lastObjectResizeStartEvent.set(e);
     };
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     };
   });
 
-  const cUnbindResizeEvents = Chain.mapper(function (input) {
+  const cUnbindResizeEvents = Chain.mapper(function (input: any) {
     input.editor.off('ObjectResizeStart', input.events.objectResizeStart);
     input.editor.off('ObjectResized', input.events.objectResized);
     return {};
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     NamedChain.output('widths')
   ]);
 
-  const cAssertWidthsShouldBe = (unit: string) => Chain.op((input) => {
+  const cAssertWidthsShouldBe = (unit: string) => Chain.op((input: any) => {
     const expectingPercent = (unit === '%');
     Assertions.assertEq(`table width before resizing is in ${unit}`, expectingPercent, input.widthBefore.isPercent);
     Assertions.assertEq(`table width after resizing is in ${unit}`, expectingPercent, input.widthAfter.isPercent);

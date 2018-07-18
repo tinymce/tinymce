@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
         Chain.on(function (container, next, die) {
           return Arr.find(editor.windowManager.getWindows(), function (win) {
             return container.dom().id === win._id;
-          }).fold(die, function (win) {
+          }).fold(() => die('Could not find popup window'), function (win) {
             next(Chain.wrap(win));
           });
         })

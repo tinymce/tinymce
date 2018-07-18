@@ -4,10 +4,10 @@ import { UiChains, Editor } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { Body } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 
 const cNotExists = (selector) => {
-  return Chain.op((container) => {
+  return Chain.op((container: Element) => {
     UiFinder.findIn(container, selector).fold(
       () => RawAssertions.assertEq('should not find anything', true, true),
       () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
@@ -16,7 +16,7 @@ const cNotExists = (selector) => {
 };
 
 const cExists = (selector) => {
-  return Chain.op((container) => {
+  return Chain.op((container: Element) => {
     UiFinder.findIn(container, selector).fold(
       () => RawAssertions.assertEq('Expected ' + selector + ' to exist.', true, false),
       () => RawAssertions.assertEq('found element', true, true)

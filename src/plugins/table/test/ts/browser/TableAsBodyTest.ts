@@ -52,18 +52,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () 
   };
 
   const cExecCommand = function (command, value?) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       editor.execCommand(command, false, value);
     });
   };
 
   const cAssertContent = function (expected) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
     });
   };
 
-  const cRemove = Chain.op(function (editor) {
+  const cRemove = Chain.op(function (editor: any) {
     const id = editor.id;
     editor.remove();
     Selectors.one('#' + id).each(Remove.remove);
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () 
   };
 
   const cSetSelection = function (startPath, soffset, finishPath, foffset) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const range = createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
       editor.selection.setRng(range);
       editor.nodeChanged();

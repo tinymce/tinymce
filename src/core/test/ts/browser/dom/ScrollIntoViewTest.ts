@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
   };
 
   const mAssertScrollIntoViewEventInfo = function (editor, expectedElementSelector, expectedAlignToTop) {
-    return Step.stateful(function (value, next, die) {
+    return Step.stateful(function (value: any, next, die) {
       const expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
       const actualTarget = Element.fromDom(value.state.get().elm);
       Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);

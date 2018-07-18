@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
   };
 
   const cParentsUntil = function (startPath, rootPath, predicate) {
-    return Chain.mapper(function (structure) {
+    return Chain.mapper(function (structure: any) {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsUntil(startNode, rootNode, predicate);
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
   };
 
   const cParents = function (startPath, rootPath) {
-    return Chain.mapper(function (structure) {
+    return Chain.mapper(function (structure: any) {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parents(startNode, rootNode);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
   };
 
   const cParentsAndSelf = function (startPath, rootPath) {
-    return Chain.mapper(function (structure) {
+    return Chain.mapper(function (structure: any) {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsAndSelf(startNode, rootNode);
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
   };
 
   const cAssertElementNames = function (expectedNames) {
-    return Chain.mapper(function (parents) {
+    return Chain.mapper(function (parents: Element[]) {
       const names = Arr.map(parents, Node.name);
       Assertions.assertEq('Should be expected names', expectedNames, names);
       return {};

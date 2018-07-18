@@ -64,7 +64,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
             'Checking ' + buttonLabel + ' button should be enabled = ' + expected,
             ApproxStructure.build(function (s, str, arr) {
               return s.element('span', {
-                attr: {
+                attrs: {
                   role: str.is('button')
                 },
                 classes: [
