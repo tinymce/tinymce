@@ -118,6 +118,7 @@ export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flow';
   selector: string;
   getInitial?: (comp: AlloyComponent) => Option<Element>;
+  onEscape?: KeyHandlerApi<FlowConfig, Stateless>;
   execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
   executeOnMove?: boolean;
   allowVertical?: boolean;
@@ -126,6 +127,7 @@ export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
 export interface FlowConfig extends GeneralKeyingConfig {
   selector: () => string;
   getInitial: () => (comp: AlloyComponent) => Option<Element>;
+  onEscape: () => KeyHandlerApi<FlowConfig, Stateless>;
   execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
   executeOnMove: () => boolean;
   allowVertical: () => boolean;
