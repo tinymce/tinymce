@@ -11,7 +11,7 @@ const cLogging = (label, chains) => {
 };
 
 const cFindUid = (uid) => {
-  return Chain.binder((context) => {
+  return Chain.binder((context: any) => {
     return context.getByUid(uid);
   });
 };
@@ -29,7 +29,7 @@ const cFindUids = (gui, lookups) => {
   );
 };
 
-const cToElement = Chain.mapper((comp) => {
+const cToElement = Chain.mapper((comp: any) => {
   return comp.element();
 });
 

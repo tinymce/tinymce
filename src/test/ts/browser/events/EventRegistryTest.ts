@@ -97,8 +97,11 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   };
 
   const sAssertFind = (label, expected, type, id) => {
-    const cFindHandler = Chain.binder((target) => {
-      return events.find(isRoot, type, target);
+    const cFindHandler = Chain.binder((target: Element) => {
+      return events.find(isRoot, type, target).fold(
+        () => Result.error('No event handler for ' + type + ' on ' + target.dom()),
+        Result.value
+      );
     });
 
     return Logger.t(
