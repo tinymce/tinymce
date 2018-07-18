@@ -1,9 +1,8 @@
-import { Assertions, Chain, Pipeline, UiFinder, Step } from "@ephox/agar";
+import { Assertions, Chain, Pipeline, UiFinder, Step, GeneralSteps } from "@ephox/agar";
 import { UnitTest, assert } from "@ephox/bedrock";
 import { Arr, Fun, Result } from "@ephox/katamari";
 import { Insert, Remove, Body, Element, SelectorFind } from "@ephox/sugar";
 import AriaVoice from "ephox/echo/api/AriaVoice";
-import GeneralSteps from "@ephox/agar/lib/main/ts/ephox/agar/api/GeneralSteps";
 
 UnitTest.asynctest('Node Change Test', function (success, failure) {
   // @tunic-tag=aria
