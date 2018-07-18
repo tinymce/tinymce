@@ -7,7 +7,7 @@ import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Mouse from 'ephox/agar/api/Mouse';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('MouseTest', function () {

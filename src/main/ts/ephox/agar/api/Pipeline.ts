@@ -1,14 +1,15 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
+import { DieFn, NextFn } from '../pipe/Pipe';
+import { Step } from './Main';
 
 const SLOW = false;
 // This slows it down considerably.
 const DEBUG = false;
 
-const assertSteps = function (steps: RunFn<any, any>[]) {
-  Arr.each(steps, function (s: RunFn<any, any>, i: number) {
+const assertSteps = function (steps: Step<any, any>[]) {
+  Arr.each(steps, function (s: Step<any, any>, i: number) {
     let msg: string;
     if (s === undefined) msg = 'step ' + i + ' was undefined. All steps: ' + Json.stringify(steps) + '\n';
     else if (Type.isArray(s)) msg = 'step ' + i + ' was an array';
@@ -22,7 +23,7 @@ const assertSteps = function (steps: RunFn<any, any>[]) {
 
 interface DebugStep {
   completion: boolean;
-  operation: RunFn<any, any>;
+  operation: Step<any, any>;
 }
 
 const pipeContinuity = function () {
@@ -51,11 +52,11 @@ const pipeContinuity = function () {
   };
 
   if (!DEBUG) {
-    return function (_operation: RunFn<any, any>) {
+    return function (_operation: Step<any, any>) {
       return () => { };
     };
   } else {
-    return function (operation: RunFn<any, any>) {
+    return function (operation: Step<any, any>) {
       const index = completionStack.length;
       completionStack.push({
         completion: false,
@@ -73,7 +74,7 @@ const pipeContinuity = function () {
 
 const addPipeStep = pipeContinuity();
 
-const debugPipeError = function (error: any, step: RunFn<any, any>) {
+const debugPipeError = function (error: any, step: Step<any, any>) {
   if (!error.name) {
     console.error(error);
     console.error('[DEBUG-MODE] this step threw the error');
@@ -99,7 +100,7 @@ const callAsync = function (f) {
   typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
-const async = function (initial: any, steps: RunFn<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, delay_doNotUse?: number) {
+const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, delay_doNotUse?: number) {
   assertSteps(steps);
 
   const chain = function (lastLink: any, index: number) {

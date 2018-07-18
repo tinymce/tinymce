@@ -5,7 +5,7 @@ import * as Truncate from '../alien/Truncate';
 import * as UiSearcher from '../find/UiSearcher';
 import { Chain } from './Chain';
 import * as Guard from './Guard';
-import * as Step from './Step';
+import { Step } from './Step';
 
 const findIn = function (container: Element, selector: string): Result<Element, string> {
   return UiSearcher.findIn(container, selector);

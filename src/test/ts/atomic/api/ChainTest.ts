@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('ChainTest', function() {

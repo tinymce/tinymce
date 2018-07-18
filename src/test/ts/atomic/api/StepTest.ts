@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.asynctest('StepTest', function () {
   const success = arguments[arguments.length - 2];

@@ -3,7 +3,7 @@ import Jsc from '@ephox/wrap-jsverify';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as PropertySteps from 'ephox/agar/api/PropertySteps';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 
 import { NextFn } from '../../../main/ts/ephox/agar/pipe/Pipe';
 

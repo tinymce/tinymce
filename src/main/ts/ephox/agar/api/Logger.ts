@@ -1,9 +1,10 @@
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
+import { DieFn, NextFn } from '../pipe/Pipe';
+import { Step } from './Step';
 
-const t = function <T, U>(label: string, f: RunFn<T, U>): RunFn<T, U> {
+const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   const enrich = function (err) {
     return ErrorTypes.enrichWith(label, err);
   };
@@ -30,9 +31,9 @@ const sync = function <T>(label: string, f: () => T): T {
   }
 };
 
-const ts = function <T, U>(label: string, fs: RunFn<T, U>[]) {
+const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
   if (fs.length === 0) return fs;
-  return Arr.map(fs, function (f: RunFn<T, U>, i: number) {
+  return Arr.map(fs, function (f: Step<T, U>, i: number) {
     return t(label + '(' + i + ')', f);
   });
 };

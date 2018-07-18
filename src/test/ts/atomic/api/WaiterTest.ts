@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import * as Waiter from 'ephox/agar/api/Waiter';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 

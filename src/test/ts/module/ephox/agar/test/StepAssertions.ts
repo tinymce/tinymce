@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 
 const preserved = '..preserved..';
 const failed = function (label, expected, step) {

@@ -8,7 +8,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RealClipboard from 'ephox/agar/api/RealClipboard';
 import { RealKeys } from 'ephox/agar/api/RealKeys';
 import * as RealMouse from 'ephox/agar/api/RealMouse';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import * as UiControls from 'ephox/agar/api/UiControls';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 import * as Waiter from 'ephox/agar/api/Waiter';

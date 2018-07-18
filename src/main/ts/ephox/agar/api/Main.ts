@@ -20,7 +20,7 @@ import * as RawAssertions from './RawAssertions';
 import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
-import * as Step from './Step';
+import { Step } from './Step';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as UnitTest from './UnitTest';

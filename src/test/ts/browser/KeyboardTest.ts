@@ -5,7 +5,7 @@ import * as Guard from 'ephox/agar/api/Guard';
 import * as Keyboard from 'ephox/agar/api/Keyboard';
 import { Keys } from 'ephox/agar/api/Keys';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('KeyboardTest', function () {

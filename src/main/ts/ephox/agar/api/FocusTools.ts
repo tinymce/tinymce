@@ -9,6 +9,7 @@ import * as Logger from './Logger';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
+import { Step } from './Step';
 
 const cGetFocused = Chain.binder(function (doc: Element) {
   return Focus.active(doc).fold(function (): Result<Element, string> {
@@ -26,7 +27,7 @@ const cSetFocused = Chain.mapper(function (element: Element) {
 const cGetOwnerDoc = Chain.mapper(Traverse.owner);
 
 
-const sIsOn = function <T>(label: string, element: Element) {
+const sIsOn = function <T>(label: string, element: Element): Step<T,T> {
   return Chain.asStep<T, Element>(element, [
     cGetOwnerDoc,
     cGetFocused,

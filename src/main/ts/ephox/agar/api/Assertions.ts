@@ -4,12 +4,11 @@ import { Compare, Element } from '@ephox/sugar';
 import * as Truncate from '../alien/Truncate';
 import { StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
-import { RunFn } from '../pipe/Pipe';
 import * as ApproxStructure from './ApproxStructure';
 import { Chain } from './Chain';
 import * as Logger from './Logger';
 import { assertEq } from './RawAssertions';
-import * as Step from './Step';
+import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 // Note, this requires changes to tunic
@@ -65,7 +64,7 @@ const assertDomEq = function (label: string, expected: Element, actual: Element)
   );
 };
 
-const sAssertEq = function <T, V>(label: string, a: V, b: V) {
+const sAssertEq = function <T, V>(label: string, a: V, b: V): Step<T,T> {
   return Step.sync<T>(function () {
     assertEq(label, a, b);
   });
@@ -89,9 +88,9 @@ const cAssertDomEq = function (label: string, expected: Element) {
   });
 };
 
-const sAssertHtml: <T> (label: string, expected: string, actual: string) => RunFn<T, T> = toStep(assertHtml);
-const sAssertPresence: <T> (label: string, expected: Record<string, number>, container: Element) => RunFn<T, T> = toStep(assertPresence);
-const sAssertStructure: <T> (label: string, expected: StructAssert, container: Element) => RunFn<T, T> = toStep(assertStructure);
+const sAssertHtml: <T> (label: string, expected: string, actual: string) => Step<T, T> = toStep(assertHtml);
+const sAssertPresence: <T> (label: string, expected: Record<string, number>, container: Element) => Step<T, T> = toStep(assertPresence);
+const sAssertStructure: <T> (label: string, expected: StructAssert, container: Element) => Step<T, T> = toStep(assertStructure);
 
 export {
   assertHtml,

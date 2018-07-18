@@ -5,19 +5,19 @@ import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
 import { GuardFn } from './Guard';
 import { Pipeline } from './Pipeline';
-import * as Step from './Step';
+import { Step } from './Step';
 
 export interface Wrap<T> {
   chain: T;
 }
 
-export type ChainRunFn<T, U> = RunFn<Wrap<T>, Wrap<U>>;//(value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => void;
+export type ChainRunFn<T, U> = RunFn<Wrap<T>, Wrap<U>>;
 
 export interface Chain<T, U> {
   runChain: ChainRunFn<T, U>;
 }
 
-export type ChainGuard<T, U, V> = GuardFn<Wrap<T>, Wrap<U>, Wrap<V>>;//(runChain: ChainRunFn<T,U>, value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => void;
+export type ChainGuard<T, U, V> = GuardFn<Wrap<T>, Wrap<U>, Wrap<V>>;
 
 // TODO: Add generic step validation later.
 const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn) => void): Chain<T, U> {

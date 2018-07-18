@@ -3,7 +3,7 @@ import { Element, Focus } from '@ephox/sugar';
 import * as Clicks from '../mouse/Clicks';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';
-import * as Step from './Step';
+import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 const triggerWith = function <T>(container: Element, selector: string, action: (ele: Element) => void) {

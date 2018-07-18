@@ -1,5 +1,5 @@
 import { Attr, Element, Insert, Remove } from '@ephox/sugar';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 
 const mSetup = Step.stateful(function (state, next, die) {
   const container = Element.fromTag('div');

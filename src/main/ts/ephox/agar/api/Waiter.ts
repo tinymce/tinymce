@@ -1,6 +1,6 @@
-import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
+import { DieFn, NextFn } from '../pipe/Pipe';
 import * as Guard from './Guard';
-import * as Step from './Step';
+import { Step } from './Step';
 
 const sTryUntilPredicate = function <T>(label: string, predicate: (value: T) => boolean, interval: number, amount: number) {
   const guard = Guard.tryUntil<T, T>(label, interval, amount);
@@ -9,17 +9,17 @@ const sTryUntilPredicate = function <T>(label: string, predicate: (value: T) => 
   }), guard);
 };
 
-const sTryUntil = function <T, U>(label: string, step: RunFn<T, U>, interval: number, amount: number) {
+const sTryUntil = function <T, U>(label: string, step: Step<T, U>, interval: number, amount: number) {
   const guard = Guard.tryUntil<T, U>(label, interval, amount);
   return Step.control(step, guard);
 };
 
-const sTryUntilNot = function <T, U>(label: string, step: RunFn<T, U>, interval: number, amount: number) {
+const sTryUntilNot = function <T, U>(label: string, step: Step<T, U>, interval: number, amount: number) {
   const guard = Guard.tryUntilNot<T, U>(label, interval, amount);
   return Step.control(step, guard);
 };
 
-const sTimeout = function <T, U>(label: string, step: RunFn<T, U>, limit: number) {
+const sTimeout = function <T, U>(label: string, step: Step<T, U>, limit: number) {
   const guard = Guard.timeout<T, U>(label, limit);
   return Step.control(step, guard);
 };

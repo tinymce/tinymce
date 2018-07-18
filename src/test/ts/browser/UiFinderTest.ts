@@ -3,7 +3,7 @@ import { Class, Css, Element, Hierarchy, Html, Insert, Node, Remove } from '@eph
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as Step from 'ephox/agar/api/Step';
+import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('UiFinderTest', function () {
