@@ -5,10 +5,12 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { ToolbarGroupDetail } from '../types/ToolbarGroupTypes';
 
 const schema: () => FieldProcessorAdt[]  = Fun.constant([
   FieldSchema.strict('items'),
   Fields.markers([ 'itemClass' ]),
+  FieldSchema.defaulted('applyItemClass', true),
   SketchBehaviours.field('tgroupBehaviours', [ Keying ])
 ]);
 
@@ -16,12 +18,12 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     name: 'items',
     unit: 'item',
-    overrides (detail) {
-      return {
+    overrides (detail: ToolbarGroupDetail) {
+      return detail.applyItemClass() ? {
         domModification: {
           classes: [ detail.markers().itemClass() ]
         }
-      };
+      } : {};
     }
   })
 ]);

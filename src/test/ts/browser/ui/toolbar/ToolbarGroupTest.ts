@@ -8,6 +8,8 @@ import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { SelectorFind } from '@ephox/sugar';
+import { AlloyComponent } from '../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
   const mungeItem = (itemSpec) => {
@@ -25,34 +27,76 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
-      ToolbarGroup.sketch({
+      {
         dom: {
           tag: 'div'
         },
         components: [
-          ToolbarGroup.parts().items({
+          ToolbarGroup.sketch({
             dom: {
               tag: 'div',
-              classes: [ 'group-items' ]
+              classes: [ 'test-group1' ]
+            },
+            components: [
+              ToolbarGroup.parts().items({
+                dom: {
+                  tag: 'div',
+                  classes: [ 'group-items' ]
+                }
+              })
+            ],
+
+            tgroupBehaviours: Behaviour.derive([
+              Tabstopping.config({ })
+            ]),
+
+            items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
+            markers: {
+              itemClass: 'toolbar-item'
+            }
+          }),
+
+          ToolbarGroup.sketch({
+            dom: {
+              tag: 'div',
+              classes: [ 'test-group2' ]
+            },
+            components: [
+              ToolbarGroup.parts().items({
+                dom: {
+                  tag: 'div',
+                  classes: [ 'group-items' ]
+                }
+              })
+            ],
+
+            tgroupBehaviours: Behaviour.derive([
+              Tabstopping.config({ })
+            ]),
+
+            items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
+            applyItemClass: false,
+            markers: {
+              itemClass: 'toolbar-item'
             }
           })
-        ],
-
-        tgroupBehaviours: Behaviour.derive([
-          Tabstopping.config({ })
-        ]),
-
-        items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
-        markers: {
-          itemClass: 'toolbar-item'
-        }
-      })
+        ]
+      }
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, component: AlloyComponent, store) => {
+
+    const group1 = component.getSystem().getByDom(
+      SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1')
+    ).getOrDie();
+
+    const group2 = component.getSystem().getByDom(
+      SelectorFind.descendant(component.element(), '.test-group2').getOrDie('Could not find test-group2')
+    ).getOrDie();
+
     return [
       Assertions.sAssertStructure(
-        'Checking initial toolbar groups',
+        'Checking initial toolbar groups (group1)',
         ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [ arr.not('group-items') ],
@@ -61,16 +105,34 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
               'data-alloy-tabstop': str.is('true')
             },
             children: [
-              s.element('button', { html: str.is('A') }),
-              s.element('button', { html: str.is('B') })
+              s.element('button', { html: str.is('A'), classes: [ arr.has('toolbar-item') ] }),
+              s.element('button', { html: str.is('B'), classes: [ arr.has('toolbar-item') ] })
             ]
           });
         }),
-        component.element()
+        group1.element()
+      ),
+
+      Assertions.sAssertStructure(
+        'Checking initial toolbar groups (group2)',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.not('group-items') ],
+            attrs: {
+              'role': str.is('toolbar'),
+              'data-alloy-tabstop': str.is('true')
+            },
+            children: [
+              s.element('button', { html: str.is('A'), classes: [ arr.not('toolbar-item') ] }),
+              s.element('button', { html: str.is('B'), classes: [ arr.not('toolbar-item') ] })
+            ]
+          });
+        }),
+        group2.element()
       ),
 
       Step.sync(() => {
-        Keying.focusIn(component);
+        Keying.focusIn(group1);
       }),
 
       FocusTools.sTryOnSelector('Focus should start on A', doc, 'button:contains("A")'),
