@@ -201,7 +201,7 @@ const toolbarGroup = (group) => {
 
     items: spec.items,
     markers: {
-      itemClass: 'demo-alloy-toolbar-item'
+      itemSelector: '.demo-alloy-toolbar-item'
     }
   };
 };

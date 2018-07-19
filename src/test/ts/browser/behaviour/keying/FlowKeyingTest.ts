@@ -50,7 +50,8 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
         containerBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
-            selector: '.stay'
+            selector: '.stay',
+            onEscape: store.adderH('flow.onEscape')
           })
         ]),
         components: [
@@ -129,6 +130,10 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
       // Test execute
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]),
+      store.sClear,
+
+      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      store.sAssertEq('Check that escape handler has fired', [ 'flow.onEscape' ]),
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];

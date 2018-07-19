@@ -3,6 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
+import * as Fields from '../data/Fields';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
@@ -20,6 +21,7 @@ const schema = [
   FieldSchema.strict('selector'),
   FieldSchema.defaulted('getInitial', Option.none),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
+  Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('executeOnMove', false),
   FieldSchema.defaulted('allowVertical', true)
 ];
@@ -60,6 +62,11 @@ const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler
   };
 };
 
+const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEvent, flowConfig, _flowState) => {
+  return flowConfig.onEscape()(component, simulatedEvent);
+};
+
+
 const getRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
@@ -67,7 +74,8 @@ const getRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRu
     KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
   ];
 };
 

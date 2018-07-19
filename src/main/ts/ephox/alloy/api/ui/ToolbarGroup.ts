@@ -25,7 +25,7 @@ const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (d
         Behaviour.derive([
           Keying.config({
             mode: 'flow',
-            selector: '.' + detail.markers().itemClass()
+            selector: detail.markers().itemSelector()
           })
         ]),
         SketchBehaviours.get(detail.tgroupBehaviours())

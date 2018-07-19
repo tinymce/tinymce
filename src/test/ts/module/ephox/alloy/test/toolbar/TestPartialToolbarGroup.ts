@@ -11,12 +11,17 @@ const mungeItem = (itemSpec) => {
       behaviours: Behaviour.derive([
         Focusing.config({ })
       ])
+    },
+    {
+      domModification: {
+        classes: [ 'toolbar-item' ]
+      }
     }
   );
 };
 
 const itemMarkers = {
-  itemClass: 'toolbar-item'
+  itemSelector: 'toolbar-item'
 };
 
 const munge = (spec) => {
