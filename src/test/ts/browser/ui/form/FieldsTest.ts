@@ -172,9 +172,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
       Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, arr) => {
-        const label = SelectorFind.descendant(inputA.element(), 'label').getOrDie();
-        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie();
-        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie();
+        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
+        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
 
         const inputID = Attr.get(input, 'id');
         const spanID = Attr.get(span, 'id');
