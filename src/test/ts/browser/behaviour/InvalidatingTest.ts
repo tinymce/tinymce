@@ -14,15 +14,15 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
   const root = Cell(Option.none());
 
   GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
+    return GuiFactory.build({
         dom: {
           tag: 'input'
         },
-        containerBehaviours: Behaviour.derive([
+        behaviours: Behaviour.derive([
           Invalidating.config({
             invalidClass: 'test-invalid',
             getRoot: root.get,
+            notify: {},
             validator: {
               validate (input) {
                 const value = Value.get(input.element());
@@ -33,7 +33,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             }
           })
         ])
-      })
+      }
     );
   }, (doc, body, gui, component, store) => {
 
@@ -118,7 +118,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       return sCheckIsInvalidOf(label, component, true);
     };
 
-    const sCheckHasTitleOf = (label, comp) => {
+    const sCheckHasTitleOf = (label, comp, titlePrefix) => {
       return Logger.t(
         label,
         Step.control(
@@ -126,9 +126,9 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             'Checking structure after marking invalid',
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
-                attrs: [
-                  arr.has('title')
-                ]
+                attrs: {
+                  title: str.startsWith(titlePrefix)
+                }
               });
             }),
             comp.element()
@@ -146,9 +146,9 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             'Checking structure after marking valid',
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
-                attrs: [
-                  arr.not('title')
-                ]
+                attrs: {
+                  title: str.none()
+                }
               });
             }),
             comp.element()
@@ -158,8 +158,8 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckHasTitle = (label) => {
-      return sCheckHasTitleOf(label, component);
+    const sCheckHasTitle = (label, titlePrefix) => {
+      return sCheckHasTitleOf(label, component, titlePrefix);
     };
 
     const sCheckHasNoTitle = (label) => {
@@ -227,15 +227,15 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValid('after 1xmarkValid, should be valid'),
       sCheckIsValid('the isInvalid API should return false'),
-      sCheckHasTitle('the field should have a title'),
+      sCheckHasNoTitle('the field should no longer have a title'),
 
       Step.sync(() => {
-        Invalidating.markInvalid(component);
+        Invalidating.markInvalid(component, 'programmatic bad value');
       }),
 
       sCheckInvalid('after markInvalid, should be invalid'),
       sCheckIsInvalid('the isInvalid API should return true'),
-      sCheckHasNoTitle('the field should no longer have a title'),
+      sCheckHasTitle('the field should have a title', 'programmatic'),
 
       UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
       sValidate,
@@ -244,6 +244,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
       sValidate,
       sCheckInvalid('validation should fail (eventually... because future based)'),
+      sCheckHasTitle('the field should have a title', 'bad value:'),
 
       Chain.asStep({ }, [
         cQueryApi,
@@ -297,7 +298,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       sCheckValid('The first input should stay valid the whole time'),
 
       Step.sync(() => {
-        Invalidating.markInvalid(component);
+        Invalidating.markInvalid(component, 'programmatic bad value');
       }),
       sCheckInvalidOf('After running markInvalid, the "other" should be invalid again', other),
       sCheckValid('The first input should stay valid the whole time'),

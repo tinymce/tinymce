@@ -39,7 +39,7 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
       // Setting the title on the element allows chrome to read it out properly
       Attr.set(component.element(), 'title', text);
     }
-    // Probably want to make "Body" configurable as well.
+    // TODO: Use the aria string property here, and maybe want to make "Body" configurable as well?
     AriaVoice.shout(Body.body(), text);
     notifyInfo.getContainer()(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?
