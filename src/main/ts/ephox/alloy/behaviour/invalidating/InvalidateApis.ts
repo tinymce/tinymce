@@ -38,11 +38,9 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
     if (isAriaElement(component.element())) {
       // Setting the title on the element allows chrome to read it out properly
       Attr.set(component.element(), 'title', text);
-      AriaVoice.shout(component.element(), text);
-    } else {
-      // Probably want to make "Body" configurable as well.
-      AriaVoice.shout(Body.body(), text);
     }
+    // Probably want to make "Body" configurable as well.
+    AriaVoice.shout(Body.body(), text);
     notifyInfo.getContainer()(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?
       Html.set(container, text);

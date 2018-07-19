@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import { Value, Attr } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -118,6 +118,54 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       return sCheckIsInvalidOf(label, component, true);
     };
 
+    const sCheckHasTitleOf = (label, comp) => {
+      return Logger.t(
+        label,
+        Step.control(
+          Assertions.sAssertStructure(
+            'Checking structure after marking invalid',
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('input', {
+                attributes: [
+                  arr.has('title')
+                ]
+              });
+            }),
+            comp.element()
+          ),
+          Guard.tryUntil('valid', 100, 100)
+        )
+      );
+    };
+
+    const sCheckHasNoTitleOf = (label, comp) => {
+      return Logger.t(
+        label,
+        Step.control(
+          Assertions.sAssertStructure(
+            'Checking structure after marking invalid',
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('input', {
+                attributes: [
+                  arr.not('title')
+                ]
+              });
+            }),
+            comp.element()
+          ),
+          Guard.tryUntil('invalid', 100, 100)
+        )
+      );
+    };
+
+    const sCheckHasTitle = (label) => {
+      return sCheckHasTitleOf(label, component);
+    };
+
+    const sCheckHasNoTitle = (label) => {
+      return sCheckHasNoTitleOf(label, component);
+    };
+
     const sValidate = GeneralSteps.sequence([
       Step.sync(() => {
         AlloyTriggers.emit(component, 'custom.test.validate');
@@ -179,6 +227,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValid('after 1xmarkValid, should be valid'),
       sCheckIsValid('the isInvalid API should return false'),
+      sCheckHasTitle('the field should have a title'),
 
       Step.sync(() => {
         Invalidating.markInvalid(component);
@@ -186,6 +235,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckInvalid('after markInvalid, should be invalid'),
       sCheckIsInvalid('the isInvalid API should return true'),
+      sCheckHasNoTitle('the field should no longer have a title'),
 
       UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
       sValidate,
