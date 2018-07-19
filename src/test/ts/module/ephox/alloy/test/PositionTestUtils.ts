@@ -7,7 +7,7 @@ import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 const cAddPopupToSink = (sinkName) => {
-  return NamedChain.bundle((data) => {
+  return NamedChain.bundle((data: any) => {
     const sink = data[sinkName];
     Attachment.attach(sink, data.popup);
     Positioning.position(sink, data.anchor, data.popup);
@@ -17,7 +17,7 @@ const cAddPopupToSink = (sinkName) => {
 
 const cTestPopupInSink = (label, sinkName) => {
   return Chain.control(
-    NamedChain.bundle((data) => {
+    NamedChain.bundle((data: any) => {
       const sink = data[sinkName];
       const inside = Sinks.isInside(sink, data.popup);
       return inside ? Result.value(data) : Result.error(
@@ -28,14 +28,14 @@ const cTestPopupInSink = (label, sinkName) => {
   );
 };
 
-const cScrollTo = Chain.mapper((component) => {
+const cScrollTo = Chain.mapper((component: any) => {
   component.element().dom().scrollIntoView();
   const doc = Traverse.owner(component.element());
   return Scroll.get(doc);
 });
 
 const cAddTopMargin = (amount) => {
-  return Chain.mapper((component) => {
+  return Chain.mapper((component: any) => {
     Css.set(component.element(), 'margin-top', amount);
     return component;
   });
@@ -51,7 +51,7 @@ const cTestSink = (label, sinkName) => {
   );
 };
 
-const cScrollDown = (componentName, amount) => {
+const cScrollDown = (componentName: string, amount) => {
   return ChainUtils.cLogging(
     'Adding margin to ' + componentName + ' and scrolling to it',
     [

@@ -46,7 +46,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((data) => {
+    const cSetupAnchor = Chain.mapper((data: any) => {
       return {
         anchor: 'selection',
         root: data.inline.element(),
@@ -114,7 +114,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 finishPath: [ 13 ],
                 foffset: 0
               })),
-              NamedChain.bundle((data) => {
+              NamedChain.bundle((data: any) => {
                 const root = data.inline.element();
                 const path = data.path;
                 const range = Cursors.calculate(root, path);

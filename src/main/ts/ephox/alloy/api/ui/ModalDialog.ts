@@ -57,6 +57,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
       hide: hideDialog,
       getBody: getDialogBody
     },
+    eventOrder: detail.eventOrder(),
 
     behaviours: Merger.deepMerge(
       Behaviour.derive([

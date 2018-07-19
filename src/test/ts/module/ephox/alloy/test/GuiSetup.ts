@@ -23,6 +23,7 @@ const setup = (createComponent, f, success, failure) => {
     Attachment.detachSystem(gui);
     success();
   }, (e) => {
+    // tslint:disable-next-line
     console.error(e);
     failure(e);
   });
@@ -44,7 +45,7 @@ const mSetupKeyLogger = (body) => {
 };
 
 const mTeardownKeyLogger = (body, expected) => {
-  return Step.stateful((state, next, die) => {
+  return Step.stateful((state: any, next, die) => {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
     next({});
@@ -64,7 +65,7 @@ const mAddStyles = (doc, styles) => {
   });
 };
 
-const mRemoveStyles = Step.stateful((value, next, die) => {
+const mRemoveStyles = Step.stateful((value: any, next, die) => {
   Remove.remove(value.style);
   next(value);
 });

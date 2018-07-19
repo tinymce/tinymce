@@ -1,12 +1,13 @@
 import { Assertions, Chain, Step } from '@ephox/agar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { AlloyComponent } from '../../../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
-const cGetValue = Chain.mapper((component) => {
+const cGetValue = Chain.mapper((component: AlloyComponent) => {
   return Representing.getValue(component);
 });
 
 const cSetValue = (value) => {
-  return Chain.op((component) => {
+  return Chain.op((component: AlloyComponent) => {
     Representing.setValue(component, value);
   });
 };

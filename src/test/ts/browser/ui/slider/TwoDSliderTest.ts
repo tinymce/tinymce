@@ -7,6 +7,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) => {
 
@@ -20,9 +21,9 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
           tag: 'div',
           classes: [ 'twod-slider-test' ],
           styles: {
-            height: '200px',
-            width: '200px',
-            display: 'flex',
+            'height': '200px',
+            'width': '200px',
+            'display': 'flex',
             'flex-wrap': 'wrap'
           }
         },
@@ -93,11 +94,11 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     );
   }, (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper((elem) => {
+    const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();
     });
 
-    const cGetComponent = Chain.binder((elem) => {
+    const cGetComponent = Chain.binder((elem: Element) => {
       return component.getSystem().getByDom(elem);
     });
 
@@ -126,7 +127,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       NamedChain.bundle(Result.value)
     ]);
 
-    const cCheckThumbAtLeft = Chain.op((parts) => {
+    const cCheckThumbAtLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
@@ -135,7 +136,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-    const cCheckThumbAtRight = Chain.op((parts) => {
+    const cCheckThumbAtRight = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
@@ -144,8 +145,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-
-    const cCheckThumbAtTop = Chain.op((parts) => {
+    const cCheckThumbAtTop = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Top-Edge: (' + parts.tedgeRect.top + '->' + parts.tedgeRect.bottom + ')',
@@ -154,7 +154,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-    const cCheckThumbAtBottom = Chain.op((parts) => {
+    const cCheckThumbAtBottom = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Bottom-Edge: (' + parts.bedgeRect.top + '->' + parts.bedgeRect.bottom + ')',
@@ -163,32 +163,32 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-    const cCheckThumbPastRight = Chain.op((parts) => {
+    const cCheckThumbPastRight = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
-    const cCheckThumbBeforeLeft = Chain.op((parts) => {
+    const cCheckThumbBeforeLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
-    const cCheckThumbPastBottom = Chain.op((parts) => {
+    const cCheckThumbPastBottom = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.top > parts.spectrumRect.bottom
       );
     });
 
-    const cCheckThumbBeforeTop = Chain.op((parts) => {
+    const cCheckThumbBeforeTop = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.bottom < parts.spectrumRect.top
       );
     });
 
     const cCheckValue = (expected) => {
-      return Chain.op((parts) => {
+      return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
         RawAssertions.assertEq('Checking slider value', expected.x, v.x());
         RawAssertions.assertEq('Checking slider value', expected.y, v.y());
@@ -362,7 +362,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       Logger.t(
         'Checking that the thumb is at the left edge',
         Chain.asStep({}, [
-          cGetParts, 
+          cGetParts,
           cCheckThumbBeforeLeft,
           cCheckThumbAtTop,
           cCheckValue({x: 49, y: 50})
