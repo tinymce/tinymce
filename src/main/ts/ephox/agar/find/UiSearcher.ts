@@ -1,18 +1,28 @@
-import SizzleFind from '../alien/SizzleFind';
-import Truncate from '../alien/Truncate';
-import { Adt } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Selectors } from '@ephox/sugar';
+import { Adt, Option, Result } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
-var targets = Adt.generate([
-  { self: [ 'element', 'selector' ] },
-  { children: [ 'element', 'selector' ] },
-  { descendants: [ 'element', 'selector' ] }
+import * as SizzleFind from '../alien/SizzleFind';
+import * as Truncate from '../alien/Truncate';
+
+interface TargetAdt extends Adt {
+  fold: <T> (
+    self: (element: Element, selector: string) => T,
+    children: (element: Element, selector: string) => T,
+    descendants: (element: Element, selector: string) => T
+  ) => T;
+}
+
+const targets: {
+  self: (element: Element, selector: string) => TargetAdt;
+  children: (element: Element, selector: string) => TargetAdt;
+  descendants: (element: Element, selector: string) => TargetAdt;
+} = Adt.generate([
+  { self: ['element', 'selector'] },
+  { children: ['element', 'selector'] },
+  { descendants: ['element', 'selector'] }
 ]);
 
-var derive = function (element, selector) {
+const derive = function (element: Element, selector: string) {
   // Not sure if error is what I want here.
   if (selector === undefined) throw new Error('No selector passed through');
   else if (selector.indexOf('root:') === 0) {
@@ -24,15 +34,11 @@ var derive = function (element, selector) {
   }
 };
 
-var matchesSelf = function (element, selector) {
+const matchesSelf = function (element: Element, selector: string): Option<Element> {
   return SizzleFind.matches(element, selector) ? Option.some(element) : Option.none();
 };
 
-var optToArray = function (opt) {
-  return opt.toArray();
-};
-
-var select = function (element, selector) {
+const select = function (element: Element, selector: string): Option<Element> {
   return derive(element, selector).fold(
     matchesSelf,
     SizzleFind.child,
@@ -40,33 +46,33 @@ var select = function (element, selector) {
   );
 };
 
-var selectAll = function (element, selector) {
+const selectAll = function (element: Element, selector: string) {
   return derive(element, selector).fold(
-    Fun.compose(optToArray, matchesSelf),
+    (element, selector) => matchesSelf(element, selector).toArray(),
     SizzleFind.children,
     SizzleFind.descendants
   );
 };
 
-var toResult = function (message, option) {
+const toResult = function <T>(message: string, option: Option<T>): Result<T, string> {
   return option.fold(function () {
-    return Result.error(message);
+    return Result.error<T, string>(message);
   }, Result.value);
 };
 
-var findIn = function (container, selector) {
+const findIn = function (container: Element, selector: string) {
   return toResult(
     'Could not find selector: ' + selector + ' in ' + Truncate.getHtml(container),
     select(container, selector)
   );
 };
 
-var findAllIn = function (container, selector) {
+const findAllIn = function (container: Element, selector: string) {
   return selectAll(container, selector);
 };
 
-export default {
-  select: select,
-  findIn: findIn,
-  findAllIn: findAllIn
+export {
+  select,
+  findIn,
+  findAllIn
 };

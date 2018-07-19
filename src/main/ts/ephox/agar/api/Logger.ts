@@ -1,14 +1,16 @@
-import ErrorTypes from '../alien/ErrorTypes';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
-var t = function (label, f) {
-  var enrich = function (err) {
+import * as ErrorTypes from '../alien/ErrorTypes';
+import { DieFn, NextFn } from '../pipe/Pipe';
+import { Step } from './Step';
+
+const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
+  const enrich = function (err) {
     return ErrorTypes.enrichWith(label, err);
   };
 
-  return function (value, next, die) {
-    var dieWith = Fun.compose(die, enrich);
+  return function (value: T, next: NextFn<U>, die: DieFn) {
+    const dieWith: DieFn = Fun.compose(die, enrich);
     try {
       return f(value, next, dieWith);
     } catch (err) {
@@ -17,8 +19,8 @@ var t = function (label, f) {
   };
 };
 
-var sync = function (label, f) {
-  var enrich = function (err) {
+const sync = function <T>(label: string, f: () => T): T {
+  const enrich = function (err) {
     return ErrorTypes.enrichWith(label, err);
   };
 
@@ -29,26 +31,26 @@ var sync = function (label, f) {
   }
 };
 
-var ts = function (label, fs) {
+const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
   if (fs.length === 0) return fs;
-  return Arr.map(fs, function (f, i) {
+  return Arr.map(fs, function (f: Step<T, U>, i: number) {
     return t(label + '(' + i + ')', f);
   });
 };
 
-var suite = function () {
+const suite = function () {
   // TMP, WIP
 };
 
-var spec = function (msg) {
+const spec = function (msg) {
   // TMP, WIP
   console.log(msg);
 };
 
-export default {
-  t: t,
-  ts: ts,
-  sync: sync,
-  suite: suite,
-  spec: spec
+export {
+  t,
+  ts,
+  sync,
+  suite,
+  spec
 };

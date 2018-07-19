@@ -1,30 +1,30 @@
-import AsyncActions from '../pipe/AsyncActions';
-import GeneralActions from '../pipe/GeneralActions';
-import Pipe from '../pipe/Pipe';
+import * as AsyncActions from '../pipe/AsyncActions';
+import * as GeneralActions from '../pipe/GeneralActions';
+import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
+import { GuardFn } from './Guard';
 
-var stateful = function (f) {
-  // In the future we might want to 'hide' this like we do in chain to decrease the likelihood of accidentally using it.
-  return function (state, next, die) {
-    Pipe(f)(state, next, die);
-  };
+export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn) => void;
+
+const stateful = function <T, U>(f: RunFn<T, U>): Step<T, U> {
+  return Pipe(f);
 };
 
 // Chiefly used for limiting things with timeouts.
-var control = function (step, guard) {
-  return Pipe(function (value, next, die) {
+const control = function <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> {
+  return Pipe<T, V>(function (value: T, next: NextFn<V>, die: DieFn) {
     guard(step, value, next, die);
   });
 };
 
-var sync = function (f) {
-  return Pipe(function (value, next, die) {
+const sync = function <T>(f: () => void): Step<T, T> {
+  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn) {
     f();
     next(value);
   });
 };
 
-var async = function (f) {
-  return Pipe(function (value, next, die) {
+const async = function <T>(f: (next: () => void, die: DieFn) => void): Step<T, T> {
+  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn) {
     f(function () {
       next(value);
     }, die);
@@ -32,30 +32,30 @@ var async = function (f) {
 };
 
 // Convenience functions
-var debugging = sync(GeneralActions.debug);
+const debugging = sync<any>(GeneralActions.debug);
 
-var log = function (message) {
-  return sync(GeneralActions.log(message));
+const log = function <T>(message: string): Step<T, T> {
+  return sync<T>(GeneralActions.log(message));
 };
 
-var wait = function (amount) {
-  return async(AsyncActions.delay(amount));
+const wait = function <T>(amount: number): Step<T, T> {
+  return async<T>(AsyncActions.delay(amount));
 };
 
-var fail = function (message) {
-  return async(AsyncActions.fail(message));
+const fail = function <T>(message: string): Step<T, T> {
+  return async<T>(AsyncActions.fail(message));
 };
 
-var pass = sync(GeneralActions.pass);
+const pass = sync<any>(GeneralActions.pass);
 
-export default {
-  stateful: stateful,
-  control: control,
-  sync: sync,
-  async: async,
-  debugging: debugging,
-  log: log,
-  wait: wait,
-  fail: fail,
-  pass: pass
+export const Step = {
+  stateful,
+  control,
+  sync,
+  async,
+  debugging,
+  log,
+  wait,
+  fail,
+  pass
 };

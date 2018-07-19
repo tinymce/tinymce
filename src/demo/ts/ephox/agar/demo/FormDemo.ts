@@ -1,7 +1,7 @@
-import Chain from 'ephox/agar/api/Chain';
-import FocusTools from 'ephox/agar/api/FocusTools';
-import Mouse from 'ephox/agar/api/Mouse';
-import Pipeline from 'ephox/agar/api/Pipeline';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as FocusTools from 'ephox/agar/api/FocusTools';
+import * as Mouse from 'ephox/agar/api/Mouse';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
 import DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Attr } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';

@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "3.0.13",
+  "version": "4.0.0",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",

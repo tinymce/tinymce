@@ -1,5 +1,5 @@
-import FocusTools from 'ephox/agar/api/FocusTools';
-import Pipeline from 'ephox/agar/api/Pipeline';
+import * as FocusTools from 'ephox/agar/api/FocusTools';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
 import DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Attr } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';

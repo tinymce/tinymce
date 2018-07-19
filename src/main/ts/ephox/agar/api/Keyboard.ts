@@ -1,9 +1,10 @@
-import Chain from './Chain';
-import FocusTools from './FocusTools';
-import FakeKeys from '../keyboard/FakeKeys';
 import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Traverse } from '@ephox/sugar';
+import { Element, Traverse } from '@ephox/sugar';
+
+import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
+import { Chain } from './Chain';
+import * as FocusTools from './FocusTools';
+import { Step } from './Main';
 
 /*
   doc - document scope
@@ -11,42 +12,52 @@ import { Traverse } from '@ephox/sugar';
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-var fakeKeys = function (types, value, modifiers, dispatcher) {
-  var doc = Traverse.owner(dispatcher);
-  Arr.each(types, function (type) {
-    FakeKeys.keyevent(type, doc, value, modifiers, dispatcher);
+const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: Element) => {
+  const doc = Traverse.owner(dispatcher);
+  Arr.each(types, (type) => {
+    keyevent(type, doc, value, modifiers, dispatcher);
   });
 };
 
-var cFakeKey = function (types, keyvalue, modifiers) {
-  return Chain.op(function (dispatcher) {
-    fakeKeys(types, keyvalue, modifiers, dispatcher);
+const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => {
+  return Chain.op(function (dispatcher: Element) {
+    fakeKeys(types)(keyvalue, modifiers, dispatcher);
   });
 };
 
-var sFakeKey = function (types) {
-  return function (doc, keyvalue, modifiers) {
-    return Chain.asStep(doc, [
+const sFakeKey = (types: string[]) => {
+  return <T>(doc: Element, keyvalue: number, modifiers: MixedKeyModifiers): Step<T,T> => {
+    return Chain.asStep<T, Element>(doc, [
       FocusTools.cGetFocused,
       cFakeKey(types, keyvalue, modifiers)
     ]);
   };
 };
 
-var keydownTypes = [ 'keydown' ];
-var keyupTypes = [ 'keyup' ];
-var keypressTypes = [ 'keypress' ];
+const keydownTypes = ['keydown'];
+const keyupTypes = ['keyup'];
+const keypressTypes = ['keypress'];
 // Should throw an error
-var keystrokeTypes = [ 'keydown', 'keyup' ];
+const keystrokeTypes = ['keydown', 'keyup'];
 
-export default {
-  keydown: Fun.curry(fakeKeys, keydownTypes),
-  keyup: Fun.curry(fakeKeys, keyupTypes),
-  keypress: Fun.curry(fakeKeys, keypressTypes),
-  keystroke: Fun.curry(fakeKeys, keystrokeTypes),
+const keydown = fakeKeys(keydownTypes);
+const keyup = fakeKeys(keyupTypes);
+const keypress = fakeKeys(keypressTypes);
+const keystroke = fakeKeys(keystrokeTypes);
 
-  sKeydown: sFakeKey(keydownTypes),
-  sKeyup: sFakeKey(keyupTypes),
-  sKeypress: sFakeKey(keypressTypes),
-  sKeystroke: sFakeKey(keystrokeTypes)
+const sKeydown = sFakeKey(keydownTypes);
+const sKeyup = sFakeKey(keyupTypes);
+const sKeypress = sFakeKey(keypressTypes);
+const sKeystroke = sFakeKey(keystrokeTypes);
+
+export {
+  keydown,
+  keyup,
+  keypress,
+  keystroke,
+
+  sKeydown,
+  sKeyup,
+  sKeypress,
+  sKeystroke
 };

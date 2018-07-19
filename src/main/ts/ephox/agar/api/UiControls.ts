@@ -1,34 +1,36 @@
-import Chain from './Chain';
-import UiFinder from './UiFinder';
-import { Value } from '@ephox/sugar';
+import { Element, Value } from '@ephox/sugar';
 
-var cSetValue = function (newValue) {
-  return Chain.op(function (element) {
+import { Chain } from './Chain';
+import * as UiFinder from './UiFinder';
+import { Step } from './Main';
+
+const cSetValue = function (newValue: string) {
+  return Chain.op(function (element: Element) {
     Value.set(element, newValue);
   });
 };
 
-var cGetValue = Chain.mapper(function (element) {
+const cGetValue = Chain.mapper(function (element: Element) {
   return Value.get(element);
 });
 
-var sSetValue = function (element, newValue) {
-  return Chain.asStep(element, [
+const sSetValue = function <T>(element: Element, newValue: string): Step<T, T> {
+  return Chain.asStep<T, Element>(element, [
     cSetValue(newValue)
   ]);
 };
 
-var sSetValueOn = function (container, selector, newValue) {
-  return Chain.asStep(container, [
+const sSetValueOn = function <T>(container: Element, selector: string, newValue: string): Step<T, T> {
+  return Chain.asStep<T, Element>(container, [
     UiFinder.cFindIn(selector),
     cSetValue(newValue)
   ]);
 };
 
-export default {
-  sSetValueOn: sSetValueOn,
-  sSetValue: sSetValue,
+export {
+  sSetValueOn,
+  sSetValue,
 
-  cSetValue: cSetValue,
-  cGetValue: cGetValue
+  cSetValue,
+  cGetValue
 };

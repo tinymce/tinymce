@@ -1,36 +1,33 @@
-import Assertions from 'ephox/agar/api/Assertions';
-import Chain from 'ephox/agar/api/Chain';
-import GeneralSteps from 'ephox/agar/api/GeneralSteps';
-import Mouse from 'ephox/agar/api/Mouse';
-import Pipeline from 'ephox/agar/api/Pipeline';
-import Step from 'ephox/agar/api/Step';
-import UiFinder from 'ephox/agar/api/UiFinder';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import { DomEvent, Element, Insert, Remove } from '@ephox/sugar';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
+import * as Mouse from 'ephox/agar/api/Mouse';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
+import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('MouseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MouseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var input = Element.fromTag('input');
-  var container = Element.fromTag('container');
+  const input = Element.fromTag('input');
+  const container = Element.fromTag('container');
 
-  var platform = PlatformDetection.detect();
+  const platform = PlatformDetection.detect();
 
   // Add to the DOM so focus calls happen
   Insert.append(Element.fromDom(document.body), container);
 
-  var repository = [ ];
+  let repository = [];
 
   // TODO: Free handlers.
-  var handlers = Arr.bind([ 'mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu' ], function (evt) {
+  const handlers = Arr.bind(['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'], function (evt) {
     return [
-      DomEvent.bind(container, evt, function () { 
+      DomEvent.bind(container, evt, function () {
         repository.push('container.' + evt);
       }),
       DomEvent.bind(input, evt, function () {
@@ -39,17 +36,17 @@ UnitTest.asynctest('MouseTest', function() {
     ];
   });
 
-  var clearRepository = Step.sync(function () {
-    repository = [ ];
+  const clearRepository = Step.sync(function () {
+    repository = [];
   });
 
-  var assertRepository = function (label, expected) {
+  const assertRepository = function (label, expected) {
     return Step.sync(function () {
       Assertions.assertEq(label, expected, repository);
     });
   };
 
-  var runStep = function (label, expected, step) {
+  const runStep = function (label, expected, step) {
     return GeneralSteps.sequence([
       clearRepository,
       step,
@@ -57,7 +54,7 @@ UnitTest.asynctest('MouseTest', function() {
     ]);
   };
 
-  var isUnfocusedFirefox = function () {
+  const isUnfocusedFirefox = function () {
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
     return platform.browser.isFirefox() && !document.hasFocus();
   };
@@ -65,10 +62,10 @@ UnitTest.asynctest('MouseTest', function() {
   Insert.append(container, input);
 
   Pipeline.async({}, [
-    runStep('Initial test', [ ], Step.pass),
+    runStep('Initial test', [], Step.pass),
     runStep(
       'sClickOn (container > input)',
-      [ 'input.click', 'container.click' ],
+      ['input.click', 'container.click'],
       Mouse.sClickOn(container, 'input')
     ),
 
@@ -80,16 +77,16 @@ UnitTest.asynctest('MouseTest', function() {
         'input.mouseup', 'container.mouseup',
         'input.click', 'container.click', 'input.focus'
 
-      ] : (isUnfocusedFirefox() ? [ 
+      ] : (isUnfocusedFirefox() ? [
         'input.mousedown', 'container.mousedown',
         'input.mouseup', 'container.mouseup',
         'input.click', 'container.click'
       ] : [
-        'input.focus',
-        'input.mousedown', 'container.mousedown',
-        'input.mouseup', 'container.mouseup',
-        'input.click', 'container.click'
-      ]),
+          'input.focus',
+          'input.mousedown', 'container.mousedown',
+          'input.mouseup', 'container.mouseup',
+          'input.click', 'container.click'
+        ]),
       Mouse.sTrueClickOn(container, 'input')
     ),
 
@@ -106,19 +103,19 @@ UnitTest.asynctest('MouseTest', function() {
 
     runStep(
       'sHoverOn (container > input)',
-      [ 'input.mouseover', 'container.mouseover' ],
+      ['input.mouseover', 'container.mouseover'],
       Mouse.sHoverOn(container, 'input')
     ),
 
     runStep(
       'sContextMenu (container > input)',
-      [ 'input.contextmenu', 'container.contextmenu' ],
+      ['input.contextmenu', 'container.contextmenu'],
       Mouse.sContextMenuOn(container, 'input')
     ),
 
     runStep(
       'cClick input',
-      [ 'input.click', 'container.click' ],
+      ['input.click', 'container.click'],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Mouse.cClick
@@ -127,7 +124,7 @@ UnitTest.asynctest('MouseTest', function() {
 
     runStep(
       'cClickOn (container > input)',
-      [ 'input.click', 'container.click' ],
+      ['input.click', 'container.click'],
       Chain.asStep(container, [
         Mouse.cClickOn('input')
       ])
@@ -135,7 +132,7 @@ UnitTest.asynctest('MouseTest', function() {
 
     runStep(
       'cContextMenu input',
-      [ 'input.contextmenu', 'container.contextmenu' ],
+      ['input.contextmenu', 'container.contextmenu'],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Mouse.cContextMenu

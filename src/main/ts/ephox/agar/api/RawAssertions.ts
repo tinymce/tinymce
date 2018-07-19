@@ -1,7 +1,7 @@
 import { assert } from '@ephox/bedrock';
 import { JSON as Json } from '@ephox/sand';
 
-var stringify = function (v) {
+const stringify = function (v: any) {
   try {
     return Json.stringify(v, null, 2);
   } catch (_) {
@@ -9,14 +9,14 @@ var stringify = function (v) {
   }
 };
 
-var extra = function (expected, actual) {
+const extra = function <T>(expected: T, actual: T) {
   return '.\n  Expected: ' + stringify(expected) + '\n  Actual: ' + stringify(actual);
 };
 
-var assertEq = function (label, expected, actual) {
+const assertEq = function <T>(label: string, expected: T, actual: T) {
   if (expected !== actual) assert.eq(expected, actual, label + extra(expected, actual));
 };
 
-export default {
-  assertEq: assertEq
+export {
+  assertEq
 };

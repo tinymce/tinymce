@@ -1,11 +1,10 @@
-import { Html } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
+import { Element, Html, Replication } from '@ephox/sugar';
 
-var getHtml = function (element) {
-  var clone = Replication.shallow(element);
+const getHtml = function (element: Element): string {
+  const clone = Replication.shallow(element);
   return Html.getOuter(clone);
 };
 
-export default {
-  getHtml: getHtml
+export {
+  getHtml
 };

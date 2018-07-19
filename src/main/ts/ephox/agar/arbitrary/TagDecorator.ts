@@ -1,13 +1,21 @@
-import WeightedChoice from './WeightedChoice';
 import Jsc from '@ephox/wrap-jsverify';
 
-var gOne = function (wDecorations) {
-  return WeightedChoice.generator(wDecorations).flatMap(function (choice) {
+import { WeightedChoice } from './WeightedChoice';
+import { Option } from '@ephox/katamari';
+
+interface Decorator {
+  weight: number;
+  property: string;
+  value: any; // generator
+}
+
+const gOne = function (wDecorations: Decorator[]) {
+  return WeightedChoice.generator(wDecorations).flatMap(function (choice: Option<Decorator>) {
     return choice.fold(function () {
       return Jsc.constant({}).generator;
     }, function (c) {
       return c.value.map(function (v) {
-        var r = {};
+        const r = {};
         r[c.property] = v;
         return r;
       });
@@ -15,7 +23,7 @@ var gOne = function (wDecorations) {
   });
 };
 
-var gEnforce = function (decorations) {
+const gEnforce = function (decorations) {
   return Jsc.constant(decorations).generator;
 };
 

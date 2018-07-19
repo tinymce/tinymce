@@ -1,9 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-
-
-export default {
-  tab:  Fun.constant(9),
+export const Keys = {
+  tab: Fun.constant(9),
   escape: Fun.constant(27),
   enter: Fun.constant(13),
   backspace: Fun.constant(8),

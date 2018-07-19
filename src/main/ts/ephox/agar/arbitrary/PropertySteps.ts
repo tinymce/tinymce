@@ -1,14 +1,15 @@
-import Step from '../api/Step';
 import { Thunk } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-var logNoPromises = Thunk.cached(function () {
+import { Step } from '../api/Step';
+
+const logNoPromises = Thunk.cached(function () {
   console.warn('No native promise support on browser to run async property tests. Skipping!');
 });
 
-var fakePromise = function () {
-  var self = {
-    then: function (fs) {
+const fakePromise = function (): PromiseLike<true> {
+  const self = {
+    then: function (fs: (result: any) => void) {
       logNoPromises();
       fs(true);
       return self;
@@ -18,9 +19,9 @@ var fakePromise = function () {
   return self;
 };
 
-var stepToPromise = function (step) {
-  return function (input) {
-    return typeof Promise !== "undefined" ? new Promise(function (resolve, reject) {
+const stepToPromise = function <T, U>(step: Step<T, U>) {
+  return function (input: T): PromiseLike<true> {
+    return typeof Promise !== "undefined" ? new Promise<true>(function (resolve, reject) {
       step(input, function () {
         resolve(true);
       }, reject);
@@ -29,10 +30,10 @@ var stepToPromise = function (step) {
 };
 
 // Maybe wrap in the same way Jsc does for console output with ticks and crosses.
-var sAsyncProperty = function (name, arbitraries, statefulStep, _options) {
-  var options = _options !== undefined ? _options : { };
+const sAsyncProperty = function <T, X, Y>(name: string, arbitraries, statefulStep: Step<X, Y>, _options?) {
+  const options = _options !== undefined ? _options : {};
 
-  return Step.async(function (next, die) {
+  return Step.async<T>(function (next, die) {
     Jsc.asyncProperty(
       name,
       arbitraries,
@@ -42,6 +43,6 @@ var sAsyncProperty = function (name, arbitraries, statefulStep, _options) {
   });
 };
 
-export default {
-  sAsyncProperty: sAsyncProperty
+export {
+  sAsyncProperty
 };

@@ -1,29 +1,30 @@
-import Guard from './Guard';
-import Step from './Step';
+import { DieFn, NextFn } from '../pipe/Pipe';
+import * as Guard from './Guard';
+import { Step } from './Step';
 
-var sTryUntilPredicate = function (label, predicate, interval, amount) {
-  var guard = Guard.tryUntil(label, interval, amount);
-  return Step.control(Step.stateful((value, next, die) => {
+const sTryUntilPredicate = function <T>(label: string, predicate: (value: T) => boolean, interval: number, amount: number) {
+  const guard = Guard.tryUntil<T, T>(label, interval, amount);
+  return Step.control(Step.stateful((value: T, next: NextFn<T>, die: DieFn) => {
     predicate(value) ? next(value) : die('predicate did not succeed');
   }), guard);
 };
 
-var sTryUntil = function (label, step, interval, amount) {
-  var guard = Guard.tryUntil(label, interval, amount);
+const sTryUntil = function <T, U>(label: string, step: Step<T, U>, interval: number, amount: number) {
+  const guard = Guard.tryUntil<T, U>(label, interval, amount);
   return Step.control(step, guard);
 };
 
-var sTryUntilNot = function (label, step, interval, amount) {
-  var guard = Guard.tryUntilNot(label, interval, amount);
+const sTryUntilNot = function <T, U>(label: string, step: Step<T, U>, interval: number, amount: number) {
+  const guard = Guard.tryUntilNot<T, U>(label, interval, amount);
   return Step.control(step, guard);
 };
 
-var sTimeout = function (label, step, limit) {
-  var guard = Guard.timeout(label, limit);
+const sTimeout = function <T, U>(label: string, step: Step<T, U>, limit: number) {
+  const guard = Guard.timeout<T, U>(label, limit);
   return Step.control(step, guard);
 };
 
-export default {
+export {
   sTryUntilPredicate,
   sTryUntil,
   sTryUntilNot,

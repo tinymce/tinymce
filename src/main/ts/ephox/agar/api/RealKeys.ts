@@ -1,24 +1,40 @@
-import SeleniumAction from '../server/SeleniumAction';
-import { Arr } from '@ephox/katamari';
-import { Adt } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Adt, Arr, Option, Struct } from '@ephox/katamari';
 
-var adt = Adt.generate([
-  { combo: [ 'modifiers', 'letter' ] },
-  { text: [ 's' ] },
-  { backspace: [ ] }
+import { MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
+import * as SeleniumAction from '../server/SeleniumAction';
+import { Step } from './Main';
+
+interface KeyPressAdt extends Adt {
+  fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
+}
+
+const adt: {
+  combo: (modifiers: Modifiers, letter: string) => KeyPressAdt;
+  text: (s: string) => KeyPressAdt;
+  backspace: () => KeyPressAdt;
+} = Adt.generate([
+  { combo: ['modifiers', 'letter'] },
+  { text: ['s'] },
+  { backspace: [] }
 ]);
 
-var modifierList = Struct.immutableBag([ ], [
+interface Modifiers {
+  ctrlKey: () => Option<boolean>;
+  metaKey: () => Option<boolean>;
+  shiftKey: () => Option<boolean>;
+  altKey: () => Option<boolean>;
+}
+
+const modifierList = Struct.immutableBag<Modifiers>([], [
   'ctrlKey',
   'metaKey',
   'shiftKey',
   'altKey'
 ]);
 
-var toSimpleFormat = function (keys) {
-  return Arr.map(keys, function (key) {
-    return key.fold(function (modifiers, letter) {
+const toSimpleFormat = function (keys: KeyPressAdt[]) {
+  return Arr.map(keys, function (key: KeyPressAdt) {
+    return key.fold<any>(function (modifiers: Modifiers, letter: string) {
       return {
         combo: {
           ctrlKey: modifiers.ctrlKey().getOr(false),
@@ -28,7 +44,7 @@ var toSimpleFormat = function (keys) {
           key: letter
         }
       };
-    }, function (s) {
+    }, function (s: string) {
       return { text: s };
     }, function () {
       return { text: '\u0008' };
@@ -36,24 +52,26 @@ var toSimpleFormat = function (keys) {
   });
 };
 
-var sSendKeysOn = function (selector, keys) {
-  return SeleniumAction.sPerform('/keys', {
+const sSendKeysOn = function <T>(selector: string, keys: KeyPressAdt[]): Step<T,T> {
+  return SeleniumAction.sPerform<T>('/keys', {
     selector: selector,
     keys: toSimpleFormat(keys)
   });
 };
 
-var combo = function (modifiers, letter) {
-  var mods = modifierList(modifiers);
+const combo = function (modifiers: MixedKeyModifiers, letter: string) {
+  const mods = modifierList(newModifiers(modifiers));
   return adt.combo(mods, letter);
 };
 
-export default {
-  // Needs to preprocess
-  combo: combo,
-  backspace: adt.backspace,
-  text: adt.text,
-  sSendKeysOn: sSendKeysOn
+const backspace = adt.backspace;
 
+const text = adt.text;
+
+export const RealKeys = {
+  combo,
+  backspace,
+  text,
+  sSendKeysOn
   // TODO: sSendKeysTo (and sSendKeys) which tags the element so that it can pass through a selector
 };

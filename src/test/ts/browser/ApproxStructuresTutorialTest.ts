@@ -1,22 +1,22 @@
-import ApproxStructure from 'ephox/agar/api/ApproxStructure';
-import Assertions from 'ephox/agar/api/Assertions';
-import { Element } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
+import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
+import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.test('Approx Structures Tutorial Test', function() {
-  var html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+UnitTest.test('Approx Structures Tutorial Test', function () {
+  const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
-      '<span data-ephox-id="blah" class="disabled">span</span>' +
+    '<span data-ephox-id="blah" class="disabled">span</span>' +
     '</div>' +
-    'words' + 
-  '</div>';
+    'words' +
+    '</div>';
 
-  var check = function (expected, input) {
-    var target = Element.fromHtml(input);
+  const check = function (expected, input) {
+    const target = Element.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 
-  var structure = ApproxStructure.build(function (s, str, arr) {
+  const structure = ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       classes: [
         arr.has('test1'),
@@ -33,7 +33,7 @@ UnitTest.test('Approx Structures Tutorial Test', function() {
         s.element('div', {
           attrs: {
             selected: str.is('true')
-          }, 
+          },
           children: [
             s.element('span', {
               attrs: {
