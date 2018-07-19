@@ -101,7 +101,7 @@ export default function (editor) {
 
   var cAssertDialogContents = function (data) {
     return Chain.on(function (element, next, die) {
-      getDialogByElement(element).fold(die, function (win) {
+      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
         next(Chain.wrap(element));
       });
@@ -110,7 +110,7 @@ export default function (editor) {
 
   var cFillDialogWith = function (data) {
     return Chain.on(function (element, next, die) {
-      getDialogByElement(element).fold(die, function (win) {
+      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         win.fromJSON(Merger.merge(win.toJSON(), data));
         next(Chain.wrap(element));
       });
@@ -134,7 +134,7 @@ export default function (editor) {
   var sSubmitDialog = function (selector: string) {
     return Chain.asStep({}, [
       cFindIn(cDialogRoot, selector),
-      cSubmitDialog
+      cSubmitDialog()
     ]);
   };
 

@@ -43,7 +43,7 @@ export default function (editor) {
     editor.selection.setRng(range);
   });
 
-  var cSelectElement = Chain.op(function (target) {
+  var cSelectElement = Chain.op(function (target: Element) {
     editor.selection.select(target.dom());
   });
 
