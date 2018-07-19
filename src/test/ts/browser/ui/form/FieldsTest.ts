@@ -15,7 +15,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { input } from 'ephox/alloy/api/events/NativeEvents';
-import { Attr } from '@ephox/sugar';
+import { Attr, SelectorFind } from '@ephox/sugar';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
@@ -52,7 +52,10 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
           factory: Input,
           data: 'init'
         }),
-        FormField.parts().label(labelSpec)
+        FormField.parts().label(labelSpec),
+        FormField.parts()['aria-descriptor']({
+          text: 'help'
+        })
       ]
     });
 
@@ -169,10 +172,24 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
       Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, arr) => {
+        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
+        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
+
+        const inputID = Attr.get(input, 'id');
+        const spanID = Attr.get(span, 'id');
         return s.element('div', {
           children: [
-            s.element('input', { }),
-            s.element('label', { })
+            s.element('input', { 
+              attrs: {
+                'aria-describedby': str.is(spanID)
+              }
+            }),
+            s.element('label', { 
+              attrs: {
+                'for': str.is(inputID)
+              }
+            }),
+            s.element('span', { })
           ]
         });
       }), inputA.element()),

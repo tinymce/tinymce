@@ -43,15 +43,23 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
   const events = AlloyEvents.derive([
     // Used to be systemInit
     AlloyEvents.runOnAttached((component, simulatedEvent) => {
-      const ps = AlloyParts.getParts(component, detail, [ 'label', 'field' ]);
-      ps.label().each((label) => {
-        ps.field().each((field) => {
-          const id = Id.generate(detail.prefix());
-
+      const ps = AlloyParts.getParts(component, detail, [ 'label', 'field', 'aria-descriptor' ]);
+      ps.field().each((field) => {
+        const id = Id.generate(detail.prefix());
+        ps.label().each((label) => {
           // TODO: Find a nicer way of doing this.
           Attr.set(label.element(), 'for', id);
           Attr.set(field.element(), 'id', id);
         });
+
+        ps['aria-descriptor']().each((descriptor) => {
+          const descriptorId = Id.generate(detail.prefix());
+          Attr.set(descriptor.element(), 'id', descriptorId);
+          Attr.set(field.element(), 'aria-describedby', descriptorId);
+          if (ps.label().toOption().isNone()) {
+            Attr.set(field.element(), 'aria-labelledby', descriptorId);
+          }
+        })
       });
     })
   ]);

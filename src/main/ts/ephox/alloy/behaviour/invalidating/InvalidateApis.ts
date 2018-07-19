@@ -1,15 +1,28 @@
-import { Future, Result } from '@ephox/katamari';
-import { Body, Class, Html } from '@ephox/sugar';
+import { Future, Result, Arr } from '@ephox/katamari';
+import { Body, Class, Html, Attr, Node } from '@ephox/sugar';
 
 import * as AriaVoice from '../../alien/AriaVoice';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
 
+const ariaElements = [
+  'input',
+  'textarea'
+];
+
+const isAriaElement = (elem) => {
+  const name = Node.name(elem);
+  return Arr.contains(ariaElements, name);
+};
+
 const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/*, invalidState */): void => {
   const elem = invalidConfig.getRoot()(component).getOr(component.element());
   Class.remove(elem, invalidConfig.invalidClass());
   invalidConfig.notify().each((notifyInfo) => {
+    if (isAriaElement(component.element())) {
+      Attr.remove(elem, 'title');
+    }
     notifyInfo.getContainer()(component).each((container) => {
       Html.set(container, notifyInfo.validHtml());
     });
@@ -22,7 +35,11 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
   const elem = invalidConfig.getRoot()(component).getOr(component.element());
   Class.add(elem, invalidConfig.invalidClass());
   invalidConfig.notify().each((notifyInfo) => {
-    // Probably want to make "Body" configurable as well.
+    if (isAriaElement(component.element())) {
+      // Setting the title on the element allows chrome to read it out properly
+      Attr.set(component.element(), 'title', text);
+    }
+    // TODO: Use the aria string property here, and maybe want to make "Body" configurable as well?
     AriaVoice.shout(Body.body(), text);
     notifyInfo.getContainer()(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?

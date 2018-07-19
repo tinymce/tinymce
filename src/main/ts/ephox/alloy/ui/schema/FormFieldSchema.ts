@@ -5,6 +5,7 @@ import { Composing } from '../../api/behaviour/Composing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
+import { FormFieldDetail } from '../../ui/types/FormFieldTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
@@ -15,6 +16,28 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.optional({
     schema: [ FieldSchema.strict('dom') ],
     name: 'label'
+  }),
+
+  PartType.optional({
+    factory: {
+      sketch (spec) {
+        return {
+          uid: spec.uid,
+          dom: {
+            tag: 'span',
+            styles: {
+              display: 'none',
+            },
+            attributes: {
+              'aria-hidden': 'true'
+            },
+            innerHtml: spec.text
+          }
+        }
+      }
+    },
+    schema: [ FieldSchema.strict('text') ],
+    name: 'aria-descriptor'
   }),
 
   PartType.required({
