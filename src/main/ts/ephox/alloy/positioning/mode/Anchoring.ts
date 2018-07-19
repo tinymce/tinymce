@@ -28,10 +28,10 @@ export interface AnchorOverrides {
 }
 
 export interface HasLayoutAnchor {
-  layouts: () => {
+  layouts: () => Option<{
     onLtr: () => (elem: Element) => AnchorLayout[];
     onRtl: () => (elem: Element) => AnchorLayout[];
-  };
+  }>;
 }
 
 export interface HasLayoutAnchorSpec {

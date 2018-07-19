@@ -9,7 +9,7 @@ import { EventFormat, CustomEvent, ReceivingEvent, ReceivingInternalEvent } from
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 import * as TooltippingApis from './TooltippingApis';
-import { Arr, Id } from '@ephox/katamari';
+import { Arr, Id, Fun } from '@ephox/katamari';
 
 import * as Layout from '../../positioning/layout/Layout';
 
@@ -46,8 +46,8 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         anchor: 'hotspot',
         hotspot: comp,
         layouts: {
-          onLtr: [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ],
-          onRtl : [ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]
+          onLtr: Fun.constant([ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
+          onRtl : Fun.constant([ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
         }
       }, popup);
     }
