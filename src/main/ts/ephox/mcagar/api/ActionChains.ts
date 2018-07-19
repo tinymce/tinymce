@@ -5,11 +5,11 @@ import { FocusTools } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-var cIDoc = Chain.mapper(function (editor) {
+var cIDoc = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getDoc());
 });
 
-var cUiDoc = Chain.mapper(function (editor) {
+var cUiDoc = Chain.mapper(function (editor: any) {
   return Element.fromDom(document);
 });
 

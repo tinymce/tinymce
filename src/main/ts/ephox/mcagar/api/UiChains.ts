@@ -12,11 +12,11 @@ import { Visibility } from '@ephox/sugar';
 
 var dialogRoot = Element.fromDom(document.body);
 
-var cToolstripRoot = Chain.mapper(function (editor) {
+var cToolstripRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getContainer());
 });
 
-var cEditorRoot = Chain.mapper(function (editor) {
+var cEditorRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getBody());
 });
 
@@ -98,7 +98,7 @@ var cTriggerContextMenu = function (label: string, target, menu) {
   ]);
 };
 
-var cDialogByPopup = Chain.binder(function (input) {
+var cDialogByPopup = Chain.binder(function (input: any) {
   var wins = input.editor.windowManager.getWindows();
   var popupId = input.popupNode.dom().id;
   var dialogs =  Arr.filter(wins, function (dialog) {

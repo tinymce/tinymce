@@ -42,7 +42,7 @@ var cFromSettings = function (settings) {
   return cFromHtml(null, settings);
 };
 
-var cRemove = Chain.op(function (editor) {
+var cRemove = Chain.op(function (editor: any) {
   var id = editor.id;
   editor.remove();
   Selectors.one('#' + id).each(Remove.remove);

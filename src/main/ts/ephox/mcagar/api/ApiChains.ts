@@ -12,23 +12,23 @@ var lazyBody = function (editor) {
   return Element.fromDom(editor.getBody());
 };
 
-var cNodeChanged = Chain.op(function (editor) {
+var cNodeChanged = Chain.op(function (editor: any) {
   editor.nodeChanged();
 });
 
 var cSetContent = function (html: string) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     editor.setContent(html);
   });
 };
 
 var cSetRawContent = function (html: string) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     editor.getBody().innerHTML = html;
   });
 };
 
-var cSetSelectionFrom = function (spec) {
+var cSetSelectionFrom = function (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
   var path = Cursors.pathFrom(spec);
   return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
 };
@@ -38,7 +38,7 @@ var cSetCursor = function (elementPath: number[], offset: number) {
 };
 
 var cSetSelection = function (startPath, soffset, finishPath, foffset) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     var range = TinySelections.createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
     editor.selection.setRng(range);
     editor.nodeChanged();
@@ -46,37 +46,37 @@ var cSetSelection = function (startPath, soffset, finishPath, foffset) {
 };
 
 var cSetSetting = function (key: string, value) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     editor.settings[key] = value;
   });
 };
 
 var cDeleteSetting = function (key: string) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     delete editor.settings[key];
   });
 };
 
 var cSelect = function (selector: string, path: number[]) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     var container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     var target = Cursors.calculateOne(container, path);
     editor.selection.select(target.dom());
   });
 };
 
-var cGetContent = Chain.mapper(function (editor) {
+var cGetContent = Chain.mapper(function (editor: any) {
   return editor.getContent();
 });
 
 var cExecCommand = function (command: string, value?) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     editor.execCommand(command, false, value);
   });
 };
 
 var cAssertContent = function (expected: string) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
   });
 };
@@ -113,14 +113,14 @@ var assertPath = function (label, root, expPath: number[], expOffset: number, ac
 };
 
 var cAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
-  return Chain.op(function (editor) {
+  return Chain.op(function (editor: any) {
     var actual = editor.selection.getRng();
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);
     assertPath('finish', lazyBody(editor), finishPath, foffset, actual.endContainer, actual.endOffset);
   });
 };
 
-var cFocus = Chain.op(function (editor) {
+var cFocus = Chain.op(function (editor: any) {
   editor.focus();
 });
 
