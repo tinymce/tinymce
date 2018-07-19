@@ -27,13 +27,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (
   };
 
   const cAssertWidth = function (expectedWidth) {
-    return Chain.op(function (tableModel) {
+    return Chain.op(function (tableModel: any) {
       Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width());
     });
   };
 
   const cAssertHeight = function (expectedWidth) {
-    return Chain.op(function (tableModel) {
+    return Chain.op(function (tableModel: any) {
       Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows().length);
     });
   };

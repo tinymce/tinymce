@@ -8,6 +8,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { document } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', function () {
   const success = arguments[arguments.length - 2];
@@ -17,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', function () {
   ImagePlugin();
 
   const cFakeEvent = function (name) {
-    return Chain.op(function (elm) {
+    return Chain.op(function (elm: Element) {
       DOMUtils.DOM.fire(elm.dom(), name);
     });
   };

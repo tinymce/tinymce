@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
     );
   });
 
-  const cRemoveEditor = Chain.op((editor) => editor.remove());
+  const cRemoveEditor = Chain.op((editor: any) => editor.remove());
 
   Pipeline.async({}, [
     Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [

@@ -1,5 +1,5 @@
 import { Assertions, Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Hierarchy, Remove, Element, Traverse, Selection, WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function (vb) {
+    return Chain.op(function (vb: any) {
       vb.update(html);
     });
   };
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cValidateBookmark = function (rootPath) {
-    return Chain.on(function (input, next, die) {
+    return Chain.on(function (input: any, next, die) {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
@@ -46,11 +46,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cAssertNone = Chain.op(function (x) {
+  const cAssertNone = Chain.op(function (x: Option<any>) {
     RawAssertions.assertEq('should be none', true, x.isNone());
   });
 
-  const cAssertSome = Chain.op(function (x) {
+  const cAssertSome = Chain.op(function (x: Option<any>) {
     RawAssertions.assertEq('should be some', true, x.isSome());
   });
 
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cManipulateBookmarkOffsets = function (startPad, finishPad) {
-    return Chain.mapper(function (bookmark) {
+    return Chain.mapper(function (bookmark: Option<any>) {
       return bookmark
         .map(function (bm) {
           return Selection.range(bm.start(), bm.soffset() + startPad, bm.finish(), bm.foffset() + finishPad);
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
-    return Chain.op(function (input) {
+    return Chain.op(function (input: Option<any>) {
       const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
 
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cSetSelectionFromBookmark = Chain.op(function (bookmark) {
+  const cSetSelectionFromBookmark = Chain.op(function (bookmark: Option<any>) {
     bookmark.each(function (b) {
       const root = Element.fromDom(viewBlock.get());
       const win = Traverse.defaultView(root);

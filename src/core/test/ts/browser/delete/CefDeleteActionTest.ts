@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Hierarchy, Element } from '@ephox/sugar';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
   };
 
   const cReadAction = function (forward, cursorPath, cursorOffset) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
   };
 
   const cAssertRemoveElementAction = function (elementPath) {
-    return Chain.op(function (actionOption) {
+    return Chain.op(function (actionOption: Option<any>) {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
   };
 
   const cAssertMoveToElementAction = function (elementPath) {
-    return Chain.op(function (actionOption) {
+    return Chain.op(function (actionOption: Option<any>) {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
   };
 
   const cAssertMoveToPositionAction = function (elementPath, offset) {
-    return Chain.op(function (actionOption) {
+    return Chain.op(function (actionOption: Option<any>) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
     });
   };
 
-  const cAssertActionNone = Chain.op(function (actionOption) {
+  const cAssertActionNone = Chain.op(function (actionOption: Option<any>) {
     Assertions.assertEq('Action value should be none', true, actionOption.isNone());
   });
 

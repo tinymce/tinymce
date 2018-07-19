@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   Theme();
 
   const cCreateInlineEditor = function (html) {
-    return Chain.on(function (viewBlock, next, die) {
+    return Chain.on(function (viewBlock: any, next, die) {
       viewBlock.update(html);
 
       EditorManager.init({
@@ -30,19 +30,19 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
     });
   };
 
-  const cFocusEditor = Chain.op(function (editor) {
+  const cFocusEditor = Chain.op(function (editor: any) {
     EditorFocus.focus(editor, false);
   });
 
   const cFocusElement = function (elementPath) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       element.dom().focus();
     });
   };
 
   const cSetSelection = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.dom.createRng();
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   };
 
   const cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.selection.getRng();
@@ -68,14 +68,14 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   };
 
   const cAssertHasFocus = function (elementPath) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
       Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active().getOrDie());
     });
   };
 
-  const cRemoveEditor = Chain.op(function (editor) {
+  const cRemoveEditor = Chain.op(function (editor: any) {
     editor.remove();
   });
 

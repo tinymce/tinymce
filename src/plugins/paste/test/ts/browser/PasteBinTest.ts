@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
   const viewBlock = ViewBlock();
 
   const cCreateEditorFromSettings = function (settings?, html?) {
-    return Chain.on(function (viewBlock, next, die) {
+    return Chain.on(function (viewBlock: any, next, die) {
       const randomId = Id.generate('tiny');
       html = html || '<textarea></textarea>';
 
@@ -61,13 +61,13 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
   };
 
   const cRemoveEditor = function () {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       editor.remove();
     });
   };
 
   const cAssertCases = function (cases) {
-    return Chain.op(function (editor) {
+    return Chain.op(function (editor: any) {
       const pasteBin = PasteBin(editor);
       Obj.each(cases, function (c, i) {
         getPasteBinParent(editor).appendChild(editor.dom.createFragment(c.content));

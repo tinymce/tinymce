@@ -1,9 +1,8 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import * as EditorContent from 'tinymce/core/content/EditorContent';
-import Assertions from '@ephox/agar/lib/main/ts/ephox/agar/api/Assertions';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Node from 'tinymce/core/api/html/Node';
 
@@ -35,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       Logger.t('getContent html', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
-          const html = EditorContent.getContent(editor);
+          const html = <string> EditorContent.getContent(editor);
           Assertions.assertHtml('Should be expected html', '<p>html</p>', html);
         })
       ])),
@@ -74,24 +73,24 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
           Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', toHtml(tree));
 
           EditorContent.setContent(editor, '<p>new html</p>');
-          Assertions.assertHtml('Should be expected html', '<p>new html</p>', EditorContent.getContent(editor));
+          Assertions.assertHtml('Should be expected html', '<p>new html</p>', <string> EditorContent.getContent(editor));
 
           EditorContent.setContent(editor, tree);
-          Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', EditorContent.getContent(editor));
+          Assertions.assertHtml('Should be expected tree html', '<p>tree</p>', <string> EditorContent.getContent(editor));
         })
       ])),
       Logger.t('setContent tree filtered', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           EditorContent.setContent(editor, getFontTree());
-          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', EditorContent.getContent(editor));
+          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
         })
       ])),
       Logger.t('setContent tree using public api', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>tree</p>'),
         Step.sync(() => {
           editor.setContent(getFontTree());
-          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', EditorContent.getContent(editor));
+          Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', <string> EditorContent.getContent(editor));
         })
       ])),
       Logger.t('getContent empty editor depending on forced_root_block setting', GeneralSteps.sequence([

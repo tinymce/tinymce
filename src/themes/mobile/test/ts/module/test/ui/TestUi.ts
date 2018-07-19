@@ -1,7 +1,7 @@
 import { Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyLogger, AlloyTriggers, NativeEvents, Toggling } from '@ephox/alloy';
 import { Result } from '@ephox/katamari';
-import { Attr, Focus, Traverse } from '@ephox/sugar';
+import { Attr, Focus, Traverse, Element } from '@ephox/sugar';
 
 const cGetFocused = Chain.binder(function () {
   return Focus.active().fold(function () {
@@ -9,7 +9,7 @@ const cGetFocused = Chain.binder(function () {
   }, Result.value);
 });
 
-const cGetParent = Chain.binder(function (elem) {
+const cGetParent = Chain.binder(function (elem: Element) {
   return Traverse.parent(elem).fold(function () {
     return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
   }, Result.value);

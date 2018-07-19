@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function
   };
 
   const cHasAllContentsSelected = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();

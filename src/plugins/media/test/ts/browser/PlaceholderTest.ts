@@ -81,7 +81,8 @@ UnitTest.asynctest('browser.core.SubmitTest', function () {
           children: [
             s.element('img', {
               classes: [
-                arr.has('mce-object', 'mce-object-script')
+                arr.has('mce-object'),
+                arr.has('mce-object-script')
               ],
               attrs: {
                 height: str.is('150'),
@@ -90,7 +91,8 @@ UnitTest.asynctest('browser.core.SubmitTest', function () {
             }),
             s.element('img', {
               classes: [
-                arr.has('mce-object', 'mce-object-script')
+                arr.has('mce-object'),
+                arr.has('mce-object-script')
               ],
               attrs: {
                 height: str.is('200'),

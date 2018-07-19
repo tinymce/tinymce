@@ -7,6 +7,7 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function () {
   const success = arguments[arguments.length - 2];
@@ -16,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function () 
   ImagePlugin();
 
   const cFakeEvent = function (name) {
-    return Chain.op(function (elm) {
+    return Chain.op(function (elm: Element) {
       DOMUtils.DOM.fire(elm.dom(), name);
     });
   };

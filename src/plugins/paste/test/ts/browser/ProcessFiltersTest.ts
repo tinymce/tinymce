@@ -15,7 +15,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function 
   PastePlugin();
 
   const cProcessPre = function (html, internal, preProcess) {
-    return Chain.mapper(function (editor) {
+    return Chain.mapper(function (editor: any) {
       editor.on('PastePreProcess', preProcess);
 
       const result = ProcessFilters.process(editor, html, internal);
@@ -27,7 +27,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function 
   };
 
   const cProcessPrePost = function (html, internal, preProcess, postProcess) {
-    return Chain.mapper(function (editor) {
+    return Chain.mapper(function (editor: any) {
       editor.on('PastePreProcess', preProcess);
       editor.on('PastePostProcess', postProcess);
 

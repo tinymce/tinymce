@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     }).then(next, die);
   });
 
-  const mAssertEditors = Step.stateful(function (editors, next, die) {
+  const mAssertEditors = Step.stateful(function (editors: any[], next, die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     Assertions.assertEq('Editor container should be null', null, editors[0].editorContainer);
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.remove();
   });
 
-  const mAssertTargets = Step.stateful(function (targets, next, die) {
+  const mAssertTargets = Step.stateful(function (targets: any[], next, die) {
     Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
 
     Arr.each(targets, function (target) {

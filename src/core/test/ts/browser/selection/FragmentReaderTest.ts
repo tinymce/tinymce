@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
   };
 
   const cReadFragment = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
   };
 
   const cReadFragmentCells = function (paths) {
-    return Chain.mapper(function (viewBlock) {
+    return Chain.mapper(function (viewBlock: any) {
       const ranges = Arr.map(paths, function (path) {
         const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
