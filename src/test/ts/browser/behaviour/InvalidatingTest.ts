@@ -143,7 +143,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         label,
         Step.control(
           Assertions.sAssertStructure(
-            'Checking structure after marking invalid',
+            'Checking structure after marking valid',
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 attributes: [
