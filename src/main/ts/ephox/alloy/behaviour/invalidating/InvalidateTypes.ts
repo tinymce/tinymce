@@ -8,7 +8,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
   markValid: (component: AlloyComponent) => void;
   isInvalid: (component: AlloyComponent) => boolean;
-  markInvalid: (component: AlloyComponent) => void;
+  markInvalid: (component: AlloyComponent, text: string) => void;
   query: <T>(component: AlloyComponent) => Future<T>;
   run: <T>(component: AlloyComponent) => Future<T>;
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
@@ -35,10 +35,11 @@ export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
 export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   invalidClass: () => string;
   notify?: () => Option<{
-    getContainer?: () => (input: AlloyComponent) => Option<Element>;
-    onValid?: () => (comp: AlloyComponent) => void;
+    aria: string,
+    getContainer: () => (input: AlloyComponent) => Option<Element>;
+    onValid: () => (comp: AlloyComponent) => void;
     validHtml: () => string;
-    onInvalid?: () => (comp: AlloyComponent, err: string) => void;
+    onInvalid: () => (comp: AlloyComponent, err: string) => void;
     onValidate: () => (comp: AlloyComponent) => void;
   }>;
   onEvent?: () => string;
