@@ -126,7 +126,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             'Checking structure after marking invalid',
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
-                attributes: [
+                attrs: [
                   arr.has('title')
                 ]
               });
@@ -146,7 +146,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             'Checking structure after marking valid',
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
-                attributes: [
+                attrs: [
                   arr.not('title')
                 ]
               });
