@@ -1,4 +1,5 @@
 import { Future, Option, Result } from '@ephox/katamari';
+// TODO: Fix this.
 import { TieredData } from '../../api/Main';
 import { TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
@@ -16,12 +17,13 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   components: () => AlloySpec[ ];
 
   role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
   fetch: () => (comp: AlloyComponent) => Future<F>;
   onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink?: () => Option<() => Result<AlloyComponent, Error>>
+  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
   matchWidth: () => boolean;
+  sandboxClasses: () => string[];
 }
 
 export interface DropdownDetail extends CommonDropdownDetail<TieredData>, CompositeSketchDetail {
@@ -38,12 +40,13 @@ export interface DropdownSpec extends CompositeSketchSpec {
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  sandboxClasses?: string[];
 
   toggleClass: string;
   lazySink?: any;
   parts: {
     menu: Partial<TieredMenuSpec>;
-  }
+  };
   matchWidth?: boolean;
   role?: string;
 }

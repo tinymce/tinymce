@@ -16,7 +16,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onHide: () => (component: AlloyComponent) => void;
   getRelated: () => (component: AlloyComponent) => Option<AlloyComponent>;
   lazySink: () =>  () => Result<AlloyComponent, Error>;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
 }
 
 export interface InlineViewSpec extends SingleSketchSpec {
@@ -28,7 +28,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   onShow?: (component: AlloyComponent) => void;
   onHide?: (component: AlloyComponent) => void;
   getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;
-  eventOrder?: Record<string, string[]>
+  eventOrder?: Record<string, string[]>;
 }
 
 // TYPIFY
@@ -41,7 +41,7 @@ export interface InlineViewAnchor {
 }
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {
-  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: SketchSpec) => void;
+  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: AlloySpec) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
 }

@@ -24,9 +24,7 @@ const sDismissOn = (label, gui, selector) => {
     'Broadcast dimiss: ' + label,
     GeneralSteps.sequence([
       Step.sync(() => {
-        const item = UiFinder.findIn(gui.element(), selector).getOrDie(
-          new Error('Could not find the item (' + selector + ') for dispatching dismiss')
-        );
+        const item = UiFinder.findIn(gui.element(), selector).getOrDie();
 
         dismiss(gui, item);
       })

@@ -1,11 +1,12 @@
-import { Arr, Fun, Result, Option } from '@ephox/katamari';
-import { Compare, Focus, Node, Remove, Traverse, Element } from '@ephox/sugar';
+import { Arr, Fun, Result } from '@ephox/katamari';
+import { Compare, Element, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
 import * as GuiEvents from '../../events/GuiEvents';
+import { FocusingEvent } from '../../events/SimulatedEvent';
 import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
@@ -14,8 +15,6 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { SystemApi } from './SystemApi';
-import { ElementAndHandler } from '../../events/EventRegistry';
-import { FocusingEvent } from '../../events/SimulatedEvent';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -26,14 +25,14 @@ export interface GuiSystem {
   getByUid: (uid: string) => Result<AlloyComponent, string | Error>;
   getByDom: (element: Element) => Result<AlloyComponent, string | Error>;
 
-  addToWorld: (AlloyComponent) => void;
-  removeFromWorld: (AlloyComponent) => void;
+  addToWorld: (comp: AlloyComponent) => void;
+  removeFromWorld: (comp: AlloyComponent) => void;
 
   broadcast: (message: message) => void;
   broadcastOn: (channels: string[], message: message) => void;
 }
 
-export type message = Record<string, string>;
+export type message = Record<string, any>;
 
 const create = (): GuiSystem => {
   const root = GuiFactory.build(

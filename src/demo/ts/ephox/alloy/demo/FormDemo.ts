@@ -17,6 +17,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoFields from './forms/DemoFields';
 import { document, console, setTimeout } from '@ephox/dom-globals';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+import { FormField } from 'ephox/alloy/api/ui/FormField';
+import { Input } from 'ephox/alloy/api/Main';
 
 export default (): void => {
   const gui = Gui.create();
@@ -79,6 +81,23 @@ export default (): void => {
         },
 
         components: [
+          parts.field('aria', FormField.sketch({
+            dom: {
+              tag: 'span'    
+            },
+            components: [
+              FormField.parts().label({
+                dom: {
+                  tag: 'label',
+                  innerHtml: 'aria test'
+                }
+              }),
+              FormField.parts().field({ factory: Input }),
+              FormField.parts()['aria-descriptor']({
+                text: 'aria descriptor'
+              })
+            ]
+          })),
           parts.field('alpha', DemoFields.textMunger(alphaSpec)),
           parts.field('beta', DemoFields.textMunger(betaSpec)),
           Container.sketch({
@@ -247,9 +266,9 @@ export default (): void => {
       alpha: 'hi'
     });
 
-    console.log('form', Obj.map(Representing.getValue(form), (v) => { return v.getOrDie(); }));
+    console.log('form', Obj.map(Representing.getValue(form), (v) => v.getOrDie()));
 
-    console.log('expform', Obj.map(Representing.getValue(expform), (v) => { return v.getOrDie(); }));
+    console.log('expform', Obj.map(Representing.getValue(expform), (v) => v.getOrDie()));
 
     Representing.setValue(expform, {
       omega: 'hi'

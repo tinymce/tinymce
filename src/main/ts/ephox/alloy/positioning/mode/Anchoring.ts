@@ -1,5 +1,5 @@
 import { Contracts, Option } from '@ephox/katamari';
-import { Element } from "@ephox/sugar";
+import { Element } from '@ephox/sugar';
 
 import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -24,21 +24,21 @@ export interface AnchorDetail<D> {
 
 export type MaxHeightFunction =  (elem: Element, available: number) => void;
 export interface AnchorOverrides {
-  maxHeightFunction?: MaxHeightFunction
+  maxHeightFunction?: MaxHeightFunction;
 }
 
 export interface HasLayoutAnchor {
-  layouts: () => Option<{
-    onLtr: () => AnchorLayout[];
-    onRtl: () => AnchorLayout[];
-  }>
+  layouts: () => {
+    onLtr: () => (elem: Element) => AnchorLayout[];
+    onRtl: () => (elem: Element) => AnchorLayout[];
+  };
 }
 
 export interface HasLayoutAnchorSpec {
   layouts?: {
-    onLtr: AnchorLayout[];
-    onRtl: AnchorLayout[];
-  }
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
+  };
 };
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec {
@@ -76,7 +76,7 @@ export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnc
   item: () => AlloyComponent;
 }
 
-export interface MakeshiftAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   anchor: 'makeshift';
   x: number;
   y: number;
@@ -98,7 +98,7 @@ export interface Anchoring {
   bubble: () => Bubble;
   overrides: () => AnchorOverrides;
   layouts: () => AnchorLayout[];
-  placer: () => Option<AnchorPlacement>
+  placer: () => Option<AnchorPlacement>;
 }
 
 const nu: (spec) => Anchoring = Contracts.exactly([
@@ -107,8 +107,8 @@ const nu: (spec) => Anchoring = Contracts.exactly([
   'overrides',
   'layouts',
   'placer'
-])
+]);
 
 export {
   nu
-}
+};

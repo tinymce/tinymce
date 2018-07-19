@@ -5,7 +5,6 @@ import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { SingleSketch } from '../../api/ui/Sketcher';
 import { DomModificationSpec, DomModification } from '../../dom/DomModification';
 
-
 export interface ContainerDetail {
   uid: () => string;
   dom: () => RawDomSchema;
@@ -15,7 +14,7 @@ export interface ContainerDetail {
   events: () => AlloyEventRecord;
   // FIX: types
   domModification: () => DomModification;
-  eventOrder: () => Record<string, string[]>
+  eventOrder: () => Record<string, string[]>;
 }
 
 export interface ContainerSpec {
@@ -25,7 +24,7 @@ export interface ContainerSpec {
   containerBehaviours?: AlloyBehaviourRecord;
   events?: AlloyEventRecord;
   domModification?: DomModificationSpec;
-  eventOrder?: Record<string, string[]>
+  eventOrder?: Record<string, string[]>;
 }
 
-export interface ContainerSketcher extends SingleSketch<ContainerSpec, ContainerDetail> { };
+export interface ContainerSketcher extends SingleSketch<ContainerSpec, ContainerDetail> { }

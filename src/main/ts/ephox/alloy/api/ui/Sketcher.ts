@@ -6,27 +6,26 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SingleSketchFactory, CompositeSketchFactory } from './UiSketcher';
 
 export interface SingleSketchSpec {
   uid?: string;
-};
+}
 export interface SingleSketchDetail {
   uid: () => string;
-};
+}
 
 export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   sketch: (spec: S) => SketchSpec;
-  factory: SingleSketchFactory<D, S>;
+  factory: UiSketcher.SingleSketchFactory<D, S>;
 }
 
-export interface CompositeSketchSpec { };
+export interface CompositeSketchSpec { }
 export interface CompositeSketchDetail {
   partUids: () => Record<string, string>;
   components: () => AlloySpec[];
-};
+}
 
 export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {
   name: () => string;
@@ -35,7 +34,7 @@ export interface CompositeSketch<S extends CompositeSketchSpec, D extends Compos
   sketch: (spec: S) => SketchSpec;
   parts: () => AlloyParts.GeneratedParts;
   // TYPIFY externals
-  factory: CompositeSketchFactory<D, S>;
+  factory: UiSketcher.CompositeSketchFactory<D, S>;
 }
 
 export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {

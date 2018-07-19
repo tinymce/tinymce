@@ -19,7 +19,7 @@ export interface SplitToolbarDetail extends CompositeSketchDetail {
     openClass: () => string;
     shrinkingClass: () => string;
     growingClass: () => string;
-  }
+  };
 }
 
 export interface SplitToolbarSpec extends CompositeSketchSpec {
@@ -38,7 +38,7 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
   parts: {
     'overflow-group': Partial<ToolbarGroupSpec>,
     'overflow-button': Partial<SimpleOrSketchSpec>
-  }
+  };
 }
 
 export interface SplitToolbarSketcher extends CompositeSketch<SplitToolbarSpec, SplitToolbarDetail> {

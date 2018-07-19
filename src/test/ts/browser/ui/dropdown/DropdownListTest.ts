@@ -16,8 +16,6 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
-
-
   const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
@@ -43,6 +41,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
             }
           }
         ],
+        sandboxClasses: [ 'my-test-sandbox' ],
 
         lazySink () {
           return Result.value(sink.get(c));
@@ -122,7 +121,8 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
-        UiFinder.sExists(gui.element(), '.menu'),
+        // Just check the sandbox class is there.
+        UiFinder.sExists(gui.element(), '.my-test-sandbox .menu'),
         100,
         1000
       ),

@@ -10,8 +10,6 @@ import TestStore from 'ephox/alloy/test/TestStore';
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison
 
-
-
   const store = TestStore();
 
   const monitor = TapEvent.monitor({

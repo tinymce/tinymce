@@ -20,8 +20,8 @@ const find = (queryElem: Element): Option<Element> => {
 
 export interface AriaManager {
   id: () => string;
-  link: (Element) => void;
-  unlink: (Element) => void;
+  link: (elem: Element) => void;
+  unlink: (elem: Element) => void;
 }
 
 const manager = (): AriaManager => {

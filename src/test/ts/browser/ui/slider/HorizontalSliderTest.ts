@@ -7,10 +7,9 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
-
-
+UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
@@ -20,26 +19,48 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
       Slider.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'slider-test' ]
+          classes: [ 'horizontal-slider-test' ],
+          styles: {
+            border: '1px solid black',
+            height: '20px',
+            display: 'flex'
+          }
         },
-
-        min: 50,
-        getInitialValue: Fun.constant(200),
-        max: 200,
+        model: {
+          mode: 'x',
+          minX: 50,
+          getInitialValue: Fun.constant({x: Fun.constant(200)}),
+          maxX: 200
+        },
         stepSize: 10,
         snapToGrid: true,
 
         components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'slider-test-left-edge' ] } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'slider-test-spectrum' ] } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'slider-test-right-edge' ] } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'slider-test-thumb' ] } })
+          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
+            width: '40px',
+            height: '20px',
+            background: 'black'
+          } } }),
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: { 
+            height: '150px',
+            background: 'green'
+          } } }),
+          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
+            width: '40px',
+            height: '20px',
+            background: 'white'
+          } } }),
+          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
+            width: '20px',
+            height: '20px',
+            background: 'gray'
+          } } })
         ]
       })
     );
   }, (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper((elem) => {
+    const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();
     });
 
@@ -49,10 +70,10 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-thumb'), 'thumb'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-left-edge'), 'ledge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-right-edge'), 'redge'),
-      NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-spectrum'), 'spectrum'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-thumb'), 'thumb'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-left-edge'), 'ledge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-right-edge'), 'redge'),
+      NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-spectrum'), 'spectrum'),
 
       NamedChain.direct('thumb', cGetComponent, 'thumbComp'),
       NamedChain.direct('ledge', cGetComponent, 'ledgeComp'),
@@ -68,7 +89,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
       NamedChain.bundle(Result.value)
     ]);
 
-    const cCheckThumbAtLeft = Chain.op((parts) => {
+    const cCheckThumbAtLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
@@ -77,7 +98,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
       );
     });
 
-    const cCheckThumbAtRight = Chain.op((parts) => {
+    const cCheckThumbAtRight = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
@@ -86,40 +107,32 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
       );
     });
 
-    const cCheckThumbPastRight = Chain.op((parts) => {
+    const cCheckThumbPastRight = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
-    const cCheckThumbBeforeLeft = Chain.op((parts) => {
+    const cCheckThumbBeforeLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
     const cCheckValue = (expected) => {
-      return Chain.op((parts) => {
+      return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
-        RawAssertions.assertEq('Checking slider value', expected, v);
+        RawAssertions.assertEq('Checking slider value', expected, v.x());
       });
     };
 
     const sAssertValue = (label, expected) => {
       return Logger.t(label, Step.sync(() => {
-        RawAssertions.assertEq(label, expected, Representing.getValue(component));
+        RawAssertions.assertEq(label, expected, Representing.getValue(component).x());
       }));
     };
 
     return [
-      GuiSetup.mAddStyles(doc, [
-        '.slider-test { border: 1px solid blue; height: 20px; display: flex; }',
-        '.slider-test-left-edge { width: 40px; height: 20px; background: black }',
-        '.slider-test-right-edge { width: 40px; height: 20px; background: white }',
-        '.slider-test-spectrum { background: green; width: 150px; }',
-        '.slider-test-thumb { width: 20px; height: 20px; background: gray; }'
-      ]),
-
       Logger.t(
         'Initial-Value: Checking that the thumb now overlaps the right edge at max',
         Waiter.sTryUntil(
@@ -170,7 +183,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', (success, failure) => {
         ])
       ),
 
-      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.slider-test-spectrum'),
+      FocusTools.sTryOnSelector('Focus should be on spectrum', doc, '.horizontal-slider-test-spectrum'),
       Keyboard.sKeydown(doc, Keys.right(), {}),
 
       Logger.t(

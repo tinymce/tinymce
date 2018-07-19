@@ -1,14 +1,15 @@
 import { Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from "../api/component/ComponentApi";
-import { SimulatedEvent, NativeSimulatedEvent } from "../events/SimulatedEvent";
-import { FocusManager } from "../api/focus/FocusManagers";
-import { BehaviourState } from "../api/Main";
-import { Stateless } from "../behaviour/common/BehaviourState";
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { FocusManager } from '../api/focus/FocusManagers';
+// TODO: Fix this.
+import { BehaviourState } from '../api/Main';
+import { Stateless } from '../behaviour/common/BehaviourState';
 
-export type KeyHandlerApi<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
+export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
 
-export type KeyRuleHandler<C,S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
+export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
 
 export interface GeneralKeyingConfigSpec {
   focusManager?: FocusManager;
@@ -19,8 +20,8 @@ export interface GeneralKeyingConfig {
 }
 
 export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyingConfigSpec {
-  onEscape?: KeyHandlerApi<C,Stateless>;
-  onEnter?: KeyHandlerApi<C,Stateless>;
+  onEscape?: KeyHandlerApi<C, Stateless>;
+  onEnter?: KeyHandlerApi<C, Stateless>;
   selector?: string;
   firstTabstop?: number;
   useTabstopAt?: (elem: Element) => boolean;
@@ -28,8 +29,8 @@ export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyin
 }
 
 export interface TabbingConfig extends GeneralKeyingConfig {
-  onEscape: <C extends TabbingConfig>() => Option<KeyHandlerApi<C,Stateless>>;
-  onEnter: <C extends TabbingConfig>() => Option<KeyHandlerApi<C,Stateless>>;
+  onEscape: <C extends TabbingConfig>() => Option<KeyHandlerApi<C, Stateless>>;
+  onEnter: <C extends TabbingConfig>() => Option<KeyHandlerApi<C, Stateless>>;
   selector: () => string;
   firstTabstop: () => number;
   useTabstopAt: () => (elem: Element) => boolean;
@@ -38,11 +39,11 @@ export interface TabbingConfig extends GeneralKeyingConfig {
 }
 
 export interface AcylicConfigSpec extends TabbingConfigSpec<AcyclicConfig> {
-  mode: 'acyclic'
+  mode: 'acyclic';
 }
 
 export interface CyclicConfigSpec extends TabbingConfigSpec<CyclicConfig> {
-  mode: 'cyclic'
+  mode: 'cyclic';
 }
 
 export interface AcyclicConfig extends TabbingConfig {
@@ -56,7 +57,7 @@ export interface CyclicConfig extends TabbingConfig {
 // Escaping Type
 export interface EscapingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'escaping';
-  onEscape: KeyHandlerApi<EscapingConfig, Stateless>
+  onEscape: KeyHandlerApi<EscapingConfig, Stateless>;
 }
 
 export interface EscapingConfig extends GeneralKeyingConfig {
@@ -92,8 +93,8 @@ export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
   initSize: {
     numColumns: number;
     numRows: number;
-  }
-};
+  };
+}
 
 export interface FlatgridConfig extends GeneralKeyingConfig {
   selector: () => string;
@@ -103,7 +104,7 @@ export interface FlatgridConfig extends GeneralKeyingConfig {
   initSize: () => {
     numColumns: () => number;
     numRows: () => number;
-  }
+  };
 }
 
 export interface FlatgridState extends BehaviourState {
@@ -117,6 +118,7 @@ export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flow';
   selector: string;
   getInitial?: (comp: AlloyComponent) => Option<Element>;
+  onEscape?: KeyHandlerApi<FlowConfig, Stateless>;
   execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
   executeOnMove?: boolean;
   allowVertical?: boolean;
@@ -125,6 +127,7 @@ export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
 export interface FlowConfig extends GeneralKeyingConfig {
   selector: () => string;
   getInitial: () => (comp: AlloyComponent) => Option<Element>;
+  onEscape: () => KeyHandlerApi<FlowConfig, Stateless>;
   execute: () => (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
   executeOnMove: () => boolean;
   allowVertical: () => boolean;

@@ -2,7 +2,7 @@ import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
 import { SugarDocument } from '../alien/TypeDefinitions';
-import { setTimeout } from '@ephox/dom-globals'
+import { setTimeout } from '@ephox/dom-globals';
 
 const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
@@ -73,7 +73,7 @@ const getSpeakAttrs = (text: string) => {
     'aria-atomic': 'true',
     'aria-label': text
   };
-}
+};
 
 const getShoutAttrs = (_text) => {
   return {
@@ -82,7 +82,7 @@ const getShoutAttrs = (_text) => {
     'aria-atomic': 'true',
     'role': 'alert'
   };
-}
+};
 
 const speak = (parent: Element, text: string): void => base(getSpeakAttrs, parent, text);
 

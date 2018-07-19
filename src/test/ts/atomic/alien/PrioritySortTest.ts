@@ -24,13 +24,13 @@ UnitTest.test('PrioritySortTest', () => {
     actual.fold((err) => {
       assert.fail('Unexpected error: ' + err + '\nWas wanting value(' + Json.stringify(expected, null, 2) + ')');
     }, (val) => {
-      RawAssertions.assertEq('Checking the value of priority sort', expected, Arr.map(val, (v) => { return v.letter(); }));
+      RawAssertions.assertEq('Checking the value of priority sort', expected, Arr.map(val, (v) => v.letter()));
     });
   };
 
   const letter = Struct.immutable('letter');
   const letters = (ls) => {
-    return Arr.map(ls, (l) => { return letter(l); });
+    return Arr.map(ls, (l) => letter(l));
   };
 
   Logger.sync(

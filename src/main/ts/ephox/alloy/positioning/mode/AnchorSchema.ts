@@ -13,4 +13,3 @@ export default ValueSchema.choose(
     makeshift: MakeshiftAnchor
   }
 );
-

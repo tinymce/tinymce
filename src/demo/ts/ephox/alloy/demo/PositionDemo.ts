@@ -146,9 +146,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: button.getSystem().getByUid('text-editor').getOrDie(
-                'Could not find text editor'
-              ).element()
+              root: button.getSystem().getByUid('text-editor').getOrDie().element()
             }, popup);
           }
         })

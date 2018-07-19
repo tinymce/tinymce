@@ -3,8 +3,6 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { AlloySpec } from '../../api/component/SpecTypes';
-import { BehaviourConfigSpec, BehaviourConfigDetail } from '../../api/behaviour/Behaviour';
-
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<SandboxingConfigSpec, SandboxingConfig> {
   config: (config: SandboxingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SandboxingConfigSpec, SandboxingConfig>;
@@ -18,7 +16,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
-export interface SandboxingConfigSpec extends BehaviourConfigSpec {
+export interface SandboxingConfigSpec extends Behaviour.BehaviourConfigSpec {
   getAttachPoint: () => AlloyComponent;
   isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
   onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
@@ -26,17 +24,17 @@ export interface SandboxingConfigSpec extends BehaviourConfigSpec {
   cloakVisibilityAttr?: string;
 }
 
-export interface SandboxingConfig extends BehaviourConfigDetail {
+export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
   cloakVisibilityAttr: () => string;
   getAttachPoint: () => () => AlloyComponent;
-  onOpen: () => (AlloyComponent, SandboxingState) => void;
+  onOpen: () => (comp: AlloyComponent, thing: AlloyComponent) => void;
   onClose: () => (sandbox: AlloyComponent, thing: AlloyComponent) => void;
   isPartOf: () => (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
-};
+}
 
 export interface SandboxingState {
   get: () => Option<AlloyComponent>;
-  set: (AlloyComponent) => void;
+  set: (comp: AlloyComponent) => void;
   isOpen: () => boolean;
   clear: () => boolean;
-};
+}

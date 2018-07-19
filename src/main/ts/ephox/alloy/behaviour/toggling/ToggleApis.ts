@@ -25,6 +25,11 @@ const off = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleStat
   updateAriaState(component, toggleConfig);
 };
 
+const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: Stateless, state: boolean) => {
+  const action = state ? on : off;
+  action(component, toggleConfig, toggleState);
+}
+
 const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig) => {
   return Class.has(component.element(), toggleConfig.toggleClass());
 };
@@ -33,8 +38,7 @@ const onLoad = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleS
   // There used to be a bit of code in here that would only overwrite
   // the attribute if it didn't have a current value. I can't remember
   // what case that was for, so I'm removing it until it is required.
-  const api = toggleConfig.selected() ? on : off;
-  api(component, toggleConfig, toggleState);
+  set(component, toggleConfig, toggleState, toggleConfig.selected());
 };
 
 export {
@@ -42,5 +46,6 @@ export {
   toggle,
   isOn,
   on,
-  off
+  off,
+  set
 };

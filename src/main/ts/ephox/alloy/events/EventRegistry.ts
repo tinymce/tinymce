@@ -20,8 +20,8 @@ export interface CurriedHandler {
 }
 
 export class UncurriedHandler {
-  purpose: () => string;
-  handler: Function;
+  public purpose: () => string;
+  public handler: Function;
 }
 
 export interface UidAndHandler {
@@ -71,7 +71,7 @@ export default () => {
   };
 
   // Given event type, and element, find the handler.
-  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
+  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     const readType = Objects.readOpt(type);
     const handlers = readType(registry) as Option<Record<string, CurriedHandler>>;
     return TransformFind.closest(target, (elem: Element) => {

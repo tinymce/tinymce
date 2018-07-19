@@ -7,17 +7,6 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import { KeyRuleHandler, EscapingConfig } from '../keying/KeyingModeTypes';
-import { KeyRule } from '../navigation/KeyRules';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import * as TabbingTypes from './TabbingTypes';
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-
-
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
-
 
 const schema = [
   Fields.onStrictKeyboardHandler('onEscape')
@@ -27,7 +16,7 @@ const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulate
   return escapeConfig.onEscape()(component, simulatedEvent);
 };
 
-const getRules: () => KeyRule<EscapingConfig, Stateless>[] = Fun.constant([
+const getRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
 ]);
 

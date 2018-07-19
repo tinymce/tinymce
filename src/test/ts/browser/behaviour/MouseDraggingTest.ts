@@ -13,8 +13,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
-
-
   const subject = Memento.record(
     Container.sketch({
       dom: {
@@ -61,7 +59,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     });
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all) => {
+      Chain.binder((all: any) => {
         return all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
           Result.error('Positions did not change.\nPosition data: ' + Json.stringify({
@@ -73,7 +71,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
     const cEnsurePinned = Chain.control(
-      Chain.binder((all) => {
+      Chain.binder((all: any) => {
         const pinned = all.box_position4.top !== all.box_position5_pinned.top &&
           all.box_position5_pinned.top === all.box_position6_pinned.top &&
           all.box_position5_pinned.top === '10px';

@@ -10,8 +10,6 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {

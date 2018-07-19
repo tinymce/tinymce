@@ -53,7 +53,7 @@ const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
   });
 };
 
-const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, predicate: (AlloyComponent) => boolean): void => {
+const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, predicate: (comp: AlloyComponent) => boolean): void => {
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
   const itemComps = Options.cat(
     Arr.map(items, (i) => {
@@ -78,7 +78,7 @@ const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hSta
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
 
   return Option.from(items[index]).fold(() => {
-    return Result.error('No element found with index ' + index);
+    return Result.error<AlloyComponent, any>('No element found with index ' + index);
   }, component.getSystem().getByDom);
 };
 

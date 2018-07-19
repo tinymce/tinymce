@@ -9,8 +9,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('SwappingTest', (success, failure) => {
 
-
-
   const ALPHA_CLS = Fun.constant('i-am-the-alpha');
   const OMEGA_CLS = Fun.constant('and-the-omega');
 

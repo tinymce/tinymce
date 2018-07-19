@@ -16,8 +16,6 @@ import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
-
-
   const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([

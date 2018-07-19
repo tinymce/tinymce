@@ -19,8 +19,6 @@ import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
-
-
   // Seems to have stopped working on phantomjs
   if (PhantomSkipper.skip()) { return success(); }
 

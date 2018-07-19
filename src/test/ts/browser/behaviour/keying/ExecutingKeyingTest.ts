@@ -10,8 +10,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
 
-
-
   const sTestDefault = Logger.t(
     'Default execution',
     Step.async((next, die) => {

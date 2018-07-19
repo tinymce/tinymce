@@ -1,8 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 
-import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import EventRegistry, { ElementAndHandler, UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
@@ -53,7 +52,7 @@ export default () => {
     return events.filterByType(type);
   };
 
-  const find = (isAboveRoot: (Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
+  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     return events.find(isAboveRoot, type, target);
   };
 

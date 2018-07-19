@@ -49,7 +49,8 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
         'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
         'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
         'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
-        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ]
+        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ],
+        'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ]
       }),
       ValueSchema.anyValue()
     ),
@@ -75,12 +76,12 @@ const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
       detail.dom().attributes()
     ),
     styles: detail.dom().styles(),
-    domChildren: Arr.map(detail.components(), (comp) => { return comp.element(); })
+    domChildren: Arr.map(detail.components(), (comp) => comp.element())
   };
 
   return NuDefinition(Merger.deepMerge(base,
-    detail.dom().innerHtml().map((h) => { return Objects.wrap('innerHtml', h); }).getOr({ }),
-    detail.dom().value().map((h) => { return Objects.wrap('value', h); }).getOr({ })
+    detail.dom().innerHtml().map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
+    detail.dom().value().map((h) => Objects.wrap('value', h)).getOr({ })
   ));
 };
 

@@ -22,4 +22,4 @@ const nu: (
 
 export {
   nu
-}
+};

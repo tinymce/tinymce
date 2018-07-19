@@ -5,6 +5,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 import { DomModification, DomModificationSpec } from '../../dom/DomModification';
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 export interface ItemDataTuple {
   value: string;
@@ -17,7 +18,7 @@ export interface WidgetItemSpec {
   type: 'widget';
   uid?: string;
   components?: AlloySpec[];
-  data?: ItemDataTuple // why is this necessary?
+  data?: ItemDataTuple; // why is this necessary?
   dom: RawDomSchema;
   autofocus?: boolean;
   domModification?: DomModificationSpec;
@@ -38,7 +39,6 @@ export interface SeparatorItemSpec {
   dom: RawDomSchema;
 }
 
-
 export interface SeparatorItemDetail extends ItemDetail {
   dom: () => RawDomSchema;
   components: () => AlloySpec[];
@@ -52,14 +52,14 @@ export interface NormalItemSpec {
   dom: RawDomSchema;
   // INVESTIGATE: this might not be right
   toggling?: Partial<TogglingConfigSpec>;
-  itemBehaviours?: SketchBehaviours;
+  itemBehaviours?: AlloyBehaviourRecord;
   ignoreFocus?: boolean;
   domModification?: DomModificationSpec;
   eventOrder?: Record<string, string[]>;
 }
 
 export interface NormalItemDetail extends ItemDetail {
-  data: () => RawDomSchema;
+  data: () => ItemDataTuple;
   components: () => AlloySpec[];
   dom: () => RawDomSchema;
   // INVESTIGATE: () => this might not be right

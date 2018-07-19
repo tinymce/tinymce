@@ -1,8 +1,7 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width } from '@ephox/sugar';
+import { Width, Element } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
-import { Element } from '@ephox/sugar';
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
@@ -18,13 +17,13 @@ import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 
-const fetch = (detail: CommonDropdownDetail<TieredData>, component) => {
+const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
   const fetcher = detail.fetch();
-  return fetcher(component);
+  return fetcher(component).map(mapFetch);
 };
 
-const openF = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component, sandbox, externals) => {
-  const futureData = fetch(detail, component);
+const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: AnchorSpec, component, sandbox, externals) => {
+  const futureData = fetch(detail, mapFetch, component);
 
   const lazySink = getSink(component, detail);
 
@@ -67,8 +66,8 @@ const openF = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, com
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) => {
-  const processed = openF(detail, anchor, component, sandbox, externals);
+const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: AnchorSpec, component: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) => {
+  const processed = openF(detail, mapFetch, anchor, component, sandbox, externals);
   return processed.map((data) => {
     Sandboxing.cloak(sandbox);
     Sandboxing.open(sandbox, data);
@@ -77,17 +76,17 @@ const open = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, comp
   });
 };
 
-const close = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpec, component, sandbox, _externals, _onOpenSync) => {
+const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: AnchorSpec, component, sandbox, _externals, _onOpenSync) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, anchor:AnchorSpec, hotspot: AlloyComponent, externals, onOpenSync) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: AnchorSpec, hotspot: AlloyComponent, externals, onOpenSync) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
   const action = showing ? close : open;
-  return action(detail, anchor, hotspot, sandbox, externals, onOpenSync);
+  return action(detail, mapFetch, anchor, hotspot, sandbox, externals, onOpenSync);
 };
 
 const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
@@ -132,6 +131,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpe
   return {
     dom: {
       tag: 'div',
+      classes: detail.sandboxClasses(),
       attributes: {
         id: ariaOwner.id()
       }

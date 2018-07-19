@@ -13,6 +13,7 @@ import { DropdownDetail } from '../types/DropdownTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
+  FieldSchema.defaulted('sandboxClasses', [ ]),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),

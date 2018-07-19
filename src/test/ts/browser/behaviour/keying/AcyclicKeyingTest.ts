@@ -11,8 +11,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', (success, failure) => {
 
-
-
   // This test will wrap an acyclic section inside a cyclic section, both with enter handlers
 
   GuiSetup.setup((store, doc, body) => {

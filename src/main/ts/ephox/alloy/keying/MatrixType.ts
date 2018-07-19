@@ -1,6 +1,6 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Focus, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
@@ -12,12 +12,8 @@ import * as MatrixNavigation from '../navigation/MatrixNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 import { MatrixConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
-import { Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema: FieldProcessorAdt[] = [
   FieldSchema.strictObjOf('selectors', [
@@ -48,7 +44,7 @@ const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEv
   });
 };
 
-const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Array<Array<Element>> => {
+const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Element[][] => {
   return Arr.map(rows, (row) => {
     return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
   });
@@ -80,7 +76,7 @@ const moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight
 const moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
 const moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
-const getRules: () => KeyRules.KeyRule<MatrixConfig, Stateless>[] = Fun.constant([
+const getRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),

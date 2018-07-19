@@ -10,10 +10,9 @@ import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
+import { Window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
-
-
 
   GuiSetup.setup((store, doc, body) => {
     let content = '';
@@ -48,21 +47,21 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((data) => {
+    const cSetupAnchor = Chain.mapper((data: any) => {
       return {
         anchor: 'selection',
         root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
       };
     });
 
-    const cGetWin = Chain.mapper((frame) => {
+    const cGetWin = Chain.mapper((frame: any) => {
       return frame.element().dom().contentWindow;
     });
 
     const cSetPath = (rawPath) => {
       const path = Cursors.path(rawPath);
 
-      return Chain.binder((win) => {
+      return Chain.binder((win: Window) => {
         const body = Element.fromDom(win.document.body);
         const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
@@ -94,7 +93,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             'Waiting for iframe to load content.',
             [
               Chain.control(
-                Chain.binder((data) => {
+                Chain.binder((data: any) => {
                   const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => {
                     return Result.error('Could not find paragraph yet');
@@ -157,7 +156,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                   return Scroll.get(
                     Traverse.owner(elem)
                   );
-                });
+                }).fold(() => Result.error('Could not scroll to 13th paragraph'), Result.value);
               }), 'scroll2'),
               NamedChain.write('anchor', cSetupAnchor)
             ]

@@ -12,8 +12,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {
 
-
-
   const bA = Cell(null);
   const bB = Cell(null);
 

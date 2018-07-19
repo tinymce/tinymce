@@ -29,7 +29,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 
-type TouchHoverState = (AlloyComponent) => void;
+type TouchHoverState = (comp: AlloyComponent) => void;
 
 const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail, components, spec, externals) => {
 

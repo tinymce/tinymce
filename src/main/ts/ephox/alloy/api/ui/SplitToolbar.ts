@@ -18,7 +18,7 @@ import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../.
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const setStoredGroups = (bar, storedGroups) => {
-  const bGroups = Arr.map(storedGroups, (g) => { return GuiFactory.premade(g); });
+  const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
   Toolbar.setGroups(bar, bGroups);
 };
 

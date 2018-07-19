@@ -9,8 +9,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('TogglingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
@@ -100,6 +98,10 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
       Toggling.off(component);
     });
 
+    const sToggleSet = (state: boolean) => Step.sync(() => {
+      Toggling.set(component, state);
+    })
+
     const sToggle = Step.sync(() => {
       Toggling.toggle(component);
     });
@@ -120,7 +122,7 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
       assertIsSelected('selected > toggle, toggle, deselect', false),
       sDeselect,
       testNotSelected('selected > toggle, toggle, deselect, deselect'),
-      assertIsSelected('selected > toggle, toggle, deslect, deselect', false),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect', false),
 
       sSelect,
       testIsSelected('selected > toggle, toggle, deselect, deselect, select'),
@@ -129,12 +131,26 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
       testIsSelected('selected > toggle, toggle, deselect, deselect, select, select'),
       assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select', true),
 
+      sToggleSet(false),
+      testNotSelected('selected > toggle, toggle, deselect, deselect, select, deselect'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect', false),
+      sToggleSet(false),
+      testNotSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect', false),
+
+      sToggleSet(true),
+      testIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select', true),
+      sToggleSet(true),
+      testIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select, select'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select, select', true),
+
       Step.sync(() => {
         AlloyTriggers.emitExecute(component);
       }),
 
-      testNotSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec'),
-      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec', false)
+      testNotSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select, select, event.exec'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, deselect, deselect, select, select, event.exec', false)
     ];
   }, success, failure);
 });

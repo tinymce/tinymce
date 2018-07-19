@@ -8,8 +8,6 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('TransitioningTest', (success, failure) => {
 
-
-
   if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup((store, doc, body) => {

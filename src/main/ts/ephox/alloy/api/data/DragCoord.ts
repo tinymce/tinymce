@@ -15,9 +15,9 @@ export interface StylesCoord {
   position: string;
 }
 
-type CoordTransform = (PositionCoordinates) => SugarPosition;
+type CoordTransform = (coords: SugarPosition) => SugarPosition;
 
-export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => SugarPosition
+export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => SugarPosition;
 /*
  * origin: the position (without scroll) of the offset parent
  * scroll: the scrolling position of the window

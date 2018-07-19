@@ -1,5 +1,5 @@
-import { AlloyComponent } from "../../api/component/ComponentApi";
-import { RepresentingConfig, RepresentingState } from "../../behaviour/representing/RepresentingTypes";
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { RepresentingConfig, RepresentingState } from '../../behaviour/representing/RepresentingTypes';
 
 const onLoad = (component: AlloyComponent, repConfig, repState) => {
   repConfig.store().manager().onLoad(component, repConfig, repState);
@@ -17,9 +17,14 @@ const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repS
   return repConfig.store().manager().getValue(component, repConfig, repState);
 };
 
+const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => {
+  return repState;
+}
+
 export {
   onLoad,
   onUnload,
   setValue,
-  getValue
+  getValue,
+  getState
 };

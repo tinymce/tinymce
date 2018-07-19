@@ -13,6 +13,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -115,10 +116,17 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         },
 
         modalBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('modal-events', [
-            AlloyEvents.runOnAttached(store.adder('modal.attached'))
+          AddEventsBehaviour.config('modal-events-1', [
+            AlloyEvents.runOnAttached(store.adder('modal.attached.1'))
+          ]),
+          AddEventsBehaviour.config('modal-events-2', [
+            AlloyEvents.runOnAttached(store.adder('modal.attached.2'))
           ])
         ]),
+
+        eventOrder: {
+          [SystemEvents.attachedToDom()]: ['modal-events-1', 'modal-events-2']
+        },
 
         onEscape: store.adderH('dialog.escape'),
         onExecute: store.adderH('dialog.execute'),
@@ -157,7 +165,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ModalDialog.show(dialog);
       }),
       Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
-      store.sAssertEq('Attached event should have fired', [ 'modal.attached' ]),
+      store.sAssertEq('Attached event should have fired', [ 'modal.attached.1', 'modal.attached.2' ]),
       store.sClear,
 
       Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),

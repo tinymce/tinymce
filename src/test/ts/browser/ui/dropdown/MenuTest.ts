@@ -11,10 +11,9 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('MenuTest', (success, failure) => {
-
-
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
@@ -47,12 +46,12 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
   }, (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
     const cAssertStructure = (label, expected) => {
-      return Chain.op((element) => {
+      return Chain.op((element: Element) => {
         Assertions.assertStructure(label, expected, element);
       });
     };
 
-    const cTriggerFocusItem = Chain.op((target) => {
+    const cTriggerFocusItem = Chain.op((target: Element) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 

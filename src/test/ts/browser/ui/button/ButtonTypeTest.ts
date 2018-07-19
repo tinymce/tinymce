@@ -8,8 +8,6 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure) => {
 
-
-
   // This button specifies the type, so it should not change to "button"
   const memSubmitButton = Memento.record(
     Button.sketch({

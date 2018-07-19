@@ -12,8 +12,6 @@ import * as StepUtils from 'ephox/alloy/test/StepUtils';
 
 UnitTest.asynctest('CouplingTest', (success, failure) => {
 
-
-
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({

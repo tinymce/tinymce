@@ -4,7 +4,6 @@ import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
 import * as DragState from '../../dragging/common/DragState';
 import { PinchingBehaviour } from '../../behaviour/pinching/PinchingTypes';
 
-
 const Pinching = Behaviour.create({
   fields: PinchingSchema,
   name: 'pinching',
