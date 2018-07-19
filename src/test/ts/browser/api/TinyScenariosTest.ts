@@ -26,7 +26,7 @@ UnitTest.asynctest('TinyScenariosTest', function() {
 
     // An example test: ensure that when starting with a selection of text nodes, pressing bold twice
     // will at some point create a bold tag.
-    var sAssertion = Step.stateful(function (scenario, next, die) {
+    var sAssertion = Step.sync(function () {
       var body = editor.getBody();
       var boldInitial = body.querySelectorAll('strong').length;
       editor.execCommand('bold');
@@ -38,8 +38,6 @@ UnitTest.asynctest('TinyScenariosTest', function() {
       } else {
         Assertions.assertEq('Two bold operations should create a <strong> tag at some point', true, boldInitial + boldBefore + boldAfter > 0); 
       }
-      
-      next(undefined);
     });
   
     Pipeline.async({}, [
