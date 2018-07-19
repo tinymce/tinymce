@@ -9,22 +9,14 @@ import { ToolbarGroupDetail } from '../types/ToolbarGroupTypes';
 
 const schema: () => FieldProcessorAdt[]  = Fun.constant([
   FieldSchema.strict('items'),
-  Fields.markers([ 'itemClass' ]),
-  FieldSchema.defaulted('applyItemClass', true),
+  Fields.markers([ 'itemSelector' ]),
   SketchBehaviours.field('tgroupBehaviours', [ Keying ])
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     name: 'items',
-    unit: 'item',
-    overrides (detail: ToolbarGroupDetail) {
-      return detail.applyItemClass() ? {
-        domModification: {
-          classes: [ detail.markers().itemClass() ]
-        }
-      } : {};
-    }
+    unit: 'item'
   })
 ]);
 

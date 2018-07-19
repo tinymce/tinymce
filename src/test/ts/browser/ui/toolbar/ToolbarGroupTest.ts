@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -8,7 +9,7 @@ import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { SelectorFind } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
@@ -16,7 +17,8 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
     return {
       dom: {
         tag: 'button',
-        innerHtml: itemSpec.data.text
+        innerHtml: itemSpec.data.text,
+        classes: [ 'toolbar-item' ]
       },
 
       behaviours: Behaviour.derive([
@@ -52,32 +54,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
 
             items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
             markers: {
-              itemClass: 'toolbar-item'
-            }
-          }),
-
-          ToolbarGroup.sketch({
-            dom: {
-              tag: 'div',
-              classes: [ 'test-group2' ]
-            },
-            components: [
-              ToolbarGroup.parts().items({
-                dom: {
-                  tag: 'div',
-                  classes: [ 'group-items' ]
-                }
-              })
-            ],
-
-            tgroupBehaviours: Behaviour.derive([
-              Tabstopping.config({ })
-            ]),
-
-            items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
-            applyItemClass: false,
-            markers: {
-              itemClass: 'toolbar-item'
+              itemSelector: '.toolbar-item'
             }
           })
         ]
@@ -88,10 +65,6 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
 
     const group1 = component.getSystem().getByDom(
       SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1')
-    ).getOrDie();
-
-    const group2 = component.getSystem().getByDom(
-      SelectorFind.descendant(component.element(), '.test-group2').getOrDie('Could not find test-group2')
     ).getOrDie();
 
     return [
@@ -111,24 +84,6 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
           });
         }),
         group1.element()
-      ),
-
-      Assertions.sAssertStructure(
-        'Checking initial toolbar groups (group2)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.not('group-items') ],
-            attrs: {
-              'role': str.is('toolbar'),
-              'data-alloy-tabstop': str.is('true')
-            },
-            children: [
-              s.element('button', { html: str.is('A'), classes: [ arr.not('toolbar-item') ] }),
-              s.element('button', { html: str.is('B'), classes: [ arr.not('toolbar-item') ] })
-            ]
-          });
-        }),
-        group2.element()
       ),
 
       Step.sync(() => {

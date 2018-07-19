@@ -9,9 +9,8 @@ export interface ToolbarGroupDetail extends CompositeSketchDetail {
   components: () => AlloySpec[ ];
   tgroupBehaviours: () => SketchBehaviours;
 
-  applyItemClass: () => boolean;
   markers: () => {
-    itemClass: () => string;
+    itemSelector: () => string;
   };
   items: () => AlloySpec[];
 }
@@ -21,11 +20,9 @@ export interface ToolbarGroupSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   tgroupBehaviours?: AlloyBehaviourRecord;
-  applyItemClass?: boolean;
-
   items: AlloySpec[];
   markers: {
-    itemClass: string;
+    itemSelector: string;
   };
 }
 
