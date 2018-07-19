@@ -55,7 +55,7 @@ const pathFromRange = function (spec: RangeSpec) {
 };
 
 const isCursorSpec = function (spec: CursorSpec | RangeSpec): spec is CursorSpec {
-  return 'start' in spec && 'element' in spec;
+  return !('start' in spec) && 'element' in spec;
 }
 
 const pathFrom = function (spec: CursorSpec | RangeSpec) {
