@@ -16,7 +16,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
   const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-  const layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
+  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     NuAnchoring({

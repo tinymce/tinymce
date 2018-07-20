@@ -41,7 +41,7 @@ export interface HasLayoutAnchorSpec {
   };
 };
 
-export interface SelectionAnchorSpec extends CommonAnchorSpec {
+export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'selection';
   getSelection?: () => Option<SugarRange>;
   root: Element;
@@ -50,7 +50,7 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec {
   showAbove?: boolean;
 }
 
-export interface SelectionAnchor extends AnchorDetail<SelectionAnchor> {
+export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
   getSelection: () => Option<() => Option<SugarRange>>;
   root: () => Element;
   bubble: () => Option<Bubble>;

@@ -16,6 +16,7 @@ import * as ContainerOffsets from './ContainerOffsets';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { SugarRange } from '../../alien/TypeDefinitions';
+import * as AnchorLayouts from './AnchorLayouts';
 
 const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
 
@@ -104,9 +105,8 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
     };
 
-    const getLayouts: (elem: Element) => Layout.AnchorLayout[] =
-      Direction.onDirection(layoutsLtr(), layoutsRtl());
-    const layouts = targetElement.map(getLayouts).getOrThunk(layoutsLtr);
+    const elem = targetElement.getOr(component.element());
+    const layouts = AnchorLayouts.get(elem, anchorInfo, layoutsLtr(), layoutsRtl());
 
     return NuAnchor({
       anchorBox: Fun.constant(anchorBox),
@@ -122,6 +122,7 @@ export default [
   FieldSchema.option('getSelection'),
   FieldSchema.strict('root'),
   FieldSchema.option('bubble'),
+  AnchorLayouts.schema(),
   // chiefly MaxHeight.expandable()
   FieldSchema.defaulted('overrides', { }),
   FieldSchema.defaulted('showAbove', false),

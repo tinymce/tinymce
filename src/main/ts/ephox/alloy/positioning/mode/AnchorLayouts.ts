@@ -12,21 +12,21 @@ const schema: () => FieldProcessorAdt = () => {
 };
 
 const get = (
-  component: AlloyComponent,
+  elem: Element,
   info: HasLayoutAnchor,
   defaultLtr: AnchorLayout[],
   defaultRtl: AnchorLayout[]
 ): AnchorLayout[] => {
   const ltr = info.layouts().map((ls) => {
-    return ls.onLtr()(component.element());
+    return ls.onLtr()(elem);
   }).getOr(defaultLtr);
 
   const rtl = info.layouts().map((ls) => {
-    return ls.onRtl()(component.element());
+    return ls.onRtl()(elem);
   }).getOr(defaultRtl);
 
   const f = Direction.onDirection(ltr, rtl);
-  return f(component.element());
+  return f(elem);
 };
 
 export {
