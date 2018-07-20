@@ -140,11 +140,6 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
        * 4. Focus gamma. Check appears. Check beta disappears
        * 5. Press left to make beta appear and gamma disappear
        */
-
-      /*
-       * Repeat the same test, except with no exclusivity set
-       */
-
       Logger.ts(
         'Checking tooltips appear and disappear on focus and hover',
         [
