@@ -45,7 +45,7 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec) => Cell({
-          x: Fun.constant(spec.mode.minX), 
+          x: Fun.constant(spec.mode.minX),
           y: Fun.constant(spec.mode.minY)
         })),
         FieldSchema.strict('getInitialValue'),

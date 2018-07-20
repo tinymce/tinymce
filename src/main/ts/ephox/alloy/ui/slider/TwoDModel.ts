@@ -23,7 +23,7 @@ const sliderValue = (x: number, y: number): SliderValueXY => {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y)
-  }
+  };
 };
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
@@ -126,4 +126,4 @@ export {
   onUp,
   onDown,
   edgeActions
-}
+};

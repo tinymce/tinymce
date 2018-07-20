@@ -7,6 +7,7 @@ export default () => {
   const adder = (value) => {
     return () => {
       array.push(value);
+      // tslint:disable-next-line:no-console
       console.log('store.add', value, array);
     };
   };

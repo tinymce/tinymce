@@ -9,20 +9,20 @@ import { min1X, max1X, min1Y, max1Y, halfX, halfY } from './SliderValues';
 const xValue = (x: number) => {
   return {
     x: Fun.constant(x)
-  }
+  };
 };
 
 const yValue = (y: number) => {
   return {
     y: Fun.constant(y)
-  }
+  };
 };
 
 const xyValue = (x: number, y: number) => {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y)
-  }
+  };
 };
 
 const fireSliderChange = (component: AlloyComponent, value: SliderValue): void => {

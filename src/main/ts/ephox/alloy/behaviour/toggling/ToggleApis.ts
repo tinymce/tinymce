@@ -28,7 +28,7 @@ const off = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleStat
 const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: Stateless, state: boolean) => {
   const action = state ? on : off;
   action(component, toggleConfig, toggleState);
-}
+};
 
 const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig) => {
   return Class.has(component.element(), toggleConfig.toggleClass());

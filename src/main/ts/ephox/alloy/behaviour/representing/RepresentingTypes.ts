@@ -16,12 +16,12 @@ export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<Represen
 export type RepresentingData = any;
 
 export interface MemoryStoreConfigSpec {
-  mode: 'memory',
-  initialValue?: RepresentingData,
+  mode: 'memory';
+  initialValue?: RepresentingData;
 }
 
 export interface MemoryStoreConfig {
-  initialValue: () => Option<RepresentingData>,
+  initialValue: () => Option<RepresentingData>;
 }
 
 export interface ManualStoreConfigSpec {

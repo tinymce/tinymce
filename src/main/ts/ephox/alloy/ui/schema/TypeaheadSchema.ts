@@ -78,7 +78,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 // way to do this.
                 () => Highlighting.dehighlight(menu, item),
                 ((fn) => fn())
-              )
+              );
             });
           }
           detail.previewing().set(false);
@@ -97,7 +97,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             // Closing the sandbox takes the item out of the system, so keep a reference.
             Sandboxing.close(sandbox);
             return system.getByUid(detail.uid()).toOption().bind((input) => {
-              setValueFromItem(detail.model(),input, item);
+              setValueFromItem(detail.model(), input, item);
 
               const currentValue: TypeaheadData = Representing.getValue(input);
               detail.onExecute()(sandbox, input, currentValue);

@@ -21,6 +21,7 @@ const events: AlloyEvents.AlloyEventRecord = AlloyEvents.derive([
     const originator: Element = simulatedEvent.event().originator();
     const target: Element = simulatedEvent.event().target();
     if (isRecursive(component, originator, target)) {
+      // tslint:disable-next-line:no-console
       console.warn(
         SystemEvents.focus() + ' did not get interpreted by the desired target. ' +
         '\nOriginator: ' + AlloyLogger.element(originator) +

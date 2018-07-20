@@ -33,7 +33,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             },
             innerHtml: spec.text
           }
-        }
+        };
       }
     },
     schema: [ FieldSchema.strict('text') ],

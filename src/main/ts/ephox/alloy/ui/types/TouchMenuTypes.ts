@@ -22,7 +22,6 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   toggleClass: () => string;
   sandboxClasses: () => string[];
 
-
   onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap: () => (comp: AlloyComponent) => void;
 

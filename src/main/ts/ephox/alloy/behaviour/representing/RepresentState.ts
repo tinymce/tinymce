@@ -88,7 +88,7 @@ const dataset = (): DatasetRepresentingState => {
     dataByText.set(
       Merger.deepMerge(currentDataByText, newDataByText)
     );
-  }
+  };
 
   return nuState({
     readState,

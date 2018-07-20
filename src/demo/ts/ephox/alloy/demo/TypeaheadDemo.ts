@@ -13,6 +13,8 @@ import { document, console } from '@ephox/dom-globals';
 import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
@@ -54,7 +56,7 @@ export default (): void => {
     return {
       value: s,
       text: Strings.capitalize(s)
-    }
+    };
   });
 
   const lazySink = () => {
@@ -106,8 +108,8 @@ export default (): void => {
               {
                 'type': 'item',
                 'data': {
-                  value: d.value,
-                  text: d.text,
+                  'value': d.value,
+                  'text': d.text,
                   html,
                   'bonus-demo-content': 'caterpillar'
                 },
@@ -137,8 +139,8 @@ export default (): void => {
         console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);
       }
-    })
-  }
+    });
+  };
 
   HtmlDisplay.section(gui,
     'An example of a typeahead component',

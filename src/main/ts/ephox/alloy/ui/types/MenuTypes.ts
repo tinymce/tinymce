@@ -9,7 +9,6 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { MenuConfigSpec } from '../../keying/KeyingModeTypes';
 import { ItemSpec } from '../../ui/types/ItemTypes';
 
-
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {
   config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;

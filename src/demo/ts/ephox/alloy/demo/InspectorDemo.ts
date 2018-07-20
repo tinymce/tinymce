@@ -12,6 +12,8 @@ import { console } from '@ephox/dom-globals';
 
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
 

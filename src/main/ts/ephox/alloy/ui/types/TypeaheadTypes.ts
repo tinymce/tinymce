@@ -10,13 +10,11 @@ import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 import { InputDetail } from '../../ui/types/InputTypes';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
-
 export interface TypeaheadModelDetail {
   getDisplayText: () => (item: TypeaheadData) => string;
   selectsOver: () => boolean;
   populateFromBrowse: () => boolean;
 }
-
 
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
@@ -25,7 +23,6 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
 
   model: () => TypeaheadModelDetail;
   sandboxClasses: () => string[];
-
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -65,7 +62,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
     getDisplayText?: (itemData: TypeaheadData) => string;
     selectsOver?: boolean;
     populateFromBrowser?: boolean;
-  },
+  };
 
   parts: {
     menu: Partial<TieredMenuSpec>;

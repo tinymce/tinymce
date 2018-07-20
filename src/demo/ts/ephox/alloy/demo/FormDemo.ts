@@ -20,6 +20,8 @@ import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { Input } from 'ephox/alloy/api/Main';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
@@ -83,7 +85,7 @@ export default (): void => {
         components: [
           parts.field('aria', FormField.sketch({
             dom: {
-              tag: 'span'    
+              tag: 'span'
             },
             components: [
               FormField.parts().label({

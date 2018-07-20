@@ -67,4 +67,4 @@ export {
   yRange,
   halfX,
   halfY
-}
+};
