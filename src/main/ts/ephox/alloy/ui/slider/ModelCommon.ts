@@ -29,4 +29,4 @@ const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<SugarPosit
 export {
   sliderChangeEvent,
   getEventSource
-}
+};

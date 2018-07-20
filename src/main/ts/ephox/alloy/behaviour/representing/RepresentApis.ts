@@ -19,7 +19,7 @@ const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repS
 
 const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => {
   return repState;
-}
+};
 
 export {
   onLoad,

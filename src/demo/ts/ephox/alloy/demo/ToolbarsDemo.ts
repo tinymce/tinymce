@@ -11,6 +11,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoRenders from './forms/DemoRenders';
 import { document, console, window } from '@ephox/dom-globals';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);

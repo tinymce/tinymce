@@ -11,6 +11,8 @@ import { document, console } from '@ephox/dom-globals';
 
 import { Option } from '@ephox/katamari';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);

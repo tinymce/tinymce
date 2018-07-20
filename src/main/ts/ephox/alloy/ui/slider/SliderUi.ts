@@ -41,7 +41,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
 
   const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
     modelDetail.value().set(newValue);
-    
+
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange()(slider, thumb, newValue);
@@ -122,7 +122,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
           const thumb = getThumb(slider);
 
           refresh(slider, thumb);
-          
+
           const spectrum = getSpectrum(slider);
           // Call onInit instead of onChange for the first value.
           detail.onInit()(slider, thumb, spectrum, modelDetail.value().get());

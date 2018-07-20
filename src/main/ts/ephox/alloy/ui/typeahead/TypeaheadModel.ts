@@ -12,7 +12,7 @@ const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, it
   const displayText = model.getDisplayText()(itemData);
   Representing.setValue(input, displayText);
   setCursorAtEnd(input);
-}
+};
 
 const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
   const el = input.element();
@@ -26,15 +26,16 @@ const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value
 
 const setCursorAtEnd = (input: AlloyComponent): void => {
   setSelectionOn(input, (node, value) => node.setSelectionRange(value.length, value.length));
-}
+};
 
 const setSelectionToEnd = (input: AlloyComponent, startOffset: number): void => {
   setSelectionOn(input, (node, value) => node.setSelectionRange(startOffset, value.length));
-}
+};
 
 const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Option<() => void> => {
-  if (! model.selectsOver()) return Option.none()
-  else {
+  if (!model.selectsOver()) {
+    return Option.none();
+  } else {
     const currentValue = Representing.getValue(input);
     const inputDisplay = model.getDisplayText()(currentValue);
 
@@ -46,7 +47,7 @@ const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, i
         setValueFromItem(model, input, item);
         setSelectionToEnd(input, inputDisplay.length);
       })
-      : Option.none()
+      : Option.none();
   }
 };
 
@@ -54,4 +55,4 @@ export {
   attemptSelectOver,
   setValueFromItem,
   setCursorAtEnd
-}
+};

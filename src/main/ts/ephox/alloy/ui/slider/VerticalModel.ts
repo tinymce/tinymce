@@ -20,7 +20,7 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void =
 const sliderValue = (y: number): SliderValueY => {
   return {
     y: Fun.constant(y)
-  }
+  };
 };
 
 // find the value of the y offset of where the mouse was clicked from the model.
@@ -103,14 +103,14 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value
     minOffset,
     maxBound: getMaxYBounds(spectrum),
     maxOffset,
-    centerMinEdge: centerMinEdge,
-    centerMaxEdge: centerMaxEdge
+    centerMinEdge,
+    centerMaxEdge
   };
   return SliderModel.findOffsetOfValue(args);
 };
 
 // find left offset for absolute positioning from a given value
-const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>, detail: SliderDetail):number => {
+const findPositionOfValue = (slider: AlloyComponent, spectrum: AlloyComponent, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>, detail: SliderDetail): number => {
   const offset = findOffsetOfValue(spectrum, detail, value, minEdge, maxEdge);
   return (getMinYBounds(spectrum) - getMinYBounds(slider)) + offset;
 };
@@ -162,4 +162,4 @@ export {
   onUp,
   onDown,
   edgeActions
-}
+};
