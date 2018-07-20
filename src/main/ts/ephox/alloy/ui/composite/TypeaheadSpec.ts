@@ -72,8 +72,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
   const mapFetch = (comp: AlloyComponent) => (tdata: TieredData): TieredData => {
     const menus = Obj.values(tdata.menus);
-    const items = Arr.bind(menus, (menu): NormalItemSpec[] => {
-      return Arr.filter(menu.items, (item) => item.type === 'item');
+    const items = Arr.bind(menus, (menu) => {
+      return <NormalItemSpec[]> Arr.filter(menu.items, (item) => item.type === 'item');
     });
 
     const repState = Representing.getState(comp) as DatasetRepresentingState;
