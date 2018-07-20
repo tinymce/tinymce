@@ -103,7 +103,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     Streaming.config({
       stream: {
         mode: 'throttle',
-        delay: 1000
+        delay: detail.responseTime()
       },
       onStream (component, simulatedEvent) {
 

@@ -21,6 +21,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
+  FieldSchema.defaulted('responseTime', 1000),
   FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onHandler('onOpen'),
   FieldSchema.defaulted('eventOrder', { }),

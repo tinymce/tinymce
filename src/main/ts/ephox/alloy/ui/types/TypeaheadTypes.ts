@@ -20,6 +20,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   uid: () => string;
   components: () => AlloySpec[ ];
   minChars: () => number;
+  responseTime: () => number;
 
   model: () => TypeaheadModelDetail;
   sandboxClasses: () => string[];
@@ -54,6 +55,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   inputStyles?: { };
 
   minChars?: number;
+  responseTime?: number;
   markers: {
     openClass: string;
   };
