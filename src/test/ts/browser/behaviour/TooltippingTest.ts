@@ -1,19 +1,29 @@
-import { ApproxStructure, Assertions, Mouse, Step, Waiter, UiControls, FocusTools, Keyboard, Keys, Logger, Chain, UiFinder } from '@ephox/agar';
+import {
+  ApproxStructure,
+  Assertions,
+  Chain,
+  FocusTools,
+  Keyboard,
+  Keys,
+  Logger,
+  Mouse,
+  Step,
+  UiFinder,
+  Waiter,
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr, Result } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import * as Memento from 'ephox/alloy/api/component/Memento';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Result, Arr } from '@ephox/katamari';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { Element } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
-import { Keying } from 'ephox/alloy/api/behaviour/Keying';
-import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 
 UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
