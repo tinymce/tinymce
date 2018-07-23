@@ -1,4 +1,4 @@
-import { FocusTools, Logger, UiControls, GeneralSteps, Step, UiFinder, Keyboard, Keys } from '@ephox/agar';
+import { FocusTools, Logger, UiControls, GeneralSteps, Step, UiFinder, Keyboard, Keys, Mouse } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Strings } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
@@ -80,6 +80,54 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
 
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
+    const testWithChooser = (label: string, sChooser: Step<any,any>): Step<any,any> => {
+      return Logger.t(
+        label,
+        GeneralSteps.sequence([
+          Logger.t(
+            'Set some content in the typeahead',
+            UiControls.sSetValue(typeahead.element(), 'Neo'),
+          ),
+
+          Logger.t(
+            'Trigger an "input" event and wait for the menu',
+            GeneralSteps.sequence([
+              Step.sync(() => {
+                AlloyTriggers.emit(typeahead, NativeEvents.input());
+              }),
+              UiFinder.sWaitFor('Waiting for menu to appear', component.element(), '[role="menu"]')
+            ])
+          ),
+
+          Logger.t(
+            'Trigger another input and wait for a little bit (less than 1000s - delay)',
+            GeneralSteps.sequence([
+              Step.sync(() => {
+                AlloyTriggers.emit(typeahead, NativeEvents.input());
+              }),
+              Step.wait(100)
+            ])
+          ),
+
+          Logger.t(
+            'While the other menu is loading, try and select an option and ensure menu goes away',
+            GeneralSteps.sequence([
+              sChooser,
+              UiFinder.sNotExists(component.element(), '[role="menu"]')
+            ])
+          ),
+
+          Logger.t(
+            'Wait and ensure menu does not reappear when second input triggers',
+            GeneralSteps.sequence([
+              Step.wait(1500),
+              UiFinder.sNotExists(component.element(), '[role="menu"]')
+            ])
+          ),
+        ])
+      )
+    }
+
     return [
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
 
@@ -96,50 +144,22 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
        * 4. Choose something from the menu before the next menu shows up
        * 5. Ensure that the menu doesn't flicker back open
        */
-      Logger.t(
-        'Set some content in the typeahead',
-        UiControls.sSetValue(typeahead.element(), 'Neo'),
-      ),
-
-      Logger.t(
-        'Trigger an "input" event and wait for the menu',
-        GeneralSteps.sequence([
-          Step.sync(() => {
-            AlloyTriggers.emit(typeahead, NativeEvents.input());
-          }),
-          UiFinder.sWaitFor('Waiting for menu to appear', component.element(), '[role="menu"]')
-        ])
-      ),
-
-      Logger.t(
-        'Trigger another input and wait for a little bit (less than 1000s - delay)',
-        GeneralSteps.sequence([
-          Step.sync(() => {
-            AlloyTriggers.emit(typeahead, NativeEvents.input());
-          }),
-          Step.wait(100)
-        ])
-      ),
-
-      Logger.t(
-        'While the other menu is loading, try and select an option and ensure menu goes away',
+      testWithChooser(
+        'Using keyboard to choose item',
         GeneralSteps.sequence([
           Keyboard.sKeydown(doc, Keys.down(), { }),
-          Keyboard.sKeydown(doc, Keys.enter(), { }),
-          UiFinder.sNotExists(component.element(), '[role="menu"]')
+          Keyboard.sKeydown(doc, Keys.enter(), { })
         ])
       ),
 
-      Logger.t(
-        'Wait and ensure menu does not reappear when second input triggers',
+      testWithChooser(
+        'Using mouse to choose item',
         GeneralSteps.sequence([
-          Step.wait(1500),
-          UiFinder.sNotExists(component.element(), '[role="menu"]')
+          Mouse.sClickOn(component.element(), '[role="menuitem"]')
         ])
       ),
 
       GuiSetup.mRemoveStyles
-
     ];
   }, () => { success(); }, failure);
 });

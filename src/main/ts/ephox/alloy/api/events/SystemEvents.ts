@@ -40,6 +40,9 @@ const longpress = Fun.constant('alloy.longpress') as StringConstant;
 // Fire by a child element to tell the outer element to close
 const sandboxClose = Fun.constant('alloy.sandbox.close') as StringConstant;
 
+// Tell the typeahead to cancel any pending fetches (that haven't already executed)
+const typeaheadCancel = Fun.constant('alloy.typeahead.cancel') as StringConstant;
+
 // Fired when adding to a world
 const systemInit = Fun.constant('alloy.system.init') as StringConstant;
 
@@ -71,6 +74,7 @@ export {
   longpress,
   sandboxClose,
   systemInit,
+  typeaheadCancel,
   windowScroll,
 
   attachedToDom,

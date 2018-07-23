@@ -146,7 +146,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             DropdownUtils.open(detail, mapFetch(component), anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
-      }
+      },
+      cancelEvent: SystemEvents.typeaheadCancel()
     }),
 
     Keying.config({
@@ -182,6 +183,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const currentValue = Representing.getValue(comp) as TypeaheadData;
 
         detail.onExecute()(sandbox, comp, currentValue);
+        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
         setCursorAtEnd(comp);
         return Option.some(true);
       }

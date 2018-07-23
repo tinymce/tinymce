@@ -1,9 +1,9 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
-import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
+import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
@@ -11,11 +11,13 @@ import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { TypeaheadData, TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
-import { Highlighting } from '../../api/behaviour/Highlighting';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -101,6 +103,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
               const currentValue: TypeaheadData = Representing.getValue(input);
               detail.onExecute()(sandbox, input, currentValue);
+              AlloyTriggers.emit(input, SystemEvents.typeaheadCancel());
               return Option.some(true);
             });
           });

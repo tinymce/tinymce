@@ -5,6 +5,7 @@ import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 
 UnitTest.asynctest('StreamingTest', (success, failure) => {
 
@@ -21,6 +22,7 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
               delay: 500
             },
             event: 'click',
+            cancelEvent: 'cancel.stream',
             onStream: store.adder('onStream')
           })
         ])
@@ -48,7 +50,18 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
         ])
       ),
       Step.wait(500),
-      store.sAssertEq('Should have only fired two events', [ 'onStream', 'onStream' ])
+      store.sAssertEq('Should have only fired two events', [ 'onStream', 'onStream' ]),
+
+      // Wait long enough to ensure everything is gone, and then test "cancelling"
+      store.sClear,
+      Step.wait(1000),
+      Mouse.sClickOn(gui.element(), 'input'),
+      Step.wait(10),
+      Step.sync(() => {
+        AlloyTriggers.emit(component, 'cancel.stream');
+      }),
+      Step.wait(1000),
+      store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ]),
     ];
   }, () => { success(); }, failure);
 });
