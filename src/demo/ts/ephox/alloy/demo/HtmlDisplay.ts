@@ -1,17 +1,19 @@
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { document, MutationObserver } from '@ephox/dom-globals';
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import * as Channels from 'ephox/alloy/api/messages/Channels';
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
-import { MutationObserver, document } from '@ephox/dom-globals';
-import * as Channels from 'ephox/alloy/api/messages/Channels';
 
 const register = Thunk.cached((gui) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-const section = (gui, instructions, spec) => {
+const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyComponent => {
   register(gui);
   const information = Container.sketch({
     dom: {

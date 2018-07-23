@@ -22,7 +22,9 @@ import SliderDemo from './SliderDemo';
 import SlidingDemo from './SlidingDemo';
 import TabSectionDemo from './TabSectionDemo';
 import ToolbarsDemo from './ToolbarsDemo';
+import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
+
 
 declare const window: any;
 
@@ -51,5 +53,6 @@ window.demos = {
   SlidingDemo,
   TabSectionDemo,
   ToolbarsDemo,
+  TooltippingDemo,
   TypeaheadDemo
 };
