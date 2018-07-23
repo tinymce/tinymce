@@ -38,12 +38,11 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('matchWidth', true),
   FieldSchema.defaulted('dismissOnBlur', true),
   Fields.markers([ 'openClass' ]),
+  FieldSchema.option('initialData'),
 
   SketchBehaviours.field('typeaheadBehaviours', [
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
-
-  FieldSchema.defaulted('dataset', [ ]),
 
   FieldSchema.state('previewing', () => {
     return Cell(true);

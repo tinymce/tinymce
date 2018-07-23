@@ -28,6 +28,7 @@ import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadMo
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
+import { Objects } from '@ephox/boulder';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   const navigateList = (
@@ -86,19 +87,22 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
-      store: {
-        mode: 'dataset',
-        getDataKey: (comp) => Value.get(comp.element()),
-        getFallbackEntry: (itemString) => ({
-          value: itemString,
-          text: itemString
-        }),
-        setValue: (comp, data) => {
-          Value.set(comp.element(), detail.model().getDisplayText()(data));
+      store: Merger.deepMerge(
+        {
+          mode: 'dataset',
+          getDataKey: (comp) => Value.get(comp.element()),
+          getFallbackEntry: (itemString) => ({
+            value: itemString,
+            text: itemString
+          }),
+          setValue: (comp, data) => {
+            Value.set(comp.element(), detail.model().getDisplayText()(data));
+          }
         },
-        initialValue: detail.data().getOr(''),
-        initialDataset: detail.dataset()
-      }
+        detail.initialData().map((d) => {
+          return Objects.wrap('initialValue', d)
+        }).getOr({ })
+      )
     }),
     Streaming.config({
       stream: {

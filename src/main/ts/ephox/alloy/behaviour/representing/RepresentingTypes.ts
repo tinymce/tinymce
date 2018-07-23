@@ -40,16 +40,14 @@ export interface ManualStoreConfig {
 export type DatasetStoreKey = string;
 export interface DatasetStoreConfigSpec<T extends ItemDataTuple> {
   mode: 'dataset';
-  initialValue?: DatasetStoreKey;
-  initialDataset?: T[];
+  initialValue?: T;
   getFallbackEntry: (key: DatasetStoreKey) => T;
   getDataKey: (comp: AlloyComponent) => DatasetStoreKey;
   setValue: (comp: AlloyComponent, data: T) => void;
 }
 
 export interface DatasetStoreConfig<T extends ItemDataTuple> {
-  initialValue?: () => Option<DatasetStoreKey>;
-  initialDataset: () => T[];
+  initialValue?: () => Option<T>;
   getFallbackEntry: () => (key: DatasetStoreKey) => T;
   getDataKey?: () => (comp: AlloyComponent) => DatasetStoreKey;
   setValue: () => (comp: AlloyComponent, data: T) => void;
