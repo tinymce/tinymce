@@ -34,7 +34,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               openClass: 'test-typeahead-open'
             },
 
-            data: 'initial-value',
+            initialData: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
 
             fetch (input) {
               const text = Value.get(input.element());

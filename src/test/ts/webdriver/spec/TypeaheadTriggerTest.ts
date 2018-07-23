@@ -23,7 +23,11 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
           Typeahead.sketch({
             uid: 'test-type',
             minChars: 2,
-            data: 'initial-value',
+
+            initialData: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
 
             markers: {
               openClass: 'test-typeahead-open'

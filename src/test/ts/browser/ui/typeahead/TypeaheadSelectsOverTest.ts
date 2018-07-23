@@ -50,7 +50,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               selectsOver: true,
             },
             markers: typeaheadMarkers,
-            data: 'initial-value',
+            initialData: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
             fetch,
             lazySink () { return Result.value(sink); },
             parts: {
@@ -66,7 +69,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               selectsOver: false,
             },
             markers: typeaheadMarkers,
-            data: 'initial-value',
+            initialData: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
             fetch,
             lazySink () { return Result.value(sink); },
             parts: {
