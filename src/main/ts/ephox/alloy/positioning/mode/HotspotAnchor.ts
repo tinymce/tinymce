@@ -8,17 +8,16 @@ import { nu as NuAnchor, Anchoring } from './Anchoring';
 import { nu as NuBubble } from '../layout/Bubble';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component, posInfo, anchorInfo, origin) => {
+const placement = (component, _posInfo, anchorInfo, origin) => {
   const hotspot = anchorInfo.hotspot();
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
-  const layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
+  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     NuAnchor({
       anchorBox: Fun.constant(anchorBox),
       bubble: Fun.constant(NuBubble(0, 0)),
-      // maxHeightFunction: Fun.constant(MaxHeight.available()),
       overrides: Fun.constant({ }),
       layouts: Fun.constant(layouts),
       placer: Option.none
