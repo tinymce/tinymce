@@ -30,7 +30,6 @@ import * as InputBase from '../common/InputBase';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
-  console.log('Making a typeahead');
   const navigateList = (
     comp: AlloyComponent,
     simulatedEvent: SimulatedEvent<SugarEvent>,
@@ -74,8 +73,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const mapFetch = (comp: AlloyComponent) => (tdata: TieredData): TieredData => {
     const menus = Obj.values(tdata.menus);
     const items = Arr.bind(menus, (menu) => {
-      return Arr.filter(menu.items, (item) => item.type === 'item');
-    }) as Array<NormalItemSpec>;
+      return <NormalItemSpec[]> Arr.filter(menu.items, (item) => item.type === 'item');
+    });
 
     const repState = Representing.getState(comp) as DatasetRepresentingState;
     repState.update(
@@ -104,7 +103,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     Streaming.config({
       stream: {
         mode: 'throttle',
-        delay: 1000
+        delay: detail.responseTime()
       },
       onStream (component, simulatedEvent) {
 
@@ -123,7 +122,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             const onOpenSync = (_sandbox) => {
               Composing.getCurrent(sandbox).each((menu) => {
                 previousValue.fold(() => {
-                  if (detail.model().selectsOver()) Highlighting.highlightFirst(menu);
+                  if (detail.model().selectsOver()) { Highlighting.highlightFirst(menu); }
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;
@@ -177,8 +176,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           Sandboxing.close(sandbox);
         }
         const currentValue = Representing.getValue(comp) as TypeaheadData;
-
-
 
         detail.onExecute()(sandbox, comp, currentValue);
         setCursorAtEnd(comp);

@@ -43,6 +43,7 @@ const Keying = Behaviour.createModes({
     // available for all keying modes
     setGridSize (component, keyConfig, keyState, numRows, numColumns) {
       if (! Objects.hasKey(keyState, 'setGridSize')) {
+        // tslint:disable-next-line:no-console
         console.error('Layout does not support setGridSize');
       } else {
         keyState.setGridSize(numRows, numColumns);

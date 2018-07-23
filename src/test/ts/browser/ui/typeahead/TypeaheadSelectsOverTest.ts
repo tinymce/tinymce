@@ -28,8 +28,6 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         { type: 'item', data: { value: 'gamma', text: 'Gamma' } }
       ]);
 
-
-
       return future.map((items) => {
         const menu = TestDropdownMenu.renderMenu({
           value: Id.generate('single-menu-value'),
@@ -37,7 +35,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         });
         return TieredMenu.singleData('overlord', menu);
       });
-    }
+    };
 
     return GuiFactory.build(
       Container.sketch({
@@ -53,7 +51,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             },
             markers: typeaheadMarkers,
             data: 'initial-value',
-            fetch: fetch,
+            fetch,
             lazySink () { return Result.value(sink); },
             parts: {
               menu: TestDropdownMenu.part(store)
@@ -69,7 +67,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             },
             markers: typeaheadMarkers,
             data: 'initial-value',
-            fetch: fetch,
+            fetch,
             lazySink () { return Result.value(sink); },
             parts: {
               menu: TestDropdownMenu.part(store)
@@ -107,7 +105,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test'),
       ];
-    }
+    };
 
     const testWithoutSelector = () => {
       const typeahead = gui.getByUid('test-type-without-selectover').getOrDie();
@@ -130,7 +128,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sAssertValue('Should keep it as "Al" with selection at end of input', 'Al'),
         steps.sAssertTextSelection('No select over. So "Al"', 'Al'.length, 'Al'.length)
       ];
-    }
+    };
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -141,6 +139,6 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
       testWithoutSelector()
     ).concat([
       GuiSetup.mRemoveStyles
-    ])
+    ]);
   }, success, failure);
 });

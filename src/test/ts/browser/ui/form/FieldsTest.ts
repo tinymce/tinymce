@@ -179,14 +179,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         const spanID = Attr.get(span, 'id');
         return s.element('div', {
           children: [
-            s.element('input', { 
+            s.element('input', {
               attrs: {
-                'aria-describedby': str.is(spanID)
+                'aria-labelledby': str.is(spanID)
               }
             }),
-            s.element('label', { 
+            s.element('label', {
               attrs: {
-                'for': str.is(inputID)
+                for: str.is(inputID)
               }
             }),
             s.element('span', { })

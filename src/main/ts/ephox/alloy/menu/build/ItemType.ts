@@ -72,7 +72,6 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
       ]),
       detail.itemBehaviours(),
 
-
     ),
     components: detail.components(),
 

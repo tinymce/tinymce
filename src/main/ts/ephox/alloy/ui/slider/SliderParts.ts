@@ -21,7 +21,7 @@ const edgePart = (name: string): PartType.PartTypeAdt => {
     name: '' + name + '-edge',
     overrides(detail: SliderDetail) {
       const action = detail.model().manager().edgeActions()[name];
-      // Not all edges have actions for all sliders.  
+      // Not all edges have actions for all sliders.
       // A horizontal slider will only have left and right, for instance,
       // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
       return action.fold(() => {
@@ -41,7 +41,7 @@ const edgePart = (name: string): PartType.PartTypeAdt => {
 
           return {
             events: isTouch ? touchEvents : mouseEvents
-          }
+          };
         }
       );
     }

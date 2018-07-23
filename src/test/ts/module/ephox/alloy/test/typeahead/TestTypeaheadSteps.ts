@@ -27,8 +27,8 @@ export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) =
         Assertions.assertEq(label + ' start cursor', start, node.selectionStart);
         Assertions.assertEq(label + ' finish cursor', finish, node.selectionEnd);
       })
-    )
-  }
+    );
+  };
 
   const sTriggerInputEvent = (label: string) => {
     return Logger.t(

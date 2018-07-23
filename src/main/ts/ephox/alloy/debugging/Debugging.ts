@@ -74,6 +74,7 @@ const monitorEvent = (eventName, initialTarget, f) => {
       },
       write () {
         if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
+        // tslint:disable-next-line:no-console
         console.log(eventName, {
           event: eventName,
           target: initialTarget.dom(),

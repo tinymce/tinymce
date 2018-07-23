@@ -71,7 +71,7 @@ export default (): void => {
         mode: 'y',
         getInitialValue: Fun.constant({y: Fun.constant(35)})
       },
-      
+
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
@@ -176,9 +176,9 @@ export default (): void => {
               dom: {
                 tag: 'div',
                 styles: {
-                  'height': '500px',
-                  'background': 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
-                  'width': '500px'
+                  height: '500px',
+                  background: 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
+                  width: '500px'
                 }
               }
             }),

@@ -7,10 +7,9 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { compare } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Results';
-import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -51,7 +50,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       return Step.sync(() => {
         const repState = Representing.getState(component) as DatasetRepresentingState;
         repState.update(newItems);
-      })
+      });
     };
 
     return [

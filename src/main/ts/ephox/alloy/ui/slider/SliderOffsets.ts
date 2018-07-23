@@ -37,7 +37,7 @@ const getYScreenRange = (component: AlloyComponent): number => {
   return getBoundsProperty(bounds, height);
 };
 
-const getCenterOffsetOf = (componentMinEdge: number, componentMaxEdge: number, spectrumMinEdge: number): number => 
+const getCenterOffsetOf = (componentMinEdge: number, componentMaxEdge: number, spectrumMinEdge: number): number =>
   (componentMinEdge + componentMaxEdge) / 2 - spectrumMinEdge;
 
 const getXCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent): number => {
@@ -66,4 +66,4 @@ export {
   getYScreenRange,
   getXCenterOffSetOf,
   getYCenterOffSetOf
-}
+};
