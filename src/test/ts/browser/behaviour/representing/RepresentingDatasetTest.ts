@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Step, UiControls } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -22,13 +22,15 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
           Representing.config({
             store: {
               mode: 'dataset',
-              initialValue: 'dog',
-              initialDataset: [ { value: 'dog', text: 'Dog' } ],
+              initialValue: {
+                value: 'dog',
+                text: 'Hund'
+              },
               getDataKey (component) {
                 return Value.get(component.element());
               },
               getFallbackEntry (key) {
-                return { value: key.toLowerCase(), text: key };
+                return { value: 'fallback.' + key.toLowerCase(), text: key };
               },
               setValue: (comp, data) => {
                 Value.set(comp.element(), data.text);
@@ -55,46 +57,45 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
 
     return [
       Assertions.sAssertStructure(
-        'Initial value should be "dog"',
+        'Initial value should be "Hund"',
         ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
-            value: str.is('Dog')
+            value: str.is('Hund')
           });
         }),
         component.element()
       ),
 
-      sAssertRepValue('Checking represented value on load', { value: 'dog', text: 'Dog' }),
+      sAssertRepValue('Checking represented value on load', { value: 'dog', text: 'Hund' }),
 
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
-      FocusTools.sSetActiveValue(doc, 'Cat'),
-      // Note, Value.set does not actually dispatch the event, so we have to simulate it.
-      Step.sync(() => {
-        AlloyTriggers.emit(component, NativeEvents.input());
+      FocusTools.sSetActiveValue(doc, 'Katze'),
+
+      sAssertRepValue('Checking represented value after change', {
+        value: 'fallback.katze',
+        text: 'Katze'
       }),
 
-      sAssertRepValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
+      FocusTools.sSetActiveValue(doc, 'Elephant'),
 
-      Step.sync(() => {
-        Representing.setValue(component, 'elephant');
+      sAssertRepValue('Checking represented value after set input but before update', {
+        value: 'fallback.elephant',
+        text: 'Elephant'
       }),
-
-      sAssertRepValue('Checking represented value after setValue but before update', { value: 'elephant', text: 'elephant' }),
 
       sUpdateDataset([
-        { value: 'elephant', text: 'Baby Elephant Walk' }
+        { value: 'big.e', text: 'Elephant' }
       ]),
 
-      Step.sync(() => {
-        Representing.setValue(component, 'elephant');
+      sAssertRepValue('Checking represented value after set input but after update', {
+        value: 'big.e',
+        text: 'Elephant'
       }),
-
-      sAssertRepValue('Checking represented value after setValue but after update', { value: 'elephant', text: 'Baby Elephant Walk' }),
       Assertions.sAssertStructure(
-        'Value should be "Baby Elephant Walk"',
+        'Test will be Elephant."',
         ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
-            value: str.is('Baby Elephant Walk')
+            value: str.is('Elephant')
           });
         }),
         component.element()

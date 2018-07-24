@@ -9,8 +9,7 @@ import { TypeaheadModelDetail } from '../../ui/types/TypeaheadTypes';
 // When showing a value in an input field, which part of the item do we use?
 const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent) => {
   const itemData = Representing.getValue(item);
-  const displayText = model.getDisplayText()(itemData);
-  Representing.setValue(input, displayText);
+  Representing.setValue(input, itemData);
   setCursorAtEnd(input);
 };
 

@@ -1,6 +1,6 @@
 import { FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Strings } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -38,13 +38,17 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               openClass: 'test-typeahead-open'
             },
 
-            data: 'initial-value',
+            initialData: {
+              // . for value, - for text
+              value: 'initial.value',
+              text: 'initial-value'
+            },
 
             fetch (input) {
-              const text = Value.get(input.element());
+              const text = Value.get(input.element()).toLowerCase();
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', text: text + '1' } },
-                { type: 'item', data: { value: text + '2', text: text + '2' } }
+                { type: 'item', data: { value: text + '1', text: Strings.capitalize(text) + '1' } },
+                { type: 'item', data: { value: text + '2', text: Strings.capitalize(text) + '2' } }
               ]);
 
               return future.map((f) => {
@@ -119,14 +123,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         // Check that the representing state has keys of peo1, peo2 etc.
         const repState = Representing.getState(typeahead) as DatasetRepresentingState;
         const peo1Data = repState.lookup('peo1').getOrDie('Should have dataset data for peo1 now');
-        Assertions.sAssertEq('Checking peo1Data', { value: 'peo1', text: 'Peo1' }, peo1Data);
+        Assertions.assertEq('Checking peo1Data', { value: 'peo1', text: 'Peo1' }, peo1Data);
 
         const peo2Data = repState.lookup('peo2').getOrDie('Should have dataset data for peo2 now');
-        Assertions.sAssertEq('Checking peo2Data', { value: 'peo2', text: 'Peo2' }, peo2Data);
+        Assertions.assertEq('Checking peo2Data', { value: 'peo2', text: 'Peo2' }, peo2Data);
       }),
 
       Keyboard.sKeydown(doc, Keys.enter(), { }),
-      steps.sAssertValue('Value after <enter>', 'peo2'),
+      steps.sAssertValue('Value after <enter>', 'Peo2'),
       steps.sAssertFocusOnTypeahead('Focus after <enter>'),
 
       steps.sWaitForNoMenu('No menu after <enter>'),
@@ -142,7 +146,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       ]),
 
       Keyboard.sKeydown(doc, Keys.escape(), { }),
-      steps.sAssertValue('After pressing ESC', 'new-value1'),
+      steps.sAssertValue('After pressing ESC', 'New-value1'),
       steps.sAssertFocusOnTypeahead('After pressing ESC'),
       steps.sWaitForNoMenu('After pressing ESC'),
 
@@ -157,7 +161,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
       Mouse.sClickOn(gui.element(), '.item[data-value="new-value12"]'),
       steps.sWaitForNoMenu('After clicking on item'),
-      steps.sAssertValue('After clicking on item', 'new-value12'),
+      steps.sAssertValue('After clicking on item', 'New-value12'),
 
       // check dismissing popups
       Keyboard.sKeydown(doc, Keys.down(), { }),
@@ -185,7 +189,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
       // Trigger menu again
-      UiControls.sSetValue(typeahead.element(), 'neo'),
+      UiControls.sSetValue(typeahead.element(), 'Neo'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Waiting for menu to appear for "neo"'),
       NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
@@ -193,7 +197,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       ]),
 
       TestDropdownMenu.mStoreMenuUid(component),
-      UiControls.sSetValue(typeahead.element(), 'neo'),
+      UiControls.sSetValue(typeahead.element(), 'Neo'),
       Step.sync(() => {
         AlloyTriggers.emit(typeahead, NativeEvents.input());
       }),
@@ -210,6 +214,20 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         Focus.focus(component.element());
       }),
       steps.sWaitForNoMenu('Blurring should dismiss popup'),
+
+      Step.sync(() => {
+        Representing.setValue(typeahead, {
+          value: 'neo3',
+          text: 'Neo3'
+        })
+      }),
+      Step.sync(() => {
+        const actual = Representing.getValue(typeahead);
+        Assertions.assertEq('Checking getValue after setValue', {
+          value: 'neo3',
+          text: 'Neo3'
+        }, actual);
+      }),
 
       GuiSetup.mRemoveStyles
 

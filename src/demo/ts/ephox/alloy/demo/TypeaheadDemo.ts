@@ -85,14 +85,8 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
-      data: 'bison',
-
+      initialData: { value: 'bison', text: 'Bison' },
       model,
-
-      dataset: [{
-        value: 'bison',
-        text: 'Bison'
-      }],
 
       fetch (input) {
         const text = Value.get(input.element());
