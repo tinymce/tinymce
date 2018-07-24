@@ -25,7 +25,6 @@ import ToolbarsDemo from './ToolbarsDemo';
 import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
 
-
 declare const window: any;
 
 window.demos = {

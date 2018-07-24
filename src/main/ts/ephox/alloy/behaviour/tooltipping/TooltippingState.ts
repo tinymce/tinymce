@@ -49,13 +49,13 @@ const init = () => {
   const readState = Fun.constant('not-implemented');
 
   return nuState({
-    getTooltip: getTooltip,
-    isShowing: isShowing,
-    setTooltip: setTooltip,
-    clearTooltip: clearTooltip,
-    clearTimer: clearTimer,
-    resetTimer: resetTimer,
-    readState: readState
+    getTooltip,
+    isShowing,
+    setTooltip,
+    clearTooltip,
+    clearTimer,
+    resetTimer,
+    readState
   });
 
 };

@@ -13,15 +13,13 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-
-
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var sink = GuiFactory.build({
+  const sink = GuiFactory.build({
     dom: {
       tag: 'div'
     },
@@ -30,7 +28,7 @@ export default (): void => {
     ])
   });
 
-  var lazySink = function () {
+  const lazySink = function () {
     return Result.value(sink);
   };
   gui.add(sink);
@@ -51,7 +49,7 @@ export default (): void => {
       ]),
 
       components: Arr.map([ 'alpha', 'beta', 'gamma' ], function (n) {
-        return <AlloySpec>{
+        return <AlloySpec> {
           dom: {
             tag: 'button',
             innerHtml: n
@@ -59,7 +57,7 @@ export default (): void => {
           behaviours: Behaviour.derive([
             Focusing.config({ }),
             Tooltipping.config({
-              lazySink: lazySink,
+              lazySink,
               // NOTE: At this stage, exclusive=false, probably doesn't do much, because
               // a mouseout/focusout is almost always fired before another tooltip
               // would show. However, if there was an API to make tooltips show,
@@ -78,7 +76,7 @@ export default (): void => {
           ])
         };
       }).concat([
-        <AlloySpec>GuiFactory.premade(sink)
+        <AlloySpec> GuiFactory.premade(sink)
       ])
     })
   );

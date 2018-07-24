@@ -1,4 +1,4 @@
-import { Merger, Id, Arr, Obj } from '@ephox/katamari';
+import { Merger, Id } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -9,10 +9,9 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import * as Main  from '../../api/Main';
+import * as Main from '../../api/Main';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import AriaLabel from '../../aria/AriaLabel';
 
@@ -51,7 +50,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const eventOrder = {
     ...detail.eventOrder(),
     'alloy.system.attached': [modalEventsId].concat(detail.eventOrder()['alloy.system.attached'] || [])
-  }
+  };
 
   return {
     uid: detail.uid(),
@@ -77,7 +76,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         }),
         Main.AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
-            AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element())
+            AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
           })
         ])
       ]),

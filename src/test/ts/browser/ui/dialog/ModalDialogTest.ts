@@ -191,7 +191,6 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         });
       })),
 
-
       Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element(), [
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),

@@ -1,6 +1,5 @@
-import { Attr } from "@ephox/sugar";
-import { Option, Id, Fun } from "@ephox/katamari";
-
+import { Attr } from '@ephox/sugar';
+import { Option, Id, Fun } from '@ephox/katamari';
 
 export default {
   labelledBy(labelledElement, labelElement) {
@@ -13,6 +12,4 @@ export default {
 
     Attr.set(labelledElement, 'aria-labelledby', labelId);
   }
-}
-
-
+};
