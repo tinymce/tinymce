@@ -107,16 +107,7 @@ const ScriptLoader: any = function () {
     elm.type = 'text/javascript';
     elm.src = Tools._addCacheSuffix(url);
 
-    // Seems that onreadystatechange works better on IE 10 onload seems to fire incorrectly
-    if ('onreadystatechange' in elm) {
-      elm.onreadystatechange = function () {
-        if (/loaded|complete/.test(elm.readyState)) {
-          done();
-        }
-      };
-    } else {
-      elm.onload = done;
-    }
+    elm.onload = done;
 
     // Add onerror event will get fired on some browsers but not all of them
     elm.onerror = error;
