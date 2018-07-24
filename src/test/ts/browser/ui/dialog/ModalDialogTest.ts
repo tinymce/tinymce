@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Result } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
+import { Result, Fun } from '@ephox/katamari';
+import { Class, Attr } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -190,6 +190,22 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           ]
         });
       })),
+
+
+      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element(), [
+        NamedChain.asChain([
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
+          NamedChain.bundle((f) => {
+            const titleId = Attr.get(f.title, 'id');
+            Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
+            Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
+            const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
+            Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
+            return Result.value(f);
+          })
+        ])
+      ])),
 
       FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
       Keyboard.sKeydown(doc, Keys.tab(), { }),
