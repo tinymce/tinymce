@@ -5,10 +5,11 @@ import * as Sketcher from './Sketcher';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
 import { Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Option, Merger } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { SketchBehaviours } from '../Main';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {
@@ -16,27 +17,36 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
     dom: detail.dom(),
     components,
 
-    behaviours: Behaviour.derive([
-      Composing.config({ find: Option.some }),
+    behaviours: Merger.deepMerge(
+      Behaviour.derive([
+        Composing.config({ find: Option.some }),
 
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue (comp) {
-            const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
-            return {
-              field1: Representing.getValue(parts.field1()),
-              field2: Representing.getValue(parts.field2())
-            };
-          },
-          setValue (comp, value) {
-            const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
-            if (Objects.hasKey(value, 'field1')) { Representing.setValue(parts.field1(), value.field1); }
-            if (Objects.hasKey(value, 'field2')) { Representing.setValue(parts.field2(), value.field2); }
+        Representing.config({
+          store: {
+            mode: 'manual',
+            getValue(comp) {
+
+              const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
+              return {
+                [detail.field1Name()]: Representing.getValue(parts.field1()),
+                [detail.field2Name()]: Representing.getValue(parts.field2())
+              };
+            },
+            setValue(comp, value) {
+              const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
+              if (Objects.hasKey(value, detail.field1Name())) { Representing.setValue(parts.field1(), value[detail.field1Name()]); }
+              if (Objects.hasKey(value, detail.field2Name())) { Representing.setValue(parts.field2(), value[detail.field2Name()]); }
+            }
           }
-        }
-      })
-    ])
+        })
+      ]),
+      SketchBehaviours.get(detail.coupledFieldBehaviours())
+    ),
+    apis: {
+      getField1: (component) => AlloyParts.getPart(component, detail, 'field1'),
+      getField2: (component) => AlloyParts.getPart(component, detail, 'field2'),
+      getLock: (component) => AlloyParts.getPart(component, detail, 'lock')
+    }
   };
 };
 
@@ -44,7 +54,12 @@ const FormCoupledInputs = Sketcher.composite({
   name: 'FormCoupledInputs',
   configFields: FormCoupledInputsSchema.schema(),
   partFields: FormCoupledInputsSchema.parts(),
-  factory
+  factory,
+  apis: {
+    getField1: (apis, component) => apis.getField1(component),
+    getField2: (apis, component) => apis.getField2(component),
+    getLock: (apis, component) => apis.getLock(component)
+  }
 }) as FormCoupledInputsSketcher;
 
 export {

@@ -6,6 +6,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { PartTypeAdt } from '../../parts/PartType';
 
 export interface SingleSketchSpec {
   uid?: string;
@@ -35,6 +36,24 @@ export interface CompositeSketch<S extends CompositeSketchSpec, D extends Compos
   parts: () => AlloyParts.GeneratedParts;
   // TYPIFY externals
   factory: UiSketcher.CompositeSketchFactory<D, S>;
+}
+
+export interface CompositeSketcherSpec {
+  name: string;
+  factory: any;
+  configFields: FieldProcessorAdt[];
+  partFields: PartTypeAdt[];
+  apis?: Record<string, Function>;
+  extraApis?: Record<string, Function>;
+}
+
+export interface CompositeSketcherRawDetail {
+  name: string;
+  factory: any;
+  configFields: FieldProcessorAdt[];
+  partFields: PartTypeAdt[];
+  apis: Record<string, Function>;
+  extraApis: Record<string, Function>;
 }
 
 export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {
@@ -83,8 +102,8 @@ const single = function <S extends SingleSketchSpec, D extends SingleSketchDetai
   ) as SingleSketch<S, D>;
 };
 
-const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig) {
-  const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
+const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig: CompositeSketcherSpec) {
+  const config: CompositeSketcherRawDetail = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
   const sketch = (spec) => {
     return UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);

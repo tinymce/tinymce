@@ -20,6 +20,11 @@ const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
   return data.dump();
 };
 
+export const SketchBehaviours = {
+  field,
+  get
+};
+
 export {
   field,
   get
