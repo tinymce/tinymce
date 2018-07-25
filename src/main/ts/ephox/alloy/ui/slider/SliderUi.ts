@@ -4,6 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
+import { Receiving } from '../../api/behaviour/Receiving';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -101,6 +102,16 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
                 mode: 'manual',
                 getValue (_) {
                   return detail.model().value().get();
+                }
+              }
+            }),
+
+            Receiving.config({
+              channels: {
+                'mouse.released': {
+                  onReceive: (comp, se) => {
+                    detail.mouseIsDown().set(false);
+                  }
                 }
               }
             })
