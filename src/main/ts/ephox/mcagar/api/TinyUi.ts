@@ -7,10 +7,16 @@ import { Arr } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
+import { ThemeSelectors, DefaultThemeSelectors } from './ThemeSelectors';
 
 
 
-export default function (editor, toolBarSelector = '.mce-toolbar-grp', menuBarSelector = '.mce-menubar', dialogSubmitSelector = 'div.mce-primary > button') {
+export default function (editor, selectors?: Partial<ThemeSelectors>) {
+  const mergedSelectors = {
+    ...DefaultThemeSelectors,
+    ...selectors
+  }
+
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
   var editorRoot = Element.fromDom(editor.getBody());
@@ -18,11 +24,11 @@ export default function (editor, toolBarSelector = '.mce-toolbar-grp', menuBarSe
   var cDialogRoot = Chain.inject(dialogRoot);
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(toolBarSelector)
+    UiFinder.cFindIn(mergedSelectors.toolBarSelector)
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(menuBarSelector)
+    UiFinder.cFindIn(mergedSelectors.menuBarSelector)
   ]);
 
   var cEditorRoot = Chain.inject(editorRoot);
@@ -126,7 +132,7 @@ export default function (editor, toolBarSelector = '.mce-toolbar-grp', menuBarSe
 
   var cSubmitDialog = function () {
     return Chain.fromChains([
-      UiFinder.cFindIn(dialogSubmitSelector),
+      UiFinder.cFindIn(mergedSelectors.dialogSubmitSelector),
       Mouse.cClick
     ]);
   };
