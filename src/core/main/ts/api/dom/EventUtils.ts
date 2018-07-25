@@ -72,26 +72,16 @@ const removeEvent = function (target, name, callback, capture?) {
  * Gets the event target based on shadow dom properties like path and composedPath.
  */
 const getTargetFromShadowDom = function (event, defaultTarget) {
-  let path, target = defaultTarget;
-
-  // When target element is inside Shadow DOM we need to take first element from path
+  // When target element is inside Shadow DOM we need to take first element from composedPath
   // otherwise we'll get Shadow Root parent, not actual target element
-
-  // Normalize target for WebComponents v0 implementation (in Chrome)
-  path = event.path;
-  if (path && path.length > 0) {
-    target = path[0];
-  }
-
-  // Normalize target for WebComponents v1 implementation (standard)
   if (event.composedPath) {
-    path = event.composedPath();
-    if (path && path.length > 0) {
-      target = path[0];
+    const composedPath = event.composedPath();
+    if (composedPath && composedPath.length > 0) {
+      return composedPath[0];
     }
   }
 
-  return target;
+  return defaultTarget;
 };
 
 /**
