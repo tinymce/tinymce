@@ -42,7 +42,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
       return memSink.getOpt(me).fold(
         () => Result.error('Could not find test sink'),
         Result.value
-      )
+      );
     };
 
     const makeButton = (name: string): AlloySpec => {
@@ -53,7 +53,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         },
         containerBehaviours: Behaviour.derive([
           Tooltipping.config({
-            lazySink: lazySink,
+            lazySink,
             delay: 100,
             tooltipDom: {
               tag: 'span',
@@ -62,7 +62,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           }),
           Focusing.config({ })
         ])
-      })
+      });
     };
 
     const me = GuiFactory.build({
@@ -93,7 +93,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             children: children(s, str, arr)
-          })
+          });
         }),
         memSink.get(component).element()
       ),
@@ -113,7 +113,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           html: str.is(html)
         })
       ])
-    )
+    );
 
     return Arr.flatten([
       Logger.ts(

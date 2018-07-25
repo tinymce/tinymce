@@ -1,4 +1,4 @@
-import { Merger } from '@ephox/katamari';
+import { Merger, Id } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -9,9 +9,11 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import * as Main from '../../api/Main';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import AriaLabel from '../../aria/AriaLabel';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
@@ -44,6 +46,12 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     return AlloyParts.getPartOrDie(dialog, detail, 'body');
   };
 
+  const modalEventsId = Id.generate('modal-events');
+  const eventOrder = {
+    ...detail.eventOrder(),
+    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder()['alloy.system.attached'] || [])
+  };
+
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge({
@@ -57,8 +65,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
       hide: hideDialog,
       getBody: getDialogBody
     },
-    eventOrder: detail.eventOrder(),
-
+    eventOrder,
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Keying.config({
@@ -66,12 +73,18 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           onEnter: detail.onExecute(),
           onEscape: detail.onEscape(),
           useTabstopAt: detail.useTabstopAt()
-        })
+        }),
+        Main.AddEventsBehaviour.config(modalEventsId, [
+          AlloyEvents.runOnAttached((c) => {
+            AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
+          })
+        ])
       ]),
       SketchBehaviours.get(detail.modalBehaviours())
     )
   };
 };
+
 const ModalDialog = Sketcher.composite({
   name: 'ModalDialog',
   configFields: ModalDialogSchema.schema(),

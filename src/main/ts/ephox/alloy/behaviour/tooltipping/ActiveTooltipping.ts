@@ -51,14 +51,14 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         }
       }, popup);
     }
-  }
+  };
 
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
       // TODO: Think about the types for this, or find a better way for this
       // to rely on receiving.
-      const receivingData = <any>message as ReceivingInternalEvent;
-      if (Arr.contains(receivingData.channels(), ExclusivityChannel)) hide();
+      const receivingData = <any> message as ReceivingInternalEvent;
+      if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(); }
     }),
 
     AlloyEvents.run(NativeEvents.focusin(), (comp) => {
