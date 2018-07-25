@@ -8,9 +8,9 @@ import TinyDom from './TinyDom';
 import TinyLoader from './TinyLoader';
 import TinyScenarios from './TinyScenarios';
 import TinyUi from './TinyUi';
-import makeUiChains from './UiChains';
+import ThemeUiChains from './UiChains';
 
-const UiChains = makeUiChains();
+const UiChains = ThemeUiChains();
 
 export {
   ActionChains,
@@ -23,5 +23,6 @@ export {
   TinyLoader,
   TinyScenarios,
   TinyUi,
-  UiChains
+  UiChains,
+  ThemeUiChains
 };
