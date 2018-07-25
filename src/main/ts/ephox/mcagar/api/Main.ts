@@ -8,6 +8,7 @@ import TinyDom from './TinyDom';
 import TinyLoader from './TinyLoader';
 import TinyScenarios from './TinyScenarios';
 import TinyUi from './TinyUi';
+import ThemeUiChains from './ThemeUiChains';
 import UiChains from './UiChains';
 
 export {
@@ -21,5 +22,6 @@ export {
   TinyLoader,
   TinyScenarios,
   TinyUi,
-  UiChains
+  UiChains,
+  ThemeUiChains
 };
