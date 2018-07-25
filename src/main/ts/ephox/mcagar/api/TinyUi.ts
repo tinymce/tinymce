@@ -10,7 +10,7 @@ import { Visibility } from '@ephox/sugar';
 
 
 
-export default function (editor) {
+export default function (editor, toolBarSelector = '.mce-toolbar-grp', menuBarSelector = '.mce-menubar', dialogSubmitSelector = 'div.mce-primary > button') {
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
   var editorRoot = Element.fromDom(editor.getBody());
@@ -18,11 +18,11 @@ export default function (editor) {
   var cDialogRoot = Chain.inject(dialogRoot);
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn('.mce-toolbar-grp')
+    UiFinder.cFindIn(toolBarSelector)
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn('.mce-menubar')
+    UiFinder.cFindIn(menuBarSelector)
   ]);
 
   var cEditorRoot = Chain.inject(editorRoot);
@@ -126,7 +126,7 @@ export default function (editor) {
 
   var cSubmitDialog = function () {
     return Chain.fromChains([
-      UiFinder.cFindIn('div.mce-primary > button'),
+      UiFinder.cFindIn(dialogSubmitSelector),
       Mouse.cClick
     ]);
   };
