@@ -88,24 +88,45 @@ const cAssertDomEq = function (label: string, expected: Element) {
   });
 };
 
+const cAssertPresence = function (label: string, expected: Record<string,number>) {
+  return Chain.op(function(container: Element) {
+    assertPresence(label, expected, container);
+  });
+};
+
+const cAssertHtmlStructure = function(label: string, expected: string) {
+  return Chain.op(function(container: Element) {
+    assertStructure(label, ApproxStructure.fromHtml(expected), container);
+  });
+};
+
+const cAssertStructure = function(label: string, expected: StructAssert) {
+  return Chain.op(function (container: Element) {
+    assertStructure(label, expected, container);
+  });
+};
+
 const sAssertHtml: <T> (label: string, expected: string, actual: string) => Step<T, T> = toStep(assertHtml);
 const sAssertPresence: <T> (label: string, expected: Record<string, number>, container: Element) => Step<T, T> = toStep(assertPresence);
 const sAssertStructure: <T> (label: string, expected: StructAssert, container: Element) => Step<T, T> = toStep(assertStructure);
 
 export {
-  assertHtml,
-  assertHtmlStructure,
-  assertPresence,
-  assertStructure,
   assertEq,
   assertDomEq,
+  assertHtml,
+  assertPresence,
+  assertHtmlStructure,
+  assertStructure,
 
+  sAssertEq,
   sAssertHtml,
   sAssertPresence,
   sAssertStructure,
-  sAssertEq,
 
-  cAssertHtml,
   cAssertEq,
-  cAssertDomEq
+  cAssertDomEq,
+  cAssertHtml,
+  cAssertPresence,
+  cAssertHtmlStructure,
+  cAssertStructure
 };
