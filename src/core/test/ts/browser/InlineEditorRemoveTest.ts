@@ -2,8 +2,7 @@ import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
-import { window } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
+import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) =>  {
   Theme();
@@ -14,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
   };
 
   const cAssertBogusNotExist = Chain.on((val, next, die) => {
-    UiFinder.findIn(Element.fromDom(window.document.body), '[data-mce-bogus]').fold(
+    UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
       () => {
         next(Chain.wrap(val));
       },
