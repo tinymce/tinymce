@@ -1,6 +1,6 @@
 import { Id, Merger } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
-import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
