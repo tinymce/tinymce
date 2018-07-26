@@ -50,6 +50,17 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
+  const testInputValueOfUndefinedPasses = StepAssertions.testStepsPass(
+    {},
+    [
+      Chain.asStep({}, [
+        Chain.on(function (cInput, cNext, cDie) {
+          cNext(Chain.wrap(undefined));
+        })
+      ])
+    ]
+  );
+
   const testChainingFails = StepAssertions.testStepsFail(
     'Cat is not a dog',
     [
@@ -138,6 +149,10 @@ UnitTest.asynctest('ChainTest', function() {
     Logger.t(
       '[Should pass validation if the chain function does wrap the output]\n',
       testInputValuePasses
+    ),
+    Logger.t(
+      '[Should pass validation if the chain function does wrap the output, even if that output is undefined]\n',
+      testInputValueOfUndefinedPasses
     ),
     Logger.t(
       '[When a previous link passes a failure that fails a chain, the step should fail]\n',
