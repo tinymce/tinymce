@@ -80,7 +80,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
 
     const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
-    const testWithChooser = (label: string, sChooser: Step<any,any>): Step<any,any> => {
+    const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -125,8 +125,8 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
             ])
           ),
         ])
-      )
-    }
+      );
+    };
 
     return [
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),

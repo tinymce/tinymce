@@ -20,6 +20,7 @@ const focus = Fun.constant('focus') as StringConstant;
 const click = Fun.constant('click') as StringConstant;
 const transitionend = Fun.constant('transitionend') as StringConstant;
 const selectstart = Fun.constant('selectstart') as StringConstant;
+const paste = Fun.constant('paste') as StringConstant;
 
 export {
   contextmenu,
@@ -45,4 +46,5 @@ export {
 
   transitionend,
   selectstart,
+  paste
 };
