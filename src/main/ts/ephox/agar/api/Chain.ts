@@ -154,7 +154,7 @@ const unwrap = function <V>(c: Wrap<V>): V {
 };
 
 const isInput = function (v): v is Wrap<any> {
-  return v.chain !== undefined;
+  return Object.prototype.hasOwnProperty.call(v, 'chain');
 };
 
 const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, delay_doNotUse?: number) {
