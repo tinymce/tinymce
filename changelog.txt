@@ -1,3 +1,7 @@
+Version 4.8.1 (2018-07-26)
+    Fixed a bug where the content of inline editors was being cleaned on every call of `editor.save()`. #TINY-1783
+    Fixed a bug where the arrow of the Inlite Theme toolbar was being rendered incorrectly in RTL mode. #TINY-1776
+    Fixed a bug with the Paste Plugin where pasting after inline contenteditable false elements moved the caret to the end of the line. #TINY-1758
 Version 4.8.0 (2018-06-27)
     Added new "experimental" object in editor, with initial Annotator API. #TBS-2374
     Fixed a bug where deleting paragraphs inside of table cells would delete the whole table cell. #TINY-1759
