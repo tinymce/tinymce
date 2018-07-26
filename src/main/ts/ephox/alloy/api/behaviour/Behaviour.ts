@@ -1,7 +1,7 @@
 import { FieldProcessorAdt, FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
-import * as Behaviour from '../../behaviour/common/Behaviour';
+import * as CommonBehaviour from '../../behaviour/common/Behaviour';
 import { NoState, BehaviourState } from '../../behaviour/common/BehaviourState';
 import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { DomModification } from '../../dom/DomModification';
@@ -63,7 +63,7 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
 
 const create = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail>(data: AlloyBehaviourConfig): AlloyBehaviour<C, D> => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
-  return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
+  return CommonBehaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
 export interface BehaviourModeSpec {
@@ -88,7 +88,7 @@ const modeSchema: Processor = ValueSchema.objOfOnly([
 
 const createModes = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail>(data: BehaviourModeSpec): AlloyBehaviour<C, D> => {
   const value: BehaviourModeSpec = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
-  return Behaviour.createModes(
+  return CommonBehaviour.createModes(
     ValueSchema.choose(value.branchKey, value.branches),
     value.name, value.active, value.apis, value.extra, value.state
   );
