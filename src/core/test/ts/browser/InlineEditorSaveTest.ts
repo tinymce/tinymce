@@ -3,8 +3,9 @@ import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) =>  {
+UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) =>  {
   Theme();
 
   const settings = {
@@ -12,25 +13,25 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
     skin_url: '/project/js/tinymce/skins/lightgray'
   };
 
-  const cAssertBogusNotExist = Chain.on((val, next, die) => {
+  const cAssertBogusExist = Chain.on((val, next, die) => {
     UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
       () => {
-        next(Chain.wrap(val));
+        die('Should be data-mce-bogus tags present');
       },
       () => {
-        die('Should not be any data-mce-bogus tags present');
+        next(Chain.wrap(val));
       }
     );
   });
 
-  const cRemoveEditor = Chain.op((editor: any) => editor.remove());
+  const cSaveEditor = Chain.op((editor: Editor) => editor.save());
 
   Pipeline.async({}, [
-    Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [
+    Logger.t('Saving inline editor should not remove data-mce-bogus tags', Chain.asStep({}, [
         McEditor.cFromHtml('<div></div>', settings),
         ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
-        cRemoveEditor,
-        cAssertBogusNotExist,
+        cSaveEditor,
+        cAssertBogusExist,
         McEditor.cRemove,
       ]),
     )

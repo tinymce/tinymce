@@ -39,7 +39,7 @@ const remove =  (editor: Editor): void => {
     const body = editor.getBody();
     const element = editor.getElement();
     if (body) {
-      editor.save();
+      editor.save({ is_removing: true });
     }
     editor.removed = true;
     editor.unbindAllNativeEvents();
