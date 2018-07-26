@@ -1,7 +1,4 @@
 import { Future, Option, Result } from '@ephox/katamari';
-// TODO: Fix this.
-import { TieredData } from '../../api/Main';
-import { TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -9,6 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {

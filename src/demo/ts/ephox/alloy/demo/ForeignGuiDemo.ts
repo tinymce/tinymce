@@ -1,6 +1,8 @@
+import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, Element, Elements, Height, Insert, InsertAll, Node, SelectorFind, Width } from '@ephox/sugar';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
@@ -9,9 +11,8 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
+
 import * as Frames from './frames/Frames';
-import { SugarEvent } from 'ephox/alloy/api/Main';
-import { document } from '@ephox/dom-globals';
 
 const resize = (element, changeX, changeY) => {
   document.querySelector('h2').innerHTML = 'resizing';

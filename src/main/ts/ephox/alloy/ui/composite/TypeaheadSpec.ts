@@ -1,8 +1,8 @@
-import { console } from '@ephox/dom-globals';
+import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
-import { Value, Focus } from '@ephox/sugar';
-import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
+import { Focus, Value } from '@ephox/sugar';
 
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -18,18 +18,18 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
-// TODO: Fix this.
-import { SugarEvent, TieredData } from '../../api/Main';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
+import { NormalItemSpec } from '../../ui/types/ItemTypes';
+import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
-import { NormalItemSpec } from '../../ui/types/ItemTypes';
-import { Objects } from '@ephox/boulder';
 
+// TODO: Fix this.
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
   const navigateList = (
     comp: AlloyComponent,

@@ -1,19 +1,19 @@
-import { Merger, Id } from '@ephox/katamari';
+import { Id, Merger } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import AriaLabel from '../../aria/AriaLabel';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
+import { ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Keying } from '../behaviour/Keying';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
-import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import * as Main from '../../api/Main';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import AriaLabel from '../../aria/AriaLabel';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
@@ -74,7 +74,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           onEscape: detail.onEscape(),
           useTabstopAt: detail.useTabstopAt()
         }),
-        Main.AddEventsBehaviour.config(modalEventsId, [
+        AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
             AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
           })

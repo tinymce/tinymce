@@ -1,12 +1,12 @@
-import { Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { FocusManager } from '../api/focus/FocusManagers';
-// TODO: Fix this.
-import { BehaviourState } from '../api/Main';
-import { Stateless } from '../behaviour/common/BehaviourState';
+import { Element } from '@ephox/sugar';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { FocusManager } from '../api/focus/FocusManagers';
+import { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+
+// TODO: Fix this.
 export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
 
 export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;

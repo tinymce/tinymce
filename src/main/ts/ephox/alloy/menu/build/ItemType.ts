@@ -12,8 +12,8 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
-// TODO: Fix this.
-import { AlloySpec, AddEventsBehaviour } from '../../api/Main';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
