@@ -14,6 +14,8 @@ const placement = (component, _posInfo, anchorInfo, origin) => {
 
   const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
 
+  console.log('hotspot', hotspot.element().dom());
+
   return Option.some(
     NuAnchor({
       anchorBox: Fun.constant(anchorBox),

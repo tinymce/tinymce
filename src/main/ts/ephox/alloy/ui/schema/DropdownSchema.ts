@@ -1,5 +1,5 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -17,6 +17,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
+  FieldSchema.defaulted('getHotspot', Option.some),
   SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
   FieldSchema.strict('toggleClass'),
   FieldSchema.option('lazySink'),

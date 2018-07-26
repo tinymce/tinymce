@@ -26,8 +26,13 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     });
   };
 
+  const getAnchor = (component: AlloyComponent): HotspotAnchorSpec => {
+    const ourHotspot = detail.getHotspot()(component).getOr(component)
+    return { anchor: 'hotspot', hotspot: ourHotspot };
+  }
+
   const action = (component: AlloyComponent): void => {
-    const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
+    const anchor = getAnchor(component);
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, (x) => x, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
@@ -55,10 +60,8 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           Coupling.config({
             others: {
               sandbox (hotspot) {
-                return DropdownUtils.makeSandbox(detail, {
-                  anchor: 'hotspot',
-                  hotspot
-                }, hotspot, {
+                const anchor = getAnchor(hotspot)
+                return DropdownUtils.makeSandbox(detail, anchor, hotspot, {
                   onOpen () { Toggling.on(hotspot); },
                   onClose () { Toggling.off(hotspot); }
                 });
