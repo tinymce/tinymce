@@ -1,10 +1,10 @@
-
-import { AlloyEventKeyAndHandler, derive, AlloyEventRecord } from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { create as createBehaviour, ConfiguredBehaviour, AlloyBehaviour, NamedConfiguredBehaviour } from './Behaviour';
-import { EventFormat } from '../../events/SimulatedEvent';
+
 import { NoState } from '../../behaviour/common/BehaviourState';
+import { EventFormat } from '../../events/SimulatedEvent';
+import { AlloyEventKeyAndHandler, AlloyEventRecord, derive } from '../events/AlloyEvents';
+import { AlloyBehaviour, create as createBehaviour, NamedConfiguredBehaviour } from './Behaviour';
 
 const events = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): AlloyBehaviour<any, any> => {
   const events: AlloyEventRecord = derive(eventHandlers);

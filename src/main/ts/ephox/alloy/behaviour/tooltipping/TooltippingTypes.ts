@@ -2,7 +2,7 @@ import { BehaviourConfigSpec, BehaviourConfigDetail, AlloyBehaviour } from '../.
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result, Option } from '@ephox/katamari';
 import { RawDomSchema } from '../../api/component/SpecTypes';
-import { BehaviourState } from 'ephox/alloy/api/Main';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
 
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive(comp: AlloyComponent): void;

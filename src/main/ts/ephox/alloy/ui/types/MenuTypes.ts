@@ -3,8 +3,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { FocusManager } from '../../api/focus/FocusManagers';
-// TODO: Fix this
-import { CustomEvent } from '../../api/Main';
+import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { MenuConfigSpec } from '../../keying/KeyingModeTypes';
 import { ItemSpec } from '../../ui/types/ItemTypes';

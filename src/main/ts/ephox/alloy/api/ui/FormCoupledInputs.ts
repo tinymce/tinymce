@@ -9,7 +9,7 @@ import { Option, Merger } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SketchBehaviours } from '../Main';
+import { SketchBehaviours } from '../component/SketchBehaviours';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {
