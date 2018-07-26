@@ -95,14 +95,14 @@ const cAssertPresence = function (label: string, expected: Record<string,number>
 };
 
 const cAssertHtmlStructure = function(label: string, expected: string) {
-  return Chain.op(function(actual: Element) {
-    assertStructure(label, ApproxStructure.fromHtml(expected), actual);
+  return Chain.op(function(container: Element) {
+    assertStructure(label, ApproxStructure.fromHtml(expected), container);
   });
 };
 
 const cAssertStructure = function(label: string, expected: StructAssert) {
-  return Chain.op(function (actual: Element) {
-    assertStructure(label, expected, actual);
+  return Chain.op(function (container: Element) {
+    assertStructure(label, expected, container);
   });
 };
 
