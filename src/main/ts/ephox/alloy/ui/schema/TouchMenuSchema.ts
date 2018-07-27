@@ -7,6 +7,7 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import { Unselecting } from '../../api/behaviour/Unselecting';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
+import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
@@ -29,7 +30,6 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
-  FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onKeyboardHandler('onExecute'),
   Fields.onHandler('onTap'),
   Fields.onHandler('onHoverOn'),
@@ -47,7 +47,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('menuTransition'),
 
   FieldSchema.defaulted('getAnchor', anchorAtCentre)
-]);
+].concat(
+  SketcherFields.sandboxFields()
+));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({

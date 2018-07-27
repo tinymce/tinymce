@@ -10,13 +10,13 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
+import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
-  FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onStrictHandler('onExecute'),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),
@@ -24,7 +24,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
   FieldSchema.defaulted('matchWidth', false)
-]);
+].concat(
+  SketcherFields.sandboxFields()
+));
 
 const arrowPart = PartType.required({
   factory: Button,

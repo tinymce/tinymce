@@ -14,6 +14,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
+import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
 import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { TypeaheadData, TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
@@ -24,7 +25,6 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
   FieldSchema.defaulted('responseTime', 1000),
-  FieldSchema.defaulted('sandboxClasses', [ ]),
   Fields.onHandler('onOpen'),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
@@ -51,6 +51,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   })
 ].concat(
   InputBase.schema()
+).concat(
+  SketcherFields.sandboxFields()
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
