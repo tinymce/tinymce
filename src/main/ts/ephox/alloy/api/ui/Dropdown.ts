@@ -27,9 +27,9 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
   };
 
   const getAnchor = (component: AlloyComponent): HotspotAnchorSpec => {
-    const ourHotspot = detail.getHotspot()(component).getOr(component)
+    const ourHotspot = detail.getHotspot()(component).getOr(component);
     return { anchor: 'hotspot', hotspot: ourHotspot };
-  }
+  };
 
   const action = (component: AlloyComponent): void => {
     const anchor = getAnchor(component);
@@ -60,7 +60,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           Coupling.config({
             others: {
               sandbox (hotspot) {
-                const anchor = getAnchor(hotspot)
+                const anchor = getAnchor(hotspot);
                 return DropdownUtils.makeSandbox(detail, anchor, hotspot, {
                   onOpen () { Toggling.on(hotspot); },
                   onClose () { Toggling.off(hotspot); }
