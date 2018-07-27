@@ -33,7 +33,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   role: () => Option<string>;
 
   getAnchor: () => (comp: AlloyComponent) => AnchorSpec;
-  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
+  lazySink: () => Option<() => Result<AlloyComponent, Error>>;
 
   fetch: () => (comp: AlloyComponent) => Future<ItemSpec[]>;
 
