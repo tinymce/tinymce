@@ -329,6 +329,28 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function () 
         api.sDeleteSetting('table_style_by_css')
       ])),
 
+      Logger.t('Table properties dialog css border when table has an existing css border value', GeneralSteps.sequence([
+        api.sSetSetting('table_style_by_css', true),
+        api.sSetContent('<table style=\"border-width:5px;\"><tr><td>X</td><td>Z</td></tr></table>'),
+        api.sSetCursor([0, 0, 0], 0),
+        api.sExecCommand('mceTableProps'),
+        Chain.asStep({}, [
+          cWaitForDialog('Table properties'),
+          ui.cFillDialogWith({
+            border: '1',
+          }),
+          ui.cSubmitDialog()
+        ]),
+        sAssertElementStructure(
+          'table',
+          '<table style=\"border-width: 1px;\" data-mce-border=\"1\">' +
+          '<tbody><tr><td style=\"border-width: 1px;\">X</td>' +
+          '<td style=\"border-width: 1px;\">Z</td></tr></tbody>' +
+          '</table>'
+        ),
+        api.sDeleteSetting('table_style_by_css')
+      ])),
+
       Logger.t('changing the style field on adv tab changes the height and width', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),

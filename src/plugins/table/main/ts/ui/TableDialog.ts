@@ -106,7 +106,7 @@ const applyDataToElement = function (editor, tableElm, data) {
 
   if (data.style) {
     // merge the styles from Advanced tab on top
-    Tools.extend(styles, dom.parseStyle(data.style));
+    styles = Tools.extend({}, dom.parseStyle(data.style), styles);
   } else {
     // ... otherwise take styles from original elm and update them
     styles = Tools.extend({}, dom.parseStyle(dom.getAttrib(tableElm, 'style')), styles);
