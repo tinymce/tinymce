@@ -48,7 +48,13 @@ const tabsPart = PartType.group({
         const activeButton = Highlighting.isHighlighted(tabbar, button);
 
         const response = (() => {
-          if (activeButton && barDetail.clickToDismiss()) { return dismissTab; } else if (! activeButton) { return changeTab; } else { return Fun.noop; }
+          if (activeButton && barDetail.clickToDismiss()) {
+            return dismissTab;
+          } else if (! activeButton) {
+            return changeTab;
+          } else {
+            return Fun.noop;
+          }
         })();
 
         response(tabbar, button);

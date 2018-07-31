@@ -11,12 +11,13 @@ export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour<Highligh
   highlightLast: (component: AlloyComponent) => void;
   highlightAt: (component: AlloyComponent, index: number) => void;
   highlightBy: (component: AlloyComponent, predicate: (any) => any) => void;
-  isHighlighted: (component: AlloyComponent, queryTarget: any ) => void;
+  isHighlighted: (component: AlloyComponent, queryTarget: any ) => boolean;
   getHighlighted: (component: AlloyComponent) => Option<AlloyComponent>;
   getFirst: (component: AlloyComponent) => Option<AlloyComponent>;
   getLast: (component: AlloyComponent) => Option<AlloyComponent>;
   getPrevious: (component: AlloyComponent) => Option<AlloyComponent>;
   getNext: (component: AlloyComponent) => Option<AlloyComponent>;
+  getCandidates: (component: AlloyComponent) => AlloyComponent[];
 }
 
 export interface HighlightingConfigSpec extends Behaviour.BehaviourConfigSpec {
