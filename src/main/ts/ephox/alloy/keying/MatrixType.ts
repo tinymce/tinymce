@@ -15,6 +15,9 @@ import { MatrixConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 
+// NB: Tsc requires AlloyEventHandler to be imported here.
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
+
 const schema: FieldProcessorAdt[] = [
   FieldSchema.strictObjOf('selectors', [
     FieldSchema.strict('row'),

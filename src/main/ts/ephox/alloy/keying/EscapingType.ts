@@ -8,6 +8,10 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import { KeyRuleHandler, EscapingConfig } from '../keying/KeyingModeTypes';
 
+// NB: Tsc requires AlloyEventHandler and AlloyComponent to be imported here.
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
+import { AlloyComponent } from '../api/component/ComponentApi';
+
 const schema = [
   Fields.onStrictKeyboardHandler('onEscape')
 ];
