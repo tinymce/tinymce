@@ -17,7 +17,7 @@ import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 
-// NB: Tsc requires AlloyEventHandler and AlloyComponent to be imported here.
+// NB: Tsc requires AlloyEventHandler to be imported here.
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
