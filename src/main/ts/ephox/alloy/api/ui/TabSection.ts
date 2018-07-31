@@ -84,10 +84,8 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
           const optTab = Arr.find(candidates, (c) => {
             return Representing.getValue(c) === tabKey;
           });
-          console.log('optTab', optTab.getOr('none'));
 
-          // return optTab.filter((tab) => !Highlighting.isHighlighted(tabbar, tab))
-          return optTab;
+          return optTab.filter((tab) => !Highlighting.isHighlighted(tabbar, tab));
         };
 
         changeTabBy(section, getTabIfNotActive);
