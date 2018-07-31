@@ -1,7 +1,7 @@
 import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class, Element } from '@ephox/sugar';
+import { Attr, Class, Element, Compare } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -214,7 +214,24 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
             });
           }),
 
-          NamedChain.direct('container', cGetHighlightedOrDie, 'blah')
+          NamedChain.direct('container', cGetHighlightedOrDie, 'blah'),
+
+          NamedChain.bundle((output) => {
+            const candidates = Highlighting.getCandidates(component);
+            const expected = [ output.alpha, output.beta, output.gamma ];
+
+            Assertions.assertEq('Checking length of getCandidates array', expected.length, candidates.length);
+            Arr.each(expected, (exp, i) => {
+              const actual = candidates[i];
+              Assertions.assertEq(
+                'Checking DOM element at index: ' + i, true,
+                Compare.eq(exp.element(), actual.element())
+              );
+            });
+
+            return Result.value(output);
+
+          })
         ])
       ])
     ];

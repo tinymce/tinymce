@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.11.0] - 2018-07-31
+### Added
+- Highlighting.getCandidates API
+- TabSection showTab API
+
 ## [3.10.0] - 2018-07-31
 ### Added
 - Changelog.
