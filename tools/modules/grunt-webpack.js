@@ -1,18 +1,24 @@
 // @ts-check
 
-let { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
+let { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 let LiveReloadPlugin = require('webpack-livereload-plugin');
 let path = require('path');
-let fs = require('fs');
 
 let create = (entries, tsConfig, outDir, filename) => {
   return {
     entry: entries,
     mode: 'development',
     devtool: 'source-map',
+    optimization: {
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      splitChunks: false,
+    },
     resolve: {
+      symlinks: false,
       extensions: ['.ts', '.js'],
       plugins: [
+        // We need to use the awesome typescript loader config paths since the one for ts-loader doesn't resolve aliases correctly
         new TsConfigPathsPlugin({
           baseUrl: '.',
           compiler: 'typescript',
@@ -22,23 +28,31 @@ let create = (entries, tsConfig, outDir, filename) => {
     },
     module: {
       rules: [
-        {
-          test: /\.js$/,
-          use: [
-            'source-map-loader'
-          ],
-          enforce: 'pre'
-        },
+        // {
+        //   test: /\.js$/,
+        //   use: [
+        //     'source-map-loader'
+        //   ],
+        //   enforce: 'pre'
+        // },
         {
           test: /\.ts$/,
           use: [
             {
-              loader: 'awesome-typescript-loader',
+              loader: 'ts-loader',
               options: {
                 transpileOnly: true,
-                configFileName: tsConfig
+                configFile: tsConfig,
+                experimentalWatchApi: true
               }
             }
+            // {
+            //   loader: 'awesome-typescript-loader',
+            //   options: {
+            //     transpileOnly: true,
+            //     configFileName: tsConfig
+            //   }
+            // }
           ]
         }
       ]
@@ -48,7 +62,8 @@ let create = (entries, tsConfig, outDir, filename) => {
     ],
     output: {
       filename: typeof entries === 'string' ? filename : "[name]/" + filename,
-      path: path.resolve(outDir)
+      path: path.resolve(outDir),
+      pathinfo: false
     }
   };
 };
