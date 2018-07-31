@@ -14,6 +14,7 @@ import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 
 import * as DemoRenders from './forms/DemoRenders';
 import { document, console } from '@ephox/dom-globals';
@@ -145,6 +146,63 @@ export default (): void => {
         });
       }
     })
+  );
+
+
+  const memHotspotBox = Memento.record(
+    {
+      dom: {
+        tag: 'div',
+        styles: {
+          'padding': '10px',
+          border: '1px solid blue',
+          'margin-bottom': '100px'
+        },
+        innerHtml: 'Hotspot'
+      }
+    }
+  );
+
+  const y = HtmlDisplay.section(
+    gui,
+    'This dropdown button shows a widget with a different hotspot',
+    Container.sketch({
+      components: [
+        memHotspotBox.asSpec(),
+        Dropdown.sketch({
+          lazySink,
+          getHotspot: memHotspotBox.getOpt,
+
+          toggleClass: 'demo-selected',
+
+          dom: {
+            tag: 'div',
+            innerHtml: 'Dropdown widget'
+          },
+
+          parts: {
+            menu: {
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
+            }
+          },
+
+          fetch () {
+            const menu = DemoRenders.menu({
+              value: 'demo.2.widget',
+              items: [ wDoubleInput ]
+            });
+
+            return Future.pure(menu).map((m) => {
+              return TieredMenu.singleData('demo.2.menu', menu);
+            });
+          }
+        })
+      ]
+    }),
+
   );
 
   HtmlDisplay.section(
