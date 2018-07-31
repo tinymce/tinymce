@@ -16,6 +16,7 @@ import { AnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
+import { SketchBehaviours } from '../api/component/SketchBehaviours';
 
 const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
   const fetcher = detail.fetch();
@@ -136,29 +137,31 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, anchor: AnchorSpe
         id: ariaOwner.id()
       }
     },
-    behaviours: Behaviour.derive([
-      Sandboxing.config({
-        onOpen,
-        onClose,
-        isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
-          return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
-        },
-        getAttachPoint () {
-          return lazySink().getOrDie();
-        }
-      }),
-      Composing.config({
-        find (sandbox: AlloyComponent): Option<AlloyComponent> {
-          return Sandboxing.getState(sandbox).bind((menu) => {
-            return Composing.getCurrent(menu);
-          });
-        }
-      }),
-      Dismissal.receivingConfig({
-        isExtraPart: Fun.constant(false)
-      })
-    ]),
-    events: { }
+    behaviours: Merger.deepMerge(
+      Behaviour.derive([
+        Sandboxing.config({
+          onOpen,
+          onClose,
+          isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
+            return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
+          },
+          getAttachPoint () {
+            return lazySink().getOrDie();
+          }
+        }),
+        Composing.config({
+          find (sandbox: AlloyComponent): Option<AlloyComponent> {
+            return Sandboxing.getState(sandbox).bind((menu) => {
+              return Composing.getCurrent(menu);
+            });
+          }
+        }),
+        Dismissal.receivingConfig({
+          isExtraPart: Fun.constant(false)
+        })
+      ]),
+      SketchBehaviours.get(detail.sandboxBehaviours())
+    )
   };
 };
 

@@ -23,7 +23,6 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   responseTime: () => number;
 
   model: () => TypeaheadModelDetail;
-  sandboxClasses: () => string[];
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
@@ -49,6 +48,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
+  sandboxBehaviours?: AlloyBehaviourRecord;
   inputClasses?: string[];
   inputAttributes?: { };
   inputStyles?: { };
