@@ -8,4 +8,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.10.0] - 2018-07-31
 ### Added
-- Added changelog
+- Changelog.
+- The capability to set dropdown anchor points to something other than the drop button.
