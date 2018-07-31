@@ -54,13 +54,8 @@ const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 };
 
 const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, predicate: (comp: AlloyComponent) => boolean): void => {
-  const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
-  const itemComps = Options.cat(
-    Arr.map(items, (i) => {
-      return component.getSystem().getByDom(i).toOption();
-    })
-  );
-  const targetComp = Arr.find(itemComps, predicate);
+  const candidates = getCandidates(component, hConfig, hState)
+  const targetComp = Arr.find(candidates, predicate);
   targetComp.each((c) => {
     highlight(component, hConfig, hState, c);
   });
@@ -112,6 +107,15 @@ const getNext = (component: AlloyComponent, hConfig: HighlightingConfig, hState:
   return getDelta(component, hConfig, hState, +1);
 };
 
+const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): AlloyComponent[] => {
+  const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
+  return Options.cat(
+    Arr.map(items, (i) => {
+      return component.getSystem().getByDom(i).toOption();
+    })
+  );
+}
+
 export {
   dehighlightAll,
   dehighlight,
@@ -125,5 +129,6 @@ export {
   getFirst,
   getLast,
   getPrevious,
-  getNext
+  getNext,
+  getCandidates
 };
