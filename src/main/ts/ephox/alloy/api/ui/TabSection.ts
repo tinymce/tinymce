@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -12,6 +12,8 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { TabSectionSketcher, TabSectionDetail, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { AlloyComponent } from '../component/ComponentApi';
 
 const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
   const changeTab = (button) => {
@@ -32,6 +34,12 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     });
   };
 
+  const changeTabBy = (section, byPred: (tbar: AlloyComponent) => Option<AlloyComponent>) => {
+    AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
+      byPred(tabbar).each(AlloyTriggers.emitExecute);
+    });
+  }
+
   return {
     uid: detail.uid(),
     dom: detail.dom(),
@@ -43,12 +51,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
 
         detail.selectFirst() ? [
           AlloyEvents.runOnAttached((section, simulatedEvent) => {
-            AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
-              Highlighting.getFirst(tabbar).each((button) => {
-                Highlighting.highlight(tabbar, button);
-                changeTab(button);
-              });
-            });
+            changeTabBy(section, Highlighting.getFirst);
           })
         ] : [ ],
 
@@ -70,6 +73,22 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
         return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => {
           return Replacing.contents(tabview);
         }).getOr([ ]);
+      },
+
+      // How should "clickToDismiss" interact with this? At the moment, it will never dismiss
+      showTab (section, tabKey) {
+        // We only change the tab if it isn't currently active because that takes
+        // the whole "dismiss" issue out of the equation.
+        const getTabIfNotActive = (tabbar) => {
+          const candidates = Highlighting.getCandidates(tabbar);
+          const optTab = Arr.find(candidates, (c) => {
+            return Representing.getValue(c) === tabKey;
+          });
+
+          return optTab.filter((tab) => !Highlighting.isHighlighted(tabbar, tab));
+        };
+
+        changeTabBy(section, getTabIfNotActive);
       }
     }
   };
@@ -84,6 +103,9 @@ const TabSection = Sketcher.composite({
   apis: {
     getViewItems (apis, component) {
       return apis.getViewItems(component);
+    },
+    showTab: (apis, component, tabKey) => {
+      apis.showTab(component, tabKey);
     }
   }
 }) as TabSectionSketcher;

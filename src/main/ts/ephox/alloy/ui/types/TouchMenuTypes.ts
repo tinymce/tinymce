@@ -20,7 +20,6 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onHoverOn: () => (comp: AlloyComponent) => void;
   onHoverOff: () => (comp: AlloyComponent) => void;
   toggleClass: () => string;
-  sandboxClasses: () => string[];
 
   onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap: () => (comp: AlloyComponent) => void;
@@ -33,7 +32,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   role: () => Option<string>;
 
   getAnchor: () => (comp: AlloyComponent) => AnchorSpec;
-  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
+  lazySink: () => Option<() => Result<AlloyComponent, Error>>;
 
   fetch: () => (comp: AlloyComponent) => Future<ItemSpec[]>;
 
@@ -47,6 +46,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   touchmenuBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
+  sandboxBehaviours?: AlloyBehaviourRecord;
 
   onHoverOn?: (comp: AlloyComponent) => void;
   onHoverOff?: (comp: AlloyComponent) => void;

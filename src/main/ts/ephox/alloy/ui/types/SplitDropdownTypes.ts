@@ -12,7 +12,6 @@ export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
-  sandboxClasses: () => string[];
   splitDropdownBehaviours: () => SketchBehaviours;
 
   onExecute: () => (comp: AlloyComponent, button: AlloyComponent) => void;
@@ -25,6 +24,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   splitDropdownBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
+  sandboxBehaviours?: AlloyBehaviourRecord;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;

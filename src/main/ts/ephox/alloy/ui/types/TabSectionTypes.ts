@@ -31,4 +31,5 @@ export interface TabSectionSpec extends CompositeSketchSpec {
 
 export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec, TabSectionDetail> {
   getViewItems: (component: AlloyComponent) => AlloyComponent[];
+  showTab: (component: AlloyComponent, tabKey: string) => void;
 }
