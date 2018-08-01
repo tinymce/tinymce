@@ -1,5 +1,5 @@
-import { Id, Merger, Option } from '@ephox/katamari';
-import { Attr, Css, Height, Traverse, Width } from '@ephox/sugar';
+import { Id, Merger, Option, Thunk } from '@ephox/katamari';
+import { Attr, Css, Height, Traverse, Width, Location } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -67,11 +67,16 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
                   Attr.set(dialog.element(), 'aria-busy', 'true');
                   const getBusySpec = se.event().getBusySpec();
 
+                  const pos = Thunk.cached(() => {
+                    return Location.absolute(dialog.element());
+                  });
+
                   const boundStyles = {
-                    left: Css.getRaw(dialog.element(), 'left').getOr('0'),
-                    top: Css.getRaw(dialog.element(), 'top').getOr('0'),
+                    left: Css.getRaw(dialog.element(), 'left').getOrThunk(() => pos().left() + 'px'),
+                    top: Css.getRaw(dialog.element(), 'top').getOrThunk(() => pos().top() + 'px'),
                     width: Css.getRaw(dialog.element(), 'width').getOrThunk(() => Width.get(dialog.element()) + 'px'),
                     height: Css.getRaw(dialog.element(), 'height').getOrThunk(() => Height.get(dialog.element()) + 'px'),
+                    'z-index': Css.get(dialog.element(), 'z-index'),
                     position: Css.getRaw(dialog.element(), 'position').getOr('fixed')
                   };
 
