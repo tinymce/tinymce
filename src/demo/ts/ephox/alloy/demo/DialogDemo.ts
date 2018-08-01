@@ -1,16 +1,15 @@
+import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console, setTimeout } from '@ephox/dom-globals';
-import { Button } from 'ephox/alloy/api/ui/Button';
-import { AlloyTriggers } from '../../../../../main/ts/ephox/alloy/api/Main';
 
 // tslint:disable:no-console
 
@@ -55,9 +54,35 @@ export default (): void => {
           innerHtml: 'Wait for 5 seconds'
         },
         action: (comp) => {
-          AlloyTriggers.emit(comp, 'lock.dialog');
+          ModalDialog.setBusy(dialog, (dlg, boundsStyles, busyBehaviours) => ({
+            dom: {
+              tag: 'div',
+              attributes: {
+                'aria-label': 'Sharks and Dolphins'
+              },
+              styles: boundsStyles
+            },
+            components: [
+              {
+                dom: {
+                  tag: 'div',
+                  styles: {
+                    width: '100%',
+                    height: '100%',
+                    opacity: '.6',
+                    filter: 'alpha(opacity=60)',
+                    zoom: '1',
+                    position: 'absolute',
+                    top: '0px',
+                    background: '#fff url(https://www.tiny.cloud/labs/configurator/app/tinymce/skins/lightgray/img/loader.gif) no-repeat center center'
+                  }
+                }
+              }
+            ],
+            behaviours: busyBehaviours
+          }));
           setTimeout(() => {
-            AlloyTriggers.emit(comp, 'unlock.dialog');
+            ModalDialog.setIdle(dialog);
           }, 4000);
         }
       })
@@ -109,21 +134,7 @@ export default (): void => {
       dragBlockClass: 'blocker-class',
 
       parts: {
-        blocker: { },
-        busy: {
-          dom: {
-            tag: 'div',
-            classes: [
-              'dialog-busy'
-            ],
-            styles: {
-              opacity: '.6',
-              filter: 'alpha(opacity=60)',
-              zoom: '1',
-              background: '#fff url(https://www.tiny.cloud/labs/configurator/app/tinymce/skins/lightgray/img/loader.gif) no-repeat center center'
-            }
-          }
-        }
+        blocker: { }
       }
     })
   );

@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -10,6 +10,8 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { ModalDialogDetail } from '../../ui/types/ModalDialogTypes';
+import { Tabstopping } from '../../api/behaviour/Tabstopping';
+import { Focusing } from '../../api/behaviour/Focusing';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
@@ -74,23 +76,6 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     factory: basic,
     name: 'blocker',
-    defaults: Fun.constant({
-      dom: {
-        tag: 'div',
-        styles: {
-          position: 'fixed',
-          left: '0px',
-          top: '0px',
-          right: '0px',
-          bottom: '0px'
-        }
-      }
-    })
-  }),
-
-  PartType.external({
-    factory: basic,
-    name: 'busy',
     defaults: Fun.constant({
       dom: {
         tag: 'div',
