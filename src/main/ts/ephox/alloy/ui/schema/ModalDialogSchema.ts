@@ -86,6 +86,23 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         }
       }
     })
+  }),
+
+  PartType.external({
+    factory: basic,
+    name: 'busy',
+    defaults: Fun.constant({
+      dom: {
+        tag: 'div',
+        styles: {
+          position: 'fixed',
+          left: '0px',
+          top: '0px',
+          right: '0px',
+          bottom: '0px'
+        }
+      }
+    })
   })
 ]);
 

@@ -8,7 +8,9 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
+import { document, console, setTimeout } from '@ephox/dom-globals';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { AlloyTriggers } from '../../../../../main/ts/ephox/alloy/api/Main';
 
 // tslint:disable:no-console
 
@@ -46,6 +48,18 @@ export default (): void => {
     components: [
       Container.sketch({
         dom: DomFactory.fromHtml('<div style="width: 400px; height: 200px;"></div>')
+      }),
+      Button.sketch({
+        dom: {
+          tag: 'button',
+          innerHtml: 'Wait for 5 seconds'
+        },
+        action: (comp) => {
+          AlloyTriggers.emit(comp, 'lock.dialog');
+          setTimeout(() => {
+            AlloyTriggers.emit(comp, 'unlock.dialog');
+          }, 4000);
+        }
       })
     ]
   });
@@ -95,7 +109,21 @@ export default (): void => {
       dragBlockClass: 'blocker-class',
 
       parts: {
-        blocker: { }
+        blocker: { },
+        busy: {
+          dom: {
+            tag: 'div',
+            classes: [
+              'dialog-busy'
+            ],
+            styles: {
+              opacity: '.6',
+              filter: 'alpha(opacity=60)',
+              zoom: '1',
+              background: '#fff url(https://www.tiny.cloud/labs/configurator/app/tinymce/skins/lightgray/img/loader.gif) no-repeat center center'
+            }
+          }
+        }
       }
     })
   );
