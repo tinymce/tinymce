@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.12.0] - 2018-08-01
+### Added
+ - setIdle and setBusy APIs to ModalDialog
+
 ## [3.11.0] - 2018-07-31
 ### Added
 - Highlighting.getCandidates API

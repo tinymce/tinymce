@@ -29,6 +29,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   }
 
   const busyBehaviours = Behaviour.derive([
+    // Trap the "Tab" key and don't let it escape.
     Keying.config({
       mode: 'special',
       focusIn: Option.some,
