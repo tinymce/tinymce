@@ -76,6 +76,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'input',
       'contextmenu',
       'change',
+      'paste',
       'transitionend',
       // Test the drag events
       'drag',
