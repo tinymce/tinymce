@@ -24,6 +24,7 @@ import TabSectionDemo from './TabSectionDemo';
 import ToolbarsDemo from './ToolbarsDemo';
 import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
+import SlotContainerDemo from './SlotContainerDemo';
 
 declare const window: any;
 
@@ -50,6 +51,7 @@ window.demos = {
   PositionDemo,
   SliderDemo,
   SlidingDemo,
+  SlotContainerDemo,
   TabSectionDemo,
   ToolbarsDemo,
   TooltippingDemo,

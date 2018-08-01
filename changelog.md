@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.13.0] - 2018-08-10
+## [3.14.0] - 2018-08-01
+### Added
+- SlotContainer: new sketcher
+
+## [3.13.0] - 2018-08-01
 ### Added
 - ModalDialog setIdle and setBusy API
 
