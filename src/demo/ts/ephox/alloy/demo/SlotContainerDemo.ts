@@ -4,6 +4,7 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
 import { Button } from 'ephox/alloy/api/ui/Button';
+import { console, setTimeout } from '@ephox/dom-globals';
 
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
@@ -21,6 +22,7 @@ export default (): void => {
           }
         },
         components: [
+          GuiFactory.text('The button will soon disappear, and then reappear'),
           parts.slot(
             'button',
             Button.sketch({
@@ -29,7 +31,7 @@ export default (): void => {
                 styles: {
                   padding: '10px'
                 },
-                innerHtml: 'Cut'
+                innerHtml: 'Inconsistent Button'
               },
               action: (btn) => {
                 console.log('clicking on action');
