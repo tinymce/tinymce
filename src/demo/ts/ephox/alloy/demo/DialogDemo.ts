@@ -74,7 +74,7 @@ export default (): void => {
                     zoom: '1',
                     position: 'absolute',
                     top: '0px',
-                    background: '#fff url(https://www.tiny.cloud/labs/configurator/app/tinymce/skins/lightgray/img/loader.gif) no-repeat center center'
+                    background: '#fff url(../css/image/loader.gif) no-repeat center center'
                   }
                 }
               }
