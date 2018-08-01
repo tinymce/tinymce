@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Result, Fun } from '@ephox/katamari';
-import { Class, Attr } from '@ephox/sugar';
+import { Class, Attr, Element } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -158,6 +158,22 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       );
     };
 
+    const sCheckBlockerStructure = (label, expected) => {
+      return Logger.t(
+        label,
+        Chain.asStep(sink.element(), [
+          UiFinder.cFindIn('.test-dialog-blocker'),
+          Chain.op((blocker) => {
+            Assertions.assertStructure(
+              'Checking blocker structure',
+              expected,
+              blocker
+            );
+          })
+        ])
+      );
+    };
+
     return [
       Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
       Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
@@ -244,7 +260,86 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ModalDialog.hide(dialog);
       }),
       Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker'))
+      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+
+      Step.sync(() => {
+        ModalDialog.show(dialog);
+      }),
+
+      sCheckBlockerStructure('Initial dialog after showing', ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                'aria-busy': str.none()
+              }
+            })
+          ]
+        });
+      })),
+
+      Logger.t(
+        'Set the Dialog to "Busy"',
+        Step.sync(() => {
+          ModalDialog.setBusy(dialog, (d, boundsStyles, bs) => {
+            return {
+              dom: {
+                tag: 'div',
+                classes: [ 'test-busy-class' ],
+                styles: boundsStyles,
+                innerHtml: 'Loading'
+              },
+              behaviours: bs
+            };
+          })
+        })
+      ),
+
+      sCheckBlockerStructure(
+        'Checking after setBusy',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            children: [
+              s.element('div', {
+                attrs: {
+                  'aria-busy': str.is('true')
+                }
+              }),
+              s.element('div', {
+                styles: {
+                  position: str.is('fixed'),
+                  left: str.startsWith(''),
+                  top: str.startsWith('')
+                }
+              })
+            ]
+          });
+        })
+      ),
+
+      FocusTools.sTryOnSelector('Focus should be on loading message', doc, '.test-busy-class'),
+      // NOTE: Without real key testing ... this isn't really that useful.
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      FocusTools.sTryOnSelector('Focus should STILL be on loading message', doc, '.test-busy-class'),
+
+      Logger.t(
+        'Set the dialog to idle',
+        Step.sync(() => {
+          ModalDialog.setIdle(dialog);
+        })
+      ),
+
+      sCheckBlockerStructure('Initial dialog after setIdle', ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                'aria-busy': str.none()
+              }
+            })
+          ]
+        });
+      })),
     ];
   }, () => { success(); }, failure);
 });

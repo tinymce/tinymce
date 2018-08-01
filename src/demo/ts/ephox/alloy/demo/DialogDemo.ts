@@ -1,14 +1,15 @@
+import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
@@ -46,6 +47,44 @@ export default (): void => {
     components: [
       Container.sketch({
         dom: DomFactory.fromHtml('<div style="width: 400px; height: 200px;"></div>')
+      }),
+      Button.sketch({
+        dom: {
+          tag: 'button',
+          innerHtml: 'Wait for 5 seconds'
+        },
+        action: (comp) => {
+          ModalDialog.setBusy(dialog, (dlg, boundsStyles, busyBehaviours) => ({
+            dom: {
+              tag: 'div',
+              attributes: {
+                'aria-label': 'Sharks and Dolphins'
+              },
+              styles: boundsStyles
+            },
+            components: [
+              {
+                dom: {
+                  tag: 'div',
+                  styles: {
+                    width: '100%',
+                    height: '100%',
+                    opacity: '.6',
+                    filter: 'alpha(opacity=60)',
+                    zoom: '1',
+                    position: 'absolute',
+                    top: '0px',
+                    background: '#fff url(../css/image/loader.gif) no-repeat center center'
+                  }
+                }
+              }
+            ],
+            behaviours: busyBehaviours
+          }));
+          setTimeout(() => {
+            ModalDialog.setIdle(dialog);
+          }, 4000);
+        }
       })
     ]
   });
