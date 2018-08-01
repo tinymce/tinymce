@@ -44,8 +44,19 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   };
 }
 
+export type GetBusySpec = (
+  dlg: AlloyComponent,
+  bounds: { left: string, top: string, width: string, height: string },
+  busyBehaviours: AlloyBehaviourRecord
+) => AlloySpec
+
 export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, ModalDialogDetail> {
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
+  setBusy(
+    dialog: AlloyComponent,
+    getBusySpec: GetBusySpec
+  );
+  setIdle(dialog: AlloyComponent);
 }

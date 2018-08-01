@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.13.0] - 2018-08-10
+### Added
+- ModalDialog setIdle and setBusy API
+
 ## [3.12.0] - 2018-08-01
 ### Added
 - Alloy listens to paste event
