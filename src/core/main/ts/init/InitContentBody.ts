@@ -27,7 +27,7 @@ import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
-import TripleClickSelection from 'tinymce/core/selection/TripleClickSelection';
+import * as MultiClickSelection from 'tinymce/core/selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import { document, window } from '@ephox/dom-globals';
 
@@ -235,7 +235,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor._selectionOverrides = SelectionOverrides(editor);
 
   DetailsElement.setup(editor);
-  TripleClickSelection.setup(editor);
+  MultiClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 
