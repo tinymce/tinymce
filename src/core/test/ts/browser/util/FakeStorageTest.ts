@@ -1,13 +1,12 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import * as FakeStorage from 'tinymce/core/api/util/FakeStorage';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
+  const LocalStorage = FakeStorage.create();
 
   const teardown = Step.sync(function () {
     LocalStorage.clear();
