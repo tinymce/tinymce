@@ -16,8 +16,8 @@ export interface ThrottleStreamingConfig extends StreamingModeConfig {
 export interface StreamingModeConfig {
   streams: () => {
     setup: (config: StreamingConfig, state: StreamingState) => (comp: AlloyComponent, evt: SimulatedEvent<EventFormat>) => void;
-    state: (config: StreamingConfig) => StreamingState
-  }
+    state: (config: StreamingConfig) => StreamingState;
+  };
 }
 
 export interface StreamingConfig extends Behaviour.BehaviourConfigDetail {
@@ -38,8 +38,9 @@ export interface StreamingState extends BehaviourState {
 
 export interface StreamingConfigSpec extends Behaviour.BehaviourConfigSpec {
   stream: {
-    mode: StreamMode,
-    delay: number
+    mode: StreamMode;
+    delay: number;
+    stopEvent?: boolean;
   };
   event?: string;
   cancelEvent?: string;
