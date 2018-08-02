@@ -100,14 +100,15 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           }
         },
         detail.initialData().map((d) => {
-          return Objects.wrap('initialValue', d)
+          return Objects.wrap('initialValue', d);
         }).getOr({ })
       )
     }),
     Streaming.config({
       stream: {
         mode: 'throttle',
-        delay: detail.responseTime()
+        delay: detail.responseTime(),
+        stopEvent: false
       },
       onStream (component, simulatedEvent) {
 
