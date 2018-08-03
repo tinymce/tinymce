@@ -184,7 +184,7 @@ const showDialog = function (editor, linkList) {
     data.title = value;
   }
 
-  for (let dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
+  for (const dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
     if ((value = dom.getAttrib(anchorElm, 'data-' + dataAttrCtrl.slug))) {
       data['data-' + dataAttrCtrl.slug] = value;
     }
@@ -274,7 +274,7 @@ const showDialog = function (editor, linkList) {
 
   if (Settings.hasLinkDataList(editor.settings)) {
     dataListCtrls = [];
-    for (let ctrl of Settings.getLinkDataList(editor.settings)) {
+    for (const ctrl of Settings.getLinkDataList(editor.settings)) {
       dataListCtrls.push({
         name: 'data-' + ctrl.slug,
         type: 'textbox',

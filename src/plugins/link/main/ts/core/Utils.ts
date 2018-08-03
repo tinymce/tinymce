@@ -93,7 +93,7 @@ const link = function (editor, attachState) {
       }
 
       if (Settings.hasLinkDataList(editor.settings)) {
-        for (let dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
+        for (const dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
           linkAttrs['data-' + dataAttrCtrl.slug] = data['data-' + dataAttrCtrl.slug];
         }
       }
