@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.15.0] - 2018-08-03
+### Added
+- Typeahead, SplitDropdown: getHotspot option
+
 ## [3.14.0] - 2018-08-01
 ### Added
 - SlotContainer: new sketcher
