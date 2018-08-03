@@ -96,10 +96,9 @@ const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata:
   return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync);
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, detail: CommonDropdownDetail<TieredData>) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
   const menu = Composing.getCurrent(container).getOr(container);
-  const ourHotspot = detail.getHotspot()(hotspot).getOr(hotspot);
-  const buttonWidth = Width.get(ourHotspot.element());
+  const buttonWidth = Width.get(hotspot.element());
   Width.set(menu.element(), buttonWidth);
 };
 
@@ -130,7 +129,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
-    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu, detail); }
+    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu); }
     detail.onOpen()(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
