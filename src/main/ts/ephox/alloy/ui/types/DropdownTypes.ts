@@ -20,6 +20,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink: () => Option<() => Result<AlloyComponent, Error>>;
+  // TODO test getHotspot
   getHotspot: () => (comp: AlloyComponent) => Option<AlloyComponent>;
   matchWidth: () => boolean;
   sandboxClasses: () => string[];
