@@ -78,7 +78,7 @@ const showDialog = function (editor, linkList) {
   const selection = editor.selection;
   const dom = editor.dom;
   let anchorElm, initialText;
-  let win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
+  let win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, dataListCtrls, linkTitleCtrl, value;
 
   const linkListChangeHandler = function (e) {
     const textCtrl = win.find('#text');
@@ -184,6 +184,12 @@ const showDialog = function (editor, linkList) {
     data.title = value;
   }
 
+  for (let dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
+    if ((value = dom.getAttrib(anchorElm, 'data-' + dataAttrCtrl.slug))) {
+      data['data-' + dataAttrCtrl.slug] = value;
+    }
+  }
+
   if (onlyText) {
     textListCtrl = {
       name: 'text',
@@ -266,6 +272,18 @@ const showDialog = function (editor, linkList) {
     };
   }
 
+  if (Settings.hasLinkDataList(editor.settings)) {
+    dataListCtrls = [];
+    for (let ctrl of Settings.getLinkDataList(editor.settings)) {
+      dataListCtrls.push({
+        name: 'data-' + ctrl.slug,
+        type: 'textbox',
+        label: ctrl.title,
+        value: data['data-' + ctrl.slug]
+      });
+    }
+  }
+
   if (Settings.shouldShowLinkTitle(editor.settings)) {
     linkTitleCtrl = {
       name: 'title',
@@ -298,7 +316,7 @@ const showDialog = function (editor, linkList) {
       relListCtrl,
       targetListCtrl,
       classListCtrl
-    ],
+    ].concat(dataListCtrls),
     onSubmit (e) {
       const assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
       const insertLink = Utils.link(editor, attachState);

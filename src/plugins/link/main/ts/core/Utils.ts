@@ -92,6 +92,12 @@ const link = function (editor, attachState) {
         linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
       }
 
+      if (Settings.hasLinkDataList(editor.settings)) {
+        for (let dataAttrCtrl of Settings.getLinkDataList(editor.settings)) {
+          linkAttrs['data-' + dataAttrCtrl.slug] = data['data-' + dataAttrCtrl.slug];
+        }
+      }
+
       if (data.href === attachState.href) {
         attachState.attach();
         attachState = {};

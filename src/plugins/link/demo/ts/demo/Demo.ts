@@ -16,6 +16,10 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'link code',
   toolbar: 'link code',
+  link_data_list: [
+    { title: 'Mobile URL', slug: 'mobile_url' },
+    { title: 'Short URL', slug: 'short_url' },
+  ],
   height: 600
 });
 
