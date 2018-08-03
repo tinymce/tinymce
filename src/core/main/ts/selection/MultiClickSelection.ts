@@ -43,12 +43,12 @@ const normalizeSelection = (editor: Editor) => {
 
 const setup = (editor: Editor) => {
   editor.on('click', (e) => {
-    if (e.detail === 3) {
+    if (e.detail >= 3) {
       normalizeSelection(editor);
     }
   });
 };
 
-export default {
+export {
   setup
 };
