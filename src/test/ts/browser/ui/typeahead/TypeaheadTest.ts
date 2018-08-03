@@ -219,7 +219,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         Representing.setValue(typeahead, {
           value: 'neo3',
           text: 'Neo3'
-        })
+        });
       }),
       Step.sync(() => {
         const actual = Representing.getValue(typeahead);

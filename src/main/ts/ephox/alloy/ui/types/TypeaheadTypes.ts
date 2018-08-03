@@ -16,6 +16,8 @@ export interface TypeaheadModelDetail {
   populateFromBrowse: () => boolean;
 }
 
+// TODO: CommonDropdownDetail has getHotspot. So all things extending it
+// need to have a schema setting for getHotspot
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
   uid: () => string;
   components: () => AlloySpec[ ];
@@ -49,6 +51,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
+  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
   inputClasses?: string[];
   inputAttributes?: { };
   inputStyles?: { };

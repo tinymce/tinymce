@@ -34,6 +34,7 @@ export default (): void => {
                 innerHtml: 'Inconsistent Button'
               },
               action: (btn) => {
+                // tslint:disable-next-line:no-console
                 console.log('clicking on action');
               }
             })
@@ -51,7 +52,7 @@ export default (): void => {
   setTimeout(() => {
     SlotContainer.hideSlot(box, 'button');
     setTimeout(() => {
-      SlotContainer.showSlot(box, 'button')
+      SlotContainer.showSlot(box, 'button');
     }, 3000);
-  }, 3000)
+  }, 3000);
 };

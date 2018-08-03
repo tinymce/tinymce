@@ -63,13 +63,13 @@ const make = (detail: SlotContainerDetail, components, spec) => {
     // NOTE: May need to restore old values.
     Css.remove(element, 'display');
     Attr.remove(element, 'aria-hidden');
-  }
+  };
 
   const doHide = (element: Element) => {
     // NOTE: May need to save old values.
     Css.set(element, 'display', 'none');
     Attr.set(element, 'aria-hidden', 'true');
-  }
+  };
 
   return Merger.deepMerge(
     {

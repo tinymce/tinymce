@@ -22,7 +22,6 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
-import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
@@ -59,11 +58,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         });
       });
     } else {
-      const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
       const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
-      DropdownUtils.open(detail, mapFetch(comp), anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
+      DropdownUtils.open(detail, mapFetch(comp), comp, sandbox, externals, onOpenSync).get(Fun.noop);
     }
   };
 
@@ -143,8 +141,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
               });
             };
 
-            const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
-            DropdownUtils.open(detail, mapFetch(component), anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
+            DropdownUtils.open(detail, mapFetch(component), component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
       },
@@ -202,10 +199,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     Coupling.config({
       others: {
         sandbox (hotspot) {
-          return DropdownUtils.makeSandbox(detail, {
-            anchor: 'hotspot',
-            hotspot
-          }, hotspot, {
+          return DropdownUtils.makeSandbox(detail, hotspot, {
             onOpen: Fun.identity,
             onClose: Fun.identity
           });
@@ -227,9 +221,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((comp) => {
-        const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: comp };
         const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, mapFetch(comp), anchor, comp, externals, onOpenSync).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {

@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -18,6 +18,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
   Fields.onStrictHandler('onExecute'),
+  FieldSchema.defaulted('getHotspot', Option.some),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),
   FieldSchema.strict('dom'),

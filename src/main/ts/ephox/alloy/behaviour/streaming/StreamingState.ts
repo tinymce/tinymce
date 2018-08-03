@@ -1,6 +1,6 @@
-import { StreamingConfig, StreamingState, CancellableStreamer } from "./StreamingTypes";
+import { StreamingConfig, StreamingState, CancellableStreamer } from './StreamingTypes';
 import { BehaviourState, nuState } from '../common/BehaviourState';
-import { Cell } from "@ephox/katamari";
+import { Cell } from '@ephox/katamari';
 
 const throttle = (_config: StreamingConfig): StreamingState => {
   const state = Cell<CancellableStreamer>(null);
@@ -8,7 +8,7 @@ const throttle = (_config: StreamingConfig): StreamingState => {
   const readState = () => {
     return {
       timer: state.get() !== null ? 'set' : 'unset'
-    }
+    };
   };
 
   const setTimer = (t: { cancel: () => void }) => {
@@ -20,7 +20,7 @@ const throttle = (_config: StreamingConfig): StreamingState => {
     if (t !== null) {
       t.cancel();
     }
-  }
+  };
 
   return nuState({
     readState,

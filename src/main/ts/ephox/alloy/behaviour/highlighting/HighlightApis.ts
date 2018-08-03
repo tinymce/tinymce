@@ -54,7 +54,7 @@ const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 };
 
 const highlightBy = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, predicate: (comp: AlloyComponent) => boolean): void => {
-  const candidates = getCandidates(component, hConfig, hState)
+  const candidates = getCandidates(component, hConfig, hState);
   const targetComp = Arr.find(candidates, predicate);
   targetComp.each((c) => {
     highlight(component, hConfig, hState, c);
@@ -114,7 +114,7 @@ const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, h
       return component.getSystem().getByDom(i).toOption();
     })
   );
-}
+};
 
 export {
   dehighlightAll,

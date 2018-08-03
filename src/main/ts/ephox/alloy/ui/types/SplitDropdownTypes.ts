@@ -1,4 +1,4 @@
-import { Future, Result } from '@ephox/katamari';
+import { Future, Result, Option } from '@ephox/katamari';
 import { DropdownDetail, CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 import { TieredMenuSpec, TieredData } from '../../ui/types/TieredMenuTypes';
 
@@ -25,6 +25,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   splitDropdownBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
+  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;

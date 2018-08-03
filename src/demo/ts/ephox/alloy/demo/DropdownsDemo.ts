@@ -148,14 +148,13 @@ export default (): void => {
     })
   );
 
-
   const memHotspotBox = Memento.record(
     {
       dom: {
         tag: 'div',
         styles: {
           'padding': '10px',
-          border: '1px solid blue',
+          'border': '1px solid blue',
           'margin-bottom': '100px'
         },
         innerHtml: 'Hotspot'
