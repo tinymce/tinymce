@@ -22,13 +22,11 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
-import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
-import { console } from '@ephox/dom-globals';
 
 // TODO: Fix this.
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
