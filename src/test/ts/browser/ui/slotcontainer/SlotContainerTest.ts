@@ -50,7 +50,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       return SlotContainer.getSlot(component, slot).fold(
         () => Result.error('Could not find slot: ' + slot),
         Result.value
-      )
+      );
     });
 
     const sAssertSlotStructure = (label: string, slot: string, expectedStructure) => Chain.asStep({ }, [
@@ -60,7 +60,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           label,
           ApproxStructure.build(expectedStructure),
           c.element()
-        )
+        );
       })
     ]);
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           'aria-hidden': str.none()
         },
         styles: {
-          'display': str.none()
+          display: str.none()
         }
       });
     });
@@ -81,7 +81,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           'aria-hidden': str.is('true')
         },
         styles: {
-          'display': str.is('none')
+          display: str.is('none')
         }
       });
     });
@@ -92,7 +92,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           'aria-hidden': str.none()
         },
         styles: {
-          'display': str.none()
+          display: str.none()
         }
       });
     });
@@ -103,7 +103,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           'aria-hidden': str.is('true')
         },
         styles: {
-          'display': str.is('none')
+          display: str.is('none')
         }
       });
     });

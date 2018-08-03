@@ -291,7 +291,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
               },
               behaviours: bs
             };
-          })
+          });
         })
       ),
 

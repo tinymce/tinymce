@@ -44,7 +44,6 @@ export default (): void => {
     }
   });
 
-
   const memTabSection = Memento.record(
     TabSection.sketch({
       dom: {
@@ -87,10 +86,9 @@ export default (): void => {
     memTabSection.asSpec()
   );
 
-
   setTimeout(() => {
     const chosenTab = prompt('Move to tab?');
     const tabSection = memTabSection.get(subject);
     TabSection.showTab(tabSection, chosenTab);
-  })
+  });
 };

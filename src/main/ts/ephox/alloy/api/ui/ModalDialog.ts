@@ -25,7 +25,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const dialogIdleEvent = Id.generate('alloy.dialog.idle');
 
   interface DialogBusyEvent extends CustomEvent {
-    getBusySpec: () => GetBusySpec
+    getBusySpec: () => GetBusySpec;
   }
 
   const busyBehaviours = Behaviour.derive([
@@ -72,15 +72,13 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
                   });
 
                   const boundStyles = {
-                    left: Css.getRaw(dialog.element(), 'left').getOrThunk(() => pos().left() + 'px'),
-                    top: Css.getRaw(dialog.element(), 'top').getOrThunk(() => pos().top() + 'px'),
-                    width: Css.getRaw(dialog.element(), 'width').getOrThunk(() => Width.get(dialog.element()) + 'px'),
-                    height: Css.getRaw(dialog.element(), 'height').getOrThunk(() => Height.get(dialog.element()) + 'px'),
+                    'left': Css.getRaw(dialog.element(), 'left').getOrThunk(() => pos().left() + 'px'),
+                    'top': Css.getRaw(dialog.element(), 'top').getOrThunk(() => pos().top() + 'px'),
+                    'width': Css.getRaw(dialog.element(), 'width').getOrThunk(() => Width.get(dialog.element()) + 'px'),
+                    'height': Css.getRaw(dialog.element(), 'height').getOrThunk(() => Height.get(dialog.element()) + 'px'),
                     'z-index': Css.get(dialog.element(), 'z-index'),
-                    position: Css.getRaw(dialog.element(), 'position').getOr('fixed')
+                    'position': Css.getRaw(dialog.element(), 'position').getOr('fixed')
                   };
-
-
 
                   const busySpec = getBusySpec(dialog, boundStyles, busyBehaviours);
                   const busy = blocker.getSystem().build(busySpec);
@@ -88,7 +86,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
                   if (busy.hasConfigured(Keying)) {
                     Keying.focusIn(busy);
                   }
-                };
+                }
               }),
             ]),
 
@@ -118,7 +116,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     AlloyTriggers.emitWith(dialog, dialogBusyEvent, {
       getBusySpec
     });
-  }
+  };
 
   const setIdle = (dialog) => {
     AlloyTriggers.emit(dialog, dialogIdleEvent);
@@ -184,7 +182,7 @@ const ModalDialog = Sketcher.composite({
       apis.setBusy(dialog, getBusySpec);
     },
     setIdle (apis, dialog) {
-      apis.setIdle(dialog)
+      apis.setIdle(dialog);
     }
   }
 }) as ModalDialogSketcher;

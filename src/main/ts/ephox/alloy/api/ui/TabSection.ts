@@ -38,7 +38,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
       byPred(tabbar).each(AlloyTriggers.emitExecute);
     });
-  }
+  };
 
   return {
     uid: detail.uid(),
