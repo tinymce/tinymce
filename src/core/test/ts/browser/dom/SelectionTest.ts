@@ -6,6 +6,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
   const success = arguments[arguments.length - 2];
@@ -168,6 +169,15 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     editor.selection.setRng(rng);
     LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart, collapsed)');
     LegacyUnit.equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
+  });
+
+  suite.test('getSelectedBlocks with collapsed selection between elements', (editor: Editor) => {
+    editor.setContent('<p>a</p><p>b</p><p>c</p>');
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.getBody(), 1);
+    rng.setEnd(editor.getBody(), 1);
+    editor.selection.setRng(rng);
+    LegacyUnit.equal(editor.selection.getSelectedBlocks().length, 0, 'should return empty array');
   });
 
   suite.test('getStart/getEnd on comment should return parent element', function (editor) {

@@ -14,6 +14,7 @@ import TreeWalker from '../api/dom/TreeWalker';
 import { moveEndPoint } from './SelectionUtils';
 import NodeType from '../dom/NodeType';
 import { Element, Range, Node } from '@ephox/dom-globals';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 const getEndpointElement = (root: Element, rng: Range, start: boolean, real: boolean, resolve: (elm, offset: number) => number) => {
   const container = start ? rng.startContainer : rng.endContainer;
@@ -98,13 +99,13 @@ const getNode = (root: Element, rng: Range): Element => {
   return elm;
 };
 
-const getSelectedBlocks = (dom, rng: Range, startElm?: Element, endElm?: Element): Element[] => {
+const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm?: Element): Element[] => {
   let node, root;
   const selectedBlocks = [];
 
   root = dom.getRoot();
-  startElm = dom.getParent(startElm || getStart(root, rng, false), dom.isBlock);
-  endElm = dom.getParent(endElm || getEnd(root, rng, false), dom.isBlock);
+  startElm = dom.getParent(startElm || getStart(root, rng, rng.collapsed), dom.isBlock) as Element;
+  endElm = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock) as Element;
 
   if (startElm && startElm !== root) {
     selectedBlocks.push(startElm);
