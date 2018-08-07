@@ -38,7 +38,8 @@ export default (): void => {
                 })
               }
             })
-          ])
+          ]),
+          data: 'dog,cat,elephant'
         }),
 
         {
@@ -59,6 +60,9 @@ export default (): void => {
                     dom: { tag: 'li', innerHtml: d }
                   };
                 });
+              },
+              initialData: {
+                items: [ 'dog', 'cat', 'elephant' ]
               }
             })
           ])

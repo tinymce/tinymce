@@ -5,7 +5,7 @@ import { Cell, Option } from "@ephox/katamari";
 const init = <S>(spec): ReflectingState<S> => {
   const cell = Cell(Option.none());
 
-  const set = (s: S) => cell.set(Option.some(s));
+  const set = (optS: Option<S>) => cell.set(optS);
   const clear = () => cell.set(Option.none());
   const get = () => cell.get();
 

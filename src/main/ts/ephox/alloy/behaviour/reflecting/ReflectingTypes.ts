@@ -4,29 +4,27 @@ import { Option } from '@ephox/katamari';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-
-export interface ReflectingBehaviour extends Behaviour.AlloyBehaviour<ReflectingConfigSpec, ReflectingConfig> {
-  config: (config: ReflectingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ReflectingConfigSpec, ReflectingConfig>;
-  getState: <S>(comp: AlloyComponent) => ReflectingState<S>;
+export interface ReflectingBehaviour<I,S> extends Behaviour.AlloyBehaviour<ReflectingConfigSpec<I,S>, ReflectingConfig<I,S>> {
+  config: (config: ReflectingConfigSpec<I,S>) => Behaviour.NamedConfiguredBehaviour<ReflectingConfigSpec<I,S>, ReflectingConfig<I,S>>;
+  getState: (comp: AlloyComponent) => ReflectingState<S>;
 }
 
-export interface ReflectingConfigSpec extends Behaviour.BehaviourConfigSpec {
+export interface ReflectingConfigSpec<I,S> extends Behaviour.BehaviourConfigSpec {
   channel: string;
-  renderComponents: (data) => AlloySpec[ ];
-  initialData?: any;
-  prepare?: (comp: AlloyComponent, initial) => any;
+  renderComponents?: (data: I, state: Option<S>) => AlloySpec[ ];
+  updateState?: (comp: AlloyComponent, data: I) => Option<S>;
+  initialData?: I;
 }
 
 export interface ReflectingState<S> extends BehaviourState {
   get: () => Option<S>;
-  set: (s: S) => void;
+  set: (optS: Option<S>) => void;
   clear: () => void;
 }
 
-export interface ReflectingConfig extends Behaviour.BehaviourConfigDetail {
-  // Intentionally Blank
+export interface ReflectingConfig<I, S> extends Behaviour.BehaviourConfigDetail {
   channel: () => string;
-  renderComponents: () => (data) => AlloySpec[];
-  prepare: () => (comp: AlloyComponent, initial) => any;
+  renderComponents: () => Option<(data: I, state: Option<S>) => AlloySpec[ ]>;
+  updateState: () => Option<(comp: AlloyComponent, data: I) => Option<S>>;
   initialData: () => Option<any>;
 }

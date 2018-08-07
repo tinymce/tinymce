@@ -5,22 +5,28 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { Attachment } from '../../api/Main';
 import { ReceivingEvent } from '../../events/SimulatedEvent';
-import { ReflectingConfig } from './ReflectingTypes';
+import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
-const events = (reflectingConfig: ReflectingConfig/*, receiveState */) => {
-  const update = (component: AlloyComponent, rawData: any) => {
-    const preparedData = reflectingConfig.prepare()(component, rawData);
-    // TODO: This is a simpler version of Replacing.set. Perhaps put something in alien?
-    const newComponents = reflectingConfig.renderComponents()(preparedData);
-    Attachment.detachChildren(component);
-    Arr.each(newComponents, (c) => {
-      Attachment.attach(component, component.getSystem().build(c));
-    })
+const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: ReflectingState<S>) => {
+  const update = (component: AlloyComponent, data: I) => {
+    reflectingConfig.updateState().each((updateState) => {
+      const newState = updateState(component, data);
+      reflectingState.set(newState);
+    });
+
+    // FIX: Partial duplication of Replacing + Receiving
+    reflectingConfig.renderComponents().each((renderComponents) => {
+      const newComponents = renderComponents(data, reflectingState.get());
+      Attachment.detachChildren(component);
+      Arr.each(newComponents, (c) => {
+        Attachment.attach(component, component.getSystem().build(c));
+      })
+    });
   }
 
 
   return AlloyEvents.derive([
-    // FIX: Partial duplication of Replacing + Receiving
+
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
       const channel = reflectingConfig.channel();
       if (Arr.contains(message.channels(), channel)) {
