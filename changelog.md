@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.16.0] - 2018-08-08
 ### Added
- - Reflecting behaviour
+- Reflecting behaviour
+- ModalDialog getFooter API
 
 ## [3.15.0] - 2018-08-03
 ### Added
