@@ -1,8 +1,8 @@
-import { FieldSchema } from "@ephox/boulder";
-import { Fun } from "@ephox/katamari";
+import { FieldSchema } from '@ephox/boulder';
 
 export default [
   FieldSchema.strict('channel'),
   FieldSchema.strict('renderComponents'),
-  FieldSchema.defaulted('prepare', Fun.identity)
+  FieldSchema.option('initialData'),
+  FieldSchema.defaulted('prepare', (c, d) => d)
 ];

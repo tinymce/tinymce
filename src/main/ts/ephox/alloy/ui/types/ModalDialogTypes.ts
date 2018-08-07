@@ -54,6 +54,7 @@ export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, Mo
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
+  getFooter: (dialog: AlloyComponent) => AlloyComponent;
   setBusy(
     dialog: AlloyComponent,
     getBusySpec: GetBusySpec

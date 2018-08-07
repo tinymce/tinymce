@@ -8,19 +8,30 @@ import { ReceivingEvent } from '../../events/SimulatedEvent';
 import { ReflectingConfig } from './ReflectingTypes';
 
 const events = (reflectingConfig: ReflectingConfig/*, receiveState */) => {
+  const update = (component: AlloyComponent, rawData: any) => {
+    const preparedData = reflectingConfig.prepare()(component, rawData);
+    // TODO: This is a simpler version of Replacing.set. Perhaps put something in alien?
+    const newComponents = reflectingConfig.renderComponents()(preparedData);
+    Attachment.detachChildren(component);
+    Arr.each(newComponents, (c) => {
+      Attachment.attach(component, component.getSystem().build(c));
+    })
+  }
+
+
   return AlloyEvents.derive([
     // FIX: Partial duplication of Replacing + Receiving
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
       const channel = reflectingConfig.channel();
-      const data = reflectingConfig.prepare()(message.data());
       if (Arr.contains(message.channels(), channel)) {
-        // TODO: This is a simpler version of Replacing.set. Perhaps put something in alien?
-        const newComponents = reflectingConfig.renderComponents()(data);
-        Attachment.detachChildren(component);
-        Arr.each(newComponents, (c) => {
-          Attachment.attach(component, component.getSystem().build(c));
-        })
+        update(component, message.data());
       }
+    }),
+
+    AlloyEvents.runOnAttached((comp, se) => {
+      reflectingConfig.initialData().each((rawData) => {
+        update(comp, rawData);
+      })
     })
   ]);
 };
