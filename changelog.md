@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Reflecting behaviour
 - ModalDialog getFooter API
+- Exported AlloyComponent and renamed MomentoRecord to MementoRecord
 
 ## [3.15.0] - 2018-08-03
 ### Added
