@@ -105,6 +105,9 @@ import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
 
+type AlloyComponent = ComponentApi.AlloyComponent;
+type MementoRecord = Memento.MementoRecord;
+
 // TODO: naughty non API's being exported
 // Type Def Exports
 export {
@@ -143,6 +146,8 @@ export {
   GuiFactory,
   GuiTemplate,
   Memento,
+  // TODO: Make the memento type "Memento". Will require a lot of changes.
+  MementoRecord,
   SketchBehaviours,
   DragCoord,
   AlloyEvents,
@@ -199,6 +204,7 @@ export {
   FunctionAnnotator,
 
   AlloySpec,
+  AlloyComponent,
   SimpleOrSketchSpec,
   RawDomSchema,
   ComponentSpec,
