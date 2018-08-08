@@ -6,13 +6,13 @@ import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface MomentoRecord {
+export interface MementoRecord {
   get: (comp: AlloyComponent) => AlloyComponent;
   getOpt: (comp: AlloyComponent) => Option<AlloyComponent>;
   asSpec: () => SimpleOrSketchSpec;
 }
 
-const record = (spec: SimpleOrSketchSpec) => {
+const record = (spec: SimpleOrSketchSpec): MementoRecord => {
   const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
   const get = (anyInSystem: AlloyComponent): AlloyComponent => {

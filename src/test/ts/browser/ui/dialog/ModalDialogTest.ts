@@ -257,6 +257,15 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       }),
 
       Step.sync(() => {
+        const footer = ModalDialog.getFooter(dialog);
+        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-dialog-footer') ]
+          });
+        }), footer.element());
+      }),
+
+      Step.sync(() => {
         ModalDialog.hide(dialog);
       }),
       Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),

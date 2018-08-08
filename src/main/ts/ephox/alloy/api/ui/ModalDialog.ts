@@ -112,6 +112,10 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     return AlloyParts.getPartOrDie(dialog, detail, 'body');
   };
 
+  const getDialogFooter = (dialog) => {
+    return AlloyParts.getPartOrDie(dialog, detail, 'footer');
+  };
+
   const setBusy = (dialog, getBusySpec) => {
     AlloyTriggers.emitWith(dialog, dialogBusyEvent, {
       getBusySpec
@@ -140,6 +144,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
       show: showDialog,
       hide: hideDialog,
       getBody: getDialogBody,
+      getFooter: getDialogFooter,
       setIdle,
       setBusy
     },
@@ -177,6 +182,9 @@ const ModalDialog = Sketcher.composite({
     },
     getBody (apis, dialog) {
       return apis.getBody(dialog);
+    },
+    getFooter (apis, dialog) {
+      return apis.getFooter(dialog);
     },
     setBusy (apis, dialog, getBusySpec) {
       apis.setBusy(dialog, getBusySpec);

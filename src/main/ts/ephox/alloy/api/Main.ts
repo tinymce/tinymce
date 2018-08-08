@@ -30,6 +30,7 @@ import { Keying } from './behaviour/Keying';
 import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
 import { Receiving } from './behaviour/Receiving';
+import { Reflecting } from './behaviour/Reflecting';
 import { Replacing } from './behaviour/Replacing';
 import { Representing } from './behaviour/Representing';
 import { Sandboxing } from './behaviour/Sandboxing';
@@ -38,6 +39,7 @@ import { Streaming } from './behaviour/Streaming';
 import { Swapping } from './behaviour/Swapping';
 import { Tabstopping } from './behaviour/Tabstopping';
 import { Toggling } from './behaviour/Toggling';
+import { Tooltipping } from './behaviour/Tooltipping';
 import { Transitioning } from './behaviour/Transitioning';
 import { Unselecting } from './behaviour/Unselecting';
 import * as CompBehaviours from './component/CompBehaviours';
@@ -103,6 +105,9 @@ import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
 
+type AlloyComponent = ComponentApi.AlloyComponent;
+type MementoRecord = Memento.MementoRecord;
+
 // TODO: naughty non API's being exported
 // Type Def Exports
 export {
@@ -120,6 +125,7 @@ export {
   Pinching,
   Positioning,
   Receiving,
+  Reflecting,
   Replacing,
   Representing,
   Sandboxing,
@@ -128,6 +134,7 @@ export {
   Swapping,
   Tabstopping,
   Toggling,
+  Tooltipping,
   Transitioning,
   Unselecting,
   CompBehaviours,
@@ -139,6 +146,8 @@ export {
   GuiFactory,
   GuiTemplate,
   Memento,
+  // TODO: Make the memento type "Memento". Will require a lot of changes.
+  MementoRecord,
   SketchBehaviours,
   DragCoord,
   AlloyEvents,
@@ -195,6 +204,7 @@ export {
   FunctionAnnotator,
 
   AlloySpec,
+  AlloyComponent,
   SimpleOrSketchSpec,
   RawDomSchema,
   ComponentSpec,
