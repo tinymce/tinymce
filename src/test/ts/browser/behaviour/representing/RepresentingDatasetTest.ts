@@ -24,13 +24,15 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
               mode: 'dataset',
               initialValue: {
                 value: 'dog',
-                text: 'Hund'
+                bonus: {
+                  text: 'Hund'
+                }
               },
               getDataKey (component) {
                 return Value.get(component.element());
               },
               getFallbackEntry (key) {
-                return { value: 'fallback.' + key.toLowerCase(), text: key };
+                return { value: 'fallback.' + key.toLowerCase(), bonus: { text: key } };
               },
               setValue: (comp, data) => {
                 Value.set(comp.element(), data.bonus.text);
@@ -66,30 +68,36 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element()
       ),
 
-      sAssertRepValue('Checking represented value on load', { value: 'dog', text: 'Hund' }),
+      sAssertRepValue('Checking represented value on load', { value: 'dog', bonus: { text: 'Hund' } }),
 
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'Katze'),
 
       sAssertRepValue('Checking represented value after change', {
         value: 'fallback.katze',
-        text: 'Katze'
+        bonus: {
+          text: 'Katze'
+        }
       }),
 
       FocusTools.sSetActiveValue(doc, 'Elephant'),
 
       sAssertRepValue('Checking represented value after set input but before update', {
         value: 'fallback.elephant',
-        text: 'Elephant'
+        bonus: {
+          text: 'Elephant'
+        }
       }),
 
       sUpdateDataset([
-        { value: 'big.e', text: 'Elephant' }
+        { value: 'big.e', bonus: { text: 'Elephant' } }
       ]),
 
       sAssertRepValue('Checking represented value after set input but after update', {
         value: 'big.e',
-        text: 'Elephant'
+        bonus: {
+          text: 'Elephant'
+        }
       }),
       Assertions.sAssertStructure(
         'Test will be Elephant."',

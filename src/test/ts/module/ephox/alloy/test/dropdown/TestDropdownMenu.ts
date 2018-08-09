@@ -23,7 +23,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
   };
 };
 
-const renderItem = (spec): ItemSpec => {
+const renderItem = (spec: { type: any, widget?: any, data: { value: string, bonus: any }}): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,

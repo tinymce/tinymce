@@ -84,7 +84,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
           return Future.pure(
             Arr.map([
               { type: 'item', data: { value: 'dog', text: 'Dog' } },
-              { type: 'item', data: { value: 'elephant', text: 'Elephant' } }
+              { type: 'item', data: { value: 'elephant', bonus: { text: 'Elephant' } } }
             ], munge)
           );
         },

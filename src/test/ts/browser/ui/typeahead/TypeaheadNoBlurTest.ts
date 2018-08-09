@@ -36,20 +36,22 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
 
             initialData: {
               value: 'initial-value',
-              text: 'initial-value'
+              bonus: {
+                text: 'initial-value'
+              }
             },
 
             fetch (input) {
               const text = Value.get(input.element());
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', text: text + '1' } },
-                { type: 'item', data: { value: text + '2', text: text + '2' } }
+                { type: 'item', data: { value: text + '1', bonus: { text: text + '1' } } },
+                { type: 'item', data: { value: text + '2', bonus: { text: text + '2' } } }
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data', data: {value: '', text: 'No data'} }
+                  { type: 'separator', data: { value: '', bonus: { text: 'No data'} } }
                 ] : f;
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',

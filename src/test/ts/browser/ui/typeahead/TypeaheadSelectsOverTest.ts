@@ -23,9 +23,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
 
     const fetch = (input: AlloyComponent): Future<TieredData> => {
       const future = Future.pure([
-        { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-        { type: 'item', data: { value: 'beta', text: 'Beta' } },
-        { type: 'item', data: { value: 'gamma', text: 'Gamma' } }
+        { type: 'item', data: { value: 'alpha', bonus: { text: 'Alpha' } } },
+        { type: 'item', data: { value: 'beta', bonus: { text: 'Beta' } } },
+        { type: 'item', data: { value: 'gamma', bonus: { text: 'Gamma' } } }
       ]);
 
       return future.map((items) => {
@@ -52,7 +52,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             markers: typeaheadMarkers,
             initialData: {
               value: 'initial-value',
-              text: 'initial-value'
+              bonus: {
+                text: 'initial-value'
+              }
             },
             fetch,
             lazySink () { return Result.value(sink); },
@@ -71,7 +73,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             markers: typeaheadMarkers,
             initialData: {
               value: 'initial-value',
-              text: 'initial-value'
+              bonus: {
+                text: 'initial-value'
+              }
             },
             fetch,
             lazySink () { return Result.value(sink); },
