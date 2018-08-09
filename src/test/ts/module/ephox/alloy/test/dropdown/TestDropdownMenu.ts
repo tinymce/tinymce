@@ -47,7 +47,7 @@ const renderItem = (spec): ItemSpec => {
         'data-test-id': 'item-' + spec.data.value
       },
       classes: [ ],
-      innerHtml: spec.data.text
+      innerHtml: spec.data.bonus.text
     },
     components: [ ]
   };

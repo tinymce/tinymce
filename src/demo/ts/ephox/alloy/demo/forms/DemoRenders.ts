@@ -11,9 +11,11 @@ import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/type
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strict('text'),
-    FieldSchema.defaulted('html', ''),
-    FieldSchema.defaulted('bonus-demo-content', { })
+    FieldSchema.strictObjOf('bonus', [
+      FieldSchema.strict('text'),
+      FieldSchema.defaulted('html', ''),
+      FieldSchema.defaulted('bonus-demo-content', { })
+    ])
   ]),
   FieldSchema.strict('type')
 ]);
@@ -21,7 +23,9 @@ const demoItem = ValueSchema.objOf([
 const demoWidgetItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strict('text')
+    FieldSchema.strictObjOf('bonus', [
+      FieldSchema.strict('text')
+    ])
   ]),
   FieldSchema.strict('type'),
   FieldSchema.defaulted('autofocus', false),
@@ -52,6 +56,12 @@ const choice = (choiceSpec) => {
 };
 
 const demoSeparatorRender = (spec): SeparatorItemSpec => {
+  const html = (() => {
+    if (spec.text) { return spec.text; }
+    else if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    else return 'Missing.Text.For.Separator';
+  })();
+
   return {
     type: spec.type,
     dom: {
@@ -60,7 +70,7 @@ const demoSeparatorRender = (spec): SeparatorItemSpec => {
         background: 'black',
         color: 'white'
       },
-      innerHtml: spec.text !== undefined ? spec.text : spec.data.text
+      innerHtml: html
     },
     components: [ ]
   };
@@ -73,23 +83,34 @@ const item = (itemSpec): ItemSpec => {
     return demoSeparatorRender(itemSpec);
   }
   const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
+  const html = (() => {
+    if (spec.data && spec.data.bonus && spec.data.bonus.html) { return spec.data.bonus.html }
+    else if (spec && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text }
+    else return 'No.Text.For.Item';
+  })();
+
   return {
     type: spec.type,
     data: spec.data,
-    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + (spec.data.html !== undefined ? spec.data.html : spec.data.text) + '</div>'),
+    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + html + '</div>'),
     components: [ ]
   };
 };
 
 const gridItem = (itemSpec) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
+  const html = (() => {
+    if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    else return 'No.Text.For.Grid.Item';
+  })();
+
   return {
     type: spec.type,
     data: spec.data,
     dom: {
       tag: 'span',
       classes: [ 'demo-alloy-item' ],
-      innerHtml: spec.data.text,
+      innerHtml: html,
       styles: {
         display: 'inline-block',
         width: '50px',
@@ -158,6 +179,11 @@ const menu = (menuSpec) => {
 };
 
 const orb = (spec): NormalItemSpec => {
+  const html = (() => {
+    if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    return 'No.Text.For.Orb';
+  })();
+
   return {
     type: 'item',
     data: spec.data,
@@ -171,7 +197,7 @@ const orb = (spec): NormalItemSpec => {
     // data: spec.data,
     components: [
       {
-        dom: DomFactory.fromHtml('<span>' + spec.data.text + '</span>')
+        dom: DomFactory.fromHtml('<span>' + html + '</span>')
       }
     ]
   };

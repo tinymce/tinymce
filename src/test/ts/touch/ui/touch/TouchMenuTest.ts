@@ -17,7 +17,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       type: 'item',
       data: i.data,
       dom: {
-        tag: 'div', innerHtml: i.data.text,
+        tag: 'div', innerHtml: i.data.bonus.text,
         attributes: { 'data-value': i.data.value },
         styles: { display: 'inline-block', padding: '10px' }
       },

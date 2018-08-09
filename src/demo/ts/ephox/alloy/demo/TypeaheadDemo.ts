@@ -85,29 +85,31 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
-      initialData: { value: 'bison', text: 'Bison' },
+      initialData: { value: 'bison', bonus: { text: 'Bison' } },
       model,
 
       fetch (input) {
-        const text = Value.get(input.element());
-        console.log('text', text);
+        const inputValue = Value.get(input.element());
+        console.log('text', inputValue);
         const matching = Arr.bind(dataset, (d) => {
           const lText = d.text.toLowerCase();
-          const index = lText.indexOf(text.toLowerCase());
+          const index = lText.indexOf(inputValue.toLowerCase());
           if (index > -1) {
 
-            const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + text.length) + '</strong>' +
-              d.text.substring(index + text.length);
+            const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + inputValue.length) + '</strong>' +
+              d.text.substring(index + inputValue.length);
             return [
               {
                 'type': 'item',
                 'data': {
                   'value': d.value,
-                  'text': d.text,
-                  html,
-                  'bonus-demo-content': 'caterpillar'
-                },
-                'item-class': 'class-' + d
+                  bonus: {
+                    'text': d.text,
+                    html,
+                    'bonus-demo-content': 'caterpillar',
+                    'item-class': 'class-' + d.value
+                  }
+                }
               }
             ];
           } else {
@@ -142,7 +144,7 @@ export default (): void => {
       components: [
          sketchTypeahead({
            selectsOver: true,
-           getDisplayText: (itemData) => itemData.text,
+           getDisplayText: (itemData) => itemData.bonus && itemData.bonus.text ? itemData.bonus.text : 'No.text',
            populateFromBrowse: true,
          }),
 

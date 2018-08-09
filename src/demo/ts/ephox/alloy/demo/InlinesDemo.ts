@@ -48,6 +48,19 @@ export default (): void => {
     })
   );
 
+  const makeItem = (v, t, c) => {
+    return {
+      type: 'item',
+      data: {
+        value: v,
+        bonus: {
+          text: t,
+          'item-class': c
+        }
+      }
+    };
+  };
+
   const inlineMenu = TieredMenu.sketch({
     dom: {
       tag: 'div'
@@ -84,19 +97,18 @@ export default (): void => {
         'dog': DemoRenders.menu({
           value: 'dog',
           items: Arr.map([
-            { type: 'item', data: { 'value': 'alpha', 'text': 'Alpha', 'item-class': 'alpha' } },
-            { type: 'item', data: { 'value': 'beta', 'text': 'Beta', 'item-class': 'beta' } },
-            { type: 'item', data: { 'value': 'gamma', 'text': 'Gamma', 'item-class': 'gamma' } },
-            { type: 'item', data: { 'value': 'delta', 'text': 'Delta', 'item-class': 'delta' } }
-
+            makeItem('alpha', 'Alpha', 'alpha'),
+            makeItem('beta', 'Beta', 'beta'),
+            makeItem('gamma', 'Gamma', 'gamma'),
+            makeItem('delta', 'Delta', 'delta')
           ], DemoRenders.item),
           textkey: 'Dog'
         }),
         'gamma-menu': DemoRenders.menu({
           value: 'gamma-menu',
           items: Arr.map([
-            { type: 'item', data: { 'value': 'gamma-1', 'text': 'Gamma-1', 'item-class': 'gamma-1' } },
-            { type: 'item', data: { 'value': 'gamma-2', 'text': 'Gamma-2', 'item-class': 'gamma-2' } }
+            makeItem('gamma-1', 'Gamma-1', 'gamma-1'),
+            makeItem('gamma-2', 'Gamma-2', 'gamma-2')
           ], DemoRenders.item),
           textkey: 'gamma-menu'
         })

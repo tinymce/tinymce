@@ -17,7 +17,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
     return {
       dom: {
         tag: 'button',
-        innerHtml: itemSpec.data.text,
+        innerHtml: itemSpec.data.bonus.text,
         classes: [ 'toolbar-item' ]
       },
 

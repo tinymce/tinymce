@@ -9,7 +9,9 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 export interface ItemDataTuple {
   value: string;
-  text: string;
+  bonus?: {
+    text?: string;
+  }
 }
 
 export type ItemSpec = WidgetItemSpec | SeparatorItemSpec | NormalItemSpec;

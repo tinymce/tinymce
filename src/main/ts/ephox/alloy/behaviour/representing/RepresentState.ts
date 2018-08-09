@@ -77,9 +77,11 @@ const dataset = (): DatasetRepresentingState => {
     const currentDataByText = dataByText.get();
     const newDataByValue = { };
     const newDataByText = { };
+    // FIX: Fix this.
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
-      newDataByText[item.text] = item;
+      // FIX:
+      newDataByText[item.bonus.text] = item;
     });
 
     dataByValue.set(

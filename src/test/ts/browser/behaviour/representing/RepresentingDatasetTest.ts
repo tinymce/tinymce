@@ -33,7 +33,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
                 return { value: 'fallback.' + key.toLowerCase(), text: key };
               },
               setValue: (comp, data) => {
-                Value.set(comp.element(), data.text);
+                Value.set(comp.element(), data.bonus.text);
               }
             }
           })

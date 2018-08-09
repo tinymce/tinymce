@@ -32,7 +32,9 @@ const singleData = (name: string, menu: MenuSpec): TieredData => {
 const collapseItem = (text: string): ItemDataTuple => {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
-    text
+    bonus: {
+      text
+    }
   };
 };
 

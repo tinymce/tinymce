@@ -89,9 +89,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         {
           mode: 'dataset',
           getDataKey: (comp) => Value.get(comp.element()),
+          // This really needs to be configurable
           getFallbackEntry: (itemString) => ({
             value: itemString,
-            text: itemString
+            bonus: { }
           }),
           setValue: (comp, data) => {
             Value.set(comp.element(), detail.model().getDisplayText()(data));
