@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
       skin_url: '/project/js/tinymce/skins/lightgray',
       setup: (ed: Editor) => {
         ed.on('init', () => {
-          ed.experimental.annotator.register('test-annotation', annotation);
+          ed.annotator.register('test-annotation', annotation);
         });
       }
     };

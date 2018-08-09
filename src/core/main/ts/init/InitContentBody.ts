@@ -14,7 +14,7 @@ import ForceBlocks from '../ForceBlocks';
 import NodeChange from '../NodeChange';
 import SelectionOverrides from '../SelectionOverrides';
 import UndoManager from '../api/UndoManager';
-import Experimental from '../api/Experimental';
+import Annotator from '../api/Annotator';
 import Formatter from '../api/Formatter';
 import Serializer from '../api/dom/Serializer';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -228,7 +228,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.parser = createParser(editor);
   editor.serializer = Serializer(settings, editor);
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
-  editor.experimental = Experimental(editor);
+  editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);
   editor._nodeChangeDispatcher = new NodeChange(editor);

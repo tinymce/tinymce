@@ -104,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     skin_url: '/project/js/tinymce/skins/lightgray',
     setup: (ed: Editor) => {
       ed.on('init', () => {
-        ed.experimental.annotator.register('test-annotation', {
+        ed.annotator.register('test-annotation', {
           decorate: (uid, data) => {
             return {
               attributes: {

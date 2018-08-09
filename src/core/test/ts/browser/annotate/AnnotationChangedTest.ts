@@ -249,7 +249,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
     skin_url: '/project/js/tinymce/skins/lightgray',
     setup: (ed: Editor) => {
       ed.on('init', () => {
-        ed.experimental.annotator.register('alpha', {
+        ed.annotator.register('alpha', {
           decorate: (uid, data) => {
             return {
               attributes: {
@@ -260,7 +260,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           }
         });
 
-        ed.experimental.annotator.register('beta', {
+        ed.annotator.register('beta', {
           decorate: (uid, data) => {
             return {
               attributes: {
@@ -271,7 +271,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           }
         });
 
-        ed.experimental.annotator.register('gamma', {
+        ed.annotator.register('gamma', {
           decorate: (uid, data) => {
             return {
               attributes: {
@@ -282,7 +282,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           }
         });
 
-        ed.experimental.annotator.register('delta', {
+        ed.annotator.register('delta', {
           decorate: (uid, data) => {
             return {
               attributes: {
@@ -313,10 +313,10 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           );
         };
 
-        ed.experimental.annotator.annotationChanged('alpha', listener);
-        ed.experimental.annotator.annotationChanged('beta', listener);
-        ed.experimental.annotator.annotationChanged('gamma', listener);
-        ed.experimental.annotator.annotationChanged('delta', listener);
+        ed.annotator.annotationChanged('alpha', listener);
+        ed.annotator.annotationChanged('beta', listener);
+        ed.annotator.annotationChanged('gamma', listener);
+        ed.annotator.annotationChanged('delta', listener);
       });
     }
   }, success, failure);

@@ -18,7 +18,7 @@ export default function () {
   button.innerHTML = 'Get all annotations';
   button.addEventListener('click', () => {
     // tslint:disable no-console
-    console.log('annotations', tinymce.activeEditor.experimental.annotator.getAll('alpha'));
+    console.log('annotations', tinymce.activeEditor.annotator.getAll('alpha'));
     // tslint:enable no-console
   });
   document.body.appendChild(button);
@@ -36,7 +36,7 @@ export default function () {
         text: 'Annotate',
         onclick: () => {
           const comment = prompt('Comment with?');
-          ed.experimental.annotator.annotate('alpha', {
+          ed.annotator.annotate('alpha', {
             comment
           });
           ed.focus();
@@ -45,7 +45,7 @@ export default function () {
         onpostrender: (ctrl) => {
           const button = ctrl.control;
           ed.on('init', () => {
-            ed.experimental.annotator.annotationChanged('alpha', (state, name, obj) => {
+            ed.annotator.annotationChanged('alpha', (state, name, obj) => {
               if (! state) {
                 button.active(false);
               } else {
@@ -57,7 +57,7 @@ export default function () {
       });
 
       ed.on('init', () => {
-        ed.experimental.annotator.register('alpha', {
+        ed.annotator.register('alpha', {
           persistent: true,
           decorate: (uid, data) => {
             return {

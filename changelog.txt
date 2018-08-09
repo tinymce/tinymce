@@ -1,3 +1,5 @@
+Version 4.8.2 (2018-08-09)
+    Moved annotator from "experimental" to "annotator" object on editor. #TBS-2398
 Version 4.8.1 (2018-07-26)
     Fixed a bug where the content of inline editors was being cleaned on every call of `editor.save()`. #TINY-1783
     Fixed a bug where the arrow of the Inlite Theme toolbar was being rendered incorrectly in RTL mode. #TINY-1776

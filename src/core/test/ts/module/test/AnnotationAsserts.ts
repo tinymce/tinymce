@@ -4,7 +4,7 @@ import { Element } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const sAnnotate = (editor: Editor, name: string, uid: string, data: { }) => Step.sync(() => {
-  editor.experimental.annotator.annotate(name, {
+  editor.annotator.annotate(name, {
     uid,
     ...data
   });
@@ -41,7 +41,7 @@ const assertMarker = (editor: Editor, expected, nodes: any[]) => {
 };
 
 const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: string) => Step.sync(() => {
-  const annotations = editor.experimental.annotator.getAll(name);
+  const annotations = editor.annotator.getAll(name);
   const keys = Obj.keys(annotations);
   const sortedKeys = Arr.sort(keys);
   const expectedKeys = Arr.sort(Obj.keys(expected));
