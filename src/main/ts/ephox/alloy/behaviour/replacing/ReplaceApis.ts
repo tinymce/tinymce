@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Compare, Insert, Element } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
@@ -51,10 +51,23 @@ const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, r
   return component.components();
 };
 
+const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: AlloySpec): void => {
+  const children = contents(component, replaceConfig);
+  Option.from(children[replaceeIndex]).each((replacee) => {
+    // remove it.
+    remove(component, replaceConfig, replaceState, replacee);
+
+    insert(component, replaceConfig, (p: Element, c: Element) => {
+      Insert.appendAt(p, c, replaceeIndex);
+    }, replacer);
+  });
+};
+
 export {
   append,
   prepend,
   remove,
+  replaceAt,
   set,
   contents
 };

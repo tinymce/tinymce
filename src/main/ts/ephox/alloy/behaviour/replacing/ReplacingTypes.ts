@@ -7,6 +7,7 @@ export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingCo
   append: (component: AlloyComponent, appendee: AlloySpec) => void;
   prepend: (component: AlloyComponent, prependee: AlloySpec) => void;
   remove: (component: AlloyComponent, removee: AlloyComponent) => void;
+  replaceAt: (component: AlloyComponent, replaceeIndex: number, replacer: AlloySpec) => void;
   set: (component: AlloyComponent, data: AlloySpec[]) => void;
   contents: (component: AlloyComponent) => AlloyComponent[];
 }
