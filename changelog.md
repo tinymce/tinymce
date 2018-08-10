@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.17.0] - 2018-08-10
+### Added
+ - Added configuration for InlineView: fireDismissalEventInstead
+
 ## [3.16.0] - 2018-08-08
 ### Added
 - Reflecting behaviour
