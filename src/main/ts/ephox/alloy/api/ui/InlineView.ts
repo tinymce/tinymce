@@ -14,6 +14,7 @@ import * as Sketcher from './Sketcher';
 import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import * as SystemEvents from '../../api/events/SystemEvents';
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
@@ -37,9 +38,18 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
               return detail.lazySink()().getOrDie();
             }
           }),
-          Dismissal.receivingConfig({
-            isExtraPart: Fun.constant(false)
-          })
+          Dismissal.receivingConfig(
+            Merger.deepMerge(
+              {
+                isExtraPart: Fun.constant(false),
+              },
+              detail.fireDismissalEventInstead().map((fe) => ({
+                'fireEventInstead': {
+                  event: fe.event()
+                }
+              } as any)).getOr({ })
+            )
+          )
         ]),
         SketchBehaviours.get(detail.inlineBehaviours())
       ),
@@ -71,6 +81,9 @@ const InlineView = Sketcher.single({
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
+    FieldSchema.optionObjOf('fireDismissalEventInstead', [
+      FieldSchema.defaulted('event', SystemEvents.dismissRequested())
+    ]),
     FieldSchema.defaulted('getRelated', Option.none),
     FieldSchema.defaulted('eventOrder', Option.none)
   ],
