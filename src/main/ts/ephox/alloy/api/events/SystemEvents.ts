@@ -51,6 +51,8 @@ const windowScroll = Fun.constant('alloy.system.scroll');
 const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
+const dismissRequested = Fun.constant('alloy.system.dismissRequested');
+
 export interface AlloyChangeTabEvent extends CustomEvent {
   button: () => AlloyComponent;
 }
@@ -75,6 +77,8 @@ export {
   systemInit,
   typeaheadCancel,
   windowScroll,
+
+  dismissRequested,
 
   attachedToDom,
   detachedFromDom,
