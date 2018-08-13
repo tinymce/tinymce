@@ -1,6 +1,4 @@
 import { Future, Option, Result } from '@ephox/katamari';
-import { TieredData } from '../../api/Main';
-import { TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -8,6 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
@@ -20,8 +19,12 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   fetch: () => (comp: AlloyComponent) => Future<F>;
   onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
+  lazySink: () => Option<() => Result<AlloyComponent, Error>>;
+  // TODO test getHotspot
+  getHotspot: () => (comp: AlloyComponent) => Option<AlloyComponent>;
   matchWidth: () => boolean;
+  sandboxClasses: () => string[];
+  sandboxBehaviours: () => SketchBehaviours;
 }
 
 export interface DropdownDetail extends CommonDropdownDetail<TieredData>, CompositeSketchDetail {
@@ -38,6 +41,9 @@ export interface DropdownSpec extends CompositeSketchSpec {
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  sandboxClasses?: string[];
+  sandboxBehaviours?: AlloyBehaviourRecord;
+  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
 
   toggleClass: string;
   lazySink?: any;
@@ -46,6 +52,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   };
   matchWidth?: boolean;
   role?: string;
+
 }
 
 export interface DropdownSketcher extends CompositeSketch<CompositeSketchSpec, CompositeSketchDetail> { }

@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -10,21 +10,24 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
+import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
-
   Fields.onStrictHandler('onExecute'),
+  FieldSchema.defaulted('getHotspot', Option.some),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),
   FieldSchema.strict('dom'),
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
   FieldSchema.defaulted('matchWidth', false)
-]);
+].concat(
+  SketcherFields.sandboxFields()
+));
 
 const arrowPart = PartType.required({
   factory: Button,

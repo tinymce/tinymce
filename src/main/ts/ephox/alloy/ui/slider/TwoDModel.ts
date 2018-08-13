@@ -12,7 +12,7 @@ import * as HorizontalModel from './HorizontalModel';
 import * as VerticalModel from './VerticalModel';
 import { maxX, maxY, minX, minY, currentValue, step } from './SliderValues';
 import * as EdgeActions from './EdgeActions';
-import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
 // fire slider change event with xy value
 const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void => {
@@ -23,7 +23,7 @@ const sliderValue = (x: number, y: number): SliderValueXY => {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y)
-  }
+  };
 };
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
@@ -43,7 +43,7 @@ const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyC
     f(currentValue(detail).x(), minX(detail), maxX(detail), step(detail));
   const yValue = !isVerticalMovement ? currentValue(detail).y() :
     f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
-    
+
   fireSliderChange(spectrum, sliderValue(xValue, yValue));
   return Option.some(xValue);
 };
@@ -126,4 +126,4 @@ export {
   onUp,
   onDown,
   edgeActions
-}
+};

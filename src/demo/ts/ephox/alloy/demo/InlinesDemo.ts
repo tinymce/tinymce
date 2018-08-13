@@ -22,6 +22,8 @@ import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 import { document, console } from '@ephox/dom-globals';
 
+// tslint:disable:no-console
+
 export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);

@@ -1,13 +1,14 @@
 import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class } from '@ephox/sugar';
+import { Attr, Class, Element, Compare } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { AlloyComponent } from '../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
@@ -74,11 +75,11 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       ]);
     };
 
-    const cHighlight = Chain.op((item) => {
+    const cHighlight = Chain.op((item: AlloyComponent) => {
       Highlighting.highlight(component, item);
     });
 
-    const cDehighlight = Chain.op((item) => {
+    const cDehighlight = Chain.op((item: AlloyComponent) => {
       Highlighting.dehighlight(component, item);
     });
 
@@ -141,7 +142,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     });
 
     const cHasClass = (clazz) => {
-      return Chain.binder((comp) => {
+      return Chain.binder((comp: AlloyComponent) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
           Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
@@ -213,7 +214,24 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
             });
           }),
 
-          NamedChain.direct('container', cGetHighlightedOrDie, 'blah')
+          NamedChain.direct('container', cGetHighlightedOrDie, 'blah'),
+
+          NamedChain.bundle((output) => {
+            const candidates = Highlighting.getCandidates(component);
+            const expected = [ output.alpha, output.beta, output.gamma ];
+
+            Assertions.assertEq('Checking length of getCandidates array', expected.length, candidates.length);
+            Arr.each(expected, (exp, i) => {
+              const actual = candidates[i];
+              Assertions.assertEq(
+                'Checking DOM element at index: ' + i, true,
+                Compare.eq(exp.element(), actual.element())
+              );
+            });
+
+            return Result.value(output);
+
+          })
         ])
       ])
     ];

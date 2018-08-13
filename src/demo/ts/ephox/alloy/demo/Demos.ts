@@ -18,11 +18,14 @@ import InspectorDemo from './InspectorDemo';
 import LongpressDemo from './LongpressDemo';
 import PinchingDemo from './PinchingDemo';
 import PositionDemo from './PositionDemo';
+import ReflectingDemo from './ReflectingDemo';
 import SliderDemo from './SliderDemo';
 import SlidingDemo from './SlidingDemo';
 import TabSectionDemo from './TabSectionDemo';
 import ToolbarsDemo from './ToolbarsDemo';
+import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
+import SlotContainerDemo from './SlotContainerDemo';
 
 declare const window: any;
 
@@ -47,9 +50,12 @@ window.demos = {
   LongpressDemo,
   PinchingDemo,
   PositionDemo,
+  ReflectingDemo,
   SliderDemo,
   SlidingDemo,
+  SlotContainerDemo,
   TabSectionDemo,
   ToolbarsDemo,
+  TooltippingDemo,
   TypeaheadDemo
 };

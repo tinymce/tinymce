@@ -3,7 +3,8 @@ import { Arr, Fun, Merger, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
-import { AlloyEventRecord } from '../api/events/AlloyEvents';
+// NB: Tsc requires AlloyEventHandler to be imported here.
+import { AlloyEventRecord, AlloyEventHandler } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
@@ -49,7 +50,8 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
         'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
         'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
         'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
-        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ]
+        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ],
+        'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ]
       }),
       ValueSchema.anyValue()
     ),

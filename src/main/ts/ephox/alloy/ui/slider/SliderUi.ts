@@ -4,6 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
+import { Receiving } from '../../api/behaviour/Receiving';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -41,7 +42,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
 
   const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
     modelDetail.value().set(newValue);
-    
+
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange()(slider, thumb, newValue);
@@ -103,6 +104,16 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
                   return detail.model().value().get();
                 }
               }
+            }),
+
+            Receiving.config({
+              channels: {
+                'mouse.released': {
+                  onReceive: (comp, se) => {
+                    detail.mouseIsDown().set(false);
+                  }
+                }
+              }
             })
           ]
         ])
@@ -122,7 +133,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
           const thumb = getThumb(slider);
 
           refresh(slider, thumb);
-          
+
           const spectrum = getSpectrum(slider);
           // Call onInit instead of onChange for the first value.
           detail.onInit()(slider, thumb, spectrum, modelDetail.value().get());

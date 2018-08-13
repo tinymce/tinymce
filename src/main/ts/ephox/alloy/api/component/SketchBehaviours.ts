@@ -1,14 +1,14 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
-import { AlloyBehaviour, AlloyBehaviourRecord, ConfiguredBehaviour } from '../../api/behaviour/Behaviour';
-import { ContainerBehaviours } from '../../spec/SpecSchema';
+// NB: Tsc requires ConfiguredBehaviour to be imported here.
+import { AlloyBehaviourRecord, ConfiguredBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface SketchBehaviours {
   dump: () => AlloyBehaviourRecord;
 }
 
-const field = (name: string, forbidden: Array<AlloyBehaviour<any, any>>): FieldProcessorAdt => {
+const field = (name: string, forbidden: Array<{ name: () => string }>): FieldProcessorAdt => {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, (f) => {
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([
@@ -18,6 +18,11 @@ const field = (name: string, forbidden: Array<AlloyBehaviour<any, any>>): FieldP
 
 const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
   return data.dump();
+};
+
+export const SketchBehaviours = {
+  field,
+  get
 };
 
 export {

@@ -27,9 +27,8 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
   };
 
   const action = (component: AlloyComponent): void => {
-    const anchor: HotspotAnchorSpec = { anchor: 'hotspot', hotspot: component };
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync).get(Fun.noop);
   };
 
   return Merger.deepMerge(
@@ -55,10 +54,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           Coupling.config({
             others: {
               sandbox (hotspot) {
-                return DropdownUtils.makeSandbox(detail, {
-                  anchor: 'hotspot',
-                  hotspot
-                }, hotspot, {
+                return DropdownUtils.makeSandbox(detail, hotspot, {
                   onOpen () { Toggling.on(hotspot); },
                   onClose () { Toggling.off(hotspot); }
                 });

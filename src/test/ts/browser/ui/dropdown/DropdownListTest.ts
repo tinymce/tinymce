@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -13,6 +13,9 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import { AddEventsBehaviour, AlloyEvents } from 'ephox/alloy/api/Main';
+import { compare } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Results';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
@@ -41,6 +44,12 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
             }
           }
         ],
+        sandboxClasses: [ 'my-test-sandbox' ],
+        sandboxBehaviours: Behaviour.derive([
+          AddEventsBehaviour.config('test-events', [
+            AlloyEvents.run('made-up-event', store.adder('received made-up-event'))
+          ])
+        ]),
 
         lazySink () {
           return Result.value(sink.get(c));
@@ -107,6 +116,17 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains(Alpha)'),
 
+      store.sClear,
+      Chain.asStep(gui.element(), [
+        UiFinder.cFindIn('.my-test-sandbox'),
+        Chain.binder((sandbox) => component.getSystem().getByDom(sandbox)),
+        Chain.op((sandboxComp) => {
+          AlloyTriggers.emit(sandboxComp, 'made-up-event');
+        })
+      ]),
+      store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
+      store.sClear,
+
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       Waiter.sTryUntil(
         'Waiting for menu to disappear',
@@ -120,7 +140,8 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
-        UiFinder.sExists(gui.element(), '.menu'),
+        // Just check the sandbox class is there.
+        UiFinder.sExists(gui.element(), '.my-test-sandbox .menu'),
         100,
         1000
       ),

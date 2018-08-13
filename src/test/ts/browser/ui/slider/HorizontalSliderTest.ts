@@ -7,6 +7,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
 
@@ -40,7 +41,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
             height: '20px',
             background: 'black'
           } } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: { 
+          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
             height: '150px',
             background: 'green'
           } } }),
@@ -59,7 +60,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     );
   }, (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper((elem) => {
+    const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();
     });
 
@@ -88,7 +89,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       NamedChain.bundle(Result.value)
     ]);
 
-    const cCheckThumbAtLeft = Chain.op((parts) => {
+    const cCheckThumbAtLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
@@ -97,7 +98,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       );
     });
 
-    const cCheckThumbAtRight = Chain.op((parts) => {
+    const cCheckThumbAtRight = Chain.op((parts: any) => {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
@@ -106,20 +107,20 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       );
     });
 
-    const cCheckThumbPastRight = Chain.op((parts) => {
+    const cCheckThumbPastRight = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
-    const cCheckThumbBeforeLeft = Chain.op((parts) => {
+    const cCheckThumbBeforeLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
     const cCheckValue = (expected) => {
-      return Chain.op((parts) => {
+      return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
         RawAssertions.assertEq('Checking slider value', expected, v.x());
       });

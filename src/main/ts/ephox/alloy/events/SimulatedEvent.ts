@@ -30,6 +30,10 @@ export interface CustomEvent extends EventFormat {
   [key: string]: () => any;
 }
 
+export interface ReceivingInternalEvent extends EventFormat {
+  channels: () => string[];
+}
+
 export interface ReceivingEvent extends EventFormat {
   data: () => any;
 }

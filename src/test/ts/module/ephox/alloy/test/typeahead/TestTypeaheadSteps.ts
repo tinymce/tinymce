@@ -1,8 +1,11 @@
-import { Assertions, Chain, FocusTools, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Focus } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import { Assertions, Chain, FocusTools, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
+import { HTMLInputElement } from '@ephox/dom-globals';
+import { Value } from '@ephox/sugar';
 import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
 export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) => {
   const sWaitForMenu = (label: string) => {
@@ -14,6 +17,26 @@ export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) =
         100,
         4000
       )
+    );
+  };
+
+  const sAssertTextSelection = (label: string, start: number, finish: number) => {
+    return Logger.t(
+      label + ' sAssertTextSelection',
+      Step.sync(() => {
+        const node = typeahead.element().dom() as HTMLInputElement;
+        Assertions.assertEq(label + ' start cursor', start, node.selectionStart);
+        Assertions.assertEq(label + ' finish cursor', finish, node.selectionEnd);
+      })
+    );
+  };
+
+  const sTriggerInputEvent = (label: string) => {
+    return Logger.t(
+      label + ' sTriggerInputEvent',
+      Step.sync(() => {
+        AlloyTriggers.emit(typeahead, NativeEvents.input());
+      })
     );
   };
 
@@ -42,12 +65,9 @@ export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) =
 
   const sAssertValue = (label: string, expected: string) => {
     return Logger.t(
-      label,
+      label + ' sAssertValue',
       Chain.asStep(typeahead.element(), [
-        Chain.op((t) => {
-          Focus.focus(t);
-        }),
-        UiControls.cGetValue,
+        Chain.mapper(Value.get),
         Assertions.cAssertEq('Checking value of typeahead', expected)
       ])
     );
@@ -56,7 +76,9 @@ export default (doc: SugarDocument, gui: GuiSystem, typeahead: AlloyComponent) =
   return {
     sWaitForMenu,
     sWaitForNoMenu,
+    sAssertTextSelection,
     sAssertFocusOnTypeahead,
+    sTriggerInputEvent,
     sAssertValue
   };
 };

@@ -27,7 +27,21 @@ export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction;
 }
 
-export interface SelectionAnchorSpec extends CommonAnchorSpec {
+export interface HasLayoutAnchor {
+  layouts: () => Option<{
+    onLtr: () => (elem: Element) => AnchorLayout[];
+    onRtl: () => (elem: Element) => AnchorLayout[];
+  }>;
+}
+
+export interface HasLayoutAnchorSpec {
+  layouts?: {
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
+  };
+}
+
+export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'selection';
   getSelection?: () => Option<SugarRange>;
   root: Element;
@@ -36,7 +50,7 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec {
   showAbove?: boolean;
 }
 
-export interface SelectionAnchor extends AnchorDetail<SelectionAnchor> {
+export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
   getSelection: () => Option<() => Option<SugarRange>>;
   root: () => Element;
   bubble: () => Option<Bubble>;
@@ -44,38 +58,22 @@ export interface SelectionAnchor extends AnchorDetail<SelectionAnchor> {
   showAbove: () => boolean;
 }
 
-export interface HotspotAnchorSpec extends CommonAnchorSpec {
+export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'hotspot';
   hotspot: AlloyComponent;
-  layouts?: {
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  };
 }
 
-export interface HotspotAnchor extends AnchorDetail<HotspotAnchor> {
+export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnchor {
   hotspot: () => AlloyComponent;
-  layouts: () => {
-    onLtr: () => (elem: Element) => AnchorLayout[];
-    onRtl: () => (elem: Element) => AnchorLayout[];
-  };
 }
 
-export interface SubmenuAnchorSpec extends CommonAnchorSpec {
+export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'submenu';
   item: AlloyComponent;
-  layouts?: {
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  };
 }
 
-export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor> {
+export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnchor {
   item: () => AlloyComponent;
-  layouts: () => {
-    onLtr: () => (elem: Element) => AnchorLayout[];
-    onRtl: () => (elem: Element) => AnchorLayout[];
-  };
 }
 
 export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
@@ -85,22 +83,14 @@ export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   height?: number;
   width?: number;
   bubble?: Bubble;
-  layouts?: {
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  };
 }
 
-export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor> {
+export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor>, HasLayoutAnchor {
   x: () => number;
   y: () => number;
   height?: () => number;
   width?: () => number;
   bubble?: () => Bubble;
-  layouts?: () => Option<{
-    onLtr: () => (elem: Element) => AnchorLayout[];
-    onRtl: () => (elem: Element) => AnchorLayout[];
-  }>;
 }
 
 export interface Anchoring {

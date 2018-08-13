@@ -6,7 +6,8 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
+import { document, console, setTimeout, prompt } from '@ephox/dom-globals';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 
 export default (): void => {
   const gui = Gui.create();
@@ -43,9 +44,7 @@ export default (): void => {
     }
   });
 
-  const subject = HtmlDisplay.section(
-    gui,
-    'A basic tab view (refactoring)',
+  const memTabSection = Memento.record(
     TabSection.sketch({
       dom: {
         tag: 'div'
@@ -81,4 +80,15 @@ export default (): void => {
     })
   );
 
+  const subject = HtmlDisplay.section(
+    gui,
+    'A basic tab view (refactoring)',
+    memTabSection.asSpec()
+  );
+
+  setTimeout(() => {
+    const chosenTab = prompt('Move to tab?');
+    const tabSection = memTabSection.get(subject);
+    TabSection.showTab(tabSection, chosenTab);
+  });
 };

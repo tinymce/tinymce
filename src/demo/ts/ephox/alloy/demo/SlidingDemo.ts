@@ -8,6 +8,8 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, console } from '@ephox/dom-globals';
 
+// tslint:disable:no-console
+
 export default (): void  => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);

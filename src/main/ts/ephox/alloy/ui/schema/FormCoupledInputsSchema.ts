@@ -14,10 +14,16 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { FormCoupledInputsDetail } from '../../ui/types/FormCoupledInputsTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Representing } from '../../api/behaviour/Representing';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
+  FieldSchema.defaulted('field1Name', 'field1'),
+  FieldSchema.defaulted('field2Name', 'field2'),
   Fields.onStrictHandler('onLockedChange'),
-  Fields.markers([ 'lockClass' ])
+  Fields.markers([ 'lockClass' ]),
+  FieldSchema.defaulted('locked', false),
+  SketchBehaviours.field('coupledFieldBehaviours', [Composing, Representing])
 ]);
 
 const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => {
@@ -61,6 +67,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({
+            selected: detail.locked(),
             toggleClass: detail.markers().lockClass(),
             aria: {
               mode: 'pressed'

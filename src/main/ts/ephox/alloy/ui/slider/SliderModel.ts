@@ -1,34 +1,34 @@
-import { Option } from "@ephox/katamari";
+import { Option } from '@ephox/katamari';
 
 export interface ValueOfArgs {
-  min:  number,
-  max:  number,
-  range: number,
-  value: number,
-  step: number,
-  snap: boolean,
-  snapStart: Option<number>,
-  rounded: boolean,
-  hasMinEdge: boolean,
-  hasMaxEdge: boolean,
-  minBound:  number,
-  maxBound:  number,
-  screenRange:  number
-};
+  min: number;
+  max: number;
+  range: number;
+  value: number;
+  step: number;
+  snap: boolean;
+  snapStart: Option<number>;
+  rounded: boolean;
+  hasMinEdge: boolean;
+  hasMaxEdge: boolean;
+  minBound: number;
+  maxBound: number;
+  screenRange: number;
+}
 
 export interface OffsetOfArgs {
-  min: number, 
-  max: number,
-  range: number,
-  value: number,
-  hasMinEdge: boolean,
-  hasMaxEdge: boolean,
-  minBound: number,
-  minOffset: number,
-  maxBound: number,
-  maxOffset: number,
-  centerMinEdge: number,
-  centerMaxEdge: number
+  min: number;
+  max: number;
+  range: number;
+  value: number;
+  hasMinEdge: boolean;
+  hasMaxEdge: boolean;
+  minBound: number;
+  minOffset: number;
+  maxBound: number;
+  maxOffset: number;
+  centerMinEdge: number;
+  centerMaxEdge: number;
 }
 
 const reduceBy = (value: number, min: number, max: number, step: number): number => {
@@ -97,7 +97,7 @@ const findValueOf = (args: ValueOfArgs): number => {
 
   if (value < minBound) {
     return capMin;
-  } else if (value > maxBound) { 
+  } else if (value > maxBound) {
     return capMax;
   } else {
     const offset = findOffsetOf(value, minBound, maxBound);

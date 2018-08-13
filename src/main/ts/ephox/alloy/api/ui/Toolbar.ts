@@ -17,6 +17,7 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
     getGroupContainer(toolbar).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
+      // tslint:disable-next-line:no-console
       console.error('Toolbar was defined to not be a shell, but no groups container was specified in components');
       throw new Error('Toolbar was defined to not be a shell, but no groups container was specified in components');
     }, (container) => {

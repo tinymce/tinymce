@@ -13,6 +13,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   modalBehaviours: () => SketchBehaviours;
+  eventOrder: () => Record<string, string[]>;
 
   // FIX: Keying.cyclic
   onExecute: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
@@ -28,6 +29,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   modalBehaviours?: AlloyBehaviourRecord;
+  eventOrder?: Record<string, string[]>;
 
   lazySink?: () => Result<AlloyComponent, Error>;
   useTabstopAt?: (comp: Element) => boolean;
@@ -42,8 +44,20 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   };
 }
 
+export type GetBusySpec = (
+  dlg: AlloyComponent,
+  bounds: { left: string, top: string, width: string, height: string },
+  busyBehaviours: AlloyBehaviourRecord
+) => AlloySpec;
+
 export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, ModalDialogDetail> {
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
+  getFooter: (dialog: AlloyComponent) => AlloyComponent;
+  setBusy(
+    dialog: AlloyComponent,
+    getBusySpec: GetBusySpec
+  );
+  setIdle(dialog: AlloyComponent);
 }

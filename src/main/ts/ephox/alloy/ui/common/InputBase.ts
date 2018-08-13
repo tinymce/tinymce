@@ -25,7 +25,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const focusBehaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord => {
+const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
   return Behaviour.derive([
     Focusing.config({
       onFocus: detail.selectOnFocus() === false ? Fun.noop : (component) => {
@@ -37,7 +37,7 @@ const focusBehaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRec
   ]);
 };
 
-const behaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord => {
+const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
   return Merger.deepMerge(
     Behaviour.derive([
       Representing.config({
@@ -64,7 +64,7 @@ const behaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord =
   );
 };
 
-const dom = <V>(detail: InputDetail<V>): RawDomSchema => {
+const dom = (detail: InputDetail): RawDomSchema => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(

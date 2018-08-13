@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Result } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
+import { Result, Fun } from '@ephox/katamari';
+import { Class, Attr, Element } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -13,6 +13,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -115,10 +116,17 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         },
 
         modalBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('modal-events', [
-            AlloyEvents.runOnAttached(store.adder('modal.attached'))
+          AddEventsBehaviour.config('modal-events-1', [
+            AlloyEvents.runOnAttached(store.adder('modal.attached.1'))
+          ]),
+          AddEventsBehaviour.config('modal-events-2', [
+            AlloyEvents.runOnAttached(store.adder('modal.attached.2'))
           ])
         ]),
+
+        eventOrder: {
+          [SystemEvents.attachedToDom()]: ['modal-events-1', 'modal-events-2']
+        },
 
         onEscape: store.adderH('dialog.escape'),
         onExecute: store.adderH('dialog.execute'),
@@ -150,6 +158,22 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       );
     };
 
+    const sCheckBlockerStructure = (label, expected) => {
+      return Logger.t(
+        label,
+        Chain.asStep(sink.element(), [
+          UiFinder.cFindIn('.test-dialog-blocker'),
+          Chain.op((blocker) => {
+            Assertions.assertStructure(
+              'Checking blocker structure',
+              expected,
+              blocker
+            );
+          })
+        ])
+      );
+    };
+
     return [
       Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
       Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
@@ -157,7 +181,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ModalDialog.show(dialog);
       }),
       Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
-      store.sAssertEq('Attached event should have fired', [ 'modal.attached' ]),
+      store.sAssertEq('Attached event should have fired', [ 'modal.attached.1', 'modal.attached.2' ]),
       store.sClear,
 
       Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
@@ -182,6 +206,21 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           ]
         });
       })),
+
+      Logger.t('Dialog should have aria-labelledby with title id', Chain.asStep(gui.element(), [
+        NamedChain.asChain([
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
+          NamedChain.bundle((f) => {
+            const titleId = Attr.get(f.title, 'id');
+            Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
+            Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
+            const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
+            Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
+            return Result.value(f);
+          })
+        ])
+      ])),
 
       FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
       Keyboard.sKeydown(doc, Keys.tab(), { }),
@@ -218,10 +257,98 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       }),
 
       Step.sync(() => {
+        const footer = ModalDialog.getFooter(dialog);
+        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-dialog-footer') ]
+          });
+        }), footer.element());
+      }),
+
+      Step.sync(() => {
         ModalDialog.hide(dialog);
       }),
       Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
-      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker'))
+      Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
+
+      Step.sync(() => {
+        ModalDialog.show(dialog);
+      }),
+
+      sCheckBlockerStructure('Initial dialog after showing', ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                'aria-busy': str.none()
+              }
+            })
+          ]
+        });
+      })),
+
+      Logger.t(
+        'Set the Dialog to "Busy"',
+        Step.sync(() => {
+          ModalDialog.setBusy(dialog, (d, boundsStyles, bs) => {
+            return {
+              dom: {
+                tag: 'div',
+                classes: [ 'test-busy-class' ],
+                styles: boundsStyles,
+                innerHtml: 'Loading'
+              },
+              behaviours: bs
+            };
+          });
+        })
+      ),
+
+      sCheckBlockerStructure(
+        'Checking after setBusy',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            children: [
+              s.element('div', {
+                attrs: {
+                  'aria-busy': str.is('true')
+                }
+              }),
+              s.element('div', {
+                styles: {
+                  position: str.is('fixed'),
+                  left: str.startsWith(''),
+                  top: str.startsWith('')
+                }
+              })
+            ]
+          });
+        })
+      ),
+
+      FocusTools.sTryOnSelector('Focus should be on loading message', doc, '.test-busy-class'),
+      // NOTE: Without real key testing ... this isn't really that useful.
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      FocusTools.sTryOnSelector('Focus should STILL be on loading message', doc, '.test-busy-class'),
+
+      Logger.t(
+        'Set the dialog to idle',
+        Step.sync(() => {
+          ModalDialog.setIdle(dialog);
+        })
+      ),
+
+      sCheckBlockerStructure('Initial dialog after setIdle', ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                'aria-busy': str.none()
+              }
+            })
+          ]
+        });
+      })),
     ];
   }, () => { success(); }, failure);
 });

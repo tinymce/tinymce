@@ -100,7 +100,7 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
 
     const sToggleSet = (state: boolean) => Step.sync(() => {
       Toggling.set(component, state);
-    })
+    });
 
     const sToggle = Step.sync(() => {
       Toggling.toggle(component);

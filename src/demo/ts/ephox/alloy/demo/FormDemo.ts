@@ -1,3 +1,4 @@
+import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Obj, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -10,13 +11,16 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
 import { Form } from 'ephox/alloy/api/ui/Form';
+import { FormField } from 'ephox/alloy/api/ui/FormField';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 import * as DemoFields from './forms/DemoFields';
-import { document, console, setTimeout } from '@ephox/dom-globals';
-import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+
+// tslint:disable:no-console
 
 export default (): void => {
   const gui = Gui.create();
@@ -79,6 +83,23 @@ export default (): void => {
         },
 
         components: [
+          parts.field('aria', FormField.sketch({
+            dom: {
+              tag: 'span'
+            },
+            components: [
+              FormField.parts().label({
+                dom: {
+                  tag: 'label',
+                  innerHtml: 'aria test'
+                }
+              }),
+              FormField.parts().field({ factory: Input }),
+              FormField.parts()['aria-descriptor']({
+                text: 'aria descriptor'
+              })
+            ]
+          })),
           parts.field('alpha', DemoFields.textMunger(alphaSpec)),
           parts.field('beta', DemoFields.textMunger(betaSpec)),
           Container.sketch({

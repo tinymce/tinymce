@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
@@ -8,12 +8,16 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { SelectorFind } from '@ephox/sugar';
+import { StructAssert } from '@ephox/agar/lib/main/ts/ephox/agar/assertions/ApproxStructures';
 
 UnitTest.asynctest('TabSection Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
+    let counterA = 0;
+    let counterB = 0;
+
     return GuiFactory.build(
       TabSection.sketch({
-        selectFirst: false,
         dom: {
           tag: 'div'
         },
@@ -35,7 +39,8 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           TabSection.parts().tabview({
             dom: {
-              tag: 'div'
+              tag: 'div',
+              classes: [ 'test-tabview' ]
             }
           })
         ],
@@ -46,10 +51,11 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
             value: 'alpha',
             dom: { tag: 'button', innerHtml: 'A' },
             view () {
+              counterA++;
               return [
                 Container.sketch({
                   dom: {
-                    innerHtml: 'This is the view for "A"'
+                    innerHtml: 'This is the view for "A' + counterA + '"'
                   },
                   components: [ ]
                 })
@@ -61,10 +67,11 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
             value: 'beta',
             dom: { tag: 'button', innerHtml: 'B' },
             view () {
+              counterB++;
               return [
                 Container.sketch({
                   dom: {
-                    innerHtml: 'This is the view for "B"'
+                    innerHtml: 'This is the view for "B' + counterB + '"'
                   },
                   components: [ ]
                 })
@@ -76,6 +83,29 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
+    const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
+    const beta = component.getSystem().getByUid('beta-tab').getOrDie();
+    const tview = component.getSystem().getByDom(
+      SelectorFind.descendant(component.element(), '.test-tabview').getOrDie('Could not find tabview')
+    ).getOrDie();
+
+    const sAssertTabSelection = (label, expected, element) =>
+      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
+        return s.element('button', {
+          attrs: {
+            'aria-selected': expected ? str.is('true') : str.is('false')
+          },
+          classes: [ (expected ? arr.has : arr.not)('selected-test-tab-button') ]
+        });
+      }), element);
+
+    const sAssertTabView = (label: string, expected: (s, str, arr) => StructAssert[]) =>
+      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          children: expected(s, str, arr)
+        });
+      }), tview.element());
+
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-test-tab-button { background: #cadbee; }'
@@ -93,7 +123,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
                   html: str.is('A'),
                   attrs: {
                     'data-alloy-id': str.is('alpha-tab'),
-                    'aria-selected': str.is('false')
+                    'aria-selected': str.is('true')
                   },
                   classes: [
                     arr.has('test-tab-button')
@@ -112,32 +142,124 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
                 })
               ]
             }),
-            s.element('div', { })
+            s.element('div', {
+              classes: [ arr.has('test-tabview') ]
+            })
           ]
         });
       }), component.element()),
 
-      Step.sync(() => {
-        const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
-        AlloyTriggers.emitExecute(alpha);
-        const beta = component.getSystem().getByUid('beta-tab').getOrDie();
-        Assertions.assertStructure('alpha after execute(alpha)', ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-selected': str.is('true')
-            },
-            classes: [ arr.has('selected-test-tab-button') ]
-          });
-        }), alpha.element());
-        Assertions.assertStructure('beta after execute(alpha)', ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-selected': str.is('false')
-            },
-            classes: [ arr.not('selected-test-tab-button') ]
-          });
-        }), beta.element());
-      }),
+      Logger.t(
+        'Execute alpha, check tabs and tabview',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            AlloyTriggers.emitExecute(alpha);
+          }),
+          sAssertTabSelection('Check Alpha', true, alpha.element()),
+          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "A1"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute beta, check tabs and tabview',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            AlloyTriggers.emitExecute(beta);
+          }),
+          sAssertTabSelection('Check Alpha', false, alpha.element()),
+          sAssertTabSelection('Check Beta', true, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "B1"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute alpha again, check tabs and tabview. Should be v2',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            AlloyTriggers.emitExecute(alpha);
+          }),
+          sAssertTabSelection('Check Alpha', true, alpha.element()),
+          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "A2"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute alpha again x 2, check tabs and tabview. Should stay v2',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            AlloyTriggers.emitExecute(alpha);
+          }),
+          sAssertTabSelection('Check Alpha', true, alpha.element()),
+          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "A2"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute alpha again x 3 (via API), check tabs and tabview. Should still stay v2',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            TabSection.showTab(component, 'alpha');
+          }),
+          sAssertTabSelection('Check Alpha', true, alpha.element()),
+          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "A2"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute alpha again x 4 (via API), check tabs and tabview. Should still stay v2',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            TabSection.showTab(component, 'alpha');
+          }),
+          sAssertTabSelection('Check Alpha', true, alpha.element()),
+          sAssertTabSelection('Check Beta', false, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "A2"')
+            })
+          ])
+        ])
+      ),
+
+      Logger.t(
+        'Execute beta (via API), check tabs and tabview. Should still stay v2',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            TabSection.showTab(component, 'beta');
+          }),
+          sAssertTabSelection('Check Alpha', false, alpha.element()),
+          sAssertTabSelection('Check Beta', true, beta.element()),
+          sAssertTabView('Check TabView', (s, str, arr) => [
+            s.element('div', {
+              html: str.is('This is the view for "B2"')
+            })
+          ])
+        ])
+      ),
 
       GuiSetup.mRemoveStyles
     ];

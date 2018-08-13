@@ -20,7 +20,7 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueX): void =
 const sliderValue = (x: number): SliderValueX => {
   return {
     x: Fun.constant(x)
-  }
+  };
 };
 
 // find the value of the x offset of where the mouse was clicked from the model.
@@ -87,9 +87,9 @@ const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<number>
 const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value: number, minEdge: Option<AlloyComponent>, maxEdge: Option<AlloyComponent>): number => {
   const minOffset = 0;
   const maxOffset = getXScreenRange(spectrum);
-  const centerMinEdge = minEdge.bind((edge: AlloyComponent) => 
+  const centerMinEdge = minEdge.bind((edge: AlloyComponent) =>
     Option.some(getXCenterOffSetOf(edge, spectrum))).getOr(minOffset);
-  const centerMaxEdge = maxEdge.bind((edge: AlloyComponent) => 
+  const centerMaxEdge = maxEdge.bind((edge: AlloyComponent) =>
     Option.some(getXCenterOffSetOf(edge, spectrum))).getOr(maxOffset);
 
   const args = {
@@ -103,8 +103,8 @@ const findOffsetOfValue = (spectrum: AlloyComponent, detail: SliderDetail, value
     minOffset,
     maxBound: getMaxXBounds(spectrum),
     maxOffset,
-    centerMinEdge: centerMinEdge,
-    centerMaxEdge: centerMaxEdge
+    centerMinEdge,
+    centerMaxEdge
   };
   return SliderModel.findOffsetOfValue(args);
 };
@@ -162,4 +162,4 @@ export {
   onUp,
   onDown,
   edgeActions
-}
+};

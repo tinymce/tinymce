@@ -14,13 +14,12 @@ import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 const placement = (component: AlloyComponent, posInfo: PositioningConfig, submenuInfo: SubmenuAnchor, origin: OriginAdt): Option<Anchoring> => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
-  const layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
+  const layouts = AnchorLayouts.get(component.element(), submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
 
   return Option.some(
     NuAnchoring({
       anchorBox: Fun.constant(anchorBox),
       bubble: Fun.constant(Bubble.nu(0, 0)),
-      // maxHeightFunction: Fun.constant(MaxHeight.available()),
       overrides: Fun.constant({ }),
       layouts: Fun.constant(layouts),
       placer: Option.none
