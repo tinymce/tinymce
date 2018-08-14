@@ -32,7 +32,9 @@ const showSuggestions = function (editor: Editor, pluginUrl: string, lastSuggest
       }
     });
   });
-
+  if (suggestions.length==0) {
+    items.push({text:'(No suggestions)',disabled:true});
+  }
   items.push({ text: '-' });
 
   const hasDictionarySupport = lastSuggestionsState.get().hasDictionarySupport;
