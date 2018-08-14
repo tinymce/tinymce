@@ -61,7 +61,7 @@ import XHR from './util/XHR';
 let tinymce = EditorManager;
 
 /**
- * @include ../../../../../../tools/docs/tinymce.js
+ * @include ../../../../../tools/docs/tinymce.js
  */
 const publicApi = {
   geom: {

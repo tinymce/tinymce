@@ -8,6 +8,12 @@ import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/ann
 
 export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
 
+/**
+ * This is the annotator api.
+ *
+ * @class tinymce.Annotator
+ */
+
 export interface Annotator {
   register: (name: string, settings: AnnotatorSettings) => void;
   annotate: (name: string, data: DecoratorData) => void;
