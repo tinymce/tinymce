@@ -20,6 +20,14 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success
           tinyApis.sAssertSelection([0], 0, [0], 0),
           tinyApis.sAssertContent('<p>&nbsp;</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
         ])),
+        Logger.t('Arrow up on first position in table cell to caption', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetContent('<table><caption>a</caption><tbody><tr><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetCursor([0, 1, 0, 0, 0], 0),
+          tinyActions.sContentKeystroke(Keys.up(), {}),
+          tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0),
+          tinyApis.sAssertContent('<table><caption>a</caption><tbody><tr><td>b</td></tr></tbody></table>')
+        ])),
         Logger.t('Arrow up on second position in first table cell', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
