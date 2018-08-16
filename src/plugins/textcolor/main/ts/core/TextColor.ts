@@ -15,7 +15,7 @@ const getCurrentColor = function (editor, format) {
     let value;
 
     if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
-      color = value;
+      color = color ? color : value;
     }
   });
 
