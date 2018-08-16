@@ -108,7 +108,9 @@ const focusEditor = (editor: Editor) => {
     // WebKit needs this call to fire focusin event properly see #5948
     // But Opera pre Blink engine will produce an empty selection so skip Opera
     if (!Env.opera) {
-      focusBody(body);
+      if (editor.settings.auto_focus === true) {
+           focusBody(body);
+      }
     }
 
     editor.getWin().focus();

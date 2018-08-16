@@ -27,6 +27,7 @@ import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import EditorFocus from '../focus/EditorFocus';
 import * as MultiClickSelection from 'tinymce/core/selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import { document, window } from '@ephox/dom-globals';
@@ -135,7 +136,9 @@ const autoFocus = function (editor: Editor) {
       }
 
       if (!focusEditor.destroyed) {
-        focusEditor.focus();
+         if (!EditorFocus.hasFocus(focusEditor)) {
+            EditorFocus.focus(focusEditor , false);
+         }
       }
     }, 100);
   }
