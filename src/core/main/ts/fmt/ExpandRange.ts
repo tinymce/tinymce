@@ -116,7 +116,7 @@ const findWordEndPoint = function (dom, body, container, offset, start, remove) 
   // Walk the nodes inside the block
   walker = new TreeWalker(container, dom.getParent(container, dom.isBlock) || body);
   while ((node = walker[start ? 'prev' : 'next']())) {
-    if (node.nodeType === 3) {
+    if (node.nodeType === 3 && !isBookmarkNode(node.parentNode)) {
       lastTextNode = node;
       pos = findSpace(start, remove, node);
 

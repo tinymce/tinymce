@@ -218,6 +218,7 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rng.insertNode(startBookmarkNode);
   trimEmptyTextNode(startBookmarkNode.previousSibling);
+  trimEmptyTextNode(startBookmarkNode.nextSibling);
 
   selection.moveToBookmark({ id, keep: 1 });
 
