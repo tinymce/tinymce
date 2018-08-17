@@ -21,6 +21,8 @@ import { Selection } from '../api/dom/Selection';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
 import SplitRange from 'tinymce/core/selection/SplitRange';
+import { Node } from '@ephox/dom-globals';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -68,7 +70,7 @@ const wrap = function (dom, node, name, attrs?) {
   return wrapper;
 };
 
-const wrapWithSiblings = (dom, startNode, name, next, attrs?) => {
+const wrapWithSiblings = (dom: DOMUtils, startNode: Node, name: string, next: boolean, attrs?) => {
   const direction = (next ? 'next' : 'previous') + 'Sibling';
   const wrapper = dom.create(name, attrs);
   startNode.parentNode.insertBefore(wrapper, startNode);

@@ -4,10 +4,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failure) => {
   ModernTheme();
 
   const sRemoveFormat = function (editor, format) {
