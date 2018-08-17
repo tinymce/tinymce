@@ -1,0 +1,65 @@
+import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+import RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
+
+UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failure) => {
+  ModernTheme();
+
+  const sRemoveFormat = function (editor, format) {
+    return Step.sync(function () {
+      editor.formatter.register('format', format);
+      RemoveFormat.remove(editor, 'format');
+      editor.formatter.unregister('format');
+    });
+  };
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    const tinyApis = TinyApis(editor);
+    const removeFormat = [{
+      selector: 'strong, em',
+      remove: 'all',
+      split: true,
+      expand: false
+    }];
+
+    Pipeline.async({}, [
+      tinyApis.sFocus,
+      Logger.t('Remove format with collapsed selection', GeneralSteps.sequence([
+        Logger.t('In middle of single word wrapped in strong', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p><strong>ab</strong></p>'),
+          tinyApis.sSetCursor([0, 0, 0], 1),
+          sRemoveFormat(editor, removeFormat),
+          tinyApis.sAssertContent('<p>ab</p>'),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('In middle of first of two words wrapped in strong', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p><strong>ab cd</strong></p>'),
+          tinyApis.sSetCursor([0, 0, 0], 1),
+          sRemoveFormat(editor, removeFormat),
+          tinyApis.sAssertContent('<p>ab<strong> cd</strong></p>'),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('In middle of last of two words wrapped in strong', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p><strong>ab cd</strong></p>'),
+          tinyApis.sSetCursor([0, 0, 0], 4),
+          sRemoveFormat(editor, removeFormat),
+          tinyApis.sAssertContent('<p><strong>ab</strong> cd</p>'),
+          tinyApis.sAssertSelection([0, 1], 2, [0, 1], 2)
+        ])),
+        Logger.t('In middle of first of two words wrapped in strong, with the first wrapped in em aswell', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p><strong><em>ab</em> cd</strong></p>'),
+          tinyApis.sSetCursor([0, 0, 0, 0], 1),
+          sRemoveFormat(editor, removeFormat),
+          tinyApis.sAssertContent('<p>ab<strong> cd</strong></p>'),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+      ])),
+    ], onSuccess, onFailure);
+  }, {
+    plugins: '',
+    toolbar: '',
+    skin_url: '/project/js/tinymce/skins/lightgray'
+  }, success, failure);
+});
