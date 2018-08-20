@@ -30,6 +30,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       const sink = tooltipConfig.lazySink()(comp).getOrDie();
       const popup = comp.getSystem().build({
         dom: tooltipConfig.tooltipDom(),
+        components: tooltipConfig.components(),
         events: AlloyEvents.derive([
           AlloyEvents.run(NativeEvents.mouseover(), (_) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
@@ -85,6 +86,10 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
    }),
     AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
       AlloyTriggers.emit(comp, HideTooltipEvent);
+    }),
+
+    AlloyEvents.runOnDetached((comp) => {
+      hide();
     })
   ]);
 
