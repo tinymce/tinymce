@@ -27,6 +27,8 @@ export interface TabSectionSpec extends CompositeSketchSpec {
 
   tabs: Array<Partial<TabButtonWithViewSpec>>;
   selectFirst?: boolean;
+  onChangeTab?: (component: AlloyComponent, button: AlloyComponent, panel: AlloySpec[]) => void;
+  onDismissTab?: (component: AlloyComponent, button: AlloyComponent) => void;
 }
 
 export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec, TabSectionDetail> {
