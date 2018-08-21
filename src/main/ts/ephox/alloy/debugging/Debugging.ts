@@ -18,7 +18,7 @@ const debugging: any = true;
 
 const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-const eventsMonitored: any = [ 'keydown' ];
+const eventsMonitored: any = [ SystemEvents.execute() ];
 
 // Ignore these files in the error stack
 const path = [

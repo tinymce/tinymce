@@ -64,6 +64,8 @@ const builder = (detail: WidgetItemDetail) => {
         }
       }),
       Focusing.config({
+        ignore: detail.ignoreFocus(),
+        // What about stopMousedown from ItemType?
         onFocus (component) {
           ItemEvents.onFocus(component);
         }
@@ -102,6 +104,7 @@ const schema = [
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),
   FieldSchema.defaulted('autofocus', false),
+  FieldSchema.defaulted('ignoreFocus', false),
   FieldSchema.defaulted('domModification', { }),
   // We don't have the uid at this point
   AlloyParts.defaultUidsSchema(WidgetParts.parts()),

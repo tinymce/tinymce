@@ -1,11 +1,11 @@
 import { Option, Result } from '@ephox/katamari';
 
-import { Element } from '@ephox/sugar';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: () => string;
@@ -31,17 +31,8 @@ export interface InlineViewSpec extends SingleSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-// TYPIFY
-export interface InlineViewAnchor {
-  anchor: string;
-  x?: number;
-  y?: number;
-  item?: AlloyComponent;
-  root?: Element;
-}
-
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {
-  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: AlloySpec) => void;
+  showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
 }

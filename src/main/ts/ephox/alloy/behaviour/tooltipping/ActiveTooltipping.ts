@@ -25,6 +25,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
   };
 
   const show = (comp) => {
+    // FIX: It can get disconnected before this.
     if (! state.isShowing()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
       const sink = tooltipConfig.lazySink()(comp).getOrDie();

@@ -13,6 +13,7 @@ export interface ButtonDetail extends SingleSketchDetail {
   buttonBehaviours: () => SketchBehaviours;
   action: () => Option<() => ButtonAction>;
   role: () => Option<string>;
+  ignoreFocus: () => boolean;
   eventOrder: () => Record<string, string[]>;
 }
 
@@ -24,6 +25,7 @@ export interface ButtonSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   buttonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
+  ignoreFocus?: boolean;
   role?: string;
   eventOrder?: Record<string, string[]>;
 }
