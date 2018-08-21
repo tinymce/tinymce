@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.18.0] - 2018-08-20
+### Added
+ - Added selectClasses and selectAttributes to HtmlSelect sketcher
+
 ## [3.17.0] - 2018-08-10
 ### Added
  - Added configuration for InlineView: fireDismissalEventInstead
