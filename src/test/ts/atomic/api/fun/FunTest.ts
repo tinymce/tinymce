@@ -33,8 +33,8 @@ UnitTest.test('Function tests', function() {
     assert.eq(false, Fun.never());
     assert.eq(true, Fun.always());
 
-    const c = function (/* arguments */) {
-      return Array.prototype.slice.call(arguments, 0);
+    const c = function (...args) {
+      return args;
     };
 
     assert.eq([], Fun.curry(c)());
