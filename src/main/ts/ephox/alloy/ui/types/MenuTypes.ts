@@ -48,6 +48,7 @@ export interface MenuSpec extends CompositeSketchSpec {
   items: ItemSpec[];
 
   fakeFocus?: boolean;
+  focusManager?: FocusManager;
   markers: {
     item: string;
     selectedItem: string;
