@@ -115,7 +115,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
         FieldSchema.strict('rowSelector'),
         FieldSchema.strict('rowDom'),
         Fields.output('layoutItems', (items: AlloyComponent[], movementInfo: MenuMatrixMovement) => {
-          const rows = Arr.chunk(items, movementInfo.numColumns());
+          const rows = Arr.chunk(items, Math.max(1, movementInfo.numColumns()));
           return Arr.map(rows, (itemsInRow) => {
             return {
               dom: movementInfo.rowDom(),
