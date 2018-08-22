@@ -1,10 +1,10 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
-import { UnitTest, assert } from '@ephox/bedrock';
-import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.test('FitmentIVTest', function() {
   const browser = PlatformDetection.detect().browser;

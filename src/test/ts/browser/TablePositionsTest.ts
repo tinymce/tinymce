@@ -1,11 +1,7 @@
+import { assert, UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import TablePositions from 'ephox/snooker/api/TablePositions';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('RectangularTest', function() {
   var body = SelectorFind.first('body').getOrDie();

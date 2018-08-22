@@ -18,6 +18,7 @@
     "url": "https://github.com/ephox/snooker"
   },
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "@ephox/dragster": "latest",
     "@ephox/echo": "latest",
     "@ephox/katamari": "latest",

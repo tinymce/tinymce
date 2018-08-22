@@ -1,13 +1,9 @@
+import { console, document } from '@ephox/dom-globals';
 import { AriaGrid } from '@ephox/echo';
+import { Attr, DomEvent, Element, Focus, Insert, Ready, Remove } from '@ephox/sugar';
 import PickerDirection from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
 import PickerUi from 'ephox/snooker/picker/PickerUi';
-import { Attr, Ready } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Focus } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
 
 
 

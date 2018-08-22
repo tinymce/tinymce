@@ -1,20 +1,10 @@
-import { Obj } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { window } from '@ephox/dom-globals';
+import { Fun, Obj, Option } from '@ephox/katamari';
+import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind } from '@ephox/sugar';
 import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
 import ResizeWire from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import TableResize from 'ephox/snooker/api/TableResize';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Direction } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Ready } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
 
 
 

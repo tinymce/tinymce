@@ -1,10 +1,8 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import { Fun, Option } from '@ephox/katamari';
+import { Element, Html, Insert } from '@ephox/sugar';
 import TableFill from 'ephox/snooker/api/TableFill';
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CloneFormatsTest', function() {
   var doc = document;
