@@ -1,14 +1,8 @@
+import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import { Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value } from '@ephox/sugar';
 import DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
 
 var container = Element.fromTag('div');
 
