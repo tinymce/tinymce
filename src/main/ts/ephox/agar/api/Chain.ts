@@ -1,3 +1,4 @@
+import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 
 import * as AsyncActions from '../pipe/AsyncActions';

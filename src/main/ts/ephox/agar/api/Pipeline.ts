@@ -1,3 +1,4 @@
+import { clearTimeout, console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 

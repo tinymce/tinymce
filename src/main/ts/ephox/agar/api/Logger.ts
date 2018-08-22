@@ -1,3 +1,4 @@
+import { console } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as ErrorTypes from '../alien/ErrorTypes';

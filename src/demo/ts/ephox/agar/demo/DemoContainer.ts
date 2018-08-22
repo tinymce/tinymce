@@ -1,10 +1,5 @@
-import { Class } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Elements } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
+import { Class, Element, Elements, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 
 var init = function (name, f) {
   var container = Element.fromTag('div');

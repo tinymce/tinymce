@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
+import { setTimeout } from '@ephox/dom-globals';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';

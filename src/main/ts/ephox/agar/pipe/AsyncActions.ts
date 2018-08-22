@@ -1,3 +1,5 @@
+import { setTimeout } from '@ephox/dom-globals';
+
 import { DieFn } from './Pipe';
 
 const delay = function (amount: number) {

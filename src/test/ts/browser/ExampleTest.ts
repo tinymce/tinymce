@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
+import { document, setTimeout } from '@ephox/dom-globals';
 import { Class, Css, DomEvent, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';

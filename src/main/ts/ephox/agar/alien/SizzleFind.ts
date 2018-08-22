@@ -1,4 +1,4 @@
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, Node, Window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 import Sizzle from '@ephox/wrap-sizzle';

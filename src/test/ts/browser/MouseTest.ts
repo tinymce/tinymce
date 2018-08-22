@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Element, Insert, Remove } from '@ephox/sugar';

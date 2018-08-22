@@ -29,6 +29,7 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "@ephox/jax": "latest",
     "@ephox/sugar": "latest",
     "@ephox/sand": "latest",
