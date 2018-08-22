@@ -98,7 +98,7 @@ export interface MenuSpec extends CompositeSketchSpec {
     selectedItem: string;
   };
 
-  movement: MenuMovementSpec;
+  movement?: MenuMovementSpec;
 
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;

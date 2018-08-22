@@ -7,6 +7,7 @@ import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { PartialMenuSpec } from '../../../../../../main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
@@ -137,7 +138,7 @@ const gridMenu = (menuSpec) => {
       Menu.parts().items({ })
     ],
     items: spec.items
-  };
+  } as PartialMenuSpec;
 };
 
 const menu = (menuSpec) => {

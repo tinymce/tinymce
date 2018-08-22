@@ -28,7 +28,17 @@ const flatgrid = (spec): FlatgridState => {
   };
 
   return nuState({
-    readState: Fun.constant({ }),
+    readState: () => {
+      return dimensions.get().map((d) => {
+        return {
+          numRows: d.numRows(),
+          numColumns: d.numColumns()
+        }
+      }).getOr({
+        numRows: '?',
+        numColumns: '?'
+      })
+    },
     setGridSize,
     getNumRows,
     getNumColumns
