@@ -88,7 +88,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('row-class') ],
               children: [
-                s.element('li', { classes: [ (expected[0] ? arr.has : arr.not)('selected-item') }),
+                s.element('li', { classes: [ (expected[0] ? arr.has : arr.not)('selected-item') ] }),
                 s.element('li', { classes: [ (expected[1] ? arr.has : arr.not)('selected-item') ] })
               ]
             }),
