@@ -96,6 +96,40 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
+  const testBindFutureError = function () {
+    return new Promise(function (resolve, reject) {
+      let count = 0;
+
+      const fut = FutureResult.nu((callback) => {
+        count++;
+        callback(Result.error('error'));
+      });
+
+      const f = function (x: string) {
+        assert.fail('Should never be invoked');
+        return FutureResult.value(x + '.bind.future');
+      };
+
+      fut.bindFuture(f).get(function (output) {
+        assert.eq(1, count, 'should only be invoked once');
+        output.fold(
+          (err) => assert.eq('error', err, 'should contain an error result'),
+          (_) => assert.fail('Should never be invoked')
+        );
+
+        fut.bindFuture(f).get(function (output) {
+          assert.eq(2, count, 'should be invoked again');
+          output.fold(
+            (err) => assert.eq('error', err, 'should contain an error result'),
+            (_) => assert.fail('Should never be invoked')
+          );
+  
+          resolve(true);
+        });
+      });
+    });
+  };
+
   const testBindResult = function () {
     return new Promise(function (resolve, reject) {
       const fut = FutureResult.value('10');
@@ -325,9 +359,18 @@ UnitTest.asynctest('FutureResultsTest', function() {
     ]);
   };
 
-  testPure().then(testError).then(testFromResult).then(testFromFuture).then(testNu).
-    then(testBindResult).then(testBindFuture).then(testMapResult).then(testSpecs).then(function () {
-    success();
-  }, failure);
+  testPure()
+    .then(testBindFutureError)
+    .then(testError)
+    .then(testFromResult)
+    .then(testFromFuture)
+    .then(testNu)
+    .then(testBindResult)
+    .then(testBindFuture)
+    .then(testMapResult)
+    .then(testSpecs)
+    .then(function () {
+      success();
+    }, failure);
 });
 
