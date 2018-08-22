@@ -21,6 +21,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/sugar": "latest",
     "@ephox/porkbun": "latest"
