@@ -21,6 +21,7 @@ export interface WidgetItemSpec {
   data?: ItemDataTuple; // why is this necessary?
   dom: RawDomSchema;
   autofocus?: boolean;
+  widgetBehaviours?: AlloyBehaviourRecord;
   ignoreFocus?: boolean;
   domModification?: DomModificationSpec;
 }
@@ -31,6 +32,7 @@ export interface WidgetItemDetail extends ItemDetail, CompositeSketchDetail {
   builder: () => <WidgetItemInfo>(buildInfo: WidgetItemInfo) => AlloySpec;
   autofocus: () => boolean;
   domModification: () => { };
+  widgetBehaviours: () => SketchBehaviours;
   ignoreFocus: () => boolean;
   data: () => ItemDataTuple;
 }

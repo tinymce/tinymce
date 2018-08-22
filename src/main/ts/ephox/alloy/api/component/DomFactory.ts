@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
 import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
-import { RawDomSchema } from '../../api/component/SpecTypes';
+import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
 
 const getAttrs = (elem) => {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
@@ -39,7 +39,28 @@ const sketch = (sketcher, html, config) => {
   );
 };
 
+const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => {
+  return {
+    tag,
+    classes,
+    attributes,
+    styles
+  }
+};
+
+const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
+  return {
+    dom: {
+      tag,
+      classes
+    },
+    components
+  };
+}
+
 export {
   fromHtml,
-  sketch
+  sketch,
+  simple,
+  dom
 };
