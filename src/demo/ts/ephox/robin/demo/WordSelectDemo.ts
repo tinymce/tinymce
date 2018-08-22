@@ -1,9 +1,7 @@
+import { console, document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
 import DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
 
 var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 

@@ -1,7 +1,7 @@
-import { UnitTest, assert } from '@ephox/bedrock';
-import { Result } from '@ephox/katamari';
-import DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Body, Compare, Element, Hierarchy, Insert, InsertAll, Remove } from '@ephox/sugar';
+import DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 UnitTest.test('SmartSelectTest', function () {
   var editor = Element.fromTag('div');

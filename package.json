@@ -22,6 +22,7 @@
   ],
   "dependencies": {
     "@ephox/boss": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/phoenix": "latest",
     "@ephox/polaris": "latest"
