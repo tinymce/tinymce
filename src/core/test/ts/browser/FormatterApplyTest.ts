@@ -1616,7 +1616,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0, 'p:nth-child(2)', 3);
+    editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
     LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
   });
@@ -1626,7 +1626,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       block: 'h1'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0, 'p:nth-child(2)', 3);
+    editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
     LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
   });
