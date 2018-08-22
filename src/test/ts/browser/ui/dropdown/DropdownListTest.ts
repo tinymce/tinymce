@@ -14,8 +14,8 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { AddEventsBehaviour, AlloyEvents } from 'ephox/alloy/api/Main';
-import { compare } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Results';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
