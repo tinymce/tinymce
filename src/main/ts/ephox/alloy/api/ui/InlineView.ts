@@ -58,6 +58,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
           Sandboxing.close(sandbox);
           detail.onHide()(sandbox);
         },
+        getContent (sandbox: AlloyComponent): Option<AlloyComponent> {
+          return Sandboxing.getState(sandbox);
+        },
         isOpen: Sandboxing.isOpen
       }
     }
@@ -84,6 +87,9 @@ const InlineView = Sketcher.single({
     },
     isOpen (apis, component) {
       return apis.isOpen(component);
+    },
+    getContent (apis, component) {
+      return apis.getContent(component);
     }
   }
 }) as InlineViewSketcher;

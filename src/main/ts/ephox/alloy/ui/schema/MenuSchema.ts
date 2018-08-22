@@ -1,20 +1,22 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { field as SketchBehaviourField } from '../../api/component/SketchBehaviours';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import * as Fields from '../../data/Fields';
+import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
 import ItemType from '../../menu/build/ItemType';
 import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { MenuDetail, MenuMovement } from '../../ui/types/MenuTypes';
 import { ItemSpec } from '../../ui/types/ItemTypes';
+import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../../ui/types/MenuTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -25,7 +27,7 @@ const itemSchema = ValueSchema.choose(
   }
 );
 
-const configureGrid = (detail: MenuDetail, movementInfo: MenuMovement) => {
+const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => {
   return {
     mode: 'flatgrid',
     selector: '.' + detail.markers().item(),
@@ -37,7 +39,18 @@ const configureGrid = (detail: MenuDetail, movementInfo: MenuMovement) => {
   };
 };
 
-const configureMenu = (detail: MenuDetail, movementInfo: MenuMovement) => {
+const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): MatrixConfigSpec => {
+  return {
+    mode: 'matrix',
+    selectors: {
+      row: movementInfo.rowSelector(),
+      cell: '.' + detail.markers().item(),
+    },
+    focusManager: detail.focusManager()
+  };
+};
+
+const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => {
   return {
     mode: 'menu',
     selector: '.' + detail.markers().item(),
@@ -93,11 +106,28 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     {
       grid: [
         Fields.initSize(),
-        Fields.output('config', configureGrid)
+        Fields.output('config', configureGrid),
+        Fields.output('layoutItems', (items) => items)
+      ],
+      matrix: [
+        Fields.output('config', configureMatrix),
+        FieldSchema.strict('numColumns'),
+        FieldSchema.strict('rowSelector'),
+        FieldSchema.strict('rowDom'),
+        Fields.output('layoutItems', (items: AlloyComponent[], movementInfo: MenuMatrixMovement) => {
+          const rows = Arr.chunk(items, movementInfo.numColumns());
+          return Arr.map(rows, (itemsInRow) => {
+            return {
+              dom: movementInfo.rowDom(),
+              components: itemsInRow
+            }
+          })
+        })
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),
-        Fields.output('config', configureMenu)
+        Fields.output('config', configureMenu),
+        Fields.output('layoutItems', (items) => items)
       ]
     }
   )),
