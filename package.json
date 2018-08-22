@@ -21,6 +21,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/phoenix": "latest",
     "@ephox/robin": "latest",

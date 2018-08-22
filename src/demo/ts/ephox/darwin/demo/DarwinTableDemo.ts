@@ -1,24 +1,26 @@
+import { document, window } from '@ephox/dom-globals';
+import { Fun, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import {
+  Attr,
+  Body,
+  Compare,
+  Direction,
+  DomEvent,
+  Element,
+  Insert,
+  Node,
+  Replication,
+  Selection,
+  SelectorFind,
+  Traverse,
+  WindowSelection,
+} from '@ephox/sugar';
 import Ephemera from 'ephox/darwin/api/Ephemera';
 import InputHandlers from 'ephox/darwin/api/InputHandlers';
 import SelectionAnnotation from 'ephox/darwin/api/SelectionAnnotation';
 import SelectionKeys from 'ephox/darwin/api/SelectionKeys';
 import Util from 'ephox/darwin/selection/Util';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Compare } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Direction } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
 
 var detection = PlatformDetection.detect();
 
