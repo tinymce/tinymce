@@ -16,7 +16,7 @@ import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { WidgetItemDetail } from '../../ui/types/ItemTypes';
-import { SketchBehaviours } from '../../api/Main';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 const builder = (detail: WidgetItemDetail) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
