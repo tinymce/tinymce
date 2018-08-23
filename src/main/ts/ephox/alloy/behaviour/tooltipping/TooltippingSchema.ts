@@ -4,6 +4,6 @@ export default [
   FieldSchema.strict('lazySink'),
   FieldSchema.strict('tooltipDom'),
   FieldSchema.defaulted('exclusive', true),
-  FieldSchema.defaulted('components', [ ]),
+  FieldSchema.defaulted('tooltipComponents', [ ]),
   FieldSchema.defaulted('delay', 300)
 ];

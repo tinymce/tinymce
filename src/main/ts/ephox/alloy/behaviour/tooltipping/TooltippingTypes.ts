@@ -12,7 +12,7 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   // Make consistent with other lazy sinks.
   lazySink: () => (comp: AlloyComponent) => Result<AlloyComponent, any>;
   tooltipDom: () => RawDomSchema;
-  components: () => AlloySpec[];
+  tooltipComponents: () => AlloySpec[];
   exclusive: () => boolean;
   delay: () => number;
 }
@@ -21,7 +21,7 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   // Make consistent with other lazy sinks.
   lazySink: (comp: AlloyComponent) => Result<AlloyComponent, any>;
   tooltipDom: RawDomSchema;
-  components?: AlloySpec[];
+  tooltipComponents?: AlloySpec[];
   exclusive?: boolean;
   delay?: number;
 }

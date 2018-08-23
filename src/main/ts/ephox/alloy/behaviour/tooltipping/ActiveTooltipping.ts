@@ -20,18 +20,17 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     state.getTooltip().each((p) => {
       Attachment.detach(p);
       state.clearTooltip();
-      state.clearTimer();
     });
+    state.clearTimer();
   };
 
   const show = (comp) => {
-    // FIX: It can get disconnected before this.
     if (! state.isShowing()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
       const sink = tooltipConfig.lazySink()(comp).getOrDie();
       const popup = comp.getSystem().build({
         dom: tooltipConfig.tooltipDom(),
-        components: tooltipConfig.components(),
+        components: tooltipConfig.tooltipComponents(),
         events: AlloyEvents.derive([
           AlloyEvents.run(NativeEvents.mouseover(), (_) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
