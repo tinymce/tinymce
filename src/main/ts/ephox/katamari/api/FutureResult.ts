@@ -2,6 +2,7 @@ import { Future } from './Future';
 import { Result } from './Result';
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
+  toCached: () => FutureResult<A, E>;
   bindFuture: <B>(f: (value: A) => Future<Result<B, E>>) => FutureResult<B, E>;
   bindResult: <B>(f: (value: A) => Result<B, E>) => FutureResult<B, E>;
   mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
@@ -10,6 +11,10 @@ export interface FutureResult<A, E> extends Future<Result<A, E>> {
 }
 
 const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResult<A, E> {
+
+  const toCached = function() {
+    return wrap(delegate.toCached());
+  };
 
   const bindFuture = function <B>(f: (value: A) => Future<Result<B, E>>) {
     return wrap(
@@ -53,6 +58,7 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
 
   return {
     ...delegate,
+    toCached,
     bindFuture,
     bindResult,
     mapResult,
