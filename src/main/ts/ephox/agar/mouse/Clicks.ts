@@ -1,4 +1,4 @@
-import { Document, HTMLElement, window } from '@ephox/dom-globals';
+import { Document, HTMLElement, MouseEvent, window } from '@ephox/dom-globals';
 import { Element, Location } from '@ephox/sugar';
 
 const LEFT_CLICK = 0;

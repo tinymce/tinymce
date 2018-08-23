@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';

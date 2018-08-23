@@ -1,3 +1,4 @@
+import { console } from '@ephox/dom-globals';
 import { Thunk } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 

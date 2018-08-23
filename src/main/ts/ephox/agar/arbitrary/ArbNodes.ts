@@ -1,3 +1,4 @@
+import { document } from '@ephox/dom-globals';
 import { Comment, Element, Node, Text } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 

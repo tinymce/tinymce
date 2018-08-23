@@ -1,3 +1,4 @@
+import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 

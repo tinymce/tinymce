@@ -1,3 +1,5 @@
+import { console } from '@ephox/dom-globals';
+
 const log = function (message: string) {
   return function () {
     console.log(message);
