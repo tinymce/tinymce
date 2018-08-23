@@ -25,4 +25,15 @@ UnitTest.test('DomFactoryTest', () => {
       components: [ ]
     }
   ]));
+
+  Assertions.assertEq(
+    'Basic DomFactory.dom',
+    {
+      tag: 'span',
+      classes: [ 'bbb' ],
+      styles: { },
+      attributes: { }
+    },
+    DomFactory.dom('span', [ 'bbb' ])
+  );
 });
