@@ -25,7 +25,6 @@ export interface ButtonSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   buttonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
-  ignoreFocus?: boolean;
   role?: string;
   eventOrder?: Record<string, string[]>;
 }

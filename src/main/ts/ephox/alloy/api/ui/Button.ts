@@ -24,9 +24,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     events,
     behaviours: Merger.deepMerge(
       Behaviour.derive([
-        Focusing.config({
-          ignore: detail.ignoreFocus()
-        }),
+        Focusing.config({ }),
         Keying.config({
           mode: 'execution',
           useSpace: true,
@@ -57,7 +55,6 @@ const Button = Sketcher.single({
   configFields: [
     FieldSchema.defaulted('uid', undefined),
     FieldSchema.strict('dom'),
-    FieldSchema.defaulted('ignoreFocus', false),
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('buttonBehaviours', [ Focusing, Keying ]),
     FieldSchema.option('action'),
