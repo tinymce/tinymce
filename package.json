@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@ephox/boss": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/polaris": "latest"
   },
@@ -30,7 +31,7 @@
     "@ephox/sugar": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
+    "typescript": "^3.0.1",
     "webpack": "^3.10.0"
   },
   "scripts": {
