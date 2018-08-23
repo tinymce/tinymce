@@ -1,4 +1,4 @@
-import { RawAssertions, Step } from '@ephox/agar';
+import { RawAssertions, Step, Chain } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
 
@@ -28,10 +28,20 @@ export default () => {
     array = [ ];
   };
 
+  const cClear = Chain.op(() => {
+    clear();
+  });
+
   const sAssertEq = (label, expected) => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
       return RawAssertions.assertEq(label, expected, array.slice(0));
+    });
+  };
+
+  const cAssertEq = (label, expected) => {
+    return Chain.op(() => {
+      assertEq(label, expected);
     });
   };
 
@@ -51,7 +61,9 @@ export default () => {
     adderH,
     clear,
     sClear,
+    cClear,
     sAssertEq,
+    cAssertEq,
     assertEq,
     sAssertSortedEq
   };
