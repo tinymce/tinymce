@@ -1,12 +1,9 @@
+import { document } from '@ephox/dom-globals';
+import { Css, DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
 import Dragger from 'ephox/dragster/api/Dragger';
 import Sizers from 'ephox/dragster/demo/Sizers';
 import Grow from 'ephox/dragster/transform/Grow';
 import Relocate from 'ephox/dragster/transform/Relocate';
-import { Css } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
 
 // var container = $('<div/>').append('Hi.');
 
