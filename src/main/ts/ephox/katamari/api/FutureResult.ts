@@ -15,7 +15,7 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
     return wrap(
       delegate.bind(
         (resA) => resA.fold(
-          () => <Future<Result<B, E>>>(<any>delegate),
+          (err: E) => <Future<Result<B, E>>>(Future.pure(Result.error(err))),
           (a: A) => f(a)
         )
       )
