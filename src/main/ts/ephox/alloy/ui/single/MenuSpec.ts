@@ -1,17 +1,17 @@
-import { Fun, Option, Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
-import { Keying, KeyingConfigSpec } from '../../api/behaviour/Keying';
+import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { MenuDetail, MenuSpec, MenuItemHoverEvent } from '../../ui/types/MenuTypes';
+import { MenuDetail, MenuItemHoverEvent, MenuSpec } from '../../ui/types/MenuTypes';
 
 const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, spec, externals) => {
   return Merger.deepMerge(

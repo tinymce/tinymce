@@ -111,7 +111,6 @@ const schema = [
   FieldSchema.defaulted('autofocus', false),
   FieldSchema.defaulted('ignoreFocus', false),
 
-  // Maybe this needs to have fewer behaviours
   SketchBehaviours.field('widgetBehaviours', [ Representing, Focusing, Keying ]),
   FieldSchema.defaulted('domModification', { }),
   // We don't have the uid at this point
