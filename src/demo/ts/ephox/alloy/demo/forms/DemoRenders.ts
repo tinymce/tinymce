@@ -1,19 +1,17 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
+import { ItemSpec, NormalItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
-import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
-import { NormalItemSpec, ItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from '../../../../../../main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
     FieldSchema.strict('text'),
-    FieldSchema.defaulted('html', ''),
+    FieldSchema.option('html'),
     FieldSchema.defaulted('bonus-demo-content', { })
   ]),
   FieldSchema.strict('type')
@@ -77,7 +75,7 @@ const item = (itemSpec): ItemSpec => {
   return {
     type: spec.type,
     data: spec.data,
-    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + (spec.data.html !== undefined ? spec.data.html : spec.data.text) + '</div>'),
+    dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + (spec.data.html.getOr(spec.data.text)) + '</div>'),
     components: [ ]
   };
 };
