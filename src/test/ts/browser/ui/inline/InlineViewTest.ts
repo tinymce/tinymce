@@ -11,6 +11,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
+import { Html } from '@ephox/sugar';
 
 UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
@@ -86,6 +87,15 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
     return [
       UiFinder.sNotExists(gui.element(), '.test-inline'),
+
+      Logger.t(
+        'Check that getContent is none for an inline menu that has not shown anything',
+        Step.sync(() => {
+          const contents = InlineView.getContent(inline);
+          Assertions.assertEq('Should be none', true, contents.isNone());
+        })
+      ),
+
       Step.sync(() => {
         InlineView.showAt(inline, {
           anchor: 'selection',
@@ -98,9 +108,27 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       }),
       sCheckOpen('After show'),
 
+      Logger.t(
+        'Check that getContent is some now that the inline menu has shown something',
+        Step.sync(() => {
+          const contents = InlineView.getContent(inline);
+          Assertions.assertEq('Checking HTML of inline contents', 'Inner HTML', Html.get(contents.getOrDie(
+            'Could not find contents'
+          ).element()));
+        })
+      ),
+
       Step.sync(() => {
         InlineView.hide(inline);
       }),
+
+      Logger.t(
+        'Check that getContent is none not that inline view has been hidden again',
+        Step.sync(() => {
+          const contents = InlineView.getContent(inline);
+          Assertions.assertEq('Should be none', true, contents.isNone());
+        })
+      ),
 
       sCheckClosed('After hide'),
 

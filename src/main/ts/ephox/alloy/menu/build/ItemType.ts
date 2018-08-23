@@ -15,6 +15,7 @@ import * as ItemEvents from '../util/ItemEvents';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
   return {
@@ -70,7 +71,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
           AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
         ])
       ]),
-      detail.itemBehaviours(),
+      SketchBehaviours.get(detail.itemBehaviours()),
 
     ),
     components: detail.components(),
@@ -89,7 +90,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.option('toggling'),
 
   // Maybe this needs to have fewer behaviours
-  FieldSchema.defaulted('itemBehaviours', { }),
+  SketchBehaviours.field('itemBehaviours', [ Toggling, Focusing, Keying, Representing ]),
 
   FieldSchema.defaulted('ignoreFocus', false),
   FieldSchema.defaulted('domModification', { }),
