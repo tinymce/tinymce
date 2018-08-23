@@ -1,0 +1,28 @@
+import { Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+
+import * as DomFactory from '../../../../main/ts/ephox/alloy/api/component/DomFactory';
+
+UnitTest.test('DomFactoryTest', () => {
+  Assertions.assertEq('Basic DomFactory.simple', {
+    dom: {
+      tag: 'span',
+      classes: [ 'bb' ]
+    },
+    components: [
+      {
+        dom: {
+          tag: 'div'
+        },
+        components: [ ]
+      }
+    ]
+  }, DomFactory.simple('span', [ 'bb' ], [
+    {
+      dom: {
+        tag: 'div'
+      },
+      components: [ ]
+    }
+  ]));
+});
