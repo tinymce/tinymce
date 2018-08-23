@@ -1,16 +1,9 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
 import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
 import Sizes from 'ephox/snooker/api/Sizes';
-import { Body } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Table Sizes Test (fusebox)', function() {
   var percentTable = '<table style="width: 100%;">' +
