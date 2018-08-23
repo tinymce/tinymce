@@ -189,7 +189,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
         Logger.t('Do not expand outside of element if selector does not match - from bookmark at end', Chain.asStep(editor, [
           cSetRawContent('<p>ab<span data-mce-type="bookmark">&#65279;</span></p>'),
           cExpandRng([0, 1, 0], 0, [0, 1, 0], 0, selectorFormat, false),
-          Chain.debugging,
           cAssertRange(editor, [0, 0], 0, [0], 2)
         ])),
         Logger.t('Expand since selector matches', Chain.asStep(editor, [
