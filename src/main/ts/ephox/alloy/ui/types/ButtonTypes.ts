@@ -13,7 +13,6 @@ export interface ButtonDetail extends SingleSketchDetail {
   buttonBehaviours: () => SketchBehaviours;
   action: () => Option<() => ButtonAction>;
   role: () => Option<string>;
-  ignoreFocus: () => boolean;
   eventOrder: () => Record<string, string[]>;
 }
 
