@@ -53,7 +53,7 @@ const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void)
     let cache: LazyValue<T> | null = null;
     return nu(function (callback: (value: T) => void) {
       if (cache === null) {
-        cache = LazyValue.nu(get);
+        cache = toLazy();
       }
       cache.get(callback);
     });
