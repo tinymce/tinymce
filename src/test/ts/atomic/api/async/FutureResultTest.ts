@@ -111,21 +111,13 @@ UnitTest.asynctest('FutureResultsTest', function() {
       };
 
       fut.bindFuture(f).get(function (output) {
-        assert.eq(1, count, 'should only be invoked once');
+        assert.eq(1, count, 'should only be invoked once not twice');
         output.fold(
           (err) => assert.eq('error', err, 'should contain an error result'),
           (_) => assert.fail('Should never be invoked')
         );
 
-        fut.bindFuture(f).get(function (output) {
-          assert.eq(2, count, 'should be invoked again');
-          output.fold(
-            (err) => assert.eq('error', err, 'should contain an error result'),
-            (_) => assert.fail('Should never be invoked')
-          );
-  
-          resolve(true);
-        });
+        resolve(true)
       });
     });
   };
