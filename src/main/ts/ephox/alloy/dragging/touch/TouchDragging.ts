@@ -42,6 +42,8 @@ const schema = [
   // Is this used?
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.defaulted('getTarget', Fun.identity),
+  FieldSchema.defaulted('onDrag', Fun.noop),
+  FieldSchema.defaulted('repositionTarget', true),
   FieldSchema.defaulted('onDrop', Fun.noop),
   SnapSchema,
   Fields.output('dragger', {

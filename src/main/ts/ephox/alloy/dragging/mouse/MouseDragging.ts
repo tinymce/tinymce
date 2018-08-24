@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, FieldPresence, ValueSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
@@ -38,7 +38,9 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           const delta = dragState.update(MouseData, event);
-          delta.each(dragBy);
+          delta.each((dlt) => {
+            DragMovement.dragBy(component, dragConfig, dlt);
+          });
         }
       };
 
@@ -61,10 +63,6 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           events: BlockerEvents.init(dragApi)
         })
       );
-
-      const dragBy = (delta) => {
-        DragMovement.dragBy(component, dragConfig, delta);
-      };
 
       const stop = () => {
         BlockerUtils.discard(blocker);
@@ -93,6 +91,8 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.strict('blockerClass'),
   FieldSchema.defaulted('getTarget', Fun.identity),
+  FieldSchema.defaulted('onDrag', Fun.noop),
+  FieldSchema.defaulted('repositionTarget', true),
   Fields.onHandler('onDrop'),
   SnapSchema,
   Fields.output('dragger', {

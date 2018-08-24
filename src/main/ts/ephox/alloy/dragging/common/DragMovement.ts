@@ -41,17 +41,22 @@ const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, 
 };
 
 const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: SugarPosition): void => {
-  const doc = Traverse.owner(component.element());
-  const scroll = Scroll.get(doc);
-
   const target = dragConfig.getTarget()(component.element());
-  const origin = OffsetOrigin.getOrigin(target, scroll);
 
-  const currentCoord = getCurrentCoord(target);
+  if (dragConfig.repositionTarget()) {
+    const doc = Traverse.owner(component.element());
+    const scroll = Scroll.get(doc);
 
-  const newCoord = calcNewCoord(component, dragConfig.snaps(), currentCoord, scroll, origin, delta);
-  const styles = DragCoord.toStyles(newCoord, scroll, origin);
-  Css.setAll(target, styles);
+
+    const origin = OffsetOrigin.getOrigin(target, scroll);
+
+    const currentCoord = getCurrentCoord(target);
+
+    const newCoord = calcNewCoord(component, dragConfig.snaps(), currentCoord, scroll, origin, delta);
+    const styles = DragCoord.toStyles(newCoord, scroll, origin);
+    Css.setAll(target, styles);
+  }
+  dragConfig.onDrag()(component, target, delta);
 };
 
 export {
