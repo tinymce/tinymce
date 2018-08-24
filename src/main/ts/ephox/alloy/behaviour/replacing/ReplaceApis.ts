@@ -51,16 +51,24 @@ const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, r
   return component.components();
 };
 
-const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: AlloySpec): void => {
+const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
   const children = contents(component, replaceConfig);
-  Option.from(children[replaceeIndex]).each((replacee) => {
+  return Option.from(children[replaceeIndex]).map((replacee) => {
     // remove it.
     remove(component, replaceConfig, replaceState, replacee);
 
-    insert(component, replaceConfig, (p: Element, c: Element) => {
-      Insert.appendAt(p, c, replaceeIndex);
-    }, replacer);
+    replacer.each((r) => {
+      insert(component, replaceConfig, (p: Element, c: Element) => {
+        Insert.appendAt(p, c, replaceeIndex);
+      }, r);
+    });
+    return replacee;
   });
+};
+
+const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+  const children = contents(component, replaceConfig);
+  return Arr.findIndex(children, replaceePred).bind((replaceeIndex) => replaceAt(component, replaceConfig, replaceState, replaceeIndex, replacer));
 };
 
 export {
@@ -68,6 +76,7 @@ export {
   prepend,
   remove,
   replaceAt,
+  replaceBy,
   set,
   contents
 };
