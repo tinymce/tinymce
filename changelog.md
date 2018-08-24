@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.20.0] - 2018-08-24
+### Added
+ - Added dragging behaviour flag for repositionTarget (defaults to true)
+ - Added dragging behaviour handler (onDrag)
+
 ## [3.19.0] - 2018-08-23
 ### Added
  - Tooltipping API access to hideAllExclusive, and tooltipComponents in config
