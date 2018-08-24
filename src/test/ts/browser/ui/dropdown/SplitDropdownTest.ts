@@ -138,7 +138,8 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
               }),
               s.element('button', {
                 attrs: {
-                  role: str.is('button')
+                  role: str.is('button'),
+                  ['aria-haspopup']: str.is('true')
                 }
               })
             ]
