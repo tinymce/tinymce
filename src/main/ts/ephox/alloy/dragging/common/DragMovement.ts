@@ -56,6 +56,7 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: Su
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
     Css.setAll(target, styles);
   }
+  // NOTE: On drag just goes with the original delta. It does not know about snapping.
   dragConfig.onDrag()(component, target, delta);
 };
 
