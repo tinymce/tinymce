@@ -147,6 +147,28 @@ UnitTest.asynctest('FutureTest', function() {
     });
   };
 
+  const testCache = function () {
+    return new Promise(function(resolve, reject) {
+      let callCount = 0;
+      const future = Future.nu(function(cb) {
+        callCount++;
+        setTimeout(Fun.curry(cb, callCount), 10);
+      });
+      const cachedFuture = future.toCached();
+
+      assert.eq(0, callCount);
+      cachedFuture.get(function(r) {
+        assert.eq(1, r);
+        assert.eq(1, callCount);
+        cachedFuture.get(function(r2) {
+          assert.eq(1, r2);
+          assert.eq(1, callCount);
+          resolve(true);
+        });
+      });
+    });
+  };
+
   const testSpecs = function () {
     const genFutureSchema = Jsc.json.generator.map(function (json) {
       const future = Future.nu(function (done) {
@@ -240,7 +262,8 @@ UnitTest.asynctest('FutureTest', function() {
   };
 
   testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).
-    then(testParallel).then(testMapM).then(testCompose).then(testSpecs).then(function () {
+    then(testParallel).then(testMapM).then(testCompose).then(testCache).
+    then(testSpecs).then(function () {
     success();
   }, failure);
 });
