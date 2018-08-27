@@ -14,6 +14,7 @@ import * as Sketcher from './Sketcher';
 import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import * as SystemEvents from '../../api/events/SystemEvents';
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
@@ -37,9 +38,18 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
               return detail.lazySink()().getOrDie();
             }
           }),
-          Dismissal.receivingConfig({
-            isExtraPart: Fun.constant(false)
-          })
+          Dismissal.receivingConfig(
+            Merger.deepMerge(
+              {
+                isExtraPart: Fun.constant(false),
+              },
+              detail.fireDismissalEventInstead().map((fe) => ({
+                'fireEventInstead': {
+                  event: fe.event()
+                }
+              } as any)).getOr({ })
+            )
+          )
         ]),
         SketchBehaviours.get(detail.inlineBehaviours())
       ),
@@ -58,6 +68,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
           Sandboxing.close(sandbox);
           detail.onHide()(sandbox);
         },
+        getContent (sandbox: AlloyComponent): Option<AlloyComponent> {
+          return Sandboxing.getState(sandbox);
+        },
         isOpen: Sandboxing.isOpen
       }
     }
@@ -71,6 +84,9 @@ const InlineView = Sketcher.single({
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
+    FieldSchema.optionObjOf('fireDismissalEventInstead', [
+      FieldSchema.defaulted('event', SystemEvents.dismissRequested())
+    ]),
     FieldSchema.defaulted('getRelated', Option.none),
     FieldSchema.defaulted('eventOrder', Option.none)
   ],
@@ -84,6 +100,9 @@ const InlineView = Sketcher.single({
     },
     isOpen (apis, component) {
       return apis.isOpen(component);
+    },
+    getContent (apis, component) {
+      return apis.getContent(component);
     }
   }
 }) as InlineViewSketcher;

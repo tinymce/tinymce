@@ -10,6 +10,8 @@ export interface HtmlSelectDetail extends SingleSketchDetail {
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   selectBehaviours: () => SketchBehaviours;
+  selectAttributes: () => Record<string, any>;
+  selectClasses: () => string[];
   options: () => [{ value: string; text: string }];
   data: () => Option<string>;
 }
@@ -20,6 +22,8 @@ export interface HtmlSelectSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   options: Array<{ value: string, text: string }>;
   selectBehaviours?: AlloyBehaviourRecord;
+  selectAttributes?: Record<string, any>;
+  selectClasses?: string[];
   data?: string;
 }
 

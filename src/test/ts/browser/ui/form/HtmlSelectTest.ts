@@ -1,4 +1,4 @@
-import { Logger, Pipeline, Step } from '@ephox/agar';
+import { Logger, Pipeline, Step, ApproxStructure, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
@@ -38,6 +38,10 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
+          selectAttributes: {
+            size: 10
+          },
+          selectClasses: [ 'my-test-select' ],
           data: 'gamma',
           options: [
             { value: 'alpha', text: 'Alpha' },
@@ -48,6 +52,24 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
       );
     }, (doc, body, gui, component, store) => {
       return [
+        Assertions.sAssertStructure(
+          'Checking initial structure',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('select', {
+              attrs: {
+                size: str.is('10')
+              },
+              classes: [ arr.has('my-test-select') ],
+              children: [
+                s.element('option', { value: str.is('alpha'), html: str.is('Alpha') }),
+                s.element('option', { value: str.is('beta'), html: str.is('Beta') }),
+                s.element('option', { value: str.is('gamma'), html: str.is('Gamma') })
+              ]
+            });
+          }),
+          component.element()
+        ),
+
         RepresentPipes.sAssertValue('Checking initial value', 'gamma', component),
         RepresentPipes.sSetValue(component, 'beta'),
         RepresentPipes.sAssertValue('Checking value after valid set', 'beta', component),

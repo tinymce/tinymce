@@ -1,16 +1,16 @@
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
-import * as Fields from '../data/Fields';
-import * as KeyRules from '../navigation/KeyRules';
-import { AlloyComponent } from '../api/component/ComponentApi';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
-import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
+import * as Fields from '../data/Fields';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import * as KeyRules from '../navigation/KeyRules';
 
 const typical = <C, S>(
   infoSchema: FieldProcessorAdt[],

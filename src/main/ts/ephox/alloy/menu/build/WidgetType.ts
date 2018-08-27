@@ -16,6 +16,7 @@ import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { WidgetItemDetail } from '../../ui/types/ItemTypes';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 const builder = (detail: WidgetItemDetail) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
@@ -56,43 +57,49 @@ const builder = (detail: WidgetItemDetail) => {
         if (detail.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
-    behaviours: Behaviour.derive([
-      Representing.config({
-        store: {
-          mode: 'memory',
-          initialValue: detail.data()
-        }
-      }),
-      Focusing.config({
-        onFocus (component) {
-          ItemEvents.onFocus(component);
-        }
-      }),
-      Keying.config({
-        mode: 'special',
-        // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
-        focusIn: detail.autofocus() ? (component) => {
-          focusWidget(component);
-        } : Behaviour.revoke(),
-        onLeft: onHorizontalArrow,
-        onRight: onHorizontalArrow,
-        onEscape (component, simulatedEvent) {
-          // If the outer list item didn't have focus,
-          // then focus it (i.e. escape the inner widget). Only do if not autofocusing
-          // Autofocusing should treat the widget like it is the only item, so it should
-          // let its outer menu handle escape
-          if (! Focusing.isFocused(component) && !detail.autofocus()) {
-            Focusing.focus(component);
-            return Option.some(true);
-          } else if (detail.autofocus()) {
-            simulatedEvent.setSource(component.element());
-            return Option.none();
-          } else {
-            return Option.none();
+    behaviours: Merger.deepMerge(
+      Behaviour.derive([
+        Representing.config({
+          store: {
+            mode: 'memory',
+            initialValue: detail.data()
           }
-        }
-      })
-    ])
+        }),
+        Focusing.config({
+          ignore: detail.ignoreFocus(),
+          // What about stopMousedown from ItemType?
+          onFocus (component) {
+            ItemEvents.onFocus(component);
+          }
+        }),
+        Keying.config({
+          mode: 'special',
+          // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
+          focusIn: detail.autofocus() ? (component) => {
+            focusWidget(component);
+          } : Behaviour.revoke(),
+          onLeft: onHorizontalArrow,
+          onRight: onHorizontalArrow,
+          onEscape (component, simulatedEvent) {
+            // If the outer list item didn't have focus,
+            // then focus it (i.e. escape the inner widget). Only do if not autofocusing
+            // Autofocusing should treat the widget like it is the only item, so it should
+            // let its outer menu handle escape
+            if (! Focusing.isFocused(component) && !detail.autofocus()) {
+              Focusing.focus(component);
+              return Option.some(true);
+            } else if (detail.autofocus()) {
+              simulatedEvent.setSource(component.element());
+              return Option.none();
+            } else {
+              return Option.none();
+            }
+          }
+        })
+      ]),
+
+      SketchBehaviours.get(detail.widgetBehaviours())
+    )
   });
 };
 
@@ -102,6 +109,9 @@ const schema = [
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),
   FieldSchema.defaulted('autofocus', false),
+  FieldSchema.defaulted('ignoreFocus', false),
+
+  SketchBehaviours.field('widgetBehaviours', [ Representing, Focusing, Keying ]),
   FieldSchema.defaulted('domModification', { }),
   // We don't have the uid at this point
   AlloyParts.defaultUidsSchema(WidgetParts.parts()),

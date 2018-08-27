@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.19.0] - 2018-08-23
+### Added
+ - Tooltipping API access to hideAllExclusive, and tooltipComponents in config
+ - DomFactory.simple and DomFactory.dom for quick generation of basic AlloySpec objects
+ - InlineView API: getContent
+ - Readable state for Flatgrid Keying types
+ - Support for matrix-style menus
+ - Consistent definitions for itemBehaviours and widgetBehaviours
+ - Added ignoreFocus capability for item widgets
+ - Exposing onChangeTab and onDismissTab through TabSectionTypes
+ - Chain methods for TestStore
+
+## [3.18.0] - 2018-08-20
+### Added
+ - Added selectClasses and selectAttributes to HtmlSelect sketcher
+
+## [3.17.0] - 2018-08-10
+### Added
+ - Added configuration for InlineView: fireDismissalEventInstead
+ - Added SystemEvents.dismissRequested()
+
 ## [3.16.0] - 2018-08-08
 ### Added
 - Reflecting behaviour

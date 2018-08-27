@@ -24,6 +24,8 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { SelectorFind } from '@ephox/sugar';
+import { Replacing } from '../../../../main/ts/ephox/alloy/api/behaviour/Replacing';
 
 UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
@@ -49,6 +51,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
       return Container.sketch({
         dom: {
           tag: 'button',
+          classes: [ name ],
           innerHtml: `${name}-html`
         },
         containerBehaviours: Behaviour.derive([
@@ -57,8 +60,10 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
             delay: 100,
             tooltipDom: {
               tag: 'span',
-              innerHtml: `${name}-tooltip`
-            }
+            },
+            tooltipComponents: [
+              GuiFactory.text(`${name}-tooltip`)
+            ]
           }),
           Focusing.config({ })
         ])
@@ -80,12 +85,18 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         Keying.config({
           mode: 'flow',
           selector: 'button'
-        })
+        }),
+        Replacing.config({ })
       ])
     });
 
     return me;
   }, (doc, body, gui, component, store) => {
+
+    const alphaButton = component.getSystem().getByDom(
+      SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
+    ).getOrDie('Could not find alpha button component');
+
     const sAssertSinkContents = (children) => Waiter.sTryUntil(
       'Waiting for tooltip to appear in sink',
       Assertions.sAssertStructure(
@@ -173,7 +184,19 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           ]),
           Step.wait(2000),
           Logger.t('Hovering outside the tooltip should dismiss it after delay', sAssertEmptySink),
+        ]
+      ),
 
+      Logger.ts(
+        'Tooltips should not throw errors when the firing button is removed from the dom',
+        [
+          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Step.sync(() => {
+            Replacing.remove(component, alphaButton);
+          }),
+          // NOTE: This won't actual fail is this throws an error to the console :( It's
+          // disconnected from the event queue.
+          Step.wait(1000)
         ]
       )
     ]);
