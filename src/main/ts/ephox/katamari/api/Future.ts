@@ -6,6 +6,7 @@ export interface Future<T> {
   bind: <U> (binder: (v: T) => Future<U>) => Future<U>;
   anonBind: <U> (thunk: Future<U>) => Future<U>;
   toLazy: () => LazyValue<T>;
+  toCached: () => Future<T>;
   get: (callback: (v: T) => void) => void;
 };
 
@@ -48,11 +49,22 @@ const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void)
     return LazyValue.nu(get);
   };
 
+  const toCached = function() {
+    let cache: LazyValue<T> | null = null;
+    return nu(function (callback: (value: T) => void) {
+      if (cache === null) {
+        cache = toLazy();
+      }
+      cache.get(callback);
+    });
+  };
+
   return {
     map: map,
     bind: bind,
     anonBind: anonBind,
     toLazy: toLazy,
+    toCached: toCached,
     get: get
   };
 
