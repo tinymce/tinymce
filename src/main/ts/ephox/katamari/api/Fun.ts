@@ -1,72 +1,84 @@
-export const noop = function (...x: any[]) { };
+const noop = function (...args: any[]) { };
 
-export const noarg = function (f: Function) {
-  return function (...x: any[]) {
+const noarg = function <T> (f: () => T) {
+  return function (...args: any[]) {
     return f();
   };
 };
 
-type AnyFunction = (...x: any[]) => any;
-
-export const compose = function (fa: AnyFunction, fb: AnyFunction): AnyFunction {
-  return function (...x: any[]) {
-    return fa(fb.apply(null, arguments));
+const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V {
+  return function (...args: T) {
+    return fa(fb.apply(null, args));
   };
 };
 
-export const constant = function <T>(value?: T): (...x: any[]) => T {
+const constant = function <T>(value?: T): (...args: any[]) => T {
   return function () {
     return value;
   };
 };
 
-export const identity = function <T = any>(x: T): T {
+const identity = function <T = any>(x: T): T {
   return x;
 };
 
-export const tripleEquals = function <T>(a: T, b: T): boolean {
+const tripleEquals = function <T>(a: T, b: T): boolean {
   return a === b;
 };
 
-// Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-export const curry = function (f, ...x: any[]): AnyFunction {
-  // equivalent to arguments.slice(1)
-  // starting at 1 because 0 is the f, makes things tricky.
-  // Pay attention to what variable is where, and the -1 magic.
-  // thankfully, we have tests for this.
-  const args = new Array(arguments.length - 1);
-  for (let i = 1; i < arguments.length; i++) args[i-1] = arguments[i];
-
-  return function (...x: any[]) {
-    const newArgs = new Array(arguments.length);
-    for (let j = 0; j < newArgs.length; j++) newArgs[j] = arguments[j];
-
-    const all = args.concat(newArgs);
-    return f.apply(null, all);
+function curry <REST extends any[],OUT> (fn: (...restArgs: REST) => OUT): (...restArgs: REST) => OUT;
+function curry <A,REST extends any[],OUT> (fn: (a: A, ...restArgs: REST) => OUT, a: A): (...restArgs: REST) => OUT;
+function curry <A,B,REST extends any[],OUT> (fn: (a: A, b: B, ...restArgs: REST) => OUT, a: A, b: B): (...restArgs: REST) => OUT;
+function curry <A,B,C,REST extends any[],OUT> (fn: (a: A, b: B, c: C, ...restArgs: REST) => OUT, a: A, b: B, c: C): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,F,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, f: F, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,F,G,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,F,G,H,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,F,G,H,I,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I): (...restArgs: REST) => OUT;
+function curry <A,B,C,D,E,F,G,H,I,J,REST extends any[],OUT> (fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J): (...restArgs: REST) => OUT;
+function curry <OUT> (fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (...restArgs: any[]) => OUT {
+  return function (...restArgs: any[]) {
+    const all = initialArgs.concat(restArgs);
+    return fn.apply(null, all);
   };
 };
 
-type PredicateFn = (...x: any[]) => boolean;
-
-export const not = (f: PredicateFn): PredicateFn => {
-  return function (...x: any[]) {
-    return !f.apply(null, arguments);
+const not = <T extends any[]> (f: (...args: T) => boolean) => {
+  return function (...args: T): boolean {
+    return !f.apply(null, args);
   };
 };
 
-export const die = function (msg: string) {
+const die = function (msg: string) {
   return function () {
     throw new Error(msg);
   };
 };
 
-export const apply = function <T>(f: (...x: any[]) => T): T  {
+const apply = function <T>(f: () => T): T  {
   return f();
 };
 
-export const call = function(f: AnyFunction) {
+const call = function(f: () => any) {
   f();
 };
 
-export const never = constant<false>(false);
-export const always = constant<true>(true);
+const never = constant<false>(false);
+const always = constant<true>(true);
+
+export {
+  noop,
+  noarg,
+  compose,
+  constant,
+  identity,
+  tripleEquals,
+  curry,
+  not,
+  die,
+  apply,
+  call,
+  never,
+  always,
+};
