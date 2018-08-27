@@ -51,6 +51,15 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
           store.cAssertEq('Checking that a drag event has fired with (20, 0) delta', [ { left: 20, top: 0 } ]),
           NamedChain.direct('box', cAssertNoPositionInfo, '_'),
+          NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
+          store.cClear,
+
+          NamedChain.direct('box', Mouse.cMouseDown, '_'),
+          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(300, 100), '_'),
+          store.cAssertEq('The state should have been reset, so one position should not give us a delta', [ ]),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(303, 100), '_'),
+          store.cAssertEq('The state should have been reset, so two positions should give us a delta of (3, 0)', [ { left: 3, top: 0 } ]),
           NamedChain.bundle((output) => {
             return Result.value(output);
           })

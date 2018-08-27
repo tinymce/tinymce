@@ -78,6 +78,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
       const delayDrop = DelayedFunction(stop, 200);
 
       const start = () => {
+        dragState.reset();
         BlockerUtils.instigate(component, blocker);
       };
 

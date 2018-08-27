@@ -31,7 +31,6 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
         Snappables.stopDrag(component, snapInfo);
       });
       const target = dragConfig.getTarget()(component.element());
-      // INVESTIGATE: Should this be in the MouseDragging?
       dragState.reset();
       dragConfig.onDrop()(component, target);
     })
