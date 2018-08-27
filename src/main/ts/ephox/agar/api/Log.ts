@@ -7,7 +7,7 @@ import { GeneralSteps } from "./Main";
 import { console } from "@ephox/dom-globals";
 
 const generateLogMsg = (qaId: string, description: string) => {
-  // Format: 'TestCase-<plugin name>-<test case ID / TBA>-<description of the test>'
+  // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA>-<description of the test>'
   return `TestCase-${qaId}-${description}`;
 };
 
@@ -15,8 +15,8 @@ const enrichErrorMsg = (label, err) => {
   return ErrorTypes.enrichWith(label, err);
 };
 
-const logStep = <T, U>(label: string, f: Step<T, U>): Step<T, U> => {
-  return (value: T, next: NextFn<U>, die: DieFn) => {
+const enrichDie = (label, f) => {
+  return (value, next, die: DieFn) => {
     const dieWith: DieFn = Fun.compose(die, Fun.curry(enrichErrorMsg, label));
     try {
       return f(value, next, dieWith);
@@ -26,44 +26,46 @@ const logStep = <T, U>(label: string, f: Step<T, U>): Step<T, U> => {
   };
 };
 
-const logStepsWithLineNum = <T, U>(label: string, fs: Step<T, U>[]): Step<T, U> => {
-  if (fs.length === 0) return GeneralSteps.sequence(fs);
-  return GeneralSteps.sequence(Arr.map(fs, (f: Step<T, U>, i: number) => {
-    return logStep(label + '(' + i + ')', f);
-  }));
+const step = <T, U>(qaId: string, description: string, f: Step<T, U>): Step<T, U> => {
+  const label = generateLogMsg(qaId, description);
+  return enrichDie(label, f);
 };
 
-const logChain = <T, U>(label: string, c: Chain<T, U>): Chain<T, U>  => {
-  const trial = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => void): Chain<T, U> => {
-    return {
-      runChain: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => {
-        const dieWith: DieFn = Fun.compose(die, Fun.curry(enrichErrorMsg, label));
-        try {
-          return f(value, next, dieWith);
-        } catch (err) {
-          dieWith(err);
-        }
-      }
-    };
-  };
-
-  return trial(c.runChain);
-};
-
-const logChains = <T, U>(label: string, fs: Chain<T, U>[]) => {
+const steps = <T, U>(qaId: string, description: string, fs: Step<T, U>[]): Step<T, U>[] => {
   if (fs.length === 0) return fs;
-  return Arr.map(fs, (f: Chain<T, U>, i: number) => {
-    return logChain(label + '(' + i + ')', f);
+  return Arr.map(fs, (f: Step<T, U>, i: number) => {
+    return step(qaId, description +  + ' (' + i + ')', f);
   });
 };
 
-const log = (qaId: string, description: string, xs: any[]) => {
+const stepsAsStep = <T, U>(qaId: string, description: string, fs: Step<T, U>[]): Step<T, U> => {
+  return GeneralSteps.sequence(steps(qaId, description, fs));
+};
+
+const chain = <T, U>(qaId: string, description: string, c: Chain<T, U>): Chain<T, U>  => {
   const label = generateLogMsg(qaId, description);
-  // TODO: call relevant function with label
+  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => void): Chain<T, U> => {
+    return { runChain: enrichDie(label, f) };
+  };
+  return switchDie(c.runChain);
+};
+
+const chains = <T, U>(qaId: string, description: string, fs: Chain<T, U>[]): Chain<T, U>[] => {
+  if (fs.length === 0) return fs;
+  return Arr.map(fs, (f: Chain<T, U>, i: number) => {
+    return chain(qaId, description + ' (' + i + ')', f);
+  });
+};
+
+const chainsAsChain = <T, U>(qaId: string, description: string, fs: Chain<T, U>[]): Chain<T, U> => {
+  return Chain.fromChains(chains(qaId, description, fs));
 };
 
 export default {
-  log,
-  logStep,
-  logChain
+  step,
+  steps,
+  stepsAsStep,
+  chain,
+  chains,
+  chainsAsChain
 }
