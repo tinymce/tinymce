@@ -74,6 +74,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     }),
     AlloyEvents.run(NativeEvents.mouseup(), (slider: AlloyComponent, _simulatedEvent) => {
       detail.onDragEnd()(slider, getThumb(slider));
+      detail.mouseIsDown().set(false);
     })
   ];
 
@@ -100,7 +101,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
               store: {
                 mode: 'manual',
                 getValue (_) {
-                  return modelDetail.value().get();
+                  return detail.model().value().get();
                 }
               }
             }),
@@ -108,17 +109,8 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
             Receiving.config({
               channels: {
                 'mouse.released': {
-                  onReceive: (slider, se) => {
-                    const wasDown = detail.mouseIsDown().get();
+                  onReceive: (comp, se) => {
                     detail.mouseIsDown().set(false);
-
-                    // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
-                    if (wasDown) {
-                      AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
-                        const value = modelDetail.value().get();
-                        detail.onChoose()(slider, thumb, value);
-                      });
-                    }
                   }
                 }
               }
