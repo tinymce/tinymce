@@ -78,6 +78,7 @@ export interface SliderDetail extends CompositeSketchDetail {
   snapStart: () => Option<number>;
 
   onChange: () => (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
+  onChoose: () => (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
   onDragStart: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
 
@@ -122,6 +123,7 @@ export interface SliderSpec extends CompositeSketchSpec {
   rounded?: boolean;
 
   onChange?: (component: AlloyComponent, thumb: AlloyComponent, value: SliderValue) => void;
+  onChoose?: (component: AlloyComponent, thumb: AlloyComponent, value: SliderValue) => void;
   onDragStart?: (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd?: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
