@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.20.0] - 2018-08-28
+###
+ - Added Replacing.replaceAt and Replacing.replaceBy
+
 ## [3.19.0] - 2018-08-23
 ### Added
  - Tooltipping API access to hideAllExclusive, and tooltipComponents in config
