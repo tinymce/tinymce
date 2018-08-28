@@ -37,7 +37,8 @@ const arrowPart = PartType.required({
     return {
       dom: {
         attributes: {
-          role: 'button'
+          role: 'button',
+          'aria-haspopup': true
         }
       },
       buttonBehaviours: Behaviour.derive([

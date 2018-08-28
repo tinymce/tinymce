@@ -1,0 +1,54 @@
+{
+  "name": "@ephox/alloy",
+<<<<<<< HEAD
+  "version": "3.20.0",
+=======
+  "version": "3.19.2",
+>>>>>>> master
+  "description": "Ui Framework",
+  "dependencies": {
+    "@ephox/boulder": "latest",
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sand": "latest",
+    "@ephox/sugar": "latest"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "devDependencies": {
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
+    "awesome-typescript-loader": "^4.0.0",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "prepublishOnly": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/alloy"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "ui"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "module": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts"
+}
