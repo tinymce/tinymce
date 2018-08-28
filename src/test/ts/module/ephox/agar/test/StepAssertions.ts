@@ -1,5 +1,5 @@
 import { assert } from '@ephox/bedrock';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
@@ -55,6 +55,18 @@ const testStepsFail = function (expected, steps) {
   });
 };
 
+const testStepFail = function (expected, step) {
+  return Step.stateful(function (value, next, die) {
+    step(value, function (v) {
+      die('Should not have passed. Expected error: ' + expected);
+    }, function (err) {
+      const errMessage = err.message !== undefined ? err.message : err;
+      if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
+      else next(value);
+    });
+  });
+};
+
 const testChain = function (expected, chain) {
   return Step.async(function (next, die) {
     chain.runChain(Chain.wrap({}), function (actual) {
@@ -66,12 +78,44 @@ const testChain = function (expected, chain) {
   });
 };
 
+const testChainFail = function (expected, initial, chain) {
+  return Step.async(function (next, die) {
+    chain.runChain(Chain.wrap(initial), function (actual) {
+      die('Should not have passed. Expected error: ' + expected);
+    }, function (err) {
+      const errMessage = err.message !== undefined ? err.message : err;
+      if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
+      else next();
+    });
+  });
+};
+
+const testChainsFail = (expected, initial, chains) => {
+  return Step.async((next, die) => {
+    Chain.pipeline(
+      Arr.flatten([
+        [Chain.inject(initial)],
+        chains
+      ]),
+      () => die('Should not have passed. Expected error: ' + expected),
+      (err) => {
+        const errMessage = err.message !== undefined ? err.message : err;
+        if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
+        else next();
+      }
+    );
+  });
+};
+
 export default <any>{
-  failed: failed,
-  passed: passed,
+  failed,
+  passed,
   preserved: Fun.constant(preserved),
 
-  testStepsFail: testStepsFail,
-  testStepsPass: testStepsPass,
-  testChain: testChain
+  testStepFail,
+  testStepsFail,
+  testStepsPass,
+  testChain,
+  testChainFail,
+  testChainsFail
 };

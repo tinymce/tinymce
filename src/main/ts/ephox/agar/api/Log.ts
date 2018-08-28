@@ -34,7 +34,7 @@ const step = <T, U>(qaId: string, description: string, f: Step<T, U>): Step<T, U
 const steps = <T, U>(qaId: string, description: string, fs: Step<T, U>[]): Step<T, U>[] => {
   if (fs.length === 0) return fs;
   return Arr.map(fs, (f: Step<T, U>, i: number) => {
-    return step(qaId, description +  + ' (' + i + ')', f);
+    return step(qaId, description + ' (' + i + ')', f);
   });
 };
 
