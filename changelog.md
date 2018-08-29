@@ -6,10 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.20.0] - 2018-08-24
+## [3.22.0] - 2018-08-29
 ### Added
  - Added dragging behaviour flag for repositionTarget (defaults to true)
  - Added dragging behaviour handler (onDrag)
+
+## [3.21.0] - 2018-08-29
+### Added
+ - onChoose event to Sliders
+
+## [3.20.0] - 2018-08-28
+### Added
+ - Replacing.replaceAt and Replacing.replaceBy
 
 ## [3.19.0] - 2018-08-23
 ### Added
@@ -19,18 +27,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Readable state for Flatgrid Keying types
  - Support for matrix-style menus
  - Consistent definitions for itemBehaviours and widgetBehaviours
- - Added ignoreFocus capability for item widgets
+ - IgnoreFocus capability for item widgets
  - Exposing onChangeTab and onDismissTab through TabSectionTypes
  - Chain methods for TestStore
 
 ## [3.18.0] - 2018-08-20
 ### Added
- - Added selectClasses and selectAttributes to HtmlSelect sketcher
+ - selectClasses and selectAttributes to HtmlSelect sketcher
 
 ## [3.17.0] - 2018-08-10
 ### Added
- - Added configuration for InlineView: fireDismissalEventInstead
- - Added SystemEvents.dismissRequested()
+ - Configuration for InlineView: fireDismissalEventInstead
+ - SystemEvents.dismissRequested()
 
 ## [3.16.0] - 2018-08-08
 ### Added
