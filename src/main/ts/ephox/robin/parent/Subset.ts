@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 
-var eq = function (universe, item) {
+var eq = function <T,U> (universe: U & { eq: (v1: T, v2: T) => boolean }, item: T) {
   return Fun.curry(universe.eq, item);
 };
 
