@@ -1,5 +1,6 @@
-import { UnitTest, assert } from "@ephox/bedrock/lib/api/Main";
-import { HTMLElement } from "ephox/sand/api/Main";
+import { assert, UnitTest } from '@ephox/bedrock/lib/api/Main';
+import { document } from '@ephox/dom-globals';
+import { HTMLElement } from 'ephox/sand/api/Main';
 
 UnitTest.test('HtmlElementTest',function () {
   var span = document.createElement('div');
