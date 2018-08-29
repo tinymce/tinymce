@@ -9,7 +9,7 @@ export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingCo
   prepend: (component: AlloyComponent, prependee: AlloySpec) => void;
   remove: (component: AlloyComponent, removee: AlloyComponent) => void;
   replaceAt: (component: AlloyComponent, replaceeIndex: number, replacer: Option<AlloySpec>) => Option<AlloyComponent>;
-  replaceBy: (component: AlloyComponent, replaceePred: (comp: AlloyComponent) => boolean, replacer: AlloySpec) => Option<AlloyComponent>;
+  replaceBy: (component: AlloyComponent, replaceePred: (comp: AlloyComponent) => boolean, replacer: Option<AlloySpec>) => Option<AlloyComponent>;
   set: (component: AlloyComponent, data: AlloySpec[]) => void;
   contents: (component: AlloyComponent) => AlloyComponent[];
 }
