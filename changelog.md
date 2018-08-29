@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.22.0] - 2018-08-29
+### Added
+ - Added dragging behaviour flag for repositionTarget (defaults to true)
+ - Added dragging behaviour handler (onDrag)
+
 ## [3.21.0] - 2018-08-29
 ### Added
  - onChoose event to Sliders
