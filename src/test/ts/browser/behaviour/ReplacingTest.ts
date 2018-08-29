@@ -5,7 +5,7 @@ import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           Replacing.set(component,
               Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
           );
-          Replacing.replaceAt(component, replaceeIndex, makeTag('div', [ replaceClass ]));
+          Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
           Assertions.assertStructure(
             'Asserting structure',
             ApproxStructure.build((s, str, arr) => {
