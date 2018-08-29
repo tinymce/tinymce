@@ -14,8 +14,8 @@ var anyAncestor = function (element: Element, targets: Element[]) {
   });
 };
 
-var sibling = function (element: Element, target: Element[]) {
-  return PredicateExists.sibling(element, Fun.curry(Compare.eq, target));
+var sibling = function (element: Element, targets: Element[]) {
+  return PredicateExists.sibling(element, (elem) => Arr.exists(targets, Fun.curry(Compare.eq, elem)));
 };
 
 var child = function (element: Element, target: Element) {
