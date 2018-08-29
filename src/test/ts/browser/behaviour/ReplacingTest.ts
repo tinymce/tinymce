@@ -5,6 +5,7 @@ import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { Arr, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
@@ -20,6 +21,38 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
+
+    const makeTag = (tag: string, classes: string[]) => {
+      return {
+        dom: {
+          tag,
+          classes
+        },
+        components: [ ]
+      };
+    };
+
+    const sCheckReplaceAt = (label: string, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: string) => {
+      return Logger.t(
+        `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
+        Step.sync(() => {
+          Replacing.set(component,
+              Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
+          );
+          Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
+          Assertions.assertStructure(
+            'Asserting structure',
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('div', {
+                children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
+              });
+            }),
+            component.element()
+          );
+        })
+      );
+    };
+
     return [
       Assertions.sAssertStructure(
         'Initially, has a single span',
@@ -200,7 +233,39 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       ),
       Step.sync(() => {
         RawAssertions.assertEq('Should have 4 children again', 4, Replacing.contents(component).length);
-      })
+      }),
+
+      sCheckReplaceAt(
+        '.replaceAt 0 of 0 - should do nothing',
+        [ ],
+        [ ],
+        0,
+        'replaceAt-0'
+      ),
+
+      sCheckReplaceAt(
+        '.replaceAt 0 of 1',
+        [ 'replaceAt-0' ],
+        [ 'original' ],
+        0,
+        'replaceAt-0'
+      ),
+
+      sCheckReplaceAt(
+        '.replaceAt 0 of 3',
+        [ 'replaceAt-0', 'original2', 'original3' ],
+        [ 'original1', 'original2', 'original3' ],
+        0,
+        'replaceAt-0'
+      ),
+
+      sCheckReplaceAt(
+        '.replaceAt 2 of 3',
+        [ 'original1', 'original2', 'replaceAt-2' ],
+        [ 'original1', 'original2', 'original3' ],
+        2,
+        'replaceAt-2'
+      )
     ];
   }, () => { success(); }, failure);
 });

@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Compare, Insert, Element } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
@@ -51,10 +51,32 @@ const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, r
   return component.components();
 };
 
+const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+  const children = contents(component, replaceConfig);
+  return Option.from(children[replaceeIndex]).map((replacee) => {
+    // remove it.
+    remove(component, replaceConfig, replaceState, replacee);
+
+    replacer.each((r) => {
+      insert(component, replaceConfig, (p: Element, c: Element) => {
+        Insert.appendAt(p, c, replaceeIndex);
+      }, r);
+    });
+    return replacee;
+  });
+};
+
+const replaceBy = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceePred: (comp: AlloyComponent) => boolean, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
+  const children = contents(component, replaceConfig);
+  return Arr.findIndex(children, replaceePred).bind((replaceeIndex) => replaceAt(component, replaceConfig, replaceState, replaceeIndex, replacer));
+};
+
 export {
   append,
   prepend,
   remove,
+  replaceAt,
+  replaceBy,
   set,
   contents
 };
