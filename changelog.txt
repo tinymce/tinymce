@@ -1,3 +1,10 @@
+Version 4.2.0
+
+Date 2018-08-30
+
+* adds Log module for QA reporting
+* adds convenience methods for StepAssertions
+
 Version 2.4.0
 
 Date: 2017-12-05
