@@ -1,9 +1,6 @@
 import { UnitTest } from "@ephox/bedrock";
-import { Pipeline, Step, Assertions, Chain } from "../../../../main/ts/ephox/agar/api/Main";
+import { Assertions, Pipeline, Step, Log } from "../../../../main/ts/ephox/agar/api/Main";
 import StepAssertions from "../../module/ephox/agar/test/StepAssertions";
-import Log from "../../../../main/ts/ephox/agar/api/Log";
-import { console } from "@ephox/dom-globals";
-import { value } from "../../../../../node_modules/@ephox/katamari/lib/main/ts/ephox/katamari/api/Singleton";
 
 UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepTest = StepAssertions.testStepFail(
@@ -115,7 +112,7 @@ UnitTest.asynctest('LogTest', (success, failure) => {
       ])
     ]
   );
-  
+
   const logStepsPassTest = StepAssertions.testStepsPass(
     'TestCase-13: good-value',
     Log.steps('TestCase-13', 'Steps passing value', [

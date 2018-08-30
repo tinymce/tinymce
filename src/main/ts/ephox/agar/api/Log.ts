@@ -1,10 +1,9 @@
-import { Step } from "./Step";
-import { NextFn, DieFn } from "../pipe/Pipe";
-import * as ErrorTypes from '../alien/ErrorTypes';
 import { Arr, Fun } from '@ephox/katamari';
+import * as ErrorTypes from '../alien/ErrorTypes';
+import { DieFn, NextFn } from "../pipe/Pipe";
 import { Chain, Wrap } from "./Chain";
 import { GeneralSteps } from "./Main";
-import { console } from "@ephox/dom-globals";
+import { Step } from "./Step";
 
 const generateLogMsg = (testId: string, description: string) => {
   // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA:> <description of the test>'
@@ -61,11 +60,11 @@ const chainsAsChain = <T, U>(testId: string, description: string, fs: Chain<T, U
   return Chain.fromChains(chains(testId, description, fs));
 };
 
-export default {
+export {
   step,
   steps,
   stepsAsStep,
   chain,
   chains,
   chainsAsChain
-}
+};
