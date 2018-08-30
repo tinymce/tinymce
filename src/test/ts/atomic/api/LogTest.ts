@@ -3,11 +3,20 @@ import { Pipeline, Step, Assertions, Chain } from "../../../../main/ts/ephox/aga
 import StepAssertions from "../../module/ephox/agar/test/StepAssertions";
 import Log from "../../../../main/ts/ephox/agar/api/Log";
 import { console } from "@ephox/dom-globals";
+import { value } from "../../../../../node_modules/@ephox/katamari/lib/main/ts/ephox/katamari/api/Singleton";
 
 UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepTest = StepAssertions.testStepFail(
     'TestCase-01: Step failure',
-    Log.step('01', 'Step failure', Assertions.sAssertEq('Assert failure', true, false))
+    Log.step('01', 'Step failure', Assertions.sAssertEq('Assert failure', false, true))
+  );
+
+  const logStepTestWithMessage = StepAssertions.testStepFail(
+    'checking error message',
+    StepAssertions.testStepFail(
+      'TestCase-01b: (wrong) Step failure',
+      Log.step('01b', 'Step failure', Assertions.sAssertEq('Assert failure', false, true))
+    )
   );
 
   const logStepInArrayTest = StepAssertions.testStepsFail(
@@ -106,9 +115,33 @@ UnitTest.asynctest('LogTest', (success, failure) => {
       ])
     ]
   );
+  
+  const logStepsPassTest = StepAssertions.testStepsPass(
+    'TestCase-13: good-value',
+    Log.steps('TestCase-13', 'Steps passing value', [
+      Step.stateful<any,any>((value, next, die) => {
+        next('TestCase-13: good-value')
+      })
+    ])
+  );
+
+  const logStepPassTestWithMessage = StepAssertions.testStepFail(
+    'right-value',
+    StepAssertions.testStepsPass(
+      'TestCase-13b: right-value',
+      Log.steps('TestCase-13b', 'Steps passing value', [
+        Step.stateful<any,any>((value, next, die) => {
+          next('TestCase-13b: wrong-value')
+        })
+      ])
+    )
+  );
+
 
   Pipeline.async({}, [
     logStepTest,
+    logStepTestWithMessage,
+
     logStepInArrayTest,
     logStepsEarlyFailTest,
     logStepsLateFailTest,
@@ -120,7 +153,10 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     logChainsEarlyFailTest,
     logChainsLateFailTest,
     logChainsAsChainTest,
-    logChainsAsChainInArrayTest
+    logChainsAsChainInArrayTest,
+
+    logStepsPassTest,
+    logStepPassTestWithMessage
 
   ], success, failure);
 
