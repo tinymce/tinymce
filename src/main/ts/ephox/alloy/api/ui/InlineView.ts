@@ -1,50 +1,44 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Merger, Option } from '@ephox/katamari';
-import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
+import { Fun, Merger, Option, Result } from '@ephox/katamari';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
+import * as SystemEvents from '../../api/events/SystemEvents';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as Fields from '../../data/Fields';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
+import { InlineViewDetail, InlineViewSketcher, InlineViewSpec, InlineMenuSpec } from '../../ui/types/InlineViewTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { InlineViewSketcher, InlineViewDetail, InlineViewSpec } from '../../ui/types/InlineViewTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
-import * as SystemEvents from '../../api/events/SystemEvents';
 import { tieredMenu } from './TieredMenu';
-import { TieredData } from '../../ui/types/TieredMenuTypes';
-import { console } from '@ephox/dom-globals';
 
-const makeMenu = (menuSandbox: AlloyComponent, lazySink, menuParts, anchor: AnchorSpec, data: TieredData) => {
+const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
     dom: {
       tag: 'div'
     },
 
-    data,
-    markers: menuParts.markers,
+    data: menuSpec.data,
+    markers: menuSpec.parts.menu.markers,
 
     onEscape() {
-      console.log('context.menu.escape');
       return Option.some(true);
     },
 
     onExecute() {
-      console.log('context.menu.execute');
       return Option.some(true);
     },
 
     onOpenMenu(notmysandbox, menu) {
-      console.log('context.menu.onOpenMenu');
       Positioning.position(lazySink().getOrDie(), anchor, menu);
     },
 
     onOpenSubmenu(notmysandbox, item, submenu) {
-      console.log('context.menu.onOpenSubmenu');
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -102,8 +96,8 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
           Sandboxing.decloak(sandbox);
           detail.onShow()(sandbox);
         },
-        showMenu(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec) {
-          const thing = makeMenu(sandbox, detail.lazySink(), menuSpec.parts.menu, anchor, menuSpec.data);
+        showMenuAt(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) {
+          const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
 
           Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);
@@ -141,8 +135,8 @@ const InlineView = Sketcher.single({
     showAt (apis, component, anchor, thing) {
       apis.showAt(component, anchor, thing);
     },
-    showMenu(apis, component, anchor, menuSpec) {
-      apis.showMenu(component, anchor, menuSpec);
+    showMenuAt(apis, component, anchor, menuSpec) {
+      apis.showMenuAt(component, anchor, menuSpec);
     },
     hide (apis, component) {
       apis.hide(component);
@@ -156,6 +150,4 @@ const InlineView = Sketcher.single({
   }
 }) as InlineViewSketcher;
 
-export {
-  InlineView
-};
+export { InlineView };
