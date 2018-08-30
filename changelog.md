@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.23.0] - 2018-08-31
+### Added
+ - Added eventOrder for Dropdowns
+
 ## [3.22.0] - 2018-08-29
 ### Added
  - Added dragging behaviour flag for repositionTarget (defaults to true)
