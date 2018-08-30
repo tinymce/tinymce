@@ -78,15 +78,22 @@ const testChain = function (expected, chain) {
   });
 };
 
+const foo = {
+  next: (err, expected, next, die) => {
+    const errMessage = err.message !== undefined ? err.message : err;
+    if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
+    else next();
+  },
+  die: (expected, die) => die('Should not have passed. Expected error: ' + expected)
+}
+
 const testChainFail = function (expected, initial, chain) {
   return Step.async(function (next, die) {
     chain.runChain(Chain.wrap(initial), function (actual) {
       die('Should not have passed. Expected error: ' + expected);
-    }, function (err) {
-      const errMessage = err.message !== undefined ? err.message : err;
-      if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
-      else next();
-    });
+    },
+    (err) => foo.next(err, expected, next, die)
+    );
   });
 };
 
@@ -97,12 +104,8 @@ const testChainsFail = (expected, initial, chains) => {
         [Chain.inject(initial)],
         chains
       ]),
-      () => die('Should not have passed. Expected error: ' + expected),
-      (err) => {
-        const errMessage = err.message !== undefined ? err.message : err;
-        if (errMessage.indexOf(expected) !== 0) die('Unexpected error: ' + errMessage + '\n  Expected error: ' + expected);
-        else next();
-      }
+      () => foo.die(expected, die),
+      (err) => foo.next(err, expected, next, die)
     );
   });
 };
