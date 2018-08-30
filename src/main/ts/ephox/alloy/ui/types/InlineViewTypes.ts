@@ -40,9 +40,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
 
 export interface InlineMenuSpec {
   data: TieredData,
-  parts: {
-    menu: Partial<TieredMenuSpec>;
-  };
+  menu: Partial<TieredMenuSpec>;
 }
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {

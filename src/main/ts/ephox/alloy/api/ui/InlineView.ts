@@ -24,7 +24,7 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
     },
 
     data: menuSpec.data,
-    markers: menuSpec.parts.menu.markers,
+    markers: menuSpec.menu.markers,
 
     onEscape() {
       return Option.some(true);
