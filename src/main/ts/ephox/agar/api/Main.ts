@@ -10,6 +10,7 @@ import { GroupStore } from './GroupStore';
 import * as Guard from './Guard';
 import * as Keyboard from './Keyboard';
 import { Keys } from './Keys';
+import * as Log from './Log';
 import * as Logger from './Logger';
 import { Monitor } from './Monitor';
 import * as Mouse from './Mouse';
@@ -40,6 +41,7 @@ export {
   Guard,
   Keyboard,
   Keys,
+  Log,
   Logger,
   Monitor,
   Mouse,
