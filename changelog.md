@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [3.23.0] - 2018-08-31
 ### Added
  - Added eventOrder for Dropdowns
+ - Added extra debugging information
 
 ## [3.22.0] - 2018-08-29
 ### Added
