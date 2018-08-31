@@ -93,6 +93,7 @@ const spellcheck = function (editor: Editor, pluginUrl: string, startedState: Ce
   const errorCallback = function (message: string) {
     editor.notificationManager.open({ text: message, type: 'error' });
     editor.setProgressState(false);
+    editor.setMode('design');
     finish(editor, startedState, textMatcherState);
   };
 
@@ -103,6 +104,7 @@ const spellcheck = function (editor: Editor, pluginUrl: string, startedState: Ce
   editor.setProgressState(true);
   sendRpcCall(editor, pluginUrl, currentLanguageState, 'spellcheck', getTextMatcher(editor, textMatcherState).text, successCallback, errorCallback);
   editor.focus();
+  editor.setMode('readonly');
 };
 
 const checkIfFinished = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) {
@@ -113,14 +115,16 @@ const checkIfFinished = function (editor: Editor, startedState: Cell<boolean>, t
 
 const addToDictionary = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: Element[]) {
   editor.setProgressState(true);
-
+  editor.setMode('readonly');
   sendRpcCall(editor, pluginUrl, currentLanguageState, 'addToDictionary', word, () => {
     editor.setProgressState(false);
+    editor.setMode('design');
     editor.dom.remove(spans, true);
     checkIfFinished(editor, startedState, textMatcherState);
   }, (message) => {
     editor.notificationManager.open({ text: message, type: 'error' });
     editor.setProgressState(false);
+    editor.setMode('design');
   });
 };
 
@@ -200,7 +204,7 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
   }
 
   editor.setProgressState(false);
-
+  editor.setMode('design');
   if (isEmpty(suggestions)) {
     const message = editor.translate('No misspellings found.');
     editor.notificationManager.open({ text: message, type: 'info' });
