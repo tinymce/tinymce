@@ -70,10 +70,13 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         SketchBehaviours.get(detail.dropdownBehaviours())
       ),
 
-      eventOrder: {
-        // Order, the button state is toggled first, so assumed !selected means close.
-        'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-      }
+      eventOrder: Merger.deepMerge(
+        detail.eventOrder(),
+        {
+          // Order, the button state is toggled first, so assumed !selected means close.
+          'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+        }
+      )
     },
     {
       dom: {

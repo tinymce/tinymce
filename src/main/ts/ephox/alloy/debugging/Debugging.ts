@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Options, Option } from '@ephox/katamari';
 
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
@@ -132,7 +132,11 @@ const getOrInitConnection = () => {
           return connGui.getByUid(uid).toOption().map((comp) => {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
           });
-        });
+        }).orThunk(() => {
+          return Option.some({
+            'error': 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
+          });
+        })
       }
     };
     return window[CHROME_INSPECTOR_GLOBAL];
