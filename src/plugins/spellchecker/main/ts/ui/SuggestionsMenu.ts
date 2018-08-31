@@ -33,6 +33,10 @@ const showSuggestions = function (editor: Editor, pluginUrl: string, lastSuggest
     });
   });
 
+  if (suggestions.length==0) {
+  var message = editor.translate('(No suggestions)');
+  items.push({text:message,disabled:true});
+  } 
   items.push({ text: '-' });
 
   const hasDictionarySupport = lastSuggestionsState.get().hasDictionarySupport;
