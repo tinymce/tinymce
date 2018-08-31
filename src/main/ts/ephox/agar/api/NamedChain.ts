@@ -4,16 +4,27 @@ import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';
 
 const inputNameId = Id.generate('input-name');
+const outputNameId = Id.generate('output-name');
+const outputUnset = Id.generate('output-unset');
 
-export type NamedData = Record<string,any>;
+export type NamedData = Record<string, any>;
 export type NamedChain = Chain<NamedData, NamedData>;
 
-const asChain = function <T>(chains: NamedChain[]): Chain<T, NamedData> {
-  return Chain.fromChains([
-    Chain.mapper(function (input: T) {
-      return wrapSingle(inputNameId, input);
-    })
-  ].concat(chains));
+const asChain = function <T>(chains: NamedChain[]): Chain<T, any> {
+  return Chain.fromChains(Arr.flatten([
+    [Chain.mapper(function (input: T) {
+      return {
+        [inputNameId]: input,
+        [outputNameId]: outputUnset
+      };
+    })],
+    chains,
+    [Chain.mapper(function (data: NamedData) {
+      const output = data[outputNameId];
+      delete data[outputNameId];
+      return output === outputUnset ? data : output;
+    })]
+  ]));
 };
 
 // Write merges in its output into input because it knows that it was
@@ -57,11 +68,15 @@ const combine = function (input: NamedData, name: string, value: any): NamedData
 
 const process = function (name: string, chain: Chain<any, any>) {
   return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die) {
-    const part = Chain.wrap(input[name]);
-    chain.runChain(part, function (other) {
-      const merged: NamedData = Merger.merge(input, Chain.unwrap(other));
-      next(Chain.wrap(merged));
-    }, die);
+    if (Object.prototype.hasOwnProperty.call(input, name)) {
+      const part = Chain.wrap(input[name]);
+      chain.runChain(part, function (other) {
+        const merged: NamedData = Merger.merge(input, Chain.unwrap(other));
+        next(Chain.wrap(merged));
+      }, die);
+    } else {
+      die(name + ' is not a field in the index object.');
+    }
   });
 };
 
@@ -98,14 +113,12 @@ const merge = function (names: string[], combinedName: string) {
   });
 };
 
-const bundle = function <T, U, E>(f: (input: T) => Result<U, E>) {
-  return Chain.binder(f);
+const bundle = function <T, E>(f: (input: NamedData) => Result<T, E>) {
+  return write(outputNameId, Chain.binder(f));
 };
 
 const output = function (name: string) {
-  return bundle(function (input: NamedData): Result<any, string> {
-    return input.hasOwnProperty(name) ? Result.value(input[name]) : Result.error(name + ' is not a field in the index object.');
-  });
+  return direct(name, Chain.identity, outputNameId);
 };
 
 const outputInput = output(inputNameId);
