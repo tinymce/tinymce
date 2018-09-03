@@ -262,15 +262,20 @@ function filterStyles(editor, validStyles, node, styleValue) {
       case 'font-color':
       case 'mso-foreground':
         name = 'color';
+        outputStyles[name] = value;
         break;
 
       case 'mso-background':
       case 'mso-highlight':
         name = 'background';
+        outputStyles[name] = value;
         break;
 
       case 'font-weight':
       case 'font-style':
+      case 'font-size':
+      case 'color':
+      case 'font-family':
         if (value !== 'normal') {
           outputStyles[name] = value;
         }

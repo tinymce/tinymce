@@ -122,11 +122,10 @@ const bindContextualToolbarsEvents = function (editor: Editor, panel: InlitePane
   editor.on('ResizeWindow', reposition);
 
   DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
-  editor.on('remove', function () {
+  editor.on('remove contextmenu', function () {
     DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
     panel.remove();
   });
-
   editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
 };
 

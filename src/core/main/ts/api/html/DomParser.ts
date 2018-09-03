@@ -423,7 +423,6 @@ export default function (settings?, schema = Schema()) {
 
       return output;
     };
-
     parser = SaxParser({
       validate,
       allow_script_urls: settings.allow_script_urls,

@@ -18,6 +18,7 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'paste code',
   toolbar: 'undo redo | pastetext code',
+  paste_webkit_styles: 'color font font-size background',
   init_instance_callback (editor) {
     editor.on('PastePreProcess', function (evt) {
       console.log(evt);
