@@ -64,6 +64,7 @@ export const TableActions = function (editor: Editor, lazyWire) {
           fireNewRow(editor, row.dom());
         });
         Arr.each(result.newCells(), function (cell) {
+          cell.dom().height = target.element().dom().offsetHeight + 'px';
           fireNewCell(editor, cell.dom());
         });
         return result.cursor().map(function (cell) {
