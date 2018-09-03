@@ -77,6 +77,9 @@ const op = function <T>(fx: (value: T) => void) {
   });
 };
 
+const async = <T,U>(fx: (input: T, next: NextFn<U>, die: DieFn) => void) =>
+  on<T,U>((v, n, d) => fx(v, Fun.compose(n, wrap) , d));
+
 const inject = function <U>(value: U) {
   return on(function (_input: any, next: NextFn<Wrap<U>>, die: DieFn) {
     next(wrap(value));
@@ -167,6 +170,7 @@ const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, on
 export const Chain = {
   on,
   op,
+  async,
   control,
   mapper,
   identity,

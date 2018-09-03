@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { Attr, Class, Css, Element, Html, Insert, Remove, DomEvent } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -9,6 +9,8 @@ import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import * as RealMouse from 'ephox/agar/api/RealMouse';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
+import { Cell } from '@ephox/katamari';
+import { Assertions } from 'ephox/agar/api/Main';
 
 UnitTest.asynctest('RealMouseTest', function () {
   const success = arguments[arguments.length - 2];
@@ -37,6 +39,17 @@ UnitTest.asynctest('RealMouseTest', function () {
 
   Insert.append(Element.fromDom(document.body), container);
 
+  const clickMe = Element.fromTag('button');
+  Class.add(clickMe, 'click-me');
+  Html.set(clickMe, 'Click me!');
+  Insert.append(container, clickMe);
+
+  const count = Cell(0);
+  // add a MouseUp handler
+  DomEvent.bind(clickMe, 'mouseup', () => {
+    count.set(count.get() + 1);
+  });
+
   Pipeline.async({}, [
     RealMouse.sMoveToOn('.other'),
     // Wait 1 second. Probably don't need to...
@@ -51,7 +64,17 @@ UnitTest.asynctest('RealMouseTest', function () {
           if (!detection.browser.isFirefox()) RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
         }),
         Guard.tryUntil('Waiting for button to turn blue', 100, 2000)
-      )
+      ),
+      Chain.inject(container),
+      UiFinder.cFindIn('.click-me'),
+      RealMouse.cClick(),
+      Chain.op((button) => {
+        // Geckodriver does not have support for API actions yet.
+        if (!detection.browser.isFirefox()) {
+          Assertions.assertEq('mouseup event has fired', 1, count.get());
+          Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
+        }
+      })
     ])
   ], function () {
     Remove.remove(container);

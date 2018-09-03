@@ -29,7 +29,7 @@ UnitTest.asynctest('ChainTest', function() {
     });
   };
   const testInputValueFails = StepAssertions.testStepsFail(
-    'Output value is not a chain: dog', 
+    'Output value is not a chain: dog',
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie) {
@@ -141,6 +141,31 @@ UnitTest.asynctest('ChainTest', function() {
     ]
   );
 
+  const testChainAsync = StepAssertions.testChain(
+    'async works!',
+    Chain.async((_value, next) => {
+      next('async works!');
+    })
+  );
+
+  const testChainAsyncFail = StepAssertions.testChainFail(
+    'async fails!',
+    {},
+    Chain.async((_value, _next, die) => {
+      die('async fails!');
+    })
+  );
+
+  const testChainAsyncChain = StepAssertions.testChain(
+    'async chains!',
+    Chain.fromChains([
+      Chain.inject('async chains!'),
+      Chain.async((value, next, _die) => {
+        next(value)
+      })
+    ])
+  );
+
   return Pipeline.async({}, [
     Logger.t(
       '[Should fail validation if the chain function does not wrap the output]\n',
@@ -181,6 +206,21 @@ UnitTest.asynctest('ChainTest', function() {
     Logger.t(
       '[Chains should enforce input conditions]\n',
       testChainEnforcesInput
+    ),
+
+    Logger.t(
+      '[Chain should async]\n',
+      testChainAsync
+    ),
+
+    Logger.t(
+      '[Chain should async fail]\n',
+      testChainAsyncFail
+    ),
+
+    Logger.t(
+      '[Chain should async chain]\n',
+      testChainAsyncChain
     ),
 
     Logger.t(
