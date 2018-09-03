@@ -129,6 +129,10 @@ const pipeline = function (namedChains: NamedChain[], onSuccess: NextFn<any>, on
 
 const inputName = () => inputNameId;
 
+// tests need these values but other users should not
+export const _outputName = () => outputNameId;
+export const _outputUnset = () => outputUnset;
+
 export const NamedChain = {
   inputName,
   asChain,
