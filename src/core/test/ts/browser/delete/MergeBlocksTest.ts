@@ -117,7 +117,28 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function () {
         cMergeBlocks(true, [0, 0], [1]),
         cAssertPosition([0, 0, 1, 0], 1),
         cAssertHtml('<ul><li>a<b>b</b>c<b>d</b></li></ul>')
-      ]))
+      ])),
+
+      Logger.t('Merge empty block into empty containing block', Chain.asStep(viewBlock, [
+        cSetHtml('<div><h1></h1></div>'),
+        cMergeBlocks(true, [0], [0, 0]),
+        cAssertPosition([0], 0),
+        cAssertHtml('<div><br data-mce-bogus="1"></div>')
+      ])),
+
+      Logger.t('Merge empty block into containing block', Chain.asStep(viewBlock, [
+        cSetHtml('<div><h1></h1>c</div>'),
+        cMergeBlocks(true, [0], [0, 0]),
+        cAssertPosition([0], 0),
+        cAssertHtml('<div><br>c</div>')
+      ])),
+
+      Logger.t('Merge first empty item of nested list into containing list item', Chain.asStep(viewBlock, [
+        cSetHtml('<ul><li><ul><li></li><li>a</li></ul></li></ul>'),
+        cMergeBlocks(true, [0, 0], [0, 0, 0, 0]),
+        cAssertPosition([0, 0], 0),
+        cAssertHtml('<ul><li><br><ul><li>a</li></ul></li></ul>')
+      ])),
     ])),
 
     Logger.t('Merge backwards', GeneralSteps.sequence([

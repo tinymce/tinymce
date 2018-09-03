@@ -9,7 +9,7 @@
  */
 
 import { Arr, Option, Fun } from '@ephox/katamari';
-import { Compare, Insert, Remove, Element, Traverse, Node } from '@ephox/sugar';
+import { Compare, Insert, Remove, Element, Traverse } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
@@ -36,7 +36,18 @@ const removeEmptyRoot = (rootNode: Element, block: Element) => {
   return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
 };
 
+const isEmptyBefore = (el: Element) => Traverse.prevSiblings(el).filter((el) => !Empty.isEmpty(el)).length === 0;
+
 const nestedBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element, insertionPoint: Element): Option<CaretPosition> => {
+  if (Empty.isEmpty(toBlock)) {
+    PaddingBr.fillWithPaddingBr(toBlock);
+    return CaretFinder.firstPositionIn(toBlock.dom());
+  }
+
+  if (isEmptyBefore(insertionPoint) && Empty.isEmpty(fromBlock)) {
+    Insert.before(insertionPoint, Element.fromTag('br'));
+  }
+
   const position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(insertionPoint.dom()));
   Arr.each(extractChildren(fromBlock), (child) => {
     Insert.before(insertionPoint, child);
