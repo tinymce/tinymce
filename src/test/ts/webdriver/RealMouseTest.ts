@@ -72,7 +72,7 @@ UnitTest.asynctest('RealMouseTest', function () {
         // Geckodriver does not have support for API actions yet.
         if (!detection.browser.isFirefox()) {
           Assertions.assertEq('mouseup event has fired', 1, count.get());
-          Assertions.assertEq('button doesn\'t have [data-seleniumid]', false, Attr.has(button, 'data-seleniumid'));
+          Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
         }
       })
     ])

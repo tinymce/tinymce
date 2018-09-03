@@ -3,6 +3,8 @@ import { Step, Chain } from './Main';
 import { Id, Fun } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
 
+const BedrockIdAttribute = 'data-bedrockid';
+
 const sActionOn = function <T>(selector: string, type: string): Step<T,T> {
   return SeleniumAction.sPerform<T>('/mouse', {
     selector: selector,
@@ -41,13 +43,13 @@ const cClick = () =>
     Chain.fromChains([
       Chain.mapper((elem: Element) => {
         const id = Id.generate('');
-        Attr.set(elem, 'data-seleniumid', id);
-        return `[data-seleniumid="${id}"]`;
+        Attr.set(elem, BedrockIdAttribute, id);
+        return `[${BedrockIdAttribute}="${id}"]`;
       }),
       cAction('click')
     ]),
     Chain.op((elem: Element) => {
-      Attr.remove(elem,'data-seleniumid')
+      Attr.remove(elem, BedrockIdAttribute);
     })
   ]);
 
@@ -56,5 +58,6 @@ export {
   sDownOn,
   sUpOn,
   sClickOn,
-  cClick
+  cClick,
+  BedrockIdAttribute
 };
