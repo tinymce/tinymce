@@ -1,3 +1,9 @@
+Version 4.3.0
+
+Date 2018-09-03
+
+* adds cClick to RealMouse
+
 Version 4.2.0
 
 Date 2018-08-30
