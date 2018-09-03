@@ -1,5 +1,7 @@
 import * as SeleniumAction from '../server/SeleniumAction';
-import { Step } from './Main';
+import { Step, Chain } from './Main';
+import { Id, Fun } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
 
 const sActionOn = function <T>(selector: string, type: string): Step<T,T> {
   return SeleniumAction.sPerform<T>('/mouse', {
@@ -24,9 +26,35 @@ const sClickOn = function <T>(selector: string): Step<T,T> {
   return sActionOn<T>(selector, 'click');
 };
 
+
+const cAction = (action) =>
+  Chain.fromChains([
+    Chain.mapper((selector) => ({
+      selector,
+      type: action
+    })),
+    SeleniumAction.cPerform('/mouse')
+  ])
+
+const cClick = () =>
+  Chain.fromParent(Chain.mapper(Fun.identity), [
+    Chain.fromChains([
+      Chain.mapper((elem: Element) => {
+        const id = Id.generate('');
+        Attr.set(elem, 'data-seleniumid', id);
+        return `[data-seleniumid="${id}"]`;
+      }),
+      cAction('click')
+    ]),
+    Chain.op((elem: Element) => {
+      Attr.remove(elem,'data-seleniumid')
+    })
+  ]);
+
 export {
   sMoveToOn,
   sDownOn,
   sUpOn,
-  sClickOn
+  sClickOn,
+  cClick
 };
