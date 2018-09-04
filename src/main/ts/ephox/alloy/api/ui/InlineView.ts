@@ -91,17 +91,13 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       apis: {
         showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
-          Sandboxing.cloak(sandbox);
-          Sandboxing.open(sandbox, thing);
-          Sandboxing.decloak(sandbox);
+          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));;
           detail.onShow()(sandbox);
         },
         showMenuAt(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) {
           const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
 
-          Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);
-          Sandboxing.decloak(sandbox);
           detail.onShow()(sandbox);
         },
         hide (sandbox: AlloyComponent) {

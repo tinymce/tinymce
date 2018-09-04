@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.24.0] - 2018-09-04
+### Added
+ - Added InlineView.showMenuAt() to special-case positioning for inline menus
+ - Added Sandboxing.openWhileCloaked() convenience method
+
 ## [3.23.0] - 2018-08-31
 ### Added
  - Added eventOrder for Dropdowns

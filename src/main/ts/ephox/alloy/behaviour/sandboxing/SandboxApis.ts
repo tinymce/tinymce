@@ -32,6 +32,13 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   return newState;
 };
 
+const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data, transaction: () => void) => {
+  cloak(sandbox, sConfig, sState);
+  open(sandbox, sConfig, sState, data);
+  transaction();
+  decloak(sandbox, sConfig, sState);
+};
+
 const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
   sState.get().each((data) => {
     Attachment.detachChildren(sandbox);
@@ -89,6 +96,7 @@ export {
   cloak,
   decloak,
   open,
+  openWhileCloaked,
   close,
   isOpen,
   isPartOf,

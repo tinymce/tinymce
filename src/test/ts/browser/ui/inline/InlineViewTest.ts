@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Chain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -11,7 +11,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
-import { Html } from '@ephox/sugar';
+import { Html, Css } from '@ephox/sugar';
 
 UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
@@ -130,6 +130,35 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         })
       ),
 
+      sCheckClosed('After hide'),
+
+      Step.sync(() => {
+        InlineView.showAt(inline, {
+          anchor: 'makeshift',
+          x: 50,
+          y: 50
+        }, Container.sketch({
+          dom: {
+            innerHtml: 'Inner HTML'
+          }
+        }));
+      }),
+      sCheckOpen('After show'),
+
+      Logger.t(
+        'Check that inline view has a top and left',
+        Chain.asStep(gui.element(), [
+          UiFinder.cFindIn('.test-inline'),
+          Chain.op((value) => {
+            Assertions.assertEq('Check view CSS top is 50px', '50px', Css.getRaw(value, 'top').getOr('no top found'));
+            Assertions.assertEq('Check view CSS left is 50px', '50px', Css.getRaw(value, 'left').getOr('no left found'));
+          })
+        ])
+      ),
+
+      Step.sync(() => {
+        InlineView.hide(inline);
+      }),
       sCheckClosed('After hide'),
 
       Logger.t(
