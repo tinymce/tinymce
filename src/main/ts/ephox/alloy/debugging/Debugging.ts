@@ -77,7 +77,6 @@ const processEvent = (eventName: string, initialTarget: Element, f: EventProcess
     case EventConfiguration.NORMAL:
       return f(noLogger());
     case EventConfiguration.LOGGING: {
-      console.log('Starting to do logging on ', eventName);
       const logger = makeEventLogger(eventName, initialTarget);
       const output = f(logger);
       logger.write();
@@ -162,7 +161,6 @@ const getOrInitConnection = () => {
       const evs = eventConfig.get();
       evs[eventName] = status;
       eventConfig.set(evs);
-      console.log('now', evs);
     };
 
     window[CHROME_INSPECTOR_GLOBAL] = {
