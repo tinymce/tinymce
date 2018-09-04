@@ -25,7 +25,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
                     tag: 'button'
                   },
                   // FIX: Will have to do something here.
-                  action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute()))
+                  action: store.adder('clicked on coupled button of: ' + Tagger.read(primary.element()).getOr('No UID'))
                 });
               }
             }
