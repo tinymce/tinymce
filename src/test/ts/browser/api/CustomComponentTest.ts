@@ -9,6 +9,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {
 
@@ -101,12 +102,16 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
             classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
             attrs: {
               'behaviour-b-exhibit': str.is('exhibition'),
-              'data-alloy-id': str.is('custom-uid')
+              // This should no longer appear
+              'data-alloy-id': str.none()
             }
           });
         }),
         component.element()
       ),
+      Step.sync(() => {
+        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.read(component.element()).getOrDie('Could not find tag'));
+      }),
 
       store.sAssertEq('Nothing in store yet', [ ]),
 

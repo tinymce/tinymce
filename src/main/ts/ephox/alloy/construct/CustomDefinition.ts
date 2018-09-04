@@ -70,12 +70,10 @@ const getUid = (detail: CustomDetail): Record<string, string> => {
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
   const base = {
+    uid: detail.uid(),
     tag: detail.dom().tag(),
     classes: detail.dom().classes(),
-    attributes: Merger.deepMerge(
-      getUid(detail),
-      detail.dom().attributes()
-    ),
+    attributes: detail.dom().attributes(),
     styles: detail.dom().styles(),
     domChildren: Arr.map(detail.components(), (comp) => comp.element())
   };

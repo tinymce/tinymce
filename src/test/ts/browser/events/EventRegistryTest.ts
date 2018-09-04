@@ -2,9 +2,10 @@ import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Tr
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Attr, Compare, Element, Html, Insert } from '@ephox/sugar';
+import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
@@ -12,16 +13,22 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const page = Element.fromTag('div');
 
   Html.set(page,
-    '<div data-alloy-id="comp-1">' +
-      '<div data-alloy-id="comp-2">' +
-        '<div data-alloy-id="comp-3">' +
-          '<div data-alloy-id="comp-4">' +
-            '<div data-alloy-id="comp-5"></div>' +
+    '<div data-test-uid="comp-1">' +
+      '<div data-test-uid="comp-2">' +
+        '<div data-test-uid="comp-3">' +
+          '<div data-test-uid="comp-4">' +
+            '<div data-test-uid="comp-5"></div>' +
           '</div>' +
         '</div>' +
       '</div>' +
     '</div>'
   );
+
+  // Add alloy UID tags to match these attributes.
+  const pageBits = SelectorFilter.descendants(page, '[data-test-uid']);
+  Arr.each(pageBits, (bit) => {
+    Tagger.writeOnly(bit, Attr.get(bit, 'data-test-uid'));
+  });
 
   const isRoot = Fun.curry(Compare.eq, page);
 
@@ -76,7 +83,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
       'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
       GeneralSteps.sequence([
         Chain.asStep(page, [
-          UiFinder.cFindIn('[data-alloy-id="' + id + '"]'),
+          UiFinder.cFindIn('[data-test-uid="' + id + '"]'),
           Chain.binder((target) => {
             const handler = events.find(isRoot, type, target);
             return handler.fold(() => {
@@ -110,7 +117,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('page', page),
-            NamedChain.direct('page', UiFinder.cFindIn('[data-alloy-id="' + id + '"]'), 'target'),
+            NamedChain.direct('page', UiFinder.cFindIn('[data-test-uid="' + id + '"]'), 'target'),
             NamedChain.direct('target', cFindHandler, 'handler'),
             NamedChain.bundle(Result.value)
           ]),
@@ -119,7 +126,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
-              Attr.get(section.element(), 'data-alloy-id')
+              Attr.get(section.element(), 'data-test-uid')
             );
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),

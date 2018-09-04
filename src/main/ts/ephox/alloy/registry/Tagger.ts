@@ -8,38 +8,40 @@ const idAttr = AlloyTags.idAttr();
 
 const write = (label: string, elem: Element): string => {
   const id: string = Id.generate(prefix + label);
-  Attr.set(elem, idAttr, id);
+  writeOnly(elem, id);
   return id;
 };
 
 const writeOnly = (elem: Element, uid: string) => {
-  Attr.set(elem, idAttr, uid);
+  // FIX here.
+  Object.defineProperty(elem.dom(), idAttr, {
+    value: uid,
+    writable: true
+  });
 };
 
 const read = (elem: Element): Option<string> => {
-  const id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
+  const id = Node.isElement(elem) ? elem.dom()[idAttr] : null;
   return Option.from(id);
 };
-
-// const find = (container: Element, id: string): Option<Element> => {
-//   return SelectorFind.descendant(container, id);
-// };
 
 const generate = (prefix: string): string => {
   return Id.generate(prefix);
 };
 
 const revoke = (elem: Element): void => {
-  Attr.remove(elem, idAttr);
+  // FIX
+  delete elem.dom()[idAttr];
 };
 
+// TODO: Consider deprecating.
 const attribute: () => string = Fun.constant(idAttr);
+
 export {
   revoke,
   write,
   writeOnly,
   read,
-  // find,
   generate,
   attribute
 };

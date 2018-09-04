@@ -11,6 +11,7 @@ import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { document, console } from '@ephox/dom-globals';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
   const root = Element.fromTag('div');
