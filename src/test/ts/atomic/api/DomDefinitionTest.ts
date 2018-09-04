@@ -11,6 +11,7 @@ UnitTest.test('DomDefinitionTest', () => {
     'Testing definition without any children or childspecs',
     () => {
       const definition = DomDefinition.nu({
+        uid: 'john-uid',
         tag: 'person',
         attributes: {
           name: 'john',
@@ -25,6 +26,7 @@ UnitTest.test('DomDefinitionTest', () => {
       });
 
       assert.eq({
+        uid: 'john-uid',
         tag: 'person',
         classes: [],
         attributes: {
@@ -49,6 +51,7 @@ UnitTest.test('DomDefinitionTest', () => {
     'Testing definition without any children or childspecs, but innerHtml',
     () => {
       const definition = DomDefinition.nu({
+        uid: 'john-uid',
         tag: 'person',
         attributes: {
           name: 'john',
@@ -64,6 +67,7 @@ UnitTest.test('DomDefinitionTest', () => {
       });
 
       assert.eq({
+        uid: 'john-uid',
         tag: 'person',
         classes: [],
         attributes: {
@@ -87,6 +91,7 @@ UnitTest.test('DomDefinitionTest', () => {
     'Testing definition without any children or childspecs, but value',
     () => {
       const definition = DomDefinition.nu({
+        uid: 'john-uid',
         tag: 'person',
         attributes: {
           name: 'john',
@@ -102,6 +107,7 @@ UnitTest.test('DomDefinitionTest', () => {
       });
 
       assert.eq({
+        uid: 'john-uid',
         tag: 'person',
         classes: [],
         attributes: {

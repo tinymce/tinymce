@@ -16,6 +16,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { input } from 'ephox/alloy/api/events/NativeEvents';
 import { Attr, SelectorFind } from '@ephox/sugar';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
@@ -248,13 +249,15 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
         },  (comp) => {
-          Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', Attr.get(comp.element(), 'data-alloy-id'));
+          const alloyId = Tagger.readOrDie(comp.element());
+          Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
         });
 
         FormField.getLabel(inputA).fold(() => {
           throw new Error('The input Label could not be found');
         },  (comp) => {
-          Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', Attr.get(comp.element(), 'data-alloy-id'));
+          const alloyId = Tagger.readOrDie(comp.element());
+          Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
         });
       }),
 

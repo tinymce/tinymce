@@ -25,7 +25,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   );
 
   // Add alloy UID tags to match these attributes.
-  const pageBits = SelectorFilter.descendants(page, '[data-test-uid']);
+  const pageBits = SelectorFilter.descendants(page, '[data-test-uid]');
   Arr.each(pageBits, (bit) => {
     Tagger.writeOnly(bit, Attr.get(bit, 'data-test-uid'));
   });

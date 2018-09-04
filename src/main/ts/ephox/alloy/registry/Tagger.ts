@@ -2,6 +2,7 @@ import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr, Node, Element } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
+import { AlloyLogger } from '../api/Main';
 
 const prefix = AlloyTags.prefix();
 const idAttr = AlloyTags.idAttr();
@@ -25,13 +26,17 @@ const read = (elem: Element): Option<string> => {
   return Option.from(id);
 };
 
+const readOrDie = (elem: Element): string => {
+  return read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));
+};
+
 const generate = (prefix: string): string => {
   return Id.generate(prefix);
 };
 
 const revoke = (elem: Element): void => {
-  // FIX
-  delete elem.dom()[idAttr];
+  // This looks like it is only used by ForeignGui, which is experimental.
+  writeOnly(elem, null);
 };
 
 // TODO: Consider deprecating.
@@ -42,6 +47,7 @@ export {
   write,
   writeOnly,
   read,
+  readOrDie,
   generate,
   attribute
 };

@@ -17,6 +17,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
@@ -33,6 +34,8 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
+    // TODO: Use s prefix for all of these. Or find out why they aren't.
+
     const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of button',
@@ -43,7 +46,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
             ],
             attrs: {
               'type': str.is('button'),
-              'data-alloy-id': str.is('test-button-id'),
+              'data-alloy-id': str.none(),
               'role': str.is('button')
             },
             html: str.is('ButtonSpecTest.button')
@@ -51,6 +54,11 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
         }),
         component.element()
       );
+    });
+
+    const testAlloyUid = Step.sync(() => {
+      const actual = Tagger.read(component.element()).getOrDie('Could not find alloy uid');
+      Assertions.assertEq('Checking alloy uid', 'test-button-id', actual);
     });
 
     const testButtonClick = Logger.t(
@@ -104,6 +112,10 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
     return [
       // Test structure
       testStructure,
+
+      // Test alloy uid
+      testAlloyUid,
+
       // Test clicking
       testButtonClick,
 

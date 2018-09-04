@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Mouse, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, Pipeline, Step, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { Body, Element, Html, Insert, Node, Remove } from '@ephox/sugar';
+import { Body, Element, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -45,6 +45,24 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     ]
   });
 
+  const sAssertChildHasRandomUid = (label: string, index: number) => Logger.t(
+    label,
+    Step.sync(() => {
+      const child = Traverse.child(root, index).getOrDie('Could not find child at index: ' + index);
+      const alloyUid = Tagger.readOrDie(child);
+      Assertions.assertEq('Uid should have been initialised', true, alloyUid.startsWith('uid_'));
+    })
+  );
+
+  const sAssertChildHasNoUid = (label: string, index: number) => Logger.t(
+    label,
+    Step.sync(() => {
+      const child = Traverse.child(root, index).getOrDie('Could not find child at index: ' + index);
+      const optUid = Tagger.read(child);
+      Assertions.assertEq('Uid should NOT be set', true, optUid.isNone());
+    })
+  );
+
   Pipeline.async({}, [
     GuiSetup.mAddStyles(Element.fromDom(document), [
       '.selected { color: white; background: black; }'
@@ -62,8 +80,9 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
               classes: [ arr.not('selected') ]
             }),
             s.element('div', {
+              // TODO: Test that the field is set.
               attrs: {
-                'data-alloy-id': str.startsWith('uid_')
+                'data-alloy-id': str.none()
               }
             })
           ]
@@ -71,6 +90,10 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
       }),
       root
     ),
+
+    sAssertChildHasNoUid('First child should have no uid', 0),
+    sAssertChildHasRandomUid('Div should have a uid', 3),
+
     Mouse.sClickOn(root, 'span.clicker:first'),
 
     Assertions.sAssertStructure(
@@ -90,7 +113,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
             }),
             s.element('div', {
               attrs: {
-                'data-alloy-id': str.startsWith('uid_')
+                'data-alloy-id': str.none()
               }
             })
           ]
@@ -98,6 +121,9 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
       }),
       root
     ),
+
+    sAssertChildHasNoUid('First child should still have no uid', 0),
+    sAssertChildHasRandomUid('Div should still have a uid', 3),
 
     Step.sync(() => {
       connection.disengage();
