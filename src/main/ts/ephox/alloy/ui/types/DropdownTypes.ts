@@ -41,6 +41,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  eventOrder?: Record<string, string[]>;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
@@ -55,4 +56,4 @@ export interface DropdownSpec extends CompositeSketchSpec {
 
 }
 
-export interface DropdownSketcher extends CompositeSketch<CompositeSketchSpec, CompositeSketchDetail> { }
+export interface DropdownSketcher extends CompositeSketch<DropdownSpec, DropdownDetail> { }

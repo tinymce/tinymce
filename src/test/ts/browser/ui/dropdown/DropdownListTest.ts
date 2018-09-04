@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -14,8 +14,8 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { AddEventsBehaviour, AlloyEvents } from 'ephox/alloy/api/Main';
-import { compare } from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Results';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
@@ -56,6 +56,16 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         },
 
         toggleClass: 'alloy-selected',
+
+        dropdownBehaviours: Behaviour.derive(
+          Arr.map([ '1', '2', '3' ], (num) => AddEventsBehaviour.config(`test-listener-${num}`, [
+            AlloyEvents.run('test-listener', store.adder(`test.listener.${num}`))
+          ]))
+        ),
+
+        eventOrder: {
+          'test-listener': [ 'test-listener-1', 'test-listener-3', 'test-listener-2' ]
+        },
 
         matchWidth: true,
 
@@ -236,6 +246,18 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       Logger.t(
         'After broadcasting dismiss popup on a non popup element, the menu should not longer exist in the DOM',
         UiFinder.sNotExists(gui.element(), '.menu')
+      ),
+
+      Logger.t(
+        'Triggering the test-listener event should fire things to the store in the right order (1, 3, 2)',
+        GeneralSteps.sequence([
+          store.sClear,
+          Step.sync(() => AlloyTriggers.emit(component, 'test-listener')),
+          store.sAssertEq(
+            'test-listener should respect eventOrder',
+            ['test.listener.1', 'test.listener.3', 'test.listener.2' ]
+          )
+        ])
       )
     ];
   }, () => { success(); }, failure);

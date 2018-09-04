@@ -7,6 +7,7 @@ import * as DemoSink from './DemoSink';
 import DialogDemo from './DialogDemo';
 import DockableDemo from './DockableDemo';
 import DraggableDemo from './DraggableDemo';
+import DraggableResizerDemo from './DraggableResizerDemo';
 import DropdownsDemo from './DropdownsDemo';
 import ForeignGuiDemo from './ForeignGuiDemo';
 import FormDemo from './FormDemo';
@@ -39,6 +40,7 @@ window.demos = {
   DialogDemo,
   DockableDemo,
   DraggableDemo,
+  DraggableResizerDemo,
   DropdownsDemo,
   ForeignGuiDemo,
   FormDemo,

@@ -5,18 +5,62 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { FocusManager } from '../../api/focus/FocusManagers';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { MenuConfigSpec } from '../../keying/KeyingModeTypes';
+import { MenuConfigSpec, FlatgridConfig, FlatgridConfigSpec, MatrixConfigSpec } from '../../keying/KeyingModeTypes';
 import { ItemSpec } from '../../ui/types/ItemTypes';
+import { KeyingConfigSpec } from '../../api/behaviour/Keying';
 
 // FIX: Do this (Fix KeyingConfig here)
-export interface MenuMovement {
-  config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
-  moveOnTab: () => boolean;
+
+export interface MenuGridMovementSpec {
+  mode: 'grid';
+  initSize: {
+    numColumns: number;
+    numRows: number;
+  }
+}
+
+export interface MenuMatrixMovementSpec {
+  mode: 'matrix';
+  rowDom: RawDomSchema;
+  rowSelector: string;
+  numColumns: number;
+}
+
+export interface MenuNormalMovementSpec {
+  mode: 'menu';
+  moveOnTab?: boolean;
+}
+
+export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | MenuNormalMovementSpec;
+
+// config: (detail: MenuDetail,  movementInfo: MenuMovement) => KeyingConfigSpec
+export interface MenuGridMovement {
+  mode: () => 'grid';
+  config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
+  layoutItems: () => (items: AlloySpec[], movementInfo: MenuMovement) => AlloySpec[];
   initSize?: () => {
     numColumns: () => number;
     numRows: () => number;
   };
 }
+
+export interface MenuMatrixMovement {
+  mode: () => 'matrix';
+  config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
+  layoutItems: () => (items: AlloySpec[], movementInfo: MenuMovement) => AlloySpec[];
+  rowDom: () => RawDomSchema;
+  numColumns: () => number;
+  rowSelector: () => string;
+}
+
+export interface MenuNormalMovement {
+  mode: () => 'menu';
+  config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
+  moveOnTab: () => boolean;
+  layoutItems: () => (items: AlloySpec[], movement: MenuMovement) => AlloySpec[]
+}
+
+export type MenuMovement = MenuGridMovement | MenuMatrixMovement | MenuNormalMovement;
 
 export interface MenuDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -48,12 +92,13 @@ export interface MenuSpec extends CompositeSketchSpec {
   items: ItemSpec[];
 
   fakeFocus?: boolean;
+  focusManager?: FocusManager;
   markers: {
     item: string;
     selectedItem: string;
   };
 
-  // Movement?
+  movement?: MenuMovementSpec;
 
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;
