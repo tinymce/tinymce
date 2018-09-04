@@ -25,6 +25,7 @@ const rule = <C, S>(matches: KeyMatch.KeyMatcher, action: KeyRuleHandler<C, S>):
 
 const choose = <C, S>(transitions: Array<KeyRule<C, S>>, event: SugarEvent): Option<KeyRuleHandler<C, S>> => {
   const transition = Arr.find(transitions, (t) => {
+    console.log('event', event);
     return t.matches(event);
   });
 

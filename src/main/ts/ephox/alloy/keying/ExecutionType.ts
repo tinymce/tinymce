@@ -3,6 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
+import * as Fields from '../data/Fields';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
@@ -20,11 +21,16 @@ const schema = [
   FieldSchema.defaulted('useSpace', false),
   FieldSchema.defaulted('useEnter', true),
   FieldSchema.defaulted('useControlEnter', false),
+  Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('useDown', false)
 ];
 
 const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig) => {
   return executeConfig.execute()(component, simulatedEvent, component.element());
+};
+
+const doEscape: KeyRuleHandler<ExecutingConfig, Stateless>  = (component, simulatedEvent, executeConfig) => {
+  return executeConfig.onEscape()(component, simulatedEvent);
 };
 
 const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
@@ -34,10 +40,12 @@ const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEven
   const execKeys = spaceExec.concat(enterExec).concat(downExec);
 
   return [
-    KeyRules.rule(KeyMatch.inSet(execKeys), execute)
+    KeyRules.rule(KeyMatch.inSet(execKeys), execute),
   ].concat(executeConfig.useControlEnter() ? [
     KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
-  ] : [ ]);
+  ] : [ ]).concat([
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
+  ]);
 };
 
 const getEvents = Fun.constant({ });

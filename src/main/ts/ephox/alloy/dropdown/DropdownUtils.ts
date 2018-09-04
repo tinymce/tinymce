@@ -17,6 +17,7 @@ import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
+import { Representing } from '../api/behaviour/Representing';
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
@@ -151,6 +152,12 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
     },
     behaviours: Merger.deepMerge(
       Behaviour.derive([
+        Representing.config({
+          store: {
+            mode: 'memory',
+            initialValue: hotspot
+          }
+        }),
         Sandboxing.config({
           onOpen,
           onClose,

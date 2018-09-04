@@ -1,8 +1,9 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Focus, Element } from '@ephox/sugar';
+import { Focus, Element, Compare } from '@ephox/sugar';
 
 import { Highlighting } from '../behaviour/Highlighting';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyTriggers } from '../Main';
 
 export interface FocusManager {
   get: (component: AlloyComponent) => Option<Element>;
@@ -15,7 +16,15 @@ const dom = (): FocusManager => {
   };
 
   const set = (component, focusee) => {
+    const prevFocus = get(component);
     component.getSystem().triggerFocus(focusee, component.element());
+    const newFocus = get(component);
+    if (! prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)))) {
+      AlloyTriggers.emitWith(component, 'focusManager.change', {
+        prevFocus,
+        newFocus
+      });
+    }
   };
 
   return {
@@ -32,9 +41,17 @@ const highlights = (): FocusManager => {
   };
 
   const set = (component, element) => {
+    const prevFocus = get(component);
     component.getSystem().getByDom(element).fold(Fun.noop, (item) => {
       Highlighting.highlight(component, item);
     });
+    const newFocus = get(component);
+    if  (! prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p))))  {
+      AlloyTriggers.emitWith(component, 'focusManager.change', {
+        prevFocus,
+        newFocus
+      });
+    }
   };
 
   return {

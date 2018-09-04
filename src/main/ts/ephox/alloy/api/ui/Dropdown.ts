@@ -5,7 +5,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
-import { DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
+import { DropdownDetail, DropdownSketcher, DropdownSpec, DropdownApis } from '../../ui/types/DropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
@@ -17,6 +17,8 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SimulatedEvent, AlloyTriggers } from '../Main';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {
@@ -29,6 +31,30 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
   const action = (component: AlloyComponent): void => {
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync).get(Fun.noop);
+  };
+
+  const apis: DropdownApis = {
+    openAndFocus: (comp) => {
+      if (! Toggling.isOn(comp)) {
+        action(comp);
+      }
+    },
+    open: (comp) => {
+      if (! Toggling.isOn(comp)) {
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop).get(Fun.noop);
+      }
+    },
+    isOpen: Toggling.isOn,
+    close: (comp) => {
+      if (Toggling.isOn(comp)) {
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop).get(Fun.noop);
+      }
+    }
+  };
+
+  const triggerExecute = (comp: AlloyComponent, se: SimulatedEvent<SugarEvent>): Option<boolean> => {
+    AlloyTriggers.emitExecute(comp);
+    return Option.some(true);
   };
 
   return Merger.deepMerge(
@@ -62,8 +88,27 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
             }
           }),
           Keying.config({
-            mode: 'execution',
-            useSpace: true
+            mode: 'special',
+            onSpace: triggerExecute,
+            onEnter: triggerExecute,
+            onDown: (comp, se) => {
+              if (Dropdown.isOpen(comp)) {
+                const sandbox = Coupling.getCoupled(comp, 'sandbox');
+                switchToMenu(sandbox);
+              } else {
+                Dropdown.openAndFocus(comp);
+              }
+
+              return Option.some(true);
+            },
+            onEscape: (comp, se) => {
+              if (Dropdown.isOpen(comp)) {
+                Dropdown.close(comp);
+                return Option.some(true);
+              } else {
+                return Option.none();
+              }
+            }
           }),
           Focusing.config({ })
         ]),
@@ -76,7 +121,9 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           // Order, the button state is toggled first, so assumed !selected means close.
           'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
         }
-      )
+      ),
+
+      apis
     },
     {
       dom: {
@@ -93,7 +140,13 @@ const Dropdown = Sketcher.composite({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
-  factory
+  factory,
+  apis: {
+    openAndFocus: (apis, comp) => apis.openAndFocus(comp),
+    open: (apis, comp) => apis.open(comp),
+    close: (apis, comp) => apis.close(comp),
+    isOpen: (apis, comp) => apis.isOpen(comp)
+  }
 }) as DropdownSketcher;
 
 export {
