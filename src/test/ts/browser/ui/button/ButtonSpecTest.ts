@@ -57,7 +57,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
     });
 
     const testAlloyUid = Step.sync(() => {
-      const actual = Tagger.read(component.element()).getOrDie('Could not find alloy uid');
+      const actual = Tagger.readOrDie(component.element());
       Assertions.assertEq('Checking alloy uid', 'test-button-id', actual);
     });
 

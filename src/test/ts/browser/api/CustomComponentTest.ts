@@ -110,7 +110,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.read(component.element()).getOrDie('Could not find tag'));
+        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
       }),
 
       store.sAssertEq('Nothing in store yet', [ ]),

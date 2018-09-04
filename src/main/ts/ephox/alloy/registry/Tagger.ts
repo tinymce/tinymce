@@ -14,7 +14,6 @@ const write = (label: string, elem: Element): string => {
 };
 
 const writeOnly = (elem: Element, uid: string) => {
-  // FIX here.
   Object.defineProperty(elem.dom(), idAttr, {
     value: uid,
     writable: true
