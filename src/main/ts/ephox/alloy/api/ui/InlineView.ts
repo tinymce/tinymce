@@ -44,7 +44,6 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
         anchor: 'submenu',
         item
       }, submenu);
-      Sandboxing.decloak(menuSandbox);
     },
   });
 }
