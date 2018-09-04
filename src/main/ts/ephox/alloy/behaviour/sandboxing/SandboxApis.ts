@@ -32,6 +32,7 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   return newState;
 };
 
+// TODO AP-191 write a test for openWhileCloaked
 const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data, transaction: () => void) => {
   cloak(sandbox, sConfig, sState);
   open(sandbox, sConfig, sState, data);

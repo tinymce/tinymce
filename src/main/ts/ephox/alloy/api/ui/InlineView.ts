@@ -93,6 +93,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
           Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));;
           detail.onShow()(sandbox);
         },
+        // TODO AP-191 write a test for showMenuAt
         showMenuAt(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) {
           const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
 
