@@ -3,7 +3,7 @@ import { Merger, Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Logger from 'ephox/agar/api/Logger';
-import { NamedChain } from 'ephox/agar/api/NamedChain';
+import { NamedChain, _outputName, _outputUnset } from 'ephox/agar/api/NamedChain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
@@ -59,7 +59,7 @@ UnitTest.asynctest('NamedChainTest', function() {
           NamedChain.read('x', cIsEqual(10)),
 
           NamedChain.bundle(function (input) {
-            RawAssertions.assertEq('Checking bundled chain output', Merger.deepMerge(
+            RawAssertions.assertEq('Checking bundled chain output', Merger.merge(
               {
                 x: 5 * 2,
                 y: 8,
@@ -74,7 +74,8 @@ UnitTest.asynctest('NamedChainTest', function() {
                 }
               },
               // Also check original value
-              wrapObj(NamedChain.inputName(), '.')
+              wrapObj(NamedChain.inputName(), '.'),
+              wrapObj(_outputName(), _outputUnset())
             ), input);
             return Result.value(input);
           })
