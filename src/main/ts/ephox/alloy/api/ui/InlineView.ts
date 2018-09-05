@@ -90,7 +90,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       apis: {
         showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
-          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));;
+          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));
           detail.onShow()(sandbox);
         },
         // TODO AP-191 write a test for showMenuAt
