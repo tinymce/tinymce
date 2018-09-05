@@ -3,13 +3,12 @@ import { Arr, Fun, Merger, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
-// NB: Tsc requires AlloyEventHandler to be imported here.
-import { AlloyEventRecord, AlloyEventHandler } from '../api/events/AlloyEvents';
+import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
-import * as AlloyTags from '../ephemera/AlloyTags';
 
+// NB: Tsc requires AlloyEventHandler to be imported here.
 export interface CustomDetail {
   dom: () => StructDomSchema;
   // By this stage, the components are built.
@@ -62,10 +61,6 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
     // Need to have this initially
     FieldSchema.defaulted('debug.sketcher', 'unknown')
   ]), spec);
-};
-
-const getUid = (detail: CustomDetail): Record<string, string> => {
-  return Objects.wrap(AlloyTags.idAttr(), detail.uid());
 };
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
