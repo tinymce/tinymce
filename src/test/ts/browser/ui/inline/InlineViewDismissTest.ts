@@ -121,7 +121,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             root: gui.element()
           }, Container.sketch({
             components: [
-              Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') })
+              Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
             ]
           }));
         })
@@ -133,7 +133,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       TestBroadcasts.sDismissOn(
         'toolbar: should not close',
         gui,
-        '[data-alloy-id="bold-button"]'
+        '.bold-button'
       ),
 
       sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),

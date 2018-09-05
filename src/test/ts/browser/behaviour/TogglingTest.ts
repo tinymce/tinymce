@@ -21,7 +21,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
             height: '200px'
           }
         },
-        uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
           Toggling.config({
             selected: true,
@@ -47,7 +46,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
                 arr.not('selected')
               ],
               attrs: {
-                'data-alloy-id': str.is('custom-uid'),
                 'aria-pressed': str.is('true'),
                 'aria-expanded': str.none()
               }
@@ -69,7 +67,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
                 arr.not('selected')
               ],
               attrs: {
-                'data-alloy-id': str.is('custom-uid'),
                 'aria-pressed': str.is('false'),
                 'aria-expanded': str.none()
               }

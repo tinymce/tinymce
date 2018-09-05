@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Attr, Classes, Css, Element, Html, InsertAll, Value } from '@ephox/sugar';
 
 import * as DomDefinition from './DomDefinition';
+import * as Tagger from '../registry/Tagger';
 
 const getChildren = (definition) => {
   if (definition.domChildren().isSome() && definition.defChildren().isSome()) {
@@ -31,6 +32,8 @@ const renderToDom = (definition) => {
   definition.value().each((value) => {
     Value.set(subject, value);
   });
+
+  Tagger.writeOnly(subject, definition.uid());
 
   return subject;
 };
