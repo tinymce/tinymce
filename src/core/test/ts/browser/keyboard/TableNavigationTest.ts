@@ -54,6 +54,14 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success
           tinyApis.sAssertSelection([1], 0, [1], 0),
           tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>')
         ])),
+        Logger.t('Arrow down on last position in last table cell with br', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b<br></td></tr></tbody></table>'),
+          tinyApis.sSetCursor([0, 0, 0, 1, 0], 1),
+          tinyActions.sContentKeystroke(Keys.down(), {}),
+          tinyApis.sAssertSelection([1], 0, [1], 0),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>')
+        ])),
         Logger.t('Arrow down on second last position in last table cell', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
