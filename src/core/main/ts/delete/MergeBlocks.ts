@@ -36,7 +36,7 @@ const removeEmptyRoot = (rootNode: Element, block: Element) => {
   return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
 };
 
-const isEmptyBefore = (el: Element) => Traverse.prevSiblings(el).filter((el) => !Empty.isEmpty(el)).length === 0;
+const isEmptyBefore = (el: Element) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
 
 const nestedBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element, insertionPoint: Element): Option<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
@@ -100,7 +100,7 @@ const mergeBlockInto = (rootNode: Element, fromBlock: Element, toBlock: Element)
   );
 };
 
-const mergeBlocks = (rootNode, forward, block1, block2) => {
+const mergeBlocks = (rootNode: Element, forward: Boolean, block1: Element, block2: Element) => {
   return forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 };
 
