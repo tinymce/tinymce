@@ -60,11 +60,16 @@ const chainsAsChain = <T, U>(testId: string, description: string, fs: Chain<T, U
   return Chain.fromChains(chains(testId, description, fs));
 };
 
+const chainsAsStep = <T>(testId: string, description: string, fs: Chain<any,any>[]): Step<T,T> => {
+  return Chain.asStep({}, chains(testId, description, fs));
+};
+
 export {
   step,
   steps,
   stepsAsStep,
   chain,
   chains,
-  chainsAsChain
+  chainsAsChain,
+  chainsAsStep,
 };
