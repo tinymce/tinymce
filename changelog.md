@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Added the data alloy identifiers to the DOM nodes themselves. They are no longer in the
  visible HTML
 
-## ADD the 3.25.0 changelog here. Should be something about debugging capability
+## [3.25.0] - 2018-09-05
+### Added
+ - Added dynamic configuration of debugging modes
 
 ## [3.24.0] - 2018-09-04
 ### Added
