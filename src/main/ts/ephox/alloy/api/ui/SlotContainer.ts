@@ -4,13 +4,17 @@ import { Attr, Css } from '@ephox/sugar';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { SlotContainerDetail, SlotContainerSketcher, SlotContainerSpecBuilder, SlotContainerApis } from '../../ui/types/SlotContainerTypes';
+import {
+  SlotContainerApis,
+  SlotContainerDetail,
+  SlotContainerSketcher,
+  SlotContainerSpecBuilder,
+} from '../../ui/types/SlotContainerTypes';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloyTriggers, SystemEvents } from '../Main';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { console } from '@ephox/dom-globals';
 
 const owner = 'container';
 
