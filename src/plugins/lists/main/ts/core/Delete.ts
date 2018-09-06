@@ -170,7 +170,8 @@ const backspaceDeleteFromListToListCaret = function (editor, isForward) {
 
       return true;
     } else if (!otherLi) {
-      if (!isForward && ToggleList.removeList(editor)) {
+      if (!isForward) {
+        ToggleList.removeList(editor);
         return true;
       }
     }
