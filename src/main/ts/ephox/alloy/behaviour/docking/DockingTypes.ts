@@ -6,6 +6,7 @@ import { Bounds } from '../../alien/Boxes';
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
   config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DockingConfigSpec, DockingConfig>;
+  refresh: (component: AlloyComponent) => void;
 }
 
 export interface DockingContext {
