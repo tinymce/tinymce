@@ -27,9 +27,18 @@ export interface SlotContainerParts {
   record(): string[];
 }
 
-export interface SlotContainerSketcher {
+export interface SlotContainerApis {
   getSlot: (container: AlloyComponent, key: string) => Option<AlloyComponent>;
+  isShowing: (comp: AlloyComponent, key: string) => boolean;
   showSlot: (container: AlloyComponent, key: string) => void;
+  showSlots: (container: AlloyComponent, keys: string[]) => void;
   hideSlot: (container: AlloyComponent, key: string) => void;
+  hideSlots: (container: AlloyComponent, keys: string[]) => void;
+  hideAllSlots: (container: AlloyComponent) => void;
+  listSlots: (container: AlloyComponent) => string[];
+  listShowing: (container: AlloyComponent) => string[];
+}
+
+export interface SlotContainerSketcher extends SlotContainerApis {
   sketch: (sSpec: SlotContainerSpecBuilder) => SketchSpec;
 }
