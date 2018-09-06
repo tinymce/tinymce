@@ -21,6 +21,7 @@ const setup = function (editor, visibleState, menu) {
   let isEmptySelection = false;
   // 监听鼠标右键（判断是否是右键）
   editor.on('mousedown', function (e) {
+    console.log('mousedown');
     isEmptySelection = false;
     // 右键事件
     const isRightClick = e.buttons === 2 || e.which === 3;
@@ -31,6 +32,7 @@ const setup = function (editor, visibleState, menu) {
   });
   // 选区事件（禁止自动选区）
   editor.on('selectstart', function (e) {
+    console.log('ffefe');
     if (isEmptySelection) {
       if (e.preventDefault) {
         e.preventDefault();
@@ -47,7 +49,6 @@ const setup = function (editor, visibleState, menu) {
     ContextMenu.show(editor, Coords.getPos(editor, e), visibleState, menu);
   });
 };
-
 export default {
   setup
 };

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import Utils from './Utils';
-
+declare const window: any;
 let currentLatexElement;
 
 const updateSelectState = function (editor, state) {

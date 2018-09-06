@@ -133,7 +133,6 @@ const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
 
 const open = function (editor: Editor) {
   let cellElm, data: FormData, classListCtrl, cells = [];
-
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
   cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');

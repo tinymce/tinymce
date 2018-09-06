@@ -20,5 +20,4 @@ PluginManager.add('contextmenu', function (editor) {
 
   return Api.get(visibleState);
 });
-
 export default function () { }

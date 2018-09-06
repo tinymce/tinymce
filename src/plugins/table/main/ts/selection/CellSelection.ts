@@ -155,6 +155,8 @@ export default function (editor, lazyResize) {
       }
     };
     const mouseUp = function (e: MouseEvent) {
+      const tdlist = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
+      editor.fire('getSeletctCell', {node: tdlist});
       if (isLeftMouse(e) && hasInternalTarget(e)) {
         mouseHandlers.mouseup(wrapEvent(e));
       }

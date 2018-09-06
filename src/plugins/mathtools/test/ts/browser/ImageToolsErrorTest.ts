@@ -6,7 +6,7 @@ import { Html } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-
+import { document } from '@ephox/dom-globals';
 import ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {

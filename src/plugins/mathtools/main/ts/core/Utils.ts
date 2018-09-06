@@ -7,6 +7,8 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { document } from '@ephox/dom-globals';
+declare const window: any;
 const loadMathJax = function () {
   return new Promise(function (resolve, reject) {
     const config = document.createElement('script');

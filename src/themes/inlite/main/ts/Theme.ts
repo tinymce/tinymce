@@ -25,7 +25,6 @@ ThemeManager.add('inlite', function (editor) {
 
   FormatControls.setup(editor);
   Buttons.addToEditor(editor, panel);
-
   return ThemeApi.get(editor, panel);
 });
 

@@ -18,7 +18,6 @@ const get = function (editor: Editor, panel: InlitePanel) {
   const renderUI = function () {
     return Render.renderUI(editor, panel);
   };
-
   return {
     renderUI,
     getNotificationManagerImpl () {

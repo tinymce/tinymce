@@ -16,7 +16,6 @@ import { getUiContainer } from 'tinymce/plugins/contextmenu/core/UiContainer';
 const renderMenu = function (editor, visibleState) {
   let menu, contextmenu;
   const items = [];
-
   contextmenu = Settings.getContextMenu(editor);
   Tools.each(contextmenu.split(/[ ,]/), function (name) {
     let item = editor.menuItems[name];
@@ -58,7 +57,6 @@ const renderMenu = function (editor, visibleState) {
     menu.remove();
     menu = null;
   });
-
   return menu;
 };
 
