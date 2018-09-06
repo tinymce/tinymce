@@ -61,6 +61,21 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', function () {
     LegacyUnit.equal(result, 2);
   });
 
+  suite.test('Counts words in table', function (editor) {
+    editor.setContent(`
+      <table style="width: 100%; border-collapse: collapse;" border="1">
+        <tbody>
+          <tr>
+            <td style="width: 50%;">a</td>
+            <td style="width: 50%;">b</td>
+          </tr>
+        </tbody>
+      </table>
+    `);
+    const result = editor.plugins.wordcount.getCount();
+    LegacyUnit.equal(result, 2);
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
