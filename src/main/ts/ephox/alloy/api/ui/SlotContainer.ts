@@ -56,6 +56,8 @@ const sketch = (sSpec: SlotContainerSpecBuilder): SketchSpec => {
 const make = (detail: SlotContainerDetail, components, spec) => {
   type F<T> = (comp: AlloyComponent, key: string) => T;
 
+  const getSlotNames = (_: AlloyComponent) => AlloyParts.getAllPartNames(detail);
+
   const getSlot = (container: AlloyComponent, key: string) =>
     AlloyParts.getPart(container, detail, key);
 
@@ -97,27 +99,17 @@ const make = (detail: SlotContainerDetail, components, spec) => {
 
   const hideSlots = onSlots(hideSlot);
 
-  const hideAllSlots = (container: AlloyComponent) => hideSlots(container, listSlots(container));
+  const hideAllSlots = (container: AlloyComponent) => hideSlots(container, getSlotNames(container));
 
   const showSlot = onSlot(doShow);
 
-  const showSlots = onSlots(showSlot);
-
-  const listSlots = (_: AlloyComponent) => AlloyParts.getAllPartNames(detail);
-
-  const listShowing = (container: AlloyComponent) =>
-    Arr.filter(listSlots(container), (key) => isShowing(container, key));
-
   const apis: SlotContainerApis = {
+    getSlotNames,
     getSlot,
     isShowing,
     hideSlot,
-    hideSlots,
     hideAllSlots,
     showSlot,
-    showSlots,
-    listSlots,
-    listShowing,
   };
 
   return {
@@ -135,15 +127,12 @@ const make = (detail: SlotContainerDetail, components, spec) => {
 // No type safety doing it this way. But removes dupe.
 // We could probably use spread operator to help here.
 const slotApis = Obj.map({
+  getSlotNames: (apis, c) => apis.getSlotNames(c),
   getSlot: (apis, c, key) => apis.getSlot(c, key),
   isShowing: (apis, c, key) => apis.isShowing(c, key),
   hideSlot: (apis, c, key) => apis.hideSlot(c, key),
-  hideSlots: (apis, c, keys) => apis.hideSlots(c, keys),
   hideAllSlots: (apis, c) => apis.hideAllSlots(c),
   showSlot: (apis, c, key) => apis.showSlot(c, key),
-  showSlots: (apis, c, keys) => apis.showSlots(c, keys),
-  listSlots: (apis, c) => apis.listSlots(c),
-  listShowing: (apis, c) => apis.listShowing(c),
 }, GuiTypes.makeApi);
 
 const SlotContainer = Merger.deepMerge(
