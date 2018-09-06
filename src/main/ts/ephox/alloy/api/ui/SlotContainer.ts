@@ -70,7 +70,7 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   };
 
   const doShowing = (comp: AlloyComponent, key: string): boolean => {
-    return !Attr.has(comp.element(), 'aria-hidden') || Attr.get(comp.element(), 'aria-hidden') !== 'true';
+    return Attr.get(comp.element(), 'aria-hidden') !== 'true';
   };
 
   const doShow = (comp: AlloyComponent, key: string) => {
