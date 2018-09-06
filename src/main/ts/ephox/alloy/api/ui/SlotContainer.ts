@@ -74,8 +74,6 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   const doShow = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to restore old values.
     if (!doShowing(comp, key)) {
-      // tslint:disable-next-line:no-console
-      console.log('doShow ' + key);
       const element = comp.element();
       Css.remove(element, 'display');
       Attr.remove(element, 'aria-hidden');
@@ -86,8 +84,6 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   const doHide = (comp: AlloyComponent, key: string) => {
     // NOTE: May need to save old values.
     if (doShowing(comp, key)) {
-      // tslint:disable-next-line:no-console
-      console.log('doHide ' + key);
       const element = comp.element();
       Css.set(element, 'display', 'none');
       Attr.set(element, 'aria-hidden', 'true');
