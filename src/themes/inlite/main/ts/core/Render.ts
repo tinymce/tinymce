@@ -76,8 +76,8 @@ const togglePanel = function (editor: Editor, panel: InlitePanel) {
   const toggle = function () {
     const toolbars = getToolbars(editor);
     const result = findMatchResult(editor, toolbars);
-
     if (result) {
+      // console.log('fhuhf');
       panel.show(editor, result.id, result.rect, toolbars);
     } else {
       panel.hide();
@@ -117,19 +117,13 @@ const bindContextualToolbarsEvents = function (editor: Editor, panel: InlitePane
 
   editor.on('blur hide ObjectResizeStart', panel.hide);
   editor.on('click', throttledTogglePanel);
-  editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
+  // editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
   editor.on('ResizeEditor keyup', throttledTogglePanel);
   editor.on('ResizeWindow', reposition);
-  editor.on('mousedown', (e) => {
-    const isRight =  e.buttons === 2 || e.which === 3;
-    if (isRight) {
-      panel.hide();
-    }
-  });
   DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
   editor.on('remove contextmenu', function () {
-    // DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
-    // panel.remove();
+    DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
+    panel.remove();
   });
   editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
 };
@@ -162,7 +156,7 @@ const fail = function (message: string) {
 };
 
 const renderUI = function (editor: Editor, panel: InlitePanel) {
-  debugger;
+  // debugger;
   return editor.inline ? renderInlineUI(editor, panel) : fail('inlite theme only supports inline mode.');
 };
 
