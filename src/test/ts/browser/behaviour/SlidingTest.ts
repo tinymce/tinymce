@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Class } from '@ephox/sugar';
+import { Class, Traverse, Css } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -31,6 +31,18 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
             'height': '20px'
           }
         },
+        components: [
+          {
+            dom: {
+              tag: 'div',
+              styles: {
+                width: '20px',
+                height: '10px',
+                transition: 'width 0.1s ease'
+              }
+            }
+          }
+        ],
         containerBehaviours: Behaviour.derive([
           Sliding.config({
             closedClass: 'test-sliding-closed',
@@ -215,6 +227,15 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       Step.sync(() => {
         Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
       }),
+      store.sClear,
+      Step.sync(() => {
+        // test firing a transitionend inside
+        Traverse.firstChild(component.element()).each((child) => {
+          Css.set(child, 'width', '10px');
+        });
+      }),
+      Step.wait(150),
+      store.sAssertEq('After child has transitioned width', []),
 
       GuiSetup.mRemoveStyles
     ];
