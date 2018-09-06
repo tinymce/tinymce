@@ -1,11 +1,10 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Options, Cell, Merger, Unique, Option } from '@ephox/katamari';
+import { console, window } from '@ephox/dom-globals';
+import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
-import { console, window } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
-import { init } from 'ephox/alloy/dragging/common/DragState';
 
 const unknown = 'unknown';
 

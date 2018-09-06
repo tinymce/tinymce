@@ -2,7 +2,7 @@ import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction, Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AnchorLayout } from '../../positioning/layout/Layout';
-import { HasLayoutAnchor } from 'ephox/alloy/positioning/mode/Anchoring';
+import { HasLayoutAnchor } from '../../positioning/mode/Anchoring';
 
 const schema: () => FieldProcessorAdt = () => {
   return FieldSchema.optionObjOf('layouts', [

@@ -1,4 +1,4 @@
-import { TooltippingConfig, TooltippingState } from 'ephox/alloy/behaviour/tooltipping/TooltippingTypes';
+import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { ExclusivityChannel } from './TooltippingCommunication';
