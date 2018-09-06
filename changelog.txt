@@ -1,3 +1,9 @@
+Version 4.4.0
+
+Date 2018-09-05
+
+* adds chainsAsStep to Log
+
 Version 4.3.0
 
 Date 2018-09-03

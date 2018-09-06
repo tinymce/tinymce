@@ -1,6 +1,7 @@
 import { UnitTest } from "@ephox/bedrock";
-import { Assertions, Pipeline, Step, Log } from "../../../../main/ts/ephox/agar/api/Main";
+import { Assertions, Pipeline, Step, Log, Chain } from "../../../../main/ts/ephox/agar/api/Main";
 import StepAssertions from "../../module/ephox/agar/test/StepAssertions";
+import { Result } from "@ephox/katamari";
 
 UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepTest = StepAssertions.testStepFail(
@@ -134,6 +135,32 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     )
   );
 
+  const logChainsAsStepPassTest = StepAssertions.testStepsPass(
+    'Value before chain',
+    [
+      Step.stateful((value, next, die) => {
+        next('Value before chain')
+      }),
+      Log.chainsAsStep('TestCast-14', 'Chain failure', [
+        Chain.inject(1),
+        Assertions.cAssertEq('Assert pass', 1),
+        Chain.binder((num) => Result.value(num * 2)),
+        Assertions.cAssertEq('Assert pass', 2)
+      ])
+    ]
+  );
+
+  const logChainsAsStepFailTest = StepAssertions.testStepsFail(
+    'TestCast-14: Chain failure (3)',
+    [
+      Log.chainsAsStep('TestCast-14', 'Chain failure', [
+        Chain.inject(true),
+        Assertions.cAssertEq('Assert pass', true),
+        Assertions.cAssertEq('Assert pass', true),
+        Assertions.cAssertEq('Assert failure', false)
+      ])
+    ]
+  );
 
   Pipeline.async({}, [
     logStepTest,
@@ -153,7 +180,10 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     logChainsAsChainInArrayTest,
 
     logStepsPassTest,
-    logStepPassTestWithMessage
+    logStepPassTestWithMessage,
+
+    logChainsAsStepPassTest,
+    logChainsAsStepFailTest
 
   ], success, failure);
 

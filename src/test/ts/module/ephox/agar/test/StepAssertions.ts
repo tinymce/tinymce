@@ -144,7 +144,7 @@ const testChainsFail = (expected, initial, chains) => {
   });
 };
 
-export default <any>{
+export default {
   failed,
   passed,
   preserved: Fun.constant(preserved),
