@@ -39,15 +39,13 @@ const startsWithWrapBreak = (lineInfo: LineInfo) => lineInfo.breakType === Break
 
 const startsWithBrBreak = (lineInfo: LineInfo) => lineInfo.breakType === BreakType.Br && lineInfo.positions.length === 1;
 
-const isOnBr = (pos: CaretPosition) => NodeType.isBr(pos.getNode());
-
 const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosition) => {
   const lineInfo = getPositionsUntil(scope, pos);
 
   // Since we can't determine if the caret is on the above or below line in a word wrap break we asume it's always
   // on the below/above line based on direction. This will make the caret jump one line if you are at the end of the last
   // line and moving down or at the beginning of the second line moving up.
-  if (startsWithWrapBreak(lineInfo) || (!isOnBr(pos) && startsWithBrBreak(lineInfo))) {
+  if (startsWithWrapBreak(lineInfo) || (!NodeType.isBr(pos.getNode()) && startsWithBrBreak(lineInfo))) {
     return !hasNextBreak(getPositionsUntil, scope, lineInfo);
   } else {
     return lineInfo.breakAt.isNone();
