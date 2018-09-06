@@ -1,14 +1,7 @@
 import { Class, Classes, Css } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SlidingConfig } from '../../behaviour/sliding/SlidingTypes';
-
-const getAnimationRoot = (component: AlloyComponent, slideConfig: SlidingConfig) => {
-  return slideConfig.getAnimationRoot().fold(() => {
-    return component.element();
-  }, (get) => {
-    return get(component);
-  });
-};
+import { getAnimationRoot } from './SlidingUtils';
 
 const getDimensionProperty = (slideConfig) => {
   return slideConfig.dimension().property();
@@ -28,14 +21,6 @@ const setShrunk = (component: AlloyComponent, slideConfig: SlidingConfig) => {
   Class.add(component.element(), slideConfig.closedClass());
   Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
   Css.reflow(component.element());
-};
-
-// Note, this is without transitions, so we can measure the size instantaneously
-const measureTargetSize = (component: AlloyComponent, slideConfig: SlidingConfig) => {
-  setGrown(component, slideConfig);
-  const expanded = getDimension(slideConfig, component.element());
-  setShrunk(component, slideConfig);
-  return expanded;
 };
 
 const setGrown = (component: AlloyComponent, slideConfig: SlidingConfig) => {
@@ -74,7 +59,9 @@ const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, sl
 // Showing is complex due to the inability to transition to "auto".
 // We also can't cache the dimension as the parents may have resized since it was last shown.
 const doStartGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  const fullSize = measureTargetSize(component, slideConfig);
+  setGrown(component, slideConfig);
+  const fullSize = getDimension(slideConfig, component.element());
+  setShrunk(component, slideConfig);
 
   // Start the growing animation styles
   const root = getAnimationRoot(component, slideConfig);
