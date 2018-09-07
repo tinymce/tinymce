@@ -8,12 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Arr from '../util/Arr';
 import Uploader from '../file/Uploader';
 import ImageScanner from '../file/ImageScanner';
 import BlobCache from './file/BlobCache';
 import UploadStatus from '../file/UploadStatus';
 import ErrorReporter from '../ErrorReporter';
+import { Arr } from '@ephox/katamari';
+import { HTMLImageElement, Blob } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -22,11 +24,12 @@ import ErrorReporter from '../ErrorReporter';
  * @class tinymce.EditorUpload
  */
 
-export default function (editor) {
+export default function (editor: Editor) {
   const blobCache = BlobCache();
   let uploader, imageScanner;
   const settings = editor.settings;
   const uploadStatus = UploadStatus();
+  const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
   const aliveGuard = function (callback) {
     return function (result) {
@@ -38,12 +41,12 @@ export default function (editor) {
     };
   };
 
-  const cacheInvalidator = function () {
+  const cacheInvalidator = function (): string {
     return '?' + (new Date()).getTime();
   };
 
   // Replaces strings without regexps to avoid FF regexp to big issue
-  const replaceString = function (content, search, replace) {
+  const replaceString = function (content: string, search: string, replace: string): string {
     let index = 0;
 
     do {
@@ -58,14 +61,14 @@ export default function (editor) {
     return content;
   };
 
-  const replaceImageUrl = function (content, targetUrl, replacementUrl) {
+  const replaceImageUrl = function (content: string, targetUrl: string, replacementUrl: string): string {
     content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
     content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
     return content;
   };
 
-  const replaceUrlInUndoStack = function (targetUrl, replacementUrl) {
+  const replaceUrlInUndoStack = function (targetUrl: string, replacementUrl: string) {
     Arr.each(editor.undoManager.data, function (level) {
       if (level.type === 'fragmented') {
         level.fragments = Arr.map(level.fragments, function (fragment) {
@@ -86,7 +89,7 @@ export default function (editor) {
     });
   };
 
-  const replaceImageUri = function (image, resultUri) {
+  const replaceImageUri = function (image: HTMLImageElement, resultUri: string) {
     blobCache.removeByUri(image.src);
     replaceUrlInUndoStack(image.src, resultUri);
 
@@ -144,8 +147,20 @@ export default function (editor) {
     }
   };
 
-  const isValidDataUriImage = function (imgElm) {
-    return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+  const isValidDataUriImage = function (imgElm: HTMLImageElement) {
+    if (Arr.forall(urlFilters, (filter) => filter(imgElm)) === false) {
+      return false;
+    }
+
+    if (imgElm.getAttribute('src').indexOf('data:') === 0) {
+      return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+    }
+
+    return true;
+  };
+
+  const addFilter = (filter: (img: HTMLImageElement) => boolean) => {
+    urlFilters.push(filter);
   };
 
   const scanForImages = function () {
@@ -180,7 +195,7 @@ export default function (editor) {
     imageScanner = uploader = null;
   };
 
-  const replaceBlobUris = function (content) {
+  const replaceBlobUris = function (content: string) {
     return content.replace(/src="(blob:[^"]+)"/g, function (match, blobUri) {
       const resultUri = uploadStatus.getResultUri(blobUri);
 
@@ -191,13 +206,14 @@ export default function (editor) {
       let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
-        blobInfo = Arr.reduce(editor.editorManager.get(), function (result, editor) {
+        blobInfo = Arr.foldl(editor.editorManager.get(), function (result, editor) {
           return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
         }, null);
       }
 
       if (blobInfo) {
-        return 'src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"';
+        const blob: Blob = blobInfo.blob();
+        return 'src="data:' + blob.type + ';base64,' + blobInfo.base64() + '"';
       }
 
       return match;
@@ -243,6 +259,7 @@ export default function (editor) {
 
   return {
     blobCache,
+    addFilter,
     uploadImages,
     uploadImagesAuto,
     scanForImages,
