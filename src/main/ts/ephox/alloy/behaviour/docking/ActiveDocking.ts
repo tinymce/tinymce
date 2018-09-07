@@ -16,12 +16,7 @@ const events = (dockInfo: DockingConfig, dockState) => {
       });
     }),
 
-    AlloyEvents.run(SystemEvents.windowScroll(), (component, simulatedEvent) => {
-      dockInfo.contextual().each((contextInfo) => {
-        // Make the dockable component disappear if the context is outside the viewport
-        contextInfo.lazyContext()(component).each((elem) => {
-        });
-      });
+    AlloyEvents.run(SystemEvents.windowScroll(), (component, _) => {
       DockingApis.refresh(component, dockInfo, dockState);
     })
   ]);

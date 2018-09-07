@@ -3,7 +3,6 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Dockables from './Dockables';
-import { console } from '@ephox/dom-globals';
 
 const refresh = (component, config, state) => {
   // Absolute coordinates (considers scroll)
