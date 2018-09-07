@@ -23,7 +23,8 @@ const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 enum EventConfiguration {
   STOP,
   NORMAL,
-  LOGGING
+  LOGGING,
+  BREAKPOINT
 };
 
 const eventConfig = Cell<Record<string, EventConfiguration>>({ });
@@ -47,7 +48,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
     logEventResponse (name, target, purpose) {
-      sequence.push({ outcome: 'response', purpose, target });
+      sequence.push({ outcome: 'response', purpose, target, stack});
     },
     write () {
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
@@ -56,7 +57,14 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
         event: eventName,
         target: initialTarget.dom(),
         sequence: Arr.map(sequence, (s) => {
-          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) {
+            return s.outcome;
+          } else {
+            return {
+              [s.purpose]: s.outcome + ' at (' + AlloyLogger.element(s.target) + ')',
+              stack: s.stack
+            };
+          }
         })
       });
     }
