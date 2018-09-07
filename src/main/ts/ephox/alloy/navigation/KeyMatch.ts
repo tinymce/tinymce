@@ -22,7 +22,6 @@ const and = (preds: KeyMatcher[]): KeyMatcher => {
 const is = (key: number): KeyMatcher => {
   return (event: SugarEvent) => {
     const raw = event.raw() as KeyboardEvent;
-    console.log('raw', raw,'key', key);
     return raw.which === key;
   };
 };

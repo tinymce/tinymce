@@ -48,7 +48,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
     logEventResponse (name, target, purpose) {
-      sequence.push({ outcome: 'response', purpose, target, stack});
+      sequence.push({ outcome: 'response', purpose, target });
     },
     write () {
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }

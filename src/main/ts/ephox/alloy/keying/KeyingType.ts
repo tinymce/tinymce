@@ -28,11 +28,9 @@ const typical = <C, S>(
   };
 
   const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, keyingConfig: C, keyingState?: S): Option<boolean> => {
-    console.log('Looking for rule', component.element().dom());
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
     return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
-      console.log('found rule', component.element().dom());
       return rule(component, simulatedEvent, keyingConfig, keyingState);
     });
   };

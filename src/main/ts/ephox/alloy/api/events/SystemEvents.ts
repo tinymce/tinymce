@@ -53,6 +53,8 @@ const detachedFromDom = Fun.constant('alloy.system.detached');
 
 const dismissRequested = Fun.constant('alloy.system.dismissRequested');
 
+const focusShifted = Fun.constant('alloy.focusmanager.shifted');
+
 export interface AlloyChangeTabEvent extends CustomEvent {
   button: () => AlloyComponent;
 }
@@ -79,6 +81,7 @@ export {
   windowScroll,
 
   dismissRequested,
+  focusShifted,
 
   attachedToDom,
   detachedFromDom,
