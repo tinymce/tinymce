@@ -206,8 +206,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
         Replacing.append(container, GuiFactory.premade(primary));
 
         if (detail.openImmediately()) {
-          setActiveMenu(container, primary);
           detail.onOpenMenu()(container, primary);
+          setActiveMenu(container, primary);
         }
       });
     })

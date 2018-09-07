@@ -6,9 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.27.0] - 2018-09-07
+## [3.29.0] - 2018-09-07
 ### Added
  - Docking.refresh() to recalculate the component's position and visibility
+
+## [3.28.0] - 2018-09-06
+### Added
+- Expanded the SlotContainer API to add:
+  - getSlotNames
+  - isShowing
+  - hideAllSlots
+
+## [3.27.0] - 2018-09-06
+### Fixed
+ - Fixed Sliding behaviour responding to transitionend on nested elements
+ - Fixed types on Sliding behavior API
 
 ## [3.26.0] - 2018-09-05
 ### Added

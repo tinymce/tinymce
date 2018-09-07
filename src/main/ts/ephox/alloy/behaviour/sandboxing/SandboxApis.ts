@@ -90,6 +90,7 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
 };
 
 const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+  Css.remove(sandbox.element(), 'position');
   restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr());
 };
 

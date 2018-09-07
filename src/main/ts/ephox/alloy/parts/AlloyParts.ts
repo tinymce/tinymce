@@ -129,6 +129,10 @@ const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): 
   });
 };
 
+const getAllPartNames = (detail: CompositeSketchDetail) => {
+  return Obj.keys(detail.partUids());
+};
+
 const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r = { };
   const uids = detail.partUids();
@@ -175,6 +179,7 @@ export {
   defaultUidsSchema,
 
   getAllParts,
+  getAllPartNames,
   getPart,
   getPartOrDie,
   getParts,
