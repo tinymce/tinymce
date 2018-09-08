@@ -24,7 +24,7 @@ module.exports = function (grunt) {
   var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
   var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
   packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
-
+  require('./fix-modules')
   grunt.initConfig({
     pkg: packageData,
 
