@@ -122,7 +122,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
                 s.element('button', {
                   html: str.is('A'),
                   attrs: {
-                    'data-alloy-id': str.is('alpha-tab'),
+                    'data-alloy-id': str.none(),
                     'aria-selected': str.is('true')
                   },
                   classes: [
@@ -133,7 +133,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
                 s.element('button', {
                   html: str.is('B'),
                   attrs: {
-                    'data-alloy-id': str.is('beta-tab'),
+                    'data-alloy-id': str.none(),
                     'aria-selected': str.is('false')
                   },
                   classes: [

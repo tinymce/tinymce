@@ -6,6 +6,7 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('InputTest', (success, failure) => {
 
@@ -29,7 +30,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
           return s.element('input', {
             attrs: {
               'type': str.is('input'),
-              'data-alloy-id': str.is('test-input-id'),
+              'data-alloy-id': str.none(),
               'placeholder': str.is('placeholder-text')
             },
             classes: [
@@ -40,6 +41,11 @@ UnitTest.asynctest('InputTest', (success, failure) => {
         }),
         component.element()
       );
+    });
+
+    const testAlloyUid = Step.sync(() => {
+      const alloyUid = Tagger.readOrDie(component.element());
+      Assertions.assertEq('Checking alloy uid', 'blah', alloyUid);
     });
 
     const sCheckInputSelection = (label, expected) => {
@@ -85,7 +91,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
             return s.element('input', {
               attrs: {
                 'type': str.is('input'),
-                'data-alloy-id': str.is('test-input-id'),
+                'data-alloy-id': str.none(),
                 'placeholder': str.is('placeholder-text')
               },
               value: str.is('v')

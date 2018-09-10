@@ -169,9 +169,9 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             root: gui.element()
           }, Container.sketch({
             components: [
-              Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
-              Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),
-              Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U' }, action: store.adder('underline') }),
+              Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') }),
+              Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I', classes: [ 'italic-button' ] }, action: store.adder('italic') }),
+              Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U', classes: [ 'underline-button' ] }, action: store.adder('underline') }),
               Dropdown.sketch({
                 dom: {
                   tag: 'button',
@@ -210,7 +210,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       TestBroadcasts.sDismissOn(
         'toolbar: should not close',
         gui,
-        '[data-alloy-id="bold-button"]'
+        '.bold-button'
       ),
 
       sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),

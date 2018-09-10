@@ -3,6 +3,7 @@ import { Struct, Option, Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 export interface GeneralDefinitionSpec<EC, DC> {
+  uid: string;
   tag?: string;
   attributes?: Record<string, any>;
   classes?: string[];
@@ -18,6 +19,7 @@ export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element[], DomD
 }
 
 export interface GeneralDefinitionDetail<EC, DC> {
+  uid(): string;
   tag(): string;
   attributes(): Option<Record<string, any>>;
   classes(): Option<string[]>;
@@ -32,7 +34,7 @@ export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element[], 
 
 }
 
-const nu = Struct.immutableBag([ 'tag' ], [
+const nu = Struct.immutableBag([ 'tag', 'uid' ], [
   'classes',
   'attributes',
   'styles',
@@ -49,6 +51,7 @@ const defToStr = (defn: GeneralDefinitionDetail<any, any>): string => {
 
 const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, any> => {
   return {
+    uid: defn.uid(),
     tag: defn.tag(),
     classes: defn.classes().getOr([ ]),
     attributes: defn.attributes().getOr({ }),

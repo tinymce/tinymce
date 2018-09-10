@@ -54,6 +54,13 @@ const detachedFromDom = Fun.constant('alloy.system.detached');
 const dismissRequested = Fun.constant('alloy.system.dismissRequested');
 
 const focusShifted = Fun.constant('alloy.focusmanager.shifted');
+// Fired when slots are made hidden/shown
+const slotVisibility = Fun.constant('alloy.slotcontainer.visibility');
+
+export interface AlloySlotVisibilityEvent extends CustomEvent {
+  name: () => string;
+  visible: () => boolean;
+}
 
 export interface AlloyChangeTabEvent extends CustomEvent {
   button: () => AlloyComponent;
@@ -87,5 +94,7 @@ export {
   detachedFromDom,
 
   changeTab,
-  dismissTab
+  dismissTab,
+
+  slotVisibility
 };

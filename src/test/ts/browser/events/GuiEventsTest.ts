@@ -11,18 +11,22 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const page = DomRender.renderToDom(
     DomDefinition.nu({
+      uid: 'test-uid-1',
       tag: 'div',
       classes: [ 'gui-events-test-container' ],
       defChildren: [
         {
+          uid: 'test-uid-1a',
           tag: 'input',
           classes: [ 'test-input' ]
         },
         {
+          uid: 'test-uid-1b',
           tag: 'div',
           classes: [ 'test-inner-div' ],
           defChildren: [
             {
+              uid: 'test-uid-1b-a',
               tag: 'span',
               classes: [ 'focusable-span' ],
               attributes: {
@@ -36,6 +40,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
               }
             },
             {
+              uid: 'test-uid-1b-b',
               tag: 'button',
               classes: [ 'test-button' ],
               innerHtml: 'Button'

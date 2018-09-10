@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.28.0] - 2018-09-06
+### Added
+- Expanded the SlotContainer API to add:
+  - getSlotNames
+  - isShowing
+  - hideAllSlots
+### Fixed
+ - Sandbox cloaking no longer enforces position when no position attributes are applied.
+
+## [3.27.0] - 2018-09-06
+### Fixed
+ - Fixed Sliding behaviour responding to transitionend on nested elements
+ - Fixed types on Sliding behavior API
+
+## [3.26.0] - 2018-09-05
+### Added
+ - Added the data alloy identifiers to the DOM nodes themselves. They are no longer in the
+ visible HTML
+
 ## [3.25.0] - 2018-09-05
 ### Added
  - Added dynamic configuration of debugging modes

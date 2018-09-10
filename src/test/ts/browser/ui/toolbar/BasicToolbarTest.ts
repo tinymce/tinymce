@@ -20,7 +20,8 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
               tag: 'div',
               attributes: {
                 'data-group-container': 'true'
-              }
+              },
+              classes: [ 'shell-toolbar' ]
             }
           }),
 
@@ -28,7 +29,8 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
             uid: 'not-shell-toolbar',
             shell: false,
             dom: {
-              tag: 'div'
+              tag: 'div',
+              classes: [ 'not-shell-toolbar' ]
             },
             components: [
               Toolbar.parts().groups({
@@ -60,8 +62,8 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
 
     return [
       GuiSetup.mAddStyles(doc, [
-        '[data-alloy-id="not-shell-toolbar"] { padding-top: 10px; padding-bottom: 10px; background: blue }',
-        '[data-alloy-id="not-shell-toolbar"] div { background: black; }'
+        '.not-shell-toolbar { padding-top: 10px; padding-bottom: 10px; background: blue }',
+        '.not-shell-toolbar div { background: black; }'
       ]),
 
       Assertions.sAssertStructure(
