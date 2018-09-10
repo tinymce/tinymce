@@ -22,7 +22,7 @@ import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
@@ -223,10 +223,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
 
-        if (detail.openImmediately()) {
-          detail.onOpenMenu()(container, primary);
-          // setActiveMenu(container, primary);
+        detail.onOpenMenu()(container, primary);
+        if (detail.highlightImmediately()) {
+          setActiveMenu(container, primary);
         }
+
+
       });
     })
   ].concat(detail.navigateOnHover() ? [
@@ -247,6 +249,17 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       });
     });
   };
+
+  const highlightPrimary = (container: AlloyComponent) => {
+    layeredState.getPrimary().each((primary) => {
+      setActiveMenu(container, primary);
+    })
+  }
+
+  const apis: TieredMenuApis = {
+    collapseMenu: collapseMenuApi,
+    highlightPrimary
+  }
 
   return {
     uid: detail.uid(),
@@ -279,9 +292,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       SketchBehaviours.get(detail.tmenuBehaviours())
     ),
     eventOrder: detail.eventOrder(),
-    apis: {
-      collapseMenu: collapseMenuApi
-    },
+    apis,
     events
   };
 };

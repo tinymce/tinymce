@@ -1,20 +1,17 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
-import * as Fields from '../data/Fields';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import * as Fields from '../data/Fields';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
@@ -29,10 +26,6 @@ const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyCom
   return executeConfig.execute()(component, simulatedEvent, component.element());
 };
 
-const doEscape: KeyRuleHandler<ExecutingConfig, Stateless>  = (component, simulatedEvent, executeConfig) => {
-  return executeConfig.onEscape()(component, simulatedEvent);
-};
-
 const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
   const enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
@@ -43,9 +36,7 @@ const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEven
     KeyRules.rule(KeyMatch.inSet(execKeys), execute),
   ].concat(executeConfig.useControlEnter() ? [
     KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
-  ] : [ ]).concat([
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
-  ]);
+  ] : [ ]);
 };
 
 const getEvents = Fun.constant({ });

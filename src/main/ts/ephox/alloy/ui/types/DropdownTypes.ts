@@ -34,8 +34,8 @@ export interface DropdownDetail extends CommonDropdownDetail<TieredData>, Compos
 }
 
 export interface DropdownApis {
-  openAndFocus: (comp: AlloyComponent) => void;
   open: (comp: AlloyComponent) => void;
+  expand: (comp: AlloyComponent) => void;
   isOpen: (comp: AlloyComponent) => boolean;
   close: (comp: AlloyComponent) => void;
 }

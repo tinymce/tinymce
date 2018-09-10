@@ -1,53 +1,52 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
+import { SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as TieredMenu from '../../api/ui/TieredMenu';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
-import { DropdownDetail, DropdownSketcher, DropdownSpec, DropdownApis } from '../../ui/types/DropdownTypes';
+import { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
-import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
-import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
+import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { HotspotAnchorSpec } from '../../positioning/mode/Anchoring';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimulatedEvent, AlloyTriggers } from '../Main';
-import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {
-    Composing.getCurrent(sandbox).each((current) => {
-      Highlighting.highlightFirst(current);
-      Keying.focusIn(current);
+    Sandboxing.getState(sandbox).each((tmenu) => {
+      TieredMenu.tieredMenu.highlightPrimary(tmenu);
     });
   };
 
   const action = (component: AlloyComponent): void => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
   };
 
   const apis: DropdownApis = {
-    openAndFocus: (comp) => {
+    expand: (comp) => {
       if (! Toggling.isOn(comp)) {
-        action(comp);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
       if (! Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
     isOpen: Toggling.isOn,
     close: (comp) => {
       if (Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     }
   };
@@ -92,11 +91,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
             onSpace: triggerExecute,
             onEnter: triggerExecute,
             onDown: (comp, se) => {
+              console.log('here we are');
               if (Dropdown.isOpen(comp)) {
                 const sandbox = Coupling.getCoupled(comp, 'sandbox');
                 switchToMenu(sandbox);
               } else {
-                Dropdown.openAndFocus(comp);
+                Dropdown.open(comp);
               }
 
               return Option.some(true);
@@ -142,10 +142,10 @@ const Dropdown = Sketcher.composite({
   partFields: DropdownSchema.parts(),
   factory,
   apis: {
-    openAndFocus: (apis, comp) => apis.openAndFocus(comp),
-    open: (apis, comp) => apis.open(comp),
-    close: (apis, comp) => apis.close(comp),
-    isOpen: (apis, comp) => apis.isOpen(comp)
+    open: (apis: DropdownApis, comp) => apis.open(comp),
+    expand: (apis: DropdownApis, comp) => apis.expand(comp),
+    close: (apis: DropdownApis, comp) => apis.close(comp),
+    isOpen: (apis: DropdownApis, comp) => apis.isOpen(comp)
   }
 }) as DropdownSketcher;
 

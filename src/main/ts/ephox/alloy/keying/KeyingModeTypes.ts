@@ -69,7 +69,6 @@ export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'execution';
   // NOTE: inconsistent.
   execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
-  onEscape?: KeyHandlerApi<ExecutingConfig, Stateless>;
   useSpace?: boolean;
   useEnter?: boolean;
   useControlEnter?: boolean;
@@ -82,7 +81,6 @@ export interface ExecutingConfig extends GeneralKeyingConfig {
   useEnter: () => boolean;
   useControlEnter: () => boolean;
   useDown: () => boolean;
-  onEscape: () => KeyHandlerApi<ExecutingConfig, Stateless>;
 }
 
 // Flatgrid type
