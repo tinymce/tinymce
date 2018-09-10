@@ -9,7 +9,7 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 export interface ItemDataTuple {
   value: string;
-  bonus?: {
+  meta?: {
     text?: string;
   }
 }

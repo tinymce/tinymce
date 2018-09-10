@@ -36,7 +36,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
             initialData: {
               // . for value, - for text
               value: 'initial.value',
-              bonus: {
+              meta: {
                 text: 'initial-value'
               }
             },
@@ -44,14 +44,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
             fetch (input) {
               const text = Value.get(input.element()).toLowerCase();
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', bonus: { text: Strings.capitalize(text) + '1' } } },
-                { type: 'item', data: { value: text + '2', bonus: { text: Strings.capitalize(text) + '2' } } }
+                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' } } },
+                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' } } }
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', bonus: { text: 'No data'} } }
+                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({

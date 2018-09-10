@@ -75,10 +75,10 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
         fetch () {
           const future = Future.pure([
-            { type: 'item', data: { value: 'alpha', bonus: { text: 'Alpha' } } },
-            { type: 'item', data: { value: 'beta', bonus: { text: 'Beta' } } },
-            { type: 'item', data: { value: 'gamma', bonus: { text: 'Gamma' } } },
-            { type: 'item', data: { value: 'delta', bonus: { text: 'Delta' } } }
+            { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
+            { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } },
+            { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' } } },
+            { type: 'item', data: { value: 'delta', meta: { text: 'Delta' } } }
           ]);
 
           return future.map((f) => {

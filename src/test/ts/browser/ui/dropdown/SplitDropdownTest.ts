@@ -99,8 +99,8 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
         fetch () {
           const future = Future.pure([
-            { type: 'item', data: { value: 'alpha', bonus: { text: 'Alpha' } } },
-            { type: 'item', data: { value: 'beta', bonus: { text: 'Beta' } } }
+            { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
+            { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } }
           ]);
 
           return future.map((f) => {

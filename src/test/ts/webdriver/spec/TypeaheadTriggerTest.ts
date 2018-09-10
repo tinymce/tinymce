@@ -26,7 +26,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
 
             initialData: {
               value: 'initial-value',
-              bonus: {
+              meta: {
                 text: 'initial-value'
               }
             },
@@ -38,14 +38,14 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
             fetch (input: AlloyComponent) {
               const text = Value.get(input.element());
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', bonus: { text: text + '1' } } },
-                { type: 'item', data: { value: text + '2', bonus: { text: text + '2' } } }
+                { type: 'item', data: { value: text + '1', meta: { text: text + '1' } } },
+                { type: 'item', data: { value: text + '2', meta: { text: text + '2' } } }
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', bonus: { text: 'No data'} } }
+                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
                 ] : f;
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',

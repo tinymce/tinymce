@@ -17,7 +17,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       type: 'item',
       data: i.data,
       dom: {
-        tag: 'div', innerHtml: i.data.bonus.text,
+        tag: 'div', innerHtml: i.data.meta.text,
         attributes: { 'data-value': i.data.value },
         styles: { display: 'inline-block', padding: '10px' }
       },
@@ -84,7 +84,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
           return Future.pure(
             Arr.map([
               { type: 'item', data: { value: 'dog', text: 'Dog' } },
-              { type: 'item', data: { value: 'elephant', bonus: { text: 'Elephant' } } }
+              { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' } } }
             ], munge)
           );
         },

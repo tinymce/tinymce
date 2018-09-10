@@ -85,7 +85,7 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
-      initialData: { value: 'bison', bonus: { text: 'Bison' } },
+      initialData: { value: 'bison', meta: { text: 'Bison' } },
       model,
 
       fetch (input) {
@@ -103,10 +103,10 @@ export default (): void => {
                 'type': 'item',
                 'data': {
                   'value': d.value,
-                  bonus: {
+                  meta: {
                     'text': d.text,
                     html,
-                    'bonus-demo-content': 'caterpillar',
+                    'meta-demo-content': 'caterpillar',
                     'item-class': 'class-' + d.value
                   }
                 }
@@ -144,7 +144,7 @@ export default (): void => {
       components: [
          sketchTypeahead({
            selectsOver: true,
-           getDisplayText: (itemData) => itemData.bonus && itemData.bonus.text ? itemData.bonus.text : 'No.text',
+           getDisplayText: (itemData) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
            populateFromBrowse: true,
          }),
 

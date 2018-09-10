@@ -10,10 +10,10 @@ import { PartialMenuSpec } from '../../../../../../main/ts/ephox/alloy/ui/types/
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('bonus', [
+    FieldSchema.strictObjOf('meta', [
       FieldSchema.strict('text'),
       FieldSchema.defaulted('html', ''),
-      FieldSchema.defaulted('bonus-demo-content', { })
+      FieldSchema.defaulted('meta-demo-content', { })
     ])
   ]),
   FieldSchema.strict('type')
@@ -22,7 +22,7 @@ const demoItem = ValueSchema.objOf([
 const demoWidgetItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('bonus', [
+    FieldSchema.strictObjOf('meta', [
       FieldSchema.strict('text')
     ])
   ]),
@@ -57,7 +57,7 @@ const choice = (choiceSpec) => {
 const demoSeparatorRender = (spec): SeparatorItemSpec => {
   const html = (() => {
     if (spec.text) { return spec.text; }
-    else if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    else if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
     else return 'Missing.Text.For.Separator';
   })();
 
@@ -83,8 +83,8 @@ const item = (itemSpec): ItemSpec => {
   }
   const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
   const html = (() => {
-    if (spec.data && spec.data.bonus && spec.data.bonus.html) { return spec.data.bonus.html }
-    else if (spec && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text }
+    if (spec.data && spec.data.meta && spec.data.meta.html) { return spec.data.meta.html }
+    else if (spec && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text }
     else return 'No.Text.For.Item';
   })();
 
@@ -99,7 +99,7 @@ const item = (itemSpec): ItemSpec => {
 const gridItem = (itemSpec) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
   const html = (() => {
-    if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
     else return 'No.Text.For.Grid.Item';
   })();
 
@@ -179,7 +179,7 @@ const menu = (menuSpec) => {
 
 const orb = (spec): NormalItemSpec => {
   const html = (() => {
-    if (spec.data && spec.data.bonus && spec.data.bonus.text) { return spec.data.bonus.text; }
+    if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
     return 'No.Text.For.Orb';
   })();
 

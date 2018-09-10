@@ -81,7 +81,7 @@ const dataset = (): DatasetRepresentingState => {
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
       // FIX:
-      newDataByText[item.bonus.text] = item;
+      newDataByText[item.meta.text] = item;
     });
 
     dataByValue.set(

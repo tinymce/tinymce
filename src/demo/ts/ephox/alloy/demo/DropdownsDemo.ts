@@ -44,7 +44,7 @@ export default (): void => {
     autofocus: true,
     data: {
       value: 'widget1',
-      bonus: {
+      meta: {
         text: 'Widget1'
       }
     },
@@ -234,7 +234,7 @@ export default (): void => {
             type: 'item',
             data: {
               value: v,
-              bonus: {
+              meta: {
                 text: t
               }
             }
@@ -296,7 +296,7 @@ export default (): void => {
             type: 'item',
             data: {
               value: v,
-              bonus: {
+              meta: {
                 text: t,
                 'item-class': c
               }
@@ -307,7 +307,7 @@ export default (): void => {
         const data = Arr.map([
           makeItem('alpha', 'Alpha', 'class-alpha'),
           makeItem('beta', 'Beta', 'class-beta'),
-          { type: 'separator', data: { value: 'text', bonus: { text: '-- separator --' } } },
+          { type: 'separator', data: { value: 'text', meta: { text: '-- separator --' } } },
           makeItem('gamma', 'Gamma', 'class-gamma'),
           makeItem('delta', 'Delta', 'class-delta')
         ], DemoRenders.item);
@@ -360,7 +360,7 @@ export default (): void => {
             type: 'item',
             data: {
               value: v,
-              bonus: {
+              meta: {
                 text: t,
                 'item-class': c
               }
@@ -381,7 +381,7 @@ export default (): void => {
                   type: 'widget',
                   data: {
                     value: 'widget',
-                    bonus: {
+                    meta: {
                       text: 'Widget'
                     }
                   },

@@ -53,7 +53,7 @@ export default (): void => {
       type: 'item',
       data: {
         value: v,
-        bonus: {
+        meta: {
           text: t,
           'item-class': c
         }
