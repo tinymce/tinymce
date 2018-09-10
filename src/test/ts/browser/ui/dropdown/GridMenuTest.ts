@@ -20,12 +20,12 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-          { type: 'item', data: { value: 'beta', text: 'Beta' } },
-          { type: 'item', data: { value: 'gamma', text: 'Gamma' } },
-          { type: 'item', data: { value: 'delta', text: 'Delta' } },
-          { type: 'item', data: { value: 'epsilon', text: 'Epsilon' } },
-          { type: 'item', data: { value: 'rho', text: 'Rho' } }
+          { type: 'item', data: { value: 'alpha', bonus: { text: 'Alpha' } } },
+          { type: 'item', data: { value: 'beta', bonus: { text: 'Beta' } } },
+          { type: 'item', data: { value: 'gamma', bonus: { text: 'Gamma' } } },
+          { type: 'item', data: { value: 'delta', bonus: { text: 'Delta' } } },
+          { type: 'item', data: { value: 'epsilon', bonus: { text: 'Epsilon' } } },
+          { type: 'item', data: { value: 'rho', bonus: { text: 'Rho' } } }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',
