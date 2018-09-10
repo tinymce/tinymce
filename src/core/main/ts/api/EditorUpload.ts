@@ -16,6 +16,7 @@ import ErrorReporter from '../ErrorReporter';
 import { Arr } from '@ephox/katamari';
 import { HTMLImageElement, Blob } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
+import Settings from 'tinymce/core/api/Settings';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -27,7 +28,6 @@ import { Editor } from 'tinymce/core/api/Editor';
 export default function (editor: Editor) {
   const blobCache = BlobCache();
   let uploader, imageScanner;
-  const settings = editor.settings;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
@@ -94,7 +94,7 @@ export default function (editor: Editor) {
     replaceUrlInUndoStack(image.src, resultUri);
 
     editor.$(image).attr({
-      'src': settings.images_reuse_filename ? resultUri + cacheInvalidator() : resultUri,
+      'src': Settings.shouldReuseFileName(editor) ? resultUri + cacheInvalidator() : resultUri,
       'data-mce-src': editor.convertURL(resultUri, 'src')
     });
   };
@@ -102,10 +102,10 @@ export default function (editor: Editor) {
   const uploadImages = function (callback) {
     if (!uploader) {
       uploader = Uploader(uploadStatus, {
-        url: settings.images_upload_url,
-        basePath: settings.images_upload_base_path,
-        credentials: settings.images_upload_credentials,
-        handler: settings.images_upload_handler
+        url: Settings.getImageUploadUrl(editor),
+        basePath: Settings.getImageUploadBasePath(editor),
+        credentials: Settings.getImagesUploadCredentials(editor),
+        handler: Settings.getImagesUploadHandler(editor)
       });
     }
 
@@ -120,7 +120,7 @@ export default function (editor: Editor) {
         const filteredResult = Arr.map(result, function (uploadInfo, index) {
           const image = imageInfos[index].image;
 
-          if (uploadInfo.status && editor.settings.images_replace_blob_uris !== false) {
+          if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
             replaceImageUri(image, uploadInfo.url);
           } else if (uploadInfo.error) {
             ErrorReporter.uploadError(editor, uploadInfo.error);
@@ -142,7 +142,7 @@ export default function (editor: Editor) {
   };
 
   const uploadImagesAuto = function (callback?) {
-    if (settings.automatic_uploads !== false) {
+    if (Settings.isAutomaticUploadsEnabled(editor)) {
       return uploadImages(callback);
     }
   };
@@ -153,7 +153,8 @@ export default function (editor: Editor) {
     }
 
     if (imgElm.getAttribute('src').indexOf('data:') === 0) {
-      return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+      const dataImgFilter = Settings.getImagesDataImgFilter(editor);
+      return dataImgFilter(imgElm);
     }
 
     return true;
@@ -221,7 +222,7 @@ export default function (editor: Editor) {
   };
 
   editor.on('setContent', function () {
-    if (editor.settings.automatic_uploads !== false) {
+    if (Settings.isAutomaticUploadsEnabled(editor)) {
       uploadImagesAuto();
     } else {
       scanForImages();
