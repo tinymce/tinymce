@@ -1,24 +1,25 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
-import * as Fields from '../data/Fields';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
+import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarEvent } from '../alien/TypeDefinitions';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   FieldSchema.defaulted('useSpace', false),
   FieldSchema.defaulted('useEnter', true),
   FieldSchema.defaulted('useControlEnter', false),
-  Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('useDown', false)
 ];
 
@@ -33,7 +34,7 @@ const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEven
   const execKeys = spaceExec.concat(enterExec).concat(downExec);
 
   return [
-    KeyRules.rule(KeyMatch.inSet(execKeys), execute),
+    KeyRules.rule(KeyMatch.inSet(execKeys), execute)
   ].concat(executeConfig.useControlEnter() ? [
     KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
   ] : [ ]);
