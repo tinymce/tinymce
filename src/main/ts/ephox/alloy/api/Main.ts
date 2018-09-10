@@ -104,6 +104,13 @@ import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+import {
+  AnchorSpec,
+  MakeshiftAnchorSpec,
+  SelectionAnchorSpec,
+  HotspotAnchorSpec,
+  SubmenuAnchorSpec
+} from '../positioning/mode/Anchoring';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -220,5 +227,10 @@ export {
   SugarEvent,
 
   // types
-  TieredMenuTypes
+  TieredMenuTypes,
+  AnchorSpec,
+  MakeshiftAnchorSpec,
+  SelectionAnchorSpec,
+  HotspotAnchorSpec,
+  SubmenuAnchorSpec
 };

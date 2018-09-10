@@ -90,6 +90,7 @@ const clashingOptArrays = (key: string, oArr1: Option<any[]>, oArr2: Option<any[
 const merge = (defnA: DomDefinitionDetail, mod) => {
   const raw = Merger.deepMerge(
     {
+      uid: defnA.uid(),
       tag: defnA.tag(),
       classes: mod.classes().getOr([ ]).concat(defnA.classes().getOr([ ])),
       attributes: Merger.merge(

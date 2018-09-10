@@ -9,6 +9,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   cloak: (sandbox: AlloyComponent) => void;
   decloak: (sandbox: AlloyComponent) => void;
   open: (sandbox: AlloyComponent, thing: AlloySpec) => AlloyComponent;
+  openWhileCloaked: (sandbox: AlloyComponent, thing: AlloySpec, transaction: () => void) => AlloyComponent;
   close: (sandbox: AlloyComponent) => void;
   isOpen: (sandbox: AlloyComponent) => boolean;
   isPartOf: (sandbox: AlloyComponent, candidate: () => Element) => boolean;

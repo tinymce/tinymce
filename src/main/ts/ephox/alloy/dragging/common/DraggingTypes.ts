@@ -52,6 +52,8 @@ export interface DraggingConfig {
   getTarget: () => (comp: Element) => Element;
   snaps: () => Option<SnapsConfig>;
   onDrop: () => (comp: AlloyComponent, Element) => void;
+  repositionTarget: () => boolean;
+  onDrag: () => (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
 }
 
 // FieldSchema.strict('getSnapPoints'),
@@ -61,7 +63,9 @@ export interface DraggingConfig {
 // FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
 export interface CommonDraggingConfigSpec {
   useFixed?: boolean;
-  onDrop?: (comp: AlloyComponent, Element) => void;
+  onDrop?: (comp: AlloyComponent, target: Element) => void;
+  repositionTarget?: boolean;
+  onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
   getTarget?: (elem: Element) => Element;
   snaps?: {
     getSnapPoints: (comp: AlloyComponent) => SnapConfig[];

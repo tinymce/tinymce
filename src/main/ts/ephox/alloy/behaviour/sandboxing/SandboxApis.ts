@@ -1,5 +1,5 @@
 import { Attr, Css, Element } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -30,6 +30,14 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   const newState = rebuild(sandbox, sConfig, sState, data);
   sConfig.onOpen()(sandbox, newState);
   return newState;
+};
+
+// TODO AP-191 write a test for openWhileCloaked
+const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data, transaction: () => void) => {
+  cloak(sandbox, sConfig, sState);
+  open(sandbox, sConfig, sState, data);
+  transaction();
+  decloak(sandbox, sConfig, sState);
 };
 
 const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
@@ -81,7 +89,15 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
 };
 
+const hasPosition = (element: Element) => Arr.exists(['top', 'left', 'right', 'bottom'], (pos) => Css.getRaw(element, pos).isSome());
+
 const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+  if (!hasPosition(sandbox.element())) {
+    // If a position value was not added to the sandbox during cloaking, remove it
+    // otherwise certain position values (absolute, relative) will impact the child that _was_ positioned
+    Css.remove(sandbox.element(), 'position');
+  }
+
   restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr());
 };
 
@@ -89,6 +105,7 @@ export {
   cloak,
   decloak,
   open,
+  openWhileCloaked,
   close,
   isOpen,
   isPartOf,

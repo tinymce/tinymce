@@ -1,3 +1,4 @@
+
 import { Assertions, Chain, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
@@ -101,8 +102,8 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         Keying.focusIn(component);
       }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
+        'onOpenMenu',
         'menu.events.focus',
-        'onOpenMenu'
       ]),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       Keyboard.sKeydown(doc, Keys.right(), { })

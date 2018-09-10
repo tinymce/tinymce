@@ -21,9 +21,11 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
             background: 'steelblue',
             height: '200px',
             width: '200px'
+          },
+          attributes: {
+            'test-uid': 'wat-uid'
           }
         },
-        uid: 'wat-uid',
         containerBehaviours: Behaviour.derive([
           Swapping.config({
             alpha: ALPHA_CLS(),
@@ -41,7 +43,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
           return s.element('div', {
             classes: Arr.map(has, arr.has).concat(Arr.map(not, arr.not)),
             attrs: {
-              'data-alloy-id': str.is('wat-uid')
+              'test-uid': str.is('wat-uid')
             }
           });
         }),

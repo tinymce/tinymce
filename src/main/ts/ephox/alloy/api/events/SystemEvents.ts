@@ -51,6 +51,16 @@ const windowScroll = Fun.constant('alloy.system.scroll');
 const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
+const dismissRequested = Fun.constant('alloy.system.dismissRequested');
+
+// Fired when slots are made hidden/shown
+const slotVisibility = Fun.constant('alloy.slotcontainer.visibility');
+
+export interface AlloySlotVisibilityEvent extends CustomEvent {
+  name: () => string;
+  visible: () => boolean;
+}
+
 export interface AlloyChangeTabEvent extends CustomEvent {
   button: () => AlloyComponent;
 }
@@ -76,9 +86,13 @@ export {
   typeaheadCancel,
   windowScroll,
 
+  dismissRequested,
+
   attachedToDom,
   detachedFromDom,
 
   changeTab,
-  dismissTab
+  dismissTab,
+
+  slotVisibility
 };

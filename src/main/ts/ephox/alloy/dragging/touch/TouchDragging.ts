@@ -31,7 +31,6 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
         Snappables.stopDrag(component, snapInfo);
       });
       const target = dragConfig.getTarget()(component.element());
-      // INVESTIGATE: Should this be in the MouseDragging?
       dragState.reset();
       dragConfig.onDrop()(component, target);
     })
@@ -42,6 +41,8 @@ const schema = [
   // Is this used?
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.defaulted('getTarget', Fun.identity),
+  FieldSchema.defaulted('onDrag', Fun.noop),
+  FieldSchema.defaulted('repositionTarget', true),
   FieldSchema.defaulted('onDrop', Fun.noop),
   SnapSchema,
   Fields.output('dragger', {

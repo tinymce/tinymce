@@ -30,7 +30,9 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
     {
       uid: detail.uid(),
       dom: {
-        tag: 'select'
+        tag: 'select',
+        classes: detail.selectClasses(),
+        attributes: detail.selectAttributes()
       },
       components: options,
       behaviours: Merger.deepMerge(
@@ -66,6 +68,8 @@ const HtmlSelect = Sketcher.single({
   configFields: [
     FieldSchema.strict('options'),
     SketchBehaviours.field('selectBehaviours', [ Focusing, Representing ]),
+    FieldSchema.defaulted('selectClasses', [ ]),
+    FieldSchema.defaulted('selectAttributes', { }),
     FieldSchema.option('data')
   ],
   factory

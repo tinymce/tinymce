@@ -6,6 +6,7 @@ import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 const renderMenu = (spec): Partial<MenuSpec> => {
   return {
@@ -69,7 +70,7 @@ const part = (store) => {
 const mStoreMenuUid = (component) => {
   return Step.stateful((value, next, die) => {
     const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
-    const uid = Attr.get(menu, 'data-alloy-id');
+    const uid = Tagger.readOrDie(menu);
     next(
       Merger.deepMerge(value, { menuUid: uid })
     );
@@ -82,7 +83,7 @@ const mWaitForNewMenu = (component) => {
       'Waiting for a new menu (different uid)',
       Step.sync(() => {
         SelectorFind.descendant(component.element(), '.menu').filter((menu) => {
-          const uid = Attr.get(menu, 'data-alloy-id');
+          const uid = Tagger.readOrDie(menu);
           return value.menuUid !== uid;
         }).getOrDie('New menu has not appeared');
       }),

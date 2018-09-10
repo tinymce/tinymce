@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { Attachment } from '../../api/Main';
+import * as Attachment from '../../api/system/Attachment';
 import { ReceivingEvent } from '../../events/SimulatedEvent';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
