@@ -16,6 +16,8 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Compare } from '@ephox/sugar';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
@@ -132,6 +134,9 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         Chain.binder((sandbox) => component.getSystem().getByDom(sandbox)),
         Chain.op((sandboxComp) => {
           AlloyTriggers.emit(sandboxComp, 'made-up-event');
+        }),
+        Chain.op((sandboxComp) => {
+          Assertions.assertEq('Checking Representing.getValue of sandbox is dropdown', true, Compare.eq(component.element(), Representing.getValue(sandboxComp).element()));
         })
       ]),
       store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
