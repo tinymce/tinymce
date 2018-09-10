@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.29.0] - 2018-09-07
+### Added
+ - Docking.refresh() to recalculate the component's position and visibility
+
 ## [3.28.0] - 2018-09-06
 ### Added
 - Expanded the SlotContainer API to add:
@@ -22,27 +26,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.26.0] - 2018-09-05
 ### Added
- - Added the data alloy identifiers to the DOM nodes themselves. They are no longer in the
+ - data alloy identifiers to the DOM nodes themselves. They are no longer in the
  visible HTML
 
 ## [3.25.0] - 2018-09-05
 ### Added
- - Added dynamic configuration of debugging modes
+ - dynamic configuration of debugging modes
 
 ## [3.24.0] - 2018-09-04
 ### Added
- - Added InlineView.showMenuAt() to special-case positioning for inline menus
- - Added Sandboxing.openWhileCloaked() convenience method
+ - InlineView.showMenuAt() to special-case positioning for inline menus
+ - Sandboxing.openWhileCloaked() convenience method
 
 ## [3.23.0] - 2018-08-31
 ### Added
- - Added eventOrder for Dropdowns
- - Added extra debugging information
+ - eventOrder for Dropdowns
+ - extra debugging information
 
 ## [3.22.0] - 2018-08-29
 ### Added
- - Added dragging behaviour flag for repositionTarget (defaults to true)
- - Added dragging behaviour handler (onDrag)
+ - dragging behaviour flag for repositionTarget (defaults to true)
+ - dragging behaviour handler (onDrag)
 
 ## [3.21.0] - 2018-08-29
 ### Added
