@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - getSlotNames
   - isShowing
   - hideAllSlots
+### Fixed
+ - Sandbox cloaking no longer enforces position when no position attributes are applied.
 
 ## [3.27.0] - 2018-09-06
 ### Fixed
