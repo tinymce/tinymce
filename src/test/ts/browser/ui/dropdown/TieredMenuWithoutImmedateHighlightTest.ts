@@ -17,7 +17,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('TieredMenuTest', (success, failure) => {
+UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
@@ -32,6 +32,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         ],
 
         markers: TestDropdownMenu.markers(),
+        highlightImmediately: false,
 
         data: {
           primary: 'menu-a',
@@ -76,30 +77,48 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    // TODO: Flesh out test.
-    const cAssertStructure = (label, expected) => {
-      return Chain.op((element: Element) => {
-        Assertions.assertStructure(label, expected, element);
-      });
-    };
-
-    const cTriggerFocusItem = Chain.op((target: Element) => {
-      AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
-    });
-
-    const cAssertStore = (label, expected) => {
-      return Chain.op(() => {
-        store.assertEq(label, expected);
-      });
-    };
-
-    const cClearStore = Chain.op(() => {
-      store.clear();
-    });
-
     return [
       Assertions.sAssertStructure(
         'Original structure test',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-menu') ],
+            children: [
+              s.element('ol', {
+                classes: [ arr.has('menu'), arr.not('selected-menu') ],
+                children: [
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  })
+                ]
+              })
+            ]
+          })
+        }),
+        component.element()
+      ),
+
+
+      store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
+        'onOpenMenu'
+      ]),
+
+      Step.sync(() => {
+        TieredMenu.highlightPrimary(component);
+      }),
+      store.sAssertEq('Focus is fired as soon as the tiered menu is highlighted by API', [
+        'onOpenMenu',
+        'menu.events.focus',
+      ]),
+
+      Assertions.sAssertStructure(
+        'Checking after TieredMenu.highlightPrimary, menu is active (item and menu selected)',
         ApproxStructure.build((s, str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-menu') ],
@@ -122,19 +141,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           })
         }),
         component.element()
-      ),
-
-
-      Step.sync(() => {
-        Keying.focusIn(component);
-      }),
-      store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
-        'onOpenMenu',
-        'menu.events.focus',
-      ]),
-      Keyboard.sKeydown(doc, Keys.down(), { }),
-      Keyboard.sKeydown(doc, Keys.right(), { })
-      // TODO: Beef up tests
+      )
     ];
   }, () => { success(); }, failure);
 });
