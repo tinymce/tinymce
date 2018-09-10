@@ -136,8 +136,6 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           return Option.some(item);
         }
       });
-
-      // return updateMenuPath(container, layeredState, path);
     });
   };
 

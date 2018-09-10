@@ -91,7 +91,6 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
             onSpace: triggerExecute,
             onEnter: triggerExecute,
             onDown: (comp, se) => {
-              console.log('here we are');
               if (Dropdown.isOpen(comp)) {
                 const sandbox = Coupling.getCoupled(comp, 'sandbox');
                 switchToMenu(sandbox);
