@@ -1,10 +1,20 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Focus, Element, Compare } from '@ephox/sugar';
+import { Compare, Element, Focus } from '@ephox/sugar';
 
-import { Highlighting } from '../behaviour/Highlighting';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
+import { Highlighting } from '../behaviour/Highlighting';
+
+const reportFocusShifting = (component: AlloyComponent, prevFocus: Option<Element>, newFocus: Option<Element>) => {
+  const noChange = prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)));
+  if  (! noChange)  {
+    AlloyTriggers.emitWith(component, SystemEvents.focusShifted(), {
+      prevFocus,
+      newFocus
+    });
+  }
+}
 
 export interface FocusManager {
   get: (component: AlloyComponent) => Option<Element>;
@@ -20,12 +30,7 @@ const dom = (): FocusManager => {
     const prevFocus = get(component);
     component.getSystem().triggerFocus(focusee, component.element());
     const newFocus = get(component);
-    if (! prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)))) {
-      AlloyTriggers.emitWith(component, SystemEvents.focusShifted(), {
-        prevFocus,
-        newFocus
-      });
-    }
+    reportFocusShifting(component, prevFocus, newFocus);
   };
 
   return {
@@ -47,12 +52,7 @@ const highlights = (): FocusManager => {
       Highlighting.highlight(component, item);
     });
     const newFocus = get(component);
-    if  (! prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p))))  {
-      AlloyTriggers.emitWith(component, SystemEvents.focusShifted(), {
-        prevFocus,
-        newFocus
-      });
-    }
+    reportFocusShifting(component, prevFocus, newFocus);
   };
 
   return {

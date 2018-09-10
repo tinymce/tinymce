@@ -1,8 +1,9 @@
 import * as NativeEvents from './NativeEvents';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CustomEvent } from '../../events/SimulatedEvent';
+import { Element } from '@ephox/sugar';
 
 const alloy = { tap: Fun.constant('alloy.tap') };
 
@@ -52,6 +53,11 @@ const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
 const dismissRequested = Fun.constant('alloy.system.dismissRequested');
+
+export interface AlloyFocusShiftedEvent extends CustomEvent {
+  prevFocus: () => Option<Element>;
+  newFocus: () => Option<Element>;
+}
 
 const focusShifted = Fun.constant('alloy.focusmanager.shifted');
 // Fired when slots are made hidden/shown
