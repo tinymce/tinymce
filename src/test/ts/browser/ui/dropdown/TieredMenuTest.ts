@@ -1,5 +1,5 @@
 
-import { Assertions, Chain, Keyboard, Keys, Step } from '@ephox/agar';
+import { Assertions, Chain, Keyboard, Keys, Step, ApproxStructure, Mouse } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
@@ -97,7 +97,43 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       store.clear();
     });
 
+    const structureMenu = (selected, itemSelections) => (s, str, arr) => {
+      return s.element('ol', {
+        classes: [ arr.has('menu'), (selected ? arr.has : arr.not)('selected-menu') ],
+        children: Arr.map(itemSelections, (sel) => s.element('li', {
+          classes: [ arr.has('item'), (sel ? arr.has : arr.not)('selected-item') ]
+        }))
+      })
+    }
+
+    const sAssertMenu = (label, structureMenus) => {
+      return Assertions.sAssertStructure(
+        label,
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-menu') ],
+            children: Arr.map(structureMenus, (sm) => sm(s, str, arr))
+          })
+        }),
+        component.element()
+      );
+    };
+
     return [
+      Assertions.sAssertStructure(
+        'Original structure test',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-menu') ],
+            children: [
+              structureMenu(true, [ true, false, false ])(s, str, arr)
+            ]
+          })
+        }),
+        component.element()
+      ),
+
+
       Step.sync(() => {
         Keying.focusIn(component);
       }),
@@ -106,8 +142,57 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         'menu.events.focus',
       ]),
       Keyboard.sKeydown(doc, Keys.down(), { }),
-      Keyboard.sKeydown(doc, Keys.right(), { })
+      Keyboard.sKeydown(doc, Keys.right(), { }),
 
+      sAssertMenu(
+        'Post expansion of submenu with <right> structure test',
+        [
+          structureMenu(false, [ false, true, false ]),
+          structureMenu(true, [ true ])
+        ]
+      ),
+
+      Keyboard.sKeydown(doc, Keys.left(), { }),
+      sAssertMenu(
+        'Post collapse of submenu with <left> structure test',
+        [
+          structureMenu(true, [ false, true, false ])
+        ]
+      ),
+      Keyboard.sKeydown(doc, Keys.enter(), { }),
+      sAssertMenu(
+        'Post exansion of submenu with <enter> structure test',
+        [
+          structureMenu(false, [ false, true, false ]),
+          structureMenu(true, [ true ])
+        ]
+      ),
+
+      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      sAssertMenu(
+        'Post collapse of submenu with <escape> structure test',
+        [
+          structureMenu(true, [ false, true, false ])
+        ]
+      ),
+
+      Mouse.sHoverOn(component.element(), 'li:contains("a-Beta")'),
+      sAssertMenu(
+        'Post hover on item with submenu structure test',
+        [
+          structureMenu(true, [ false, true, false ]),
+          structureMenu(false, [ false ])
+        ]
+      ),
+
+      Keyboard.sKeydown(doc, Keys.right(), { }),
+      sAssertMenu(
+        'Post right on item with expanded submenu structure test',
+        [
+          structureMenu(false, [ false, true, false ]),
+          structureMenu(true, [ true ])
+        ]
+      )
       // TODO: Beef up tests
     ];
   }, () => { success(); }, failure);

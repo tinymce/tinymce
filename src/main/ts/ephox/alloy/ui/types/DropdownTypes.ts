@@ -33,6 +33,13 @@ export interface DropdownDetail extends CommonDropdownDetail<TieredData>, Compos
   toggleClass: () => string;
 }
 
+export interface DropdownApis {
+  open: (comp: AlloyComponent) => void;
+  expand: (comp: AlloyComponent) => void;
+  isOpen: (comp: AlloyComponent) => boolean;
+  close: (comp: AlloyComponent) => void;
+}
+
 export interface DropdownSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
@@ -56,4 +63,4 @@ export interface DropdownSpec extends CompositeSketchSpec {
 
 }
 
-export interface DropdownSketcher extends CompositeSketch<DropdownSpec, DropdownDetail> { }
+export interface DropdownSketcher extends CompositeSketch<DropdownSpec, DropdownDetail>, DropdownApis { }

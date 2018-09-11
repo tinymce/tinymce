@@ -189,9 +189,6 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
-          Step.sync(() => {
-            Assertions.assertEq('Checking all menus are considered', 5, active.concat(background).concat(others).length);
-          }),
           store.sAssertEq('checking store', stored),
           FocusTools.sTryOnSelector('Searching for focus on: ' + focused.label, doc, focused.selector),
           sCheckActive,
@@ -357,10 +354,10 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       // Hover on "strings"
       Mouse.sHoverOn(gui.element(), focusables.strings.selector),
       sTestMenus(
-        'After hovering on "strings"',
+        'After hovering on "strings" (should only expand)',
         [ ],
-        focusables.versions,
-        [ focusables.stringsMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [
+        focusables.strings,
+        [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [
           focusables.numbersMenu
         ]
       ),

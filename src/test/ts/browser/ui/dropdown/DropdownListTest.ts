@@ -16,10 +16,12 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Compare, Focus } from '@ephox/sugar';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 
-  const sink = Memento.record(
+  const memSink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
@@ -52,7 +54,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         ]),
 
         lazySink () {
-          return Result.value(sink.get(c));
+          return Result.value(memSink.get(c));
         },
 
         toggleClass: 'alloy-selected',
@@ -95,10 +97,16 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
     return c;
 
   }, (doc, body, gui, component, store) => {
+    const sink = GuiFactory.build(memSink.asSpec());
 
-    gui.add(
-      GuiFactory.build(sink.asSpec())
-    );
+    const inputForFocus = GuiFactory.build({
+      dom: {
+        tag: 'input'
+      }
+    });
+
+    gui.add(sink);
+    gui.add(inputForFocus);
 
     const focusables = {
       button: { label: 'dropdown-button', selector: 'button' },
@@ -109,6 +117,9 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
     };
 
     return [
+      GuiSetup.mAddStyles(doc, [
+        ':focus { outline: 2px solid green; }'
+      ]),
       // Add more information to this.
       Assertions.sAssertStructure(
         'Initial structure of dropdown button',
@@ -132,6 +143,9 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         Chain.binder((sandbox) => component.getSystem().getByDom(sandbox)),
         Chain.op((sandboxComp) => {
           AlloyTriggers.emit(sandboxComp, 'made-up-event');
+        }),
+        Chain.op((sandboxComp) => {
+          Assertions.assertEq('Checking Representing.getValue of sandbox is dropdown', true, Compare.eq(component.element(), Representing.getValue(sandboxComp).element()));
         })
       ]),
       store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
@@ -258,7 +272,61 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
             ['test.listener.1', 'test.listener.3', 'test.listener.2' ]
           )
         ])
-      )
+      ),
+
+      Logger.t(
+        'Using the expand API should open the dropdown, without focusing / highlighting it',
+        GeneralSteps.sequence([
+          store.sClear,
+          Step.sync(() => {
+            Focus.focus(component.element());
+          }),
+          Step.sync(() => {
+            Dropdown.expand(component);
+          }),
+          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element(), '.menu'),
+          Step.sync(() => Assertions.assertEq('isOpen should be true', true, Dropdown.isOpen(component))),
+          FocusTools.sTryOnSelector('Focus should still be on button (expand does not shift it)', doc, 'button')
+        ])
+      ),
+
+      Logger.t(
+        'Pressing <down> in the button should focus the expanded menu',
+        GeneralSteps.sequence([
+          Keyboard.sKeydown(doc, Keys.down(), { }),
+          Step.sync(() => Assertions.assertEq('isOpen should be true', true, Dropdown.isOpen(component))),
+          FocusTools.sTryOnSelector('Focus should still be on button (expand does not shift it)', doc, 'li:contains("Alpha")')
+        ])
+      ),
+
+      Logger.t(
+        'Closing the dropdown should hide the menu. Currently, it will not shift focus.',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            Focus.focus(inputForFocus.element())
+          }),
+          Step.sync(() => {
+            Dropdown.close(component);
+          }),
+          UiFinder.sNotExists(sink.element(), '.menu'),
+          Step.sync(() => Assertions.assertEq('isOpen should be false', false, Dropdown.isOpen(component))),
+          FocusTools.sTryOnSelector('Focus should not be shifted by the close call', doc, 'input')
+        ])
+      ),
+
+      Logger.t(
+        'Using the open API should open the dropdown, and focus / highlight the menu',
+        GeneralSteps.sequence([
+          Step.sync(() => {
+            Dropdown.open(component);
+          }),
+          UiFinder.sWaitForVisible('Waiting for menu to appear', sink.element(), '.menu'),
+          Step.sync(() => Assertions.assertEq('isOpen should be true', true, Dropdown.isOpen(component))),
+          FocusTools.sTryOnSelector('Focus should still be on button (expand does not shift it)', doc, 'li:contains("Alpha")')
+        ])
+      ),
+
+      GuiSetup.mRemoveStyles
     ];
   }, () => { success(); }, failure);
 });

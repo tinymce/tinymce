@@ -61,7 +61,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       const onOpenSync = (sandbox) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
-      DropdownUtils.open(detail, mapFetch(comp), comp, sandbox, externals, onOpenSync).get(Fun.noop);
+      DropdownUtils.open(detail, mapFetch(comp), comp, sandbox, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
     }
   };
 
@@ -142,7 +142,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
               });
             };
 
-            DropdownUtils.open(detail, mapFetch(component), component, sandbox, externals, onOpenSync).get(Fun.noop);
+            DropdownUtils.open(detail, mapFetch(component), component, sandbox, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
           }
         }
       },
@@ -223,7 +223,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((comp) => {
         const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
