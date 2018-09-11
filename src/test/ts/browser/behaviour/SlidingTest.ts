@@ -237,6 +237,23 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       Step.wait(150),
       store.sAssertEq('After child has transitioned width', []),
 
+      store.sClear,
+      Step.sync(() => {
+        Sliding.toggleGrow(component);
+        Sliding.toggleGrow(component);
+      }),
+
+      Waiter.sTryUntil(
+        'toggleGrow x 2 in quick succession',
+        store.sAssertEq('Two toggles (one after the other) should fire all events even though no transitioning occurs', [
+          'onStartGrow',
+          'onStartShrink',
+          'onShrunk'
+        ]),
+        100,
+        4000
+      ),
+
       GuiSetup.mRemoveStyles
     ];
   }, () => { success(); }, failure);
