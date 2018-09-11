@@ -54,13 +54,12 @@ export default (): void => {
           innerHtml: 'Wait for 5 seconds'
         },
         action: (comp) => {
-          ModalDialog.setBusy(dialog, (dlg, boundsStyles, busyBehaviours) => ({
+          ModalDialog.setBusy(dialog, (dlg, busyBehaviours) => ({
             dom: {
               tag: 'div',
               attributes: {
                 'aria-label': 'Sharks and Dolphins'
-              },
-              styles: boundsStyles
+              }
             },
             components: [
               {

@@ -126,7 +126,6 @@ const singleReplace = (detail, p) => {
   return replacement.fold((req, valueThunk) => {
     return [ valueThunk(detail) ];
   }, (req, valuesThunk) => {
-    console.log('detail', detail);
     return valuesThunk(detail);
   });
 };

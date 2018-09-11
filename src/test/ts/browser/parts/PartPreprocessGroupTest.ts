@@ -32,7 +32,6 @@ UnitTest.test('Browser Test: parts.PartPrecoessGroupTest', () => {
       placeholders.groupB({
         preprocess: (comps) => {
           const chunks = Arr.chunk(comps, 2);
-          console.log('chunks', chunks);
           return Arr.map(chunks, (c) => {
             return {
               chunk: c
