@@ -68,6 +68,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       }
     },
     name: 'items',
+    schema: [
+      // FieldSchema.option('layoutGroup')
+    ],
     unit: 'item',
     defaults (detail: MenuDetail, u) {
       const fallbackUid = Tagger.generate('');

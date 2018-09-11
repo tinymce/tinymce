@@ -58,7 +58,8 @@ const substitute = (owner, detail, compSpec, placeholders) => {
     },
     (req, valuesThunk) => {
       const values = valuesThunk(detail, compSpec.config, compSpec.validated);
-      return values;
+      const preprocessor = compSpec.validated.preprocess.getOr(Fun.identity);
+      return preprocessor(values);
     }
   );
 };
@@ -125,6 +126,7 @@ const singleReplace = (detail, p) => {
   return replacement.fold((req, valueThunk) => {
     return [ valueThunk(detail) ];
   }, (req, valuesThunk) => {
+    console.log('detail', detail);
     return valuesThunk(detail);
   });
 };
