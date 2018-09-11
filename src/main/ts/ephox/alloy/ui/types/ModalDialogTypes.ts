@@ -46,7 +46,6 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
 
 export type GetBusySpec = (
   dlg: AlloyComponent,
-  bounds: { left: string, top: string, width: string, height: string },
   busyBehaviours: AlloyBehaviourRecord
 ) => AlloySpec;
 

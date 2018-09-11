@@ -290,12 +290,11 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the Dialog to "Busy"',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (d, boundsStyles, bs) => {
+          ModalDialog.setBusy(dialog, (d, bs) => {
             return {
               dom: {
                 tag: 'div',
                 classes: [ 'test-busy-class' ],
-                styles: boundsStyles,
                 innerHtml: 'Loading'
               },
               behaviours: bs
