@@ -22,7 +22,7 @@ import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
@@ -84,6 +84,15 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     );
   };
 
+  const closeOthers = (container: AlloyComponent, state: LayeredState, path: string[]): void => {
+    const others = getMenus(state, state.otherMenus(path));
+    Arr.each(others, (o) => {
+      // May not need to do the active menu thing.
+      Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
+      if (! detail.stayInDom()) { Replacing.remove(container, o); }
+    });
+  };
+
   const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => {
     return Option.from(path[0]).bind(state.lookupMenu).map((activeMenu: AlloyComponent) => {
       const rest = getMenus(state, path.slice(1));
@@ -98,33 +107,35 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       // Remove the background-menu class from the active menu
       Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
       setActiveMenu(container, activeMenu);
-      const others = getMenus(state, state.otherMenus(path));
-      Arr.each(others, (o) => {
-        // May not need to do the active menu thing.
-        Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
-        if (! detail.stayInDom()) { Replacing.remove(container, o); }
-      });
-
+      closeOthers(container, state, path);
       return activeMenu;
     });
 
   };
 
-  const expandRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
+  enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent };
+
+  const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
       // When expanding, always select the first.
-      Option.from(path[0]).bind(layeredState.lookupMenu).each((activeMenu) => {
+      return Option.from(path[0]).bind(layeredState.lookupMenu).bind((activeMenu) => {
         // DUPE with above. Fix later.
         if (! Body.inBody(activeMenu.element())) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
         }
 
+        // updateMenuPath is the code which changes the active menu. We don't always
+        // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
         detail.onOpenSubmenu()(container, item, activeMenu);
-        Highlighting.highlightFirst(activeMenu);
+        if (decision === ExpandHighlightDecision.HighlightSubmenu) {
+          Highlighting.highlightFirst(activeMenu);
+          return updateMenuPath(container, layeredState, path);
+        } else {
+          Highlighting.dehighlightAll(activeMenu);
+          return Option.some(item);
+        }
       });
-
-      return updateMenuPath(container, layeredState, path);
     });
   };
 
@@ -146,7 +157,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   };
 
   const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
-    return EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item);
+    return EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
   };
 
   const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
@@ -177,6 +188,11 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
       const menu = simulatedEvent.event().menu();
       Highlighting.highlight(sandbox, menu);
+
+      const value = getItemValue(simulatedEvent.event().item());
+      layeredState.refresh(value).each((path) => {
+        return closeOthers(sandbox, layeredState, path);
+      });
     }),
 
     AlloyEvents.runOnExecute((component, simulatedEvent) => {
@@ -191,7 +207,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           collapseLeft(component, item);
         }
 
-        expandRight(component, item).fold(
+        expandRight(component, item, ExpandHighlightDecision.HighlightSubmenu).fold(
           () => {
             detail.onExecute()(component, item);
           },
@@ -205,10 +221,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
 
-        if (detail.openImmediately()) {
-          detail.onOpenMenu()(container, primary);
+        detail.onOpenMenu()(container, primary);
+        if (detail.highlightImmediately()) {
           setActiveMenu(container, primary);
         }
+
+
       });
     })
   ].concat(detail.navigateOnHover() ? [
@@ -217,7 +235,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
       const item = simulatedEvent.event().item();
       updateView(sandbox, item);
-      expandRight(sandbox, item);
+      expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
       detail.onHover()(sandbox, item);
     })
   ] : [ ]));
@@ -229,6 +247,17 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       });
     });
   };
+
+  const highlightPrimary = (container: AlloyComponent) => {
+    layeredState.getPrimary().each((primary) => {
+      setActiveMenu(container, primary);
+    })
+  }
+
+  const apis: TieredMenuApis = {
+    collapseMenu: collapseMenuApi,
+    highlightPrimary
+  }
 
   return {
     uid: detail.uid(),
@@ -261,9 +290,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       SketchBehaviours.get(detail.tmenuBehaviours())
     ),
     eventOrder: detail.eventOrder(),
-    apis: {
-      collapseMenu: collapseMenuApi
-    },
+    apis,
     events
   };
 };

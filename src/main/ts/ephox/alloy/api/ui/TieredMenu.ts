@@ -46,7 +46,7 @@ const tieredMenu = single({
     Fields.onStrictHandler('onOpenSubmenu'),
     Fields.onHandler('onCollapseMenu'),
 
-    FieldSchema.defaulted('openImmediately', true),
+    FieldSchema.defaulted('highlightImmediately', true),
 
     FieldSchema.strictObjOf('data', [
       FieldSchema.strict('primary'),
@@ -71,6 +71,9 @@ const tieredMenu = single({
   apis: {
     collapseMenu (apis, tmenu) {
       apis.collapseMenu(tmenu);
+    },
+    highlightPrimary (apis, tmenu) {
+      apis.highlightPrimary(tmenu);
     }
   },
 
