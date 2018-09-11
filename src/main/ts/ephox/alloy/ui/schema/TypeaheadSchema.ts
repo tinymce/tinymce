@@ -30,7 +30,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('getHotspot', Option.some),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
-    FieldSchema.defaulted('getDisplayText', (itemData) => itemData.text),
+    FieldSchema.defaulted('getDisplayText', (itemData) => itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value),
     FieldSchema.defaulted('selectsOver', true),
     FieldSchema.defaulted('populateFromBrowse', true)
   ]),

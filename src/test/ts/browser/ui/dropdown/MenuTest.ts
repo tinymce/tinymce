@@ -20,8 +20,8 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-          { type: 'item', data: { value: 'beta', text: 'Beta' } }
+          { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
+          { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',

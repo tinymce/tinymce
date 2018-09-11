@@ -40,15 +40,15 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
             'menu-a': {
               value: 'menu-a',
               items: Arr.map([
-                { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
-                { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
-                { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
+                { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' } } },
+                { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' } } },
+                { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' } } }
               ], TestDropdownMenu.renderItem)
             },
             'menu-b': {
               value: 'menu-b',
               items: Arr.map([
-                { type: 'item', data: { value: 'b-alpha', text: 'b-Alpha' } }
+                { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' } } }
               ], TestDropdownMenu.renderItem)
             }
           }, TestDropdownMenu.renderMenu),
