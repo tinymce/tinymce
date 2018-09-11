@@ -41,20 +41,22 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
             initialData: {
               // . for value, - for text
               value: 'initial.value',
-              text: 'initial-value'
+              meta: {
+                text: 'initial-value'
+              }
             },
 
             fetch (input) {
               const text = Value.get(input.element()).toLowerCase();
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', text: Strings.capitalize(text) + '1' } },
-                { type: 'item', data: { value: text + '2', text: Strings.capitalize(text) + '2' } }
+                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' } } },
+                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' } } }
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data', data: {value: '', text: 'No data'} }
+                  { type: 'separator', text: 'No data', data: { value: '', meta: { text: 'No data'} } }
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({
@@ -123,10 +125,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         // Check that the representing state has keys of peo1, peo2 etc.
         const repState = Representing.getState(typeahead) as DatasetRepresentingState;
         const peo1Data = repState.lookup('peo1').getOrDie('Should have dataset data for peo1 now');
-        Assertions.assertEq('Checking peo1Data', { value: 'peo1', text: 'Peo1' }, peo1Data);
+        Assertions.assertEq('Checking peo1Data', { value: 'peo1', meta: { text: 'Peo1' } }, peo1Data);
 
         const peo2Data = repState.lookup('peo2').getOrDie('Should have dataset data for peo2 now');
-        Assertions.assertEq('Checking peo2Data', { value: 'peo2', text: 'Peo2' }, peo2Data);
+        Assertions.assertEq('Checking peo2Data', { value: 'peo2', meta: { text: 'Peo2' } }, peo2Data);
       }),
 
       Keyboard.sKeydown(doc, Keys.enter(), { }),
@@ -218,14 +220,18 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       Step.sync(() => {
         Representing.setValue(typeahead, {
           value: 'neo3',
-          text: 'Neo3'
+          meta: {
+            text: 'Neo3'
+          }
         });
       }),
       Step.sync(() => {
         const actual = Representing.getValue(typeahead);
         Assertions.assertEq('Checking getValue after setValue', {
           value: 'neo3',
-          text: 'Neo3'
+          meta: {
+            text: 'Neo3'
+          }
         }, actual);
       }),
 

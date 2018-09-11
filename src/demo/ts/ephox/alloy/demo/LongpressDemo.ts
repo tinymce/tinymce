@@ -45,8 +45,8 @@ export default (): void => {
           },
           fetch () {
             return Future.pure(Arr.map([
-              { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-              { type: 'item', data: { value: 'beta', text: 'Beta'} }
+              { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
+              { type: 'item', data: { value: 'beta', meta: { text: 'Beta'} } }
             ], DemoRenders.orb));
           },
           onExecute (component, menuComp, item, data) {

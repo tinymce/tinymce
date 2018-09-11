@@ -34,8 +34,7 @@ export default (): void => {
   const makeItem = (value, text) => {
     return {
       data: {
-        value,
-        text
+        value
       },
       type: 'item',
       dom: {

@@ -24,7 +24,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
   };
 };
 
-const renderItem = (spec): ItemSpec => {
+const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }}): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -48,7 +48,7 @@ const renderItem = (spec): ItemSpec => {
         'data-test-id': 'item-' + spec.data.value
       },
       classes: [ ],
-      innerHtml: spec.data.text
+      innerHtml: spec.data.meta.text
     },
     components: [ ]
   };

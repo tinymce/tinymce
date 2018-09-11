@@ -44,7 +44,9 @@ export default (): void => {
     autofocus: true,
     data: {
       value: 'widget1',
-      text: 'Widget1'
+      meta: {
+        text: 'Widget1'
+      }
     },
     widget: Container.sketch({
       dom: {
@@ -227,12 +229,23 @@ export default (): void => {
         }
       },
       fetch () {
+        const makeItem = (v, t) => {
+          return {
+            type: 'item',
+            data: {
+              value: v,
+              meta: {
+                text: t
+              }
+            }
+          }
+        };
 
         const data = Arr.map([
-          { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
-          { type: 'item', data: { value: 'beta', text: '+Beta' } },
-          { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
-          { type: 'item', data: { value: 'delta', text: '+Delta' } }
+          makeItem('alpha', '+Alpha'),
+          makeItem('beta', '+Beta'),
+          makeItem('gamma', '+Gamma'),
+          makeItem('delta', '+Delta')
         ], DemoRenders.gridItem);
 
         const future = Future.pure(data);
@@ -278,12 +291,25 @@ export default (): void => {
       matchWidth: true,
 
       fetch () {
+        const makeItem = (v, t, c) => {
+          return {
+            type: 'item',
+            data: {
+              value: v,
+              meta: {
+                text: t,
+                'item-class': c
+              }
+            }
+          }
+        };
+
         const data = Arr.map([
-          { 'type': 'item', 'data': { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
-          { 'type': 'item', 'data': { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
-          { type: 'separator', data: { value: 'text', text: '-- separator --' } },
-          { 'type': 'item', 'data': { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
-          { 'type': 'item', 'data': { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
+          makeItem('alpha', 'Alpha', 'class-alpha'),
+          makeItem('beta', 'Beta', 'class-beta'),
+          { type: 'separator', data: { value: 'text', meta: { text: '-- separator --' } } },
+          makeItem('gamma', 'Gamma', 'class-gamma'),
+          makeItem('delta', 'Delta', 'class-delta')
         ], DemoRenders.item);
 
         const future = Future.pure(data);
@@ -329,6 +355,19 @@ export default (): void => {
         console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
       },
       fetch () {
+        const makeItem = (v, t, c) => {
+          return {
+            type: 'item',
+            data: {
+              value: v,
+              meta: {
+                text: t,
+                'item-class': c
+              }
+            }
+          }
+        };
+
         const future = Future.pure({
           primary: 'tools-menu',
           menus: Obj.map({
@@ -336,13 +375,15 @@ export default (): void => {
               value: 'tools-menu',
               text: 'tools-menu',
               items: Arr.map([
-                { 'type': 'item', 'data': { value: 'packages', text: 'Packages' }, 'item-class': '' },
-                { 'type': 'item', 'data': { value: 'about', text: 'About' }, 'item-class': '' },
+                makeItem('packages', 'Packages', ''),
+                makeItem('about', 'About Us', ''),
                 {
                   type: 'widget',
                   data: {
                     value: 'widget',
-                    text: 'Widget'
+                    meta: {
+                      text: 'Widget'
+                    }
                   },
                   widget: Container.sketch({
                     dom: {
@@ -398,30 +439,30 @@ export default (): void => {
               value: 'packages',
               text: 'packages',
               items: Arr.map([
-                { 'type': 'item', 'data': { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
+                makeItem('sortby', 'SortBy', '')
               ], DemoRenders.item)
             },
             'sortby-menu': {
               value: 'sortby',
               text: 'sortby',
               items: Arr.map([
-                { 'type': 'item', 'data': { value: 'strings', text: 'Strings' }, 'item-class': '' },
-                { 'type': 'item', 'data': { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
+                makeItem('strings', 'Strings', ''),
+                makeItem('numbers', 'Numbers', '')
               ], DemoRenders.item)
             },
             'strings-menu': {
               value: 'strings',
               text: 'strings',
               items: Arr.map([
-                { 'type': 'item', 'data': { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
-                { 'type': 'item', 'data': { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
+                makeItem('version', 'Versions', ''),
+                makeItem('alphabetic', 'Alphabetic', '')
               ], DemoRenders.item)
             },
             'numbers-menu': {
               value: 'numbers',
               text: 'numbers',
               items: Arr.map([
-                { 'type': 'item', 'data': { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
+                makeItem('doubled', 'Double Digits', '')
               ], DemoRenders.item)
             }
           }, DemoRenders.menu),

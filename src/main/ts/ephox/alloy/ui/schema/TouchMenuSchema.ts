@@ -21,7 +21,10 @@ const anchorAtCentre = (component: AlloyComponent) => {
     anchor: 'makeshift',
     x: pos.left() + w / 2,
     y: pos.top() + h / 2,
-    layouts: [ Layout.southmiddle, Layout.northmiddle ]
+    layouts: {
+      onLtr: () => [ Layout.southmiddle, Layout.northmiddle ],
+      onRtl: () => [ Layout.southmiddle, Layout.northmiddle ]
+    }
   };
 };
 

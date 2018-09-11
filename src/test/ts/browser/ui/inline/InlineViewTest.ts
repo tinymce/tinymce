@@ -187,8 +187,8 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
                 },
                 fetch () {
                   const future = Future.pure([
-                    { type: 'item', data: { value: 'option-1', text: 'Option-1' } },
-                    { type: 'item', data: { value: 'option-2', text: 'Option-2' } }
+                    { type: 'item', data: { value: 'option-1', meta: { text: 'Option-1' } } },
+                    { type: 'item', data: { value: 'option-2', meta: { text: 'Option-2' } } }
                   ]);
 
                   return future.map((f) => {

@@ -61,39 +61,39 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           value: 'tools-menu-value',
           text: 'Tools Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'packages', text: 'Packages' } },
-            { type: 'item', data: { value: 'about', text: 'About' } },
-            { type: 'widget', widget, data: { value: 'widget' } }
+            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' } } },
+            { type: 'item', data: { value: 'about', meta: { text: 'About' } } },
+            { type: 'widget', widget, data: { value: 'widget', meta: { } } }
           ], TestDropdownMenu.renderItem)
         },
         'packages-menu': {
           value: 'packages-menu-value',
           text: 'Packages Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'sortby', text: 'SortBy' } }
+            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' } } }
           ], TestDropdownMenu.renderItem)
         },
         'sortby-menu': {
           value: 'sortby-menu-value',
           text: 'Sortby Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'strings', text: 'Strings' } },
-            { type: 'item', data: { value: 'numbers', text: 'Numbers' } }
+            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' } } },
+            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' } } }
           ], TestDropdownMenu.renderItem)
         },
         'strings-menu': {
           value: 'strings-menu-value',
           text: 'Strings Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'versions', text: 'Versions', html: '<b>V</b>ersions' } },
-            { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' } }
+            { type: 'item', data: { value: 'versions', meta: { text: 'Versions', html: '<b>V</b>ersions' } } },
+            { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' } } }
           ], TestDropdownMenu.renderItem)
         },
         'numbers-menu': {
           value: 'numbers-menu-value',
           text: 'Numbers Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'doubled', text: 'Doubled digits' } }
+            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' } } }
           ], TestDropdownMenu.renderItem)
         }
       }, TestDropdownMenu.renderMenu),

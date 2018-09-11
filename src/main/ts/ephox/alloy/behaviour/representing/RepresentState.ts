@@ -79,7 +79,11 @@ const dataset = (): DatasetRepresentingState => {
     const newDataByText = { };
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
-      newDataByText[item.text] = item;
+      Objects.readOptFrom(item, 'meta').each((meta) => {
+        Objects.readOptFrom(meta, 'text').each((text) => {
+          newDataByText[text] = item;
+        });
+      });
     });
 
     dataByValue.set(

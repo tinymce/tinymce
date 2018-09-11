@@ -20,10 +20,10 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-          { type: 'item', data: { value: 'beta', text: 'Beta' } },
-          { type: 'item', data: { value: 'gamma', text: 'Gamma' } },
-          { type: 'item', data: { value: 'delta', text: 'Delta' } }
+          { type: 'item', data: { value: 'alpha', meta: { } } },
+          { type: 'item', data: { value: 'beta', meta: { } } },
+          { type: 'item', data: { value: 'gamma', meta: { } } },
+          { type: 'item', data: { value: 'delta', meta: { } } }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',
