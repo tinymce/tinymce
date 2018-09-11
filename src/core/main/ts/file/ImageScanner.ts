@@ -13,6 +13,17 @@ import Arr from '../util/Arr';
 import Fun from '../util/Fun';
 import Conversions from './Conversions';
 import Env from '../api/Env';
+import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
+import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
+
+export interface BlobInfoImagePair {
+  image: HTMLImageElement;
+  blobInfo: BlobInfo;
+}
+
+export interface ImageScanner {
+  findAll: (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) => Promise<BlobInfoImagePair[]>;
+}
 
 /**
  * Finds images with data uris or blob uris. If data uris are found it will convert them into blob uris.
@@ -23,11 +34,11 @@ import Env from '../api/Env';
 
 let count = 0;
 
-const uniqueId = function (prefix?) {
+const uniqueId = function (prefix?: string): string {
   return (prefix || 'blobid') + (count++);
 };
 
-const imageToBlobInfo = function (blobCache, img, resolve, reject) {
+const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, resolve, reject) {
   let base64, blobInfo;
 
   if (img.src.indexOf('blob:') === 0) {
@@ -83,14 +94,14 @@ const imageToBlobInfo = function (blobCache, img, resolve, reject) {
   }
 };
 
-const getAllImages = function (elm) {
-  return elm ? elm.getElementsByTagName('img') : [];
+const getAllImages = function (elm: HTMLElement): HTMLElement[] {
+  return elm ? (elm as any).getElementsByTagName('img') : [];
 };
 
-export default function (uploadStatus, blobCache) {
+export default function (uploadStatus, blobCache: BlobCache): ImageScanner {
   const cachedPromises = {};
 
-  const findAll = function (elm, predicate?) {
+  const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
     let images;
 
     if (!predicate) {
@@ -117,7 +128,7 @@ export default function (uploadStatus, blobCache) {
       }
 
       if (src.indexOf('blob:') === 0) {
-        return !uploadStatus.isUploaded(src);
+        return !uploadStatus.isUploaded(src) && predicate(img);
       }
 
       if (src.indexOf('data:') === 0) {

@@ -10,6 +10,9 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { HTMLImageElement } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { UploadHandler } from 'tinymce/core/file/Uploader';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -83,6 +86,38 @@ const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean => {
 const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', ''));
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
+const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => {
+  return editor.getParam('images_dataimg_filter', Fun.constant(true), 'function');
+};
+
+const isAutomaticUploadsEnabled = (editor: Editor): boolean => {
+  return editor.getParam('automatic_uploads', true, 'boolean');
+};
+
+const shouldReuseFileName = (editor: Editor): boolean => {
+  return editor.getParam('images_reuse_filename', false, 'boolean');
+};
+
+const shouldReplaceBlobUris = (editor: Editor): boolean => {
+  return editor.getParam('images_replace_blob_uris', true, 'boolean');
+};
+
+const getImageUploadUrl = (editor: Editor): string => {
+  return editor.getParam('images_upload_url', '', 'string');
+};
+
+const getImageUploadBasePath = (editor: Editor): string => {
+  return editor.getParam('images_upload_base_path', '', 'string');
+};
+
+const getImagesUploadCredentials = (editor: Editor): boolean => {
+  return editor.getParam('images_upload_credentials', false, 'boolean');
+};
+
+const getImagesUploadHandler = (editor: Editor): UploadHandler => {
+  return editor.getParam('images_upload_handler', null, 'function');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -98,5 +133,13 @@ export default {
   shouldKeepStyles,
   shouldEndContainerOnEmptyBlock,
   getFontStyleValues,
-  getFontSizeClasses
+  getFontSizeClasses,
+  getImagesDataImgFilter,
+  isAutomaticUploadsEnabled,
+  shouldReuseFileName,
+  shouldReplaceBlobUris,
+  getImageUploadUrl,
+  getImageUploadBasePath,
+  getImagesUploadCredentials,
+  getImagesUploadHandler
 };

@@ -8,8 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Blob, FileReader, Uint8Array, Window, XMLHttpRequest } from '@ephox/sand';
+import { FileReader, Uint8Array, Window, XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
+import { Blob } from '@ephox/dom-globals';
 
 /**
  * Converts blob/uris back and forth.
@@ -18,7 +19,7 @@ import Promise from '../api/util/Promise';
  * @class tinymce.file.Conversions
  */
 
-const blobUriToBlob = function (url) {
+const blobUriToBlob = function (url: string): Promise<Blob> {
   return new Promise(function (resolve, reject) {
 
     const rejectWithError = function () {
@@ -51,31 +52,31 @@ const blobUriToBlob = function (url) {
   });
 };
 
-const parseDataUri = function (uri) {
+const parseDataUri = function (uri: string) {
   let type, matches;
 
-  uri = decodeURIComponent(uri).split(',');
+  const uriParts = decodeURIComponent(uri).split(',');
 
-  matches = /data:([^;]+)/.exec(uri[0]);
+  matches = /data:([^;]+)/.exec(uriParts[0]);
   if (matches) {
     type = matches[1];
   }
 
   return {
     type,
-    data: uri[1]
+    data: uriParts[1]
   };
 };
 
-const dataUriToBlob = function (uri) {
+const dataUriToBlob = function (uri: string): Promise<Blob> {
   return new Promise(function (resolve) {
     let str, arr, i;
 
-    uri = parseDataUri(uri);
+    const uriParts = parseDataUri(uri);
 
     // Might throw error if data isn't proper base64
     try {
-      str = Window.atob(uri.data);
+      str = Window.atob(uriParts.data);
     } catch (e) {
       resolve(new Blob([]));
       return;
@@ -87,11 +88,11 @@ const dataUriToBlob = function (uri) {
       arr[i] = str.charCodeAt(i);
     }
 
-    resolve(new Blob([arr], { type: uri.type }));
+    resolve(new Blob([arr], { type: uriParts.type }));
   });
 };
 
-const uriToBlob = function (url) {
+const uriToBlob = function (url: string): Promise<Blob> {
   if (url.indexOf('blob:') === 0) {
     return blobUriToBlob(url);
   }
@@ -103,7 +104,7 @@ const uriToBlob = function (url) {
   return null;
 };
 
-const blobToDataUri = function (blob) {
+const blobToDataUri = function (blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
     const reader = new FileReader();
 

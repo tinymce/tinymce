@@ -12,6 +12,8 @@ import { XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import { FormData } from '@ephox/dom-globals';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import Type from 'tinymce/themes/inlite/alien/Type';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
@@ -33,6 +35,8 @@ import { FormData } from '@ephox/dom-globals';
  * });
  */
 
+export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string) => void, progress?: (percent: number) => void) => void;
+
 export default function (uploadStatus, settings) {
   const pendingPromises = {};
 
@@ -44,7 +48,7 @@ export default function (uploadStatus, settings) {
     return path2;
   };
 
-  const defaultHandler = function (blobInfo, success, failure, progress) {
+  const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
     let xhr, formData;
 
     xhr = new XMLHttpRequest();
@@ -192,11 +196,9 @@ export default function (uploadStatus, settings) {
     return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
   };
 
-  settings = Tools.extend({
-    credentials: false,
-    // We are adding a notify argument to this (at the moment, until it doesn't work)
-    handler: defaultHandler
-  }, settings);
+  if (Type.isFunction(settings.handler) === false) {
+    settings.handler = defaultHandler;
+  }
 
   return {
     upload
