@@ -4,7 +4,7 @@ import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
 
-var ancestor = function (scope: Element, transform: (e: Element) => Option<Element>, isRoot?) {
+var ancestor = function <A>(scope: Element, transform: (e: Element) => Option<A>, isRoot?): Option<A> {
   var element: DomNode = scope.dom();
   var stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
@@ -16,13 +16,13 @@ var ancestor = function (scope: Element, transform: (e: Element) => Option<Eleme
     if (transformed.isSome()) return transformed;
     else if (stop(el)) break;
   }
-  return Option.none<Element>();
+  return Option.none<A>();
 };
 
-var closest = function (scope: Element, transform: (e: Element) => Option<Element>, isRoot?) {
+var closest = function <A>(scope: Element, transform: (e: Element) => Option<A>, isRoot?): Option<A> {
   var current = transform(scope);
   return current.orThunk(function () {
-    return isRoot(scope) ? Option.none<Element>() : ancestor(scope, transform, isRoot);
+    return isRoot(scope) ? Option.none<A>() : ancestor(scope, transform, isRoot);
   });
 };
 
