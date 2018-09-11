@@ -44,10 +44,15 @@ const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig
 };
 
 const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
+  const size = getDimension(slideConfig, component.element());
+  if (size === '0px') {
+    return doImmediateShrink(component, slideConfig, slideState);
+  }
+
   slideState.setCollapsed();
 
   // Force current dimension to begin transition
-  Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
+  Css.set(component.element(), getDimensionProperty(slideConfig), size);
   Css.reflow(component.element());
 
   const root = getAnimationRoot(component, slideConfig);
