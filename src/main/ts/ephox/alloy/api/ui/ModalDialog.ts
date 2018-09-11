@@ -1,5 +1,5 @@
-import { Id, Merger, Option, Thunk, Cell } from '@ephox/katamari';
-import { Attr, Css, Height, Traverse, Width, Location } from '@ephox/sugar';
+import { Cell, Id, Merger, Option } from '@ephox/katamari';
+import { Attr, Traverse } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -57,39 +57,23 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
               AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
                 if (Attr.has(dialog.element(), 'aria-busy')) {
                   Attr.remove(dialog.element(), 'aria-busy');
-
                   busyComp.get().each((bc) => Replacing.remove(dialog, bc));
                 }
               }),
 
               AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
-                if (! Attr.has(dialog.element(), 'aria-busy')) {
-                  Attr.set(dialog.element(), 'aria-busy', 'true');
-                  const getBusySpec = se.event().getBusySpec();
+                Attr.set(dialog.element(), 'aria-busy', 'true');
+                const getBusySpec = se.event().getBusySpec();
 
-                  // const pos = Thunk.cached(() => {
-                  //   return Location.absolute(dialog.element());
-                  // });
-
-                  // const boundStyles = {
-                  //   'left': Css.getRaw(dialog.element(), 'left').getOrThunk(() => pos().left() + 'px'),
-                  //   'top': Css.getRaw(dialog.element(), 'top').getOrThunk(() => pos().top() + 'px'),
-                  //   'width': Css.getRaw(dialog.element(), 'width').getOrThunk(() => Width.get(dialog.element()) + 'px'),
-                  //   'height': Css.getRaw(dialog.element(), 'height').getOrThunk(() => Height.get(dialog.element()) + 'px'),
-                  //   'z-index': Css.get(dialog.element(), 'z-index'),
-                  //   'position': Css.getRaw(dialog.element(), 'position').getOr('fixed')
-                  // };
-
-                  busyComp.get().each((bc) => {
-                    Replacing.remove(dialog, bc);
-                  });
-                  const busySpec = getBusySpec(dialog, busyBehaviours);
-                  const busy = blocker.getSystem().build(busySpec);
-                  busyComp.set(Option.some(busy));
-                  Replacing.append(dialog, GuiFactory.premade(busy));
-                  if (busy.hasConfigured(Keying)) {
-                    Keying.focusIn(busy);
-                  }
+                busyComp.get().each((bc) => {
+                  Replacing.remove(dialog, bc);
+                });
+                const busySpec = getBusySpec(dialog, busyBehaviours);
+                const busy = blocker.getSystem().build(busySpec);
+                busyComp.set(Option.some(busy));
+                Replacing.append(dialog, GuiFactory.premade(busy));
+                if (busy.hasConfigured(Keying)) {
+                  Keying.focusIn(busy);
                 }
               }),
             ]),
