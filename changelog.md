@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [3.30.0] - 2018-09-10
 ### Added
  - Created a Dropdown API with isOpen, close, expand, open
- - Added a new event `focusShifted` that is fired by the FocusManager in Keying
+ - New event `focusShifted` that is fired by the FocusManager in Keying
+ - Representing config to the Dropdown sandbox to store the triggering Dropdown
+
+### Changed
+ - Hover behaviour on menus now shows the expanded menu, but doesn't focus it
  - Renamed unused config `openImmediately` to `highlightImmediately` and made TieredMenus always open
- - Changed the hover behaviour on menus so that it shows the expanded menu, but doesn't focus it
- - Added a Representing config to the Dropdown sandbox to store the triggering Dropdown
 
 ## [3.29.0] - 2018-09-07
 ### Added
