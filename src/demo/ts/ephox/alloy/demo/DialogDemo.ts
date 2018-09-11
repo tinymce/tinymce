@@ -59,6 +59,13 @@ export default (): void => {
               tag: 'div',
               attributes: {
                 'aria-label': 'Sharks and Dolphins'
+              },
+              styles: {
+                position: 'absolute',
+                left: '0px',
+                right: '0px',
+                bottom: '0px',
+                top: '0px'
               }
             },
             components: [
@@ -96,7 +103,7 @@ export default (): void => {
 
   const dialog = GuiFactory.build(
     ModalDialog.sketch({
-      dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-floatpanel mce-window mce-in"></div>'),
+      dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-floatpanel mce-window mce-in" style="position: relative;"></div>'),
       components: [
         Container.sketch({
           dom: DomFactory.fromHtml('<div class="mce-reset" role="application"></div>'),
