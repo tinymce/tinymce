@@ -2,6 +2,7 @@ import { Class, Classes, Css } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SlidingConfig } from '../../behaviour/sliding/SlidingTypes';
 import { getAnimationRoot } from './SlidingUtils';
+import { Option } from '@ephox/katamari';
 
 const getDimensionProperty = (slideConfig) => {
   return slideConfig.dimension().property();
@@ -29,7 +30,7 @@ const setGrown = (component: AlloyComponent, slideConfig: SlidingConfig) => {
   Css.remove(component.element(), getDimensionProperty(slideConfig));
 };
 
-const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
+const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState, _calculatedSize: Option<string>) => {
   slideState.setCollapsed();
 
   // Force current dimension to begin transition
@@ -43,17 +44,25 @@ const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig
   slideConfig.onShrunk()(component);
 };
 
-const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
+const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState, calculatedSize: Option<string>) => {
+  const size = calculatedSize.getOrThunk(() => getDimension(slideConfig, component.element()));
   slideState.setCollapsed();
 
   // Force current dimension to begin transition
-  Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
+  Css.set(component.element(), getDimensionProperty(slideConfig), size);
   Css.reflow(component.element());
 
   const root = getAnimationRoot(component, slideConfig);
   Class.add(root, slideConfig.shrinkingClass()); // enable transitions
   setShrunk(component, slideConfig);
   slideConfig.onStartShrink()(component);
+};
+
+// A "smartShrink" will do an immediate shrink if no shrinking is scheduled to happen
+const doStartSmartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
+  const size: string = getDimension(slideConfig, component.element());
+  const shrinker = size === '0px' ? doImmediateShrink : doStartShrink;
+  shrinker(component, slideConfig, slideState, Option.some(size));
 };
 
 // Showing is complex due to the inability to transition to "auto".
@@ -82,11 +91,11 @@ const grow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState)
 };
 
 const shrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  if (slideState.isExpanded()) { doStartShrink(component, slideConfig, slideState); }
+  if (slideState.isExpanded()) { doStartSmartShrink(component, slideConfig, slideState); }
 };
 
 const immediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  if (slideState.isExpanded()) { doImmediateShrink(component, slideConfig, slideState); }
+  if (slideState.isExpanded()) { doImmediateShrink(component, slideConfig, slideState, Option.none()); }
 };
 
 const hasGrown = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
@@ -112,7 +121,7 @@ const isTransitioning = (component: AlloyComponent, slideConfig: SlidingConfig, 
 };
 
 const toggleGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  const f = slideState.isExpanded() ? doStartShrink : doStartGrow;
+  const f = slideState.isExpanded() ? doStartSmartShrink : doStartGrow;
   f(component, slideConfig, slideState);
 };
 

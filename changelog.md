@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.32.0] - 2018-09-11
+### Fixed
+ - Sliding behaviour now handles rapidly switching between expanding and shrinking
+
 ## [3.31.0] - 2018-09-11
 ### Changed
  - `text` property is now in `meta` for Items
