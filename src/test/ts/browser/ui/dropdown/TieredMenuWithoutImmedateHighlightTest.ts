@@ -1,5 +1,5 @@
 
-import { Assertions, Chain, Keyboard, Keys, Step, ApproxStructure, Mouse } from '@ephox/agar';
+import { Assertions, Chain, Keyboard, Keys, Step, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
@@ -17,7 +17,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('TieredMenuTest', (success, failure) => {
+UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
@@ -32,6 +32,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         ],
 
         markers: TestDropdownMenu.markers(),
+        highlightImmediately: false,
 
         data: {
           primary: 'menu-a',
@@ -76,49 +77,6 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    // TODO: Flesh out test.
-    const cAssertStructure = (label, expected) => {
-      return Chain.op((element: Element) => {
-        Assertions.assertStructure(label, expected, element);
-      });
-    };
-
-    const cTriggerFocusItem = Chain.op((target: Element) => {
-      AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
-    });
-
-    const cAssertStore = (label, expected) => {
-      return Chain.op(() => {
-        store.assertEq(label, expected);
-      });
-    };
-
-    const cClearStore = Chain.op(() => {
-      store.clear();
-    });
-
-    const structureMenu = (selected, itemSelections) => (s, str, arr) => {
-      return s.element('ol', {
-        classes: [ arr.has('menu'), (selected ? arr.has : arr.not)('selected-menu') ],
-        children: Arr.map(itemSelections, (sel) => s.element('li', {
-          classes: [ arr.has('item'), (sel ? arr.has : arr.not)('selected-item') ]
-        }))
-      })
-    }
-
-    const sAssertMenu = (label, structureMenus) => {
-      return Assertions.sAssertStructure(
-        label,
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-menu') ],
-            children: Arr.map(structureMenus, (sm) => sm(s, str, arr))
-          })
-        }),
-        component.element()
-      );
-    };
-
     return [
       Assertions.sAssertStructure(
         'Original structure test',
@@ -126,7 +84,20 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           return s.element('div', {
             classes: [ arr.has('test-menu') ],
             children: [
-              structureMenu(true, [ true, false, false ])(s, str, arr)
+              s.element('ol', {
+                classes: [ arr.has('menu'), arr.not('selected-menu') ],
+                children: [
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  })
+                ]
+              })
             ]
           })
         }),
@@ -134,66 +105,43 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       ),
 
 
-      Step.sync(() => {
-        Keying.focusIn(component);
-      }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
+        'onOpenMenu'
+      ]),
+
+      Step.sync(() => {
+        TieredMenu.highlightPrimary(component);
+      }),
+      store.sAssertEq('Focus is fired as soon as the tiered menu is highlighted by API', [
         'onOpenMenu',
         'menu.events.focus',
       ]),
-      Keyboard.sKeydown(doc, Keys.down(), { }),
-      Keyboard.sKeydown(doc, Keys.right(), { }),
 
-      sAssertMenu(
-        'Post expansion of submenu with <right> structure test',
-        [
-          structureMenu(false, [ false, true, false ]),
-          structureMenu(true, [ true ])
-        ]
-      ),
-
-      Keyboard.sKeydown(doc, Keys.left(), { }),
-      sAssertMenu(
-        'Post collapse of submenu with <left> structure test',
-        [
-          structureMenu(true, [ false, true, false ])
-        ]
-      ),
-      Keyboard.sKeydown(doc, Keys.enter(), { }),
-      sAssertMenu(
-        'Post exansion of submenu with <enter> structure test',
-        [
-          structureMenu(false, [ false, true, false ]),
-          structureMenu(true, [ true ])
-        ]
-      ),
-
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
-      sAssertMenu(
-        'Post collapse of submenu with <escape> structure test',
-        [
-          structureMenu(true, [ false, true, false ])
-        ]
-      ),
-
-      Mouse.sHoverOn(component.element(), 'li:contains("a-Beta")'),
-      sAssertMenu(
-        'Post hover on item with submenu structure test',
-        [
-          structureMenu(true, [ false, true, false ]),
-          structureMenu(false, [ false ])
-        ]
-      ),
-
-      Keyboard.sKeydown(doc, Keys.right(), { }),
-      sAssertMenu(
-        'Post right on item with expanded submenu structure test',
-        [
-          structureMenu(false, [ false, true, false ]),
-          structureMenu(true, [ true ])
-        ]
+      Assertions.sAssertStructure(
+        'Checking after TieredMenu.highlightPrimary, menu is active (item and menu selected)',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('test-menu') ],
+            children: [
+              s.element('ol', {
+                classes: [ arr.has('menu'), arr.has('selected-menu') ],
+                children: [
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.has('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  }),
+                  s.element('li', {
+                    classes: [ arr.has('item'), arr.not('selected-item') ]
+                  })
+                ]
+              })
+            ]
+          })
+        }),
+        component.element()
       )
-      // TODO: Beef up tests
     ];
   }, () => { success(); }, failure);
 });

@@ -1,9 +1,11 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
+import { SplitDropdownDetail, SplitDropdownSketcher, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
@@ -14,9 +16,6 @@ import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
-import { SplitDropdownSketcher, SplitDropdownDetail, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 
@@ -29,7 +28,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const action = (component) => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
   };
 
   const executeOnButton = (comp) => {

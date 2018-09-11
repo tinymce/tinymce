@@ -33,7 +33,7 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   onHover: () => (comp: AlloyComponent, item: AlloyComponent) => void;
 
   navigateOnHover: () => boolean;
-  openImmediately: () => boolean;
+  highlightImmediately: () => boolean;
 
   stayInDom: () => boolean;
 
@@ -61,7 +61,7 @@ export interface TieredMenuSpec extends SingleSketchSpec {
 
   navigateOnHover?: boolean;
   stayInDom?: boolean;
-  openImmediately?: boolean;
+  highlightImmediately?: boolean;
   fakeFocus?: boolean;
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 
@@ -92,8 +92,12 @@ export interface TieredData {
 
 export type PartialMenuSpec = Partial<MenuSpec>;
 
-export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec, TieredMenuDetail> {
-  collapseMenu: (menu: any) => void;
+export interface TieredMenuApis {
+  collapseMenu: (tmenu: AlloyComponent) => void;
+  highlightPrimary: (tmenu: AlloyComponent) => void;
+}
+
+export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec, TieredMenuDetail>, TieredMenuApis {
   tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
   singleData: (name: string, menu: PartialMenuSpec) => TieredData;
   collapseItem: (text: string) => ItemDataTuple;

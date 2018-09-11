@@ -145,7 +145,7 @@ export default (): void => {
 
     navigateOnHover: false,
 
-    openImmediately: true,
+    highlightImmediately: true,
     data: TieredMenu.tieredData(
       'styles',
       {

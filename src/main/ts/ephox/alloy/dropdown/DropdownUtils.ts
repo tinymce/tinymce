@@ -17,6 +17,9 @@ import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
+import { Representing } from '../api/behaviour/Representing';
+
+export enum HighlightOnOpen { HighlightFirst, HighlightNone };
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
@@ -28,7 +31,7 @@ const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
   return fetcher(component).map(mapFetch);
 };
 
-const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: HotspotAnchorSpec, component, sandbox, externals) => {
+const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: HotspotAnchorSpec, component, sandbox, externals, highlightOnOpen: HighlightOnOpen) => {
   const futureData = fetch(detail, mapFetch, component);
 
   const lazySink = getSink(component, detail);
@@ -41,6 +44,8 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
         {
           uid: Tagger.generate(''),
           data,
+
+          highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
           onOpenMenu (tmenu, menu) {
             const sink = lazySink().getOrDie();
@@ -72,9 +77,9 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) => {
+const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
   const anchor = getAnchor(detail, hotspot);
-  const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals);
+  const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
   return processed.map((data) => {
     Sandboxing.cloak(sandbox);
     Sandboxing.open(sandbox, data);
@@ -83,17 +88,17 @@ const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiered
   });
 };
 
-const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component, sandbox, _externals, _onOpenSync) => {
+const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component, sandbox, _externals, _onOpenSync, _highlightOnOpen: HighlightOnOpen) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, externals, onOpenSync) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
   const action = showing ? close : open;
-  return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync);
+  return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
 const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
@@ -151,6 +156,12 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
     },
     behaviours: Merger.deepMerge(
       Behaviour.derive([
+        Representing.config({
+          store: {
+            mode: 'memory',
+            initialValue: hotspot
+          }
+        }),
         Sandboxing.config({
           onOpen,
           onClose,
