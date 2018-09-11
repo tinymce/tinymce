@@ -21,9 +21,7 @@ export interface MenuGridMovementSpec {
 
 export interface MenuMatrixMovementSpec {
   mode: 'matrix';
-  rowDom: RawDomSchema;
   rowSelector: string;
-  numColumns: number;
 }
 
 export interface MenuNormalMovementSpec {
@@ -37,7 +35,6 @@ export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | M
 export interface MenuGridMovement {
   mode: () => 'grid';
   config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
-  layoutItems: () => (items: AlloySpec[], movementInfo: MenuMovement) => AlloySpec[];
   initSize?: () => {
     numColumns: () => number;
     numRows: () => number;
@@ -47,9 +44,6 @@ export interface MenuGridMovement {
 export interface MenuMatrixMovement {
   mode: () => 'matrix';
   config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
-  layoutItems: () => (items: AlloySpec[], movementInfo: MenuMovement) => AlloySpec[];
-  rowDom: () => RawDomSchema;
-  numColumns: () => number;
   rowSelector: () => string;
 }
 
@@ -57,7 +51,6 @@ export interface MenuNormalMovement {
   mode: () => 'menu';
   config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
   moveOnTab: () => boolean;
-  layoutItems: () => (items: AlloySpec[], movement: MenuMovement) => AlloySpec[]
 }
 
 export type MenuMovement = MenuGridMovement | MenuMatrixMovement | MenuNormalMovement;

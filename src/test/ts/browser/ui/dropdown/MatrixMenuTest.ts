@@ -32,16 +32,23 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
 
         movement: {
           mode: 'matrix',
-          numColumns: 2,
-          rowDom: {
-            tag: 'div',
-            classes: [ 'row-class' ]
-          },
+
           rowSelector: '.row-class'
         },
 
         components: [
-          Menu.parts().items({ })
+          Menu.parts().items({
+            preprocess: (items) => {
+              const chunks = Arr.chunk(items, 2);
+              return Arr.map(chunks, (c) => ({
+                dom: {
+                  tag: 'div',
+                  classes: [ 'row-class' ]
+                },
+                components: c
+              }))
+            }
+          })
         ],
 
         markers: {

@@ -68,9 +68,6 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       }
     },
     name: 'items',
-    schema: [
-      // FieldSchema.option('layoutGroup')
-    ],
     unit: 'item',
     defaults (detail: MenuDetail, u) {
       const fallbackUid = Tagger.generate('');
@@ -109,28 +106,15 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     {
       grid: [
         Fields.initSize(),
-        Fields.output('config', configureGrid),
-        Fields.output('layoutItems', (items) => items)
+        Fields.output('config', configureGrid)
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.strict('numColumns'),
         FieldSchema.strict('rowSelector'),
-        FieldSchema.strict('rowDom'),
-        Fields.output('layoutItems', (items: AlloyComponent[], movementInfo: MenuMatrixMovement) => {
-          const rows = Arr.chunk(items, Math.max(1, movementInfo.numColumns()));
-          return Arr.map(rows, (itemsInRow) => {
-            return {
-              dom: movementInfo.rowDom(),
-              components: itemsInRow
-            }
-          })
-        })
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),
-        Fields.output('config', configureMenu),
-        Fields.output('layoutItems', (items) => items)
+        Fields.output('config', configureMenu)
       ]
     }
   )),
