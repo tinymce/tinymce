@@ -13,7 +13,7 @@ import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import { FormData } from '@ephox/dom-globals';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import Type from 'tinymce/themes/inlite/alien/Type';
+import { Type } from '@ephox/katamari';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
