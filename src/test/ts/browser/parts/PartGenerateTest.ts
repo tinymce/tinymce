@@ -34,6 +34,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     name: 'name.4',
     unit: 'unit.4',
     pname: 'name.part.4',
+    // This should be ignored
     schema
   });
 
@@ -50,6 +51,30 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
           'test-data': data['test-data'],
           'state': 'state'
         }, output.validated);
+      });
+
+      RawAssertions.assertEq(
+        'Checking PartType.generate',
+        expected,
+        Obj.map(generated, (g) => {
+          const output = g(data);
+          return Objects.exclude(output, [ 'config', 'validated' ]);
+        })
+      );
+    });
+  };
+
+  const checkGroup = (label, expected, parts) => {
+    Logger.sync(label, () => {
+      const data = { preprocess: 'PREPROCESSOR' };
+      const generated = AlloyParts.generate('owner', parts);
+
+      // Check that config, and ensure that preprocessor is all that is in validated
+      Obj.each(generated, (g, k) => {
+        const output = g(data);
+        RawAssertions.assertEq('Checking config', data, output.config);
+        RawAssertions.assertEq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
+        RawAssertions.assertEq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
       });
 
       RawAssertions.assertEq(
@@ -93,7 +118,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     [ optional ]
   );
 
-  check(
+  checkGroup(
     'Group',
     {
       'name.4': {

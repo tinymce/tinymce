@@ -58,6 +58,7 @@ const substitute = (owner, detail, compSpec, placeholders) => {
     },
     (req, valuesThunk) => {
       const values = valuesThunk(detail, compSpec.config, compSpec.validated);
+      // Allow a preprocessing step for groups before returning the components
       const preprocessor = compSpec.validated.preprocess.getOr(Fun.identity);
       return preprocessor(values);
     }

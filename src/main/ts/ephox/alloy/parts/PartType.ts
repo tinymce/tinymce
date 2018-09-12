@@ -54,7 +54,8 @@ const fPname = FieldSchema.field(
   ValueSchema.anyValue()
 );
 
-const fGroupSchema = FieldSchema.defaulted('schema', [
+// Groups cannot choose their schema.
+const fGroupSchema = FieldSchema.state('schema', () => [
   FieldSchema.option('preprocess')
 ]);
 
