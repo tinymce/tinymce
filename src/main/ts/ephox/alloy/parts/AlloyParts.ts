@@ -23,8 +23,8 @@ export interface UnconfiguredPart {
 }
 
 export interface ConfiguredPart extends UnconfiguredPart {
-  config: { };
-  validated: { };
+  config: Record<string, any>;
+  validated: Record<string, any>;
 }
 
 export interface Substition { [ key: string ]: FieldProcessorAdt; }
