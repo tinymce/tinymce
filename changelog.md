@@ -6,9 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.33.0] - 2018-09-13
+## [3.34.0] - 2018-09-13
 ### Added
  - Added `attachSystemAfter` to Attachment so a `GuiSystem` can be attached as a sibling
+
+
+## [3.33.0] - 2018-09-12
+### Added
+ - Group parts have a `preprocess` configuration
+
+### Fixed
+ - Sliding listens to transition events from itself, not the animation root
+
+### Changed
+ - Modal Dialog busy container is now inside the Modal Dialog container
+ - ModalDialog callback in `setBusy` API is no longer passed the existing dialog styles
+
+### Removed
+ - Menu movement configuration options for laying out item components. Use group `preprocess` instead
+
 
 ## [3.32.0] - 2018-09-11
 ### Fixed

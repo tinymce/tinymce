@@ -54,6 +54,11 @@ const fPname = FieldSchema.field(
   ValueSchema.anyValue()
 );
 
+// Groups cannot choose their schema.
+const fGroupSchema = FieldSchema.state('schema', () => [
+  FieldSchema.option('preprocess')
+]);
+
 const fDefaults = FieldSchema.defaulted('defaults', Fun.constant({ }));
 const fOverrides = FieldSchema.defaulted('overrides', Fun.constant({ }));
 
@@ -70,7 +75,7 @@ const optionalSpec = ValueSchema.objOf([
 ]);
 
 const groupSpec = ValueSchema.objOf([
-  fFactory, fSchema, fName,
+  fFactory, fGroupSchema, fName,
   FieldSchema.strict('unit'),
   fPname, fDefaults, fOverrides
 ]);
