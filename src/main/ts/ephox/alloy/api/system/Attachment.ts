@@ -56,7 +56,15 @@ const detachChildren = (component: AlloyComponent): void => {
 };
 
 const attachSystem = (element: Element, guiSystem: GuiSystem): void => {
-  Insert.append(element, guiSystem.element());
+  attachSystemInternal(element, guiSystem, Insert.append)
+};
+
+const attachSystemAfter = (element: Element, guiSystem: GuiSystem): void => {
+  attachSystemInternal(element, guiSystem, Insert.after);
+};
+
+const attachSystemInternal = (element: Element, guiSystem: GuiSystem, inserter: (marker: Element, element: Element) => void): void => {
+  inserter(element, guiSystem.element());
   const children = Traverse.children(guiSystem.element());
   Arr.each(children, (child) => {
     guiSystem.getByDom(child).each(fireAttaching);
@@ -78,5 +86,7 @@ export {
   detachChildren,
 
   attachSystem,
+  attachSystemAfter,
+
   detachSystem
 };
