@@ -157,8 +157,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       },
       onEscape (comp) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
-        if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
-        return Option.some(true);
+        if (Sandboxing.isOpen(sandbox)) {
+          Sandboxing.close(sandbox);
+          return Option.some(true);
+        }
+        return Option.none();
       },
       onUp (comp, simulatedEvent) {
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
@@ -166,25 +169,38 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       },
       onEnter (comp, simulatedEvent) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
-        if (Sandboxing.isOpen(sandbox)) {
+        const sandboxIsOpen = Sandboxing.isOpen(sandbox);
+
+        const detailOnExecute = () => {
+          const currentValue = Representing.getValue(comp) as TypeaheadData;
+          detail.onExecute()(sandbox, comp, currentValue);
+        }
+
+        if (sandboxIsOpen) {
 
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
           Composing.getCurrent(sandbox).each((menu) => {
             Highlighting.getHighlighted(menu).each((item) => {
+              // 'Previewing' means that items are shown but none has been actively selected
               if (detail.previewing().get() === false) {
                 setValueFromItem(detail.model(), comp, item);
               }
             });
           });
-          Sandboxing.close(sandbox);
-        }
-        const currentValue = Representing.getValue(comp) as TypeaheadData;
 
-        detail.onExecute()(sandbox, comp, currentValue);
+          // This is duplicated as it allows the client to inspect
+          // the sandbox before its closed
+          detailOnExecute();
+          Sandboxing.close(sandbox);
+        } else {
+          detailOnExecute();
+        }
+
         AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
         setCursorAtEnd(comp);
-        return Option.some(true);
+
+        return sandboxIsOpen ? Option.some(true) : Option.none();
       }
     }),
 
