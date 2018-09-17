@@ -21,21 +21,19 @@ const getFixedOrigin = (): OriginAdt => {
 };
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
-  // This container is the origin.
-  const position = Location.absolute(component.element());
-  return Origins.relative(position.left(), position.top());
+  return Anchor.relativeOrigin(component.element());
 };
 
 const placeFixed = (_component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const anchor = Anchor.box(anchoring.anchorBox());
+  const anchor = Anchor.box(anchoring.anchorBox(), origin);
   // TODO: Overrides for expanding panel
-  SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
+  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
 const placeRelative = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
   const bounds = posConfig.bounds().getOr(Boxes.view());
 
-  SimpleLayout.relative(
+  SimpleLayout.detailed(
     anchoring.anchorBox(),
     placee.element(),
     anchoring.bubble(),

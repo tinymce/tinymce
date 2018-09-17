@@ -5,6 +5,7 @@ import { Classes, Css, Height, Width, Element } from '@ephox/sugar';
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
+import * as Offset from './Offset';
 import { AnchorElement, AnchorBox } from '../../positioning/layout/Layout';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
@@ -50,7 +51,22 @@ const setHeight = (element, decision, options) => {
 const position = (element, decision, options) => {
   const addPx = (num) => num + 'px';
 
-  const newPosition = Origins.reposition(options.origin(), decision);
+  // if the origin is fixed, ignore it and use the one relevant to the element context
+  const origin = options.origin();
+  const nonFixed = Fun.constant(origin);
+  const elementOrigin = origin.fold(nonFixed, nonFixed, function () {
+    // Perhaps this could be done inside Origins.reposition, but it's more composable and testable this way
+    const translatedPosition = Offset.measure(element);
+
+    return Origins.fixed(
+      translatedPosition.left(),
+      translatedPosition.top(),
+      translatedPosition.width(),
+      translatedPosition.height()
+    );
+  });
+
+  const newPosition = Origins.reposition(elementOrigin, decision, element);
   Css.setOptions(element, {
     position: Option.some(newPosition.position()),
     left: newPosition.left().map(addPx),

@@ -11,12 +11,8 @@ import { SugarPosition, SugarDocument } from '../../alien/TypeDefinitions';
 // if/when repartee is compiled with NPM modules available, we can switch to `domtest` which allows sugar to load in nodejs
 
 const toBox = (origin: OriginAdt, element: Element): Bounds => {
-  const rel = Fun.curry(OuterPosition.find, element);
-  const position = origin.fold(rel, rel, () => {
-    const scroll = Scroll.get();
-    // TODO: Make adding the scroll in OuterPosition.find optional.
-    return OuterPosition.find(element).translate(-scroll.left(), -scroll.top());
-  });
+  const pos = OuterPosition.find(element);
+  const position = translate(origin, pos.left(), pos.top());
 
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
@@ -34,12 +30,14 @@ const viewport = (origin: OriginAdt, bs: Option<() => Bounds>): Bounds => {
   });
 };
 
-const translate = (origin: OriginAdt, doc: SugarDocument, x: number, y: number): SugarPosition => {
+const translate = (origin: OriginAdt, x: number, y: number): SugarPosition => {
   const pos = Position(x, y);
-  return origin.fold(Fun.constant(pos), Fun.constant(pos), () => {
+  const removeScroll = () => {
     const outerScroll = Scroll.get();
     return pos.translate(-outerScroll.left(), -outerScroll.top());
-  });
+  };
+  // This could use cata if it wasn't a circular reference
+  return origin.fold(Fun.constant(pos), removeScroll, removeScroll);
 };
 
 export {

@@ -30,8 +30,8 @@ const defaultOr = (options, key, dephault) => {
   return options[key] === undefined ? dephault : options[key];
 };
 
-// This takes care of everything when you are positioning UI that can go anywhere on the screen (position: fixed)
-const fixed = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], overrideOptions: AnchorOverrides): void => {
+// This takes care of everything when you are positioning UI that can go anywhere on the screen
+const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -48,7 +48,7 @@ const fixed = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout
   go(anchorBox, element, bubble, options);
 };
 
-const relative = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
+const detailed = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
   const defaults = (_opts) => {
     const opts = _opts !== undefined ? _opts : {};
     return reparteeOptions({
@@ -73,6 +73,6 @@ const go = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optio
 };
 
 export {
-  fixed,
-  relative
+  simple,
+  detailed
 };
