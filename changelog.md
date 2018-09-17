@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.36.0] - 2018-09-14
+### Added
+ - InlineView has new API method: setContent
+
 ## [3.35.0] - 2018-09-14
 ### Changed
  - Typeahead now lets `onEscape` and `onEnter` events bubble when sandbox is closed
