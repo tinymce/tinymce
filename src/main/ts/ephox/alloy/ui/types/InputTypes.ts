@@ -33,6 +33,7 @@ export interface InputSpec extends SingleSketchSpec {
   inputBehaviours?: AlloyBehaviourRecord;
   placeholder?: string;
   data?: string;
+  type?: string;
 
   selectOnFocus?: boolean;
   eventOrder?: Record<string, string[]>;
