@@ -12,6 +12,7 @@ const mouseup = Fun.constant('mouseup');
 const mouseover = Fun.constant('mouseover');
 // Not really a native event as it has to be simulated
 const focusin = Fun.constant('focusin');
+const focusout = Fun.constant('focusout');
 const keydown = Fun.constant('keydown');
 const input = Fun.constant('input');
 const change = Fun.constant('change');
@@ -34,6 +35,7 @@ export {
   mouseover,
 
   focusin,
+  focusout,
 
   keydown,
 

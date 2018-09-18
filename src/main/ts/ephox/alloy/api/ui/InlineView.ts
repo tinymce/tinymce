@@ -88,6 +88,10 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       eventOrder: detail.eventOrder(),
 
       apis: {
+        setContent (sandbox: AlloyComponent, thing: AlloySpec) {
+          // Keep the same location, and just change the content.
+          Sandboxing.open(sandbox, thing);
+        },
         showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
           Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));
@@ -142,6 +146,9 @@ const InlineView = Sketcher.single({
     },
     getContent (apis, component) {
       return apis.getContent(component);
+    },
+    setContent (apis, component, thing) {
+      apis.setContent(component, thing);
     }
   }
 }) as InlineViewSketcher;

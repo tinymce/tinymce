@@ -49,4 +49,5 @@ export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineV
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
   getContent: (component: AlloyComponent) => Option<AlloyComponent>;
+  setContent: (component: AlloyComponent, thing: AlloySpec) => void;
 }

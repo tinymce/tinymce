@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Chain } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Chain, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -116,6 +116,43 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             'Could not find contents'
           ).element()));
         })
+      ),
+
+      Logger.t(
+        'Change the content using setContent and check it is there',
+        Step.sync(() => {
+          InlineView.setContent(inline, {
+            dom: {
+              tag: 'div',
+              innerHtml: 'changed-html'
+            }
+          });
+
+          const contents = InlineView.getContent(inline);
+          Assertions.assertEq('Checking HTML of inline contents has changed', 'changed-html', Html.get(contents.getOrDie(
+            'Could not find contents'
+          ).element()));
+        })
+      ),
+
+      Logger.t(
+        'Check that changed content is in the DOM',
+        Chain.asStep(component.element(), [
+          UiFinder.cFindIn('.test-inline'),
+          Assertions.cAssertStructure(
+            'Checking structure of changed content',
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('div', {
+                classes: [ arr.has('test-inline') ],
+                children: [
+                  s.element('div', {
+                    html: str.is('changed-html')
+                  })
+                ]
+              })
+            })
+          )
+        ])
       ),
 
       Step.sync(() => {
