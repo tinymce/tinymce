@@ -5,7 +5,8 @@ const events = (streamConfig: StreamingConfig, streamState: StreamingState): All
   const streams = streamConfig.stream().streams();
   const processor = streams.setup(streamConfig, streamState);
   return AlloyEvents.derive([
-    AlloyEvents.run(streamConfig.event(), processor)
+    AlloyEvents.run(streamConfig.event(), processor),
+    AlloyEvents.runOnDetached(() => streamState.cancel())
   ].concat(
     streamConfig.cancelEvent().map((e) => {
       return [

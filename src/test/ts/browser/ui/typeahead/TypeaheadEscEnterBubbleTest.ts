@@ -54,6 +54,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
 
             parts: {
               menu: TestDropdownMenu.part(store)
+            },
+            onExecute: store.adder('***onExecute***'),
+            onItemExecute: (typeahead, sandbox, item, value) => {
+              store.adder(value.value)();
             }
           })
         ],
@@ -89,8 +93,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       steps.sWaitForNoMenu('Enter to close menu'),
       Keyboard.sKeydown(doc,  Keys.enter(), {}),
 
+      store.sAssertEq('Should have item1 and onExecute', ['11', '***onExecute***']),
       GuiSetup.mRemoveStyles,
-      GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27', 'keydown.to.body: 13']),
+      GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27']),
     ];
   }, success, failure);
 });

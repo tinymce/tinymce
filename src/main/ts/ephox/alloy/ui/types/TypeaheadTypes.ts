@@ -28,6 +28,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
 
   typeaheadBehaviours: () => SketchBehaviours;
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  onItemExecute: () => (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: () => boolean;
 
   initialData: () => Option<TypeaheadData>;
@@ -74,6 +75,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
 
   dismissOnBlur?: boolean;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  onItemExecute?: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
   initialData?: TypeaheadData;
 }
