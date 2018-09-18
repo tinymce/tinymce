@@ -66,7 +66,7 @@ const position = (element, decision, options) => {
     );
   });
 
-  const newPosition = Origins.reposition(elementOrigin, decision, element);
+  const newPosition = Origins.reposition(elementOrigin, decision);
   Css.setOptions(element, {
     position: Option.some(newPosition.position()),
     left: newPosition.left().map(addPx),

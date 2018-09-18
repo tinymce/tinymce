@@ -18,10 +18,14 @@ export interface Anchor {
 
 const anchor: (anchorBox: AnchorBox, origin: OriginAdt) => Anchor = Struct.immutable('anchorBox', 'origin');
 
+const fixedOrigin = (): OriginAdt => {
+  return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
+};
+
 // This is not the nicest pattern, but it can't live in the Origins module while our console tests need to avoid DOM.
 // The uiElement isn't passed into the other functions in order to clearly separate which parts need to know about it and which don't.
-const relativeOrigin = (uiElement) => {
-  const bounds = uiElement.dom().getBoundingClientRect();
+const relativeOrigin = (uiElement: Element): OriginAdt => {
+  const bounds = uiElement.dom().getBoundingClientRect(); // TODO: THIS USED TO BE LOCATION.ABSOLUTE, check it TODO TODO
 
   // Relative calculations are all adjusted to be relative to Boxes.view() so the bounding client rect of the origin is all we need
   return Origins.relative(bounds.left, bounds.top, bounds.width, bounds.height);
@@ -40,5 +44,6 @@ const box = (anchorBox: AnchorBox, origin: OriginAdt): Anchor => {
 export {
   box,
   element,
-  relativeOrigin
+  relativeOrigin,
+  fixedOrigin
 };
