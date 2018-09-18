@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.37.0] - 2018-09-17
 ### Added
+ - Added `onItemExecute` to Typeahead
+
+## [3.37.0] - 2018-09-17
+### Added
  - Added `focusout` to NativeEvents
 
 ## [3.36.0] - 2018-09-14

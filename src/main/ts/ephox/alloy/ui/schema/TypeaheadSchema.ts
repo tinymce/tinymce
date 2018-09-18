@@ -6,19 +6,18 @@ import { Focusing } from '../../api/behaviour/Focusing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
-import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
 import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
-import { TypeaheadData, TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
+import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
+import * as TypeaheadEvents from '../composite/TypeaheadEvents';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -36,6 +35,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   ]),
 
   Fields.onKeyboardHandler('onExecute'),
+  Fields.onHandler('onItemExecute'),
   FieldSchema.defaulted('inputClasses', [ ]),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),
@@ -97,19 +97,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // for clicking on an item. We need to close the sandbox, update the typeahead
         // to show the item clicked on, and fire an execute.
         onExecute (menu: AlloyComponent, item: AlloyComponent): Option<boolean> {
-          return menu.getSystem().getByUid(detail.uid()).toOption().bind((typeahead) => {
-            const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-            const system = item.getSystem();
-            // Closing the sandbox takes the item out of the system, so keep a reference.
-            Sandboxing.close(sandbox);
-            return system.getByUid(detail.uid()).toOption().bind((input) => {
-              setValueFromItem(detail.model(), input, item);
-
-              const currentValue: TypeaheadData = Representing.getValue(input);
-              detail.onExecute()(sandbox, input, currentValue);
-              AlloyTriggers.emit(input, SystemEvents.typeaheadCancel());
-              return Option.some(true);
-            });
+          // Note: This will only work when the typeahead and menu are in the same system.
+          return menu.getSystem().getByUid(detail.uid()).toOption().map((typeahead) => {
+            AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
+            return true;
           });
         },
 
