@@ -11,12 +11,9 @@ export interface InputDetail extends SingleSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   inputBehaviours: () => SketchBehaviours;
-
-  placeholder: () => Option<string>;
   inputStyles: () => { };
   inputClasses: () => string[];
   inputAttributes: () => { };
-  type: () => string;
   tag: () => string;
   data: () => Option<string>;
   onSetValue: () => (comp: AlloyComponent, data: string) => void;
@@ -31,9 +28,7 @@ export interface InputSpec extends SingleSketchSpec {
   inputAttributes?: { };
   inputStyles?: { };
   inputBehaviours?: AlloyBehaviourRecord;
-  placeholder?: string;
   data?: string;
-  type?: string;
 
   selectOnFocus?: boolean;
   eventOrder?: Record<string, string[]>;
