@@ -14,12 +14,10 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),
-  FieldSchema.defaulted('type', 'input'),
   FieldSchema.defaulted('tag', 'input'),
   FieldSchema.defaulted('inputClasses', [ ]),
   Fields.onHandler('onSetValue'),
   FieldSchema.defaulted('styles', { }),
-  FieldSchema.option('placeholder'),
   FieldSchema.defaulted('eventOrder', { }),
   SketchBehaviours.field('inputBehaviours', [ Representing, Focusing ]),
   FieldSchema.defaulted('selectOnFocus', true)
@@ -68,18 +66,8 @@ const dom = (detail: InputDetail): RawDomSchema => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
-      Objects.wrapAll([
-        {
-          key: 'type',
-          value: detail.type()
-        }
-      ].concat(detail.placeholder().map((pc) => {
-        return {
-          key: 'placeholder',
-          value: pc
-        };
-      }).toArray())),
-      detail.inputAttributes()
+      detail.inputAttributes(),
+      { type: 'input' }
     ),
     styles: detail.inputStyles(),
     classes: detail.inputClasses()

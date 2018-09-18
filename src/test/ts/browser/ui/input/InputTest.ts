@@ -15,7 +15,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Input.sketch({
-        placeholder: 'placeholder-text',
+        inputAttributes: { placeholder: 'placeholder-text' },
         data: 'initial-value',
         uid: 'test-input-id',
         inputClasses: [ 'extra-class' ]
