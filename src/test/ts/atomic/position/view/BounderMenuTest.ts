@@ -1,5 +1,5 @@
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
-import { nu as NuBubble } from 'ephox/alloy/positioning/layout/Bubble';
+import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
@@ -22,18 +22,18 @@ UnitTest.test('BounderMenuTest', () => {
     label: 'none',
     x: 0,
     y: 0
-  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), NuBubble(0, 0), bounds(0, 0, 1000, 1000));
+  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), Bubble.fallback(), bounds(0, 0, 1000, 1000));
 
   check({
     label: 'none',
     x: 100,
     y: 0
-  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), NuBubble(10, 0), bounds(0, 0, 1000, 1000));
+  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), Bubble.nu(10, 0, Bubble.noClasses()), bounds(0, 0, 1000, 1000));
 
   const panelBox = bounds(0, 0, 100, 75);
   const bigPanel = bounds(0, 0, 75, 500);
   const view = bounds(50, 50, 350, 220);
-  const bubb = NuBubble(0, 0);
+  const bubb = Bubble.fallback();
 
   // Southeast.
   check({

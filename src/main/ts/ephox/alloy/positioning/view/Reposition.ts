@@ -15,7 +15,10 @@ export interface RepositionDecision {
   height: () => number;
   maxHeight: () => number;
   direction: () => any;
-  classes: () => string[];
+  classes: () => {
+    off: string[];
+    on: string[]
+  };
   label: () => string;
   candidateYforTest: any;
 }

@@ -57,6 +57,14 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): Reposition
       () => {
         // northwest
         return NuRepositionCss('fixed', none, none, right, bottom);
+      },
+      () => {
+        // southmiddle
+        return NuRepositionCss('fixed', left, top, none, none);
+      },
+      () => {
+        // northmiddle
+        return NuRepositionCss('fixed', left, none, none, bottom);
       }
     );
   });

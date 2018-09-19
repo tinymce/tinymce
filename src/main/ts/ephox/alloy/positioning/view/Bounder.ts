@@ -22,8 +22,8 @@ const adt: {
 const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bounds): BounderAttemptAdt  => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
-  const bubbleLeft = candidate.bubble().left();
-  const bubbleTop = candidate.bubble().top();
+  const bubbleLeft = candidate.bubble().offset().left();
+  const bubbleTop = candidate.bubble().offset().top();
 
   const boundsX = bounds.x();
   const boundsY = bounds.y();
@@ -64,7 +64,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // As of TBIO-4291, we provide all available space for both up and down.
   const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
   const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
-  const maxHeight = Direction.cata(candidate.direction(), downAvailable, downAvailable, upAvailable, upAvailable);
+  const maxHeight = Direction.cata(candidate.direction(), downAvailable, downAvailable, upAvailable, upAvailable, downAvailable, upAvailable);
 
   // We don't futz with the width.
 
@@ -75,7 +75,10 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
     height: deltaH,
     maxHeight,
     direction: candidate.direction(),
-    classes: candidate.anchors(),
+    classes: {
+      on: candidate.bubble().classesOn(),
+      off: candidate.bubble().classesOff()
+    },
     label: candidate.label(),
     candidateYforTest: newY
   });

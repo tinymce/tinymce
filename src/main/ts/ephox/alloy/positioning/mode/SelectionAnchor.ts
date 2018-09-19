@@ -8,7 +8,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';
 import * as Fields from '../../data/Fields';
-import { nu as Bubble } from '../layout/Bubble';
+import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import { SelectionAnchor, nu as NuAnchor, Anchoring } from './Anchoring';
@@ -110,7 +110,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
 
     return NuAnchor({
       anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble(0, 0))),
+      bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble.fallback())),
       overrides: anchorInfo.overrides,
       layouts: Fun.constant(layouts),
       placer: Option.none

@@ -29,19 +29,19 @@ const south = (anchor: AnchorBox): number => {
 };
 
 const southeast: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(east(anchor), south(anchor), bubbles.southeast(), Direction.southeast(), [ Anchors.south(), Anchors.east() ], 'link-layout-se');
+  return NuSpotInfo(east(anchor), south(anchor), bubbles.southeast(), Direction.southeast(), 'link-layout-se');
 };
 
 const southwest: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(west(anchor, element), south(anchor), bubbles.southwest(), Direction.southwest(), [ Anchors.south(), Anchors.west() ], 'link-layout-sw');
+  return NuSpotInfo(west(anchor, element), south(anchor), bubbles.southwest(), Direction.southwest(), 'link-layout-sw');
 };
 
 const northeast: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(east(anchor), north(anchor, element), bubbles.northeast(), Direction.northeast(), [ Anchors.north(), Anchors.east() ], 'link-layout-ne');
+  return NuSpotInfo(east(anchor), north(anchor, element), bubbles.northeast(), Direction.northeast(), 'link-layout-ne');
 };
 
 const northwest: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(west(anchor, element), north(anchor, element), bubbles.northwest(), Direction.northwest(), [ Anchors.north(), Anchors.west() ], 'link-layout-nw');
+  return NuSpotInfo(west(anchor, element), north(anchor, element), bubbles.northwest(), Direction.northwest(), 'link-layout-nw');
 };
 
 const all = (): AnchorLayout[] => {

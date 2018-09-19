@@ -53,27 +53,27 @@ const south = (anchor: AnchorBox): number => {
 };
 
 const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(east(anchor), south(anchor), bubbles.southeast(), Direction.southeast(), [ Anchors.south(), Anchors.east() ], 'layout-se');
+  return NuSpotInfo(east(anchor), south(anchor), bubbles.southeast(), Direction.southeast(), 'layout-se');
 };
 
 const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(west(anchor, element), south(anchor), bubbles.southwest(), Direction.southwest(), [ Anchors.south(), Anchors.west() ], 'layout-sw');
+  return NuSpotInfo(west(anchor, element), south(anchor), bubbles.southwest(), Direction.southwest(), 'layout-sw');
 };
 
 const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(east(anchor), north(anchor, element), bubbles.northeast(), Direction.northeast(), [ Anchors.north(), Anchors.east() ], 'layout-ne');
+  return NuSpotInfo(east(anchor), north(anchor, element), bubbles.northeast(), Direction.northeast(), 'layout-ne');
 };
 
 const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(west(anchor, element), north(anchor, element), bubbles.northwest(), Direction.northwest(), [ Anchors.north(), Anchors.west() ], 'layout-nw');
+  return NuSpotInfo(west(anchor, element), north(anchor, element), bubbles.northwest(), Direction.northwest(), 'layout-nw');
 };
 
 const northmiddle: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(middle(anchor, element), north(anchor, element), bubbles.northeast(), Direction.northeast(), [ Anchors.north(), Anchors.middle() ], 'layout-nm');
+  return NuSpotInfo(middle(anchor, element), north(anchor, element), bubbles.northmiddle(), Direction.northmiddle(), 'layout-nm');
 };
 
 const southmiddle: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(middle(anchor, element), south(anchor), bubbles.southeast(), Direction.southeast(), [ Anchors.south(), Anchors.middle() ], 'layout-sm');
+  return NuSpotInfo(middle(anchor, element), south(anchor), bubbles.southmiddle(), Direction.southmiddle(), 'layout-sm');
 };
 
 const all = (): AnchorLayout[] => {
