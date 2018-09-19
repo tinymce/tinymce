@@ -48,21 +48,6 @@ const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layou
   go(anchorBox, element, bubble, options);
 };
 
-const detailed = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
-  const defaults = (_opts) => {
-    const opts = _opts !== undefined ? _opts : {};
-    return reparteeOptions({
-      bounds: defaultOr(opts, 'bounds', Boxes.view()),
-      origin: defaultOr(opts, 'origin', Origins.none()),
-      preference: defaultOr(opts, 'preference', Layout.all()),
-      maxHeightFunction: defaultOr(opts, 'maxHeightFunction', MaxHeight.anchored())
-    });
-  };
-
-  const options: ReparteeOptions = defaults(optionsSpec);
-  go(anchorBox, element, bubble, options);
-};
-
 // This is the old public API. If we ever need full customisability again, this is how to expose it
 const go = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, options: ReparteeOptions) => {
   const decision = Callouts.layout(anchorBox, element, bubble, options);
@@ -73,6 +58,5 @@ const go = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optio
 };
 
 export {
-  simple,
-  detailed
+  simple
 };

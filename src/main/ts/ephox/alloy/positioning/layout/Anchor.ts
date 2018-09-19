@@ -18,10 +18,6 @@ export interface Anchor {
 
 const anchor: (anchorBox: AnchorBox, origin: OriginAdt) => Anchor = Struct.immutable('anchorBox', 'origin');
 
-const fixedOrigin = (): OriginAdt => {
-  return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
-};
-
 // This is not the nicest pattern, but it can't live in the Origins module while our console tests need to avoid DOM.
 // The uiElement isn't passed into the other functions in order to clearly separate which parts need to know about it and which don't.
 const relativeOrigin = (uiElement: Element): OriginAdt => {
@@ -44,6 +40,5 @@ const box = (anchorBox: AnchorBox, origin: OriginAdt): Anchor => {
 export {
   box,
   element,
-  relativeOrigin,
-  fixedOrigin
+  relativeOrigin
 };

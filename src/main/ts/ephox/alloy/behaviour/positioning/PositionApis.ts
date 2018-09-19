@@ -30,24 +30,8 @@ const placeFixed = (_component: AlloyComponent, origin: OriginAdt, anchoring: An
   SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
-const placeRelative = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const bounds = posConfig.bounds().getOr(Boxes.view());
-
-  SimpleLayout.detailed(
-    anchoring.anchorBox(),
-    placee.element(),
-    anchoring.bubble(),
-    {
-      bounds,
-      origin,
-      preference: anchoring.layouts(),
-      maxHeightFunction: () => { }
-    }
-  );
-};
-
 const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const f = posConfig.useFixed() ? placeFixed : placeRelative;
+  const f = posConfig.useFixed() ? placeFixed : placeFixed;
   f(component, origin, anchoring, posConfig, placee);
 };
 
