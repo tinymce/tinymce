@@ -45,7 +45,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
       'eventOrder',
       FieldPresence.mergeWith({
         // Note, not using constant behaviour names to avoid code size of unused behaviours
-        'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
+        'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling', 'typeaheadevents' ],
         'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
         'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
         'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],

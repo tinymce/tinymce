@@ -21,12 +21,19 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, EventFormat, CustomEvent } from '../../events/SimulatedEvent';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
+import * as TypeaheadEvents from './TypeaheadEvents';
+import { console } from '@ephox/dom-globals'
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
+
+interface ItemExecuteEvent extends CustomEvent {
+  item: () => AlloyComponent
+}
 
 // TODO: Fix this.
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
@@ -167,40 +174,29 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
         return Option.some(true);
       },
-      onEnter (comp, simulatedEvent) {
+      onEnter (comp) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         const sandboxIsOpen = Sandboxing.isOpen(sandbox);
 
-        const detailOnExecute = () => {
-          const currentValue = Representing.getValue(comp) as TypeaheadData;
-          detail.onExecute()(sandbox, comp, currentValue);
-        }
-
         if (sandboxIsOpen) {
+          // 'Previewing' means that items are shown but none has been actively selected
+          if (detail.previewing().get() === true){
+            return Option.none()
+          }
 
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
-          Composing.getCurrent(sandbox).each((menu) => {
-            Highlighting.getHighlighted(menu).each((item) => {
-              // 'Previewing' means that items are shown but none has been actively selected
-              if (detail.previewing().get() === false) {
-                setValueFromItem(detail.model(), comp, item);
-              }
-            });
+          return Composing.getCurrent(sandbox).bind((menu) => {
+            return Highlighting.getHighlighted(menu);
+          }).map((item) => {
+            AlloyTriggers.emitWith(comp, TypeaheadEvents.itemExecute(), { item });
+            return true;
           });
-
-          // This is duplicated as it allows the client to inspect
-          // the sandbox before its closed
-          detailOnExecute();
-          Sandboxing.close(sandbox);
         } else {
-          detailOnExecute();
+          const currentValue = Representing.getValue(comp) as TypeaheadData;
+          detail.onExecute()(sandbox, comp, currentValue);
+          return Option.some(true);
         }
-
-        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        setCursorAtEnd(comp);
-
-        return sandboxIsOpen ? Option.some(true) : Option.none();
       }
     }),
 
@@ -222,7 +218,31 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           });
         }
       }
-    })
+    }),
+    AddEventsBehaviour.config('typeaheadevents', [
+      AlloyEvents.runOnExecute((comp) => {
+        const onOpenSync = Fun.noop;
+        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+      }),
+      AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
+        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+
+        setValueFromItem(detail.model(), comp, se.event().item());
+        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
+        detail.onItemExecute()(comp, sandbox, se.event().item(), Representing.getValue(comp));
+
+        Sandboxing.close(sandbox);
+        setCursorAtEnd(comp);
+      })
+    ].concat(detail.dismissOnBlur() ? [
+      AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
+        const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+        // Only close the sandbox if the focus isn't inside it!
+        if (Focus.search(sandbox.element()).isNone()) {
+          Sandboxing.close(sandbox);
+        }
+      })
+    ] : [ ]))
   ]);
 
   return {
@@ -234,22 +254,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       SketchBehaviours.get(detail.typeaheadBehaviours())
     ),
 
-    eventOrder: detail.eventOrder(),
-
-    events: AlloyEvents.derive([
-      AlloyEvents.runOnExecute((comp) => {
-        const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
-      })
-    ].concat(detail.dismissOnBlur() ? [
-      AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
-        const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-        // Only close the sandbox if the focus isn't inside it!
-        if (Focus.search(sandbox.element()).isNone()) {
-          Sandboxing.close(sandbox);
-        }
-      })
-    ] : [ ]))
+    eventOrder: detail.eventOrder()
   };
 };
 
