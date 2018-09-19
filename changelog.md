@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## <Placeholder version>
 
 ### Added
+ - Exposed Layout and Bubble through Main
  - Additional Layout options: east and west
  - Configuration classes for different bubbles positions
 

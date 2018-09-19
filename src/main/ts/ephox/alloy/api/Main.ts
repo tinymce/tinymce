@@ -112,6 +112,9 @@ import {
   SubmenuAnchorSpec
 } from '../positioning/mode/Anchoring';
 
+import * as Layout from '../positioning/layout/Layout';
+import * as Bubble from '../positioning/layout/Bubble';
+
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
 
@@ -225,6 +228,10 @@ export {
   CustomSimulatedEvent,
   ReceivingEvent,
   SugarEvent,
+
+  // layout
+  Layout,
+  Bubble,
 
   // types
   TieredMenuTypes,
