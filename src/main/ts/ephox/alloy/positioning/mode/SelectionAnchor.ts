@@ -95,14 +95,14 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
 
     const layoutsLtr = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
-        [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
-        [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
+        [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.north, Layout.south ] :
+        [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.south, Layout.south ];
     };
 
     const layoutsRtl = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
-        [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
-        [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
+        [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.north, Layout.south ] :
+        [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.south, Layout.north ];
     };
 
     const elem = targetElement.getOr(component.element());

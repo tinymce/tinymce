@@ -13,8 +13,10 @@ export interface Bubble {
   southwest: () => BubbleInstance;
   northwest: () => BubbleInstance;
   northeast: () => BubbleInstance;
-  southmiddle: () => BubbleInstance;
-  northmiddle: () => BubbleInstance;
+  south: () => BubbleInstance;
+  north: () => BubbleInstance;
+  east: () => BubbleInstance;
+  west: () => BubbleInstance;
 }
 
 const noClasses = () => ({
@@ -37,7 +39,7 @@ const nu = (width, yoffset, classes: { top: string[], left: string[], bottom: st
       classesOn: () => Arr.flatten([ classes.top, classes.right ]),
       classesOff: () => Arr.flatten([ classes.left, classes.bottom, classes.middle ])
     }),
-    southmiddle: () => ({
+    south: () => ({
       offset: () => Position(-width/2, -yoffset),
       classesOn: () => Arr.flatten([ classes.top, classes.middle ]),
       classesOff: () => Arr.flatten([ classes.left, classes.right, classes.bottom ])
@@ -52,7 +54,18 @@ const nu = (width, yoffset, classes: { top: string[], left: string[], bottom: st
       classesOn: () => Arr.flatten([ classes.bottom, classes.right ]),
       classesOff: () => Arr.flatten([ classes.left, classes.top, classes.middle ])
     }),
-    northmiddle: () => ({
+    north: () => ({
+      offset: () => Position(-width/2, -yoffset),
+      classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
+      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])
+    }),
+    // TODO: Check offsets
+    east: () => ({
+      offset: () => Position(-width/2, -yoffset),
+      classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
+      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])
+    }),
+    west: () => ({
       offset: () => Position(-width/2, -yoffset),
       classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
       classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])

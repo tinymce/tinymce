@@ -64,7 +64,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // As of TBIO-4291, we provide all available space for both up and down.
   const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
   const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
-  const maxHeight = Direction.cata(candidate.direction(), downAvailable, downAvailable, upAvailable, upAvailable, downAvailable, upAvailable);
+  const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
 
   // We don't futz with the width.
 

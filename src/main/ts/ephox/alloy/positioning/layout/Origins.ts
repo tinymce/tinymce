@@ -59,12 +59,20 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): Reposition
         return NuRepositionCss('fixed', none, none, right, bottom);
       },
       () => {
-        // southmiddle
+        // south
         return NuRepositionCss('fixed', left, top, none, none);
       },
       () => {
-        // northmiddle
+        // north
         return NuRepositionCss('fixed', left, none, none, bottom);
+      },
+      () => {
+        // east
+        return NuRepositionCss('fixed', left, none, none, none);
+      },
+      () => {
+        // west
+        return NuRepositionCss('fixed', none, none, right, none);
       }
     );
   });

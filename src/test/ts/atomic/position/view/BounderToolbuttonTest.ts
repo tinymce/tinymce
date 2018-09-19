@@ -51,7 +51,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const southmiddle = () => {
+    const south = () => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -59,7 +59,23 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const northmiddle = () => {
+    const north = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const east = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const west = () => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -72,8 +88,10 @@ UnitTest.test('BounderToolbuttonTest', () => {
       northeast,
       southwest,
       southeast,
-      southmiddle,
-      northmiddle
+      south,
+      north,
+      east,
+      west
     };
   };
 

@@ -22,8 +22,8 @@ const anchorAtCentre = (component: AlloyComponent) => {
     x: pos.left() + w / 2,
     y: pos.top() + h / 2,
     layouts: {
-      onLtr: () => [ Layout.southmiddle, Layout.northmiddle ],
-      onRtl: () => [ Layout.southmiddle, Layout.northmiddle ]
+      onLtr: () => [ Layout.south, Layout.north ],
+      onRtl: () => [ Layout.south, Layout.north ]
     }
   };
 };
