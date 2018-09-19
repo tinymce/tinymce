@@ -1,15 +1,12 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Css, Location } from '@ephox/sugar';
-
+import { Css } from '@ephox/sugar';
 import * as Anchor from '../../positioning/layout/Anchor';
-import * as Boxes from '../../positioning/layout/Boxes';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
@@ -21,7 +18,10 @@ const getFixedOrigin = (): OriginAdt => {
 };
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
-  return Anchor.relativeOrigin(component.element());
+  const bounds = component.element().dom().getBoundingClientRect(); // TODO: THIS USED TO BE LOCATION.ABSOLUTE, check it TODO TODO
+
+  // Relative calculations are all adjusted to be relative to Boxes.view() so the bounding client rect of the origin is all we need
+  return Origins.relative(bounds.left, bounds.top, bounds.width, bounds.height);
 };
 
 const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
