@@ -19,9 +19,10 @@ const getFixedOrigin = (): OriginAdt => {
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
   const position = Location.absolute(component.element());
-  const bounds = component.element().dom().getBoundingClientRect(); // TODO: THIS USED TO BE LOCATION.ABSOLUTE, check it TODO TODO
+  const bounds = component.element().dom().getBoundingClientRect();
 
-  // Relative calculations are all adjusted to be relative to Boxes.view() so the bounding client rect of the origin is all we need
+  // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
+  // should change this to just bounds.left and bounds.top from getBoundingClientRect
   return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
 };
 
