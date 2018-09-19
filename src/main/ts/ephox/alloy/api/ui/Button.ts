@@ -33,7 +33,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
           // On Firefox, pressing space fires a click event. We could potentially resolve this
           // by listening to keyup instead of keydown, but that seems like a big change. Alternatively,
           // we could make execution be able to do that.
-          useSpace: !(isFirefox && optTag.is('button')),
+          useSpace: true, //!(isFirefox && optTag.is('button')),
           useEnter: true
         })
       ]),

@@ -85,7 +85,8 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'dragenter',
       'dragleave',
       'dragover',
-      'drop'
+      'drop',
+      'keyup'
     ]),
     (type) => {
       return DomEvent.bind(container, type, (event: SugarEvent) => {
