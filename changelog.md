@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## <Placeholder version>
+
+### Added
+ - Additional Layout options: east and west
+ - Configuration classes for different bubbles positions
+
+### Changed
+ - Layout names in the private API have changed
+ - Bubble data structure format
+
 ## [3.39.3] - 2018-09-19
 ### Fixed
  - Correct argument is passed through for `item` in itemExecute in Typeahead
