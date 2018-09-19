@@ -10,6 +10,9 @@ import * as Sketcher from './Sketcher';
 import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { PlatformDetection } from '@ephox/sand';
+
+const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action());
@@ -27,7 +30,10 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
-          useSpace: true,
+          // On Firefox, pressing space fires a click event. We could potentially resolve this
+          // by listening to keyup instead of keydown, but that seems like a big change. Alternatively,
+          // we could make execution be able to do that.
+          useSpace: !(isFirefox && optTag.is('button')),
           useEnter: true
         })
       ]),
