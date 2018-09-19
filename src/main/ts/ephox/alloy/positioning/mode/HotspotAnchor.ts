@@ -1,11 +1,11 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
+import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import { nu as NuAnchor, Anchoring } from './Anchoring';
-import { nu as NuBubble } from '../layout/Bubble';
+import { nu as NuAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
 const placement = (component, _posInfo, anchorInfo, origin) => {
@@ -17,7 +17,7 @@ const placement = (component, _posInfo, anchorInfo, origin) => {
   return Option.some(
     NuAnchor({
       anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(NuBubble(0, 0, { })),
+      bubble: Fun.constant(Bubble.fallback()),
       overrides: Fun.constant({ }),
       layouts: Fun.constant(layouts),
       placer: Option.none

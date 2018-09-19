@@ -20,7 +20,6 @@ const adt: {
 ]);
 
 const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bounds): BounderAttemptAdt  => {
-  console.log('trying', candidate.label());
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleLeft = candidate.bubble().offset().left();
