@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.38.0] - 2018-09-19
+### Changed
+ - Positioning logic refactor.
+
 ## [3.37.0] - 2018-09-17
 ### Added
- - Added `focusout` to NativeEvents
+ - Event `focusout` to NativeEvents
 
 ## [3.36.0] - 2018-09-14
 ### Added
@@ -21,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.34.0] - 2018-09-13
 ### Added
- - Added `attachSystemAfter` to Attachment so a `GuiSystem` can be attached as a sibling
+ - Function `attachSystemAfter` to Attachment so a `GuiSystem` can be attached as a sibling
 
 
 ## [3.33.0] - 2018-09-12
