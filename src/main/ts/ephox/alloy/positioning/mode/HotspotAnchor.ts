@@ -17,13 +17,7 @@ const placement = (component, _posInfo, anchorInfo, origin) => {
   return Option.some(
     NuAnchor({
       anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(NuBubble(0, 0, {
-        top: [ ],
-        left: [ ],
-        right: [ ],
-        middle: [ ],
-        bottom: [ ]
-      })),
+      bubble: Fun.constant(NuBubble(0, 0, { })),
       overrides: Fun.constant({ }),
       layouts: Fun.constant(layouts),
       placer: Option.none

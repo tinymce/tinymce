@@ -22,13 +22,13 @@ UnitTest.test('BounderCursorTest', () => {
     label: 'none',
     x: 0,
     y: 0
-  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), Bubble.nu(0, 0, Bubble.noClasses()), bounds(0, 0, 1000, 1000));
+  }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), Bubble.nu(0, 0, { }), bounds(0, 0, 1000, 1000));
 
   check({
     label: 'none',
     x: 100,
     y: 0
-  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), Bubble.nu(10, 0, Bubble.noClasses()), bounds(0, 0, 1000, 1000));
+  }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), Bubble.nu(10, 0, { }), bounds(0, 0, 1000, 1000));
 
   const panelBox = bounds(0, 0, 100, 75);
   const bigPanel = bounds(0, 0, 75, 500);

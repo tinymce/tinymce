@@ -1,6 +1,7 @@
 import { Fun, Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { SugarPosition } from '../../alien/TypeDefinitions';
+import { Objects } from '@ephox/boulder';
 
 export interface BubbleInstance {
   offset: () => SugarPosition;
@@ -19,64 +20,68 @@ export interface Bubble {
   west: () => BubbleInstance;
 }
 
-const noClasses = () => ({
-  top: [ ],
-  left: [ ],
-  bottom: [ ],
-  right: [ ],
-  middle: [ ]
-});
+export interface BubbleAlignments {
+  // Used for east and west
+  valignCentre?: string[];
 
-const nu = (width, yoffset, classes: { top: string[], left: string[], bottom: string[], right: string[], middle: string[] }): Bubble => {
+  // Used for *east
+  alignLeft?: string[];
+  // Used for *west
+  alignRight?: string[];
+  // Used for *middle
+  alignCentre?: string[];
+
+  // Used for south*
+  top?: string[];
+  bottom?: string[];
+  // Used for east
+  left?: string[];
+  // Used for west
+  right?: string[];
+}
+
+const allAlignments = [
+  'valignCentre',
+
+  'alignLeft',
+  'alignRight',
+  'alignCentre',
+
+  'top',
+  'bottom',
+  'left',
+  'right'
+];
+
+const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
+  const getClasses = (prop: string): string[] => {
+    return Objects.readOptFrom(classes, prop).getOr([ ])
+  };
+
+  const make = (xDelta: number, yDelta: number, alignmentsOn: string[]) => {
+    const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);
+    return {
+      offset: () => Position(xDelta, yDelta),
+      classesOn: () => Arr.bind(alignmentsOn, getClasses),
+      classesOff: () => Arr.bind(alignmentsOff, getClasses)
+    };
+  };
+
   return {
-    southeast: () => ({
-      offset: () => Position(-width, yoffset),
-      classesOn: () => Arr.flatten([ classes.top, classes.left ]),
-      classesOff: () => Arr.flatten([ classes.right, classes.bottom, classes.middle ])
-    }),
-    southwest: () => ({
-      offset: () => Position(width, yoffset),
-      classesOn: () => Arr.flatten([ classes.top, classes.right ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.bottom, classes.middle ])
-    }),
-    south: () => ({
-      offset: () => Position(-width/2, -yoffset),
-      classesOn: () => Arr.flatten([ classes.top, classes.middle ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.bottom ])
-    }),
-    northeast: () => ({
-      offset: () => Position(-width, -yoffset),
-      classesOn: () => Arr.flatten([ classes.bottom, classes.left ]),
-      classesOff: () => Arr.flatten([ classes.right, classes.top, classes.middle ])
-    }),
-    northwest: () => ({
-      offset: () => Position(width, -yoffset),
-      classesOn: () => Arr.flatten([ classes.bottom, classes.right ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.top, classes.middle ])
-    }),
-    north: () => ({
-      offset: () => Position(-width/2, -yoffset),
-      classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])
-    }),
-    // TODO: Check offsets
-    east: () => ({
-      offset: () => Position(-width/2, -yoffset),
-      classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])
-    }),
-    west: () => ({
-      offset: () => Position(-width/2, -yoffset),
-      classesOn: () => Arr.flatten([ classes.bottom, classes.middle ]),
-      classesOff: () => Arr.flatten([ classes.left, classes.right, classes.top ])
-    })
+    southeast: () => make(-width, yoffset, [ 'top', 'alignLeft' ]),
+    southwest: () => make(width, yoffset, [ 'top', 'alignRight' ]),
+    south: () => make(-width/2, yoffset, [ 'top', 'alignCentre' ]),
+    northeast: () => make(-width, -yoffset, [ 'bottom', 'alignLeft' ]),
+    northwest: () => make(width, -yoffset, [ 'bottom', 'alignRight' ]),
+    north: () => make(-width/2, -yoffset, [ 'bottom', 'alignCentre' ]),
+    east: () => make(width, -yoffset/2, [ 'valignCentre', 'left' ]),
+    west: () => make(-width, -yoffset/2, [ 'valignCentre', 'right' ])
   };
 };
 
-const fallback = () => nu(0, 0, noClasses());
+const fallback = () => nu(0, 0, { });
 
 export {
   nu,
-  noClasses,
   fallback
 };
