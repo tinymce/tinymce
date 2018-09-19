@@ -66,8 +66,8 @@ const dom = (detail: InputDetail): RawDomSchema => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
-      detail.inputAttributes(),
-      { type: 'input' }
+      { type: 'input' },
+      detail.inputAttributes()
     ),
     styles: detail.inputStyles(),
     classes: detail.inputClasses()
