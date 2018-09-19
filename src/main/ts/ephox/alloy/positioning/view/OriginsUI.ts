@@ -11,14 +11,12 @@ import { SugarPosition, SugarDocument } from '../../alien/TypeDefinitions';
 // if/when repartee is compiled with NPM modules available, we can switch to `domtest` which allows sugar to load in nodejs
 
 const toBox = (origin: OriginAdt, element: Element): Bounds => {
-  // const pos = OuterPosition.find(element);
   const rel = Fun.curry(OuterPosition.find, element);
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();
     // TODO: Make adding the scroll in OuterPosition.find optional.
     return OuterPosition.find(element).translate(-scroll.left(), -scroll.top());
   });
-  // translate(origin, pos.left(), pos.top());
 
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
