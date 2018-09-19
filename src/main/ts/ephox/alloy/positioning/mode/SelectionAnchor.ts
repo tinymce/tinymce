@@ -75,7 +75,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
         return CssPosition.sumAsAbsolute(points);
       },
       () => {
-        return CssPosition.sumAsFixed(points);
+        return CssPosition.sumAsAbsolute(points);
       },
       () => {
         return CssPosition.sumAsFixed(points);
