@@ -20,11 +20,10 @@ const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulate
   return escapeConfig.onEscape()(component, simulatedEvent);
 };
 
-const getRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
+const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
 ]);
 
-const getEvents = Fun.constant({ });
-const getApis = Fun.constant({ });
+const getKeyupRules = Fun.constant([ ]);
 
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.none());

@@ -27,7 +27,7 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
+const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
     KeyRules.rule(
@@ -58,7 +58,6 @@ const focusIn = (component: AlloyComponent, specialInfo: SpecialConfig): Option<
   });
 };
 
-const getEvents = () => ({ });
-const getApis = () => ({ });
+const getKeyupRules = Fun.constant([ ]);
 
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));

@@ -69,7 +69,7 @@ const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEv
   return flowConfig.onEscape()(component, simulatedEvent);
 };
 
-const getRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
+const getKeydownRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
   return [
@@ -81,8 +81,6 @@ const getRules = (_component, _se, flowConfig, _flowState): Array<KeyRules.KeyRu
   ];
 };
 
-const getEvents = Fun.constant({ });
+const getKeyupRules = Fun.constant([ ]);
 
-const getApis = Fun.constant({ });
-
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));

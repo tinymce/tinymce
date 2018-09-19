@@ -79,7 +79,7 @@ const moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight
 const moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
 const moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
-const getRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
+const getKeydownRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
@@ -87,8 +87,6 @@ const getRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.con
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
-const getEvents = Fun.constant({ });
+const getKeyupRules = Fun.constant([ ]);
 
-const getApis = Fun.constant({ });
-
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));

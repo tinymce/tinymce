@@ -27,7 +27,7 @@ const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyCom
   return executeConfig.execute()(component, simulatedEvent, component.element());
 };
 
-const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
+const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
   const enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
   const downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];
@@ -40,7 +40,18 @@ const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEven
   ] : [ ]);
 };
 
-const getEvents = Fun.constant({ });
-const getApis = Fun.constant({ });
+const isFirefoxButton = () => true;
 
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());
+const stopEventForFirefox: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig) => {
+  return Option.some(true);
+};
+
+const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
+  const spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
+
+  return executeConfig.useSpace() &&  isFirefoxButton  ? [
+    // KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), stopEventForFirefox)
+  ] : [ ]
+};
+
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.none());

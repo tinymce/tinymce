@@ -25,11 +25,7 @@ enum EventConfiguration {
   LOGGING
 };
 
-const eventConfig = Cell<Record<string, EventConfiguration>>({
-  keydown: EventConfiguration.LOGGING,
-  click: EventConfiguration.LOGGING,
-  keyup: EventConfiguration.LOGGING
-});
+const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 
 export type EventProcessor = (logger: any) => boolean;
 

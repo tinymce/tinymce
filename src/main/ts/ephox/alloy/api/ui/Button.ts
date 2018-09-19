@@ -30,10 +30,10 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
-          // On Firefox, pressing space fires a click event. We could potentially resolve this
-          // by listening to keyup instead of keydown, but that seems like a big change. Alternatively,
-          // we could make execution be able to do that.
-          useSpace: true, //!(isFirefox && optTag.is('button')),
+          // Note execution will capture keyup when the focus is on the button
+          // on Firefox, because otherwise it will fire a click event and double
+          // up on the action
+          useSpace: true,
           useEnter: true
         })
       ]),

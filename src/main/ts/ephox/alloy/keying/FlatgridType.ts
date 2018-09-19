@@ -73,7 +73,7 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-const getRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
+const getKeydownRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
@@ -85,8 +85,6 @@ const getRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = F
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
-const getEvents = Fun.constant({ });
+const getKeyupRules = Fun.constant([ ]);
 
-const getApis = {};
-
-export default KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, Option.some(focusIn));
