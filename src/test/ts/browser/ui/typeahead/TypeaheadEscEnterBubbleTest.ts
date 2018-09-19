@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Fun } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import { Value, Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -49,7 +49,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
             },
             onExecute: store.adder('***onExecute***'),
             onItemExecute: (typeahead, sandbox, item, value) => {
-              store.adder(value.value)();
+              store.adder(value.value + '(' + Arr.map([ typeahead.element(), sandbox.element(), item.element() ], Node.name).join('-') + ')')();
             }
           })
         ],
@@ -85,7 +85,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       steps.sWaitForNoMenu('Enter to close menu'),
       Keyboard.sKeydown(doc,  Keys.enter(), {}),
 
-      store.sAssertEq('Should have item1 and onExecute', ['1', '***onExecute***']),
+      store.sAssertEq('Should have item1 and onExecute', ['1(input-div-li)', '***onExecute***']),
       GuiSetup.mRemoveStyles,
       GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27']),
     ];

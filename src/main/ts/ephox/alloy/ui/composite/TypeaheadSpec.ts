@@ -223,6 +223,16 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.runOnExecute((comp) => {
         const onOpenSync = Fun.noop;
         DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+      }),
+      AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
+        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+
+        setValueFromItem(detail.model(), comp, se.event().item());
+        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
+        detail.onItemExecute()(comp, sandbox, se.event().item(), Representing.getValue(comp));
+
+        Sandboxing.close(sandbox);
+        setCursorAtEnd(comp);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
@@ -231,16 +241,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (Focus.search(sandbox.element()).isNone()) {
           Sandboxing.close(sandbox);
         }
-      }),
-      AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
-        const sandbox = Coupling.getCoupled(comp, 'sandbox');
-
-        setValueFromItem(detail.model(), comp, se.event().item());
-        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        detail.onItemExecute()(comp, sandbox, comp, Representing.getValue(comp));
-
-        Sandboxing.close(sandbox);
-        setCursorAtEnd(comp);
       })
     ] : [ ]))
   ]);

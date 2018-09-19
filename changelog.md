@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.39.3] - 2018-09-19
+### Fixed
+ - Correct argument is passed through for `item` in itemExecute in Typeahead
+ - Internal event Typeahead itemExecute is handled when dismissOnBlur is false
+
 ## [3.39.0] - 2018-09-17
 ### Removed
  - Removed `type` and `placeholder` shorthands from Input
