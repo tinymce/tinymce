@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Fun } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import { Value, Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -30,30 +30,26 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
               openClass: 'test-typeahead-open'
             },
 
-            fetch (input) {
-              const text = Value.get(input.element());
-              const future = Future.pure([
-                { type: 'item', data: { value: text + '1', meta: { text: text + '1' } } },
-                { type: 'item', data: { value: text + '2', meta: { text: text + '2' } } }
-              ]);
+            fetch () {
+              const items = [
+                { type: 'item', data: { value: '1', meta: { text: '1' } } },
+                { type: 'item', data: { value: '2', meta: { text: '2' } } }
+              ];
 
-              return future.map((f) => {
-                // TODO: Test this.
-                const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
-                ] : f;
-                const menu = TestDropdownMenu.renderMenu({
-                  value: 'blah',
-                  items: Arr.map(items, TestDropdownMenu.renderItem)
-                });
-                return TieredMenu.singleData('blah.overall', menu);
-              });
+              return Future.pure(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
+                value: 'blah',
+                items: Arr.map(items, TestDropdownMenu.renderItem)
+              })))
             },
 
             lazySink () { return Result.value(sink); },
 
             parts: {
               menu: TestDropdownMenu.part(store)
+            },
+            onExecute: store.adder('***onExecute***'),
+            onItemExecute: (typeahead, sandbox, item, value) => {
+              store.adder(value.value + '(' + Arr.map([ typeahead.element(), sandbox.element(), item.element() ], Node.name).join('-') + ')')();
             }
           })
         ],
@@ -89,8 +85,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       steps.sWaitForNoMenu('Enter to close menu'),
       Keyboard.sKeydown(doc,  Keys.enter(), {}),
 
+      store.sAssertEq('Should have item1 and onExecute', ['1(input-div-li)', '***onExecute***']),
       GuiSetup.mRemoveStyles,
-      GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27', 'keydown.to.body: 13']),
+      GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27']),
     ];
   }, success, failure);
 });

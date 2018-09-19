@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Step, Assertions, Logger, Chain, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
@@ -42,17 +42,12 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
             },
 
             fetch (input) {
-              const text = Value.get(input.element());
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', meta: { text: text + '1' } } },
-                { type: 'item', data: { value: text + '2', meta: { text: text + '2' } } }
+                { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' } } },
+                { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' } } }
               ]);
 
-              return future.map((f) => {
-                // TODO: Test this.
-                const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
-                ] : f;
+              return future.map((items) => {
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
@@ -110,6 +105,23 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       }),
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       steps.sWaitForNoMenu('Escape should still dismiss regardless of setting'),
+
+      Logger.t(
+        'Checking that with dismissOnBlur = false, we can still select items',
+        GeneralSteps.sequence([
+          Keyboard.sKeydown(doc, Keys.down(), { }),
+          steps.sWaitForMenu('Down to activate menu again'),
+          Logger.t(
+            'Choose an item with <enter> key',
+            Keyboard.sKeydown(doc, Keys.enter(), { })
+          ),
+          Chain.asStep(component.element(), [
+            FocusTools.cGetActiveValue,
+            Assertions.cAssertEq('Active value should be the first option', 'choice1')
+          ]),
+          steps.sWaitForNoMenu('Selecting an item should close the menu'),
+        ])
+      ),
       GuiSetup.mRemoveStyles
     ];
   }, success, failure);
