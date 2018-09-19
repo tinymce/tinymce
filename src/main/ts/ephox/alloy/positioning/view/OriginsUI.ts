@@ -20,10 +20,10 @@ const toBox = (origin: OriginAdt, element: Element): Bounds => {
 };
 
 // TODO: Not sure about these bounds.
-const viewport = (origin: OriginAdt, bs: Option<() => Bounds>): Bounds => {
-  return bs.fold(() => {
+const viewport = (origin: OriginAdt, getBounds: Option<() => Bounds>): Bounds => {
+  return getBounds.fold(() => {
     /* There are no bounds supplied */
-    return origin.fold(Boxes.view, Boxes.view, bounds);
+    return origin.fold(Boxes.win, Boxes.win, bounds);
   }, (b) => {
     /* Use any bounds supplied or make a bounds from the whole viewport for fixed. */
     return origin.fold(b, b, bounds);

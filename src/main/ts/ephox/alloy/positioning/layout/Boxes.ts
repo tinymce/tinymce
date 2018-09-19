@@ -13,7 +13,7 @@ const absolute = (element: Element): Bounds => {
   return bounds(position.left(), position.top(), width, height);
 };
 
-const view = (): Bounds => {
+const win = (): Bounds => {
   const width = window.innerWidth;
   const height = window.innerHeight;
   // To make calculations easier, relative coordinates for "in view" positioning are transformed as if there was no scroll.
@@ -24,5 +24,5 @@ const view = (): Bounds => {
 
 export {
   absolute,
-  view
+  win
 };

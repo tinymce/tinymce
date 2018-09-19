@@ -70,8 +70,8 @@ const toBox = (origin: OriginAdt, element: Element): Bounds => {
   return OriginsUI.toBox(origin, element);
 };
 
-const viewport = (origin: OriginAdt, bounds: Option<() => Bounds>): Bounds => {
-  return OriginsUI.viewport(origin, bounds);
+const viewport = (origin: OriginAdt, getBounds: Option<() => Bounds>): Bounds => {
+  return OriginsUI.viewport(origin, getBounds);
 };
 
 const translate = (origin, x, y) => {

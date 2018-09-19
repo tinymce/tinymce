@@ -1,4 +1,4 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Option, Struct, Fun } from '@ephox/katamari';
 
 import * as Callouts from '../view/Callouts';
 import * as Boxes from './Boxes';
@@ -31,7 +31,7 @@ const defaultOr = (options, key, dephault) => {
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen
-const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], overrideOptions: AnchorOverrides): void => {
+const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -39,7 +39,7 @@ const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layou
   const origin = anchor.origin();
 
   const options = reparteeOptions({
-    bounds: Origins.viewport(origin, Option.none()),
+    bounds: Origins.viewport(origin, getBounds),
     origin,
     preference: layouts,
     maxHeightFunction
