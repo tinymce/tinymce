@@ -12,7 +12,7 @@ const horizontal = (container, selector, current, delta): Option<Element> => {
 
   const tryCycle = (initial, index, candidates) => {
     const newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);
-    if (newIndex === initial) {
+    if (newIndex === initial) { // If we've cycled back to the original index, we've failed to find a new valid candidate
       return Option.none();
     } else {
       return isDisabledButton(candidates[newIndex]) ?
