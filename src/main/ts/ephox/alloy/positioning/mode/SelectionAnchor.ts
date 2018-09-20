@@ -8,7 +8,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';
 import * as Fields from '../../data/Fields';
-import { nu as Bubble } from '../layout/Bubble';
+import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import { SelectionAnchor, nu as NuAnchor, Anchoring } from './Anchoring';
@@ -95,14 +95,14 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
 
     const layoutsLtr = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
-        [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
-        [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
+        [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.north, Layout.south ] :
+        [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.south, Layout.south ];
     };
 
     const layoutsRtl = (): Layout.AnchorLayout[] => {
       return anchorInfo.showAbove() ?
-        [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
-        [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
+        [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.north, Layout.south ] :
+        [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.south, Layout.north ];
     };
 
     const elem = targetElement.getOr(component.element());
@@ -110,7 +110,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchor
 
     return NuAnchor({
       anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble(0, 0))),
+      bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble.fallback())),
       overrides: anchorInfo.overrides,
       layouts: Fun.constant(layouts),
       placer: Option.none

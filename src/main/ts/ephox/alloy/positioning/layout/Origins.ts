@@ -36,23 +36,38 @@ const positionWithDirection = (posName, decision, x, y, width, height) => {
   const bottom = Option.some(decisionBottom);
   const none = Option.none();
 
-  // wtb adt.match()
   return Direction.cata(decision.direction(),
-    function () {
+    () => {
       // southeast
       return NuRepositionCss(posName, left, top, none, none);
     },
-    function () {
+    () => {
       // southwest
       return NuRepositionCss(posName, none, top, right, none);
     },
-    function () {
+    () => {
       // northeast
       return NuRepositionCss(posName, left, none, none, bottom);
     },
-    function () {
+    () => {
       // northwest
       return NuRepositionCss(posName, none, none, right, bottom);
+    },
+    () => {
+      // south
+      return NuRepositionCss(posName, left, top, none, none);
+    },
+    () => {
+      // north
+      return NuRepositionCss(posName, left, none, none, bottom);
+    },
+    () => {
+      // east
+      return NuRepositionCss(posName, left, none, none, none);
+    },
+    () => {
+      // west
+      return NuRepositionCss(posName, none, none, right, none);
     }
   );
 };

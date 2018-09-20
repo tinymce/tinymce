@@ -29,9 +29,10 @@ const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options
   return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
 };
 
-const setClasses = (element, decision) => {
-  Classes.remove(element, Anchors.all());
-  Classes.add(element, decision.classes());
+const setClasses = (element, decision: RepositionDecision) => {
+  const classInfo = decision.classes();
+  Classes.remove(element, classInfo.off);
+  Classes.add(element, classInfo.on);
 };
 
 /*

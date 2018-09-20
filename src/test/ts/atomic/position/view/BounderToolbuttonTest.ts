@@ -3,6 +3,7 @@ import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { Position } from '@ephox/sugar';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
 
 UnitTest.test('BounderToolbuttonTest', () => {
   /* global assert */
@@ -16,29 +17,81 @@ UnitTest.test('BounderToolbuttonTest', () => {
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   // We use it for toolbar buttons, like naughty hobbitses, so this test will change (TBIO-2326) because right now it's insane.
-  const chameleonBubble = (width) => {
+  const chameleonBubble = (width): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
     const northeast = () => {
-      return Position(-1, 1);
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
     };
 
     const northwest = () => {
-      return Position(width - 1, 1);
+      return {
+        offset: () => Position(width - 1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
     };
 
     const southeast = () => {
-      return Position(-1, -2);
+      return {
+        offset: () => Position(-1, -2),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
     };
 
     const southwest = () => {
-      return Position(width - 1, -2);
+      return {
+        offset: () => Position(width - 1, -2),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const south = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const north = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const east = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
+    };
+
+    const west = () => {
+      return {
+        offset: () => Position(-1, 1),
+        classesOn: () => [ ],
+        classesOff: () => [ ]
+      };
     };
 
     return {
       northwest,
       northeast,
       southwest,
-      southeast
+      southeast,
+      south,
+      north,
+      east,
+      west
     };
   };
 

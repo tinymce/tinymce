@@ -47,8 +47,8 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         anchor: 'hotspot',
         hotspot: comp,
         layouts: {
-          onLtr: Fun.constant([ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
-          onRtl : Fun.constant([ Layout.southmiddle, Layout.northmiddle, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
+          onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
+          onRtl : Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
         }
       }, popup);
     }
