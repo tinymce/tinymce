@@ -13,7 +13,7 @@ const absolute = (element: Element): Bounds => {
   return bounds(position.left(), position.top(), width, height);
 };
 
-const view = (): Bounds => {
+const win = (): Bounds => {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const doc = Element.fromDom(document);
@@ -23,5 +23,5 @@ const view = (): Bounds => {
 
 export {
   absolute,
-  view
+  win
 };

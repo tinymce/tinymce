@@ -1,4 +1,4 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Option, Struct, Fun } from '@ephox/katamari';
 
 import * as Callouts from '../view/Callouts';
 import * as Boxes from './Boxes';
@@ -30,8 +30,8 @@ const defaultOr = (options, key, dephault) => {
   return options[key] === undefined ? dephault : options[key];
 };
 
-// This takes care of everything when you are positioning UI that can go anywhere on the screen (position: fixed)
-const fixed = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], overrideOptions: AnchorOverrides): void => {
+// This takes care of everything when you are positioning UI that can go anywhere on the screen
+const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -39,27 +39,12 @@ const fixed = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout
   const origin = anchor.origin();
 
   const options = reparteeOptions({
-    bounds: Origins.viewport(origin, Option.none()),
+    bounds: Origins.viewport(origin, getBounds),
     origin,
     preference: layouts,
     maxHeightFunction
   });
 
-  go(anchorBox, element, bubble, options);
-};
-
-const relative = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optionsSpec: ReparteeOptionsSpec): void => {
-  const defaults = (_opts) => {
-    const opts = _opts !== undefined ? _opts : {};
-    return reparteeOptions({
-      bounds: defaultOr(opts, 'bounds', Boxes.view()),
-      origin: defaultOr(opts, 'origin', Origins.none()),
-      preference: defaultOr(opts, 'preference', Layout.all()),
-      maxHeightFunction: defaultOr(opts, 'maxHeightFunction', MaxHeight.anchored())
-    });
-  };
-
-  const options: ReparteeOptions = defaults(optionsSpec);
   go(anchorBox, element, bubble, options);
 };
 
@@ -73,6 +58,5 @@ const go = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, optio
 };
 
 export {
-  fixed,
-  relative
+  simple
 };

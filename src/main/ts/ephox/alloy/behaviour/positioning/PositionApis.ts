@@ -1,15 +1,12 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Css, Location } from '@ephox/sugar';
-
 import * as Anchor from '../../positioning/layout/Anchor';
-import * as Boxes from '../../positioning/layout/Boxes';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
@@ -21,36 +18,17 @@ const getFixedOrigin = (): OriginAdt => {
 };
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
-  // This container is the origin.
   const position = Location.absolute(component.element());
-  return Origins.relative(position.left(), position.top());
-};
+  const bounds = component.element().dom().getBoundingClientRect();
 
-const placeFixed = (_component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const anchor = Anchor.box(anchoring.anchorBox());
-  // TODO: Overrides for expanding panel
-  SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
-};
-
-const placeRelative = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const bounds = posConfig.bounds().getOr(Boxes.view());
-
-  SimpleLayout.relative(
-    anchoring.anchorBox(),
-    placee.element(),
-    anchoring.bubble(),
-    {
-      bounds,
-      origin,
-      preference: anchoring.layouts(),
-      maxHeightFunction: () => { }
-    }
-  );
+  // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
+  // should change this to just bounds.left and bounds.top from getBoundingClientRect
+  return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
 };
 
 const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
-  const f = posConfig.useFixed() ? placeFixed : placeRelative;
-  f(component, origin, anchoring, posConfig, placee);
+  const anchor = Anchor.box(anchoring.anchorBox(), origin);
+  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), posConfig.getBounds(), anchoring.overrides());
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {

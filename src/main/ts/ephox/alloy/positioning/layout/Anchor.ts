@@ -18,19 +18,13 @@ export interface Anchor {
 
 const anchor: (anchorBox: AnchorBox, origin: OriginAdt) => Anchor = Struct.immutable('anchorBox', 'origin');
 
-const fixedOrigin = (): OriginAdt => {
-  return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
-};
-
-const element = (anchorElement: Element): Anchor => {
-  const origin = fixedOrigin();
+const element = (anchorElement: Element, origin: OriginAdt): Anchor => {
   const anchorBox = Origins.toBox(origin, anchorElement);
 
   return anchor(anchorBox, origin);
 };
 
-const box = (anchorBox: AnchorBox): Anchor => {
-  const origin = fixedOrigin();
+const box = (anchorBox: AnchorBox, origin: OriginAdt): Anchor => {
   return anchor(anchorBox, origin);
 };
 

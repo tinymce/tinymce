@@ -19,7 +19,7 @@ const placement = (component: AlloyComponent, posInfo: PositioningConfig, submen
   return Option.some(
     NuAnchoring({
       anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(Bubble.nu(0, 0)),
+      bubble: Fun.constant(Bubble.fallback()),
       overrides: Fun.constant({ }),
       layouts: Fun.constant(layouts),
       placer: Option.none
