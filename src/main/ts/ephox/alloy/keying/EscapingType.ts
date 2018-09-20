@@ -3,15 +3,12 @@ import { Fun, Option } from '@ephox/katamari';
 import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
+import { EscapingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
-import { KeyRuleHandler, EscapingConfig } from '../keying/KeyingModeTypes';
 
 // NB: Tsc requires AlloyEventHandler and AlloyComponent to be imported here.
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
-import { AlloyComponent } from '../api/component/ComponentApi';
-
 const schema = [
   Fields.onStrictKeyboardHandler('onEscape')
 ];

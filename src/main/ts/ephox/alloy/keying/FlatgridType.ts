@@ -82,9 +82,12 @@ const getKeydownRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridStat
   KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape),
 
+  // Probably should make whether space is used configurable
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
-const getKeyupRules = Fun.constant([ ]);
+const getKeyupRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+])
 
 export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, Option.some(focusIn));

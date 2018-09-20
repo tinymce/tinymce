@@ -61,6 +61,8 @@ const getKeydownRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
 ]);
 
-const getKeyupRules = Fun.constant([ ]);
+const getKeyupRules = Fun.constant([
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules,getKeyupRules, Option.some(focusIn));

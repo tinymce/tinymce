@@ -81,6 +81,8 @@ const getKeydownRules = (_component, _se, flowConfig, _flowState): Array<KeyRule
   ];
 };
 
-const getKeyupRules = Fun.constant([ ]);
+const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig, Stateless>> = Fun.constant([
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+])
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));
