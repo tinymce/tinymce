@@ -6,8 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## <Placeholder version>
-
+## [3.41.0] - 2018-09-20
 ### Added
  - Exposed Layout and Bubble through Main
  - Additional Layout options: east and west
@@ -17,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Layout names in the private API have changed
  - Bubble data structure format
 
+## [3.40.0] - 2018-09-20
+### Changed
+ - Positioning logic refactor.
+
 ## [3.39.3] - 2018-09-19
 ### Fixed
  - Correct argument is passed through for `item` in itemExecute in Typeahead
@@ -24,15 +27,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.39.0] - 2018-09-17
 ### Removed
- - Removed `type` and `placeholder` shorthands from Input
+ - Shorthands `type` and `placeholder` from Input
 
 ## [3.38.0] - 2018-09-17
 ### Added
- - Added `onItemExecute` to Typeahead
+ - Function `onItemExecute` to Typeahead
 
 ## [3.37.0] - 2018-09-17
 ### Added
- - Added `focusout` to NativeEvents
+ - Event `focusout` to NativeEvents
 
 ## [3.36.0] - 2018-09-14
 ### Added
@@ -42,11 +45,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Typeahead now lets `onEscape` and `onEnter` events bubble when sandbox is closed
 
-
 ## [3.34.0] - 2018-09-13
 ### Added
- - Added `attachSystemAfter` to Attachment so a `GuiSystem` can be attached as a sibling
-
+ - Function `attachSystemAfter` to Attachment so a `GuiSystem` can be attached as a sibling
 
 ## [3.33.0] - 2018-09-12
 ### Added

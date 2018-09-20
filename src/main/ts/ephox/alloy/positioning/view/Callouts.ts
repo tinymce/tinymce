@@ -51,6 +51,8 @@ const setHeight = (element, decision, options) => {
 const position = (element, decision, options) => {
   const addPx = (num) => num + 'px';
 
+  // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
+  // That is not ported yet.
   const newPosition = Origins.reposition(options.origin(), decision);
   Css.setOptions(element, {
     position: Option.some(newPosition.position()),
