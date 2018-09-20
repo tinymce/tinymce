@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
+    "@ephox/bedrock": "3.0.0",
     "@ephox/mcagar": "latest",
     "@ephox/swag": "latest",
     "awesome-typescript-loader": "^5.2.0",
