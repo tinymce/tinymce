@@ -1,11 +1,12 @@
-import { Adt, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Adt, Option, Fun } from '@ephox/katamari';
+import { Element, Position, Scroll, Width, Height } from '@ephox/sugar';
 
-import * as OriginsUI from '../view/OriginsUI';
 import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
 import { AdtInterface, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
-import { Bounds } from '../../alien/Boxes';
+import { Bounds, bounds } from '../../alien/Boxes';
+import * as Boxes from '../layout/Boxes';
+import * as OuterPosition from '../../frame/OuterPosition';
 
 export interface OriginAdt extends AdtInterface {
 
@@ -67,15 +68,36 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): Reposition
 };
 
 const toBox = (origin: OriginAdt, element: Element): Bounds => {
-  return OriginsUI.toBox(origin, element);
+  const rel = Fun.curry(OuterPosition.find, element);
+  const position = origin.fold(rel, rel, () => {
+    const scroll = Scroll.get();
+    // TODO: Make adding the scroll in OuterPosition.find optional.
+    return OuterPosition.find(element).translate(-scroll.left(), -scroll.top());
+  });
+
+  const width = Width.getOuter(element);
+  const height = Height.getOuter(element);
+  return bounds(position.left(), position.top(), width, height);
 };
 
 const viewport = (origin: OriginAdt, getBounds: Option<() => Bounds>): Bounds => {
-  return OriginsUI.viewport(origin, getBounds);
+  return getBounds.fold(() => {
+    /* There are no bounds supplied */
+    return origin.fold(Boxes.win, Boxes.win, bounds);
+  }, (b) => {
+    /* Use any bounds supplied or make a bounds from the whole viewport for fixed. */
+    return origin.fold(b, b, bounds);
+  });
 };
 
 const translate = (origin, x, y) => {
-  return OriginsUI.translate(origin, x, y);
+  const pos = Position(x, y);
+  const removeScroll = () => {
+    const outerScroll = Scroll.get();
+    return pos.translate(-outerScroll.left(), -outerScroll.top());
+  };
+  // This could use cata if it wasn't a circular reference
+  return origin.fold(Fun.constant(pos), Fun.constant(pos), removeScroll);
 };
 
 const cata = <B>(
