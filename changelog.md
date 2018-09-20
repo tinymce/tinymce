@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.40.0] - 2018-09-20
+### Added
+ - Alloy listens to the keyup event
+
+### Changed
+ - Keying behaviours that handle space cancel space on keyup. Helps to prevent a firefox issue with buttons
+
 ## [3.39.3] - 2018-09-19
 ### Fixed
  - Correct argument is passed through for `item` in itemExecute in Typeahead

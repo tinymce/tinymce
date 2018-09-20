@@ -23,7 +23,7 @@ const defaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulat
 // On Firefox, pressing space fires a click event if the element maintains focus and fires a keyup. This
 // stops the keyup, which should stop the click. We might want to make this only work for buttons and Firefox etc,
 // but at this stage it's cleaner to just always do it. It makes sense that Keying that handles space should handle
-// keyup also.
+// keyup also. This does make the name confusing, though.
 const stopEventForFirefox: KeyRuleHandler<GeneralKeyingConfig, any> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
   return Option.some(true);
 };
