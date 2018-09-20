@@ -145,6 +145,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         parts: {
           blocker: {
             dom: {
+              tag: 'div',
               styles: {
                 'z-index': '1000000000',
                 'background': 'rgba(0, 0, 100, 0.5)'

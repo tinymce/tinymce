@@ -45,13 +45,15 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
     const busyComp = Cell(Option.none());
 
+    const externalBlocker = externals.blocker();
+
     const blocker = sink.getSystem().build(
       Merger.deepMerge(
-        externals.blocker(),
+        externalBlocker,
         {
-          components: [
+          components: externalBlocker.components.concat([
             GuiFactory.premade(dialog)
-          ],
+          ]),
           behaviours: Behaviour.derive([
             AddEventsBehaviour.config('dialog-blocker-events', [
               AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
