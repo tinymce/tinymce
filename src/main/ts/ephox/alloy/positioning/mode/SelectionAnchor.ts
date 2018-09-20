@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
-import { Direction, Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
+import { Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
 import { Window } from '@ephox/dom-globals';
 

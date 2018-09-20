@@ -56,7 +56,7 @@ const detachChildren = (component: AlloyComponent): void => {
 };
 
 const attachSystem = (element: Element, guiSystem: GuiSystem): void => {
-  attachSystemInternal(element, guiSystem, Insert.append)
+  attachSystemInternal(element, guiSystem, Insert.append);
 };
 
 const attachSystemAfter = (element: Element, guiSystem: GuiSystem): void => {
