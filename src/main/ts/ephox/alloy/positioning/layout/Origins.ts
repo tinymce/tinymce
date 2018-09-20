@@ -39,35 +39,35 @@ const positionWithDirection = (posName, decision, x, y, width, height) => {
   return Direction.cata(decision.direction(),
     () => {
       // southeast
-      return NuRepositionCss('fixed', left, top, none, none);
+      return NuRepositionCss(posName, left, top, none, none);
     },
     () => {
       // southwest
-      return NuRepositionCss('fixed', none, top, right, none);
+      return NuRepositionCss(posName, none, top, right, none);
     },
     () => {
       // northeast
-      return NuRepositionCss('fixed', left, none, none, bottom);
+      return NuRepositionCss(posName, left, none, none, bottom);
     },
     () => {
       // northwest
-      return NuRepositionCss('fixed', none, none, right, bottom);
+      return NuRepositionCss(posName, none, none, right, bottom);
     },
     () => {
       // south
-      return NuRepositionCss('fixed', left, top, none, none);
+      return NuRepositionCss(posName, left, top, none, none);
     },
     () => {
       // north
-      return NuRepositionCss('fixed', left, none, none, bottom);
+      return NuRepositionCss(posName, left, none, none, bottom);
     },
     () => {
       // east
-      return NuRepositionCss('fixed', left, none, none, none);
+      return NuRepositionCss(posName, left, none, none, none);
     },
     () => {
       // west
-      return NuRepositionCss('fixed', none, none, right, none);
+      return NuRepositionCss(posName, none, none, right, none);
     }
   );
 };
