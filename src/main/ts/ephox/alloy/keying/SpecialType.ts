@@ -12,6 +12,7 @@ import * as KeyingType from './KeyingType';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SpecialConfig } from './KeyingModeTypes';
 import { NativeSimulatedEvent, SimulatedEvent, EventFormat } from '../events/SimulatedEvent';
+import { stopEventForFirefox } from './KeyingTypes';
 
 const schema = [
   Fields.onKeyboardHandler('onSpace'),
@@ -24,10 +25,11 @@ const schema = [
   Fields.onKeyboardHandler('onUp'),
   Fields.onKeyboardHandler('onDown'),
   Fields.onKeyboardHandler('onEscape'),
+  FieldSchema.defaulted('stopSpaceKeyup', false),
   FieldSchema.option('focusIn')
 ];
 
-const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
+const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace()),
     KeyRules.rule(
@@ -52,13 +54,16 @@ const getRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEven
   ];
 };
 
+const getKeyupRules =  (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
+  return specialInfo.stopSpaceKeyup() ? [
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), stopEventForFirefox)
+  ] : [ ]
+};
+
 const focusIn = (component: AlloyComponent, specialInfo: SpecialConfig): Option<boolean>  => {
   return specialInfo.focusIn().bind((f) => {
     return f(component, specialInfo);
   });
 };
 
-const getEvents = () => ({ });
-const getApis = () => ({ });
-
-export default KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));

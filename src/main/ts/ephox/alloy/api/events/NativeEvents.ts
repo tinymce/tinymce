@@ -14,6 +14,7 @@ const mouseover = Fun.constant('mouseover');
 const focusin = Fun.constant('focusin');
 const focusout = Fun.constant('focusout');
 const keydown = Fun.constant('keydown');
+const keyup = Fun.constant('keyup');
 const input = Fun.constant('input');
 const change = Fun.constant('change');
 const focus = Fun.constant('focus');
@@ -38,6 +39,7 @@ export {
   focusout,
 
   keydown,
+  keyup,
 
   input,
   change,

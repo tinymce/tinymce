@@ -181,6 +181,7 @@ export interface SpecialConfigSpec extends GeneralKeyingConfigSpec {
   onUp?: KeyHandlerApi<SpecialConfig, Stateless>;
   onDown?: KeyHandlerApi<SpecialConfig, Stateless>;
   onEscape?: KeyHandlerApi<SpecialConfig, Stateless>;
+  stopSpaceKeyup?: boolean;
   focusIn?: (comp: AlloyComponent, info: SpecialConfig) => void;
 }
 
@@ -195,5 +196,6 @@ export interface SpecialConfig extends GeneralKeyingConfig {
   onUp?: () => KeyHandlerApi<SpecialConfig, Stateless>;
   onDown?: () => KeyHandlerApi<SpecialConfig, Stateless>;
   onEscape?: () => KeyHandlerApi<SpecialConfig, Stateless>;
+  stopSpaceKeyup: () => boolean;
   focusIn?: () => Option<(comp: AlloyComponent, info: SpecialConfig) => Option<boolean>>;
 }

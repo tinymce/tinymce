@@ -1,15 +1,15 @@
-import { Objects, FieldSchema } from '@ephox/boulder';
+import { FieldSchema, Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
+import { SketchSpec } from '../../api/component/SpecTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as ButtonBase from '../../ui/common/ButtonBase';
+import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action());
@@ -27,6 +27,9 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
+          // Note execution will capture keyup when the focus is on the button
+          // on Firefox, because otherwise it will fire a click event and double
+          // up on the action
           useSpace: true,
           useEnter: true
         })

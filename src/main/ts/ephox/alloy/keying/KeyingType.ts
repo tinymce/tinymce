@@ -15,9 +15,8 @@ import * as KeyRules from '../navigation/KeyRules';
 const typical = <C, S>(
   infoSchema: FieldProcessorAdt[],
   stateInit: (config: C) => BehaviourState,
-  getRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
-  getEvents: (config: C, state?: S) => AlloyEvents.AlloyEventRecord,
-  getApis,
+  getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
+  getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
   optFocusIn) => {
   const schema = () => {
     return infoSchema.concat([
@@ -27,7 +26,7 @@ const typical = <C, S>(
     ]);
   };
 
-  const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, keyingConfig: C, keyingState?: S): Option<boolean> => {
+  const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules, keyingConfig: C, keyingState?: S): Option<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
     return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
@@ -36,8 +35,7 @@ const typical = <C, S>(
   };
 
   const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
-    const otherEvents = getEvents(keyingConfig, keyingState);
-    const keyEvents = AlloyEvents.derive(
+    return AlloyEvents.derive(
       optFocusIn.map((focusIn) => {
         return AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
           focusIn(component, keyingConfig, keyingState, simulatedEvent);
@@ -45,20 +43,23 @@ const typical = <C, S>(
         });
       }).toArray().concat([
         AlloyEvents.run<SugarEvent>(NativeEvents.keydown(), (component, simulatedEvent) => {
-          processKey(component, simulatedEvent, keyingConfig, keyingState).each((_) => {
+          processKey(component, simulatedEvent, getKeydownRules, keyingConfig, keyingState).each((_) => {
+            simulatedEvent.stop();
+          });
+        }),
+        AlloyEvents.run<SugarEvent>(NativeEvents.keyup(), (component, simulatedEvent) => {
+          processKey(component, simulatedEvent, getKeyupRules, keyingConfig, keyingState).each((_) => {
             simulatedEvent.stop();
           });
         })
       ])
     );
-    return Merger.deepMerge(otherEvents, keyEvents);
   };
 
   const me = {
     schema,
     processKey,
-    toEvents,
-    toApis: getApis
+    toEvents
   };
 
   return me;
