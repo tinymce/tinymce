@@ -150,7 +150,7 @@ export default (): void => {
             {
               dom: {
                 tag: 'blockquote',
-                innerHtml: 'Hello'
+                innerHtml: 'I am a backdrop!'
               }
             }
           ]
