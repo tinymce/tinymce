@@ -31,7 +31,7 @@ export interface Substition { [ key: string ]: FieldProcessorAdt; }
 
 export interface Substitutions {
   internals: () => Substition;
-  externals: () => Substition;
+  externals: () => Record<string, () => any>;
 }
 
 // TODO: Make more functional if performance isn't an issue.

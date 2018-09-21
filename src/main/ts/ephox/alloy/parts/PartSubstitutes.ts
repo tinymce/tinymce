@@ -37,7 +37,10 @@ const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
       (data) => {
         const partSpec = detail.parts()[data.name()]();
         externals[data.name()] = Fun.constant(
-          combine(detail, data, partSpec[PartType.original()]()) // This is missing partValidated
+          data.factory().sketch(
+            combine(detail, data, partSpec[PartType.original()]()),
+            partSpec
+          ) // This is missing partValidated
         );
         // no placeholders
       },

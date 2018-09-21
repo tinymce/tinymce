@@ -140,7 +140,21 @@ export default (): void => {
       dragBlockClass: 'blocker-class',
 
       parts: {
-        blocker: { }
+        blocker: {
+          dom: {
+            tag: 'div',
+            classes: [ 'blocker-main' ],
+            styles: { }
+          },
+          components: [
+            {
+              dom: {
+                tag: 'blockquote',
+                innerHtml: 'I am a backdrop!'
+              }
+            }
+          ]
+        }
       }
     })
   );

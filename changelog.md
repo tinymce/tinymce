@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.43.0] - 2018-09-21
+### Added
+ - ModalDialog blocker part now can take components to put *before* dialog
+
+### Changed
+ - Group Part types now use a factory if present
+
 ## [3.42.0] - 2018-09-20
 ### Added
  - Alloy listens to the keyup event

@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Merger } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -72,10 +72,17 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.external({
-    factory: basic,
-    name: 'blocker',
-    defaults: Fun.constant({
-      dom: {
+    factory: {
+      sketch: (spec, detail) => {
+        // Merging should take care of the uid
+        return Merger.merge(spec, {
+          dom: detail.dom(),
+          components: detail.components()
+        });
+      }
+    },
+    schema: [
+      FieldSchema.defaulted('dom', {
         tag: 'div',
         styles: {
           position: 'fixed',
@@ -84,8 +91,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           right: '0px',
           bottom: '0px'
         }
-      }
-    })
+      }),
+      FieldSchema.defaulted('components', [ ])
+    ],
+    name: 'blocker'
   })
 ]);
 
