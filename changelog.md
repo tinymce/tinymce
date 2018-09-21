@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.44.0] - 2018-09-21
+### Fixed
+ - Keyboard navigating through the toolbar now skips disabled buttons.
+
 ## [3.43.0] - 2018-09-21
 ### Added
  - ModalDialog blocker part now can take components to put *before* dialog
