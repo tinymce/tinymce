@@ -40,6 +40,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   parts: {
     blocker: {
       dom?: Partial<RawDomSchema>;
+      components?: AlloySpec[];
     }
   };
 }
