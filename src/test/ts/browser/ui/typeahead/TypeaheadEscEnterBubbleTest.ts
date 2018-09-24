@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result, Fun } from '@ephox/katamari';
-import { Value, Node } from '@ephox/sugar';
+import { Arr, Future, Result } from '@ephox/katamari';
+import { Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -28,6 +28,13 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
             uid: 'test-type',
             markers: {
               openClass: 'test-typeahead-open'
+            },
+
+            model: {
+              // If selectsOver is true, then highlighting happens automatically, and there isn't
+              // really a "previewing" mode. Set this to false so that the highlighting
+              // isn't fired automatically when the menu opens
+              selectsOver: false
             },
 
             fetch () {
@@ -84,8 +91,18 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       steps.sWaitForNoMenu('Enter to close menu'),
       Keyboard.sKeydown(doc,  Keys.enter(), {}),
-
       store.sAssertEq('Should have item1 and onExecute', ['1(input-div-li)', '***onExecute***']),
+
+      FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element(), 'input'),
+      FocusTools.sSetActiveValue(doc, 'al'),
+      steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
+      steps.sWaitForMenu('"Typing" should activate menu'),
+      store.sClear,
+      store.sAssertEq('Sanity check that clear worked', [ ]),
+      Keyboard.sKeydown(doc, Keys.enter(), { }),
+      steps.sWaitForNoMenu('Enter should close menu (in previewing mode)'),
+      store.sAssertEq('Pressing <enter> in preview mode should execute', [ '***onExecute***' ]),
+
       GuiSetup.mRemoveStyles,
       GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27']),
     ];

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.45.0] - 2018-09-22
+### Changed
+ - When previewing in a typeahead, pressing *enter* fires an execute
+
 ## [3.44.0] - 2018-09-21
 ### Fixed
  - Keyboard navigating through the toolbar now skips disabled buttons.
