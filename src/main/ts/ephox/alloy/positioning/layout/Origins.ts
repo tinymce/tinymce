@@ -63,11 +63,11 @@ const positionWithDirection = (posName, decision, x, y, width, height) => {
     },
     () => {
       // east
-      return NuRepositionCss(posName, left, none, none, none);
+      return NuRepositionCss(posName, left, top, none, none);
     },
     () => {
       // west
-      return NuRepositionCss(posName, none, none, right, none);
+      return NuRepositionCss(posName, none, top, right, none);
     }
   );
 };
