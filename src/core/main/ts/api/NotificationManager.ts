@@ -114,7 +114,7 @@ export default function (editor) {
     });
 
     editor.on('remove', function () {
-      Arr.each(notifications, function (notification) {
+      Arr.each(notifications.slice(), function (notification) {
         getImplementation().close(notification);
       });
     });
