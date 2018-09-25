@@ -6,6 +6,8 @@ import { Option } from './Option';
 // Use the native keys if it is available (IE9+), otherwise fall back to manually filtering
 export const keys = Object.keys;
 
+export const hasOwnProperty = Object.hasOwnProperty;
+
 export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => void) {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
@@ -80,4 +82,15 @@ export const values = function <T> (obj: T) {
 
 export const size = function (obj: {}) {
   return keys(obj).length;
+};
+
+
+/** get :: (JsObj(k, v), k) -> Option v */
+export const get = function <T, K extends keyof T> (obj: T, key: K): Option<T[K]> {
+  return has(obj, key) ? Option.some(obj[key]) : Option.none();
+};
+
+/** has :: (JsObj(k, v), k) -> Bool */
+export const has = function <T, K extends keyof T> (obj: T, key: K): boolean {
+  return hasOwnProperty.call(obj, key);
 };
