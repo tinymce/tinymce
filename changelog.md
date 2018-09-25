@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.45.2] - 2018-09-25
+### Fixed
+ - East and West layouts now have a top value
+
 ## [3.45.0] - 2018-09-24
 ### Changed
  - When previewing in a typeahead, pressing *enter* fires an execute
