@@ -33,7 +33,7 @@ const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchorin
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
-  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
   // when calculating anchors
@@ -42,6 +42,11 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   const oldVisibility = Css.getRaw(placee.element(), 'visibility');
   // INVESTIGATE: Will hiding the popup cause issues for focus?
   Css.set(placee.element(), 'visibility', 'hidden');
+
+  // We need to calculate the origin (esp. the bounding client rect) *after* we have done
+  // all the preprocessing of the component and placee. Otherwise, the relative positions
+  // (bottom and right) will be using the wrong dimensions
+  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
   const placer = anchorage.placement();
   placer(component, posConfig, anchorage, origin).each((anchoring) => {
