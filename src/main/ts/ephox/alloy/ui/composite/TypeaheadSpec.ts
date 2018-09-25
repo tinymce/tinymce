@@ -178,12 +178,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         const sandboxIsOpen = Sandboxing.isOpen(sandbox);
 
-        if (sandboxIsOpen) {
-          // 'Previewing' means that items are shown but none has been actively selected
-          if (detail.previewing().get() === true){
-            return Option.none()
-          }
-
+        // 'Previewing' means that items are shown but none has been actively selected by the user
+        if (sandboxIsOpen && !detail.previewing().get()) {
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
           return Composing.getCurrent(sandbox).bind((menu) => {
@@ -194,7 +190,13 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           });
         } else {
           const currentValue = Representing.getValue(comp) as TypeaheadData;
+          AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
           detail.onExecute()(sandbox, comp, currentValue);
+
+          // If we're open and previewing, close the sandbox after firing execute.
+          if (sandboxIsOpen) {
+            Sandboxing.close(sandbox);
+          }
           return Option.some(true);
         }
       }
