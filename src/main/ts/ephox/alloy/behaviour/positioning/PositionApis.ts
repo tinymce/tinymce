@@ -34,7 +34,6 @@ const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchorin
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
 
-
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
   // when calculating anchors
   Css.set(placee.element(), 'position', 'fixed');
