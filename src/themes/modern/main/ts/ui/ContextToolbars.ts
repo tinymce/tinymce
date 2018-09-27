@@ -326,7 +326,7 @@ const addContextualToolbars = function (editor) {
     editor.contextToolbars = {};
   });
 
-  editor.shortcuts.add('ctrl+shift+e > ctrl+shift+p', '', function () {
+  editor.shortcuts.add('ctrl+F9', '', function () {
     const match = findFrontMostMatch(editor.selection.getNode());
     if (match && match.toolbar.panel) {
       match.toolbar.panel.items()[0].focus();
