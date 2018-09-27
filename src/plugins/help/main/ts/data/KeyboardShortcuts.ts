@@ -33,7 +33,7 @@ const shortcuts = [
   { shortcut: 'Alt + F10', action: 'Focus to toolbar' },
   { shortcut: 'Alt + F11', action: 'Focus to element path' },
   {
-    shortcut: 'Ctrl + Shift + P > Ctrl + Shift + P',
+    shortcut: 'Ctrl + F9',
     action: 'Focus to contextual toolbar'
   },
   { shortcut: meta + ' + K', action: 'Insert link (if link plugin activated)' },
