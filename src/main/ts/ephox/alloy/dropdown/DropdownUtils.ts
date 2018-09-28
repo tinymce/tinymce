@@ -1,5 +1,5 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width, Element } from '@ephox/sugar';
+import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
@@ -19,7 +19,7 @@ import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
 
-export enum HighlightOnOpen { HighlightFirst, HighlightNone };
+export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
@@ -104,7 +104,7 @@ const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata:
 const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
-  Width.set(menu.element(), buttonWidth);
+  Css.set(menu.element(), 'min-width', buttonWidth + 'px');
 };
 
 interface SinkDetail {
