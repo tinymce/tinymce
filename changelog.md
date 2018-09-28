@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.45.6] - 2018-09-28
+### Remove
+ - Hard-coded background color of blocker
+
 ## [3.45.4] - 2018-09-25
 ### Fixed
  - Origins are calculated after preprocessing both the positioning container and the component to be placed
