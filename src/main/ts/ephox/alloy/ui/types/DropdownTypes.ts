@@ -23,6 +23,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   // TODO test getHotspot
   getHotspot: () => (comp: AlloyComponent) => Option<AlloyComponent>;
   matchWidth: () => boolean;
+  useMinWidth: () => boolean;
   sandboxClasses: () => string[];
   sandboxBehaviours: () => SketchBehaviours;
 }
@@ -59,6 +60,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
     menu: Partial<TieredMenuSpec>;
   };
   matchWidth?: boolean;
+  useMinWidth?: boolean;
   role?: string;
 
 }

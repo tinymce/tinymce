@@ -101,10 +101,14 @@ const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata:
   return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
-  Css.set(menu.element(), 'min-width', buttonWidth + 'px');
+  if (useMinWidth) {
+    Css.set(menu.element(), 'min-width', buttonWidth + 'px');
+  } else {
+    Width.set(menu.element(), buttonWidth);
+  }
 };
 
 interface SinkDetail {
@@ -134,7 +138,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
-    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu); }
+    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu, detail.useMinWidth()); }
     detail.onOpen()(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };

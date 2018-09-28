@@ -24,6 +24,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.option('lazySink'),
   FieldSchema.defaulted('matchWidth', false),
+  FieldSchema.defaulted('useMinWidth', false),
   FieldSchema.option('role')
 ].concat(
   SketcherFields.sandboxFields()
