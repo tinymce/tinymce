@@ -54,8 +54,6 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
               'width': '100%',
               'height': '100%',
               'position': 'fixed',
-              'opacity': '0.5',
-              'background': 'rgb(100, 100, 0)',
               'z-index': '1000000000000000'
             },
             classes: [ dragConfig.blockerClass() ]
