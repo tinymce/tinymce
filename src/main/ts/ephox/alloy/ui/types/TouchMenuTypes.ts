@@ -35,9 +35,6 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   lazySink: () => Option<() => Result<AlloyComponent, Error>>;
 
   fetch: () => (comp: AlloyComponent) => Future<ItemSpec[]>;
-
-  // FIX: Clean up DropdownUtils, so this isn't required here.
-  matchWidth: () => boolean;
 }
 
 export interface TouchMenuSpec extends CompositeSketchSpec {
@@ -66,6 +63,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
   matchWidth?: boolean;
+  useMinWidth?: boolean;
 
   parts: {
     menu: PartialMenuSpec,

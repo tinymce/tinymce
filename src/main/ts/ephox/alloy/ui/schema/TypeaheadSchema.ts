@@ -40,6 +40,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),
   FieldSchema.defaulted('matchWidth', true),
+  FieldSchema.defaulted('useMinWidth', false),
   FieldSchema.defaulted('dismissOnBlur', true),
   Fields.markers([ 'openClass' ]),
   FieldSchema.option('initialData'),

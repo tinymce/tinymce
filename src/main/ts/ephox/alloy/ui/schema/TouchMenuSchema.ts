@@ -44,6 +44,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('role'),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaulted('matchWidth', true),
+  FieldSchema.defaulted('useMinWidth', false),
 
   Fields.onHandler('onClosed'),
 

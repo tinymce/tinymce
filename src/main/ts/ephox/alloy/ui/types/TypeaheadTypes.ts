@@ -62,6 +62,8 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   markers: {
     openClass: string;
   };
+  matchWidth?: boolean;
+  useMinWidth?: boolean;
 
   model?: {
     getDisplayText?: (itemData: TypeaheadData) => string;
