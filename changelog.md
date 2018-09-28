@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.46.0] - 2019-09-28
+### Added
+ - useMinWidth property to dropdown and split dropdown specs, to modify matchWidth's behaviour. When true, matchWidth sets min-width, when false it sets width.
+
 ## [3.45.6] - 2018-09-28
 ### Remove
  - Hard-coded background color of blocker

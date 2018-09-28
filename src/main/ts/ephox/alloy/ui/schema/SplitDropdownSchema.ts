@@ -24,7 +24,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
-  FieldSchema.defaulted('matchWidth', false)
+  FieldSchema.defaulted('matchWidth', false),
+  FieldSchema.defaulted('useMinWidth', false)
 ].concat(
   SketcherFields.sandboxFields()
 ));

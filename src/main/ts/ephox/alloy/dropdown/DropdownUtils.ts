@@ -1,5 +1,5 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width, Element } from '@ephox/sugar';
+import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
@@ -19,7 +19,7 @@ import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
 
-export enum HighlightOnOpen { HighlightFirst, HighlightNone };
+export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
@@ -101,10 +101,14 @@ const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata:
   return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
-  Width.set(menu.element(), buttonWidth);
+  if (useMinWidth) {
+    Css.set(menu.element(), 'min-width', buttonWidth + 'px');
+  } else {
+    Width.set(menu.element(), buttonWidth);
+  }
 };
 
 interface SinkDetail {
@@ -134,7 +138,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
-    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu); }
+    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu, detail.useMinWidth()); }
     detail.onOpen()(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
