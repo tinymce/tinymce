@@ -28,7 +28,9 @@ tinymce.init({
     id: "image-plugin-preview", 
     label: 'Custom Image preview',  
     width: 160, 
-    height: 160 
+    height: 160,
+    emptyImgSrc: null,
+    brokenImgSrc: null
   },
   images_upload_url: 'postAcceptor.php',
   file_picker_callback (callback, value, meta) {

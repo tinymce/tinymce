@@ -75,7 +75,6 @@ export default {
   getClassList,
   hasDescription,
   getPreview,
-  // previewCreds,
   hasImageTitle,
   hasImageCaption,
   getImageList,
