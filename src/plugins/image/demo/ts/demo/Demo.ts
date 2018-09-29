@@ -24,6 +24,12 @@ tinymce.init({
     { title: 'Class1', value: 'class1' },
     { title: 'Class2', value: 'class2' }
   ],
+  image_preview: { 
+    id: "image-plugin-preview", 
+    label: 'Custom Image preview',  
+    width: 160, 
+    height: 160 
+  },
   images_upload_url: 'postAcceptor.php',
   file_picker_callback (callback, value, meta) {
     callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });

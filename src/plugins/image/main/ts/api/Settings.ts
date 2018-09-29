@@ -28,6 +28,10 @@ const hasDescription = function (editor) {
   return editor.settings.image_description === false ? false : true;
 };
 
+const getPreview = function (editor) {
+  return editor.getParam('image_preview', false);
+};
+
 const hasImageTitle = function (editor) {
   return editor.settings.image_title === true ? true : false;
 };
@@ -70,6 +74,8 @@ export default {
   getPrependUrl,
   getClassList,
   hasDescription,
+  getPreview,
+  // previewCreds,
   hasImageTitle,
   hasImageCaption,
   getImageList,

@@ -30,6 +30,10 @@ const onSrcChange = function (evt, editor) {
 
     control.value(srcURL);
 
+    if(Settings.getPreview(editor)){
+      Utils.setImageToPreview(editor, srcURL);
+    }
+
     Utils.getImageSize(editor.documentBaseURI.toAbsolute(control.value()), function (data) {
       if (data.width && data.height && Settings.hasDimensions(editor)) {
         rootControl.find('#width').value(data.width);
@@ -59,6 +63,18 @@ const getGeneralItems = function (editor, imageListCtrl) {
     },
     imageListCtrl
   ];
+
+  if (Settings.getPreview(editor)) {
+    let params = Settings.getPreview(editor)
+    generalFormItems.push({ 
+      name: 'preview', 
+      type: 'container', 
+      id: params.id,
+      label: params.label || 'Image preview', 
+      minWidth: params.width || 160,
+      minHeight: params.height || 160,
+    });
+  }
 
   if (Settings.hasDescription(editor)) {
     generalFormItems.push({ name: 'alt', type: 'textbox', label: 'Image description' });

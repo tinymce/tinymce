@@ -57,6 +57,10 @@ export default function (editor) {
           }
 
           win.find('#src').value(e.control.value()).fire('change');
+          
+          if(Settings.getPreview(editor)) {
+            Utils.setImageToPreview(editor, e.control.value())
+          }
         },
         onPostRender () {
           /*eslint consistent-this: 0*/
@@ -94,6 +98,11 @@ export default function (editor) {
         body: MainTab.getGeneralItems(editor, imageListCtrl),
         onSubmit: Fun.curry(submitForm, editor)
       });
+    }
+
+    const currentImageSrc = win.find('#src').value();
+    if(Settings.getPreview(editor)) {
+      Utils.setImageToPreview(editor, currentImageSrc)
     }
 
     SizeManager.syncSize(win);
