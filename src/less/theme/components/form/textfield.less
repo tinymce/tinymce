@@ -17,7 +17,7 @@
 @textfield-pad-y: (@textfield-height - @textfield-line-height - (@textfield-border-width * 2  ) ) / 2;
 @textfield-text-color: @text-color;
 @textfield-focus-border-color: @color-tint;
-@textfield-focus-box-shadow: 0 0 0 1px @textfield-focus-border-color;
+@textfield-focus-box-shadow: none;
 @textfield-focus-outline: none;
 
 .tox-textfield {
@@ -38,6 +38,12 @@
   outline: @textfield-outline;
   padding: @textfield-pad-y @textfield-pad-x;
   width: 100%;
+}
+
+.tox-textfield:focus {
+  border-color: @textfield-focus-border-color;
+  box-shadow: @textfield-focus-box-shadow;
+  outline: @textfield-focus-outline;
 }
 
 .tox-toolbar-textfield:extend(.tox .tox-textfield) {
