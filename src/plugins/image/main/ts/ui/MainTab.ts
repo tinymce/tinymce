@@ -1,113 +1,72 @@
-import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Utils from '../core/Utils';
-import SizeManager from './SizeManager';
+import { ImageDialogInfo } from './DialogTypes';
+import { Arr } from '@ephox/katamari';
 
-const onSrcChange = function (evt, editor) {
-  let srcURL, prependURL, absoluteURLPattern;
-  const meta = evt.meta || {};
-  const control = evt.control;
-  const rootControl = control.rootControl;
-  const imageListCtrl = rootControl.find('#image-list')[0];
+const makeItems = function (info: ImageDialogInfo) {
+  const imageUrl = {
+    name: 'src',
+    type: 'urlinput',
+    filetype: 'image',
+    label: 'Source'
+  };
+  const imageList = info.imageList.map((items) => ({
+    name: 'images',
+    type: 'selectbox',
+    label: 'Image list',
+    items
+  }));
+  const imageDescription = {
+    name: 'alt',
+    type: 'input',
+    label: 'Image description'
+  };
+  const imageTitle = {
+    name: 'title',
+    type: 'input',
+    label: 'Image title'
+  };
+  const imageDimensions = {
+    name: 'dimensions',
+    type: 'sizeinput'
+  };
+  // TODO: the original listbox supported styled items but bridge does not seem to support this
+  const classList = info.classList.map((items) => ({
+    name: 'classes',
+    type: 'selectbox',
+    label: 'Class',
+    items
+  }));
+  const caption = {
+    name: 'caption',
+    type: 'checkbox',
+    label: 'Show caption'
+  };
 
-  if (imageListCtrl) {
-    imageListCtrl.value(editor.convertURL(control.value(), 'src'));
-  }
-
-  Tools.each(meta, function (value, key) {
-    rootControl.find('#' + key).value(value);
-  });
-
-  if (!meta.width && !meta.height) {
-    srcURL = editor.convertURL(control.value(), 'src');
-
-    // Pattern test the src url and make sure we haven't already prepended the url
-    prependURL = Settings.getPrependUrl(editor);
-    absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i');
-    if (prependURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, prependURL.length) !== prependURL) {
-      srcURL = prependURL + srcURL;
-    }
-
-    control.value(srcURL);
-
-    Utils.getImageSize(editor.documentBaseURI.toAbsolute(control.value()), function (data) {
-      if (data.width && data.height && Settings.hasDimensions(editor)) {
-        rootControl.find('#width').value(data.width);
-        rootControl.find('#height').value(data.height);
-        SizeManager.syncSize(rootControl);
-      }
-    });
-  }
+  return Arr.flatten<any>([
+    [imageUrl],
+    imageList.toArray(),
+    info.hasDescription ? [imageDescription] : [],
+    info.hasImageTitle ? [imageTitle] : [],
+    info.hasDimensions ? [imageDimensions] : [],
+    [{
+      type: 'grid',
+      columns: 2,
+      items: Arr.flatten([
+        classList.toArray(),
+        info.hasImageCaption ? [caption] : []
+      ])
+    }]
+  ]);
 };
 
-const onBeforeCall = function (evt) {
-  evt.meta = evt.control.rootControl.toJSON();
-};
-
-const getGeneralItems = function (editor, imageListCtrl) {
-  const generalFormItems = [
-    {
-      name: 'src',
-      type: 'filepicker',
-      filetype: 'image',
-      label: 'Source',
-      autofocus: true,
-      onchange (evt) {
-        onSrcChange(evt, editor);
-      },
-      onbeforecall: onBeforeCall
-    },
-    imageListCtrl
-  ];
-
-  if (Settings.hasDescription(editor)) {
-    generalFormItems.push({ name: 'alt', type: 'textbox', label: 'Image description' });
-  }
-
-  if (Settings.hasImageTitle(editor)) {
-    generalFormItems.push({ name: 'title', type: 'textbox', label: 'Image Title' });
-  }
-
-  if (Settings.hasDimensions(editor)) {
-    generalFormItems.push(
-      SizeManager.createUi()
-    );
-  }
-
-  if (Settings.getClassList(editor)) {
-    generalFormItems.push({
-      name: 'class',
-      type: 'listbox',
-      label: 'Class',
-      values: Utils.buildListItems(
-        Settings.getClassList(editor),
-        function (item) {
-          if (item.value) {
-            item.textStyle = function () {
-              return editor.formatter.getCssText({ inline: 'img', classes: [item.value] });
-            };
-          }
-        }
-      )
-    });
-  }
-
-  if (Settings.hasImageCaption(editor)) {
-    generalFormItems.push({ name: 'caption', type: 'checkbox', label: 'Caption' });
-  }
-
-  return generalFormItems;
-};
-
-const makeTab = function (editor, imageListCtrl) {
+const makeTab = function (info: ImageDialogInfo) {
   return {
     title: 'General',
     type: 'form',
-    items: getGeneralItems(editor, imageListCtrl)
+    items: makeItems(info)
   };
 };
 
-export default {
+export const MainTab = {
   makeTab,
-  getGeneralItems
+  makeItems
 };

@@ -1,13 +1,13 @@
 import { Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FormatChangeSelectionTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -22,6 +22,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FormatChangeSelectionTest', functio
   }, {
     plugins: '',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

@@ -62,6 +62,15 @@ const loadTheme = function (scriptLoader, editor, suffix, callback) {
   }
 };
 
+const loadIcons = (settings, editor) => {
+  const iconPackName: any = settings.icons;
+
+  if (Type.isString(iconPackName)) {
+    const urlString = `${editor.editorManager.baseURL}/icons/${Tools.trim(iconPackName)}/icons.js`;
+    ScriptLoader.ScriptLoader.add(urlString);
+  }
+};
+
 const loadPlugins = function (settings, suffix) {
   if (Tools.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
@@ -107,6 +116,7 @@ const loadScripts = function (editor, suffix) {
 
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
+    loadIcons(editor.settings, editor);
     loadPlugins(editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {

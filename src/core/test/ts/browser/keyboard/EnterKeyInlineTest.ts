@@ -1,7 +1,7 @@
 import { Chain,  Keys,  Logger,  Pipeline } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { ActionChains, ApiChains, Editor } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function () {
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function 
   Theme();
 
   const settings = {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     inline: true
   };
 

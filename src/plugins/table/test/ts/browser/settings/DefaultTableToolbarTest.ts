@@ -4,16 +4,18 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SelectorFilter } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from '../../../../../../themes/silver/main/ts/Theme';
 
 import TableTestUtils from '../../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  ModernTheme();
+/*
+ *
+ * NOTE: This is a context toolbar test. Can't migrate yet.
+ *
+ */
+UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', (success, failure) => {
   TablePlugin();
+  Theme();
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
@@ -37,6 +39,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', func
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

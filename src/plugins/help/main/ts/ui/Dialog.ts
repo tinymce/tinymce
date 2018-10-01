@@ -10,27 +10,36 @@
 
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
-import ButtonsRow from './ButtonsRow';
+import VersionTab from './VersionTab';
 
-const open = function (editor, pluginUrl) {
+const opener = function (editor, pluginUrl) {
   return function () {
-    editor.windowManager.open({
-      title: 'Help',
-      bodyType: 'tabpanel',
-      layout: 'flex',
-      body: [
-        KeyboardShortcutsTab.makeTab(),
-        PluginsTab.makeTab(editor)
-      ],
-      buttons: ButtonsRow.makeRow(),
-      onPostRender () {
-        const title = this.getEl('title');
-        title.innerHTML = '<img src="' + pluginUrl + '/img/logo.png" alt="TinyMCE Logo" style="display: inline-block; width: 200px; height: 50px">';
+    editor.windowManager.open(
+      {
+        title: 'Help',
+        size: 'medium',
+        body: {
+          type: 'tabpanel',
+          tabs: [
+            KeyboardShortcutsTab.tab(),
+            PluginsTab.tab(editor),
+            VersionTab.tab()
+          ]
+        },
+        buttons: [
+          {
+            type: 'cancel',
+            name: 'cancel',
+            text: 'Close',
+            primary: true
+          }
+        ],
+        initialData: {}
       }
-    });
+    );
   };
 };
 
 export default {
-  open
+  opener
 };

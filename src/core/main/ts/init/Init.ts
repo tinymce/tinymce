@@ -8,13 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Type } from '@ephox/katamari';
+import { Type, Obj } from '@ephox/katamari';
 import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
 import Tools from '../api/util/Tools';
+import { Editor } from '../api/Editor';
+import { IconManager } from '../api/IconManager';
 
 const DOM = DOMUtils.DOM;
 
@@ -54,6 +56,14 @@ const initPlugins = function (editor) {
 
   Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
+  });
+};
+
+const initIcons = (editor: Editor) => {
+  const iconPackName: string = Tools.trim(editor.settings.icons);
+
+  Obj.each(IconManager.get(iconPackName).icons, (svgData, name) => {
+    editor.ui.registry.addIcon(name, svgData);
   });
 };
 
@@ -182,6 +192,7 @@ const init = function (editor) {
 
   initTheme(editor);
   initPlugins(editor);
+  initIcons(editor);
   boxInfo = renderThemeUi(editor);
   editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
 

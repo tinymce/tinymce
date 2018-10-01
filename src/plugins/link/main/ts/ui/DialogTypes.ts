@@ -1,0 +1,71 @@
+import { Option } from '@ephox/katamari';
+import { Types } from '@ephox/bridge';
+import { HTMLAnchorElement } from '@ephox/dom-globals';
+
+export interface ListValue {
+  text: string;
+  value: string;
+}
+
+export interface ListGroup {
+  text: string;
+  items: ListItem[];
+}
+
+export type ListItem = ListValue | ListGroup;
+
+export interface LinkDialogInfo {
+  anchor: {
+    url: Option<string>;
+    text: Option<string>;
+    target: Option<string>;
+    rel: Option<string>;
+    linkClass: Option<string>;
+    title: Option<string>;
+  };
+  catalogs: {
+    link: Option<ListItem[]>;
+    targets: Option<ListItem[]>;
+    rels: Option<ListItem[]>;
+    classes: Option<ListItem[]>;
+    anchor: Option<ListItem[]>;
+  };
+  flags: {
+    titleEnabled: boolean;
+  };
+  optNode: Option<HTMLAnchorElement>;
+  onSubmit?: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => void;
+}
+
+export interface LinkDialogUrlData {
+  value: string;
+  meta?: LinkUrlMeta;
+}
+
+export interface LinkDialogData {
+  url: LinkDialogUrlData;
+  text: string;
+  title: string;
+  anchor: string;
+  link: string;
+  rel: string;
+  target: string;
+  classz: string;
+}
+
+export interface LinkDialogOutput {
+  href: string;
+  text: string;
+  target: string;
+  rel: string;
+  class: string;
+  title: string;
+}
+
+interface LinkUrlMeta {
+  text?: string;
+  attach: () => void;
+  original: {
+    value: string;
+  };
+}

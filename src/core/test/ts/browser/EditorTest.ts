@@ -4,7 +4,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/api/util/URI';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -453,6 +453,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     extended_valid_elements: 'custom1,custom2,script[*]',
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

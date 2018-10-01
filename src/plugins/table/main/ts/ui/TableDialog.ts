@@ -8,20 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Tools from 'tinymce/core/api/util/Tools';
 import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import Helpers from './Helpers';
-import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from '../api/Settings';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import { Element } from '@ephox/dom-globals';
+import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss } from '../api/Settings';
+import Helpers, { TableData } from './Helpers';
 
 // Explore the layers of the table till we find the first layer of tds or ths
-function styleTDTH(dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) {
+const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
     dom.setStyle(elm, name, value);
   } else {
@@ -31,37 +31,12 @@ function styleTDTH(dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
       }
     }
   }
-}
-
-const extractDataFromElement = function (editor, tableElm) {
-  const dom = editor.dom;
-  const data: any = {
-    width: dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width'),
-    height: dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height'),
-    cellspacing: dom.getStyle(tableElm, 'border-spacing') || dom.getAttrib(tableElm, 'cellspacing'),
-    cellpadding: dom.getAttrib(tableElm, 'data-mce-cell-padding') || dom.getAttrib(tableElm, 'cellpadding') || Styles.getTDTHOverallStyle(editor.dom, tableElm, 'padding'),
-    border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') || Styles.getTDTHOverallStyle(editor.dom, tableElm, 'border'),
-    borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
-    caption: !!dom.select('caption', tableElm)[0],
-    class: dom.getAttrib(tableElm, 'class')
-  };
-
-  Tools.each('left center right'.split(' '), function (name) {
-    if (editor.formatter.matchNode(tableElm, 'align' + name)) {
-      data.align = name;
-    }
-  });
-
-  if (hasAdvancedTableTab(editor)) {
-    Tools.extend(data, Helpers.extractAdvancedStyles(dom, tableElm));
-  }
-  return data;
 };
 
-const applyDataToElement = function (editor, tableElm, data) {
+const applyDataToElement = (editor, tableElm, data) => {
   const dom = editor.dom;
   const attrs: any = {};
-  let styles: any = {};
+  const styles: any = {};
 
   attrs.class = data.class;
 
@@ -76,12 +51,6 @@ const applyDataToElement = function (editor, tableElm, data) {
   if (shouldStyleWithCss(editor)) {
     styles['border-width'] = Util.addSizeSuffix(data.border);
     styles['border-spacing'] = Util.addSizeSuffix(data.cellspacing);
-
-    Tools.extend(attrs, {
-      'data-mce-border-color': data.borderColor,
-      'data-mce-cell-padding': data.cellpadding,
-      'data-mce-border': data.border
-    });
   } else {
     Tools.extend(attrs, {
       border: data.border,
@@ -92,47 +61,45 @@ const applyDataToElement = function (editor, tableElm, data) {
 
   // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
   // will control whether child TD/THs should be processed or not
-  if (shouldStyleWithCss(editor)) {
-    if (tableElm.children) {
-      for (let i = 0; i < tableElm.children.length; i++) {
+  if (shouldStyleWithCss(editor) && tableElm.children) {
+    for (let i = 0; i < tableElm.children.length; i++) {
+      styleTDTH(dom, tableElm.children[i], {
+        'border-width': Util.addSizeSuffix(data.border),
+        'padding': Util.addSizeSuffix(data.cellpadding),
+      });
+      if (hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
-          'border-width': Util.addSizeSuffix(data.border),
-          'border-color': data.borderColor,
-          'padding': Util.addSizeSuffix(data.cellpadding)
+          'border-color': data.bordercolor,
         });
       }
     }
   }
 
-  if (data.style) {
-    // merge the styles from Advanced tab on top
-    Tools.extend(styles, dom.parseStyle(data.style));
-  } else {
-    // ... otherwise take styles from original elm and update them
-    styles = Tools.extend({}, dom.parseStyle(dom.getAttrib(tableElm, 'style')), styles);
+  if (hasAdvancedTableTab(editor)) {
+    styles['background-color'] = data.backgroundcolor;
+    styles['border-color'] = data.bordercolor;
+    styles['border-style'] = data.borderstyle;
   }
 
   attrs.style = dom.serializeStyle(styles);
   dom.setAttribs(tableElm, attrs);
 };
 
-const onSubmitTableForm = function (editor, tableElm, evt) {
+const onSubmitTableForm = (editor, tableElm, api) => {
   const dom = editor.dom;
   let captionElm;
-  let data;
+  const data = api.getData();
 
-  if (hasAdvancedTableTab(editor)) {
-    Helpers.syncAdvancedStyleFields(editor, evt);
-  }
-  data = evt.control.rootControl.toJSON();
+  api.close();
 
-  if (data.class === false) {
+  if (data.class === '') {
     delete data.class;
   }
 
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     if (!tableElm) {
-      tableElm = InsertTable.insert(editor, data.cols || 1, data.rows || 1);
+      // Cases 1 & 3 - inserting a table
+      tableElm = InsertTable.insert(editor, data.cols || '1', data.rows || '1');
     }
 
     applyDataToElement(editor, tableElm, data);
@@ -140,18 +107,19 @@ const onSubmitTableForm = function (editor, tableElm, evt) {
     // Toggle caption on/off
     captionElm = dom.select('caption', tableElm)[0];
 
-    if (captionElm && !data.caption) {
+    if (captionElm && data.caption !== 'checked') {
       dom.remove(captionElm);
     }
 
-    if (!captionElm && data.caption) {
+    if (!captionElm && data.caption === 'checked') {
       captionElm = dom.create('caption');
       captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
       tableElm.insertBefore(captionElm, tableElm.firstChild);
     }
 
-    Styles.unApplyAlign(editor, tableElm);
-    if (data.align) {
+    if (data.align === '') {
+      Styles.unApplyAlign(editor, tableElm);
+    } else {
       Styles.applyAlign(editor, tableElm, data.align);
     }
 
@@ -160,116 +128,192 @@ const onSubmitTableForm = function (editor, tableElm, evt) {
   });
 };
 
-const open = function (editor, isProps?) {
+const open = (editor, isNew?) => {
   const dom = editor.dom;
-  let tableElm, colsCtrl, rowsCtrl, classListCtrl, data: any = {}, generalTableForm;
+  let tableElm, data: TableData = {
+    height: '',
+    width: '100%',
+    cellspacing: '',
+    cellpadding: '',
+    caption: 'unchecked',
+    class: '',
+    align: '',
+    type: '',
+    border: ''
+  };
 
-  if (isProps === true) {
+  // Cases for creation/update of tables:
+  // 1. isNew == true - called by mceInsertTable - we are inserting a new table so we don't care what the selection's parent is,
+  //    and we need to add cols and rows input fields to the dialog
+  // 2. isNew == false && selection parent is a table - update the table
+  // 3. isNew == false && selection parent isn't a table - open dialog with default values and insert a table
+
+  if (isNew === false) {
     tableElm = dom.getParent(editor.selection.getStart(), 'table');
     if (tableElm) {
-      data = extractDataFromElement(editor, tableElm);
+      // Case 2 - isNew == false && table parent
+      data = Helpers.extractDataFromTableElement(editor, tableElm, hasAdvancedTableTab(editor));
+    } else {
+      // Case 3 - isNew == false && non-table parent. data is set to basic defaults so just add the adv properties if needed
+      if (hasAdvancedTableTab(editor)) {
+        Tools.extend(data, {
+          borderstyle: '',
+          bordercolor: '',
+          backgroundcolor: '',
+        });
+      }
     }
   } else {
-    colsCtrl = { label: 'Cols', name: 'cols' };
-    rowsCtrl = { label: 'Rows', name: 'rows' };
+    // Case 1 - isNew == true. We're inserting a new table so use defaults and add cols and rows + adv properties.
+    Tools.extend(data, {
+      cols: '1',
+      rows: '1'
+    });
+    if (hasAdvancedTableTab(editor)) {
+      Tools.extend(data, {
+        borderstyle: '',
+        bordercolor: '',
+        backgroundcolor: '',
+      });
+    }
   }
 
-  if (getTableClassList(editor).length > 0) {
+  const hasClasses = getTableClassList(editor).length > 0;
+
+  if (hasClasses) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
+  }
 
-    classListCtrl = {
+  const rowColCountItems = !isNew ? [] : [
+    {
+      type: 'input',
+      name: 'cols',
+      label: 'Cols'
+    },
+    {
+      type: 'input',
+      name: 'rows',
+      label: 'Rows'
+    }
+  ];
+
+  const alwaysItems = [
+    {
+      type: 'input',
+      name: 'width',
+      label: 'Width'
+    },
+    {
+      type: 'input',
+      name: 'height',
+      label: 'Height'
+    }
+  ];
+
+  const appearanceItems = hasAppearanceOptions(editor) ? [
+    {
+      type: 'input',
+      name: 'cellspacing',
+      label: 'Cell spacing'
+    },
+    {
+      type: 'input',
+      name: 'cellpadding',
+      label: 'Cell padding'
+    },
+    {
+      type: 'input',
+      name: 'border',
+      label: 'Border width'
+    },
+    {
+      type: 'checkbox',
+      name: 'caption',
+      label: 'Caption'
+    }
+  ] : [];
+
+  const alignmentItem = [
+    {
+      type: 'selectbox',
+      name: 'align',
+      label: 'Alignment',
+      items: [
+        { text: 'None', value: '' },
+        { text: 'Left', value: 'left' },
+        { text: 'Center', value: 'center' },
+        { text: 'Right', value: 'right' }
+      ]
+    }
+  ];
+
+  const classListItem = hasClasses ? [
+    {
+      type: 'selectbox',
       name: 'class',
-      type: 'listbox',
       label: 'Class',
-      values: Helpers.buildListItems(
+      items: Helpers.buildListItems(
         getTableClassList(editor),
-        function (item) {
+        (item) => {
           if (item.value) {
-            item.textStyle = function () {
+            item.textStyle = () => {
               return editor.formatter.getCssText({ block: 'table', classes: [item.value] });
             };
           }
         }
       )
-    };
-  }
+    }
+  ] : [];
 
-  generalTableForm = {
-    type: 'form',
-    layout: 'flex',
-    direction: 'column',
-    labelGapCalc: 'children',
-    padding: 0,
-    items: [
+  const generalTabItems = rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
+
+  const generalPanel = {
+    type: 'grid',
+    columns: 2,
+    items: generalTabItems
+  };
+
+  const nonAdvancedForm = {
+    type: 'panel',
+    items: [ generalPanel ]
+  };
+
+  const advancedForm = {
+    type: 'tabpanel',
+    tabs: [
       {
-        type: 'form',
-        labelGapCalc: false,
-        padding: 0,
-        layout: 'grid',
-        columns: 2,
-        defaults: {
-          type: 'textbox',
-          maxWidth: 50
-        },
-        items: (hasAppearanceOptions(editor)) ? [
-          colsCtrl,
-          rowsCtrl,
-          { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-          { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-          { label: 'Cell spacing', name: 'cellspacing' },
-          { label: 'Cell padding', name: 'cellpadding' },
-          { label: 'Border', name: 'border' },
-          { label: 'Caption', name: 'caption', type: 'checkbox' }
-        ] : [
-          colsCtrl,
-          rowsCtrl,
-            { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-            { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) }
-        ]
+        title: 'General',
+        items: [ generalPanel ]
       },
-
-      {
-        label: 'Alignment',
-        name: 'align',
-        type: 'listbox',
-        text: 'None',
-        values: [
-          { text: 'None', value: '' },
-          { text: 'Left', value: 'left' },
-          { text: 'Center', value: 'center' },
-          { text: 'Right', value: 'right' }
-        ]
-      },
-
-      classListCtrl
+      Helpers.getAdvancedTab()
     ]
   };
 
-  if (hasAdvancedTableTab(editor)) {
-    editor.windowManager.open({
-      title: 'Table properties',
-      data,
-      bodyType: 'tabpanel',
-      body: [
-        {
-          title: 'General',
-          type: 'form',
-          items: generalTableForm
-        },
-        Helpers.createStyleForm(editor)
-      ],
-      onsubmit: Fun.curry(onSubmitTableForm, editor, tableElm)
-    });
-  } else {
-    editor.windowManager.open({
-      title: 'Table properties',
-      data,
-      body: generalTableForm,
-      onsubmit: Fun.curry(onSubmitTableForm, editor, tableElm)
-    });
-  }
+  const dialogBody = hasAdvancedTableTab(editor) ? advancedForm : nonAdvancedForm;
+
+  editor.windowManager.open({
+    title: 'Table Properties',
+    size: 'normal',
+    data,
+    body: dialogBody,
+    onSubmit: Fun.curry(onSubmitTableForm, editor, tableElm),
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel',
+      }
+    ],
+    initialData: data
+  });
 };
 
 export default {

@@ -28,11 +28,6 @@ const getHref = function (elm) {
   return href ? href : elm.getAttribute('href');
 };
 
-const isContextMenuVisible = function (editor) {
-  const contextmenu = editor.plugins.contextmenu;
-  return contextmenu ? contextmenu.isContextMenuVisible() : false;
-};
-
 const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
@@ -66,7 +61,9 @@ const gotoSelectedLink = function (editor) {
 const leftClickedOnAHref = function (editor) {
   return function (elm) {
     let sel, rng, node;
-    if (Settings.hasContextToolbar(editor.settings) && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
+    // TODO: this used to query the context menu plugin directly. Is that a good idea?
+    //  && !isContextMenuVisible(editor)
+    if (Settings.hasContextToolbar(editor.settings) && Utils.isLink(elm)) {
       sel = editor.selection;
       rng = sel.getRng();
       node = rng.startContainer;
@@ -98,35 +95,19 @@ const setupGotoLinks = function (editor) {
 };
 
 const toggleActiveState = function (editor) {
-  return function () {
-    const self = this;
-    editor.on('nodechange', function (e) {
-      self.active(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
-    });
+  return function (api) {
+    const nodeChangeHandler = (e) => api.setActive(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
+    editor.on('nodechange', nodeChangeHandler);
+    return () => editor.off('nodechange', nodeChangeHandler);
   };
 };
 
-const toggleViewLinkState = function (editor) {
-  return function () {
-    const self = this;
-
-    const toggleVisibility = function (e) {
-      if (Utils.hasLinks(e.parents)) {
-        self.show();
-      } else {
-        self.hide();
-      }
-    };
-
-    if (!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart()))) {
-      self.hide();
-    }
-
-    editor.on('nodechange', toggleVisibility);
-
-    self.on('remove', function () {
-      editor.off('nodechange', toggleVisibility);
-    });
+const toggleEnabledState = function (editor) {
+  return function (api) {
+    api.setDisabled(!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart())));
+    const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
+    editor.on('nodechange', nodeChangeHandler);
+    return () => editor.off('nodechange', nodeChangeHandler);
   };
 };
 
@@ -136,5 +117,5 @@ export default {
   leftClickedOnAHref,
   setupGotoLinks,
   toggleActiveState,
-  toggleViewLinkState
+  toggleEnabledState,
 };

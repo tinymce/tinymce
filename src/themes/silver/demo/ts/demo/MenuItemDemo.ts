@@ -1,0 +1,141 @@
+import * as MockDemo from './MockDemo';
+import { Editor } from 'tinymce/core/api/Editor';
+import * as Icons from '../../../main/ts/ui/icons/Icons';
+
+declare let tinymce: any;
+
+// tslint:disable:no-console
+
+export default function () {
+  const DemoState = MockDemo.mockFeatureState();
+  const DemoState2 = MockDemo.mockFeatureState();
+
+  tinymce.init({
+    selector: 'textarea.tiny-text',
+    theme: 'silver',
+    // toolbar: [ 'basic-button-1', 'basic-button-2', 'menu-button-1', 'panel-button-1', 'dialog-button', 'MagicButton' ],
+    plugins: [
+      // 'lists', // Required for list functionality (commands),
+      // 'autolink', // Required for turning pasted text into hyperlinks
+      // 'autosave' // Required to prevent users losing content when they press back
+    ],
+
+    menus: {
+      File: [ 'x1', 'x2', 'x3', '|', 't1', '|', 'd1' ]
+    },
+
+    setup (ed: Editor) {
+      ed.ui.registry.addMenuItem('x1', {
+        type: 'menuitem',
+        icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
+        text: 'Text with icon',
+        onAction () {
+          console.log('Just Text click');
+        }
+      });
+
+      ed.ui.registry.addMenuItem('x2', {
+        type: 'menuitem',
+        // icon: Icons.getOr('bold', () => 'oh no'),
+        text: 'Just Text',
+        onAction () {
+          console.log('Just Text click');
+        }
+      });
+
+      ed.ui.registry.addMenuItem('x3', {
+        type: 'menuitem',
+        // icon: Icons.getOr('bold', () => 'oh no'),
+        text: 'Just Text with shortcut',
+        shortcut: 'Ctrl+Alt+Delete',
+        onAction () {
+          console.log('Just Text click');
+        }
+      });
+
+      ed.ui.registry.addToggleMenuItem('t1', {
+        type: 'togglemenuitem',
+        text: 'button with Toggle',
+        shortcut: '⌘+C',
+        onSetup: (comp) => {
+          // debugger;
+          // TODO: TS narrowing, when config toggling = true
+          // then the comp interface should include comp.toggleOn otherwise it should complain
+          const state = DemoState.get();
+          console.log(state);
+          comp.setActive(state);
+          return () => { };
+        },
+        onAction (comp) {
+          DemoState.toggle();
+          comp.setActive(DemoState.get());
+          console.log('button with Toggle click - current state is: ' + DemoState.get());
+        }
+      });
+
+      ed.ui.registry.addMenuItem('d1', {
+        type: 'menuitem',
+        // icon: Icons.getOr('icon-drop', () => 'oh no'),
+        text: 'nested',
+        onAction () {
+          console.log('Just Text click');
+        },
+        getSubmenuItems: () => [
+          {
+            type: 'menuitem',
+            text: 'Nested 1',
+            onAction () {
+              console.log('clicked nested 1');
+            }
+          },
+          {
+            type: 'menuitem',
+            text: 'Nested 2',
+            icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
+            onAction () {
+              console.log('clicked nested 1');
+            }
+          },
+          {
+            type: 'menuitem',
+            text: 'Nested 3',
+            shortcut: 'X',
+            onAction () {
+              console.log('clicked nested 1');
+            }
+          },
+          {
+            type: 'togglemenuitem',
+            text: 'nested Toggle',
+            onSetup: (comp) => {
+              // debugger;
+              // TODO: TS narrowing, when config toggling = true
+              // then the comp interface should include comp.toggleOn otherwise it should complain
+              const state = DemoState2.get();
+              console.log(state);
+              comp.setActive(state);
+              return () => { };
+            },
+            onAction (comp) {
+              DemoState2.toggle();
+              comp.setActive(DemoState2.get());
+              console.log('button with Toggle click - current state is: ' + DemoState2.get());
+            }
+          },
+          {
+            type: 'menuitem',
+            text: 'Double nested',
+            onAction: () => console.log('double nest go!'),
+            getSubmenuItems: () => [
+              {
+                type: 'menuitem',
+                text: 'wow',
+                onAction: () => console.log('so deep')
+              }
+            ]
+          }
+        ]
+      });
+    }
+  });
+}

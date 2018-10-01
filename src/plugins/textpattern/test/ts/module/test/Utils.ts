@@ -1,11 +1,11 @@
-import { ApproxStructure, GeneralSteps, Keys } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndPressKey = function (key) {
   return function (tinyApis, tinyActions, content) {
     const padding = key === Keys.space() ? '\u00a0' : '';
     const extraOffset = padding === '' ? 0 : 1;
-    return GeneralSteps.sequence([
+    return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + padding + '</p>'),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
@@ -13,7 +13,7 @@ const sSetContentAndPressKey = function (key) {
         content.length + extraOffset
       ),
       tinyActions.sContentKeystroke(key, {})
-    ]);
+    ]));
   };
 };
 

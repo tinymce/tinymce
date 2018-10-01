@@ -1,15 +1,15 @@
-import { RawAssertions, Step, Waiter } from '@ephox/agar';
+import { RawAssertions, Step, Waiter, Logger } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 import { Image } from '@ephox/dom-globals';
 
 const sExecCommand = function (editor, cmd, value?) {
-  return Step.sync(function () {
+  return Logger.t(`Execute ${cmd}`, Step.sync(function () {
     editor.execCommand(cmd, false, value);
-  });
+  }));
 };
 
 const sLoadImage = function (editor, url, size?) {
-  return Step.async(function (done) {
+  return Logger.t(`Load image ${url}`, Step.async(function (done) {
     const img = new Image();
 
     img.onload = function () {
@@ -19,13 +19,13 @@ const sLoadImage = function (editor, url, size?) {
     };
 
     img.src = url;
-  });
+  }));
 };
 
 const sUploadImages = function (editor) {
-  return Step.async(function (done) {
+  return Logger.t('Upload images', Step.async(function (done) {
     editor.uploadImages(done);
-  });
+  }));
 };
 
 const sWaitForBlobImage = function (editor) {
@@ -47,9 +47,11 @@ const createStateContainer = function () {
     };
   };
 
-  const sResetState = Step.sync(function () {
-    state.set(null);
-  });
+  const sResetState = Logger.t('Reset state',
+    Step.sync(function () {
+      state.set(null);
+    })
+  );
 
   const sWaitForState = Waiter.sTryUntil('Did not get a state change', Step.sync(function () {
     RawAssertions.assertEq('Should be true when we have the state', true, state.get() !== null);

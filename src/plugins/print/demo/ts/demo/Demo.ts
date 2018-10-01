@@ -12,8 +12,8 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  theme: 'silver',
+  skin_url: '../../../../../js/tinymce/skins/oxide',
   plugins: 'print code',
   toolbar: 'print code',
   height: 600

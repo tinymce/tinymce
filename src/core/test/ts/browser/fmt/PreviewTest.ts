@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Preview from 'tinymce/core/fmt/Preview';
 import HtmlUtils from '../../module/test/HtmlUtils';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
@@ -260,6 +260,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
     entities: 'raw',
     indent: false,
     content_style: previewStyles(),
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

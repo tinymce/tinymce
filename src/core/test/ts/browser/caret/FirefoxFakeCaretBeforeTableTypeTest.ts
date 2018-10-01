@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, Step, RawAssertions } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import KeyUtils from '../../module/test/KeyUtils';
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', (
       ]))
     ] : [], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     plugins: 'table'
   }, success, failure);
 });

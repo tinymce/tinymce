@@ -201,7 +201,7 @@ const sketch = function (settings) {
 
     navigateOnHover: false,
 
-    openImmediately: true,
+    highlightImmediately: true,
     data: dataset.tmenu,
 
     markers: {

@@ -9,19 +9,30 @@
  */
 
 import { document } from '@ephox/dom-globals';
+import Dialog from '../../../main/ts/ui/Dialog';
 
 declare let tinymce: any;
 
 const element: any = document.querySelector('.tinymce');
 element.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
+const getSelectColor = (ed) => {
+  return (hex) => {
+    console.log('you chose: ' + hex);
+    const selectColor = getSelectColor(ed);
+    setTimeout(() => {
+      Dialog.open(ed, selectColor, '#ffffff');
+    }, 1000);
+  };
+};
+
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
-  plugins: 'table colorpicker code',
-  toolbar: 'table code',
-  height: 600
+  plugins: 'colorpicker',
+  height: 600,
+  init_instance_callback: (ed) => {
+    Dialog.open(ed, getSelectColor(ed), '#ffffff');
+  }
 });
 
 export {};

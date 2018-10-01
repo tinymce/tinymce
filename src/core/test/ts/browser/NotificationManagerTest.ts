@@ -1,15 +1,14 @@
-import { Pipeline } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/modern/Theme';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Delay from 'tinymce/core/api/util/Delay';
+import Tools from 'tinymce/core/api/util/Tools';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
-
+UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (success, failure) {
   Theme();
+
+  const suite = LegacyUnit.createSuite();
 
   const teardown = function (editor) {
     const notifications = [].concat(editor.notificationManager.getNotifications());
@@ -19,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
     });
   };
 
-  suite.test('Should not add duplicate text message', function (editor) {
+  suite.test('TestCase-TBA: Should not add duplicate text message', function (editor) {
     const testMsg1 = { type: 'default', text: 'test default message' };
     const testMsg2 = { type: 'warning', text: 'test warning message' };
     const testMsg3 = { type: 'error', text: 'test error message' };
@@ -49,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
     teardown(editor);
   });
 
-  suite.test('Should add duplicate progressBar messages', function (editor) {
+  suite.test('TestCase-TBA: Should add duplicate progressBar messages', function (editor) {
     const testMsg1 = { text: 'test progressBar message', progressBar: true };
     const notifications = editor.notificationManager.getNotifications();
 
@@ -66,7 +65,8 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
     teardown(editor);
   });
 
-  suite.asyncTest('Should add duplicate timeout messages', function (editor, done) {
+  suite.asyncTest('TestCase-TBA: Should add duplicate timeout messages', function (editor, done) {
+
     const checkClosed = function () {
       if (notifications.length === 0) {
         done();
@@ -76,16 +76,20 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
     const testMsg1 = { text: 'test timeout message', timeout: 1 };
     const notifications = editor.notificationManager.getNotifications();
 
-    editor.notificationManager.open(testMsg1).on('close', checkClosed);
+    editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
 
-    editor.notificationManager.open(testMsg1).on('close', checkClosed);
+    editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 2, 'Duplicate should be added for timeout message.');
+
+    Delay.setTimeout(() => {
+      checkClosed();
+    }, 100);
   });
 
-  suite.test('Should not open notifcation if editor is removed', function (editor) {
+  suite.test('TestCase-TBA: Should not open notification if editor is removed', function (editor) {
     const testMsg1 = { type: 'default', text: 'test progressBar message' };
 
     editor.remove();
@@ -101,12 +105,13 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+    Pipeline.async({}, Log.steps('TBA', 'Testing the notifications api', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
     disable_nodechange: true,
+    theme: 'silver',
     indent: false,
     entities: 'raw',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

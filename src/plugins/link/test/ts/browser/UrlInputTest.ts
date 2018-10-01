@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Element } from '@ephox/sugar';
 
@@ -19,7 +19,7 @@ const cCloseDialog = Chain.fromChains([
 ]);
 
 UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failure) => {
-  ModernTheme();
+  Theme();
   LinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -72,6 +72,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
   }, {
     plugins: 'link',
     toolbar: 'link',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

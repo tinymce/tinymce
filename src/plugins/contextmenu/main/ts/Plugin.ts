@@ -8,17 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Bind from './core/Bind';
 
-PluginManager.add('contextmenu', function (editor) {
-  const menu = Cell(null), visibleState = Cell(false);
-
-  Bind.setup(editor, visibleState, menu);
-
-  return Api.get(visibleState);
+PluginManager.add('contextmenu', function () {
+  console.warn('Context menu plugin is now built in to the core editor, please remove it from your editor configuration');
 });
 
 export default function () { }

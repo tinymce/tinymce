@@ -4,7 +4,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function () {
@@ -111,6 +111,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

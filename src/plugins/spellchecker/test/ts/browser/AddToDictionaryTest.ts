@@ -3,11 +3,11 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Element, Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (success, failure) => {
-  ModernTheme();
+  Theme();
   SpellcheckerPlugin();
 
   const dict = [];
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     spellchecker_callback(method, text, success, failure) {
       if (method === 'spellcheck') {
         success({dictionary: dict, words: {hello: ['word1'], world: ['word2']}});

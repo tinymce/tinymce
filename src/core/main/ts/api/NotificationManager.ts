@@ -104,7 +104,6 @@ export default function (editor) {
           text: serviceMessage,
           type: 'warning',
           timeout: 0,
-          icon: ''
         });
       }
     });

@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, failure) => {
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
   }, success, failure);
 });

@@ -11,8 +11,13 @@
 import Settings from '../api/Settings';
 import CodeSample from './CodeSample';
 
-const getLanguages = function (editor) {
-  const defaultLanguages = [
+export interface LanguageSpec {
+  text: string;
+  value: string;
+}
+
+const getLanguages = (editor): LanguageSpec[] => {
+  const defaultLanguages: LanguageSpec[] = [
     { text: 'HTML/XML', value: 'markup' },
     { text: 'JavaScript', value: 'javascript' },
     { text: 'CSS', value: 'css' },
@@ -29,16 +34,13 @@ const getLanguages = function (editor) {
   return customLanguages ? customLanguages : defaultLanguages;
 };
 
-const getCurrentLanguage = function (editor) {
-  let matches;
+const getCurrentLanguage = (editor, fallback: string): string => {
   const node = CodeSample.getSelectedCodeSample(editor);
 
-  if (node) {
-    matches = node.className.match(/language-(\w+)/);
-    return matches ? matches[1] : '';
-  }
-
-  return '';
+  return node.fold(() => fallback, (n) => {
+    const matches = n.className.match(/language-(\w+)/);
+    return matches ? matches[1] : fallback;
+  });
 };
 
 export default {

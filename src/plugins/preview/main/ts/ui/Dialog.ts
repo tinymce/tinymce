@@ -1,3 +1,5 @@
+import IframeContent from '../core/IframeContent';
+
 /**
  * Dialog.js
  *
@@ -8,34 +10,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/api/Env';
-import Settings from '../api/Settings';
-import IframeContent from './IframeContent';
+export const open = (editor) => {
 
-const open = function (editor) {
-  const sandbox = !Env.ie;
-  const dialogHtml = '<iframe src="" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
-  const dialogWidth = Settings.getPreviewDialogWidth(editor);
-  const dialogHeight = Settings.getPreviewDialogHeight(editor);
+  const content = IframeContent.getPreviewHtml(editor);
 
-  editor.windowManager.open({
+  const dataApi = editor.windowManager.open({
     title: 'Preview',
-    width: dialogWidth,
-    height: dialogHeight,
-    html: dialogHtml,
-    buttons: {
-      text: 'Close',
-      onclick (e) {
-        e.control.parent().parent().close();
-      }
+    size: 'large',
+    body: {
+      type: 'panel',
+      items: [
+        {
+          name: 'preview',
+          type: 'iframe',
+          sandboxed: true
+        }
+      ]
     },
-    onPostRender (e) {
-      const iframeElm = e.control.getEl('body').firstChild;
-      IframeContent.injectIframeContent(editor, iframeElm, sandbox);
+    buttons: [
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Close',
+        primary: true
+      }
+    ],
+    initialData: {
+      preview: content
+    },
+    onClose: () => {
+      console.log('Preview Demo Close');
     }
   });
-};
 
-export default {
-  open
+  // NOTE: AP-217 hack - Workout why this is necessary
+  dataApi.focus('cancel');
 };

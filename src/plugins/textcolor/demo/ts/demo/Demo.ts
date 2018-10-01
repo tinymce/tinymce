@@ -14,8 +14,8 @@ tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'textcolor code',
   toolbar: 'forecolor backcolor code',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
-  height: 600
+  height: 600,
+  // textcolor_cols: 1
 });
 
 export {};

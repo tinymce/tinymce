@@ -18,16 +18,17 @@ const showDialog = function (editor) {
 };
 
 const register = function (editor) {
-  editor.addButton('template', {
-    title: 'Insert template',
-    onclick: Templates.createTemplateList(editor.settings, showDialog(editor))
+  editor.ui.registry.addButton('template', {
+    type: 'button',
+    icon: 'template',
+    tooltip: 'Insert template',
+    onAction: Templates.createTemplateList(editor.settings, showDialog(editor))
   });
 
-  editor.addMenuItem('template', {
-    text: 'Template',
-    onclick: Templates.createTemplateList(editor.settings, showDialog(editor)),
+  editor.ui.registry.addMenuItem('template', {
     icon: 'template',
-    context: 'insert'
+    text: 'Template',
+    onAction: Templates.createTemplateList(editor.settings, showDialog(editor)),
   });
 };
 

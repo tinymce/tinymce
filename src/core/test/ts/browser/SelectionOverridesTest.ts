@@ -4,7 +4,7 @@ import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -246,6 +246,6 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

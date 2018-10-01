@@ -2,7 +2,7 @@ import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import TypeText from '../../module/test/TypeText';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

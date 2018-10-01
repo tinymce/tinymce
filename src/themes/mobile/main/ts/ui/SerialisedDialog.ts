@@ -96,11 +96,11 @@ const sketch = function (rawSpec) {
             components: Arr.map(spec.fields, function (field, i) {
               return i <= spec.maxFieldIndex ? Container.sketch({
                 dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
-                components: Arr.flatten([
-                  [ navigationButton(-1, 'previous', (i > 0)) ],
-                  [ parts.field(field.name, field.spec) ],
-                  [ navigationButton(+1, 'next', (i < spec.maxFieldIndex)) ]
-                ])
+                components: [
+                  navigationButton(-1, 'previous', (i > 0)),
+                  parts.field(field.name, field.spec),
+                  navigationButton(+1, 'next', (i < spec.maxFieldIndex))
+                ]
               }) : parts.field(field.name, field.spec);
             })
           })
@@ -191,7 +191,7 @@ const sketch = function (rawSpec) {
         AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
           const event = simulatedEvent.event() as any;
           spec.state.dialogSwipeState.set(
-            SwipingModel.init(event.touches[0].clientX)
+            SwipingModel.init(event.raw().touches[0].clientX)
           );
         }),
         AlloyEvents.run(NativeEvents.touchmove(), function (wrapper, simulatedEvent) {

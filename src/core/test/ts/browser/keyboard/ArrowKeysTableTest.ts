@@ -1,14 +1,14 @@
 import { Logger, Pipeline, Chain, ApproxStructure, Keys, GeneralSteps } from '@ephox/agar';
 import { TinyLoader, ApiChains, ActionChains } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;
 
-    ModernTheme();
+    Theme();
 
     const table = (html: string) => ApproxStructure.fromHtml('<table><tbody><tr><td>' + html + '</td></tr></tbody></table>');
     const block = ApproxStructure.fromHtml('<p><br></p>');
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
         ]))
       ], onSuccess, onFailure);
     }, {
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, success, failure);
   }
 );

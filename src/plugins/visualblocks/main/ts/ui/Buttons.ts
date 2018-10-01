@@ -8,33 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const toggleActiveState = function (editor, enabledState) {
-  return function (e) {
-    const ctrl = e.control;
-
-    ctrl.active(enabledState.get());
-
-    editor.on('VisualBlocks', function (e) {
-      ctrl.active(e.state);
-    });
-  };
+const toggleActiveState = (editor, enabledState) => (api) => {
+  api.setActive(false);
+  const editorEventCallback = (e) => api.setActive(e.state);
+  editor.on('VisualBlocks', editorEventCallback);
+  return () => editor.off('VisualBlocks', editorEventCallback);
 };
 
 const register = function (editor, enabledState) {
-  editor.addButton('visualblocks', {
-    active: false,
-    title: 'Show blocks',
-    cmd: 'mceVisualBlocks',
-    onPostRender: toggleActiveState(editor, enabledState)
+  editor.ui.registry.addToggleButton('visualblocks', {
+    icon: 'paragraph',
+    tooltip: 'Show blocks',
+    onAction: () => editor.execCommand('mceVisualBlocks'),
+    onSetup: toggleActiveState(editor, enabledState)
   });
 
-  editor.addMenuItem('visualblocks', {
+  editor.ui.registry.addToggleMenuItem('visualblocks', {
     text: 'Show blocks',
-    cmd: 'mceVisualBlocks',
-    onPostRender: toggleActiveState(editor, enabledState),
-    selectable: true,
-    context: 'view',
-    prependToContext: true
+    icon: 'paragraph',
+    onAction: () => editor.execCommand('mceVisualBlocks'),
+    onSetup: toggleActiveState(editor, enabledState),
+    selectable: true
   });
 };
 

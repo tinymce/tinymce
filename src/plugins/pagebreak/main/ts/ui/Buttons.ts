@@ -9,16 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('pagebreak', {
-    title: 'Page break',
-    cmd: 'mcePageBreak'
+  editor.ui.registry.addButton('pagebreak', {
+    icon: 'page-break',
+    tooltip: 'Page break',
+    onAction: () => editor.execCommand('mcePageBreak')
   });
 
-  editor.addMenuItem('pagebreak', {
+  editor.ui.registry.addMenuItem('pagebreak', {
     text: 'Page break',
-    icon: 'pagebreak',
-    cmd: 'mcePageBreak',
-    context: 'insert'
+    icon: 'page-break',
+    onAction: () => editor.execCommand('mcePageBreak')
   });
 };
 

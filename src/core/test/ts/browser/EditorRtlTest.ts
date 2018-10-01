@@ -4,7 +4,7 @@ import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Factory from 'tinymce/core/api/ui/Factory';
 import I18n from 'tinymce/core/api/util/I18n';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -49,6 +49,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

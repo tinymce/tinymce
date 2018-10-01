@@ -20,8 +20,9 @@ const sketch = function (rawSpec): SketchSpec {
   };
 
   const onChange = function (slider, thumb, valueIndex) {
-    if (isValidValue(valueIndex)) {
-      spec.onChange(valueIndex);
+    const index = valueIndex.x();
+    if (isValidValue(index)) {
+      spec.onChange(index);
     }
   };
 
@@ -40,10 +41,17 @@ const sketch = function (rawSpec): SketchSpec {
     onDragEnd (slider, thumb) {
       Toggling.off(thumb);
     },
-    min: 0,
-    max: spec.sizes.length - 1,
+    model: {
+      mode: 'x',
+      minX: 0,
+      maxX: spec.sizes.length - 1,
+      getInitialValue: () => {
+        return {
+          x: () => spec.getInitialValue()
+        };
+      }
+    },
     stepSize: 1,
-    getInitialValue: spec.getInitialValue,
     snapToGrid: true,
 
     sliderBehaviours: Behaviour.derive([

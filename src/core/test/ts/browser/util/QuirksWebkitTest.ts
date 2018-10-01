@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import HtmlUtils from '../../module/test/HtmlUtils';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
@@ -326,6 +326,6 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
     add_unload_trigger: false,
     indent: false,
     disable_nodechange: true,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

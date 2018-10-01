@@ -1,5 +1,5 @@
 import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
 
   const settings = {
     inline: true,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   };
 
   const cAssertBogusExist = Chain.on((val, next, die) => {

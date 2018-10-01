@@ -12,10 +12,8 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'lists code',
-  toolbar: 'numlist bullist | outdent indent | code',
+  toolbar: 'numlist bullist | code',
   height: 600
 });
 

@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Dialog from '../ui/Dialog';
+import { open } from '../ui/Dialog';
 
 const register = function (editor) {
   editor.addCommand('mcePreview', function () {
-    Dialog.open(editor);
+    open(editor);
   });
 };
 

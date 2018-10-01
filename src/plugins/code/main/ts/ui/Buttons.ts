@@ -7,24 +7,20 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
 import Dialog from './Dialog';
 
 const register = function (editor) {
-  editor.addButton('code', {
-    icon: 'code',
+  editor.ui.registry.addButton('code', {
+    type: 'button',
+    icon: 'sourcecode',
     tooltip: 'Source code',
-    onclick () {
-      Dialog.open(editor);
-    }
+    onAction: () => Dialog.open(editor)
   });
 
-  editor.addMenuItem('code', {
-    icon: 'code',
+  editor.ui.registry.addMenuItem('code', {
+    icon: 'sourcecode',
     text: 'Source code',
-    onclick () {
-      Dialog.open(editor);
-    }
+    onAction: () => Dialog.open(editor)
   });
 };
 

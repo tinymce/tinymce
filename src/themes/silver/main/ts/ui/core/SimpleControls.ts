@@ -1,0 +1,138 @@
+/**
+ * SimpleControls.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+import Tools from 'tinymce/core/api/util/Tools';
+import { Editor } from '../../../../../../core/main/ts/api/Editor';
+
+const toggleFormat = (editor: Editor, fmt: string) => {
+  return () => {
+    editor.execCommand('mceToggleFormat', false, fmt);
+  };
+};
+
+const addFormatChangedListener = (editor: Editor, name: string, changed: (state: boolean, name: string) => void) => {
+  const handler = (state) => {
+    changed(state, name);
+  };
+
+  if (editor.formatter) {
+    editor.formatter.formatChanged(name, handler);
+  } else {
+    editor.on('init', () => {
+      editor.formatter.formatChanged(name, handler);
+    });
+  }
+};
+
+const postRenderFormatToggle = (editor: Editor, name: string) => (api) => {
+  addFormatChangedListener(editor, name, (state) => {
+    api.setActive(state);
+  });
+
+  return () => { };
+};
+
+const registerFormatButtons = (editor) => {
+  Tools.each([
+    {name: 'bold', text: 'Bold', icon: 'bold'},
+    {name: 'italic', text: 'Italic', icon: 'italic'},
+    {name: 'underline', text: 'Underline', icon: 'underline'},
+    {name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through'},
+    {name: 'subscript', text: 'Subscript', icon: 'subscript'},
+    {name: 'superscript', text: 'Superscript', icon: 'superscript'}
+  ], (btn) => {
+    editor.ui.registry.addToggleButton(btn.name, {
+      tooltip: btn.text,
+      icon: btn.icon,
+      onSetup: postRenderFormatToggle(editor, btn.name),
+      onAction: toggleFormat(editor, btn.name)
+    });
+  });
+};
+
+const registerCommandButtons = (editor) => {
+  Tools.each([
+    {name: 'outdent', text: 'Decrease indent', action: 'Outdent', icon: 'outdent'},
+    {name: 'indent', text: 'Increase indent', action: 'Indent', icon: 'indent'},
+    {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut'},
+    {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy'},
+    {name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste'},
+    {name: 'help', text: 'Help', action: 'mceHelp', icon: 'help'},
+    {name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all'},
+    // visualaid was here but also exists in VisualAid.ts?
+    {name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document'},
+    {name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting'},
+    {name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove'}
+  ], (btn) => {
+    editor.ui.registry.addButton(btn.name, {
+      tooltip: btn.text,
+      icon: btn.icon,
+      onAction: () => editor.execCommand(btn.action)
+    });
+  });
+};
+
+const registerCommandToggleButtons = (editor) => {
+  Tools.each([
+    {name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote'},
+  ], (btn) => {
+    editor.ui.registry.addToggleButton(btn.name, {
+      tooltip: btn.text,
+      icon: btn.icon,
+      onAction: () => editor.execCommand(btn.action),
+      onSetup: postRenderFormatToggle(editor, btn.name)
+    });
+  });
+};
+
+const registerButtons = (editor) => {
+  registerFormatButtons(editor);
+  registerCommandButtons(editor);
+  registerCommandToggleButtons(editor);
+};
+
+const registerMenuItems = (editor) => {
+  Tools.each([
+    {name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B'},
+    {name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I'},
+    {name: 'underline', text: 'Underline', action: 'Underline', icon: 'underline', shortcut: 'Meta+U'},
+    {name: 'strikethrough', text: 'Strikethrough', action: 'Strikethrough', icon: 'strike-through', shortcut: ''},
+    {name: 'subscript', text: 'Subscript', action: 'Subscript', icon: 'subscript', shortcut: ''},
+    {name: 'superscript', text: 'Superscript', action: 'Superscript', icon: 'superscript', shortcut: ''},
+    {name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting', shortcut: ''},
+    {name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document', shortcut: ''},
+    {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut', shortcut: 'Meta+X'},
+    {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C'},
+    {name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste', shortcut: 'Meta+V'},
+    {name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A'}
+  ], (btn) => {
+    editor.ui.registry.addMenuItem(btn.name, {
+      text: btn.text,
+      icon: btn.icon,
+      shortcut: btn.shortcut,
+      onAction: () => editor.execCommand(btn.action)
+    });
+  });
+
+  editor.ui.registry.addMenuItem('codeformat', {
+    text: 'Code',
+    icon: 'sourcecode',
+    onAction: toggleFormat(editor, 'code')
+  });
+};
+
+const register = (editor) => {
+  registerButtons(editor);
+  registerMenuItems(editor);
+};
+
+export default {
+  register
+};

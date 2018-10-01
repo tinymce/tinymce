@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function () {
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function 
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     indent: false
   }, success, failure);
 });

@@ -10,10 +10,10 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
-import Statusbar from './ui/Statusbar';
+import Wordcounter from './core/WordCounter';
 
 PluginManager.add('wordcount', function (editor) {
-  Statusbar.setup(editor);
+  Wordcounter.setup(editor);
   return Api.get(editor);
 });
 

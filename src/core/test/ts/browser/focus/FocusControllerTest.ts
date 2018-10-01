@@ -3,7 +3,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import FocusManager from 'tinymce/core/api/FocusManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import FocusController from 'tinymce/core/focus/FocusController';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
@@ -59,6 +59,6 @@ UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

@@ -57,6 +57,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
+import { IconManager } from './IconManager';
 
 let tinymce = EditorManager;
 
@@ -135,6 +136,7 @@ const publicApi = {
   ScriptLoader: ScriptLoader.ScriptLoader,
   PluginManager: AddOnManager.PluginManager,
   ThemeManager: AddOnManager.ThemeManager,
+  IconManager,
 
   // Global utility functions
   trim: Tools.trim,

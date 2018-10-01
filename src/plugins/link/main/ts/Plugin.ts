@@ -17,6 +17,7 @@ import Controls from './ui/Controls';
 PluginManager.add('link', function (editor) {
   Controls.setupButtons(editor);
   Controls.setupMenuItems(editor);
+  Controls.setupContextMenu(editor);
   Controls.setupContextToolbars(editor);
   Actions.setupGotoLinks(editor);
   Commands.register(editor);

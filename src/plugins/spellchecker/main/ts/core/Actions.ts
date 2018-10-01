@@ -18,7 +18,10 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { Element, HTMLElement } from '@ephox/dom-globals';
 
-export type Data = string | {words: Record<string, string[]>, dictionary?: any};
+export interface Data {
+  words: Record<string, string[]>;
+  dictionary?: any;
+}
 
 const getTextMatcher = function (editor, textMatcherState) {
   if (!textMatcherState.get()) {
@@ -51,7 +54,6 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
 
       postData += key + '=' + encodeURIComponent(value);
     });
-
     XHR.send({
       url: new URI(pluginUrl).toAbsolute(Settings.getRpcUrl(editor)),
       type: 'post',
@@ -184,20 +186,13 @@ const findSpansByIndex = function (editor: Editor, index: string) {
 };
 
 export interface LastSuggestion {
-  suggestions: string | string[];
+  suggestions: Record<string, string[]>;
   hasDictionarySupport: boolean;
 }
 
 const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, data: Data) {
-  let suggestions, hasDictionarySupport;
-
-  if (typeof data !== 'string' && data.words) {
-    hasDictionarySupport = !!data.dictionary;
-    suggestions = data.words;
-  } else {
-    // Fallback to old format
-    suggestions = data;
-  }
+  const hasDictionarySupport = !!data.dictionary;
+  const suggestions = data.words;
 
   editor.setProgressState(false);
 

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Element, Attr, Css } from '@ephox/sugar';
+import { Element, Attr, Class } from '@ephox/sugar';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -41,11 +41,6 @@ const relaxDomain = function (editor, ifr) {
   return false;
 };
 
-const normalizeHeight = function (height) {
-  const normalizedHeight = typeof height === 'number' ? height + 'px' : height;
-  return normalizedHeight ? normalizedHeight : '';
-};
-
 const createIframeElement = function (id, title, height, customAttrs) {
   const iframe = Element.fromTag('iframe');
 
@@ -58,11 +53,7 @@ const createIframeElement = function (id, title, height, customAttrs) {
     title
   });
 
-  Css.setAll(iframe, {
-    width: '100%',
-    height: normalizeHeight(height),
-    display: 'block' // Important for Gecko to render the iframe correctly
-  });
+  Class.add(iframe, 'tox-edit-area__iframe');
 
   return iframe;
 };

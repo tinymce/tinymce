@@ -25,7 +25,7 @@ const clearInputBehaviour = 'input-clearing';
 
 const field = function (name, placeholder) {
   const inputSpec = Memento.record(Input.sketch({
-    placeholder,
+    inputAttributes: { placeholder },
     onSetValue (input, data) {
       // If the value changes, inform the container so that it can update whether the "x" is visible
       AlloyTriggers.emit(input, NativeEvents.input());

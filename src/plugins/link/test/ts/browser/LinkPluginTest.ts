@@ -4,14 +4,14 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
 
-  ModernTheme();
+  Theme();
   LinkPlugin();
 
   const nonRelativeRegex = /^\w+:/i;
@@ -206,6 +206,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function () {
     plugins: 'link',
     add_unload_trigger: false,
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

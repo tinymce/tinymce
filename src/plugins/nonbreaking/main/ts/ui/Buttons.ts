@@ -9,16 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('nonbreaking', {
-    title: 'Nonbreaking space',
-    cmd: 'mceNonBreaking'
+  editor.ui.registry.addButton('nonbreaking', {
+    icon: 'non-breaking',
+    tooltip: 'Nonbreaking space',
+    onAction: () => editor.execCommand('mceNonBreaking')
   });
 
-  editor.addMenuItem('nonbreaking', {
-    icon: 'nonbreaking',
+  editor.ui.registry.addMenuItem('nonbreaking', {
+    icon: 'non-breaking',
     text: 'Nonbreaking space',
-    cmd: 'mceNonBreaking',
-    context: 'insert'
+    onAction: () => editor.execCommand('mceNonBreaking')
   });
 };
 

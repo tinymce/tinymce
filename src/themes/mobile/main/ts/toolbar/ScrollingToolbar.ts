@@ -42,7 +42,12 @@ export default function () {
         })
       ],
       markers: {
-        itemClass: Styles.resolve('toolbar-group-item')
+        // TODO: Now that alloy isn't marking the items with the old
+        // itemClass here, this navigation probably doesn't work. But
+        // it's mobile. However, bluetooth keyboards will need to be fixed
+        // Essentially, all items put in the toolbar will need to be given
+        // this class if they are to be part of keyboard navigation
+        itemSelector: '.' + Styles.resolve('toolbar-group-item')
       },
 
       items: gSpec.items

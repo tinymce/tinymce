@@ -1,12 +1,10 @@
 import { Assertions, GeneralSteps, Keys, Keyboard, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (success, failure) {
 
   Theme();
 
@@ -91,7 +89,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function () {
       ]))
     ], onSuccess, onFailure);
   }, {
-    theme: 'modern',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

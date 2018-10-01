@@ -10,39 +10,36 @@
 
 import Storage from '../core/Storage';
 
-const postRender = function (editor, started) {
-  return function (e) {
-    const ctrl = e.control;
-
-    ctrl.disabled(!Storage.hasDraft(editor));
-
-    editor.on('StoreDraft RestoreDraft RemoveDraft', function () {
-      ctrl.disabled(!Storage.hasDraft(editor));
-    });
-
-    // TODO: Investigate why this is only done on postrender that would
-    // make the feature broken if only the menu item was rendered since
-    // it is rendered when the menu appears
-    Storage.startStoreDraft(editor, started);
-  };
+const makeSetupHandler = (editor, started) => (api) => {
+  api.setDisabled(!Storage.hasDraft(editor));
+  const editorEventCallback = () => api.setDisabled(!Storage.hasDraft(editor));
+  editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
+  return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
 };
 
 const register = function (editor, started) {
-  editor.addButton('restoredraft', {
-    title: 'Restore last draft',
-    onclick () {
+  // TODO: This was moved from makeSetupHandler as it would only be called when the menu item was rendered?
+  //       Is it safe to start this process when the plugin is registered?
+  Storage.startStoreDraft(editor, started);
+
+  editor.ui.registry.addButton('restoredraft', {
+    type: 'button',
+    text: 'Restore last draft',
+    icon: 'restore-draft',
+    onAction: () => {
       Storage.restoreLastDraft(editor);
     },
-    onPostRender: postRender(editor, started)
+    onSetup: makeSetupHandler(editor, started)
   });
 
-  editor.addMenuItem('restoredraft', {
+  editor.ui.registry.addMenuItem('restoredraft', {
+    type: 'menuitem',
     text: 'Restore last draft',
-    onclick () {
+    icon: 'restore-draft',
+    onAction: () => {
       Storage.restoreLastDraft(editor);
     },
-    onPostRender: postRender(editor, started),
-    context: 'file'
+    onSetup: makeSetupHandler(editor, started),
   });
 };
 

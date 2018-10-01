@@ -3,7 +3,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import HtmlUtils from '../module/test/HtmlUtils';
 import KeyUtils from '../module/test/KeyUtils';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
@@ -507,6 +507,6 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
     disable_nodechange: true,
     indent: false,
     entities: 'raw',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

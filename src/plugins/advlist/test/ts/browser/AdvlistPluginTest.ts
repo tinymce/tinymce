@@ -1,6 +1,6 @@
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function (
 
   AdvListPlugin();
   ListsPlugin();
-  ModernTheme();
+  Theme();
 
   const listStyleTest = function (title, definition) {
     suite.test(title, function (editor) {
@@ -193,6 +193,6 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function (
       '*': 'list-style-type'
     },
     disable_nodechange: true,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

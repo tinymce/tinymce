@@ -7,20 +7,19 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
 import Dialog from './Dialog';
 
 const register = function (editor, pluginUrl) {
-  editor.addButton('help', {
+  editor.ui.registry.addButton('help', {
     icon: 'help',
-    onclick: Dialog.open(editor, pluginUrl)
+    tooltip: 'Help',
+    onAction: Dialog.opener(editor, pluginUrl)
   });
 
-  editor.addMenuItem('help', {
+  editor.ui.registry.addMenuItem('help', {
     text: 'Help',
     icon: 'help',
-    context: 'help',
-    onclick: Dialog.open(editor, pluginUrl)
+    onAction: Dialog.opener(editor, pluginUrl)
   });
 };
 

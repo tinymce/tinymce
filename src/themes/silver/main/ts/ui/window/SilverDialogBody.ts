@@ -1,0 +1,74 @@
+import { AlloySpec, Behaviour, ModalDialog, Reflecting } from '@ephox/alloy';
+import { InternalPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Panel';
+import { InternalTabPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/TabPanel';
+import { Option } from '@ephox/katamari';
+
+import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { renderBodyPanel } from '../dialog/BodyPanel';
+import { renderTabPanel } from '../dialog/TabPanel';
+import { bodyChannel } from './DialogChannels';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
+
+export interface WindowBodyFoo {
+  body: InternalPanel | InternalTabPanel;
+}
+
+const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpec => {
+  const renderComponents = (incoming: WindowBodyFoo) => {
+    switch (incoming.body.type) {
+      case 'tabpanel': {
+        return [
+          renderTabPanel({
+            tabs: incoming.body.tabs
+          }, backstage)
+        ];
+      }
+
+      default: {
+        return [
+          renderBodyPanel({
+            items: incoming.body.items
+          }, backstage)
+        ];
+      }
+    }
+  };
+
+  const updateState = (_comp, incoming: WindowBodyFoo) => {
+    return Option.some({
+      isTabPanel: () => incoming.body.type === 'tabpanel'
+    });
+  };
+
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dialog__content-js' ]
+    },
+    components: [ ],
+    behaviours: Behaviour.derive([
+      ComposingConfigs.childAt(0),
+      Reflecting.config({
+        channel: bodyChannel,
+        updateState,
+        renderComponents,
+        initialData: foo
+      })
+    ])
+  };
+};
+
+const renderInlineBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
+  return renderBody(foo, backstage);
+};
+
+const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
+  return ModalDialog.parts().body(
+    renderBody(foo, backstage)
+  );
+};
+
+export {
+  renderInlineBody,
+  renderModalBody
+};

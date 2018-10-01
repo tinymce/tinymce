@@ -83,9 +83,9 @@ const toggleFullscreen = function (editor, fullscreenState) {
     iframeStyle.width = iframeStyle.height = '100%';
     editorContainerStyle.width = editorContainerStyle.height = '';
 
-    DOM.addClass(body, 'mce-fullscreen');
-    DOM.addClass(documentElement, 'mce-fullscreen');
-    DOM.addClass(editorContainer, 'mce-fullscreen');
+    DOM.addClass(body, 'tox-fullscreen');
+    DOM.addClass(documentElement, 'tox-fullscreen');
+    DOM.addClass(editorContainer, 'tox-fullscreen');
 
     DOM.bind(window, 'resize', resize);
     editor.on('remove', removeResize);
@@ -106,9 +106,9 @@ const toggleFullscreen = function (editor, fullscreenState) {
       editorContainerStyle.height = fullscreenInfo.containerHeight;
     }
 
-    DOM.removeClass(body, 'mce-fullscreen');
-    DOM.removeClass(documentElement, 'mce-fullscreen');
-    DOM.removeClass(editorContainer, 'mce-fullscreen');
+    DOM.removeClass(body, 'tox-fullscreen');
+    DOM.removeClass(documentElement, 'tox-fullscreen');
+    DOM.removeClass(editorContainer, 'tox-fullscreen');
     setScrollPos(fullscreenInfo.scrollPos);
 
     DOM.unbind(window, 'resize', fullscreenInfo.resizeHandler);

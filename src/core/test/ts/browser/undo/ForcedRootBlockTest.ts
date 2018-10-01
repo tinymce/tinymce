@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Levels from 'tinymce/core/undo/Levels';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function () {
@@ -49,6 +49,6 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function () 
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

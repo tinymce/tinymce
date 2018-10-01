@@ -43,7 +43,7 @@ const forToolbarStateAction = function (editor, clazz, command, action) {
 
 const forToolbar = function (clazz, action, extraBehaviours): SketchSpec {
   return Button.sketch({
-    dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
+    dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
     action,
 
     buttonBehaviours: Merger.deepMerge(

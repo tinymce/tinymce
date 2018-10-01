@@ -22,12 +22,12 @@ import MultiRange from '../../selection/MultiRange';
 import NormalizeRange from '../../selection/NormalizeRange';
 import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
-import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint, hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import { Selection as NativeSelection, HTMLElement, Node, Range, Element, ClientRect, Window } from '@ephox/dom-globals';
+import SelectorChanged from './SelectorChanged';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -38,8 +38,6 @@ import { Selection as NativeSelection, HTMLElement, Node, Range, Element, Client
  * // Getting the currently selected node for the active editor
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
-
-const each = Tools.each;
 
 const isNativeIeSelection = (rng: any): boolean => {
   return !!(<any> rng).select;
@@ -89,6 +87,11 @@ export interface Selection {
       selector: String;
       parents: Element[];
   }) => void) => any;
+  selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
+    node: Node;
+    selector: String;
+    parents: Element[];
+  }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement;
   scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
@@ -108,7 +111,9 @@ export interface Selection {
  */
 export const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
-  let selectedRange, explicitRange, selectorChangedData;
+  let selectedRange, explicitRange;
+
+  const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
   /**
    * Move the selection cursor range to the specified node and offset.
@@ -507,7 +512,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     return rng;
   };
 
-  /**
+    /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
    * state will be passed to the callback as it's first argument.
    *
@@ -516,54 +521,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
   const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
-    let currentSelectors;
-
-    if (!selectorChangedData) {
-      selectorChangedData = {};
-      currentSelectors = {};
-
-      editor.on('NodeChange', function (e) {
-        const node = e.element, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
-
-        // Check for new matching selectors
-        each(selectorChangedData, function (callbacks, selector) {
-          each(parents, function (node) {
-            if (dom.is(node, selector)) {
-              if (!currentSelectors[selector]) {
-                // Execute callbacks
-                each(callbacks, function (callback) {
-                  callback(true, { node, selector, parents });
-                });
-
-                currentSelectors[selector] = callbacks;
-              }
-
-              matchedSelectors[selector] = callbacks;
-              return false;
-            }
-          });
-        });
-
-        // Check if current selectors still match
-        each(currentSelectors, function (callbacks, selector) {
-          if (!matchedSelectors[selector]) {
-            delete currentSelectors[selector];
-
-            each(callbacks, function (callback) {
-              callback(false, { node, selector, parents });
-            });
-          }
-        });
-      });
-    }
-
-    // Add selector listeners
-    if (!selectorChangedData[selector]) {
-      selectorChangedData[selector] = [];
-    }
-
-    selectorChangedData[selector].push(callback);
-
+    selectorChangedWithUnbind(selector, callback);
     return exports;
   };
 
@@ -622,6 +580,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     getSelectedBlocks,
     normalize,
     selectorChanged,
+    selectorChangedWithUnbind,
     getScrollContainer,
     scrollIntoView,
     placeCaretAt,

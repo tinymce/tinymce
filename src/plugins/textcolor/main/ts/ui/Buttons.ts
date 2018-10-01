@@ -1,3 +1,7 @@
+import { Menu, Toolbar } from '@ephox/bridge';
+import { Cell } from '@ephox/katamari';
+import Settings from '../api/Settings';
+
 /**
  * Buttons.js
  *
@@ -8,137 +12,124 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import TextColor from '../core/TextColor';
-import ColorPickerHtml from './ColorPickerHtml';
-
-const setDivColor = function setDivColor(div, value) {
-  div.style.background = value;
-  div.setAttribute('data-mce-color', value);
+const getIcon = (color: string) => {
+  if (color === 'remove') {
+    return '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M25 5L5 25" stroke-width="1.5" fill="none"></path></svg>';
+  } else if (color === 'custom') {
+    return 'color-picker';
+  } else {
+    return `<div style="width: 24px; height: 24px; background-color: ${color};"></div>`;
+  }
 };
 
-const onButtonClick = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
+const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
+  []
+);
 
-    if (ctrl._color) {
-      editor.execCommand('mceApplyTextcolor', ctrl.settings.format, ctrl._color);
-    } else {
-      editor.execCommand('mceRemoveTextcolor', ctrl.settings.format);
-    }
-  };
-};
-
-const onPanelClick = function (editor, cols) {
-  return function (e) {
-    const buttonCtrl = this.parent();
-    let value;
-    const currentColor = TextColor.getCurrentColor(editor, buttonCtrl.settings.format);
-
-    const selectColor = function (value) {
-      editor.execCommand('mceApplyTextcolor', buttonCtrl.settings.format, value);
-      buttonCtrl.hidePanel();
-      buttonCtrl.color(value);
-    };
-
-    const resetColor = function () {
-      editor.execCommand('mceRemoveTextcolor', buttonCtrl.settings.format);
-      buttonCtrl.hidePanel();
-      buttonCtrl.resetColor();
-    };
-
-    if (DOMUtils.DOM.getParent(e.target, '.mce-custom-color-btn')) {
-      buttonCtrl.hidePanel();
-
-      const colorPickerCallback = Settings.getColorPickerCallback(editor);
-
-      colorPickerCallback.call(editor, function (value) {
-        const tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
-        let customColorCells, div, i;
-
-        customColorCells = Tools.map(tableElm.rows[tableElm.rows.length - 1].childNodes, function (elm) {
-          return elm.firstChild;
-        });
-
-        for (i = 0; i < customColorCells.length; i++) {
-          div = customColorCells[i];
-          if (!div.getAttribute('data-mce-color')) {
-            break;
-          }
+const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
+  if (value === 'custom') {
+    editor.windowManager.open({
+      title: 'Colorpicker',
+      body: {
+        type: 'panel',
+        items: [
+          { type: 'colorpicker', name: 'col' }
+        ]
+      },
+      buttons: [
+        {
+          type: 'submit',
+          text: 'OK',
+          primary: true
+        },
+        {
+          type: 'cancel',
+          text: 'Cancel'
         }
+      ],
+      initialData: {
+        col: '#eeeeee'
+      },
+      onSubmit: (dialogApi) => {
+        const data = dialogApi.getData().col;
 
-        // Shift colors to the right
-        // TODO: Might need to be the left on RTL
-        if (i === cols) {
-          for (i = 0; i < cols - 1; i++) {
-            setDivColor(customColorCells[i], customColorCells[i + 1].getAttribute('data-mce-color'));
+        currentColors.set(currentColors.get().concat([
+          {
+            type: 'choiceitem',
+            text: data,
+            icon: getIcon(data),
+            value: data
           }
-        }
+        ]));
 
-        setDivColor(div, value);
-        selectColor(value);
-      }, currentColor);
-    }
-
-    value = e.target.getAttribute('data-mce-color');
-    if (value) {
-      if (this.lastId) {
-        DOMUtils.DOM.get(this.lastId).setAttribute('aria-selected', 'false');
+        dialogApi.close();
+        editor.execCommand('mceApplyTextcolor', format, data);
+        onChoice(data);
       }
-
-      e.target.setAttribute('aria-selected', true);
-      this.lastId = e.target.id;
-
-      if (value === 'transparent') {
-        resetColor();
-      } else {
-        selectColor(value);
-      }
-    } else if (value !== null) {
-      buttonCtrl.hidePanel();
-    }
-  };
-};
-
-const renderColorPicker = function (editor, foreColor) {
-  return function () {
-    const cols = foreColor ? Settings.getForeColorCols(editor) : Settings.getBackColorCols(editor);
-    const rows = foreColor ? Settings.getForeColorRows(editor) : Settings.getBackColorRows(editor);
-    const colorMap = foreColor ? Settings.getForeColorMap(editor) : Settings.getBackColorMap(editor);
-    const hasColorPicker = Settings.hasColorPicker(editor);
-
-    return ColorPickerHtml.getHtml(cols, rows, colorMap, hasColorPicker);
-  };
+    });
+  } else if (value === 'remove') {
+    editor.execCommand('mceRemoveTextcolor', format);
+  } else  {
+    onChoice(value);
+    editor.execCommand('mceApplyTextcolor', format, value);
+  }
 };
 
 const register = function (editor) {
-  editor.addButton('forecolor', {
-    type: 'colorbutton',
-    tooltip: 'Text color',
-    format: 'forecolor',
-    panel: {
-      role: 'application',
-      ariaRemember: true,
-      html: renderColorPicker(editor, true),
-      onclick: onPanelClick(editor, Settings.getForeColorCols(editor))
-    },
-    onclick: onButtonClick(editor)
-  });
+  currentColors.set(Settings.getTextColorMap(editor));
 
-  editor.addButton('backcolor', {
-    type: 'colorbutton',
-    tooltip: 'Background color',
-    format: 'hilitecolor',
-    panel: {
-      role: 'application',
-      ariaRemember: true,
-      html: renderColorPicker(editor, false),
-      onclick: onPanelClick(editor, Settings.getBackColorCols(editor))
-    },
-    onclick: onButtonClick(editor)
-  });
+  const addColorButton = (name: string, format: string, tooltip: string, cols: number) => {
+    editor.ui.registry.addSplitButton(name, (() => {
+      const lastColour = Cell(null);
+      return {
+        type: 'splitbutton',
+        tooltip,
+        presets: 'color',
+        icon: name === 'forecolor' ? 'text-color' : 'background-color',
+        select: () => false,
+        columns: cols,
+        fetch: (callback) => {
+          callback(
+            currentColors.get().concat([
+              {
+                type: 'choiceitem',
+                text: 'Remove',
+                icon: getIcon('remove'),
+                value: 'remove'
+              },
+              {
+                type: 'choiceitem',
+                text: 'Custom',
+                icon: getIcon('custom'),
+                value: 'custom'
+              }
+            ])
+          );
+        },
+        onAction: (splitButtonApi) => {
+          // do something with last colour
+          if (lastColour.get() !== null) {
+            applyColour(editor,  format, splitButtonApi, lastColour.get(), () => { });
+          }
+        },
+        onItemAction : (splitButtonApi, value) => {
+          applyColour(editor, format, splitButtonApi, value, (newColour) => {
+
+            const setIconFillAndStroke = (pathId, colour) => {
+              splitButtonApi.setIconFill(pathId, colour);
+              splitButtonApi.setIconStroke(pathId, colour);
+            };
+
+            lastColour.set(newColour);
+            setIconFillAndStroke(name === 'forecolor' ? 'color' : 'Rectangle', newColour);
+          });
+        }
+      } as Toolbar.ToolbarSplitButtonApi;
+    })());
+  };
+
+  addColorButton('forecolor', 'forecolor', 'Color', Settings.getForeColorCols(editor));
+  addColorButton('backcolor', 'hilitecolor', 'Background Color', Settings.getBackColorCols(editor));
 };
 
 export default {

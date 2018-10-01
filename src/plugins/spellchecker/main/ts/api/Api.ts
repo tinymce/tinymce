@@ -9,7 +9,7 @@
  */
 
 import Settings from './Settings';
-import Actions, { LastSuggestion } from '../core/Actions';
+import Actions, { LastSuggestion, Data } from '../core/Actions';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
@@ -23,7 +23,7 @@ const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestio
     return Settings.getSpellcheckerWordcharPattern(editor);
   };
 
-  const markErrors = function (data: string) {
+  const markErrors = function (data: Data) {
     Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 

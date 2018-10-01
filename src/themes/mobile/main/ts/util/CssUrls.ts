@@ -3,7 +3,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 
 const derive = function (editor) {
   const base = Objects.readOptFrom(editor.settings, 'skin_url').fold(function () {
-    return EditorManager.baseURL + '/skins/' + 'lightgray';
+    return EditorManager.baseURL + '/skins/' + 'oxide';
   }, function (url) {
     return url;
   });

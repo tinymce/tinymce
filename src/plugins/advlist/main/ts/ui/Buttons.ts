@@ -12,7 +12,11 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
-import ListStyles from './ListStyles';
+
+const enum ListType {
+  OrderedList = 'OL',
+  UnorderedList = 'UL'
+}
 
 const findIndex = function (list, predicate) {
   for (let index = 0; index < list.length; index++) {
@@ -38,37 +42,69 @@ const listState = function (editor, listName) {
   };
 };
 
-const updateSelection = function (editor) {
-  return function (e) {
-    const listStyleType = ListUtils.getSelectedStyleType(editor);
-    e.control.items().each(function (ctrl) {
-      ctrl.active(ctrl.settings.data === listStyleType);
-    });
-  };
+// const updateSelection = function (editor) {
+//   return function (e) {
+//     const listStyleType = ListUtils.getSelectedStyleType(editor);
+//     e.control.items().each(function (ctrl) {
+//       ctrl.active(ctrl.settings.data === listStyleType);
+//     });
+//   };
+// };
+
+// <ListStyles>
+const styleValueToText = function (styleValue) {
+  return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
+    return chr.toUpperCase();
+  });
 };
+// </ListStyles>
 
 const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
-  editor.addButton(id, {
-    active: false,
+  editor.ui.registry.addSplitButton(id, {
     type: 'splitbutton',
+    active: false,
     tooltip,
-    menu: ListStyles.toMenuItems(styles),
-    onPostRender: listState(editor, nodeName),
-    onshow: updateSelection(editor),
-    onselect (e) {
-      Actions.applyListFormat(editor, nodeName, e.control.settings.data);
+    icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
+    presets: 'toolbar',
+    columns: 3,
+    fetch: (callback) => {
+      const items = Tools.map(styles, (styleValue) => {
+        const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
+        const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
+        const itemValue = styleValue === 'default' ? '' : styleValue;
+        return {
+          type: 'choiceitem',
+          value: itemValue,
+          icon: 'list-' +  iconStyle + '-' + iconName,
+          text: styleValueToText(styleValue)
+        };
+      });
+      callback(items);
     },
-    onclick () {
+    onAction: () => {
       editor.execCommand(cmd);
+    },
+    onItemAction: (splitButtonApi, value) => {
+      Actions.applyListFormat(editor, nodeName, value);
     }
+    // menu: ListStyles.toMenuItems(styles),
+    // onPostRender: listState(editor, nodeName),
+    // onshow: updateSelection(editor),
+    // onselect (e) {
+    //   Actions.applyListFormat(editor, nodeName, e.control.settings.data);
+    // },
+    // onclick () {
+    //   editor.execCommand(cmd);
+    // }
   });
 };
 
 const addButton = function (editor, id, tooltip, cmd, nodeName, styles) {
-  editor.addButton(id, {
-    active: false,
+  editor.ui.registry.addButton(id, {
     type: 'button',
+    active: false,
     tooltip,
+    icon: nodeName === ListType.OrderedList ? 'icon-ordered-list' : 'icon-unordered-list',
     onPostRender: listState(editor, nodeName),
     onclick () {
       editor.execCommand(cmd);
@@ -85,8 +121,8 @@ const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
 };
 
 const register = function (editor) {
-  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', 'OL', Settings.getNumberStyles(editor));
-  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', 'UL', Settings.getBulletStyles(editor));
+  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
+  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
 export default {

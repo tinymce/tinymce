@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
           Assertions.assertEq('Should have the specified documentBaseUrl', 'documentBaseUrl', settings.document_base_url);
           Assertions.assertEq('Should have the specified userSetting', 'b', settings.userSetting);
           Assertions.assertEq('Should have the forced validate setting', true, settings.validate);
-          Assertions.assertEq('Should have the default theme', 'modern', settings.theme);
+          Assertions.assertEq('Should have the default theme', 'silver', settings.theme);
           Assertions.assertEq('Should have the specified default plugin', 'a', settings.plugins);
           Assertions.assertEq('Should have the default setting', 'a', settings.defaultSetting);
         })),
@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
           Assertions.assertEq('Should be none for existing bool setting', true, EditorSettings.getString(fakeEditor, 'boolTrue').isNone());
         })),
 
-        Logger.t('Mobile override', Step.sync(function () {
+        Logger.t('Mobile override (has been disabled)', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
             {},
             'id',
@@ -231,7 +231,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile' },
+            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists' },
             EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
           );
         })),
@@ -290,6 +290,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
       }))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

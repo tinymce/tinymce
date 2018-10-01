@@ -1,3 +1,6 @@
+Version 5.0.0-preview-1 (2018-10-01)
+    Developer preview 1
+    Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
 Version 4.8.3 (2018-09-13)
     Fixed a bug where the Wordcount Plugin didn't correctly count words within tables on IE11. #TINY-1770
     Fixed a bug where it wasn't possible to move the caret out of a table on IE11 and Firefox. #TINY-1682

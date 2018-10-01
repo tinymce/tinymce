@@ -9,15 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('print', {
-    title: 'Print',
-    cmd: 'mcePrint'
+  editor.ui.registry.addButton('print', {
+    icon: 'print',
+    tooltip: 'Print',
+    onAction: () => editor.execCommand('mcePrint')
   });
 
-  editor.addMenuItem('print', {
+  editor.ui.registry.addMenuItem('print', {
     text: 'Print',
-    cmd: 'mcePrint',
-    icon: 'print'
+    icon: 'print',
+    onAction: () => editor.execCommand('mcePrint')
   });
 };
 

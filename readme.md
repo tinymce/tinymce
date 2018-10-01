@@ -1,3 +1,14 @@
+# TinyMCE 5 Developer Preview
+
+Welcome to the Developer Preview!
+
+[Download the preview](https://devpreview.tiny.cloud/download/tinymce.zip)
+
+[Preview documentation](https://tiny.cloud/docs-preview)
+
+[Log feedback](https://github.com/tinymce/tinymce/labels/dev%20preview)
+
+
 TinyMCE - JavaScript Library for Rich Text Editing
 ===================================================
 
@@ -66,9 +77,9 @@ Displays the various build tasks.
 
 Bundle themes and plugins into a single file
 ---------------------------------------------
-`grunt bundle --themes=modern --plugins=table,paste`
+`grunt bundle --themes=silver --plugins=table,paste`
 
-Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
+Minifies the core, adds the silver theme and adds the table and paste plugin into tinymce.min.js.
 
 Contributing to the TinyMCE project
 ------------------------------------
@@ -96,4 +107,4 @@ __How to Contribute to the Docs__
 
 Docs are hosted on Github in the [tinymce-docs](https://github.com/tinymce/tinymce-docs) repo.
 
-[How to contribute](https://www.tinymce.com/docs/advanced/contributing-docs/) to the docs, including a style guide, can be found on the TinyMCE website.
+[How to contribute](https://www.tiny.cloud/docs/advanced/contributing-docs/) to the docs, including a style guide, can be found on the TinyMCE website.

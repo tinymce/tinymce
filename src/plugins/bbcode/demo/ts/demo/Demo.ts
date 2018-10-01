@@ -18,8 +18,6 @@ elm.value = '[b]bbcode plugin[/b]';
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'bbcode code',
   toolbar: 'bbcode code',
   height: 600

@@ -9,15 +9,21 @@
  */
 
 const register = function (editor) {
-  editor.addButton('fullpage', {
-    title: 'Document properties',
-    cmd: 'mceFullPageProperties'
+  editor.ui.registry.addButton('fullpage', {
+    // TODO: This should be title or text, with no icon?
+    tooltip: 'Document properties',
+    icon: 'new-document',
+    onAction: () => {
+      editor.execCommand('mceFullPageProperties');
+    }
   });
 
-  editor.addMenuItem('fullpage', {
+  editor.ui.registry.addMenuItem('fullpage', {
     text: 'Document properties',
-    cmd: 'mceFullPageProperties',
-    context: 'file'
+    icon: 'new-document',
+    onAction: () => {
+      editor.execCommand('mceFullPageProperties');
+    }
   });
 };
 

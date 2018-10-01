@@ -7,17 +7,14 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import Env from 'tinymce/core/api/Env';
+import { Merger } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import Settings from '../api/Settings';
 import HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
 import Size from '../core/Size';
 import UpdateHtml from '../core/UpdateHtml';
-import SizeManager from './SizeManager';
-
-const embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
 const handleError = function (editor) {
   return function (error) {
@@ -28,6 +25,10 @@ const handleError = function (editor) {
   };
 };
 
+const snippetToData = (editor, embedSnippet) => {
+  return Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet));
+};
+
 const getData = function (editor) {
   const element = editor.selection.getNode();
   const dataEmbed = element.getAttribute('data-ephox-embed-iri');
@@ -36,8 +37,10 @@ const getData = function (editor) {
     return {
       'source1': dataEmbed,
       'data-ephox-embed-iri': dataEmbed,
-      'width': Size.getMaxWidth(element),
-      'height': Size.getMaxHeight(element)
+      'dimensions': {
+        width: Size.getMaxWidth(element),
+        height: Size.getMaxHeight(element)
+      }
     };
   }
 
@@ -48,23 +51,23 @@ const getData = function (editor) {
 
 const getSource = function (editor) {
   const elm = editor.selection.getNode();
-
-  if (elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri')) {
-    return editor.selection.getContent();
-  }
+  return elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri') ? editor.selection.getContent() : '';
 };
 
 const addEmbedHtml = function (win, editor) {
   return function (response) {
     const html = response.html;
-    const embed = win.find('#embed')[0];
-    const data = Tools.extend(HtmlToData.htmlToData(Settings.getScripts(editor), html), { source1: response.url });
-    win.fromJSON(data);
+    const snippetData = snippetToData(editor, html);
+    const nuData = {
+      source1: response.url,
+      embed: html,
+      dimensions: {
+        width: snippetData.width ? snippetData.width : '',
+        height: snippetData.height ? snippetData.height : ''
+      }
+    };
 
-    if (embed) {
-      embed.value(html);
-      SizeManager.updateSize(win);
-    }
+    win.setData(nuData);
   };
 };
 
@@ -93,9 +96,7 @@ const handleInsert = function (editor, html) {
   editor.nodeChanged();
 };
 
-const submitForm = function (win, editor) {
-  const data = win.toJSON();
-
+const submitForm = function (data, editor) {
   data.embed = UpdateHtml.updateHtml(data.embed, data);
 
   if (data.embed && Service.isCached(data.source1)) {
@@ -108,128 +109,169 @@ const submitForm = function (win, editor) {
   }
 };
 
-const populateMeta = function (win, meta) {
-  Tools.each(meta, function (value, key) {
-    win.find('#' + key).value(value);
-  });
-};
-
 const showDialog = function (editor) {
   let win;
-  let data;
 
-  const generalFormItems: any[] = [
-    {
-      name: 'source1',
-      type: 'filepicker',
-      filetype: 'media',
-      size: 40,
-      autofocus: true,
-      label: 'Source',
-      onpaste () {
-        setTimeout(function () {
-          Service.getEmbedHtml(editor, win.toJSON())
-            .then(
-            addEmbedHtml(win, editor)
-            ).catch(handleError(editor));
-        }, 1);
-      },
-      onchange (e) {
-        Service.getEmbedHtml(editor, win.toJSON())
-          .then(
-          addEmbedHtml(win, editor)
-          ).catch(handleError(editor));
+  const initialHtmlData = getData(editor);
 
-        populateMeta(win, e.meta);
-      },
-      onbeforecall (e) {
-        e.meta = win.toJSON();
-      }
+  const defaultData = {
+    source1: '',
+    source2: '',
+    embed: getSource(editor),
+    poster: '',
+    dimensions: {
+      height: initialHtmlData.height ? initialHtmlData.height : '',
+      width: initialHtmlData.width ? initialHtmlData.width : ''
     }
-  ];
+  };
+
+  const initialData = Merger.merge(defaultData, initialHtmlData);
+
+  const getSourceData = (api) => {
+    const data = api.getData();
+    return Settings.hasDimensions(editor) ? Merger.merge(data, {
+      width: data.dimensions.width,
+      height: data.dimensions.height
+    }) : data;
+  };
+
+  const handleSource1 = (api) => {
+    const serviceData = getSourceData(api);
+    Service.getEmbedHtml(editor, serviceData)
+      .then(addEmbedHtml(win, editor))
+      .catch(handleError(editor));
+  };
+
+  const handleEmbed = (api) => {
+    const data = api.getData();
+
+    const dataFromEmbed = snippetToData(editor, data.embed);
+    dataFromEmbed.dimensions = {
+      width: dataFromEmbed.width ? dataFromEmbed.width : data.dimensions.width,
+      height: dataFromEmbed.height ? dataFromEmbed.height : data.dimensions.height
+    };
+
+    api.setData(dataFromEmbed);
+  };
+
+  const generalTab = Settings.hasDimensions(editor) ?
+    {
+      title: 'General',
+      items: [
+        {
+          name: 'source1',
+          type: 'input',
+          filetype: 'media',
+          label: 'Source'
+        },
+        {
+          type: 'sizeinput',
+          name: 'dimensions',
+          label: 'size',
+          constrain: true
+        }
+      ]
+    } : {
+      title: 'General',
+      items: [
+        {
+          name: 'source1',
+          type: 'input',
+          filetype: 'media',
+          label: 'Source'
+        },
+      ]
+    };
+
+  const embedTab = {
+    title: 'Embed',
+    items: [
+      {
+        type: 'textarea',
+        name: 'embed',
+        label: 'Paste your embed code below:'
+      }
+    ]
+  };
 
   const advancedFormItems = [];
 
-  const reserialise = function (update) {
-    update(win);
-    data = win.toJSON();
-    win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
-  };
-
   if (Settings.hasAltSource(editor)) {
-    advancedFormItems.push({ name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source' });
+    advancedFormItems.push({
+        name: 'source2',
+        type: 'input',
+        filetype: 'media',
+        label: 'Alternative source'
+      }
+    );
   }
 
   if (Settings.hasPoster(editor)) {
-    advancedFormItems.push({ name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster' });
+    advancedFormItems.push({
+      name: 'poster',
+      type: 'input',
+      filetype: 'image',
+      label: 'Poster'
+    });
   }
 
-  if (Settings.hasDimensions(editor)) {
-    const control = SizeManager.createUi(reserialise);
-    generalFormItems.push(control);
-  }
-
-  data = getData(editor);
-
-  const embedTextBox = {
-    id: 'mcemediasource',
-    type: 'textbox',
-    flex: 1,
-    name: 'embed',
-    value: getSource(editor),
-    multiline: true,
-    rows: 5,
-    label: 'Source'
+  const advancedTab = {
+    title: 'Advanced',
+    items: advancedFormItems
   };
 
-  const updateValueOnChange = function () {
-    data = Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), this.value()));
-    this.parent().parent().fromJSON(data);
-  };
-
-  embedTextBox[embedChange] = updateValueOnChange;
-
-  const body = [
-    {
-        title: 'General',
-        type: 'form',
-        items: generalFormItems
-    },
-    {
-        title: 'Embed',
-        type: 'container',
-        layout: 'flex',
-        direction: 'column',
-        align: 'stretch',
-        padding: 10,
-        spacing: 10,
-        items: [
-          {
-            type: 'label',
-            text: 'Paste your embed code below:',
-            forId: 'mcemediasource'
-          },
-          embedTextBox
-        ]
-      }
+  const tabs = [
+    generalTab,
+    embedTab
   ];
 
   if (advancedFormItems.length > 0) {
-    body.push({ title: 'Advanced', type: 'form', items: advancedFormItems });
+    tabs.push(advancedTab);
   }
 
   win = editor.windowManager.open({
     title: 'Insert/edit media',
-    data,
-    bodyType: 'tabpanel',
-    body,
-    onSubmit () {
-      SizeManager.updateSize(win);
-      submitForm(win, editor);
-    }
-  });
+    size: 'normal',
 
-  SizeManager.syncSize(win);
+    body: {
+      type: 'tabpanel',
+      tabs
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
+      }
+    ],
+    onSubmit (api) {
+      const serviceData = getSourceData(api);
+      submitForm(serviceData, editor);
+      api.close();
+    },
+    onChange (api, detail) {
+      switch (detail.name) {
+        case 'source1':
+          handleSource1(api);
+          break;
+
+        case 'dimensions':
+          handleSource1(api);
+
+        case 'embed':
+          handleEmbed(api);
+        default:
+          break;
+      }
+    },
+    initialData
+  });
 };
 
 export default {

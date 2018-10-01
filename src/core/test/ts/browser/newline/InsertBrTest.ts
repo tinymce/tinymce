@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InsertBr from 'tinymce/core/newline/InsertBr';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
@@ -90,6 +90,6 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

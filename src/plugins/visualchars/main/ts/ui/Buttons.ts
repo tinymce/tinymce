@@ -8,31 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const toggleActiveState = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
-
-    editor.on('VisualChars', function (e) {
-      ctrl.active(e.state);
-    });
-  };
+const toggleActiveState = (editor) => (api) => {
+  api.setActive(false);
+  const editorEventCallback = (e) => api.setActive(e.state);
+  editor.on('VisualChars', editorEventCallback);
+  return () => editor.off('VisualChars', editorEventCallback);
 };
 
 const register = function (editor) {
-  editor.addButton('visualchars', {
-    active: false,
-    title: 'Show invisible characters',
-    cmd: 'mceVisualChars',
-    onPostRender: toggleActiveState(editor)
+  editor.ui.registry.addToggleButton('visualchars', {
+    tooltip: 'Show invisible characters',
+    icon: 'paragraph',
+    onAction: () => editor.execCommand('mceVisualChars'),
+    onSetup: toggleActiveState(editor)
   });
 
-  editor.addMenuItem('visualchars', {
+  editor.ui.registry.addToggleMenuItem('visualchars', {
     text: 'Show invisible characters',
-    cmd: 'mceVisualChars',
-    onPostRender: toggleActiveState(editor),
-    selectable: true,
-    context: 'view',
-    prependToContext: true
+    icon: 'paragraph',
+    onAction: () => editor.execCommand('mceVisualChars'),
+    onSetup: toggleActiveState(editor),
+    selectable: true
   });
 };
 

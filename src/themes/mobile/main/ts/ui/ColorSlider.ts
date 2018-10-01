@@ -21,13 +21,13 @@ const makeSlider = function (spec) {
   };
 
   // Does not fire change intentionally.
-  const onInit = function (slider, thumb, value) {
-    const color = getColor(value);
+  const onInit = function (slider, thumb, spectrum, value) {
+    const color = getColor(value.x());
     Css.set(thumb.element(), 'background-color', color);
   };
 
   const onChange = function (slider, thumb, value) {
-    const color = getColor(value);
+    const color = getColor(value.x());
     Css.set(thumb.element(), 'background-color', color);
     spec.onChange(slider, thumb, color);
   };
@@ -67,9 +67,16 @@ const makeSlider = function (spec) {
     },
     onInit,
     stepSize: 10,
-    min: 0,
-    max: 360,
-    getInitialValue: spec.getInitialValue,
+    model: {
+      mode: 'x',
+      minX: 0,
+      maxX: 360,
+      getInitialValue: () => {
+        return {
+          x: () => spec.getInitialValue()
+        };
+      }
+    },
 
     sliderBehaviours: Behaviour.derive([
       Receivers.orientation(Slider.refresh)

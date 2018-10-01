@@ -8,23 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Dialog from './Dialog';
+import { Dialog } from './Dialog';
 
 const register = function (editor) {
-  editor.addButton('image', {
+  editor.ui.registry.addToggleButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',
-    onclick: Dialog(editor).open,
-    stateSelector: 'img:not([data-mce-object],[data-mce-placeholder]),figure.image'
+    onAction: Dialog(editor).open,
+    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind
   });
 
-  editor.addMenuItem('image', {
+  editor.ui.registry.addMenuItem('image', {
     icon: 'image',
     text: 'Image',
-    onclick: Dialog(editor).open,
-    context: 'insert',
-    prependToContext: true
+    onAction: Dialog(editor).open
   });
+
+  editor.ui.registry.addContextMenu('image', {
+    update: (element) => {
+      return !element.src ? [] : ['image'];
+    }
+  });
+
 };
 
 export default {

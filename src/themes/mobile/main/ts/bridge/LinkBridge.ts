@@ -53,7 +53,7 @@ const wasSimple = function (link) {
 };
 
 const getTextToApply = function (link, url, info) {
-  return info.text.filter(isNotEmpty).fold(function () {
+  return info.text.toOption().filter(isNotEmpty).fold(function () {
     return wasSimple(link) ? Option.some(url) : Option.none();
   }, Option.some);
 };
@@ -69,17 +69,17 @@ const getAttrs = function (url, info) {
   const attrs: any = { };
   attrs.href = url;
 
-  info.title.filter(isNotEmpty).each(function (title) {
+  info.title.toOption().filter(isNotEmpty).each(function (title) {
     attrs.title = title;
   });
-  info.target.filter(isNotEmpty).each(function (target) {
+  info.target.toOption().filter(isNotEmpty).each(function (target) {
     attrs.target = target;
   });
   return attrs;
 };
 
 const applyInfo = function (editor, info) {
-  info.url.filter(isNotEmpty).fold(function () {
+  info.url.toOption().filter(isNotEmpty).fold(function () {
     // Unlink if there is something to unlink
     unlinkIfRequired(editor, info);
   }, function (url) {
@@ -88,7 +88,7 @@ const applyInfo = function (editor, info) {
 
     const activeLink = info.link.bind(Fun.identity);
     activeLink.fold(function () {
-      const text = info.text.filter(isNotEmpty).getOr(url);
+      const text = info.text.toOption().filter(isNotEmpty).getOr(url);
       editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
     }, function (link) {
       const text = getTextToApply(link, url, info);

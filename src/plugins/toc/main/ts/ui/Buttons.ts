@@ -28,27 +28,32 @@ const isToc = function (editor) {
 };
 
 const register = function (editor) {
-  editor.addButton('toc', {
+  editor.ui.registry.addButton('toc', {
     tooltip: 'Table of Contents',
-    cmd: 'mceInsertToc',
+    onAction: () => editor.execCommand('mceInsertToc'),
     icon: 'toc',
     onPostRender: toggleState(editor)
   });
 
-  editor.addButton('tocupdate', {
+  editor.ui.registry.addButton('tocupdate', {
     tooltip: 'Update',
-    cmd: 'mceUpdateToc',
+    onAction: () => editor.execCommand('mceUpdateToc'),
     icon: 'reload'
   });
 
-  editor.addMenuItem('toc', {
+  editor.ui.registry.addMenuItem('toc', {
     text: 'Table of Contents',
-    context: 'insert',
-    cmd: 'mceInsertToc',
+    onAction: () => editor.execCommand('mceInsertToc'),
+    icon: 'toc',
     onPostRender: toggleState(editor)
   });
 
-  editor.addContextToolbar(isToc(editor), 'tocupdate');
+  editor.ui.registry.addContextToolbar('toc', {
+    type: 'contexttoolbar',
+    items: [ 'tocupdate' ],
+    predicate: isToc(editor),
+    position: 'node'
+  });
 };
 
 export default {

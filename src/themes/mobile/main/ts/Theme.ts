@@ -17,12 +17,13 @@ import IosRealm from './ui/IosRealm';
 import CssUrls from './util/CssUrls';
 import FormatChangers from './util/FormatChangers';
 import SkinLoaded from './util/SkinLoaded';
+import { HTMLElement } from '@ephox/dom-globals';
 
 /// not to be confused with editor mode
 const READING = Fun.constant('toReading'); /// 'hide the keyboard'
 const EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
-ThemeManager.add('mobile', function (editor) {
+export const renderMobileTheme = function (editor) {
   const renderUI = function (args) {
     const cssUrls = CssUrls.derive(editor);
 
@@ -238,8 +239,8 @@ ThemeManager.add('mobile', function (editor) {
     });
 
     return {
-      iframeContainer: realm.socket().element().dom(),
-      editorContainer: realm.element().dom()
+      iframeContainer: realm.socket().element().dom() as HTMLElement,
+      editorContainer: realm.element().dom() as HTMLElement
     };
   };
 
@@ -254,6 +255,8 @@ ThemeManager.add('mobile', function (editor) {
     },
     renderUI
   };
-});
+};
+
+ThemeManager.add('mobile', renderMobileTheme);
 
 export default function () { }

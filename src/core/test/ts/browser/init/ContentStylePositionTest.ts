@@ -2,14 +2,14 @@ import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, Node } from '@ephox/sugar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
 
   const contentStyle = '.class {color: blue;}';
 
@@ -30,6 +30,6 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', functio
     ], onSuccess, onFailure);
   }, {
     content_style: contentStyle,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

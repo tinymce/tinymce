@@ -12,15 +12,28 @@ import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import { FormData } from '@ephox/dom-globals';
+import { BlobCache, BlobInfo } from '../../../../../core/main/ts/api/file/BlobCache';
 
 /**
  * This is basically cut down version of tinymce.core.file.Uploader, which we could use directly
  * if it wasn't marked as private.
  */
 
+export type SuccessCallback = (path: string) => void;
+export type FailureCallback = (error: string) => void;
+export type ProgressCallback = (percent: number) => void;
+export type UploadHandler = (blobInfo: BlobCache, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
+
+export interface UploaderSettings {
+  url?: string;
+  credentials?: boolean;
+  basePath?: string;
+  handler?: UploadHandler;
+}
+
 const noop = function () {};
 
-const pathJoin = function (path1, path2) {
+const pathJoin = function (path1: string | undefined, path2: string) {
   if (path1) {
     return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
   }
@@ -28,8 +41,8 @@ const pathJoin = function (path1, path2) {
   return path2;
 };
 
-export default function (settings) {
-  const defaultHandler = function (blobInfo, success, failure, progress) {
+export default function (settings: UploaderSettings) {
+  const defaultHandler = function (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) {
     let xhr, formData;
 
     xhr = new XMLHttpRequest();
@@ -68,8 +81,8 @@ export default function (settings) {
     xhr.send(formData);
   };
 
-  const uploadBlob = function (blobInfo, handler) {
-    return new Promise(function (resolve, reject) {
+  const uploadBlob = function (blobInfo: BlobCache, handler: UploadHandler) {
+    return new Promise<string>(function (resolve, reject) {
       try {
         handler(blobInfo, resolve, reject, noop);
       } catch (ex) {
@@ -78,11 +91,11 @@ export default function (settings) {
     });
   };
 
-  const isDefaultHandler = function (handler) {
+  const isDefaultHandler = function (handler: Function) {
     return handler === defaultHandler;
   };
 
-  const upload = function (blobInfo) {
+  const upload = function (blobInfo: BlobCache): Promise<string> {
     return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
   };
 

@@ -1,360 +1,164 @@
-/**
- * Dialog.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
+import { DialogInstanceApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Dialog';
+import { HTMLAnchorElement } from '@ephox/dom-globals';
+import { Arr, Future, Option, Options } from '@ephox/katamari';
 
-import Delay from 'tinymce/core/api/util/Delay';
-import Tools from 'tinymce/core/api/util/Tools';
-import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
+import { ListOptions } from '../core/ListOptions';
 import Utils from '../core/Utils';
+import { DialogChanges } from './DialogChanges';
+import { DialogConfirms } from './DialogConfirms';
+import { DialogInfo } from './DialogInfo';
+import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-let attachState = {};
+const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: DialogInstanceApi<LinkDialogData>) => {
+  const data: LinkDialogData = api.getData();
 
-const createLinkList = function (editor, callback) {
-  const linkList = Settings.getLinkList(editor.settings);
-
-  if (typeof linkList === 'string') {
-    XHR.send({
-      url: linkList,
-      success (text) {
-        callback(editor, JSON.parse(text));
-      }
-    });
-  } else if (typeof linkList === 'function') {
-    linkList(function (list) {
-      callback(editor, list);
-    });
-  } else {
-    callback(editor, linkList);
-  }
-};
-
-const buildListItems = function (inputList, itemCallback?, startItems?) {
-  const appendItems = function (values, output?) {
-    output = output || [];
-
-    Tools.each(values, function (item) {
-      const menuItem: any = { text: item.text || item.title };
-
-      if (item.menu) {
-        menuItem.menu = appendItems(item.menu);
-      } else {
-        menuItem.value = item.value;
-
-        if (itemCallback) {
-          itemCallback(menuItem);
-        }
-      }
-
-      output.push(menuItem);
-    });
-
-    return output;
+  const resultData = {
+    href: data.url.value,
+    text: data.text ? data.text : text.getOr(undefined),
+    target: data.target ? data.target : undefined,
+    rel: data.rel ? data.rel : undefined,
+    class: data.classz ? data.classz : undefined,
+    title: data.title ? data.title : undefined,
   };
 
-  return appendItems(inputList, startItems || []);
-};
+  console.log('resultData', resultData, text.getOr('<none>'));
 
-// Delay confirm since onSubmit will move focus
-const delayedConfirm = function (editor, message, callback) {
-  const rng = editor.selection.getRng();
+  const attachState = {
+    href: data.url.value,
+    attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
+  };
 
-  Delay.setEditorTimeout(editor, function () {
-    editor.windowManager.confirm(message, function (state) {
-      editor.selection.setRng(rng);
-      callback(state);
-    });
+  const insertLink = Utils.link(editor, attachState);
+  const removeLink = Utils.unlink(editor);
+
+  const url = data.url.value;
+
+  if (!url) {
+    removeLink();
+    return;
+  }
+
+  if (text.is(data.text) || (info.optNode.isNone() && !data.text)) {
+    delete resultData.text;
+  }
+
+  console.log('result data', resultData);
+
+  DialogConfirms.preprocess(editor, assumeExternalTargets, resultData).get((pData) => {
+    console.log('preprocessed', pData);
+    insertLink(pData);
   });
+
+  api.close();
 };
 
-const showDialog = function (editor, linkList) {
-  const data: any = {};
-  const selection = editor.selection;
-  const dom = editor.dom;
-  let anchorElm, initialText;
-  let win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
+const collectData = (editor): Future<LinkDialogInfo> => {
+  const settings = editor.settings;
+  const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
+  return DialogInfo.collect(editor, settings, anchorNode);
+};
 
-  const linkListChangeHandler = function (e) {
-    const textCtrl = win.find('#text');
-
-    if (!textCtrl.value() || (e.lastControl && textCtrl.value() === e.lastControl.text())) {
-      textCtrl.value(e.control.text());
-    }
-
-    win.find('#href').value(e.control.value());
-  };
-
-  const buildAnchorListControl = function (url) {
-    const anchorList = [];
-
-    Tools.each(editor.dom.select('a:not([href])'), function (anchor) {
-      const id = anchor.name || anchor.id;
-
-      if (id) {
-        anchorList.push({
-          text: id,
-          value: '#' + id,
-          selected: url.indexOf('#' + id) !== -1
-        });
+const getInitialData = (settings: LinkDialogInfo): LinkDialogData => ({
+  url: {
+    value: settings.anchor.url.getOr(''),
+    meta: {
+      attach: () => { },
+      text: settings.anchor.text.getOr(''),
+      original: {
+        value: settings.anchor.url.getOr(''),
       }
-    });
-
-    if (anchorList.length) {
-      anchorList.unshift({ text: 'None', value: '' });
-
-      return {
-        name: 'anchor',
-        type: 'listbox',
-        label: 'Anchors',
-        values: anchorList,
-        onselect: linkListChangeHandler
-      };
     }
-  };
+  },
+  text: settings.anchor.text.getOr(''),
+  title: settings.anchor.title.getOr(''),
+  anchor: settings.anchor.url.getOr(''),
+  link: settings.anchor.url.getOr(''),
+  rel: settings.anchor.rel.getOr(''),
+  target: settings.anchor.target.getOr(''),
+  classz: settings.anchor.linkClass.getOr('')
+});
 
-  const updateText = function () {
-    if (!initialText && onlyText && !data.text) {
-      this.parent().parent().find('#text')[0].value(this.value());
+const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
+
+  const urlInput = [
+    {
+      name: 'url',
+      type: 'urlinput',
+      filetype: 'file',
+      label: 'Url'
     }
-  };
+  ];
 
-  const urlChange = function (e) {
-    const meta = e.meta || {};
-
-    if (linkListCtrl) {
-      linkListCtrl.value(editor.convertURL(this.value(), 'href'));
-    }
-
-    Tools.each(e.meta, function (value, key) {
-      const inp = win.find('#' + key);
-
-      if (key === 'text') {
-        if (initialText.length === 0) {
-          inp.value(value);
-          data.text = value;
-        }
-      } else {
-        inp.value(value);
-      }
-    });
-
-    if (meta.attach) {
-      attachState = {
-        href: this.value(),
-        attach: meta.attach
-      };
-    }
-
-    if (!meta.text) {
-      updateText.call(this);
-    }
-  };
-
-  const onBeforeCall = function (e) {
-    e.meta = win.toJSON();
-  };
-
-  onlyText = Utils.isOnlyTextSelected(selection.getContent());
-  anchorElm = Utils.getAnchorElement(editor);
-
-  data.text = initialText = Utils.getAnchorText(editor.selection, anchorElm);
-  data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-
-  if (anchorElm) {
-    data.target = dom.getAttrib(anchorElm, 'target');
-  } else if (Settings.hasDefaultLinkTarget(editor.settings)) {
-    data.target = Settings.getDefaultLinkTarget(editor.settings);
-  }
-
-  if ((value = dom.getAttrib(anchorElm, 'rel'))) {
-    data.rel = value;
-  }
-
-  if ((value = dom.getAttrib(anchorElm, 'class'))) {
-    data.class = value;
-  }
-
-  if ((value = dom.getAttrib(anchorElm, 'title'))) {
-    data.title = value;
-  }
-
-  if (onlyText) {
-    textListCtrl = {
+  const displayText = settings.anchor.text.map(() => (
+    {
       name: 'text',
-      type: 'textbox',
-      size: 40,
-      label: 'Text to display',
-      onchange () {
-        data.text = this.value();
-      }
-    };
-  }
-
-  if (linkList) {
-    linkListCtrl = {
-      type: 'listbox',
-      label: 'Link list',
-      values: buildListItems(
-        linkList,
-        function (item) {
-          item.value = editor.convertURL(item.value || item.url, 'href');
-        },
-        [{ text: 'None', value: '' }]
-      ),
-      onselect: linkListChangeHandler,
-      value: editor.convertURL(data.href, 'href'),
-      onPostRender () {
-        /*eslint consistent-this:0*/
-        linkListCtrl = this;
-      }
-    };
-  }
-
-  if (Settings.shouldShowTargetList(editor.settings)) {
-    if (Settings.getTargetList(editor.settings) === undefined) {
-      Settings.setTargetList(editor, [
-        { text: 'None', value: '' },
-        { text: 'New window', value: '_blank' }
-      ]);
+      type: 'input',
+      label: 'Text to display'
     }
+  )).toArray();
 
-    targetListCtrl = {
-      name: 'target',
-      type: 'listbox',
-      label: 'Target',
-      values: buildListItems(Settings.getTargetList(editor.settings))
-    };
-  }
-
-  if (Settings.hasRelList(editor.settings)) {
-    relListCtrl = {
-      name: 'rel',
-      type: 'listbox',
-      label: 'Rel',
-      values: buildListItems(
-        Settings.getRelList(editor.settings),
-        function (item) {
-          if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-            item.value = Utils.toggleTargetRules(item.value, data.target === '_blank');
-          }
-        }
-      )
-    };
-  }
-
-  if (Settings.hasLinkClassList(editor.settings)) {
-    classListCtrl = {
-      name: 'class',
-      type: 'listbox',
-      label: 'Class',
-      values: buildListItems(
-        Settings.getLinkClassList(editor.settings),
-        function (item) {
-          if (item.value) {
-            item.textStyle = function () {
-              return editor.formatter.getCssText({ inline: 'a', classes: [item.value] });
-            };
-          }
-        }
-      )
-    };
-  }
-
-  if (Settings.shouldShowLinkTitle(editor.settings)) {
-    linkTitleCtrl = {
+  const titleText = settings.flags.titleEnabled ? [
+    {
       name: 'title',
-      type: 'textbox',
-      label: 'Title',
-      value: data.title
-    };
-  }
-
-  win = editor.windowManager.open({
-    title: 'Insert link',
-    data,
-    body: [
-      {
-        name: 'href',
-        type: 'filepicker',
-        filetype: 'file',
-        size: 40,
-        autofocus: true,
-        label: 'Url',
-        onchange: urlChange,
-        onkeyup: updateText,
-        onpaste: updateText,
-        onbeforecall: onBeforeCall
-      },
-      textListCtrl,
-      linkTitleCtrl,
-      buildAnchorListControl(data.href),
-      linkListCtrl,
-      relListCtrl,
-      targetListCtrl,
-      classListCtrl
-    ],
-    onSubmit (e) {
-      const assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
-      const insertLink = Utils.link(editor, attachState);
-      const removeLink = Utils.unlink(editor);
-
-      const resultData = Tools.extend({}, data, e.data);
-      /*eslint dot-notation: 0*/
-      const href = resultData.href;
-
-      if (!href) {
-        removeLink();
-        return;
-      }
-
-      if (!onlyText || resultData.text === initialText) {
-        delete resultData.text;
-      }
-
-      // Is email and not //user@domain.com
-      if (href.indexOf('@') > 0 && href.indexOf('//') === -1 && href.indexOf('mailto:') === -1) {
-        delayedConfirm(
-          editor,
-          'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
-          function (state) {
-            if (state) {
-              resultData.href = 'mailto:' + href;
-            }
-            insertLink(resultData);
-          }
-        );
-        return;
-      }
-
-      // Is not protocol prefixed
-      if ((assumeExternalTargets === true && !/^\w+:/i.test(href)) ||
-        (assumeExternalTargets === false && /^\s*www[\.|\d\.]/i.test(href))) {
-        delayedConfirm(
-          editor,
-          'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
-          function (state) {
-            if (state) {
-              resultData.href = 'http://' + href;
-            }
-            insertLink(resultData);
-          }
-        );
-        return;
-      }
-
-      insertLink(resultData);
+      type: 'input',
+      label: 'Title'
     }
-  });
+  ] : [];
+
+  const initialData: LinkDialogData = getInitialData(settings);
+  const dialogDelta = DialogChanges.init(initialData, settings);
+  const catalogs = settings.catalogs;
+
+  return {
+    title: 'Insert link',
+    size: 'normal',
+    body: {
+      type: 'panel',
+      items: Arr.flatten([
+        urlInput,
+        displayText,
+        titleText,
+        Options.cat([
+          catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
+          catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
+          catalogs.targets.map(ListOptions.createUi('target', 'Targets')),
+          catalogs.link.map(ListOptions.createUi('link', 'Link list')),
+          catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
+        ])
+      ])
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
+      }
+    ],
+    initialData,
+    onChange: (api: DialogInstanceApi<LinkDialogData>, {name}) => {
+      dialogDelta.onChange(api.getData, { name }).each((newData) => {
+        api.setData(newData);
+      });
+    },
+    onSubmit
+  };
 };
 
 const open = function (editor) {
-  createLinkList(editor, showDialog);
+  const data = collectData(editor);
+  data.map((info) => {
+    const onSubmit = handleSubmit(editor, info, info.anchor.text, Settings.assumeExternalTargets(editor.settings));
+    return makeDialog(info, onSubmit);
+  }).get((spec) => {
+    editor.windowManager.open(spec);
+  });
 };
 
 export default {

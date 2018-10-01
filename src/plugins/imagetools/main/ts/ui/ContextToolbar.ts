@@ -13,10 +13,10 @@ import * as Settings from '../api/Settings';
 import Actions from '../core/Actions';
 
 const register = function (editor) {
-  editor.addContextToolbar(
-    Fun.curry(Actions.isEditableImage, editor),
-    Settings.getToolbarItems(editor)
-  );
+  editor.ui.registry.addContextToolbar('imagetools', {
+    items: Settings.getToolbarItems(editor),
+    predicate: Fun.curry(Actions.isEditableImage, editor)
+  });
 };
 
 export default {

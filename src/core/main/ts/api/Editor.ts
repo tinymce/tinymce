@@ -7,30 +7,32 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import { AddOnManager } from './AddOnManager';
-import EditorCommands from './EditorCommands';
-import EditorObservable from './EditorObservable';
-import { ParamTypeMap, getEditorSettings, getParam } from '../EditorSettings';
-import Env from './Env';
-import * as Mode from '../Mode';
-import Shortcuts from './Shortcuts';
-import DOMUtils from './dom/DOMUtils';
-import DomQuery from './dom/DomQuery';
-import EditorFocus from '../focus/EditorFocus';
-import Render from '../init/Render';
-import Sidebar from '../ui/Sidebar';
-import Tools from './util/Tools';
-import URI from './util/URI';
-import Uuid from '../util/Uuid';
+import { Registry } from '@ephox/bridge';
+import { Document, HTMLElement, Window } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { Annotator } from 'tinymce/core/api/Annotator';
 import { Selection } from 'tinymce/core/api/dom/Selection';
-import * as EditorContent from 'tinymce/core/content/EditorContent';
-import * as EditorRemove from '../EditorRemove';
-import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UndoManager } from 'tinymce/core/api/UndoManager';
-import { Annotator } from 'tinymce/core/api/Annotator';
-import { HTMLElement, Document, Window, Element, HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
+import * as EditorContent from 'tinymce/core/content/EditorContent';
+import SelectionOverrides from 'tinymce/core/SelectionOverrides';
+
+import * as EditorRemove from '../EditorRemove';
+import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
+import EditorFocus from '../focus/EditorFocus';
+import Render from '../init/Render';
+import * as Mode from '../Mode';
+import Sidebar from '../ui/Sidebar';
+import Uuid from '../util/Uuid';
+import { AddOnManager } from './AddOnManager';
+import DomQuery from './dom/DomQuery';
+import DOMUtils from './dom/DOMUtils';
+import EditorCommands from './EditorCommands';
+import EditorObservable from './EditorObservable';
+import Env from './Env';
+import Shortcuts from './Shortcuts';
+import Tools from './util/Tools';
+import URI from './util/URI';
 
 /**
  * Include the base event class documentation.
@@ -59,7 +61,7 @@ import { HTMLElement, Document, Window, Element, HTMLInputElement, HTMLTextAreaE
  */
 
 export type AnyFunction = (...x: any[]) => any;
-
+export type EditorSettings = Record<string, any>;
 export interface Editor {
   $: any;
   annotator: Annotator;
@@ -111,13 +113,15 @@ export interface Editor {
   schema: Schema;
   selection: Selection;
   serializer: any;
-  settings: Record<string, any>;
+  settings: EditorSettings;
   shortcuts: any;
+  sidebars?: SidebarConfig[];
   startContent: string;
   suffix: string;
   targetElm: HTMLElement;
   theme: any;
   undoManager: UndoManager;
+  ui: Ui;
   validate: boolean;
   windowManager: any;
   _beforeUnload: AnyFunction;
@@ -135,7 +139,7 @@ export interface Editor {
   addQueryStateHandler(name: string, callback, scope?: object): void;
   addQueryValueHandler(name: string, callback, scope?: object): void;
   addShortcut(pattern: string, desc: string, cmdFunc, scope?: object): void;
-  addSidebar(name: string, settings): void;
+  addSidebar(name: string, settings: SidebarSettings): void;
   addVisual(elm?): void;
   bindPendingEventDelegates(): void;
   convertURL(url: string, name: string, elm?): string;
@@ -170,7 +174,7 @@ export interface Editor {
   queryCommandValue(cmd: string): any;
   remove(): void;
   render(): void;
-  save(args?: SaveArgs): void;
+  save(args?): void;
   setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): void;
   setDirty(state: boolean): void;
   setMode(mode: string): void;
@@ -183,14 +187,59 @@ export interface Editor {
   _scanForImages(): void;
 }
 
-export interface SaveArgs {
-  is_removing?: boolean;
-  save?: boolean;
-  element?: Element;
-  content?: any;
-  no_events?: boolean;
-  format?: 'raw';
-  set_dirty?: boolean;
+export interface Ui {
+  registry: Registry.Registry;
+  // WIP - TODO
+  dialog: {
+    open: () => void,    // windowManager.open
+    confirm: () => void, // windowManager.confirm
+    alert: () => void    // windowManager.alert
+  };
+  notification: {
+    open: () => void,   // notificationManager.open
+    close: () => void,  // notificationManager.open
+    getNotifications: () => void // notificationManager.getNotifications
+  };
+}
+
+export interface AddButtonSettings {
+  active?: boolean;
+  text?: string;
+  cmd?: string;
+  stateSelector?: string[];
+  icon?: string;
+  tooltip?: string;
+  title?: string;
+  type?: string;
+  ariaLabel?: string;
+  onclick?(): void;
+  action?(): void;
+  onAction?(): void;
+}
+
+export interface AddMenuItem {
+  cmd?: string;
+  text: string;
+  context: string;
+  onclick(): void;
+}
+
+export interface SidebarSettings {
+  tooltip: string;
+  icon: string;
+  image?: string;
+  onshow?(api: UiSidebarApi): void;
+  onrender?(api: UiSidebarApi): void;
+  onhide?(api: UiSidebarApi): void;
+}
+
+export interface UiSidebarApi {
+  element(): HTMLElement;
+}
+
+export interface SidebarConfig {
+  name: string;
+  settings: SidebarSettings;
 }
 
 // Shorten these names
@@ -325,6 +374,27 @@ export const Editor = function (id, settings, editorManager) {
   if (settings.override_viewport === false) {
     Env.overrideViewPort = false;
   }
+
+  const registry = Registry.create();
+  /**
+   * Editor ui components
+   *
+   * @property ui
+   * @type Object
+   */
+  self.ui = {
+    registry,
+    dialog: {
+      open: Fun.noop,    // windowManager.open
+      confirm: Fun.noop, // windowManager.confirm
+      alert: Fun.noop    // windowManager.alert
+    },
+    notification: {
+      open: Fun.noop,   // notificationManager.open
+      close: Fun.noop,  // notificationManager.open
+      getNotifications: Fun.noop // notificationManager.getNotifications
+    }
+  };
 
   // Call setup
   editorManager.fire('SetupEditor', { editor: self });
@@ -499,7 +569,8 @@ Editor.prototype = {
    *    }
    * });
    */
-  addButton (name, settings) {
+
+  addButton (name: string, settings: Partial<AddButtonSettings>) {
     const self = this;
 
     if (settings.cmd) {
@@ -542,7 +613,7 @@ Editor.prototype = {
    *    }
    * });
    */
-  addSidebar (name, settings) {
+  addSidebar (name: string, settings: SidebarSettings) {
     return Sidebar.add(this, name, settings);
   },
 
@@ -571,7 +642,7 @@ Editor.prototype = {
    *    }
    * });
    */
-  addMenuItem (name, settings) {
+  addMenuItem (name: string, settings: AddMenuItem) {
     const self = this;
 
     if (settings.cmd) {
@@ -589,9 +660,9 @@ Editor.prototype = {
    *
    * @method addContextToolbar
    * @param {function/string} predicate Predicate that needs to return true if provided strings get converted into CSS predicates.
-   * @param {String/Array} items String or array with items to add to the context toolbar.
+   * @param {String} items String comma separated with items to add to the context toolbar.
    */
-  addContextToolbar (predicate, items) {
+  addContextToolbar (predicate: (any) => boolean | string, items: string) {
     const self = this;
     let selector;
 
@@ -600,7 +671,7 @@ Editor.prototype = {
     // Convert selector to predicate
     if (typeof predicate === 'string') {
       selector = predicate;
-      predicate = function (elm) {
+      predicate = function (elm): boolean {
         return self.dom.is(elm, selector);
       };
     }
@@ -878,8 +949,8 @@ Editor.prototype = {
    * @param {Object} args Optional content object, this gets passed around through the whole save process.
    * @return {String} HTML string that got set into the textarea/div.
    */
-  save (args: SaveArgs) {
-    const self: Editor = this;
+  save (args) {
+    const self = this;
     let elm = self.getElement(), html, form;
 
     if (!elm || !self.initialized || self.removed) {
@@ -904,9 +975,7 @@ Editor.prototype = {
     html = args.content;
 
     if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
-      if (args.is_removing || !self.inline) {
-        elm.innerHTML = html;
-      }
+      elm.innerHTML = html;
 
       // Update hidden form element
       if ((form = DOM.getParent(self.id, 'form'))) {
@@ -918,7 +987,7 @@ Editor.prototype = {
         });
       }
     } else {
-      (elm as HTMLInputElement | HTMLTextAreaElement).value = html;
+      elm.value = html;
     }
 
     args.element = elm = null;

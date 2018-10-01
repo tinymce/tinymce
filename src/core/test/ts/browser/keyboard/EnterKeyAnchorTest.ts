@@ -2,7 +2,7 @@ import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/ag
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
@@ -206,6 +206,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       sTestEnterAtEndOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

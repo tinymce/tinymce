@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import JSON from 'tinymce/core/api/util/JSON';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (success, failure) => {
@@ -414,6 +414,6 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
         'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
     },
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

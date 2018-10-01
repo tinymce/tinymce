@@ -1,11 +1,11 @@
 import { Logger, Pipeline, Step, GeneralSteps } from '@ephox/agar';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (success, failure) => {
-    ModernTheme();
+    Theme();
 
     const sFakeMultiClick = (editor: Editor, clickCount) => {
       return Step.sync(() => {
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     }, {
       plugins: '',
       toolbar: '',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, function () {
       success();
     }, failure);

@@ -8,31 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const postRender = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
-
-    editor.on('FullscreenStateChanged', function (e) {
-      ctrl.active(e.state);
-    });
-  };
+const makeSetupHandler = (editor) => (api) => {
+  api.setActive(false);
+  const editorEventCallback = (e) => api.setActive(e.state);
+  editor.on('FullscreenStateChanged', editorEventCallback);
+  return () => editor.off('FullscreenStateChanged', editorEventCallback);
 };
 
 const register = function (editor) {
-  editor.addMenuItem('fullscreen', {
+  editor.ui.registry.addToggleMenuItem('fullscreen', {
     text: 'Fullscreen',
     shortcut: 'Ctrl+Shift+F',
     selectable: true,
-    cmd: 'mceFullScreen',
-    onPostRender: postRender(editor),
-    context: 'view'
+    onAction: () => editor.execCommand('mceFullScreen'),
+    onSetup: makeSetupHandler(editor)
   });
 
-  editor.addButton('fullscreen', {
-    active: false,
+  editor.ui.registry.addToggleButton('fullscreen', {
     tooltip: 'Fullscreen',
-    cmd: 'mceFullScreen',
-    onPostRender: postRender(editor)
+    icon: 'fullscreen',
+    onAction: () => editor.execCommand('mceFullScreen'),
+    onSetup: makeSetupHandler(editor)
   });
 };
 

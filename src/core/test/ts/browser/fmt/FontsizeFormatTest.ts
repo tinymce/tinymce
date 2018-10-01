@@ -1,6 +1,6 @@
 import { Pipeline, RawAssertions, Step } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
 
   const sAssertMenuItemCount = function (expected, editor) {
     return Step.sync(function () {
@@ -28,6 +28,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
   }, {
     toolbar: 'fontsizeselect',
     fontsize_formats: '1em',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

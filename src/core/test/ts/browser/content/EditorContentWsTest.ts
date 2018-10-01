@@ -1,16 +1,16 @@
 import { Chain, Pipeline, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { ApiChains, Editor } from '@ephox/mcagar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorContentWsTest', (success, failure) => {
-  ModernTheme();
+  Theme();
 
   Pipeline.async({}, [
     Logger.t('Editor initialized on pre element should retain whitespace on get/set content', Chain.asStep({}, [
       Editor.cFromHtml('<pre>  a  </pre>', {
         inline: true,
-        skin_url: '/project/js/tinymce/skins/lightgray'
+        skin_url: '/project/js/tinymce/skins/oxide'
       }),
       ApiChains.cAssertContent('  a  '),
       ApiChains.cSetContent('  b  '),

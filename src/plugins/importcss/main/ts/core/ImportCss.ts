@@ -14,6 +14,7 @@ import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
+import { generate } from './SelectorModel';
 
 const removeCacheSuffix = function (url: string) {
   const cacheSuffix = Env.cacheSuffix;
@@ -26,7 +27,7 @@ const removeCacheSuffix = function (url: string) {
 };
 
 const isSkinContentCss = function (editor: Editor, href: string) {
-  const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+  const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
 
   if (skin) {
     const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/' + skin;
@@ -213,9 +214,11 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('renderFormatsMenu', function (e) {
+  editor.on('init', function (e) {
+    const model = generate();
+
     const globallyUniqueSelectors = {};
-    const selectorFilter = compileFilter(Settings.getSelectorFilter(editor)), ctrl = e.control;
+    const selectorFilter = compileFilter(Settings.getSelectorFilter(editor));
     const groups = compileUserDefinedGroups(Settings.getCssGroups(editor));
 
     const processSelector = function (selector: string, group: StyleGroup) {
@@ -227,8 +230,10 @@ const setup = function (editor: Editor) {
           const formatName = format.name || DOMUtils.DOM.uniqueId();
           editor.formatter.register(formatName, format);
 
-          return Tools.extend({}, ctrl.settings.itemDefaults, {
-            text: format.title,
+          // NOTE: itemDefaults has been removed as it was not supported by bridge and its concept
+          // is handled elsehwere.
+          return Tools.extend({}, {
+            title: format.title,
             format: formatName
           });
         }
@@ -236,10 +241,6 @@ const setup = function (editor: Editor) {
 
       return null;
     };
-
-    if (!Settings.shouldAppend(editor)) {
-      ctrl.items().remove();
-    }
 
     Tools.each(getSelectors(editor, e.doc || editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector: string) {
       if (selector.indexOf('.mce-') === -1) {
@@ -250,26 +251,24 @@ const setup = function (editor: Editor) {
             Tools.each(selectorGroups, function (group) {
               const menuItem = processSelector(selector, group);
               if (menuItem) {
-                group.item.menu.push(menuItem);
+                model.addItemToGroup(group.title, menuItem);
               }
             });
           } else {
             const menuItem = processSelector(selector, null);
             if (menuItem) {
-              ctrl.add(menuItem);
+              model.addItem(menuItem);
             }
           }
         }
       }
     });
 
-    Tools.each(groups, function (group) {
-      if (group.item.menu.length > 0) {
-        ctrl.add(group.item);
-      }
+    const items = model.toFormats();
+    editor.fire('addStyleModifications', {
+      items,
+      replace: !Settings.shouldAppend(editor)
     });
-
-    e.control.renderNew();
   });
 };
 

@@ -5,10 +5,13 @@ import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import ImageUtils from '../module/test/ImageUtils';
 import { document } from '@ephox/dom-globals';
+
+import 'tinymce/themes/silver/Theme';
+
+// TODO: This needs to be looked at again once notifications come back
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
   const success = arguments[arguments.length - 2];
@@ -18,18 +21,17 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
   Plugin();
-  ModernTheme();
 
   const sAssertErrorMessage = function (html) {
     return Chain.asStep(TinyDom.fromDom(document.body), [
-      UiFinder.cWaitFor('Could not find notification', '.mce-notification-inner'),
+      UiFinder.cWaitFor('Could not find notification', '.tox-notification__body'),
       Chain.mapper(Html.get),
       Assertions.cAssertHtml('Message html does not match', html)
     ]);
   };
 
   const sCloseErrorMessage = Chain.asStep(TinyDom.fromDom(document.body), [
-    UiFinder.cWaitFor('Could not find notification', '.mce-notification > button'),
+    UiFinder.cWaitFor('Could not find notification', '.tox-notification > button'),
     Mouse.cClick
   ]);
 
@@ -119,9 +121,10 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
       Pipeline.async({}, stepsWithTeardown, onSuccess, onFailure);
     },
     {
+      theme: 'silver',
       plugins: 'imagetools',
       automatic_uploads: false,
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide',
     },
     success,
     failure

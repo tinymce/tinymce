@@ -1,6 +1,8 @@
+// TODO: TINY-1645 This helper is duplicated from Alloy/tests, its used by the mobile theme, also the alloy-docs project has this duplicated too
+
 import { Assertions, Pipeline, Step } from '@ephox/agar';
-import { Attachment, Gui } from '@ephox/alloy';
-import { Merger } from '@ephox/katamari';
+import { Attachment, Gui, Debugging } from '@ephox/alloy';
+import { Merger, Id } from '@ephox/katamari';
 import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 
 import TestStore from './TestStore';
@@ -15,6 +17,7 @@ const setup = function (createComponent, f, success, failure) {
   const body = Element.fromDom(document.body);
 
   Attachment.attachSystem(body, gui);
+  Debugging.registerInspector(Id.generate('test-case'), gui);
 
   const component = createComponent(store, doc, body);
   gui.add(component);

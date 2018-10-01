@@ -33,3 +33,7 @@ export interface PositionCoordinates {
   top: () => number;
   translate: (x: number, y: number) => PositionCoordinates;
 }
+
+export interface SugarElement {
+  dom: () => HTMLElement;
+}

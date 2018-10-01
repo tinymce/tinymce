@@ -7,20 +7,21 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
+import { Arr, Option } from '@ephox/katamari';
+import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
 
-const insertIframeHtml = function (editor, win, html) {
+const getPreviewContent = (editor, html) => {
   if (html.indexOf('<html>') === -1) {
     let contentCssLinks = '';
 
-    Tools.each(editor.contentCSS, function (url) {
+    Tools.each(editor.contentCSS, (url) => {
       contentCssLinks += '<link type="text/css" rel="stylesheet" href="' +
-              editor.documentBaseURI.toAbsolute(url) +
-              '">';
+        editor.documentBaseURI.toAbsolute(url) +
+        '">';
     });
 
     let bodyClass = editor.settings.body_class || '';
@@ -30,116 +31,180 @@ const insertIframeHtml = function (editor, win, html) {
     }
 
     html = (
-            '<!DOCTYPE html>' +
-            '<html>' +
-            '<head>' +
-            contentCssLinks +
-            '</head>' +
-            '<body class="' + bodyClass + '">' +
-            html +
-            '</body>' +
-            '</html>'
-          );
+      '<!DOCTYPE html>' +
+      '<html>' +
+      '<head>' +
+      contentCssLinks +
+      '</head>' +
+      '<body class="' + bodyClass + '">' +
+      html +
+      '</body>' +
+      '</html>'
+    );
   }
 
-  html = Templates.replaceTemplateValues(editor, html, Settings.getPreviewReplaceValues(editor));
-
-  const doc = win.find('iframe')[0].getEl().contentWindow.document;
-  doc.open();
-  doc.write(html);
-  doc.close();
+  return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = function (editor, templateList) {
-  let win;
-  const values = [];
-  let templateHtml;
-
-  if (!templateList || templateList.length === 0) {
-    const message = editor.translate('No templates defined.');
-    editor.notificationManager.open({ text: message, type: 'info' });
-    return;
-  }
-
-  Tools.each(templateList, function (template) {
-    values.push({
-      selected: !values.length,
-      text: template.title,
-      value: {
-        url: template.url,
-        content: template.content,
-        description: template.description
-      }
-    });
-  });
-
-  const onSelectTemplate = function (e) {
-    const value = e.control.value();
-
-    if (value.url) {
-      XHR.send({
-        url: value.url,
-        success (html) {
-          templateHtml = html;
-          insertIframeHtml(editor, win, templateHtml);
-        }
-      });
-    } else {
-      templateHtml = value.content;
-      insertIframeHtml(editor, win, templateHtml);
+const open = (editor, templateList) => {
+  const createTemplates = () => {
+    if (!templateList || templateList.length === 0) {
+      const message = editor.translate('No templates defined.');
+      editor.notificationManager.open({ text: message, type: 'info' });
+      return Option.none();
     }
 
-    win.find('#description')[0].text(e.control.value().description);
+    return Option.from(Tools.map(templateList, (template, index) => {
+      return {
+        selected: index === 0,
+        text: template.title,
+        value: {
+          url: template.url,
+          content: template.content,
+          description: template.description
+        }
+      };
+    }));
   };
 
-  win = editor.windowManager.open({
-    title: 'Insert template',
-    layout: 'flex',
-    direction: 'column',
-    align: 'stretch',
-    padding: 15,
-    spacing: 10,
-    items: [
-      {
-        type: 'form',
-        flex: 0,
-        padding: 0,
-        items: [
-          {
-            type: 'container',
-            label: 'Templates',
-            items: {
-              type: 'listbox',
-              label: 'Templates',
-              name: 'template',
-              values,
-              onselect: onSelectTemplate
-            }
+  const createSelectBoxItems = (templates) => {
+    return Arr.map(templates, (v) => {
+      return {
+        text: v.text,
+        value: v.text
+      };
+    });
+  };
+
+  const findTemplate = (templates, templateTitle) => {
+    return Arr.find(templates, (t) => {
+      return t.text === templateTitle;
+    });
+  };
+
+  const getTemplateContent = (t) => {
+    return new Promise((resolve, reject) => {
+      if (t.value.url) {
+        XHR.send({
+          url: t.value.url,
+          success (html) {
+            resolve(html);
+          },
+          error: (e) => {
+            reject(e);
           }
-        ]
-      },
-      {
-        type: 'label',
-        name: 'description',
-        label: 'Description',
-        text: '\u00a0'
-      },
-      {
-        type: 'iframe',
-        flex: 1,
-        border: 1
+        });
+      } else {
+        resolve(t.value.content);
       }
-    ],
+    });
+  };
 
-    onsubmit () {
-      Templates.insertTemplate(editor, false, templateHtml);
-    },
+  const onChange = (templates) => (api, change) => {
+    if (change.name === 'template') {
+      const newTemplateTitle = api.getData().template;
+      findTemplate(templates, newTemplateTitle).each((t) => {
+        getTemplateContent(t).then((previewHtml) => {
+          const previewContent = getPreviewContent(editor, previewHtml);
+          api.setData({
+            preview: previewContent
+          });
+        });
+      });
+    }
+  };
 
-    minWidth: Settings.getDialogWidth(editor),
-    minHeight: Settings.getDialogHeight(editor)
-  });
+  const onSubmit = (templates) => (api) => {
+    const data = api.getData();
+    findTemplate(templates, data.template).each((t) => {
+      getTemplateContent(t).then((previewHtml) => {
+        Templates.insertTemplate(editor, false, previewHtml);
+        api.close();
+      });
+    });
+  };
 
-  win.find('listbox')[0].fire('select');
+  interface TemplateValues {
+    url?: string;
+    content: string;
+    description: string;
+  }
+
+  interface TemplateData {
+    selected: boolean;
+    text: string;
+    value: TemplateValues;
+  }
+
+  const openDialog = (templates: TemplateData[]) => {
+    const selectBoxItems = createSelectBoxItems(templates);
+
+    const dialogSpec = (bodyItems = [], initialData = {}) => ({
+      title: 'Insert template',
+      size: 'large',
+      layout: 'flex',
+      direction: 'column',
+      align: 'stretch',
+      padding: 15,
+      spacing: 10,
+      minWidth: Settings.getDialogWidth(editor),
+      minHeight: Settings.getDialogHeight(editor),
+      body: {
+        type: 'panel',
+        items: bodyItems
+      },
+      initialData,
+      buttons: [
+        {
+          type: 'submit',
+          name: 'ok',
+          text: 'Ok',
+          primary: true
+        },
+        {
+          type: 'cancel',
+          name: 'cancel',
+          text: 'Cancel',
+        }
+      ],
+      onSubmit: onSubmit(templates),
+      onChange: onChange(templates)
+    });
+
+    const dialogApi = editor.windowManager.open(dialogSpec());
+    dialogApi.block('Loading...');
+
+    getTemplateContent(templates[0]).then((previewHtml) => {
+      const content = getPreviewContent(editor, previewHtml);
+      const bodyItems = [
+        {
+          type: 'selectbox',
+          name: 'template',
+          label: 'Templates',
+          items: selectBoxItems
+        },
+        {
+          label: 'Preview',
+          type: 'iframe',
+          name: 'preview',
+          flex: 1,
+          border: 1,
+          sandboxed: false
+        }
+      ];
+      const initialData = {
+          template: templates[0].text,
+          preview: content
+      };
+
+      dialogApi.unblock();
+      dialogApi.redial(dialogSpec(bodyItems, initialData));
+      dialogApi.focus('template');
+    });
+  };
+
+  const optTemplates: Option<TemplateData[]> = createTemplates();
+  optTemplates.each(openDialog);
 };
 
 export default {

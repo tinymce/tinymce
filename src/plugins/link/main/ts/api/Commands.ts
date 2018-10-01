@@ -9,9 +9,19 @@
  */
 
 import Actions from '../core/Actions';
+import Settings from './Settings';
 
 const register = function (editor) {
-  editor.addCommand('mceLink', Actions.openDialog(editor));
+  editor.addCommand('mceLink', () => {
+    if (Settings.useQuickLink(editor.settings)) {
+      // Taken from ContextEditorEvents in silver. Find a better way.
+      editor.fire('contexttoolbar-show', {
+        toolbarKey: 'link-form'
+      });
+    } else {
+      Actions.openDialog(editor)();
+    }
+  });
 };
 
 export default {

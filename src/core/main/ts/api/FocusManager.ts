@@ -30,7 +30,7 @@ import { Element } from '@ephox/dom-globals';
  */
 const isEditorUIElement = function (elm: Element) {
   // Needs to be converted to string since svg can have focus: #6776
-  return elm.className.toString().indexOf('mce-') !== -1;
+  return elm.className.toString().indexOf('tox-') !== -1 || elm.className.toString().indexOf('mce-') !== -1;
 };
 
 export default {

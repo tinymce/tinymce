@@ -1,117 +1,94 @@
-import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
+import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, Mouse, Logger, Guard, RawAssertions } from '@ephox/agar';
+import { Event, HTMLElement, document } from '@ephox/dom-globals';
+import { Element, Focus } from '@ephox/sugar';
+import { Type } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { document } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
+const selectors = {
+  source: 'label:contains(Source) + input.tox-textfield',
+  width: '.tox-form__controls-h-stack span:contains(Width) + input.tox-textfield',
+  height: '.tox-form__controls-h-stack span:contains(Height) + input.tox-textfield',
+  embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',
+  okayButton: 'button.tox-button:contains(Ok)',
+  xClose: 'button[aria-label=Close]',
+  lockIcon: 'button.tox-lock',
+  embedButton: 'div.tox-tab:contains(Embed)'
+};
 
 const sOpenDialog = function (ui) {
-  return GeneralSteps.sequence([
-    ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button'),
-    ui.sWaitForPopup('wait for popup', 'div[role="dialog"]')
-  ]);
+  return Logger.t('Open dialog', GeneralSteps.sequence([
+    ui.sClickOnToolbar('Click on media button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
+    ui.sWaitForPopup('wait for popup', 'div.tox-dialog-wrap')
+  ]));
 };
 
-const cFindInDialog = function (mapper) {
-  return function (ui, text) {
-    return Chain.fromChains([
+const cFindInDialog = (selector: string) => (ui) => {
+  return Chain.control(
+    Chain.fromChains([
       ui.cWaitForPopup('Wait for popup', 'div[role="dialog"]'),
-      UiFinder.cFindIn('label:contains(' + text + ')'),
-      Chain.mapper(function (val) {
-        return TinyDom.fromDom(mapper(val));
-      })
-    ]);
-  };
-};
-
-const cFindWidthInput = cFindInDialog(function (value) {
-  return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Width"]');
-});
-
-const cFindHeightInput = cFindInDialog(function (value) {
-  return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Height"]');
-});
-
-const cGetWidthValue = function (ui) {
-  return Chain.fromChains([
-    cFindWidthInput(ui, 'Dimensions'),
-    UiControls.cGetValue
-  ]);
-};
-
-const cSetWidthValue = function (ui, value) {
-  return Chain.fromChains([
-    cFindWidthInput(ui, 'Dimensions'),
-    UiControls.cSetValue(value)
-  ]);
-};
-
-const cGetHeightValue = function (ui) {
-  return Chain.fromChains([
-    cFindHeightInput(ui, 'Dimensions'),
-    UiControls.cGetValue
-  ]);
-};
-
-const cSetHeightValue = function (ui, value) {
-  return Chain.fromChains([
-    cFindHeightInput(ui, 'Dimensions'),
-    UiControls.cSetValue(value)
-  ]);
-};
-
-const sAssertWidthValue = function (ui, value) {
-  return Waiter.sTryUntil('Wait for new width value',
-    Chain.asStep({}, [
-      cGetWidthValue(ui),
-      Assertions.cAssertEq('Assert size value', value)
-    ]), 1, 3000
+      UiFinder.cFindIn(selector)
+    ]),
+    Guard.addLogging(`Find ${selector} in dialog`)
   );
 };
 
-const sAssertHeightValue = function (ui, value) {
-  return Waiter.sTryUntil('Wait for new height value',
-    Chain.asStep({}, [
-      cGetHeightValue(ui),
-      Assertions.cAssertEq('Assert size value', value)
-    ]), 1, 3000
+const cGetValueOn = (selector: string) => (ui) => {
+  return Chain.control(
+    Chain.fromChains([
+      cFindInDialog(selector)(ui),
+      UiControls.cGetValue
+    ]),
+    Guard.addLogging('Get value')
   );
 };
 
-const sAssertSourceValue = function (ui, value) {
-  return Waiter.sTryUntil('Wait for source value',
-    Chain.asStep({}, [
-      cFindFilepickerInput(ui, 'Source'),
-      UiControls.cGetValue,
-      Assertions.cAssertEq('Assert source value', value)
-    ]), 1, 3000
+const cSetValueOn = (selector: string, newValue: any) => (ui) => {
+  return Chain.control(
+    Chain.fromChains([
+      cFindInDialog(selector)(ui),
+      UiControls.cSetValue(newValue)
+    ]),
+    Guard.addLogging('Set value')
   );
+};
+
+const sAssertFieldValue = (selector) => (ui, value) => {
+  return Waiter.sTryUntil(`Wait for new ${selector} value`,
+    Chain.asStep({}, [
+      cGetValueOn(selector)(ui),
+      Assertions.cAssertEq(`Assert ${value} value`, value)
+    ]), 20, 3000
+  );
+};
+
+const sAssertWidthValue = sAssertFieldValue(selectors.width);
+const sAssertHeightValue = sAssertFieldValue(selectors.height);
+const sAssertSourceValue = sAssertFieldValue(selectors.source);
+
+const sSetValueAndTrigger = (selector, value, event) => (ui) => {
+  return Logger.t(`Set ${value} and trigger ${event}`, Chain.asStep({}, [
+    Chain.fromChains([
+      cFindInDialog(selector)(ui),      // get the element
+      Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
+      cSetValueOn(selector, value)(ui), // change the value
+      cFakeEvent(event)                 // fire [change, input etc]
+    ])
+  ]));
 };
 
 const sPasteSourceValue = function (ui, value) {
-  return Chain.asStep({}, [
-    cFindFilepickerInput(ui, 'Source'),
-    UiControls.cSetValue(value),
-    cFakeEvent('paste')
-  ]);
+  return sSetValueAndTrigger(selectors.source, value, 'paste')(ui);
 };
 
 const sChangeWidthValue = function (ui, value) {
-  return Chain.asStep({}, [
-    cSetWidthValue(ui, value),
-    cFakeEvent('change')
-  ]);
+  return sSetValueAndTrigger(selectors.width, value, 'input')(ui);
 };
 
 const sChangeHeightValue = function (ui, value) {
-  return Chain.asStep({}, [
-    cSetHeightValue(ui, value),
-    cFakeEvent('change')
-  ]);
+  return sSetValueAndTrigger(selectors.height, value, 'input')(ui);
 };
 
 const sAssertSizeRecalcConstrained = function (ui) {
-  return GeneralSteps.sequence([
+  return Logger.t('Asset constrained size recalculation', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
     sAssertWidthValue(ui, '300'),
@@ -123,11 +100,11 @@ const sAssertSizeRecalcConstrained = function (ui) {
     sAssertHeightValue(ui, '100'),
     sAssertWidthValue(ui, '200'),
     sCloseDialog(ui)
-  ]);
+  ]));
 };
 
 const sAssertSizeRecalcConstrainedReopen = function (ui) {
-  return GeneralSteps.sequence([
+  return Logger.t('Assert constrained size recalculation on dialog reopen', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
     sAssertWidthValue(ui, '300'),
@@ -144,14 +121,14 @@ const sAssertSizeRecalcConstrainedReopen = function (ui) {
     sChangeWidthValue(ui, '350'),
     sAssertWidthValue(ui, '350'),
     sAssertHeightValue(ui, '175')
-  ]);
+  ]));
 };
 
 const sAssertSizeRecalcUnconstrained = function (ui) {
-  return GeneralSteps.sequence([
+  return Logger.t('Assert unconstrained size recalculation', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
-    ui.sClickOnUi('click checkbox', '.mce-checkbox'),
+    ui.sClickOnUi('click checkbox', selectors.lockIcon),
     sAssertWidthValue(ui, '300'),
     sAssertHeightValue(ui, '150'),
     sChangeWidthValue(ui, '350'),
@@ -161,71 +138,82 @@ const sAssertSizeRecalcUnconstrained = function (ui) {
     sAssertHeightValue(ui, '100'),
     sAssertWidthValue(ui, '350'),
     sCloseDialog(ui)
-  ]);
+  ]));
 };
 
 const sCloseDialog = function (ui) {
-  return ui.sClickOnUi('Click cancel button', '.mce-i-remove');
+  return Logger.t('Close dialog', ui.sClickOnUi('Click cancel button', selectors.xClose));
 };
 
 const cFakeEvent = function (name) {
-  return Chain.op(function (elm: Element) {
-    DOMUtils.DOM.fire(elm.dom(), name);
-  });
-};
-
-const cFindFilepickerInput = cFindInDialog(function (value) {
-  return document.getElementById(value.dom().htmlFor).querySelector('input');
-});
-
-const cFindTextarea = cFindInDialog(function (value) {
-  return document.getElementById(value.dom().htmlFor);
-});
-
-const cSetSourceInput = function (ui, value) {
-  return Chain.fromChains([
-    cFindFilepickerInput(ui, 'Source'),
-    UiControls.cSetValue(value)
-  ]);
-};
-
-const cGetTextareaContent = function (ui) {
-  return Chain.fromChains([
-    cFindTextarea(ui, 'Paste your embed code below:'),
-    UiControls.cGetValue
-  ]);
-};
-
-const sPasteTextareaValue = function (ui, value) {
-  return Chain.asStep({}, [
-    cFindTextarea(ui, 'Paste your embed code below:'),
-    UiControls.cSetValue(value),
-    cFakeEvent('paste')
-  ]);
-};
-
-const sAssertEmbedContent = function (ui, content) {
-  return Waiter.sTryUntil('Textarea should have a proper value',
-    Chain.asStep({}, [
-      cGetTextareaContent(ui),
-      Assertions.cAssertEq('Content same as embed', content)
-    ]), 1, 3000
+  return Chain.control(
+    Chain.op(function (elm: Element) {
+      const element: HTMLElement = elm.dom();
+      // NOTE we can't fake a paste event here.
+      let event;
+      if (Type.isFunction(Event)) {
+        event = new Event(name, {
+          bubbles: true,
+          cancelable: true
+        });
+      } else { // support IE
+        event = document.createEvent('Event');
+        event.initEvent(name, true, true);
+      }
+      element.dispatchEvent(event);
+    }),
+    Guard.addLogging(`Fake event ${name}`)
   );
 };
 
-const sTestEmbedContentFromUrl = function (ui, url, content) {
-  return GeneralSteps.sequence([
+const cFindFilepickerInput = cFindInDialog(selectors.source);
+
+const cFindTextarea = cFindInDialog(selectors.embed);
+
+const cSetSourceInput = function (ui, value) {
+  return Chain.control(
+    Chain.fromChains([
+      cFindFilepickerInput(ui),
+      UiControls.cSetValue(value)
+    ]),
+    Guard.addLogging(`Set source input ${value}`)
+  );
+};
+
+const sPasteTextareaValue = function (ui, value) {
+  return Logger.t(`Paste text area ${value}`, Chain.asStep({}, [
+    Chain.fromChains([
+      cFindInDialog(selectors.embedButton)(ui),
+      Mouse.cClick,
+      cFindInDialog(selectors.embed)(ui),
+      UiControls.cSetValue(value),
+    ]),
+    cFakeEvent('paste')
+  ]));
+};
+
+const sAssertEmbedData = function (editor, ui, content) {
+  return Waiter.sTryUntil('Textarea should have a proper value',
+      Step.sync(() => {
+        const embedValue = editor.windowManager.getParams().embed;
+        Assertions.assertEq('the embed value should be correct', content, embedValue);
+      })
+    , 1, 3000);
+};
+
+const sTestEmbedContentFromUrl = function (editor, ui, url, content) {
+  return Logger.t(`Assert embed ${content} from ${url}`, GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, url),
-    sAssertEmbedContent(ui, content),
+    sAssertEmbedData(editor, ui, content),
     sCloseDialog(ui)
-  ]);
+  ]));
 };
 
 const sSetFormItemNoEvent = function (ui, value) {
-  return Chain.asStep({}, [
+  return Logger.t(`Set form item ${value}`, Chain.asStep({}, [
     cSetSourceInput(ui, value)
-  ]);
+  ]));
 };
 
 const sAssertEditorContent = function (apis, editor, expected) {
@@ -238,25 +226,49 @@ const sAssertEditorContent = function (apis, editor, expected) {
 };
 
 const sSubmitDialog = function (ui) {
-  return ui.sClickOnUi('Click submit button', 'div.mce-primary > button');
+  return Logger.t('Submit dialog', ui.sClickOnUi('Click submit button', selectors.okayButton));
 };
 
 const sSubmitAndReopen = function (ui) {
-  return GeneralSteps.sequence([
+  return Logger.t('Submit and reopen dialog', GeneralSteps.sequence([
     sSubmitDialog(ui),
     sOpenDialog(ui)
-  ]);
+  ]));
 };
 
 const sSetSetting = function (editorSetting, key, value) {
-  return Step.sync(function () {
+  return Logger.t(`Set setting ${key}: ${value}`, Step.sync(function () {
     editorSetting[key] = value;
-  });
+  }));
+};
+
+const cNotExists = (selector) => {
+  return Chain.control(
+    Chain.op((container: Element) => {
+      UiFinder.findIn(container, selector).fold(
+        () => RawAssertions.assertEq('should not find anything', true, true),
+        () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
+      );
+    }),
+    Guard.addLogging(`Assert ${selector} does not exist`)
+  );
+};
+
+const cExists = (selector) => {
+  return Chain.control(
+    Chain.op((container: Element) => {
+      UiFinder.findIn(container, selector).fold(
+        () => RawAssertions.assertEq('Expected ' + selector + ' to exist.', true, false),
+        () => RawAssertions.assertEq('found element', true, true)
+      );
+    }),
+    Guard.addLogging(`Assert ${selector} exists`)
+  );
 };
 
 export default {
   cSetSourceInput,
-  cFindTextare: cFindTextarea,
+  cFindTextarea,
   cFakeEvent,
   cFindInDialog,
   sOpenDialog,
@@ -273,8 +285,11 @@ export default {
   sAssertSizeRecalcConstrained,
   sAssertSizeRecalcConstrainedReopen,
   sAssertSizeRecalcUnconstrained,
-  sAssertEmbedContent,
+  sAssertEmbedData,
   sAssertSourceValue,
   sChangeWidthValue,
-  sPasteTextareaValue
+  sPasteTextareaValue,
+  selectors,
+  cExists,
+  cNotExists
 };

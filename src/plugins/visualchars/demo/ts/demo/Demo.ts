@@ -14,7 +14,7 @@ tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'visualchars code',
   toolbar: 'visualchars code',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  skin_url: '../../../../../js/tinymce/skins/oxide',
   height: 600
 });
 

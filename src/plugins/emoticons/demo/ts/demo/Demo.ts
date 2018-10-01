@@ -12,10 +12,9 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'emoticons code',
   toolbar: 'emoticons code',
+  emoticons_database_url: '/src/plugins/emoticons/main/json/emojis.js',
   height: 600
 });
 

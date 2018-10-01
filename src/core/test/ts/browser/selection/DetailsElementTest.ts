@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.selection.DetailsElementTest', (success, failure) => {
@@ -62,6 +62,6 @@ UnitTest.asynctest('browser.tinymce.selection.DetailsElementTest', (success, fai
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

@@ -53,7 +53,7 @@ const toggleScrolling = function (editor, state) {
  * This method gets executed each time the editor needs to resize.
  */
 const resize = function (editor, oldSize) {
-  let deltaSize, doc, body, resizeHeight, myHeight;
+  let deltaSize, doc, body, resizeHeight, contentHeight;
   let marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
   const dom = editor.dom;
 
@@ -77,25 +77,25 @@ const resize = function (editor, oldSize) {
   paddingBottom = dom.getStyle(body, 'padding-bottom', true);
   borderTop = dom.getStyle(body, 'border-top-width', true);
   borderBottom = dom.getStyle(body, 'border-bottom-width', true);
-  myHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +
+  contentHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +
     parseInt(paddingTop, 10) + parseInt(paddingBottom, 10) +
     parseInt(borderTop, 10) + parseInt(borderBottom, 10);
 
   // Make sure we have a valid height
-  if (isNaN(myHeight) || myHeight <= 0) {
+  if (isNaN(contentHeight) || contentHeight <= 0) {
     // Get height differently depending on the browser used
     // eslint-disable-next-line no-nested-ternary
-    myHeight = Env.ie ? body.scrollHeight : (Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
+    contentHeight = Env.ie ? body.scrollHeight : (Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
   }
 
   // Don't make it smaller than the minimum height
-  if (myHeight > Settings.getAutoResizeMinHeight(editor)) {
-    resizeHeight = myHeight;
+  if (contentHeight > Settings.getAutoResizeMinHeight(editor)) {
+    resizeHeight = contentHeight;
   }
 
   // If a maximum height has been defined don't exceed this height
   const maxHeight = Settings.getAutoResizeMaxHeight(editor);
-  if (maxHeight && myHeight > maxHeight) {
+  if (maxHeight && contentHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);
   } else {
@@ -105,7 +105,10 @@ const resize = function (editor, oldSize) {
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
     deltaSize = resizeHeight - oldSize.get();
-    dom.setStyle(editor.iframeElement, 'height', resizeHeight + 'px');
+    const containerHeight = editor.getContainer().scrollHeight;
+    const contentAreaHeight = editor.contentAreaContainer.scrollHeight;
+    const chromeHeight = containerHeight - contentAreaHeight;
+    dom.setStyle(editor.getContainer(), 'height', resizeHeight + chromeHeight + 'px');
     oldSize.set(resizeHeight);
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized

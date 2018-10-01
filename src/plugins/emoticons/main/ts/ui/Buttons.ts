@@ -7,31 +7,24 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import Dialog from './Dialog';
+import { Editor } from 'tinymce/core/api/Editor';
+import { EmojiDatabase } from '../core/EmojiDatabase';
 
-import PanelHtml from './PanelHtml';
+const register = function (editor: Editor, database: EmojiDatabase): void {
+  const onAction = () => Dialog.open(editor, database);
 
-const insertEmoticon = function (editor, src, alt) {
-  editor.insertContent(editor.dom.createHTML('img', { src, alt }));
-};
+  editor.ui.registry.addButton('emoticons', {
+    type: 'button',
+    tooltip: 'Emoticons',
+    icon: 'emoji',
+    onAction
+  });
 
-const register = function (editor, pluginUrl) {
-  const panelHtml = PanelHtml.getHtml(pluginUrl);
-
-  editor.addButton('emoticons', {
-    type: 'panelbutton',
-    panel: {
-      role: 'application',
-      autohide: true,
-      html: panelHtml,
-      onclick (e) {
-        const linkElm = editor.dom.getParent(e.target, 'a');
-        if (linkElm) {
-          insertEmoticon(editor, linkElm.getAttribute('data-mce-url'), linkElm.getAttribute('data-mce-alt'));
-          this.hide();
-        }
-      }
-    },
-    tooltip: 'Emoticons'
+  editor.ui.registry.addMenuItem('emoticons', {
+    text: 'Emoticons',
+    icon: 'emoji',
+    onAction
   });
 };
 

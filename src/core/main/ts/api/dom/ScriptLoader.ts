@@ -116,6 +116,10 @@ const ScriptLoader: any = function () {
     (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
   };
 
+  this.loadScript = function (url, success, failure) {
+    loadScript(url, success, failure);
+  },
+
   /**
    * Returns true/false if a script has been loaded or not.
    *

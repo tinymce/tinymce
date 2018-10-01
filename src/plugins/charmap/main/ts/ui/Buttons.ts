@@ -9,17 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('charmap', {
-    icon: 'charmap',
+  editor.ui.registry.addButton('charmap', {
+    icon: 'insert-character',
     tooltip: 'Special character',
-    cmd: 'mceShowCharmap'
+    onAction: () => editor.execCommand('mceShowCharmap')
   });
 
-  editor.addMenuItem('charmap', {
-    icon: 'charmap',
+  editor.ui.registry.addMenuItem('charmap', {
+    icon: 'insert-character',
     text: 'Special character',
-    cmd: 'mceShowCharmap',
-    context: 'insert'
+    onAction: () => editor.execCommand('mceShowCharmap'),
   });
 };
 

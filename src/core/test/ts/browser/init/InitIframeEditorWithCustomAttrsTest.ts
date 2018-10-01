@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, Attr } from '@ephox/sugar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
@@ -23,7 +23,7 @@ UnitTest.asynctest(
         }))
       ], onSuccess, onFailure);
     }, {
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       iframe_attrs: {
         'id': 'x',
         'data-custom1': 'a',

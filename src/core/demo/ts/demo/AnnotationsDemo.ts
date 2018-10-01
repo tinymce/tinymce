@@ -24,7 +24,7 @@ export default function () {
   document.body.appendChild(button);
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/lightgray',
+    skin_url: '../../../../js/tinymce/skins/oxide',
     selector: 'textarea.tinymce',
     toolbar: 'annotate-alpha',
     plugins: [ ],
@@ -71,7 +71,6 @@ export default function () {
       });
     },
 
-    theme: 'modern',
     menubar: false
   });
 }

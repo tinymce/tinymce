@@ -8,19 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+const stateSelectorAdapter = (editor, selector) => (buttonApi) =>
+  editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;
+
 const register = function (editor) {
-  editor.addButton('media', {
+  editor.ui.registry.addToggleButton('media', {
     tooltip: 'Insert/edit media',
-    cmd: 'mceMedia',
-    stateSelector: ['img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]']
+    icon: 'embed',
+    onAction: () => {
+      editor.execCommand('mceMedia');
+    },
+    onSetup: stateSelectorAdapter(editor, ['img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]'])
   });
 
-  editor.addMenuItem('media', {
-    icon: 'media',
+  editor.ui.registry.addMenuItem('media', {
+    icon: 'embed',
     text: 'Media',
-    cmd: 'mceMedia',
-    context: 'insert',
-    prependToContext: true
+    prependToContext: true,
+    onAction: () => {
+      editor.execCommand('mceMedia');
+    }
   });
 };
 

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Dialog from '../ui/Dialog';
+import { Dialog } from '../ui/Dialog';
 
 const register = function (editor) {
   editor.addCommand('mceImage', Dialog(editor).open);

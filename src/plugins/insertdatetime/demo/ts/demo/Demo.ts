@@ -12,11 +12,13 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'insertdatetime code',
   toolbar: 'insertdatetime code',
-  height: 600
+  height: 600,
+  menubar: 'insertdatetime',
+  menu: {
+    insertdatetime: {title: 'Insert DateTime', items: 'insertdatetime'}
+  },
 });
 
 export {};

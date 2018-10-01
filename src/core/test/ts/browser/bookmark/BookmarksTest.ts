@@ -1,6 +1,6 @@
 import { Assertions, Logger, Pipeline, NamedChain, Chain, RawAssertions } from '@ephox/agar';
 import { Editor, ApiChains } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Hierarchy, Element, Remove, Html, SelectorFilter, Replication } from '@ephox/sugar';
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
   };
 
   const cCreateNamedEditor = NamedChain.write('editor', Editor.cFromSettings({
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }));
 
   const cSetupEditor = (content, startPath, startOffset, endPath, endOffset) => {

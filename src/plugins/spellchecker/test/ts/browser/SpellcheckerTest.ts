@@ -4,13 +4,13 @@ import { TinyLoader } from '@ephox/mcagar';
 
 import Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
   SpellcheckerPlugin();
 
   const sTestDefaultLanguage = function (editor) {
@@ -35,6 +35,6 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
   }, {
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

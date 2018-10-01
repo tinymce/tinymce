@@ -14,7 +14,7 @@ const getNumberStyles = function (editor) {
 };
 
 const getBulletStyles = function (editor) {
-  const styles = editor.getParam('advlist_bullet_styles', 'default,circle,disc,square');
+  const styles = editor.getParam('advlist_bullet_styles', 'default,circle,square');
   return styles ? styles.split(/[ ,]/) : [];
 };
 

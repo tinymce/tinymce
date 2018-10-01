@@ -17,8 +17,6 @@ elm.value = 'The format menu should show "red"';
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'importcss code',
   toolbar: 'styleselect code',
   height: 600,

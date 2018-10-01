@@ -6,7 +6,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { window, document } from '@ephox/dom-globals';
 
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       init_instance_callback (ed) {
         LegacyUnit.equalDom(ed.targetElm, elm1);
         teardown(done);
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       target: elm,
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       init_instance_callback (ed) {
         LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
         LegacyUnit.equalDom(ed.targetElm, elm);
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '#elm-2',
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       init_instance_callback (ed) {
         LegacyUnit.equalDom(ed.targetElm, elm2);
         teardown(done);
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   suite.asyncTest('selector on non existing targets', function (_, done) {
     EditorManager.init({
       selector: '#non-existing-id',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }).then(function (result) {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       teardown(done);
@@ -96,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       selector: '#elm-2',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }).then(function (result) {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       Env.ie = oldIeValue;
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '.elm-even',
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       init_instance_callback (ed) {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
         LegacyUnit.equal(Tools.inArray(ed.targetElm, targets), -1);
@@ -131,7 +131,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
       const href = Attr.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
-      const isSkin = href.indexOf('lightgray/') > -1;
+      const isSkin = href.indexOf('oxide/') > -1;
       return isSkin ? [ fileName ] : [ ];
     });
   };
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }).then(next, die);
   });
 

@@ -3,6 +3,9 @@
 let { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 let LiveReloadPlugin = require('webpack-livereload-plugin');
 let path = require('path');
+let fs = require('fs');
+
+let liveReloadPlugin = new LiveReloadPlugin();
 
 let create = (entries, tsConfig, outDir, filename) => {
   return {
@@ -28,13 +31,6 @@ let create = (entries, tsConfig, outDir, filename) => {
     },
     module: {
       rules: [
-        // {
-        //   test: /\.js$/,
-        //   use: [
-        //     'source-map-loader'
-        //   ],
-        //   enforce: 'pre'
-        // },
         {
           test: /\.ts$/,
           use: [
@@ -46,13 +42,6 @@ let create = (entries, tsConfig, outDir, filename) => {
                 experimentalWatchApi: true
               }
             }
-            // {
-            //   loader: 'awesome-typescript-loader',
-            //   options: {
-            //     transpileOnly: true,
-            //     configFileName: tsConfig
-            //   }
-            // }
           ]
         }
       ]
@@ -70,7 +59,23 @@ let create = (entries, tsConfig, outDir, filename) => {
 
 let buildDemoEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
-    acc[name] = `src/${type}/${name}/demo/ts/demo/${demo}`;
+    var tsfile = `src/${type}/${name}/demo/ts/demo/${demo}`;
+    if (fs.existsSync(tsfile)) acc[name] = tsfile;
+    else console.log('skipping demo file that does not exist:', tsfile);
+    return acc;
+  }, {}
+)
+
+let buildComponentEntries = (pluginNames, type, demo) => pluginNames.reduce(
+  (acc, name) => {
+    acc[name] = `src/${type}/${name}/demo/ts/components/${demo}`;
+    return acc;
+  }, {}
+)
+
+let buildDialogEntries = (pluginNames, type, demo) => pluginNames.reduce(
+  (acc, name) => {
+    acc[name] = `src/${type}/${name}/demo/ts/dialogs/${demo}`;
     return acc;
   }, {}
 )
@@ -98,10 +103,20 @@ let allThemeDemos = (themes) => {
   return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'demo.js')
 }
 
+let allComponentDemos = (themes) => {
+  return create(buildComponentEntries(themes, 'themes', 'Components.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'components.js')
+}
+
+let allDialogDemos = (themes) => {
+  return create(buildDialogEntries(themes, 'themes', 'DialogDemos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'dialogdemos.js')
+}
+
 let all = (plugins, themes) => {
   return [
     allPluginDemos(plugins),
     allThemeDemos(themes),
+    allComponentDemos(themes),
+    allDialogDemos(themes),
     create(`src/core/demo/ts/demo/Demos.ts`, 'tsconfig.json', 'scratch/demos/core/', 'demo.js'),
     create('src/core/main/ts/api/Main.ts', 'tsconfig.json', 'js/tinymce/', 'tinymce.js'),
     create(buildEntries(plugins, 'plugins', 'Plugin.ts'), 'tsconfig.plugin.json', 'js/tinymce/plugins', 'plugin.js'),
@@ -110,7 +125,7 @@ let all = (plugins, themes) => {
 }
 
 let generateDemoIndex = (grunt, app, plugins, themes) => {
-  let demoList = grunt.file.expand(['src/**/demo/html/*.html'])
+  let demoList = grunt.file.expand(['src/**/demo/html/*.html', 'src/**/demo/html/**/*.html'])
   let sortedDemos = demoList.reduce((acc, link) => {
     const type = link.split('/')[1];
 
@@ -157,5 +172,6 @@ module.exports = {
   all,
   allPluginDemos,
   allThemeDemos,
+  allComponentDemos,
   generateDemoIndex
 };

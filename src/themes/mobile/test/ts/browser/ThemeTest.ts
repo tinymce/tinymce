@@ -40,11 +40,11 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
     ], onSuccess, onFailure);
   }, {
     theme: 'mobile',
-    plugins: 'image table link paste contextmenu textpattern',
+    plugins: 'image table link paste textpattern',
     insert_toolbar: 'quickimage media quicktable',
     selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
     inline: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
 
   }, success, failure);
 });

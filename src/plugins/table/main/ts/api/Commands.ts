@@ -170,8 +170,9 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
 
   // Register dialog commands
   each({
-    mceInsertTable: Fun.curry(TableDialog.open, editor),
-    mceTableProps: Fun.curry(TableDialog.open, editor, true),
+    // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
+    mceInsertTable: Fun.curry(TableDialog.open, editor, true),
+    mceTableProps: Fun.curry(TableDialog.open, editor, false),
     mceTableRowProps: Fun.curry(RowDialog.open, editor),
     mceTableCellProps: Fun.curry(CellDialog.open, editor)
   }, function (func, name) {

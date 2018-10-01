@@ -3,13 +3,13 @@ import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertMarker, sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (success, failure) => {
 
-  ModernTheme();
+  Theme();
 
   const changes: Cell<Array<{state: boolean, name: string, uid: string}>> = Cell([ ]);
 
@@ -246,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       sTestChanges
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {

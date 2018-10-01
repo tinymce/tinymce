@@ -2,12 +2,13 @@ import { GeneralSteps, Logger, Pipeline, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import SilverTheme from '../../../../../../themes/silver/main/ts/Theme';
 import TableTestUtils from '../../module/test/TableTestUtils';
 
+/* This requires a menubar. Cannot migrate yet. */
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (success, failure) => {
-  ModernTheme();
   TablePlugin();
+  SilverTheme();
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -93,6 +94,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
   }, {
     indent: false,
     plugins: 'table',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    theme: 'silver',
+    skin_url: '/project/js/tinymce/skins/oxide',
   }, success, failure);
 });

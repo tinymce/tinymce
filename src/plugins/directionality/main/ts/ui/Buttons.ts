@@ -21,16 +21,18 @@ const generateSelector = function (dir) {
 };
 
 const register = function (editor) {
-  editor.addButton('ltr', {
-    title: 'Left to right',
-    cmd: 'mceDirectionLTR',
-    stateSelector: generateSelector('ltr')
+  editor.ui.registry.addToggleButton('ltr', {
+    tooltip: 'Left to right',
+    icon: 'ltr',
+    onAction: () => editor.execCommand('mceDirectionLTR'),
+    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('ltr'), buttonApi.setActive).unbind
   });
 
-  editor.addButton('rtl', {
-    title: 'Right to left',
-    cmd: 'mceDirectionRTL',
-    stateSelector: generateSelector('rtl')
+  editor.ui.registry.addToggleButton('rtl', {
+    tooltip: 'Right to left',
+    icon: 'rtl',
+    onAction: () => editor.execCommand('mceDirectionRTL'),
+    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('rtl'), buttonApi.setActive).unbind
   });
 };
 

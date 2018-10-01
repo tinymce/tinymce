@@ -41,11 +41,11 @@ const getImageList = function (editor) {
 };
 
 const hasUploadUrl = function (editor) {
-  return editor.getParam('images_upload_url', false);
+  return !!editor.getParam('images_upload_url', false);
 };
 
 const hasUploadHandler = function (editor) {
-  return editor.getParam('images_upload_handler', false);
+  return !!editor.getParam('images_upload_handler', false);
 };
 
 const getUploadUrl = function (editor) {

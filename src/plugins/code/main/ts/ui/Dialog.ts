@@ -15,25 +15,52 @@ const open = function (editor) {
   const minWidth = Settings.getMinWidth(editor);
   const minHeight = Settings.getMinHeight(editor);
 
-  const win = editor.windowManager.open({
+  const editorContent = Content.getContent(editor);
+
+  editor.windowManager.open({
     title: 'Source code',
+    size: 'large',
     body: {
-      type: 'textbox',
-      name: 'code',
-      multiline: true,
-      minWidth,
-      minHeight,
-      spellcheck: false,
-      style: 'direction: ltr; text-align: left'
+      type: 'panel',
+      items: [
+        {
+          type: 'textarea',
+          name: 'code',
+          multiline: true,
+          flex: true,
+          minWidth,
+          minHeight,
+          spellcheck: false,
+          style: 'direction: ltr; text-align: left'
+        }
+      ]
     },
-    onSubmit (e) {
-      Content.setContent(editor, e.data.code);
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel',
+      }
+    ],
+    initialData: {
+      code: editorContent
+    },
+    onSubmit: (api) => {
+      Content.setContent(editor, api.getData().code);
+      api.close();
     }
   });
 
+  // TODO - ask Spocke about this. Works without, is maybe an outdated comment?
   // Gecko has a major performance issue with textarea
   // contents so we need to set it when all reflows are done
-  win.find('#code').value(Content.getContent(editor));
+  // win.find('#code').value(Content.getContent(editor));
 };
 
 export default {

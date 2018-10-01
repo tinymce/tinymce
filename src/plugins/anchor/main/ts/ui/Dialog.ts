@@ -27,12 +27,36 @@ const open = function (editor) {
 
   editor.windowManager.open({
     title: 'Anchor',
-    body: { type: 'textbox', name: 'id', size: 40, label: 'Id', value: currentId },
-    onsubmit (e) {
-      const newId = e.data.id;
-
-      if (insertAnchor(editor, newId)) {
-        e.preventDefault();
+    size: 'normal',
+    body: {
+      type: 'panel',
+      items: [
+        {
+          name: 'id',
+          type: 'input',
+          label: 'Id'
+        }
+      ]
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
+      }
+    ],
+    initialData: {
+      id: currentId
+    },
+    onSubmit (api) {
+      if (!insertAnchor(editor, api.getData().id)) { // TODO we need a better way to do validation
+        api.close();
       }
     }
   });

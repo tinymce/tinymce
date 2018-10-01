@@ -15,9 +15,9 @@ import { Node } from '@ephox/dom-globals';
 
 const each = Tools.each;
 
-const addButtons = function (editor: Editor) {
+const addButtons = (editor: Editor) => {
   const menuItems = [];
-  each('inserttable tableprops deletetable | cell row column'.split(' '), function (name) {
+  each('inserttable tableprops deletetable | cell row column'.split(' '), (name) => {
     if (name === '|') {
       menuItems.push({ text: '-' });
     } else {
@@ -25,102 +25,117 @@ const addButtons = function (editor: Editor) {
     }
   });
 
-  editor.addButton('table', {
-    type: 'menubutton',
-    title: 'Table',
-    menu: menuItems
-  });
+  // TODO: tricky menubutton type of buttons
+  // editor.ui.registry.addButton('table', {
+  //   text: 'Table',
+  //   icon: 'table',
+  //   onAction: () => {
+  //   // open the menu thingy
+  //   }
+  // });
 
-  function cmd(command: string) {
-    return function () {
-      editor.execCommand(command);
-    };
-  }
+  const cmd = (command) => () => editor.execCommand(command);
 
-  editor.addButton('tableprops', {
-    title: 'Table properties',
-    onclick: cmd('mceTableProps'),
+  editor.ui.registry.addButton('tableprops', {
+    tooltip: 'Table properties',
+    onAction: cmd('mceTableProps'),
     icon: 'table'
   });
 
-  editor.addButton('tabledelete', {
-    title: 'Delete table',
-    onclick: cmd('mceTableDelete')
+  editor.ui.registry.addButton('tabledelete', {
+    tooltip: 'Delete table',
+    onAction: cmd('mceTableDelete'),
+    icon: 'table-delete-table'
   });
 
-  editor.addButton('tablecellprops', {
-    title: 'Cell properties',
-    onclick: cmd('mceTableCellProps')
+  editor.ui.registry.addButton('tablecellprops', {
+    tooltip: 'Cell properties',
+    onAction: cmd('mceTableCellProps'),
+    icon: 'table-cell-properties'
   });
 
-  editor.addButton('tablemergecells', {
-    title: 'Merge cells',
-    onclick: cmd('mceTableMergeCells')
+  editor.ui.registry.addButton('tablemergecells', {
+    tooltip: 'Merge cells',
+    onAction: cmd('mceTableMergeCells'),
+    icon: 'table-merge-cells'
   });
 
-  editor.addButton('tablesplitcells', {
-    title: 'Split cell',
-    onclick: cmd('mceTableSplitCells')
+  editor.ui.registry.addButton('tablesplitcells', {
+    tooltip: 'Split cell',
+    onAction: cmd('mceTableSplitCells'),
+    icon: 'table-split-cells'
   });
 
-  editor.addButton('tableinsertrowbefore', {
-    title: 'Insert row before',
-    onclick: cmd('mceTableInsertRowBefore')
+  editor.ui.registry.addButton('tableinsertrowbefore', {
+    tooltip: 'Insert row before',
+    onAction: cmd('mceTableInsertRowBefore'),
+    icon: 'table-insert-row-above'
   });
 
-  editor.addButton('tableinsertrowafter', {
-    title: 'Insert row after',
-    onclick: cmd('mceTableInsertRowAfter')
+  editor.ui.registry.addButton('tableinsertrowafter', {
+    tooltip: 'Insert row after',
+    onAction: cmd('mceTableInsertRowAfter'),
+    icon: 'table-insert-row-after'
   });
 
-  editor.addButton('tabledeleterow', {
-    title: 'Delete row',
-    onclick: cmd('mceTableDeleteRow')
+  editor.ui.registry.addButton('tabledeleterow', {
+    tooltip: 'Delete row',
+    onAction: cmd('mceTableDeleteRow'),
+    icon: 'table-delete-row'
   });
 
-  editor.addButton('tablerowprops', {
-    title: 'Row properties',
-    onclick: cmd('mceTableRowProps')
+  editor.ui.registry.addButton('tablerowprops', {
+    tooltip: 'Row properties',
+    onAction: cmd('mceTableRowProps'),
+    icon: 'table-row-properties'
   });
 
-  editor.addButton('tablecutrow', {
-    title: 'Cut row',
-    onclick: cmd('mceTableCutRow')
+  editor.ui.registry.addButton('tableinsertcolbefore', {
+    tooltip: 'Insert column before',
+    onAction: cmd('mceTableInsertColBefore'),
+    icon: 'table-insert-column-before'
   });
 
-  editor.addButton('tablecopyrow', {
-    title: 'Copy row',
-    onclick: cmd('mceTableCopyRow')
+  editor.ui.registry.addButton('tableinsertcolafter', {
+    tooltip: 'Insert column after',
+    onAction: cmd('mceTableInsertColAfter'),
+    icon: 'table-insert-column-after'
   });
 
-  editor.addButton('tablepasterowbefore', {
-    title: 'Paste row before',
-    onclick: cmd('mceTablePasteRowBefore')
+  editor.ui.registry.addButton('tabledeletecol', {
+    tooltip: 'Delete column',
+    onAction: cmd('mceTableDeleteCol'),
+    icon: 'table-delete-column'
   });
 
-  editor.addButton('tablepasterowafter', {
-    title: 'Paste row after',
-    onclick: cmd('mceTablePasteRowAfter')
+  // TODO: THESE CAN BE DEPRECATED?? Not documented, don't have icons.
+  editor.ui.registry.addButton('tablecutrow', {
+    tooltip: 'Cut row',
+    onAction: cmd('mceTableCutRow'),
+    icon: 'temporary-placeholder'
   });
 
-  editor.addButton('tableinsertcolbefore', {
-    title: 'Insert column before',
-    onclick: cmd('mceTableInsertColBefore')
+  editor.ui.registry.addButton('tablecopyrow', {
+    tooltip: 'Copy row',
+    onAction: cmd('mceTableCopyRow'),
+    icon: 'temporary-placeholder'
   });
 
-  editor.addButton('tableinsertcolafter', {
-    title: 'Insert column after',
-    onclick: cmd('mceTableInsertColAfter')
+  editor.ui.registry.addButton('tablepasterowbefore', {
+    tooltip: 'Paste row before',
+    onAction: cmd('mceTablePasteRowBefore'),
+    icon: 'temporary-placeholder'
   });
 
-  editor.addButton('tabledeletecol', {
-    title: 'Delete column',
-    onclick: cmd('mceTableDeleteCol')
+  editor.ui.registry.addButton('tablepasterowafter', {
+    tooltip: 'Paste row after',
+    onAction: cmd('mceTablePasteRowAfter'),
+    icon: 'temporary-placeholder'
   });
 };
 
-const addToolbars = function (editor: Editor) {
-  const isTable = function (table: Node) {
+const addToolbars = (editor: Editor) => {
+  const isTable = (table: Node) => {
     const selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
     return selectorMatched;
@@ -128,10 +143,11 @@ const addToolbars = function (editor: Editor) {
 
   const toolbar = getToolbar(editor);
   if (toolbar.length > 0) {
-    editor.addContextToolbar(
-      isTable,
-      toolbar.join(' ')
-    );
+    editor.ui.registry.addContextToolbar('table', {
+      predicate: isTable,
+      items: toolbar,
+      scope: 'node'
+    });
   }
 };
 

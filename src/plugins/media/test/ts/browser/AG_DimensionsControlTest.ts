@@ -1,0 +1,47 @@
+import { Pipeline, UiFinder, Waiter, Log, Chain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+
+import Plugin from 'tinymce/plugins/media/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+
+import Utils from '../module/test/Utils';
+import { document } from '@ephox/dom-globals';
+
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function (success, failure) {
+  Plugin();
+  Theme();
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    const ui = TinyUi(editor, {
+      toolBarSelector: '.tox-toolbar',
+    });
+
+    Pipeline.async({}, Log.steps('TBA', 'Media: Open dialog, assert dimensions fields are not present while media_dimensions is false. Close dialog and assert dialog is not present', [
+      Utils.sOpenDialog(ui),
+      Chain.asStep({}, [
+        Chain.fromParent(
+          ui.cWaitForPopup('wait for popup', 'div.tox-dialog'),
+          [
+            Utils.cExists('label:contains(Source) + input.tox-textfield'),
+            Utils.cNotExists('.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield'),
+            Utils.cNotExists('.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield')
+          ]
+        )
+      ]),
+      ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+      Waiter.sTryUntil(
+        'Wait for dialog to close',
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),
+        50, 5000
+      )
+    ])
+    , onSuccess, onFailure);
+  }, {
+    plugins: ['media'],
+    toolbar: 'media',
+    theme: 'silver',
+    media_dimensions: false,
+    skin_url: '/project/js/tinymce/skins/oxide'
+  }, success, failure);
+});

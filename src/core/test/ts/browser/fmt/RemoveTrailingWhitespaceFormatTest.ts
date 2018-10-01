@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
@@ -10,7 +10,7 @@ UnitTest.asynctest(
     const success = arguments[arguments.length - 2];
     const failure = arguments[arguments.length - 1];
 
-    ModernTheme();
+    Theme();
     LinkPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -47,7 +47,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'link',
       toolbar: 'bold unlink',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, success, failure);
   }
 );

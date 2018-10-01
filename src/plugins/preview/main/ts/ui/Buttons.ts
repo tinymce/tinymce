@@ -9,15 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('preview', {
-    title: 'Preview',
-    cmd: 'mcePreview'
+  editor.ui.registry.addButton('preview', {
+    icon: 'preview',
+    tooltip: 'Preview Text',
+    onAction: () => editor.execCommand('mcePreview')
   });
 
-  editor.addMenuItem('preview', {
+  editor.ui.registry.addMenuItem('preview', {
+    icon: 'preview',
     text: 'Preview',
-    cmd: 'mcePreview',
-    context: 'view'
+    onAction: () => editor.execCommand('mcePreview'),
   });
 };
 

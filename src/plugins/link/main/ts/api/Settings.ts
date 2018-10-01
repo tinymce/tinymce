@@ -24,6 +24,10 @@ const hasDefaultLinkTarget = function (editorSettings) {
   return typeof editorSettings.default_link_target === 'string';
 };
 
+const useQuickLink = function (editorSettings) {
+  return editorSettings.link_quicklink === true;
+};
+
 const getDefaultLinkTarget = function (editorSettings) {
   return editorSettings.default_link_target;
 };
@@ -78,5 +82,6 @@ export default {
   getLinkClassList,
   hasLinkClassList,
   shouldShowLinkTitle,
-  allowUnsafeLinkTarget
+  allowUnsafeLinkTarget,
+  useQuickLink
 };

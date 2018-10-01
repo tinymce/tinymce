@@ -4,7 +4,7 @@ import { Element } from '@ephox/sugar';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 import { Text } from '@ephox/dom-globals';
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
 
   const sApplyCaretFormat = function (editor, name, vars) {
     return Step.sync(function () {
@@ -405,6 +405,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
   }, {
     plugins: '',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

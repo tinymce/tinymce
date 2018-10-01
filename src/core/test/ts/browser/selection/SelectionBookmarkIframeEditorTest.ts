@@ -2,7 +2,7 @@ import { Assertions, Cursors, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Element, Html } from '@ephox/sugar';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -12,7 +12,7 @@ UnitTest.asynctest(
     const success = arguments[arguments.length - 2];
     const failure = arguments[arguments.length - 1];
 
-    ModernTheme();
+    Theme();
     const testDivId = 'testDiv1234';
 
     const sRemoveTestDiv = Step.sync(function () {
@@ -118,7 +118,7 @@ UnitTest.asynctest(
     }, {
       plugins: '',
       toolbar: '',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, function () {
       success();
     }, failure);

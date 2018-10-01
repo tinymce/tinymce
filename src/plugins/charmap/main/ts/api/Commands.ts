@@ -10,9 +10,9 @@
 
 import Dialog from '../ui/Dialog';
 
-const register = function (editor) {
+const register = function (editor, charMap) {
   editor.addCommand('mceShowCharmap', function () {
-    Dialog.open(editor);
+    Dialog.open(editor, charMap);
   });
 };
 

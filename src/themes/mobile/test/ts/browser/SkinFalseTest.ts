@@ -17,6 +17,6 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function () {
   }, {
     skin: false,
     theme: 'mobile',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

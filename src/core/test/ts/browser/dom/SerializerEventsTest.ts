@@ -1,6 +1,6 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function () {
@@ -46,6 +46,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function () 
   }, {
     inline: true,
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

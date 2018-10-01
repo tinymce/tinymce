@@ -17,17 +17,18 @@ const showDialog = function (editor, currentIndexState) {
 };
 
 const register = function (editor, currentIndexState) {
-  editor.addMenuItem('searchreplace', {
+  editor.ui.registry.addMenuItem('searchreplace', {
     text: 'Find and replace',
     shortcut: 'Meta+F',
-    onclick: showDialog(editor, currentIndexState),
+    onAction: showDialog(editor, currentIndexState),
     separator: 'before',
-    context: 'edit'
+    icon: 'search'
   });
 
-  editor.addButton('searchreplace', {
+  editor.ui.registry.addButton('searchreplace', {
     tooltip: 'Find and replace',
-    onclick: showDialog(editor, currentIndexState)
+    onAction: showDialog(editor, currentIndexState),
+    icon: 'search'
   });
 
   editor.shortcuts.add('Meta+F', '', showDialog(editor, currentIndexState));

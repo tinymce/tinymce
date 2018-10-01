@@ -7,8 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
+import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import Actions from '../core/Actions';
 
 const open = function (editor, currentIndexState) {
@@ -17,116 +18,177 @@ const open = function (editor, currentIndexState) {
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates() {
-    win.statusbar.find('#next').disabled(Actions.hasNext(editor, currentIndexState) === false);
-    win.statusbar.find('#prev').disabled(Actions.hasPrev(editor, currentIndexState) === false);
+  function updateButtonStates(api) {
+    const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
+    updateNext('next');
+    const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
+    updatePrev('prev');
   }
 
-  function notFoundAlert() {
+  const disableAll = function (api, disable: boolean) {
+    const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
+    const toggle = disable ? api.disable : api.enable;
+    Arr.each(buttons, toggle);
+  };
+
+  function notFoundAlert(api) {
     editor.windowManager.alert('Could not find the specified string.', function () {
-      win.find('#find')[0].focus();
+      api.focus('findtext');
     });
   }
 
-  const win = editor.windowManager.open({
-    layout: 'flex',
-    pack: 'center',
-    align: 'center',
-    onClose () {
-      editor.focus();
-      Actions.done(editor, currentIndexState);
-      editor.undoManager.add();
-    },
-    onSubmit (e) {
-      let count, caseState, text, wholeWord;
+  const doSubmit = (api) => {
+    const data = api.getData();
 
-      e.preventDefault();
+    if (!data.findtext.length) {
+      Actions.done(editor, currentIndexState, false);
+      disableAll(api, true);
+      updateButtonStates(api);
+      return;
+    }
 
-      caseState = win.find('#case').checked();
-      wholeWord = win.find('#words').checked();
-
-      text = win.find('#find').value();
-      if (!text.length) {
-        Actions.done(editor, currentIndexState, false);
-        win.statusbar.items().slice(1).disabled(true);
-        return;
-      }
-
-      if (last.text === text && last.caseState === caseState && last.wholeWord === wholeWord) {
-        if (!Actions.hasNext(editor, currentIndexState)) {
-          notFoundAlert();
+    if (last.text === data.findtext && last.caseState === data.matchcase && last.wholeWord === data.wholewords) {
+      if (!Actions.hasNext(editor, currentIndexState)) {
+          notFoundAlert(api);
           return;
+      }
+      Actions.next(editor, currentIndexState);
+      updateButtonStates(api);
+      return;
+    }
+    const count = Actions.find(editor, currentIndexState, data.findtext, checkToBool(data.matchcase), checkToBool(data.wholewords));
+    if (!count) {
+      notFoundAlert(api);
+    }
+
+    disableAll(api, count === 0);
+    updateButtonStates(api);
+
+    last = {
+      text: data.findtext,
+      caseState: data.matchcase,
+      wholeWord: data.wholewords
+    };
+  };
+
+  editor.windowManager.open({
+    title: 'Find and Replace',
+    size: 'normal',
+    body: {
+      type: 'panel',
+      items: [
+        {
+          type: 'input',
+          name: 'findtext',
+          label: 'Find'
+        },
+        {
+          type: 'input',
+          name: 'replacetext',
+          label: 'Replace with'
+        },
+        {
+          type: 'grid',
+          columns: 2,
+          items: [
+            {
+              type: 'checkbox',
+              name: 'matchcase',
+              label: 'Match case'
+            },
+            {
+              type: 'checkbox',
+              name: 'wholewords',
+              label: 'Whole words'
+            }
+          ]
         }
-
-        Actions.next(editor, currentIndexState);
-        updateButtonStates();
-        return;
-      }
-
-      count = Actions.find(editor, currentIndexState, text, caseState, wholeWord);
-      if (!count) {
-        notFoundAlert();
-      }
-
-      win.statusbar.items().slice(1).disabled(count === 0);
-      updateButtonStates();
-
-      last = {
-        text,
-        caseState,
-        wholeWord
-      };
+      ]
     },
     buttons: [
       {
-        text: 'Find', subtype: 'primary', onclick () {
-          win.submit();
-        }
+        type: 'custom',
+        name: 'find',
+        text: 'Find',
+        align: 'start',
+        primary: true
       },
       {
-        text: 'Replace', disabled: true, onclick () {
-          if (!Actions.replace(editor, currentIndexState, win.find('#replace').value())) {
-            win.statusbar.items().slice(1).disabled(true);
+        type: 'custom',
+        name: 'replace',
+        text: 'Replace',
+        align: 'start',
+        disabled: true,
+      },
+      {
+        type: 'custom',
+        name: 'replaceall',
+        text: 'Replace All',
+        align: 'start',
+        disabled: true,
+      },
+      {
+        type: 'custom',
+        name: 'prev',
+        text: 'Prev',
+        align: 'end',
+        disabled: true,
+      },
+      {
+        type: 'custom',
+        name: 'next',
+        text: 'Next',
+        align: 'end',
+        disabled: true,
+      }
+    ],
+    initialData: {
+      findtext: selectedText,
+      replacetext: '',
+      matchcase: 'checked',
+      wholewords: 'unchecked'
+    },
+    onAction: (api, details) => {
+      const data = api.getData();
+      switch (details.name) {
+        case 'find':
+          doSubmit(api);
+          break;
+        case 'replace':
+          if (!Actions.replace(editor, currentIndexState, data.replacetext)) {
+            disableAll(api, true);
             currentIndexState.set(-1);
             last = {};
           }
-        }
-      },
-      {
-        text: 'Replace all', disabled: true, onclick () {
-          Actions.replace(editor, currentIndexState, win.find('#replace').value(), true, true);
-          win.statusbar.items().slice(1).disabled(true);
+          break;
+        case 'replaceall':
+          Actions.replace(editor, currentIndexState, data.replacetext, true, true);
+          disableAll(api, true);
           last = {};
-        }
-      },
-      { type: 'spacer', flex: 1 },
-      {
-        text: 'Prev', name: 'prev', disabled: true, onclick () {
+          break;
+        case 'prev':
           Actions.prev(editor, currentIndexState);
-          updateButtonStates();
-        }
-      },
-      {
-        text: 'Next', name: 'next', disabled: true, onclick () {
+          updateButtonStates(api);
+          break;
+        case 'next':
           Actions.next(editor, currentIndexState);
-          updateButtonStates();
-        }
+          updateButtonStates(api);
+          break;
+        default:
+          break;
       }
-    ],
-    title: 'Find and replace',
-    items: {
-      type: 'form',
-      padding: 20,
-      labelGap: 30,
-      spacing: 10,
-      items: [
-        { type: 'textbox', name: 'find', size: 40, label: 'Find', value: selectedText },
-        { type: 'textbox', name: 'replace', size: 40, label: 'Replace with' },
-        { type: 'checkbox', name: 'case', text: 'Match case', label: ' ' },
-        { type: 'checkbox', name: 'words', text: 'Whole words', label: ' ' }
-      ]
+    },
+    onSubmit: doSubmit,
+    onClose: () => {
+      editor.focus();
+      Actions.done(editor, currentIndexState);
+      editor.undoManager.add();
     }
   });
+};
+
+const checkToBool = (value: string): boolean => {
+  return value === 'checked';
 };
 
 export default {

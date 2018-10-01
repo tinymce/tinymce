@@ -12,11 +12,10 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
-  plugins: 'charmap code',
-  toolbar: 'charmap code',
-  height: 600
+  plugins: 'charmap',
+  toolbar: 'charmap',
+  height: 600,
+  charmap_append: [['A'.charCodeAt(0), 'A'], ['B'.charCodeAt(0), 'B'], ['C'.charCodeAt(0), 'C']],
 });
 
 export {};

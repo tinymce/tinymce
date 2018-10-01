@@ -2,14 +2,14 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import ExpandRange from 'tinymce/core/fmt/ExpandRange';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
 
   const cSetRawContent = function (html) {
     return Chain.op(function (editor: any) {
@@ -219,6 +219,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   }, {
     plugins: '',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

@@ -12,11 +12,13 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'autosave code',
   toolbar: 'restoredraft code',
-  height: 600
+  height: 600,
+  autosave_interval: '10s',
+  menus: {
+    File: [ 'restoredraft' ]
+  }
 });
 
 export {};

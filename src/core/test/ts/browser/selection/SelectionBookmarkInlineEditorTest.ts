@@ -3,7 +3,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Element, Html } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -13,7 +13,7 @@ UnitTest.asynctest(
     const success = arguments[arguments.length - 2];
     const failure = arguments[arguments.length - 1];
 
-    ModernTheme();
+    Theme();
 
     const testDivId = 'testDiv1234';
 
@@ -200,7 +200,7 @@ UnitTest.asynctest(
       indent: false,
       plugins: '',
       toolbar: '',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, function () {
       success();
     }, failure);

@@ -1,3 +1,5 @@
+// TODO: TINY-1645 This helper is duplicated from Alloy/tests, its used by the mobile theme, also the alloy-docs project has this duplicated too
+
 import { RawAssertions, Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 

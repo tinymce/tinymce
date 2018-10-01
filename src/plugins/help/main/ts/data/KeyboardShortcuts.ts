@@ -7,13 +7,13 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import Env from 'tinymce/core/api/Env';
+import { ShortcutActionPairType } from '../ui/KeyboardShortcutsTab';
+import Env from '../../../../../core/main/ts/api/Env';
 
 const meta = Env.mac ? '\u2318' : 'Ctrl';
 const access = Env.mac ? 'Ctrl + Alt' : 'Shift + Alt';
 
-const shortcuts = [
+const shortcuts: ShortcutActionPairType[] = [
   { shortcut: meta + ' + B', action: 'Bold' },
   { shortcut: meta + ' + I', action: 'Italic' },
   { shortcut: meta + ' + U', action: 'Underline' },

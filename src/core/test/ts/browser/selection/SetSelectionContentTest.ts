@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function () {
@@ -51,6 +51,6 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

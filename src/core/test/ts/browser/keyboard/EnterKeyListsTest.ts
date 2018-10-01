@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function () {
@@ -478,6 +478,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

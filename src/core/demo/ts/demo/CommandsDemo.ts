@@ -10,6 +10,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
+
 declare let tinymce: any;
 
 export default function () {
@@ -108,14 +109,13 @@ export default function () {
   });
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/lightgray',
+    skin_url: '../../../../js/tinymce/skins/oxide',
     selector: 'textarea.tinymce',
     plugins: [
       'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample'
+      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern codesample'
     ],
-    theme: 'modern',
     toolbar1: 'bold italic',
     menubar: false
   });

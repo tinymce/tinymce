@@ -8,16 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Dialog from './Dialog';
+
 const register = function (editor) {
-  editor.addButton('codesample', {
-    cmd: 'codesample',
-    title: 'Insert/Edit code sample'
+  editor.ui.registry.addButton('codesample', {
+    icon: 'code-sample',
+    tooltip: 'Insert/Edit Code Sample',
+    onAction: () => Dialog.open(editor)
   });
 
-  editor.addMenuItem('codesample', {
-    cmd: 'codesample',
-    text: 'Code sample',
-    icon: 'codesample'
+  editor.ui.registry.addMenuItem('codesample', {
+    text: 'Code Sample',
+    icon: 'code-sample',
+    onAction: () => Dialog.open(editor)
   });
 };
 

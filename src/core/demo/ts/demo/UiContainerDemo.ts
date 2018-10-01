@@ -14,7 +14,7 @@ declare let tinymce: any;
 
 export default function () {
   const generalSettings = {
-    skin_url: '../../../../js/tinymce/skins/lightgray',
+    skin_url: '../../../../js/tinymce/skins/oxide',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
     visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     images_upload_url: 'd',
@@ -73,7 +73,6 @@ export default function () {
     template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
     template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
-    theme: 'modern',
     mobile: {
       plugins: [
         'autosave lists'
@@ -82,7 +81,7 @@ export default function () {
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
       'codesample help noneditable print'
     ],
     // rtl_ui: true,

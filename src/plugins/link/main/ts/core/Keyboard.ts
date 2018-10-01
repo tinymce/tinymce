@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Actions from './Actions';
-
 const setup = function (editor) {
-  editor.addShortcut('Meta+K', '', Actions.openDialog(editor));
+  editor.addShortcut('Meta+K', '', () => {
+    editor.execCommand('mceLink');
+  });
 };
 
 export default {

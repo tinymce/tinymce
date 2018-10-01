@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Css, SelectorFind } from '@ephox/sugar';
 import EditorView from 'tinymce/core/EditorView';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { window } from '@ephox/dom-globals';
 
@@ -63,6 +63,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function () {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

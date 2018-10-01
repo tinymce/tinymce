@@ -11,30 +11,31 @@
 import Settings from '../api/Settings';
 
 const stateToggle = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
+  return function (api) {
+    const handler = () => {
+      api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
+    };
 
-    editor.on('nodeChange dirty', function () {
-      ctrl.disabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
-    });
+    editor.on('nodeChange dirty', handler);
+    return () => editor.off('nodeChange dirty', handler);
   };
 };
 
 const register = function (editor) {
-  editor.addButton('save', {
+  editor.ui.registry.addButton('save', {
     icon: 'save',
-    text: 'Save',
-    cmd: 'mceSave',
+    tooltip: 'Save',
     disabled: true,
-    onPostRender: stateToggle(editor)
+    onAction: () => editor.execCommand('mceSave'),
+    onSetup: stateToggle(editor)
   });
 
-  editor.addButton('cancel', {
-    text: 'Cancel',
-    icon: false,
-    cmd: 'mceCancel',
+  editor.ui.registry.addButton('cancel', {
+    icon: 'cancel',
+    tooltip: 'Cancel',
     disabled: true,
-    onPostRender: stateToggle(editor)
+    onAction: () => editor.execCommand('mceSave'),
+    onSetup: stateToggle(editor)
   });
 
   editor.addShortcut('Meta+S', '', 'mceSave');

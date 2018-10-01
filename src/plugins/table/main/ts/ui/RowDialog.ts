@@ -7,51 +7,20 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
+import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import Helpers from './Helpers';
-import { hasAdvancedRowTab, getRowClassList } from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Node, HTMLElement, Element } from '@ephox/dom-globals';
+import { hasAdvancedRowTab } from '../api/Settings';
+import DomModifiers from './DomModifiers';
+import Helpers, { RowData } from './Helpers';
+import RowDialogGeneralTab from './RowDialogGeneralTab';
 
-interface FormData {
-  height: string;
-  scope: string;
-  class: string;
-  align: string;
-  style: string;
-  type: string;
-}
-
-const extractDataFromElement = function (editor: Editor, elm: Node): FormData {
-  const dom = editor.dom;
-  const data: FormData = {
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    scope: dom.getAttrib(elm, 'scope'),
-    class: dom.getAttrib(elm, 'class'),
-    align: '',
-    style: '',
-    type: elm.parentNode.nodeName.toLowerCase()
-  };
-
-  Tools.each('left center right'.split(' '), function (name: string) {
-    if (editor.formatter.matchNode(elm, 'align' + name)) {
-      data.align = name;
-    }
-  });
-
-  if (hasAdvancedRowTab(editor)) {
-    Tools.extend(data, Helpers.extractAdvancedStyles(dom, elm));
-  }
-
-  return data;
-};
-
-const switchRowType = function (dom: DOMUtils, rowElm: HTMLElement, toType) {
+const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType) => {
   const tableElm = dom.getParent(rowElm, 'table');
   const oldParentElm = rowElm.parentNode;
   let parentElm = dom.select(toType, tableElm as Element)[0];
@@ -77,36 +46,37 @@ const switchRowType = function (dom: DOMUtils, rowElm: HTMLElement, toType) {
   }
 };
 
-function onSubmitRowForm(editor: Editor, rows: HTMLElement[], oldData: FormData, evt) {
+const updateAdvancedProps = (modifiers, data: RowData) => {
+  modifiers.setStyle('background-color', data.backgroundcolor);
+  modifiers.setStyle('border-color', data.bordercolor);
+  modifiers.setStyle('border-style', data.borderstyle);
+};
+
+const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
   const dom = editor.dom;
 
-  function setAttrib(elm: Node, name: string, value: string) {
-    if (rows.length === 1 || value) {
-      dom.setAttrib(elm, name, value);
-    }
-  }
+  const data: RowData = api.getData();
+  api.close();
 
-  function setStyle(elm: Node, name: string, value: string) {
-    if (rows.length === 1 || value) {
-      dom.setStyle(elm, name, value);
-    }
-  }
+  // When selection length is 1, allow things to be turned off/cleared
+  const createModifier = rows.length === 1 ? DomModifiers.normal : DomModifiers.ifTruthy;
 
-  if (hasAdvancedRowTab(editor)) {
-    Helpers.syncAdvancedStyleFields(editor, evt);
-  }
+  editor.undoManager.transact(() => {
+    Tools.each(rows, (rowElm) => {
 
-  const data: FormData = evt.control.rootControl.toJSON();
-
-  editor.undoManager.transact(function () {
-    Tools.each(rows, function (rowElm: HTMLElement) {
-      setAttrib(rowElm, 'scope', data.scope);
-      setAttrib(rowElm, 'style', data.style);
-      setAttrib(rowElm, 'class', data.class);
-      setStyle(rowElm, 'height', Util.addSizeSuffix(data.height));
-
+      // Switch row type
       if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
         switchRowType(editor.dom, rowElm, data.type);
+      }
+
+      const modifiers =  createModifier(dom, rowElm);
+
+      modifiers.setAttrib('scope', data.scope);
+      modifiers.setAttrib('class', data.class);
+      modifiers.setStyle('height', Util.addSizeSuffix(data.height));
+
+      if (hasAdvancedRowTab(editor)) {
+        updateAdvancedProps(modifiers, data);
       }
 
       if (data.align !== oldData.align) {
@@ -114,23 +84,27 @@ function onSubmitRowForm(editor: Editor, rows: HTMLElement[], oldData: FormData,
         Styles.applyAlign(editor, rowElm, data.align);
       }
     });
-
     editor.focus();
   });
-}
+};
 
-const open = function (editor: Editor) {
+const open = (editor: Editor) => {
   const dom = editor.dom;
-  let tableElm, cellElm, rowElm, classListCtrl, data: FormData;
+  let tableElm, cellElm, rowElm;
   const rows = [];
-  let generalRowForm;
 
   tableElm = dom.getParent(editor.selection.getStart(), 'table');
+
+  if (!tableElm) {
+    // If this element is null, return now to avoid crashing.
+    return;
+  }
+
   cellElm = dom.getParent(editor.selection.getStart(), 'td,th');
 
-  Tools.each(tableElm.rows, function (row) {
-    Tools.each(row.cells, function (cell) {
-      if (dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) {
+  Tools.each(tableElm.rows, (row) => {
+    Tools.each(row.cells, (cell) => {
+      if ((dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) && rows.indexOf(row) < 0) {
         rows.push(row);
         return false;
       }
@@ -143,98 +117,45 @@ const open = function (editor: Editor) {
     return;
   }
 
-  if (rows.length > 1) {
-    data = {
-      height: '',
-      scope: '',
-      style: '',
-      class: '',
-      align: '',
-      type: rowElm.parentNode.nodeName.toLowerCase()
-    };
-  } else {
-    data = extractDataFromElement(editor, rowElm);
-  }
+  // Get current data and find shared values between rows
+  const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
+  const data: RowData = Helpers.getSharedValues(rowsData);
 
-  if (getRowClassList(editor).length > 0) {
-    classListCtrl = {
-      name: 'class',
-      type: 'listbox',
-      label: 'Class',
-      values: Helpers.buildListItems(
-        getRowClassList(editor),
-        function (item) {
-          if (item.value) {
-            item.textStyle = function () {
-              return editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
-            };
-          }
-        }
-      )
+  const body = hasAdvancedRowTab(editor) ?
+    {
+      type: 'tabpanel',
+      tabs: [
+        RowDialogGeneralTab.tab(editor),
+        Helpers.getAdvancedTab()
+      ]
+    } : {
+      type: 'panel',
+      items: [
+        RowDialogGeneralTab.tab(editor),
+      ]
     };
-  }
 
-  generalRowForm = {
-    type: 'form',
-    columns: 2,
-    padding: 0,
-    defaults: {
-      type: 'textbox'
-    },
-    items: [
+  editor.windowManager.open({
+    title: 'Row Properties',
+    size: 'normal',
+    data,
+    body,
+    buttons: [
       {
-        type: 'listbox',
-        name: 'type',
-        label: 'Row type',
-        text: 'Header',
-        maxWidth: null,
-        values: [
-          { text: 'Header', value: 'thead' },
-          { text: 'Body', value: 'tbody' },
-          { text: 'Footer', value: 'tfoot' }
-        ]
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
       },
       {
-        type: 'listbox',
-        name: 'align',
-        label: 'Alignment',
-        text: 'None',
-        maxWidth: null,
-        values: [
-          { text: 'None', value: '' },
-          { text: 'Left', value: 'left' },
-          { text: 'Center', value: 'center' },
-          { text: 'Right', value: 'right' }
-        ]
-      },
-      { label: 'Height', name: 'height' },
-      classListCtrl
-    ]
-  };
-
-  if (hasAdvancedRowTab(editor)) {
-    editor.windowManager.open({
-      title: 'Row properties',
-      data,
-      bodyType: 'tabpanel',
-      body: [
-        {
-          title: 'General',
-          type: 'form',
-          items: generalRowForm
-        },
-        Helpers.createStyleForm(editor)
-      ],
-      onsubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
-    });
-  } else {
-    editor.windowManager.open({
-      title: 'Row properties',
-      data,
-      body: generalRowForm,
-      onsubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
-    });
-  }
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel',
+      }
+    ],
+    initialData: data,
+    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data),
+  });
 };
 
 export default {

@@ -1,6 +1,6 @@
 import { Assertions, Pipeline } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () {
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () 
       Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.settings.content_editable)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
 
     // Setting exposed as another forced setting
     inline: true,

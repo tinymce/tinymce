@@ -1,0 +1,11 @@
+h1.red {
+  color: red;
+}
+
+p.other {
+  text-align: right;
+}
+
+span.inline {
+  display: inline-block;
+}

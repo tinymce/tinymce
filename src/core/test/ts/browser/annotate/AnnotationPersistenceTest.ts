@@ -3,12 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
 import { Editor } from 'tinymce/core/api/Editor';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { sAnnotate } from '../../module/test/AnnotationAsserts';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (success, failure) => {
-  ModernTheme();
+  Theme();
 
   const sUndoLevel = (editor: Editor) => Step.sync(() => {
     editor.undoManager.add();
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
 
   const sRunTinyWithSettings = (annotation: AnnotatorSettings, getSteps: (tinyApis: any, editor: Editor) => any[]) => Step.async((next, die) => {
     const settings = {
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       setup: (ed: Editor) => {
         ed.on('init', () => {
           ed.annotator.register('test-annotation', annotation);

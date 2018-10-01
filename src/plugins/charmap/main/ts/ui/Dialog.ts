@@ -7,106 +7,100 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Arr, Cell, Throttler } from '@ephox/katamari';
 
 import Actions from '../core/Actions';
-import CharMap from '../core/CharMap';
-import GridHtml from './GridHtml';
+import Scan from '../core/Scan';
+import {UserDefined} from '../core/CharMap';
 
-const getParentTd = function (elm) {
-  while (elm) {
-    if (elm.nodeName === 'TD') {
-      return elm;
-    }
+const patternName = 'pattern';
 
-    elm = elm.parentNode;
-  }
-};
-
-const open = function (editor) {
-  let win;
-
-  const charMapPanel = {
-    type: 'container',
-    html: GridHtml.getHtml(CharMap.getCharMap(editor)),
-    onclick (e) {
-      const target = e.target;
-
-      if (/^(TD|DIV)$/.test(target.nodeName)) {
-        const charDiv = getParentTd(target).firstChild;
-        if (charDiv && charDiv.hasAttribute('data-chr')) {
-          const charCodeString = charDiv.getAttribute('data-chr');
-          const charCode = parseInt(charCodeString, 10);
-
-          if (!isNaN(charCode)) {
-            Actions.insertChar(editor, String.fromCharCode(charCode));
-          }
-
-          if (!e.ctrlKey) {
-            win.close();
-          }
-        }
-      }
+const open = function (editor, charMap) {
+  const makeGroupItems = () => [
+    {
+      label: 'Search',
+      type: 'input',
+      name: patternName
     },
-    onmouseover (e) {
-      const td = getParentTd(e.target);
+    {
+      type: 'collection',
+      name: 'results',
+      columns: 'auto'
+    }
+  ];
 
-      if (td && td.firstChild) {
-        win.find('#preview').text(td.firstChild.firstChild.data);
-        win.find('#previewTitle').text(td.title);
-      } else {
-        win.find('#preview').text(' ');
-        win.find('#previewTitle').text(' ');
-      }
+  const makeTabs = () => {
+    return Arr.map(charMap, (charGroup) => {
+      return {
+        title: charGroup.name,
+        items: makeGroupItems()
+      };
+    });
+  };
+
+  const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
+
+  const makeBodyItems = () => {
+    if (charMap.length === 1) {
+      return { items: makeGroupItems() };
+    } else {
+      return { tabs: makeTabs() };
     }
   };
 
-  win = editor.windowManager.open({
+  const scanAndSet = (dialogApi, pattern: string) => {
+    Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
+      const items = Scan.scan(f, pattern.toLowerCase());
+      dialogApi.setData({
+        results: items
+      });
+    });
+  };
+
+  const SEARCH_DELAY = 40;
+
+  const updateFilter = Throttler.last((dialogApi) => {
+    const pattern = dialogApi.getData().pattern;
+    scanAndSet(dialogApi, pattern);
+  }, SEARCH_DELAY);
+
+  const bridgeSpec = {
     title: 'Special character',
-    spacing: 10,
-    padding: 10,
-    items: [
-      charMapPanel,
-      {
-        type: 'container',
-        layout: 'flex',
-        direction: 'column',
-        align: 'center',
-        spacing: 5,
-        minWidth: 160,
-        minHeight: 160,
-        items: [
-          {
-            type: 'label',
-            name: 'preview',
-            text: ' ',
-            style: 'font-size: 40px; text-align: center',
-            border: 1,
-            minWidth: 140,
-            minHeight: 80
-          },
-          {
-            type: 'spacer',
-            minHeight: 20
-          },
-          {
-            type: 'label',
-            name: 'previewTitle',
-            text: ' ',
-            style: 'white-space: pre-wrap;',
-            border: 1,
-            minWidth: 140
-          }
-        ]
-      }
-    ],
+    size: 'normal',
+    body: {
+      type: charMap.length === 1 ? 'panel' : 'tabpanel',
+      ...makeBodyItems()
+    },
     buttons: [
       {
-        text: 'Close', onclick () {
-          win.close();
-        }
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
       }
-    ]
-  });
+    ],
+    initialData: {
+      pattern: '',
+      results: Scan.scan(charMap[0], '')
+    },
+    onAction(api, details) {
+      if (details.name === 'results') {
+        Actions.insertChar(editor, details.value);
+        api.close();
+      }
+    },
+
+    onTabChange: (dialogApi, title: string) => {
+      currentTab.set(title);
+      updateFilter.throttle(dialogApi);
+    },
+
+    onChange: (dialogApi, changeData) => {
+      if (changeData.name === patternName) {
+        updateFilter.throttle(dialogApi);
+      }
+    }
+  };
+  editor.windowManager.open(bridgeSpec);
 };
 
 export default {

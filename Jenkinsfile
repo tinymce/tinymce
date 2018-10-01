@@ -1,0 +1,127 @@
+properties([
+  disableConcurrentBuilds(),
+  pipelineTriggers([
+    upstream(threshold: 'SUCCESS', upstreamProjects:
+      // This list should match package.json
+      'alloy, bridge'
+    ),
+    pollSCM('H 0 1 1 1')
+  ])
+])
+
+node("primary") {
+  stage ("Checkout SCM") {
+    checkout scm
+    sh "mkdir -p jenkins-plumbing"
+    dir ("jenkins-plumbing") {
+      git([branch: "standard-build-customisation", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+    }
+  }
+
+  def extNpmInstall = load("jenkins-plumbing/npm-install.groovy")
+
+  def permutations = [
+     [ name: "win10Chrome", os: "windows-10", browser: "chrome" ]
+    ,[ name: "win10FF", os: "windows-10", browser: "firefox" ]
+    // ,[ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ]
+
+    // TODO: Enable IE at some point
+    // ,[ name: "win10IE", os: "windows-10", browser: "ie" ]
+
+    // Safari 12 doesn't work with selenium-webdriver 3.x
+    // ,[ name: "macSafari", os: "macos", browser: "safari" ]
+
+    ,[ name: "macChrome", os: "macos", browser: "chrome" ]
+    ,[ name: "macFirefox", os: "macos", browser: "firefox" ]
+  ]
+
+  def processes = [:]
+
+  for (int i = 0; i < permutations.size(); i++) {
+    def permutation = permutations.get(i);
+    def processName = permutation.name;
+    processes[processName] = {
+      stage (permutation.os + ' ' + permutation.browser) {
+        node("bedrock-" + permutation.os) {
+          echo "Slave checkout on node $NODE_NAME"
+          checkout scm
+
+          // never trust node to know what it's doing
+          // dir('node_modules') {
+          //  deleteDir()
+          // }
+
+          echo "Installing tools"
+          extNpmInstall()
+          sh "sed -i -e s/\"warn\"/\"error\"/ tslint.json"
+          if (isUnix()) {
+            sh "yarn grunt && git checkout ."
+          } else {
+            bat "yarn grunt"
+            bat "git checkout ."
+          }
+
+
+          echo "Platform: browser tests for " + permutation.name
+
+          // individual test timeout - 50 seconds. Ideally would only be 30 but resample URL tends to take a while, as do tests that run all languages
+          def singleTimeout ="50000"
+
+          // overall timeout - was 780 seconds (13m) , trying 1200s (20m) for the slow VMs
+          // -system and -acceptance tests are sometimes taking >16m (Aug '17)
+          def totalTimeout="1200000"
+
+          def customParams = '--totalTimeout ' + totalTimeout + ' --singleTimeout ' + singleTimeout + ' --stopOnFailure'
+
+          def name = permutation.name
+
+          // Clean out the old XML files before running tests, since we junit import *.XML files
+          dir('scratch') {
+            if (isUnix()) {
+              sh "rm -f *.xml"
+            } else {
+              bat "del *.xml"
+            }
+          }
+
+
+          def bedrock = "yarn grunt bedrock-auto:apollo --bedrock-browser=" + permutation.browser
+
+          def successfulTests = true
+
+          if (isUnix()) {
+            successfulTests = (sh([script: bedrock, returnStatus: true]) == 0) && successfulTests
+          } else {
+            successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
+          }
+
+          echo "Writing JUnit results for " + name
+
+          step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
+
+          if (!successfulTests) {
+            echo "Tests failed for " + name + " so passing failure as exit code"
+            if (isUnix()) {
+              sh "exit 1"
+            } else {
+              bat "exit 1"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  def runTests = {
+    parallel processes
+  }
+
+  def runBuild = load("jenkins-plumbing/standard-build.groovy")
+
+  sh "sed -i -e s/\"warn\"/\"error\"/ tslint.json"
+  sh "yarn install --no-lockfile && npx grunt && git checkout ."
+  runBuild(runTests, "develop", "prerelease", """
+    sed -i -e s/\"warn\"/\"error\"/ tslint.json
+    yarn install --no-lockfile && npx grunt && git checkout .
+  """)
+}

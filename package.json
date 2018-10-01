@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "4.8.3",
+  "version": "5.0.0-preview-1-build.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -18,18 +18,26 @@
   "scripts": {
     "test": "grunt bedrock-auto:chrome-headless",
     "lint": "tslint src/**/*.ts",
-    "postinstall": "rimraf node_modules/@ephox/alloy/node_modules"
+    "apollo-test": "grunt bedrock-auto:apollo",
+    "apollo-test-manual": "grunt bedrock-manual:apollo",
+    "silver-test": "grunt bedrock-auto:silver",
+    "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "@ephox/alloy": "2.2.3",
-    "@ephox/boulder": "3.2.1",
+    "@ephox/alloy": "latest",
+    "@ephox/acid": "latest",
+    "@ephox/boulder": "latest",
+    "@ephox/bridge": "latest",
     "@ephox/darwin": "latest",
     "@ephox/dom-globals": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
+    "@ephox/oxide": "latest",
+    "@ephox/oxide-icons-default": "latest",
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
+    "@ephox/wrap-codemirror": "^2.0.2",
     "@ephox/sugar": "latest"
   },
   "devDependencies": {
@@ -41,8 +49,8 @@
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",
     "grunt-contrib-copy": "~1.0.0",
-    "grunt-contrib-less": "~1.4.1",
-    "grunt-contrib-uglify": "~3.3.0",
+    "grunt-contrib-less": "2.0.0",
+    "grunt-contrib-uglify": "4.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-nuget-pack": "^0.0.6",
     "grunt-replace": "^1.0.1",
@@ -56,8 +64,11 @@
     "ts-loader": "^4.4.2",
     "typescript": "^2.6.2",
     "webpack": "^4.8.3",
-    "webpack-dev-server": "^3.1.5",
+    "webpack-dev-server": "3.1.5",
     "webpack-livereload-plugin": "^2.1.1",
     "rimraf": "^2.6.2"
+  },
+  "publishConfig": {
+    "registry": "http://nexus:8081/repository/ephox-npm/"
   }
 }

@@ -18,12 +18,12 @@ asynctest(
     'tinymce.core.api.Tinymce',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Monitor, Pipeline, Step, UiFinder, Fun, TinyApis, TinyLoader, TinyUi, Element, window, Tinymce, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Monitor, Pipeline, Step, UiFinder, Fun, TinyApis, TinyLoader, TinyUi, Element, window, Tinymce, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     window.tinymce = Tinymce;
-    ModernTheme();
+    Theme();
 
     var getDialogWindow = function (editor) {
       return editor.windowManager.getWindows()[0].getContentWindow();
@@ -99,7 +99,7 @@ asynctest(
         'compat3x': '/project/src/plugins/compat3x/main/js/plugin.js'
       },
       toolbar: 'link',
-      skin_url: '/project/js/tinymce/skins/lightgray'
+      skin_url: '/project/js/tinymce/skins/oxide'
     }, success, failure);
   }
 );

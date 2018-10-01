@@ -3,7 +3,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -1102,6 +1102,34 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     LegacyUnit.equal(newArgs.parents.length, 1);
   });
 
+  suite.test('selectorChangedWithUnbind', function (editor) {
+    let newState, newArgs, calls = 0;
+
+    const { unbind } = editor.selection.selectorChangedWithUnbind('a[href]', function (state, args) {
+      newState = state;
+      newArgs = args;
+      calls++;
+    });
+
+    editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
+    LegacyUnit.setSelection(editor, 'a', 0, 'a', 4);
+    editor.nodeChanged();
+
+    LegacyUnit.equal(newState, true);
+    LegacyUnit.equal(newArgs.selector, 'a[href]');
+    LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
+    LegacyUnit.equal(newArgs.parents.length, 2);
+    LegacyUnit.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
+
+    unbind();
+
+    editor.getBody().innerHTML = '<p>text</p>';
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
+    editor.nodeChanged();
+
+    LegacyUnit.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
+  });
+
   suite.test('setRng', function (editor) {
     let rng = editor.dom.createRng();
 
@@ -1239,6 +1267,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     },
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

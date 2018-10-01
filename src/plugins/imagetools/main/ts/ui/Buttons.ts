@@ -9,35 +9,53 @@
  */
 
 const register = function (editor) {
-  editor.addButton('rotateleft', {
-    title: 'Rotate counterclockwise',
-    cmd: 'mceImageRotateLeft'
+  const cmd = (command: string) => () => editor.execCommand(command);
+
+  editor.ui.registry.addButton('rotateleft', {
+    tooltip: 'Rotate counterclockwise',
+    icon: 'rotate-left',
+    onAction: cmd('mceImageRotateLeft')
   });
 
-  editor.addButton('rotateright', {
-    title: 'Rotate clockwise',
-    cmd: 'mceImageRotateRight'
+  editor.ui.registry.addButton('rotateright', {
+    tooltip: 'Rotate clockwise',
+    icon: 'rotate-right',
+    onAction: cmd('mceImageRotateRight')
   });
 
-  editor.addButton('flipv', {
-    title: 'Flip vertically',
-    cmd: 'mceImageFlipVertical'
+  editor.ui.registry.addButton('flipv', {
+    tooltip: 'Flip vertically',
+    icon: 'flip-vertically',
+    onAction: cmd('mceImageFlipVertical')
   });
 
-  editor.addButton('fliph', {
-    title: 'Flip horizontally',
-    cmd: 'mceImageFlipHorizontal'
+  editor.ui.registry.addButton('fliph', {
+    tooltip: 'Flip horizontally',
+    icon: 'flip-horizontally',
+    onAction: cmd('mceImageFlipHorizontal')
   });
 
-  editor.addButton('editimage', {
-    title: 'Edit image',
-    cmd: 'mceEditImage'
+  editor.ui.registry.addButton('editimage', {
+    tooltip: 'Edit image',
+    icon: 'edit-image',
+    onAction: cmd('mceEditImage')
   });
 
-  editor.addButton('imageoptions', {
-    title: 'Image options',
-    icon: 'options',
-    cmd: 'mceImage'
+  editor.ui.registry.addButton('imageoptions', {
+    tooltip: 'Image options',
+    icon: 'image-options',
+    onAction: cmd('mceImage')
+  });
+
+  editor.ui.registry.addContextMenu('imagetools', {
+    update: (element) => {
+      // since there's no menu item available, this has to be it's own thing
+      return !element.src ? [] : [{
+        text: 'Edit image',
+        icon: 'edit-image',
+        onAction: cmd('mceEditImage')
+      }];
+    }
   });
 };
 

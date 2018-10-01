@@ -12,11 +12,19 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'link code',
   toolbar: 'link code',
-  height: 600
+  menubar: 'view insert tools custom',
+  link_quicklink: true,
+  menu: {
+    custom: { title: 'Custom', items: 'link unlink openlink' }
+  },
+  height: 600,
+  setup: (ed) => {
+    ed.on('init', () => {
+      ed.setContent('<h1>Heading</h1><p><a name="anchor1"></a>anchor here.');
+    });
+  }
 });
 
 export {};

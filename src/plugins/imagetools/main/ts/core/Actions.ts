@@ -18,9 +18,8 @@ import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 
 import * as Settings from '../api/Settings';
-import Dialog from '../ui/Dialog';
 import ImageSize from './ImageSize';
-import Proxy from './Proxy';
+import * as Proxy from './Proxy';
 import { Editor } from 'tinymce/core/api/Editor';
 import { HTMLImageElement } from '@ephox/dom-globals';
 
@@ -199,50 +198,36 @@ const flip = function (editor, imageUploadTimerState, axis) {
   };
 };
 
-const editImageDialog = function (editor, imageUploadTimerState) {
-  return function () {
-    const img = getSelectedImage(editor), originalSize = ImageSize.getNaturalImageSize(img);
+const handleDialogBlob = function (editor, imageUploadTimerState, img, originalSize, blob) {
+  return new Promise(function (resolve) {
+    BlobConversions.blobToImage(blob).
+      then(function (newImage) {
+        const newSize = ImageSize.getNaturalImageSize(newImage);
 
-    const handleDialogBlob = function (blob) {
-      return new Promise(function (resolve) {
-        BlobConversions.blobToImage(blob).
-          then(function (newImage) {
-            const newSize = ImageSize.getNaturalImageSize(newImage);
+        if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
+          if (ImageSize.getImageSize(img)) {
+            ImageSize.setImageSize(img, newSize);
+          }
+        }
 
-            if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
-              if (ImageSize.getImageSize(img)) {
-                ImageSize.setImageSize(img, newSize);
-              }
-            }
-
-            URL.revokeObjectURL(newImage.src);
-            resolve(blob);
-          });
-      });
-    };
-
-    const openDialog = function (editor, imageResult) {
-      return Dialog.edit(editor, imageResult).then(handleDialogBlob).
-        then(ResultConversions.blobToImageResult).
-        then(function (imageResult) {
-          return updateSelectedImage(editor, imageResult, true, imageUploadTimerState);
-        }, function () {
-          // Close dialog
-        });
-    };
-
-    findSelectedBlob(editor).
+        URL.revokeObjectURL(newImage.src);
+        return blob;
+      }).
       then(ResultConversions.blobToImageResult).
-      then(Fun.curry(openDialog, editor), function (error) {
-        displayError(editor, error);
+      then(function (imageResult) {
+        return updateSelectedImage(editor, imageResult, true, imageUploadTimerState);
+      }, function () {
+        // Close dialog
       });
-  };
+  });
 };
 
 export default {
   rotate,
   flip,
-  editImageDialog,
   isEditableImage,
-  cancelTimedUpload
+  cancelTimedUpload,
+  findSelectedBlob,
+  getSelectedImage,
+  handleDialogBlob
 };

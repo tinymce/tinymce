@@ -9,8 +9,8 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Formats from './core/Formats';
-import Buttons from './ui/Buttons';
+// import Formats from './core/Formats';
+// import Buttons from './ui/Buttons';
 
 /**
  * This class contains all core logic for the legacyoutput plugin.
@@ -20,8 +20,10 @@ import Buttons from './ui/Buttons';
  */
 
 PluginManager.add('legacyoutput', function (editor) {
-  Formats.setup(editor);
-  Buttons.register(editor);
+  console.error('Legacy output plugin has not yet been updated for TinyMCE 5');
+  return;
+  // Formats.setup(editor);
+  // Buttons.register(editor);
 });
 
 export default function () { }

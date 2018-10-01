@@ -14,6 +14,8 @@ import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import { document } from '@ephox/dom-globals';
+import { StyleMap } from '../../../../../core/main/ts/api/html/Styles';
+import { Result } from '@ephox/katamari';
 
 /**
  * @class tinymce.image.core.Utils
@@ -27,22 +29,23 @@ const parseIntAndGetMax = function (val1, val2) {
 const getImageSize = function (url, callback) {
   const img = document.createElement('img');
 
-  function done(width, height) {
+  function done(dimensions) {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
 
-    callback({ width, height });
+    callback(dimensions);
   }
 
   img.onload = function () {
     const width = parseIntAndGetMax(img.width, img.clientWidth);
     const height = parseIntAndGetMax(img.height, img.clientHeight);
-    done(width, height);
+    const dimensions = {width, height};
+    done(Result.value(dimensions));
   };
 
   img.onerror = function () {
-    done(0, 0);
+    done(Result.error(undefined));
   };
 
   const style = img.style;
@@ -92,10 +95,10 @@ const addPixelSuffix = (value: string): string => {
   return value;
 };
 
-const mergeMargins = function (css) {
+const mergeMargins = function (css: StyleMap) {
   if (css.margin) {
 
-    const splitMargin = css.margin.split(' ');
+    const splitMargin = String(css.margin).split(' ');
 
     switch (splitMargin.length) {
       case 1: // margin: toprightbottomleft;

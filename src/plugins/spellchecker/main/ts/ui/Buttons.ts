@@ -11,9 +11,11 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions, { LastSuggestion } from '../core/Actions';
-import { Cell } from '@ephox/katamari';
+import { Cell, Merger } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
+
+const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 
 const buildMenuItems = function (listName: string, languageValues) {
   const items = [];
@@ -27,16 +29,6 @@ const buildMenuItems = function (listName: string, languageValues) {
   });
 
   return items;
-};
-
-const updateSelection = function (editor: Editor, currentLanguageState: Cell<string>) {
-  return function (e) {
-    const selectedLanguage = currentLanguageState.get();
-
-    e.control.items().each(function (ctrl) {
-      ctrl.active(ctrl.settings.data === selectedLanguage);
-    });
-  };
 };
 
 const getItems = function (editor) {
@@ -56,44 +48,63 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  const buttonArgs: any = {
-    tooltip: 'Spellcheck',
-    onclick: startSpellchecking,
-    onPostRender (e) {
-      const ctrl = e.control;
-
-      editor.on('SpellcheckStart SpellcheckEnd', function () {
-        ctrl.active(startedState.get());
-      });
-    }
+  const buttonArgs = {
+    tooltip: 'Spell check',
+    onAction: startSpellchecking,
+    text: 'Spell check',
+    icon: 'spell-check',
+    onSetup : (buttonApi) => {
+      const setButtonState = () => {
+        buttonApi.setActive(startedState.get());
+      };
+      editor.on(spellcheckerEvents, setButtonState);
+      return () => {
+        editor.off(spellcheckerEvents, setButtonState);
+      };
+    },
   };
 
-  if (languageMenuItems.length > 1) {
-    buttonArgs.type = 'splitbutton';
-    buttonArgs.menu = languageMenuItems;
-    buttonArgs.onshow = updateSelection(editor, currentLanguageState);
-    buttonArgs.onselect = function (e) {
-      currentLanguageState.set(e.control.settings.data);
+  const getSplitButtonArgs = () => {
+    return {
+      type : 'splitbutton',
+      menu : languageMenuItems,
+      select : (value) => {
+        return value === currentLanguageState.get();
+      },
+      fetch : (callback) => {
+        const items = Tools.map(languageMenuItems, (languageItem) => {
+          return {
+            type: 'choiceitem',
+            value: languageItem.data,
+            text: languageItem.text
+          };
+        });
+        callback(items);
+      },
+      onItemAction: (splitButtonApi, value) => {
+        currentLanguageState.set(value);
+      }
     };
-  }
+  };
 
-  editor.addButton('spellchecker', buttonArgs);
+  editor.ui.registry.addButton('spellchecker', Merger.merge(buttonArgs, languageMenuItems.length > 1 ? getSplitButtonArgs() : {type: 'togglebutton'}));
 
-  editor.addMenuItem('spellchecker', {
-    text: 'Spellcheck',
-    context: 'tools',
-    onclick: startSpellchecking,
-    selectable: true,
-    onPostRender () {
-      const self = this;
-
-      self.active(startedState.get());
-
-      editor.on('SpellcheckStart SpellcheckEnd', function () {
-        self.active(startedState.get());
-      });
-    }
+  editor.ui.registry.addToggleMenuItem('spellchecker', {
+    type: 'togglemenuitem',
+    text: 'Spell check',
+    onSetup: (menuApi) => {
+      menuApi.setActive(startedState.get());
+      const setMenuItemCheck = () => {
+        menuApi.setActive(startedState.get());
+      };
+      editor.on(spellcheckerEvents, setMenuItemCheck);
+      return () => {
+        editor.off(spellcheckerEvents, setMenuItemCheck);
+      };
+    },
+    onAction: startSpellchecking
   });
+
 };
 
 export default {

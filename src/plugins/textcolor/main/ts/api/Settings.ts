@@ -1,3 +1,6 @@
+import { Arr } from '@ephox/katamari';
+import { Menu } from '@ephox/bridge';
+
 /**
  * Settings.js
  *
@@ -8,50 +11,44 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const defaultColorMap = [
-  '000000', 'Black',
-  '993300', 'Burnt orange',
-  '333300', 'Dark olive',
-  '003300', 'Dark green',
-  '003366', 'Dark azure',
-  '000080', 'Navy Blue',
-  '333399', 'Indigo',
-  '333333', 'Very dark gray',
-  '800000', 'Maroon',
-  'FF6600', 'Orange',
-  '808000', 'Olive',
-  '008000', 'Green',
-  '008080', 'Teal',
-  '0000FF', 'Blue',
-  '666699', 'Grayish blue',
-  '808080', 'Gray',
-  'FF0000', 'Red',
-  'FF9900', 'Amber',
-  '99CC00', 'Yellow green',
-  '339966', 'Sea green',
-  '33CCCC', 'Turquoise',
-  '3366FF', 'Royal blue',
-  '800080', 'Purple',
-  '999999', 'Medium gray',
-  'FF00FF', 'Magenta',
-  'FFCC00', 'Gold',
-  'FFFF00', 'Yellow',
-  '00FF00', 'Lime',
-  '00FFFF', 'Aqua',
-  '00CCFF', 'Sky blue',
-  '993366', 'Red violet',
-  'FFFFFF', 'White',
-  'FF99CC', 'Pink',
-  'FFCC99', 'Peach',
-  'FFFF99', 'Light yellow',
-  'CCFFCC', 'Pale green',
-  'CCFFFF', 'Pale cyan',
-  '99CCFF', 'Light sky blue',
-  'CC99FF', 'Plum'
+const defaultColors = [
+  { text: 'Black', value: '#1abc9c' },
+  { text: 'Black', value: '#2ecc71' },
+  { text: 'Black', value: '#3498db' },
+  { text: 'Black', value: '#9b59b6' },
+  { text: 'Black', value: '#34495e' },
+
+  { text: 'Black', value: '#16a085' },
+  { text: 'Black', value: '#27ae60' },
+  { text: 'Black', value: '#2980b9' },
+  { text: 'Black', value: '#8e44ad' },
+  { text: 'Black', value: '#2c3e50' },
+
+  { text: 'Black', value: '#f1c40f' },
+  { text: 'Black', value: '#e67e22' },
+  { text: 'Black', value: '#e74c3c' },
+  { text: 'Black', value: '#ecf0f1' },
+  { text: 'Black', value: '#95a5a6' },
+
+  { text: 'Black', value: '#f39c12' },
+  { text: 'Black', value: '#d35400' },
+  { text: 'Black', value: '#c0392b' },
+  { text: 'Black', value: '#bdc3c7' },
+  { text: 'Black', value: '#7f8c8d' },
+
+  { text: 'Black', value: '#000000' },
+  { text: 'Black', value: '#ffffff' },
 ];
 
-const getTextColorMap = function (editor) {
-  return editor.getParam('textcolor_map', defaultColorMap);
+const getTextColorMap = function (editor): Menu.ChoiceMenuItemApi[]  {
+  const unmapped = editor.getParam('textcolor_map', defaultColors);
+  return Arr.map(unmapped, (item): Menu.ChoiceMenuItemApi => {
+    return {
+      text: item.text,
+      value: item.value,
+      type: 'choiceitem'
+    };
+  });
 };
 
 const getForeColorMap = function (editor) {
@@ -66,8 +63,14 @@ const getTextColorRows = function (editor) {
   return editor.getParam('textcolor_rows', 5);
 };
 
+const calcCols = (colors) => {
+  return Math.ceil(Math.sqrt(colors));
+};
+
 const getTextColorCols = function (editor) {
-  return editor.getParam('textcolor_cols', 8);
+  const colors = getTextColorMap(editor);
+  const defaultCols = calcCols(colors.length);
+  return editor.getParam('textcolor_cols', defaultCols);
 };
 
 const getForeColorRows = function (editor) {
@@ -95,6 +98,8 @@ const hasColorPicker = function (editor) {
 };
 
 export default {
+  calcCols,
+  getTextColorMap,
   getForeColorMap,
   getBackColorMap,
   getForeColorRows,

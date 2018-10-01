@@ -14,8 +14,8 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  theme: 'silver',
+  skin_url: '../../../../../js/tinymce/skins/oxide',
   plugins: 'paste code',
   toolbar: 'undo redo | pastetext code',
   init_instance_callback (editor) {

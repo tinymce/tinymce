@@ -39,7 +39,7 @@ UnitTest.asynctest(
           editorContainer: elm.dom()
         };
       },
-      skin_url: '/project/js/tinymce/skins/lightgray',
+      skin_url: '/project/js/tinymce/skins/oxide',
       inline: true,
       init_instance_callback (editor) {
         editor.fire('SkinLoaded');

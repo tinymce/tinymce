@@ -20,7 +20,6 @@ const urls = [
   { key: 'codesample', name: 'Code Sample' },
   { key: 'colorpicker', name: 'Color Picker' },
   { key: 'compat3x', name: '3.x Compatibility' },
-  { key: 'contextmenu', name: 'Context Menu' },
   { key: 'directionality', name: 'Directionality' },
   { key: 'emoticons', name: 'Emoticons' },
   { key: 'fullpage', name: 'Full Page' },

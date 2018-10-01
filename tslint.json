@@ -22,10 +22,11 @@
       "variable-name": false,
       "interface-name": false,
       "ban-types": false,
-      "no-console": true,
+      "no-console": false, //FIXME reenable after development
       "no-bitwise": false,
       "no-duplicate-imports": true,
-      "no-namespace": false
+      "no-namespace": false,
+      "array-type": false
     },
     "rulesDirectory": []
 }

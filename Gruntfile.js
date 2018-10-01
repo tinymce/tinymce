@@ -8,21 +8,22 @@ let path = require('path');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'code', 'codesample',
-  'colorpicker', /*'compat3x', */ 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
+  'colorpicker', /*'compat3x', */ 'directionality', 'emoticons', 'help', 'fullpage',
   'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
   'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
   'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount',
+  'visualblocks', 'visualchars', 'wordcount', 'inlite',
 ];
 
 let themes = [
-  'modern', 'mobile', 'inlite'
+  // 'modern', 'mobile', 'inlite', 'silver'
+  'silver'
 ];
 
 module.exports = function (grunt) {
   var packageData = grunt.file.readJSON('package.json');
   var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
-  var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
+  var BUILD_VERSION = packageData.version + (process.env.BUILD_NUMBER ? '-' + process.env.BUILD_NUMBER : '');
   packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
 
   grunt.initConfig({
@@ -165,8 +166,11 @@ module.exports = function (grunt) {
 
     webpack: Object.assign(
       {core: () => gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js')},
-      {plugins: () => gruntWebPack.allPlugins(plugins)},
-      {themes: () => gruntWebPack.allThemes(themes)},
+      {plugins: () => gruntWebPack.allPluginDemos(plugins)},
+      {themes: () => {
+        gruntWebPack.allThemeDemos(themes);
+        gruntWebPack.allComponentDemos(themes);
+      }},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
       gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
     ),
@@ -196,7 +200,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          'js/tinymce/skins/lightgray/skin.min.css': 'src/skins/lightgray/main/less/desktop/Skin.less'
+          'js/tinymce/skins/oxide/skin.min.css': 'node_modules/@ephox/oxide/build/skin-default.css',
         }
       },
       mobile: {
@@ -209,7 +213,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          'js/tinymce/skins/lightgray/skin.mobile.min.css': 'src/skins/lightgray/main/less/mobile/app/mobile-less.less'
+          'js/tinymce/skins/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
         }
       },
       'content-mobile': {
@@ -219,7 +223,7 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.mobile.min.css': 'src/skins/lightgray/main/less/mobile/content.less'
+          'js/tinymce/skins/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
         }
       },
       content: {
@@ -229,7 +233,7 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.min.css': 'src/skins/lightgray/main/less/desktop/Content.less'
+          'js/tinymce/skins/oxide/content.min.css': 'src/skins/oxide/main/less/desktop/Content.less'
         }
       },
       'content-inline': {
@@ -239,9 +243,9 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.inline.min.css': 'src/skins/lightgray/main/less/desktop/Content.Inline.less'
+          'js/tinymce/skins/oxide/content.inline.min.css': 'src/skins/oxide/main/less/desktop/Content.Inline.less'
         }
-      }
+      },
     },
 
     copy: {
@@ -278,20 +282,20 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            cwd: 'src/skins/lightgray/main/fonts',
+            cwd: 'src/skins/oxide/main/fonts',
             src: [
               '**',
               '!*.json',
               '!*.md'
             ],
-            dest: 'js/tinymce/skins/lightgray/fonts'
+            dest: 'js/tinymce/skins/oxide/fonts'
           },
           {
             expand: true,
             flatten: true,
-            cwd: 'src/skins/lightgray/main/img',
+            cwd: 'src/skins/oxide/main/img',
             src: '**',
-            dest: 'js/tinymce/skins/lightgray/img'
+            dest: 'js/tinymce/skins/oxide/img'
           }
         ]
       },
@@ -308,15 +312,10 @@ module.exports = function (grunt) {
           {
             flatten: true,
             expand: true,
-            cwd: 'src/plugins/emoticons/main/img',
-            src: '*.gif',
-            dest: 'js/tinymce/plugins/emoticons/img/'
+            cwd: 'src/plugins/emoticons/main/json',
+            src: '*.js',
+            dest: 'js/tinymce/plugins/emoticons/json'
           }
-        ]
-      },
-      'help-plugin': {
-        files: [
-          { src: 'src/plugins/help/main/img/logo.png', dest: 'js/tinymce/plugins/help/img/logo.png' }
         ]
       },
       'visualblocks-plugin': {
@@ -701,6 +700,24 @@ module.exports = function (grunt) {
           'src/**/test/ts/browser/**/*Test.ts'
         ],
         customRoutes: 'src/core/test/json/routes.json'
+      },
+      apollo: {
+        config: 'tsconfig.json',
+        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/plugins/*/test/ts/browser/**/AG_*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/test/json/routes.json',
+        name: 'apollo-tests'
+      },
+      silver: {
+        config: 'tsconfig.json',
+        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/test/json/routes.json',
+        name: 'silver-tests'
       }
     },
 
@@ -764,17 +781,37 @@ module.exports = function (grunt) {
         singleTimeout: 300000,
         customRoutes: 'src/core/test/json/routes.json',
         name: 'ie'
+      },
+      apollo: {
+        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs',
+        config: 'tsconfig.json',
+        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts', 'src/plugins/*/test/ts/browser/**/AG_*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/test/json/routes.json',
+        name: 'apollo-tests'
+      },
+      silver: {
+        browser: 'phantomjs',
+        config: 'tsconfig.json',
+        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/test/json/routes.json',
+        name: 'silver-tests'
       }
     },
 
     watch: {
       skins: {
-        files: ['src/skins/lightgray/main/less/**/*'],
+        files: ['src/skins/oxide/main/less/**/*'],
         tasks: ['less', 'copy:skins'],
         options: {
           spawn: false
         }
-      }
+      },
     }
   });
 
@@ -795,7 +832,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-tslint');
 
   grunt.registerTask('prod', [
-    'validateVersion',
+    // 'validateVersion',
     'shell:tsc',
     'tslint',
     'globals',
@@ -811,7 +848,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dev', [
-    'shell:tsc',
+    // 'shell:tsc',
     'globals',
     'rollup',
     'less',

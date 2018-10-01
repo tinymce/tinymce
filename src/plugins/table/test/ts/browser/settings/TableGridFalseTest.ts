@@ -3,14 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import SilverTheme from '../../../../../../themes/silver/main/ts/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  ModernTheme();
+/* This test requires a menubar. It is testing a setting which means that the table picker is replaced by just a dialog. */
+UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, failure) => {
   TablePlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -37,6 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', function () {
   }, {
     plugins: 'table',
     table_grid: false,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    theme: 'silver',
+    skin_url: '/project/js/tinymce/skins/oxide',
   }, success, failure);
 });

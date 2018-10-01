@@ -8,131 +8,113 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { HTMLTableCellElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import Helpers from './Helpers';
-import { hasAdvancedCellTab, getCellClassList } from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
-import { HTMLElement, Node, HTMLTableCellElement } from '@ephox/dom-globals';
+import { hasAdvancedCellTab } from '../api/Settings';
+import CellDialogGeneralTab from './CellDialogGeneralTab';
+import Helpers, { CellData } from './Helpers';
+import DomModifiers from './DomModifiers';
 
-/**
- * @class tinymce.table.ui.CellDialog
- * @private
- */
-
-interface FormData {
-  width: string;
-  height: string;
-  scope: string;
-  class: string;
-  align: string;
-  valign: string;
-  style: string;
-  type: string;
-}
-
-const updateStyles = function (elm: HTMLElement, cssText: string) {
-  delete elm.dataset.mceStyle;
-  elm.style.cssText += ';' + cssText;
+const updateSimpleProps = (modifiers, data: CellData) => {
+  modifiers.setAttrib('scope', data.scope);
+  modifiers.setAttrib('class', data.class);
+  modifiers.setStyle('width', Util.addSizeSuffix(data.width));
+  modifiers.setStyle('height', Util.addSizeSuffix(data.height));
 };
 
-const extractDataFromElement = function (editor: Editor, elm: HTMLElement) {
-  const dom = editor.dom;
-  const data: FormData = {
-    width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    scope: dom.getAttrib(elm, 'scope'),
-    class: dom.getAttrib(elm, 'class'),
-    type: elm.nodeName.toLowerCase(),
-    style: '',
-    align: '',
-    valign: ''
-  };
-
-  Tools.each('left center right'.split(' '), function (name: string) {
-    if (editor.formatter.matchNode(elm, 'align' + name)) {
-      data.align = name;
-    }
-  });
-
-  Tools.each('top middle bottom'.split(' '), function (name: string) {
-    if (editor.formatter.matchNode(elm, 'valign' + name)) {
-      data.valign = name;
-    }
-  });
-
-  if (hasAdvancedCellTab(editor)) {
-    Tools.extend(data, Helpers.extractAdvancedStyles(dom, elm));
-  }
-
-  return data;
+const updateAdvancedProps = (modifiers, data: CellData) => {
+  modifiers.setStyle('background-color', data.backgroundcolor);
+  modifiers.setStyle('border-color', data.bordercolor);
+  modifiers.setStyle('border-style', data.borderstyle);
 };
 
-const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
+// When applying to a single cell, values can be falsy. That is
+// because there should be a consistent value across the cell
+// selection, so it should also be possible to toggle things off.
+const applyToSingle = (editor, cells: Node[], data: CellData) => {
+  // NOTE: cells instead of cellElm passed through here just to keep signature
+  // same as applyToMultiple. Probably change.
+  // let cellElm = cells[0] as HTMLTableCellElement;
   const dom = editor.dom;
-  let data: FormData;
 
-  function setAttrib(elm: Node, name: string, value: string) {
-    if (cells.length === 1 || value) {
-      dom.setAttrib(elm, name, value);
-    }
-  }
+  // Switch cell type
+  const cellElm: HTMLTableCellElement = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? dom.rename(cells[0], data.celltype) : cells[0];
 
-  function setStyle(elm: Node, name: string, value: string) {
-    if (cells.length === 1 || value) {
-      dom.setStyle(elm, name, value);
-    }
-  }
+  const modifiers = DomModifiers.normal(dom, cellElm);
+
+  updateSimpleProps(modifiers, data);
 
   if (hasAdvancedCellTab(editor)) {
-    Helpers.syncAdvancedStyleFields(editor, evt);
+    updateAdvancedProps(modifiers, data);
   }
-  data = evt.control.rootControl.toJSON();
 
-  editor.undoManager.transact(function () {
-    Tools.each(cells, function (cellElm: HTMLTableCellElement) {
-      setAttrib(cellElm, 'scope', data.scope);
+  // Remove alignment
+  Styles.unApplyAlign(editor, cellElm);
+  Styles.unApplyVAlign(editor, cellElm);
 
-      if (cells.length === 1) {
-        setAttrib(cellElm, 'style', data.style);
-      } else {
-        updateStyles(cellElm, data.style);
-      }
+  // Apply alignment
+  if (data.halign) {
+    Styles.applyAlign(editor, cellElm, data.halign);
+  }
 
-      setAttrib(cellElm, 'class', data.class);
-      setStyle(cellElm, 'width', Util.addSizeSuffix(data.width));
-      setStyle(cellElm, 'height', Util.addSizeSuffix(data.height));
+  // Apply vertical alignment
+  if (data.valign) {
+    Styles.applyVAlign(editor, cellElm, data.valign);
+  }
+};
 
-      // Switch cell type
-      if (data.type && cellElm.nodeName.toLowerCase() !== data.type) {
-        cellElm = dom.rename(cellElm, data.type) as HTMLTableCellElement;
-      }
+// When applying to multiple cells, values must be truthy to be set.
+// This is because multiple cells might have different values, and you
+// don't want a blank value to wipe out their original values. Note,
+// how as part of this, it doesn't remove any original alignment before
+// applying any specified alignment.
+const applyToMultiple = (editor, cells: Node[], data: CellData) => {
+  const dom = editor.dom;
 
-      // Remove alignment
-      if (cells.length === 1) {
-        Styles.unApplyAlign(editor, cellElm);
-        Styles.unApplyVAlign(editor, cellElm);
-      }
+  Tools.each(cells, (cellElm: HTMLTableCellElement) => {
+    // Switch cell type
+    if (data.celltype && cellElm.nodeName.toLowerCase() !== data.celltype) {
+      cellElm = dom.rename(cellElm, data.celltype) as HTMLTableCellElement;
+    }
 
-      // Apply alignment
-      if (data.align) {
-        Styles.applyAlign(editor, cellElm, data.align);
-      }
+    // NOTE: This isn't tested at all.
+    const modifiers = DomModifiers.ifTruthy(dom, cellElm);
 
-      // Apply vertical alignment
-      if (data.valign) {
-        Styles.applyVAlign(editor, cellElm, data.valign);
-      }
-    });
+    updateSimpleProps(modifiers, data);
 
+    if (hasAdvancedCellTab(editor)) {
+      updateAdvancedProps(modifiers, data);
+    }
+
+    // Apply alignment
+    if (data.halign) {
+      Styles.applyAlign(editor, cellElm, data.halign);
+    }
+
+    // Apply vertical alignment
+    if (data.valign) {
+      Styles.applyVAlign(editor, cellElm, data.valign);
+    }
+  });
+};
+
+const onSubmitCellForm = (editor: Editor, cells: Node[], api) => {
+  const data = api.getData();
+  api.close();
+
+  editor.undoManager.transact(() => {
+    const applicator = cells.length === 1 ? applyToSingle : applyToMultiple;
+    applicator(editor, cells, data);
     editor.focus();
   });
 };
 
-const open = function (editor: Editor) {
-  let cellElm, data: FormData, classListCtrl, cells = [];
+const open = (editor: Editor) => {
+  let cellElm, cells = [];
 
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
@@ -148,144 +130,46 @@ const open = function (editor: Editor) {
     return;
   }
 
-  if (cells.length > 1) {
-    data = {
-      width: '',
-      height: '',
-      scope: '',
-      class: '',
-      align: '',
-      valign: '',
-      style: '',
-      type: cellElm.nodeName.toLowerCase()
-    };
-  } else {
-    data = extractDataFromElement(editor, cellElm);
-  }
+  // Get current data and find shared values between cells
+  const cellsData: CellData[] = Tools.map(cells,
+    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
+  );
+  const data: CellData = Helpers.getSharedValues(cellsData);
 
-  if (getCellClassList(editor).length > 0) {
-    classListCtrl = {
-      name: 'class',
-      type: 'listbox',
-      label: 'Class',
-      values: Helpers.buildListItems(
-        getCellClassList(editor),
-        function (item) {
-          if (item.value) {
-            item.textStyle = function () {
-              return editor.formatter.getCssText({ block: 'td', classes: [item.value] });
-            };
-          }
-        }
-      )
+  const body = hasAdvancedCellTab(editor) ?
+    {
+      type: 'tabpanel',
+      tabs: [
+        CellDialogGeneralTab.tab(editor),
+        Helpers.getAdvancedTab()
+      ]
+    } : {
+      type: 'panel',
+      items: [
+        CellDialogGeneralTab.tab(editor),
+      ]
     };
-  }
 
-  const generalCellForm = {
-    type: 'form',
-    layout: 'flex',
-    direction: 'column',
-    labelGapCalc: 'children',
-    padding: 0,
-    items: [
+  editor.windowManager.open({
+    title: 'Cell Properties',
+    size: 'normal',
+    body,
+    buttons: [
       {
-        type: 'form',
-        layout: 'grid',
-        columns: 2,
-        labelGapCalc: false,
-        padding: 0,
-        defaults: {
-          type: 'textbox',
-          maxWidth: 50
-        },
-        items: [
-          { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-          { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-          {
-            label: 'Cell type',
-            name: 'type',
-            type: 'listbox',
-            text: 'None',
-            minWidth: 90,
-            maxWidth: null,
-            values: [
-              { text: 'Cell', value: 'td' },
-              { text: 'Header cell', value: 'th' }
-            ]
-          },
-          {
-            label: 'Scope',
-            name: 'scope',
-            type: 'listbox',
-            text: 'None',
-            minWidth: 90,
-            maxWidth: null,
-            values: [
-              { text: 'None', value: '' },
-              { text: 'Row', value: 'row' },
-              { text: 'Column', value: 'col' },
-              { text: 'Row group', value: 'rowgroup' },
-              { text: 'Column group', value: 'colgroup' }
-            ]
-          },
-          {
-            label: 'H Align',
-            name: 'align',
-            type: 'listbox',
-            text: 'None',
-            minWidth: 90,
-            maxWidth: null,
-            values: [
-              { text: 'None', value: '' },
-              { text: 'Left', value: 'left' },
-              { text: 'Center', value: 'center' },
-              { text: 'Right', value: 'right' }
-            ]
-          },
-          {
-            label: 'V Align',
-            name: 'valign',
-            type: 'listbox',
-            text: 'None',
-            minWidth: 90,
-            maxWidth: null,
-            values: [
-              { text: 'None', value: '' },
-              { text: 'Top', value: 'top' },
-              { text: 'Middle', value: 'middle' },
-              { text: 'Bottom', value: 'bottom' }
-            ]
-          }
-        ]
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
       },
-
-      classListCtrl
-    ]
-  };
-
-  if (hasAdvancedCellTab(editor)) {
-    editor.windowManager.open({
-      title: 'Cell properties',
-      bodyType: 'tabpanel',
-      data,
-      body: [
-        {
-          title: 'General',
-          type: 'form',
-          items: generalCellForm
-        },
-        Helpers.createStyleForm(editor)
-      ],
-      onsubmit: Fun.curry(onSubmitCellForm, editor, cells)
-    });
-  } else {
-    editor.windowManager.open({
-      title: 'Cell properties',
-      data,
-      body: generalCellForm,
-      onsubmit: Fun.curry(onSubmitCellForm, editor, cells)
-    });
-  }
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
+      }
+    ],
+    initialData: data,
+    onSubmit: Fun.curry(onSubmitCellForm, editor, cells)
+  });
 };
 
 export default {

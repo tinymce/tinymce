@@ -5,7 +5,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Factory from 'tinymce/core/api/ui/Factory';
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Editor } from 'tinymce/core/api/Editor';
 import { document } from '@ephox/dom-globals';
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
   const suite = LegacyUnit.createSuite();
   let menuCtrl;
 
-  ModernTheme();
+  Theme();
   ImportCssPlugin();
 
   const fireFormatsMenuEvent = function (editor: Editor, styleSheets, items?) {
@@ -387,6 +387,6 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
   }, {
     add_unload_trigger: false,
     plugins: 'importcss',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

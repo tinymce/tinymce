@@ -12,8 +12,6 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'lists advlist code',
   toolbar: 'bullist numlist | outdent indent | code',
   height: 600

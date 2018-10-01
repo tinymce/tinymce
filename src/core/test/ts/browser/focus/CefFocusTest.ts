@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox
 import { Hierarchy, Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../../module/test/ViewBlock';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
       EditorManager.init({
         selector: '.tinymce',
         inline: true,
-        skin_url: '/project/js/tinymce/skins/lightgray'
+        skin_url: '/project/js/tinymce/skins/oxide'
       }).then(function () {
         done();
       });

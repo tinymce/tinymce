@@ -12,8 +12,6 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'codesample code',
   toolbar: 'codesample code',
   codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css',
@@ -23,8 +21,6 @@ tinymce.init({
 tinymce.init({
   selector: 'div.tinymce',
   inline: true,
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'codesample code',
   toolbar: 'codesample code',
   codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css',

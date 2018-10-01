@@ -12,11 +12,10 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
   plugins: 'help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor',
   toolbar: 'help',
-  height: 600
+  height: 600,
+  menubar: 'view insert tools help'
 });
 
 export {};

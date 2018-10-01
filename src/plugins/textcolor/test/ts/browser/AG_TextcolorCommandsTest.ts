@@ -1,0 +1,74 @@
+import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
+import { Cell } from '@ephox/katamari';
+import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
+import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import { UnitTest } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
+
+UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorCommandsTest', (success, failure) => {
+    const browser = PlatformDetection.detect().browser;
+
+    Theme();
+    TextcolorPlugin();
+
+    const state = Cell(null);
+
+    const sAssertState = function (expected) {
+      return Logger.t(`Assert state ${expected}`, Step.sync(function () {
+        RawAssertions.assertEq('should be same', expected, state.get());
+      }));
+    };
+
+    const sResetState = Logger.t('Reset state', Step.sync(function () {
+      state.set(null);
+    }));
+
+    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+
+      editor.on('execCommand', function (e) {
+        state.set(e.command);
+      });
+
+      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyApis = TinyApis(editor);
+
+      Pipeline.async({}, browser.isIE() ? [] : [
+        Log.stepsAsStep('TBA', 'TextColor: apply and remove forecolor and make sure of the right command has been executed', [
+          tinyApis.sFocus,
+          tinyApis.sSetContent('hello test'),
+          tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+          tinyUi.sClickOnToolbar('click forecolor', 'button[aria-label="Color"] + .tox-split-button__chevron'),
+          tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+          tinyUi.sClickOnUi('click color', 'div[data-mce-color="#1abc9c"]'),
+          sAssertState('mceApplyTextcolor'),
+          tinyApis.sSetSelection([0, 0, 0], 0, [0, 0, 0], 5),
+          tinyUi.sClickOnToolbar('click forecolor', 'button[aria-label="Color"] + .tox-split-button__chevron'),
+          tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+          tinyUi.sClickOnUi('click remove color', '.tox-swatch--remove'),
+          sAssertState('mceRemoveTextcolor'),
+          sResetState
+        ]),
+        Log.stepsAsStep('TBA', 'TextColor: apply and remove backcolor and make sure of the right command has been executed', [
+          tinyApis.sFocus,
+          tinyApis.sSetContent('hello test'),
+          tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
+          tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+          tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#1abc9c"]'),
+          sAssertState('mceApplyTextcolor'),
+          tinyApis.sSetSelection([0, 0, 0], 0, [0, 0, 0], 5),
+          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
+          tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+          tinyUi.sClickOnUi('click remove color', '.tox-swatch--remove'),
+          sAssertState('mceRemoveTextcolor'),
+          sResetState
+        ])
+      ], onSuccess, onFailure);
+    }, {
+      plugins: 'textcolor',
+      toolbar: 'forecolor backcolor',
+      skin_url: '/project/js/tinymce/skins/oxide'
+    }, success, failure);
+  }
+);

@@ -4,14 +4,14 @@ import { Editor as McEditor } from '@ephox/mcagar';
 
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import Node from 'tinymce/core/api/html/Node';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest', (success, failure) => {
   Theme();
 
   const settings = {
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   };
 
   const cCreateEditor = Chain.on((_, next, die) => next(Chain.wrap(new Editor('editor', {}, EditorManager))));

@@ -26,7 +26,7 @@ const sectionResult = Struct.immutable('sections', 'settings');
 const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
 const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = { theme: 'mobile' };
+const defaultMobileSettings = {  };
 
 const normalizePlugins = function (plugins) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -61,7 +61,7 @@ const hasSection = function (sectionResult, name) {
 const getDefaultSettings = function (id, documentBaseUrl, editor) {
   return {
     id,
-    theme: 'modern',
+    theme: 'silver',
     delta_width: 0,
     delta_height: 0,
     popup_css: '',

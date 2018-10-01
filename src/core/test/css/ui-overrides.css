@@ -29,6 +29,6 @@
 .ui-overrides .mce-dotted {background-image: url(data:image/gif;base64,R0lGODlhCwALAIABAAAAAP///yH5BAEAAAEALAAAAAALAAsAAAIPjI+py+CuHkwSRHkf23wXADs=);}
 .ui-overrides .mce-i-test {background: red;}
 
-body .ui-overrides .mce-window, body .ui-overrides .mce-notification {
+body .ui-overrides .mce-window, body .ui-overrides .tox-notification {
   transform: none;
 }

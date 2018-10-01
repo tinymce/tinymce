@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { EditorMode, getMode, setMode } from 'tinymce/core/Mode';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/lightgray',
+    skin_url: '/project/js/tinymce/skins/oxide',
     readonly: true
   }, success, failure);
 });

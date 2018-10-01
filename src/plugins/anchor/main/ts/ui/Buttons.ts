@@ -9,18 +9,17 @@
  */
 
 const register = function (editor) {
-  editor.addButton('anchor', {
-    icon: 'anchor',
+  editor.ui.registry.addToggleButton('anchor', {
+    icon: 'bookmark',
     tooltip: 'Anchor',
-    cmd: 'mceAnchor',
-    stateSelector: 'a:not([href])'
+    onAction: () => editor.execCommand('mceAnchor'),
+    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('a:not([href])', buttonApi.setActive).unbind
   });
 
-  editor.addMenuItem('anchor', {
-    icon: 'anchor',
+  editor.ui.registry.addMenuItem('anchor', {
+    icon: 'bookmark',
     text: 'Anchor',
-    context: 'insert',
-    cmd: 'mceAnchor'
+    onAction: () => editor.execCommand('mceAnchor')
   });
 };
 

@@ -12,11 +12,16 @@ import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 
-const makeTab = function () {
-  const makeAriaLabel = function (shortcut) {
+export interface ShortcutActionPairType {
+  shortcut: string;
+  action: string;
+}
+
+const tab = () => {
+  const makeAriaLabel = (shortcut: ShortcutActionPairType) => {
     return 'aria-label="Action: ' + shortcut.action + ', Shortcut: ' + shortcut.shortcut.replace(/Ctrl/g, 'Control') + '"';
   };
-  const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut) {
+  const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut: ShortcutActionPairType) {
     return '<tr data-mce-tabstop="1" tabindex="-1" ' + makeAriaLabel(shortcut) + '>' +
               '<td>' + I18n.translate(shortcut.action) + '</td>' +
               '<td>' + shortcut.shortcut + '</td>' +
@@ -25,11 +30,9 @@ const makeTab = function () {
 
   return {
     title: 'Handy Shortcuts',
-    type: 'container',
-    style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
     items: [
       {
-        type: 'container',
+        type: 'htmlpanel',
         html: '<div>' +
                 '<table class="mce-table-striped">' +
                   '<thead>' +
@@ -45,5 +48,5 @@ const makeTab = function () {
 };
 
 export default {
-  makeTab
+  tab
 };

@@ -12,11 +12,13 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  theme: 'modern',
-  skin_url: '../../../../../js/tinymce/skins/lightgray',
-  plugins: 'searchreplace code',
-  toolbar: 'searchreplace code',
-  height: 600
+  plugins: 'searchreplace',
+  toolbar: 'searchreplace',
+  height: 600,
+  menubar: 'custom',
+  menu: {
+    custom: { title: 'Custom', items: 'searchreplace' }
+  }
 });
 
 export {};

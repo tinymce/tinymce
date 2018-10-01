@@ -48,6 +48,6 @@ const getUrl = function (url: string, apiKey: string, withCredentials: boolean):
   return apiKey ? requestServiceBlob(url, apiKey) : requestBlob(url, withCredentials);
 };
 
-export default {
+export {
   getUrl
 };

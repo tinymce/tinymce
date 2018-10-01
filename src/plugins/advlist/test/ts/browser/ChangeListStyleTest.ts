@@ -2,14 +2,14 @@ import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  ModernTheme();
+  Theme();
   ListsPlugin();
   AdvlistPlugin();
 
@@ -83,6 +83,6 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
     indent: false,
     plugins: 'lists advlist',
     toolbar: 'numlist bullist',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });

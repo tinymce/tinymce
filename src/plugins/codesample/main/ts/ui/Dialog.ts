@@ -10,49 +10,73 @@
 
 import Settings from '../api/Settings';
 import CodeSample from '../core/CodeSample';
-import Languages from '../core/Languages';
+import Languages, { LanguageSpec } from '../core/Languages';
+import { Arr } from '@ephox/katamari';
 
-export default {
-  open (editor) {
-    const minWidth = Settings.getDialogMinWidth(editor);
-    const minHeight = Settings.getDialogMinHeight(editor);
-    const currentLanguage = Languages.getCurrentLanguage(editor);
-    const currentLanguages = Languages.getLanguages(editor);
-    const currentCode = CodeSample.getCurrentCode(editor);
+const open = (editor) => {
+  const minWidth = Settings.getDialogMinWidth(editor);
+  const minHeight = Settings.getDialogMinHeight(editor);
+  const languages: LanguageSpec[] = Languages.getLanguages(editor);
+  const defaultLanguage: string = Arr.head(languages).fold(() => '', (l) => l.value);
+  const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
+  const currentCode: string = CodeSample.getCurrentCode(editor);
 
-    editor.windowManager.open({
-      title: 'Insert/Edit code sample',
-      minWidth,
-      minHeight,
-      layout: 'flex',
-      direction: 'column',
-      align: 'stretch',
-      body: [
+  editor.windowManager.open({
+    title: 'Insert/Edit code sample',
+    size: 'large',
+    minWidth,
+    minHeight,
+    layout: 'flex',
+    direction: 'column',
+    align: 'stretch',
+    body: {
+      type: 'panel',
+      items: [
         {
-          type: 'listbox',
+          type: 'selectbox',
           name: 'language',
           label: 'Language',
-          maxWidth: 200,
-          value: currentLanguage,
-          values: currentLanguages
+          items: languages
         },
-
         {
-          type: 'textbox',
+          type: 'textarea',
           name: 'code',
           multiline: true,
+          flex: true,
           spellcheck: false,
           ariaLabel: 'Code view',
-          flex: 1,
           style: 'direction: ltr; text-align: left',
           classes: 'monospace',
           value: currentCode,
           autofocus: true
         }
-      ],
-      onSubmit (e) {
-        CodeSample.insertCodeSample(editor, e.data.language, e.data.code);
+      ]
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel',
       }
-    });
-  }
+    ],
+    initialData: {
+      language: currentLanguage,
+      code: currentCode
+    },
+    onSubmit: (api) => {
+      const data = api.getData();
+      CodeSample.insertCodeSample(editor, data.language, data.code);
+      api.close();
+    }
+  });
+};
+
+export default {
+  open
 };

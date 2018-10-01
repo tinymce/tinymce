@@ -10,7 +10,6 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from '../core/NodeType';
-import Selection from '../core/Selection';
 
 const findIndex = function (list, predicate) {
   for (let index = 0; index < list.length; index++) {
@@ -22,28 +21,19 @@ const findIndex = function (list, predicate) {
   }
   return -1;
 };
-const listState = function (editor, listName) {
-  return function (e) {
-    const ctrl = e.control;
 
-    editor.on('NodeChange', function (e) {
+const listState = function (editor, listName) {
+  return function (buttonApi) {
+    const nodeChangeHandler = (e) => {
       const tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
       const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
       const lists = Tools.grep(parents, NodeType.isListNode);
-      ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
-    });
-  };
-};
+      buttonApi.setActive(lists.length > 0 && lists[0].nodeName === listName);
+    };
 
-const indentPostRender = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
+    editor.on('NodeChange', nodeChangeHandler);
 
-    editor.on('nodechange', function () {
-      const listItemBlocks = Selection.getSelectedListItems(editor);
-      const disable = listItemBlocks.length > 0 && NodeType.isFirstChild(listItemBlocks[0]);
-      ctrl.disabled(disable);
-    });
+    return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 
@@ -53,28 +43,25 @@ const register = function (editor) {
     return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
   };
 
+  const exec = (command) => () => editor.execCommand(command);
+
   if (!hasPlugin(editor, 'advlist')) {
-    editor.addButton('numlist', {
+    editor.ui.registry.addToggleButton('numlist', {
+      icon: 'ordered-list',
       active: false,
-      title: 'Numbered list',
-      cmd: 'InsertOrderedList',
-      onPostRender: listState(editor, 'OL')
+      tooltip: 'Numbered list',
+      onAction: exec('InsertOrderedList'),
+      onSetup: listState(editor, 'OL')
     });
 
-    editor.addButton('bullist', {
+    editor.ui.registry.addToggleButton('bullist', {
+      icon: 'unordered-list',
       active: false,
-      title: 'Bullet list',
-      cmd: 'InsertUnorderedList',
-      onPostRender: listState(editor, 'UL')
+      tooltip: 'Bullet list',
+      onAction: exec('InsertUnorderedList'),
+      onSetup: listState(editor, 'UL')
     });
   }
-
-  editor.addButton('indent', {
-    icon: 'indent',
-    title: 'Increase indent',
-    cmd: 'Indent',
-    onPostRender: indentPostRender(editor)
-  });
 };
 
 export default {

@@ -9,16 +9,16 @@
  */
 
 const register = function (editor) {
-  editor.addButton('hr', {
-    icon: 'hr',
+  editor.ui.registry.addButton('hr', {
+    icon: 'horizontal-rule',
     tooltip: 'Horizontal line',
-    cmd: 'InsertHorizontalRule'
+    onAction: () => editor.execCommand('InsertHorizontalRule'),
   });
 
-  editor.addMenuItem('hr', {
-    icon: 'hr',
+  editor.ui.registry.addMenuItem('hr', {
+    icon: 'horizontal-rule',
     text: 'Horizontal line',
-    cmd: 'InsertHorizontalRule',
+    onAction: () => editor.execCommand('InsertHorizontalRule'),
     context: 'insert'
   });
 };

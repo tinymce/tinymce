@@ -10,6 +10,7 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Actions from '../core/Actions';
+import Dialog from '../ui/Dialog';
 
 const register = function (editor, imageUploadTimerState) {
   Tools.each({
@@ -17,7 +18,7 @@ const register = function (editor, imageUploadTimerState) {
     mceImageRotateRight: Actions.rotate(editor, imageUploadTimerState, 90),
     mceImageFlipVertical: Actions.flip(editor, imageUploadTimerState, 'v'),
     mceImageFlipHorizontal: Actions.flip(editor, imageUploadTimerState, 'h'),
-    mceEditImage: Actions.editImageDialog(editor, imageUploadTimerState)
+    mceEditImage: Dialog.makeOpen(editor, imageUploadTimerState)
   }, function (fn, cmd) {
     editor.addCommand(cmd, fn);
   });
