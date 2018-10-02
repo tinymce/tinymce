@@ -7,10 +7,10 @@ Icons do not have a defined size and will use whatever size the SVG has. This ma
 Colors are applied using `fill` via CSS, so make sure to follow the steps under _Designing an icon_.
 
 # Installation
-`oxide-icons-default` is available as an `npm` package.  You can install it via the npm package `@tinymce/oxide-icons-default`
+`oxide-icons-default` is available as an `npm` package.  You can install it via the npm package `@ephox/oxide-icons-default`
 
 ## Install from npm
-`npm install @tinymce/oxide-icons-default`
+`npm install @ephox/oxide-icons-default`
 
 ## Updating Icons
 
