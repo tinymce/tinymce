@@ -3,7 +3,6 @@ import { open as SearchReplace } from './searchreplace/SearchReplace';
 
 import DialogComponentsDemo from './DialogComponentsDemo';
 
-import CodeView from './codeview/CodeView';
 import AlertDemo from './alert/AlertDemo';
 import NotificationDemo from './notification/NotificationDemo';
 
@@ -13,7 +12,6 @@ window.components = {
   Preview,
   SearchReplace,
   DialogComponentsDemo,
-  CodeView,
   AlertDemo,
   NotificationDemo
 };
