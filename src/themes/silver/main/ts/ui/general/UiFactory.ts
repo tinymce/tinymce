@@ -2,7 +2,7 @@ import { AlloySpec, SimpleOrSketchSpec } from '@ephox/alloy';
 import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
 import { Objects } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
-import { renderAlertDialog } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderAutocomplete } from '../dialog/Autocomplete';
@@ -50,7 +50,7 @@ const makeIframe = (render: NoFormRenderer): FormPartRenderer => {
 const factories: Record<string, FormPartRenderer> = {
   collection: make(renderCollection),
   alloy: make(Fun.identity),
-  alertbanner: make((spec, backstage) => renderAlertDialog(spec, backstage.shared.providers)),
+  alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
   input: make(renderInput),
   textarea: make(renderTextarea),
   // textbutton: make(Buttons.text().sketch),

@@ -10,7 +10,7 @@ import {
 import { Menu, Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { Arr, Id, Option } from '@ephox/katamari';
-import { renderAlertDialog } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
 import * as Icons from '../../../../../themes/silver/main/ts/ui/icons/Icons';
 import { renderAutocomplete } from '../../../main/ts/ui/dialog/Autocomplete';
@@ -272,7 +272,7 @@ export default () => {
       }),
     });
 
-  const alertBannerSpec = renderAlertDialog({
+  const alertBannerSpec = renderAlertBanner({
     text: 'The alert banner message',
     level: 'warn',
     icon: Icons.get('icon-close', sharedBackstage.providers.icons),
