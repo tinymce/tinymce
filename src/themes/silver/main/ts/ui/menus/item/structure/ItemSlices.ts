@@ -42,7 +42,7 @@ const convertShortcut = (source: string) => {
   });
 
   return updated.join('+');
-}
+};
 
 const renderShortcut = (shortcut: string): AlloySpec => ({
   dom: {
