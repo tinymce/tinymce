@@ -120,7 +120,7 @@ node("primary") {
 
   sh "sed -i -e s/\"warn\"/\"error\"/ tslint.json"
   sh "yarn install --no-lockfile && npx grunt && git checkout ."
-  runBuild(runTests, "develop", "prerelease", """
+  runBuild(runTests, "5.x", "prerelease", """
     sed -i -e s/\"warn\"/\"error\"/ tslint.json
     yarn install --no-lockfile && npx grunt && git checkout .
   """)
