@@ -133,7 +133,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     } else {
       // The bookmark is responsible for splitting the nodes beforehand at the selection points
       // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
-      // to stop the paragraph splitting into two paragraphs. Probably a better way exists.
+      // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
       const bookmark = GetBookmark.getPersistentBookmark(editor.selection, false);
       const rng = editor.selection.getRng();
       annotate(editor, rng, name, settings.decorate, data);
