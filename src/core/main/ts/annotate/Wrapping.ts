@@ -20,10 +20,14 @@ export type Decorator = (
   classes?: string[]
 };
 
+// We want it to apply to trailing spaces (like removeFormat does) when dealing with non breaking spaces. There
+// will likely be other edge cases as well.
+const shouldApplyToTrailingSpaces = (rng: Range) => {
+  return rng.startContainer.nodeType === 3 && rng.startContainer.nodeValue.length >= rng.startOffset && rng.startContainer.nodeValue[rng.startOffset] === '\u00A0';
+};
+
 const applyWordGrab = (editor: Editor, rng: Range): void => {
-  console.log('rngx', rng.startContainer.cloneNode(true), rng.startOffset, rng.endContainer.cloneNode(true), rng.endOffset);
-  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], false);
-  console.log('r', r.startContainer.cloneNode(true), r.startOffset, r.endContainer.cloneNode(true), r.endOffset);
+  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], shouldApplyToTrailingSpaces(rng));
   rng.setStart(r.startContainer, r.startOffset);
   rng.setEnd(r.endContainer, r.endOffset);
   editor.selection.setRng(rng);
@@ -73,7 +77,6 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
 
   const processElement = (elem) => {
     const ctx = context(editor, elem, 'span', Node.name(elem));
-    console.log({ ctx });
 
     switch (ctx) {
       case ChildContext.InvalidChild: {
@@ -119,8 +122,11 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
       applyWordGrab(editor, initialRng);
     }
 
-    if (editor.selection.getRng().collapsed && true)  {
+    // Even after applying word grab, we could not find a selection. Therefore,
+    // just make a wrapper and insert it at the current cursor
+    if (editor.selection.getRng().collapsed)  {
       const wrapper = makeAnnotation(data, name, settings.decorate);
+      // Put something visible in the marker
       Html.set(wrapper, '\u00A0');
       editor.selection.getRng().insertNode(wrapper.dom());
       editor.selection.select(wrapper.dom());
