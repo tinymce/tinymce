@@ -17,6 +17,7 @@ gulp.task('clean', function () {
 gulp.task('icons', () => {
   const minifiedIcons = gulp.src('src/svg/**/*.svg')
   .pipe(svgo({
+    floatPrecision: 1,
     plugins: [{
       removeTitle: true
     }, {
@@ -25,6 +26,8 @@ gulp.task('icons', () => {
       removeAttrs:{
         attrs: 'fill'
       }
+    }, {
+      removeXMLNS: true
     }]
   }));
 
