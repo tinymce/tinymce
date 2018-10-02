@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-insert-time</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon-insert-time" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="clock" transform="translate(2.000000, 2.000000)" fill="#000000" fill-rule="nonzero">
+            <path d="M17,0 L3,0 C1.346,0 0,1.346 0,3 L0,17 C0,18.654 1.346,20 3,20 L17,20 C18.654,20 20,18.654 20,17 L20,3 C20,1.346 18.654,0 17,0 Z M10,18 C5.589,18 2,14.411 2,10 C2,5.589 5.589,2 10,2 C14.411,2 18,5.589 18,10 C18,14.411 14.411,18 10,18 Z" id="Shape"></path>
+            <path d="M13,10 L10,10 L10,5 C10,4.724 9.776,4.5 9.5,4.5 C9.224,4.5 9,4.724 9,5 L9,11 L13,11 C13.276,11 13.5,10.776 13.5,10.5 C13.5,10.224 13.276,10 13,10 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

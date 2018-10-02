@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "noUnusedLocals": true,
+    "module": "es2015",
+    "lib": ["es2015"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist/js",
+    "baseUrl": ".",
+    "paths": {
+      "@ephox/oxide-icons-default": ["dist/ts/Icons.ts"]
+    }
+  },
+  "include": [
+    "dist/ts"
+  ]
+}

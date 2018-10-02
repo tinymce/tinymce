@@ -1,0 +1,35 @@
+{
+  "name": "@ephox/oxide-icons-default",
+  "version": "1.0.0",
+  "description": "Default icons for TinyMCE Oxide Theme",
+  "main": "dist/js/Main.js",
+  "scripts": {
+    "build": "gulp && tsc",
+    "start": "gulp && tsc",
+    "prepublishOnly": "gulp && tsc"
+  },
+  "keywords": [
+    "TinyMCE",
+    "Icons"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "Ephox Corporation",
+  "license": "LGPL-2.1",
+  "dependencies": {},
+  "devDependencies": {
+    "@ephox/svgroup": "latest",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-inject": "^4.3.2",
+    "gulp-svgo": "^1.5.4",
+    "merge-stream": "^1.0.1",
+    "typescript": "^3.0.0"
+  }
+}
