@@ -61,7 +61,7 @@ const setMode = (allTabs) => {
             Css.set(tabview, 'height', `${newHeight}px`);
           } else {
             oldHeight.each((h) => {
-              Css.set(tabview, 'height', `${newHeight}px`);
+              Css.set(tabview, 'height', `${h}px`);
             });
           }
 
