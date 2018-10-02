@@ -11,6 +11,8 @@ import OuterContainer from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import ContextToolbar from './ContextToolbar';
+import { Css } from '@ephox/sugar';
+import { defaultMinEditorSize } from './ui/sizing/SizeSettings';
 
 const setup = (editor) => {
   const isInline = editor.getParam('inline', false, 'boolean');
@@ -145,6 +147,14 @@ const setup = (editor) => {
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
+
+    // Set height and width if they were given
+    if (args.width && args.width > defaultMinEditorSize()) {
+      Css.set(outerContainer.element(), 'width', args.width + 'px');
+    }
+    if (args.height > defaultMinEditorSize()) {
+      Css.set(outerContainer.element(), 'height', args.height + 'px');
+    }
 
     const uiComponents = {mothership, uiMothership, outerContainer};
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);

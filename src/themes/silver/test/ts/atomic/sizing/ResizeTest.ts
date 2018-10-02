@@ -1,20 +1,19 @@
 import { UnitTest } from '@ephox/bedrock';
-import { calcMinChromeSize, calcCappedSize } from '../../../../main/ts/ui/resize/Resize';
+import { calcMinChromeHeight, calcCappedSize } from '../../../../main/ts/ui/sizing/Resize';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
+import { defaultMinEditorSize } from '../../../../main/ts/ui/sizing/SizeSettings';
 
 UnitTest.asynctest('SVG Icon tests', function (success, failure) {
-  const defaultMinSize = 150;
-
   const makeChromeSizeTest = (containerHeight, contentAreaHeight, expected) => {
     return Step.sync(() => {
-      const actual = calcMinChromeSize(defaultMinSize, containerHeight, contentAreaHeight);
+      const actual = calcMinChromeHeight(defaultMinEditorSize(), containerHeight, contentAreaHeight);
       Assertions.assertEq('Chrome height should match expected', expected, actual);
     });
   };
 
   const makeCappedSizeTest = (originalSize, delta, minSize, expected) => {
     return Step.sync(() => {
-      const actual = calcCappedSize(defaultMinSize, originalSize, delta, minSize);
+      const actual = calcCappedSize(defaultMinEditorSize(), originalSize, delta, minSize);
       Assertions.assertEq('Chrome height should match expected', expected, actual);
     });
   };
