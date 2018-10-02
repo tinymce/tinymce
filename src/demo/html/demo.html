@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Slider Demo Page</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <style>
+    .example-colour-picker {
+      display: flex;
+      flex-direction: row;
+      height: 150px;
+    }
+
+    .sv-palette {
+      display: flex;
+      height: 100%;
+      width: 150px;
+      border: 1px solid black;
+      margin-right: 15px;
+    }
+
+    .sv-palette-spectrum {
+      height: 100%;
+      width: 100%;
+    }
+
+    .sv-palette-thumb {
+      background: none;
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border: 1px solid black;
+      border-radius: 50%;
+    }
+
+    .sv-palette-inner-thumb {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 1px solid white;
+      border-radius: 50%;
+    }
+
+    .hue-slider {
+      height: 100%;
+      width: 25px;
+      border: 1px solid black;
+      margin-right: 15px;
+    }
+
+    .hue-slider-spectrum {
+      height: 100%;
+      width: 100%;
+      background: -ms-linear-gradient(bottom, #ff0000, #ff0080, #ff00ff, #8000ff, #0000ff, #0080ff, #00ffff, #00ff80, #00ff00, #80ff00, #ffff00, #ff8000, #ff0000);
+      background: linear-gradient(to bottom, #ff0000, #ff0080, #ff00ff, #8000ff, #0000ff, #0080ff, #00ffff, #00ff80, #00ff00, #80ff00, #ffff00, #ff8000, #ff0000);
+    }
+
+    .hue-slider-thumb {
+      background: white;
+      height: 4px;
+      width: 100%;
+      border: 1px solid black;
+      margin-left: -1px;
+    }
+
+    .rgb-form {
+      width: 80px;
+      height: 100%;
+    }
+
+    .rgb-form div {
+      width: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .rgb-form input {
+      width: 50px;
+      padding: 3px;
+      margin-left: 10px;
+      border: 1px solid black;
+    }
+
+    .rgb-form input.invalid {
+      border: 1px solid red;
+    }
+
+    .rgb-form label {
+      display: inline-block;
+    }
+
+    .rgb-form .rgba-preview {
+      width: 98%;
+      height: 37px;
+      border: 1px solid black;
+      margin-bottom: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Colour Picker Demo</h1>
+  <div id="ephox-ui"></div>
+  <script type="text/javascript" src="../../../scratch/compiled/demo.js"></script>
+</body>
+
+</html>
