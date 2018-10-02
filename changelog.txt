@@ -1,5 +1,6 @@
 Version 5.0.0-preview-2 (TBD)
     Fixed 'meta' shortcuts not translated into platform-specific text
+    Fixed  tabbed dialogs (Charmap and Emoticons) shrinking when no search results returned.
 Version 5.0.0-preview-1 (2018-10-01)
     Developer preview 1
     Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
