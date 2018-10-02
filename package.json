@@ -37,7 +37,6 @@
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
-    "@ephox/wrap-codemirror": "^2.0.2",
     "@ephox/sugar": "latest"
   },
   "devDependencies": {
