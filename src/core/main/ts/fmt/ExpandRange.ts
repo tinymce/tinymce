@@ -88,7 +88,7 @@ const findSpace = function (start, remove, node, offset?) {
     pos = pos > pos2 ? pos : pos2;
 
     // Include the space on remove to avoid tag soup
-    if (pos !== -1 && !remove) {
+    if (pos !== -1 && !remove && (pos < offset || !start) && pos <= str.length) {
       pos++;
     }
   } else {
@@ -303,9 +303,12 @@ const expandRng = function (editor, rng, format, remove?) {
     }
   }
 
+  console.log('winners');
   if (rng.collapsed) {
     // Expand left to closest word boundary
     endPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, remove);
+    console.log('endPoint', endPoint);
+    debugger;
     if (endPoint) {
       startContainer = endPoint.container;
       startOffset = endPoint.offset;
