@@ -205,7 +205,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         }),
                         s.element('span', {
                           classes: [ arr.has('tox-collection__item-accessory') ],
-                          html: str.is((Env.mac ? '\u2318' : 'ctrl') + '+M')
+                          html: str.is((Env.mac ? '\u2318' : 'Ctrl') + '+M')
                         })
                       ]
                     });

@@ -1,6 +1,6 @@
 import { setupDemo } from '../DemoHelpers';
 import { GuiFactory } from '@ephox/alloy';
-import { renderAlertDialog } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import * as Icons from '../../../../main/ts/ui/icons/Icons';
 
 export default () => {
@@ -8,7 +8,7 @@ export default () => {
   const sharedBackstage = helpers.extras.backstage.shared;
 
   const alert = GuiFactory.build(
-    renderAlertDialog({
+    renderAlertBanner({
       text: 'I say I say yi ha',
       level: 'info', // info | warn | error | success
       icon: Icons.get('icon-close', sharedBackstage.providers.icons),
