@@ -1,0 +1,20 @@
+//
+// Select
+//
+
+.tox-selectfield {
+  cursor: pointer;
+  position: relative;
+}
+
+.tox-selectfield select:extend(.tox .tox-textfield) {
+  padding-right: @pad-lg;
+}
+
+.tox-selectfield svg {
+  pointer-events: none;
+  position: absolute;
+  right: @pad-sm;
+  top: 50%;
+  transform: translateY(-50%);
+}

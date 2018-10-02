@@ -1,0 +1,25 @@
+//
+// Global styling
+//
+
+@tinymce-container-padding: 0;
+@tinymce-container-border: none;
+
+.tox-tinymce {
+  border: @tinymce-container-border;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: @font-stack-base;
+  padding: @tinymce-container-padding;
+}
+
+.tox-tinymce-aux {
+  font-family: @font-stack-base;
+}
+
+// Reset focus states
+.tox-tinymce *:focus,
+.tox-tinymce-aux *:focus {
+  outline: none;
+}

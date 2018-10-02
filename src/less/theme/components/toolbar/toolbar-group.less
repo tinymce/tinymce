@@ -1,0 +1,30 @@
+//
+// Toolbar group
+//
+
+@toolbar-group-background-color: transparent;
+@toolbar-group-border: none;
+@toolbar-group-border-radius: 0;
+@toolbar-group-padding-x: 4px;
+@toolbar-group-separator-color: @toolbar-border-color;
+@toolbar-group-separator-width: 1px;
+@toolbar-group-spacing-x: 0;
+
+.tox-toolbar__group {
+  align-items: center;
+  background: @toolbar-group-background-color;
+  border: @toolbar-group-border;
+  border-radius: @toolbar-group-border-radius;
+  display: flex;
+  margin: 0 @toolbar-group-spacing-x 0 0;
+  padding: 0 @toolbar-group-padding-x;
+}
+
+.tox-toolbar__group:not(:last-of-type) {
+  border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
+}
+
+// Align toolbar group to the right
+.tox-toolbar__group--pull-right {
+  margin-left: auto;
+}

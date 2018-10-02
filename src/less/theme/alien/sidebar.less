@@ -1,0 +1,40 @@
+@edit-area-minimum-height: 150px;
+
+.tox-sidebar-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  min-height: @edit-area-minimum-height;
+}
+
+.tox-sidebar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.tox-sidebar__slider {
+  display: flex;
+  overflow: hidden;
+}
+
+.tox-sidebar__pane-container {
+  display: flex;
+}
+
+.tox-sidebar__pane {
+  display: flex;
+}
+
+.tox-sidebar--sliding-closed {
+  opacity: 0;
+}
+
+.tox-sidebar--sliding-open {
+  opacity: 1;
+}
+
+.tox-sidebar--sliding-growing,
+.tox-sidebar--sliding-shrinking {
+  transition: width .5s ease, opacity .5s ease;
+}

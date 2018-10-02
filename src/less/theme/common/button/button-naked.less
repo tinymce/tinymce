@@ -1,0 +1,62 @@
+//
+// Naked button
+// Extends button.less and button-icon-less
+// Note: button--naked is for removing button chrome on button--icon
+//
+
+@button-naked-icon-color: @text-color;
+
+@button-naked-hover-background-color: @button-secondary-hover-background-color;
+@button-naked-hover-border-color: @button-secondary-hover-border-color;
+@button-naked-hover-box-shadow: @button-secondary-hover-box-shadow;
+@button-naked-hover-icon-color: @button-secondary-hover-text-color;
+
+@button-naked-focus-background-color: @button-naked-hover-background-color;
+@button-naked-focus-border-color: @button-naked-hover-border-color;
+@button-naked-focus-box-shadow: @button-naked-hover-box-shadow;
+@button-naked-focus-icon-color: @button-naked-hover-icon-color;
+
+@button-naked-active-background-color: @button-secondary-active-background-color;
+@button-naked-active-border-color: @button-secondary-active-border-color;
+@button-naked-active-box-shadow: @button-secondary-active-box-shadow;
+@button-naked-active-icon-color: @button-secondary-active-text-color;
+
+.@{prefix}-button--naked {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: unset;
+  color: @button-naked-icon-color;
+
+  &:hover:not(:disabled) {
+    background-color: @button-naked-hover-background-color;
+    border-color: @button-naked-focus-border-color;
+    box-shadow: @button-naked-hover-box-shadow;
+    color: @button-naked-hover-icon-color;
+  }
+
+  &:focus:not(:disabled) {
+    background-color: @button-naked-focus-background-color;
+    border-color: @button-naked-focus-border-color;
+    box-shadow: @button-naked-focus-box-shadow;
+    color: @button-naked-focus-icon-color;
+  }
+
+  &:active:not(:disabled) {
+    background-color: @button-naked-active-background-color;
+    border-color: @button-naked-active-border-color;
+    box-shadow: @button-naked-active-box-shadow;
+    color: @button-naked-active-icon-color;
+  }
+
+  .@{prefix}-icon svg {
+    fill: currentColor;
+  }
+}
+
+.@{prefix}-button--naked.@{prefix}-button--icon {
+  color: currentColor;
+
+  &:hover:not(:disabled) {
+    color: @button-naked-hover-icon-color;
+  }
+}

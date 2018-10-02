@@ -1,0 +1,60 @@
+//
+// Form layout
+//
+
+// .tox-grid {
+//   display: grid;
+//   grid-template-columns: repeat(1, 1fr);
+//   grid-gap: @pad-sm @pad-md;
+// }
+
+// .tox-grid--2col {
+//   grid-template-columns: repeat(2, 1fr);
+// }
+
+// .tox-grid--span-2col {
+//   grid-column: span 2;
+// }
+
+.tox-form {
+  //
+
+  > .tox-form__group:not(:last-child) {
+    margin-bottom: @pad-xs;
+  }
+}
+
+// Wraps a label and input combo.
+.tox-form__group {
+  //
+}
+
+// Modifier for validation error
+.tox-form__group--error {
+  //
+}
+
+.tox-form--2col {
+  display: grid;
+  grid-gap: 0 @pad-md;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tox-form__controls-h-stack {
+  align-items: center;
+  display: flex;
+
+  > *:not(:first-child) {
+    margin-left: @pad-xs;
+  }
+}
+
+.tox-form__group {
+    //
+}
+
+.tox-form__group--inline {
+  align-items: center;
+  display: flex;
+}
+

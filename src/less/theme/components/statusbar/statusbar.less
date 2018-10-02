@@ -1,0 +1,62 @@
+//
+// Statusbar
+//
+
+@statusbar-height: 18px;
+@statusbar-padding-x: @pad-sm;
+
+.tox-statusbar {
+  align-items: center;
+  border-color: @border-color;
+  border-style: solid;
+  border-width: 0 1px 1px 1px;
+  color: @text-color-muted;
+  display: flex;
+  flex-shrink: 0;
+  font-size: @font-size-xs;
+  height: @statusbar-height;
+  padding: 0 @statusbar-padding-x;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.tox-statusbar a {
+  color: @text-color-muted;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.tox-statusbar__path {
+  display: flex;
+  margin-right: auto;
+}
+
+.tox-statusbar__path > * {
+  margin-right: @pad-xs;
+}
+
+.tox-statusbar__wordcount {
+  margin-left: 1ch;
+}
+
+.tox-statusbar__branding {
+  margin-left: 1ch;
+}
+
+.tox-statusbar__resize-handle {
+  align-items: flex-end;
+  align-self: stretch;
+  cursor: ns-resize;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: -@statusbar-padding-x;
+  padding-left: 1ch;
+
+  svg {
+    display: block;
+    fill: @text-color-muted;
+  }
+}

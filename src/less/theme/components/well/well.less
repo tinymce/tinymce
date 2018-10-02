@@ -1,0 +1,27 @@
+//
+// Well
+//
+
+@well-border-color: @border-color;
+@well-border-width: 1px;
+@well-padding: @pad-sm;
+@well-border-radius: @panel-border-radius;
+
+.tox-well {
+  border: @well-border-width solid @well-border-color;
+  border-radius: @well-border-radius;
+  padding: @well-padding;
+  width: 100%;
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  > *:only-child {
+    margin: 0;
+  }
+}

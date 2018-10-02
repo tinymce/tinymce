@@ -1,0 +1,99 @@
+.tox-color-picker-container {
+  display: flex;
+  flex-direction: row;
+  height: 225px;
+  margin: 0;
+}
+
+.tox-sv-palette {
+  border: 1px solid black;
+  display: flex;
+  height: 100%;
+  margin-right: 15px;
+}
+
+.tox-sv-palette-spectrum {
+  height: 100%;
+}
+
+.tox-sv-palette,
+.tox-sv-palette-spectrum {
+  width: 225px;
+}
+
+.tox-sv-palette-thumb {
+  background: none;
+  border: 1px solid black;
+  border-radius: 50%;
+  height: 12px;
+  position: absolute;
+  width: 12px;
+}
+
+.tox-sv-palette-inner-thumb {
+  border: 1px solid white;
+  border-radius: 50%;
+  height: 10px;
+  position: absolute;
+  width: 10px;
+}
+
+.tox-hue-slider {
+  border: 1px solid black;
+  height: 100%;
+  margin-right: 15px;
+  width: 25px;
+}
+
+.tox-hue-slider-spectrum {
+  background: -ms-linear-gradient(bottom, #f00, #ff0080, #f0f, #8000ff, #00f, #0080ff, #0ff, #00ff80, #0f0, #80ff00, #ff0, #ff8000, #f00);
+  background: linear-gradient(to bottom, #f00, #ff0080, #f0f, #8000ff, #00f, #0080ff, #0ff, #00ff80, #0f0, #80ff00, #ff0, #ff8000, #f00);
+  height: 100%;
+  width: 100%;
+}
+
+.tox-hue-slider,
+.tox-hue-slider-spectrum {
+  width: 20px;
+}
+
+.tox-hue-slider-thumb {
+  background: white;
+  border: 1px solid black;
+  height: 4px;
+  margin-left: -1px;
+  width: 100%;
+}
+
+.tox-rgb-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tox-rgb-form div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  width: inherit;
+}
+
+.tox-rgb-form input {
+  width: 6em;
+}
+
+.tox-rgb-form input.tox-invalid {
+  /* Need !important to override Chrome's focus styling unfortunately */
+  border: 1px solid red !important;
+}
+
+.tox-rgb-form label {
+  margin-right: .5em;
+}
+
+.tox-rgb-form .tox-rgba-preview {
+  border: 1px solid black;
+  flex-grow: 2;
+  margin-bottom: 0;
+}

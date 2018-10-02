@@ -1,0 +1,44 @@
+//
+// Slider
+//
+
+@slider-handle-background-color: @color-tint;
+@slider-handle-border-radius: @slider-handle-width / 2;
+@slider-handle-border: 0;
+@slider-handle-box-shadow: none;
+@slider-handle-height: 24px;
+@slider-handle-width: 3px;
+@slider-rail-background-color: transparent;
+@slider-rail-border-radius: @slider-rail-height;
+@slider-rail-border: 1px solid @border-color;
+@slider-rail-height: 6px;
+
+.@{prefix}-slider {
+  align-items: center;
+  display: flex;
+  height: @slider-handle-height;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.@{prefix}-slider__rail {
+  background-color: @slider-rail-background-color;
+  border: @slider-rail-border;
+  border-radius: @slider-rail-border-radius;
+  height: @slider-rail-height;
+  min-width: 120px;
+  width: 100%;
+}
+
+.@{prefix}-slider__handle {
+  background-color: @slider-handle-background-color;
+  border-radius: @slider-handle-border-radius;
+  box-shadow: @slider-handle-box-shadow;
+  height: @slider-handle-height;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: @slider-handle-width;
+}

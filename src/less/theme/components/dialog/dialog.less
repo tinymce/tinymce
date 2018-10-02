@@ -1,0 +1,236 @@
+//
+// Dialog
+//
+
+@dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@dialog-backdrop-background-color: fade(@background-color, 75);
+@dialog-busy-backdrop-background-color: fade(@dialog-background-color, 75);
+
+@dialog-border-style: solid;
+@dialog-border-width: 1px;
+@dialog-border-color: @border-color;
+@dialog-border-radius: @panel-border-radius;
+@dialog-box-shadow: 0 16px 16px -10px fade(@color-black, 15%), 0 0 40px 1px fade(@color-black, 15%);
+
+@dialog-header-separator-border: none;
+@dialog-footer-separator-border: 1px solid @dialog-border-color;
+
+@dialog-header-background-color: @dialog-background-color;
+@dialog-footer-background-color: @dialog-background-color;
+@dialog-header-padding: @pad-sm @pad-md 0 @pad-md;
+@dialog-body-padding: 0 @pad-md;
+@dialog-footer-padding: @pad-sm @pad-md;
+
+@dialog-title-font-size: @font-size-lg;
+@dialog-title-font-family: @font-stack-base;
+@dialog-title-font-style: normal;
+@dialog-title-font-weight: @font-weight-normal;
+@dialog-title-line-height: @line-height-base;
+@dialog-title-text-color: @text-color;
+@dialog-title-text-transform: normal;
+
+@dialog-body-font-size: @font-size-md;
+@dialog-body-font-style: normal;
+@dialog-body-font-weight: @font-weight-normal;
+@dialog-body-line-height: @line-height-base;
+@dialog-body-text-color: @text-color;
+@dialog-body-text-transform: normal;
+@dialog-body-text-align: left;
+
+.tox-dialog-wrap {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: @z-index-dialogs;
+}
+
+.tox-dialog-wrap__backdrop {
+  background-color: @dialog-backdrop-background-color;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: @z-index-dialogs + 1;
+}
+
+.tox-dialog {
+  background-color: @dialog-background-color;
+  border-color: @dialog-border-color;
+  border-radius: @dialog-border-radius;
+  border-style: @dialog-border-style;
+  border-width: @dialog-border-width;
+  box-shadow: @dialog-box-shadow;
+  max-height: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  position: relative;
+  width: 95vw;
+  z-index: @z-index-dialogs + 2;
+}
+
+.tox-dialog__header {
+  align-items: center;
+  background-color: @dialog-header-background-color;
+  border-bottom: @dialog-header-separator-border;
+  color: @dialog-title-text-color;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: @pad-md;
+  padding: @dialog-header-padding;
+  position: relative;
+  font-size: @font-size-base;
+}
+
+.tox-dialog__header .tox-button {
+  z-index: 1;
+}
+
+.tox-dialog__draghandle {
+  cursor: grab;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.tox-dialog__draghandle:active {
+  cursor: grabbing;
+}
+
+.tox-dialog__dismiss {
+  margin-left: auto;
+}
+
+.tox-dialog__title {
+  font-family: @dialog-title-font-family;
+  font-size: @dialog-title-font-size;
+  font-style: @dialog-title-font-style;
+  font-weight: @dialog-title-font-weight;
+  line-height: @dialog-title-line-height;
+  margin: 0;
+  text-transform: @dialog-title-text-transform;
+}
+
+.tox-dialog__body {
+  color: @dialog-body-text-color;
+  display: flex;
+  font-size: @dialog-body-font-size;
+  font-style: @dialog-body-font-style;
+  font-weight: @dialog-body-font-weight;
+  line-height: @dialog-body-line-height;
+  padding: @dialog-body-padding;
+  text-align: @dialog-body-text-align;
+  text-transform: @dialog-body-text-transform;
+}
+
+.tox-dialog__body-nav {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-right: @pad-xl;
+}
+
+.tox-dialog__body-nav-item {
+  line-height: @line-height-base;
+  color: @text-color-muted;
+  display: inline-block;
+  font-size: @font-size-sm;
+  margin-bottom: @pad-sm;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.tox-dialog__body-nav-item--active {
+  border-bottom: 2px solid @color-tint;
+  color: @color-tint;
+}
+
+.tox-dialog__body-content {
+  flex: 1;
+  // TODO (verify max-height for dialogs)
+  max-height: 650px;
+
+  > * {
+    margin-bottom: 0;
+    margin-top: @pad-md;
+  }
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  > *:only-child {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.tox-dialog--width-lg {
+  max-width: 1200px;
+}
+
+.tox-dialog--width-md {
+  // TODO (verify width for size medium)
+  max-width: 800px;
+
+  .tox-dialog__body-content {
+    overflow: auto;
+  }
+}
+
+// Centers content within a dialog body
+.tox-dialog__body-content--centered {
+  text-align: center;
+}
+
+// Add more whitespace around body content
+.tox-dialog__body-content--spacious {
+  margin-bottom: @pad-md;
+}
+
+.tox-dialog__footer {
+  align-items: center;
+  background-color: @dialog-footer-background-color;
+  border-top: @dialog-footer-separator-border;
+  display: flex;
+  justify-content: space-between;
+  margin-top: @pad-md;
+  padding: @dialog-footer-padding;
+
+  .tox-dialog__footer-start,
+  .tox-dialog__footer-end {
+    > * {
+      margin-left: @pad-sm;
+    }
+  }
+}
+
+// Make a dialog disabled for user input
+.tox-dialog__busy-spinner {
+  align-items: center;
+  background-color: @dialog-busy-backdrop-background-color;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: @z-index-dialogs + 3;
+}
+
+// the blocking div for dialogs
+.tox-dialog-blocker-wrap {
+  //
+}

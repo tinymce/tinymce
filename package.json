@@ -1,0 +1,43 @@
+{
+  "name": "@ephox/oxide",
+  "version": "1.0.0",
+  "description": "TinyMCE 5 Oxide skin",
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test/ts/atomic/",
+    "build": "gulp build",
+    "start": "gulp",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "TinyMCE"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "Ephox Corporation",
+  "license": "LGPL-2.1",
+  "devDependencies": {
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
+    "@ephox/oxide-icons-default": "latest",
+    "browser-sync": "^2.24.4",
+    "event-stream": "^3.3.4",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-file-include": "^2.0.1",
+    "gulp-less": "^3.5.0",
+    "gulp-stylelint": "^7.0.0",
+    "gulp-typescript": "^5.0.0-alpha.2",
+    "less-plugin-autoprefix": "^1.5.1",
+    "less-plugin-variables-output": "^1.2.0",
+    "stylelint": "^9.2.1",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-order": "^0.8.1"
+  },
+  "files": [
+    "build/*.css",
+    "README.md",
+    "LICENSE.txt"
+  ]
+}
