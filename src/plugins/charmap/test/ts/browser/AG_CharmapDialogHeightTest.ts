@@ -54,7 +54,8 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
             NamedChain.direct('body', UiFinder.cWaitForState('wait until ', '[role="dialog"] .tox-collection__group', (e) => Traverse.childNodesCount(e) === 0), '_'),
             NamedChain.direct('tabpanel', cTabPanelHeight, 'newheight'),
             NamedChain.bundle((bindings) => {
-              return bindings.oldheight !== bindings.newheight ?
+              // TODO: Use round pixel numbers in DialogTabHeight.ts
+              return parseInt(bindings.oldheight, 10) !== parseInt(bindings.newheight, 10) ?
                 Result.error(`Old height and new height differ. Old height: '${bindings.oldheight}' new height '${bindings.newheight}'`) :
                 Result.value({});
             })
