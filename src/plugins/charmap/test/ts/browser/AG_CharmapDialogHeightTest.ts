@@ -1,15 +1,14 @@
 import 'tinymce/themes/silver/Theme';
 
-import { Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter, Step, NamedChain } from '@ephox/agar';
+import { Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element, Css, Traverse } from '@ephox/sugar';
+import { Body, Element, Css, Traverse } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import { Result } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failure) => {
-  // TODO: Replicate this test with only one category of characters.
   CharmapPlugin();
 
   // Move into shared library
@@ -54,9 +53,9 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
             // need to wait until '.tox-collection__group' has no children
             NamedChain.direct('body', UiFinder.cWaitForState('wait until ', '[role="dialog"] .tox-collection__group', (e) => Traverse.childNodesCount(e) === 0), '_'),
             NamedChain.direct('tabpanel', cTabPanelHeight, 'newheight'),
-            NamedChain.bundle((errything) => {
-              return errything.oldheight !== errything.newheight ?
-                Result.error(`Old height and new height differ. Old height: '${errything.oldheight}' new height '${errything.newheight}'`) :
+            NamedChain.bundle((bindings) => {
+              return bindings.oldheight !== bindings.newheight ?
+                Result.error(`Old height and new height differ. Old height: '${bindings.oldheight}' new height '${bindings.newheight}'`) :
                 Result.value({});
             })
           ])
