@@ -5,7 +5,7 @@ Acid implements the user interface for the TinyMCE 5 colour picker. It also expo
 `acid` is available as an `npm` package.  You can install it via the npm package `@ephox/acid`
 
 ## Install from npm
-`npm install @ephox/acidn`
+`npm install @ephox/acid`
 
 # Usage
 
