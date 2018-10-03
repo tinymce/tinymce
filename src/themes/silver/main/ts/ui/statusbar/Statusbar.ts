@@ -1,13 +1,9 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
-import ElementPath from './ElementPath';
 import { getDefaultOr } from '../icons/Icons';
-import * as Resize from '../sizing/Resize';
-
-enum ResizeTypes {
-  None, Both, Vertical
-}
+import ElementPath from './ElementPath';
+import { ResizeTypes, resize } from '../sizing/Resize';
 
 const renderStatusbar = (editor) => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes) => {
@@ -22,7 +18,7 @@ const renderStatusbar = (editor) => {
           mode: 'mouse',
           repositionTarget: false,
           onDrag: (comp, target, delta) => {
-            Resize.resize(editor, delta, resizeType, ResizeTypes);
+            resize(editor, delta, resizeType);
           },
           blockerClass: 'tox-blocker'
         })

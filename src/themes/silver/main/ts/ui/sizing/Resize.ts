@@ -1,11 +1,18 @@
 import { Css, Element, Height, Width } from '@ephox/sugar';
-import { defaultMinEditAreaHeight, defaultMinEditorSize, defaultMaxEditorSize } from './SizeSettings';
+import { defaultMaxEditorSize, defaultMinEditAreaHeight, defaultMinEditorSize } from './SizeDefaults';
 
-// Should we put this magic number somewhere better?
-export const calcMinChromeHeight = (minHeightSetting: number, containerHeight: number, contentAreaHeight: number) => {
+interface EditorDimensions {
+  height?: string;
+  width?: string;
+}
+
+export enum ResizeTypes {
+  None, Both, Vertical
+}
+
+export const calcChromeHeight = (containerHeight: number, contentAreaHeight: number) => {
   const chromeHeight = containerHeight - contentAreaHeight;
-  const minHeight = chromeHeight + defaultMinEditAreaHeight();
-  return minHeight > minHeightSetting ? minHeight : minHeightSetting;
+  return chromeHeight + defaultMinEditAreaHeight();
 };
 
 export const calcCappedSize = (originalSize: number, delta: number, minSize: number, maxSize: number) => {
@@ -18,7 +25,9 @@ export const calcCappedSize = (originalSize: number, delta: number, minSize: num
   return newSize;
 };
 
-export const resize = (editor, deltas, resizeType, ResizeTypes) => {
+export const getDimensions = (editor, deltas, resizeType, getContainerHeight, getContainerWidth) => {
+  const dimensions: EditorDimensions = {};
+
   const getMinWidthSetting = (): number => editor.getParam('min_width', defaultMinEditorSize(), 'number');
   const getMinHeightSetting = (): number => editor.getParam('min_height', defaultMinEditorSize(), 'number');
   const getMaxWidthSetting = (): number => editor.getParam('max_width', defaultMaxEditorSize(), 'number');
@@ -27,20 +36,29 @@ export const resize = (editor, deltas, resizeType, ResizeTypes) => {
   const getMinHeight = () => {
     const containerHeight = editor.getContainer().scrollHeight;
     const contentAreaHeight = editor.contentAreaContainer.scrollHeight;
-    return calcMinChromeHeight(getMinHeightSetting(), containerHeight, contentAreaHeight);
+    const chromeSize = calcChromeHeight(containerHeight, contentAreaHeight);
+    const minHeight = getMinHeightSetting();
+    return chromeSize > minHeight ? chromeSize : minHeight;
   };
 
-  const container = Element.fromDom(editor.getContainer());
-
-  const setDimension = (dimension, getter, minSize: number, maxSize: number, delta: number) => {
-    const originalSize = Css.getRaw(container, dimension).fold(getter, (d) => parseInt(d, 10));
-    const cappedHeight = calcCappedSize(originalSize, delta, minSize, maxSize);
-    Css.set(container, dimension, cappedHeight + 'px');
-  };
-
-  setDimension('height', () => Height.get(container), getMinHeight(), getMaxHeightSetting(), deltas.top());
+  const originalHeight = getContainerHeight();
+  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeight(), getMaxHeightSetting()) + 'px';
 
   if (resizeType === ResizeTypes.Both) {
-    setDimension('width', () => Width.get(container), getMinWidthSetting(), getMaxWidthSetting(), deltas.left());
+    const originalWidth = getContainerWidth();
+    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(), getMaxWidthSetting()) + 'px';
   }
+
+  return dimensions;
+};
+
+export const resize = (editor, deltas, resizeType) => {
+  const container = Element.fromDom(editor.getContainer());
+
+  const getContainerSize = (dimension, fallback) => Css.getRaw(container, dimension).fold(fallback, (d) => parseInt(d, 10));
+  const getContainerHeight = () => getContainerSize('height', () => Height.get(container));
+  const getContainerWidth = () => getContainerSize('width', () => Width.get(container));
+
+  const dimensions = getDimensions(editor, deltas, resizeType, getContainerHeight, getContainerWidth);
+  Css.setAll(container, dimensions);
 };
