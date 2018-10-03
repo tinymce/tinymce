@@ -7,7 +7,7 @@ import { Attr } from '@ephox/sugar';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import NavigableObject from '../general/NavigableObject';
-import { renderLabel, renderFormField } from '../alien/FieldLabeller';
+import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 
 const platformNeedsSandboxing = !PlatformDetection.detect().browser.isIE();
 
@@ -80,7 +80,9 @@ const renderIFrame = (spec: Types.Iframe.Iframe) => {
     factory: { sketch: factory }
   });
 
-  return renderFormField(pLabel, pField);
+  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
+
+  return renderFormFieldWith(pLabel, pField, extraClasses);
 };
 
 export {
