@@ -18,17 +18,17 @@ import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
-import * as Layout from '../positioning/layout/Layout';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
-  const layouts = detail.layouts().getOr({
-    onLtr: Layout.all,
-    onRtl: Layout.allRtl
+  const anchor: 'hotspot' = 'hotspot';
+  return detail.layouts().fold(() => {
+    return { anchor, hotspot: ourHotspot };
+  }, (layouts) => {
+    return { anchor, hotspot: ourHotspot, layouts };
   });
-  return { anchor: 'hotspot', hotspot: ourHotspot, layouts };
 };
 
 const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
