@@ -18,12 +18,18 @@ import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
+import { console } from '@ephox/dom-globals';
+import * as Layout from '../positioning/layout/Layout';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
-  return { anchor: 'hotspot', hotspot: ourHotspot };
+  const layouts = detail.layouts().getOr({
+    onLtr: Layout.all,
+    onRtl: Layout.allRtl
+  });
+  return { anchor: 'hotspot', hotspot: ourHotspot, layouts };
 };
 
 const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
@@ -49,12 +55,16 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
 
           onOpenMenu (tmenu, menu) {
             const sink = lazySink().getOrDie();
+            // tslint:disable-next-line:no-console
+            console.log('hurr');
             Positioning.position(sink, anchor, menu);
             Sandboxing.decloak(sandbox);
           },
 
           onOpenSubmenu (tmenu, item, submenu) {
             const sink = lazySink().getOrDie();
+            // tslint:disable-next-line:no-console
+            console.log('durr');
             Positioning.position(sink, {
               anchor: 'submenu',
               item
