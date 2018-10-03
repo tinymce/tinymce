@@ -4,31 +4,42 @@ import {
   Dropdown as AlloyDropdown,
   RawDomSchema,
   SketchSpec,
-  TieredMenu,
   Unselecting,
-  AddEventsBehaviour,
-  AlloyEvents,
-  CustomEvent,
-  SimulatedEvent,
   ComponentApi,
   Tabstopping
 } from '@ephox/alloy';
-import { Future, Id, Option } from '@ephox/katamari';
+import { Future, Id, Option, Merger } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
-import { renderWidgetMenu } from '../menus/menu/MenuWidgets';
-import { formActionEvent } from '../general/FormEvents';
+import { createTieredDataFrom, createPartialChoiceMenu, SingleMenuItemApi } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
+import { ItemResponse } from 'tinymce/themes/silver/ui/menus/item/MenuItems';
+import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
+import { Element } from '@ephox/sugar';
+import * as Layout from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/Layout';
 
 export interface PanelButtonFoo {
   dom: RawDomSchema;
   components: AlloySpec[];
   fetch: (callback: (panel: AlloySpec) => void) => void;
   getHotspot?: (comp: ComponentApi.AlloyComponent) => Option<ComponentApi.AlloyComponent>;
-  onChange: (comp: ComponentApi.AlloyComponent, se: SimulatedEvent<CustomEvent>) => void;
+  onItemAction: (value) => void;
 }
 
-export const renderPanelButton = (spec: PanelButtonFoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export interface SwatchPanelButtonFoo {
+  dom: RawDomSchema;
+  components: AlloySpec[];
+  fetch: (callback: (panel: AlloySpec) => void) => void;
+  getHotspot?: (comp: ComponentApi.AlloyComponent) => Option<ComponentApi.AlloyComponent>;
+  onItemAction: (value) => void;
+  items: SingleMenuItemApi[];
+  layouts?: Option<{
+    onLtr: (elem: Element) => Layout.AnchorLayout[];
+    onRtl: (elem: Element) => Layout.AnchorLayout[];
+  }>;
+}
+
+export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   return AlloyDropdown.sketch({
     dom: spec.dom,
     components: spec.components,
@@ -39,34 +50,39 @@ export const renderPanelButton = (spec: PanelButtonFoo, sharedBackstage: UiFacto
       Unselecting.config({ }),
       Tabstopping.config({ })
     ]),
-    getHotspot: spec.getHotspot,
+    // getHotspot: spec.getHotspot,
+    layouts: spec.layouts,
     sandboxClasses: [ 'tox-dialog__popups' ],
-    sandboxBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config('sandbox-behaviours-dropdown', [
-        AlloyEvents.run(formActionEvent, spec.onChange)
-      ])
-    ]),
 
     lazySink: sharedBackstage.getSink,
     fetch () {
-      const menuName = Id.generate('menu');
-      return Future.nu((callback) => {
-        spec.fetch((panel) => {
-          callback(
-            TieredMenu.singleData(
-              menuName,
-              renderWidgetMenu({
-                value: menuName,
-                widget: panel
-              })
-            )
-          );
-        });
-      });
+
+      return Future.pure(createTieredDataFrom(
+        Merger.deepMerge(
+          createPartialChoiceMenu(
+            Id.generate('menu-value'),
+            spec.items,
+            (value) => {
+              console.log('value', value);
+              console.log(sharedBackstage);
+              spec.onItemAction(value);
+            },
+            5, // spec.columns
+            'color', // spec.presets,
+            ItemResponse.CLOSE_ON_EXECUTE,
+            // No colour is ever selected
+            () => false,
+            sharedBackstage.providers
+          ),
+          {
+            movement: deriveMenuMovement(5, 'color')
+          } // as PartialMenuSpec
+        )
+      ));
     },
 
     parts: {
-      menu: MenuParts.part(false, 1, 'normal')
+      menu: MenuParts.part(false, 1, 'color')
     }
   });
 };
