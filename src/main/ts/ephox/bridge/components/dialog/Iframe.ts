@@ -5,15 +5,18 @@ import { FormComponent, FormComponentApi, formComponentFields } from './FormComp
 export interface IframeApi extends FormComponentApi {
   type: 'iframe';
   sandboxed?: boolean;
+  flex?: boolean;
 }
 
 export interface Iframe extends FormComponent {
   type: 'iframe';
   sandboxed: boolean;
+  flex: boolean;
 }
 
 export const iframeFields = formComponentFields.concat([
-  FieldSchema.defaultedBoolean('sandboxed', true)
+  FieldSchema.defaultedBoolean('sandboxed', true),
+  FieldSchema.defaultedBoolean('flex', false)
 ]);
 
 export const iframeSchema = ValueSchema.objOf(iframeFields);
