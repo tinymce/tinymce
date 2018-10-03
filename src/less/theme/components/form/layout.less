@@ -18,15 +18,15 @@
 
 .tox-form {
   //
-
-  > .tox-form__group:not(:last-child) {
-    margin-bottom: @pad-xs;
-  }
 }
 
 // Wraps a label and input combo.
 .tox-form__group {
   //
+}
+
+.tox-form > .tox-form__group:not(:last-child) {
+  margin-bottom: @pad-xs;
 }
 
 // Modifier for validation error
@@ -47,10 +47,6 @@
   > *:not(:first-child) {
     margin-left: @pad-xs;
   }
-}
-
-.tox-form__group {
-    //
 }
 
 .tox-form__group--inline {
