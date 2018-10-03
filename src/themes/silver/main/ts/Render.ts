@@ -95,7 +95,11 @@ const setup = (editor) => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox', 'tox-tinymce' ]
+        classes: ['tox', 'tox-tinymce'],
+        styles: {
+          // This is overridden by the skin, it helps avoid FOUC
+          visibility: 'hidden'
+        }
       },
       components: editorComponents,
       behaviours: Behaviour.derive(mode.getBehaviours(editor))
