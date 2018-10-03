@@ -12,7 +12,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import ContextToolbar from './ContextToolbar';
 import { Css } from '@ephox/sugar';
-import { defaultMinEditorSize } from './ui/sizing/SizeSettings';
+import { defaultMinEditorSize } from './ui/sizing/SizeDefaults';
 
 const setup = (editor) => {
   const isInline = editor.getParam('inline', false, 'boolean');
@@ -152,7 +152,7 @@ const setup = (editor) => {
     if (args.width && args.width > defaultMinEditorSize()) {
       Css.set(outerContainer.element(), 'width', args.width + 'px');
     }
-    if (args.height > defaultMinEditorSize()) {
+    if (args.height && args.height > defaultMinEditorSize()) {
       Css.set(outerContainer.element(), 'height', args.height + 'px');
     }
 
