@@ -187,7 +187,7 @@ const open = (editor, templateList) => {
           label: 'Preview',
           type: 'iframe',
           name: 'preview',
-          flex: 1,
+          flex: true,
           border: 1,
           sandboxed: false
         }
