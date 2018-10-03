@@ -3,7 +3,7 @@ import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import * as Icons from '../icons/Icons';
 
-export interface AlertDialog {
+export interface AlertBanner {
   text: string;
   level: 'info' | 'warn' | 'error' | 'success';
   icon: string;
@@ -11,7 +11,7 @@ export interface AlertDialog {
   actionLabel: string;
 }
 
-export const renderAlertDialog = (spec: AlertDialog, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // For using the alert banner inside a dialog
   return Container.sketch({
     dom: {
@@ -25,7 +25,7 @@ export const renderAlertDialog = (spec: AlertDialog, providersBackstage: UiFacto
         dom: {
           tag: 'div',
           classes: [ 'tox-notification__icon' ],
-          innerHtml: spec.icon
+          innerHtml: Icons.get(`icon-${spec.icon}`, providersBackstage.icons)
         }
       },
       {

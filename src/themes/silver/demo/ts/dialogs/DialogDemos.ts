@@ -10,7 +10,6 @@ import FindReplaceDialogSpec from './spec/FindReplaceDialogSpec';
 import ImageDialogSpec from './spec/ImageDialogSpec';
 import LinkDialogSpec from './spec/LinkDialogSpec';
 import MediaDialogSpec from './spec/MediaDialogSpec';
-import OriginalCodeDialogSpec from './spec/OriginalCodeDialogSpec';
 import PreviewDialogSpec from './spec/PreviewDialogSpec';
 import TableCellDialogSpec from './spec/TableCellDialogSpec';
 import TableDialogSpec from './spec/TableDialogSpec';
@@ -34,7 +33,6 @@ const demo = () => {
     ImageDialogSpec,
     LinkDialogSpec,
     MediaDialogSpec,
-    OriginalCodeDialogSpec,
     PreviewDialogSpec,
     TableCellDialogSpec,
     TableDialogSpec,

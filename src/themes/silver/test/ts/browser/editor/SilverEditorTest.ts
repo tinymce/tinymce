@@ -7,6 +7,7 @@ import { Element, Body } from '@ephox/sugar';
 import Theme from '../../../../../silver/main/ts/Theme';
 import * as Icons from '../../../../main/ts/ui/icons/Icons';
 import { document } from '@ephox/dom-globals';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
@@ -201,6 +202,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         s.element('span', {
                           classes: [ arr.has('tox-collection__item-label') ],
                           html: str.is('Text with icon')
+                        }),
+                        s.element('span', {
+                          classes: [ arr.has('tox-collection__item-accessory') ],
+                          html: str.is((Env.mac ? '\u2318' : 'Ctrl') + '+M')
                         })
                       ]
                     });
@@ -407,6 +412,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           type: 'menuitem',
           icon: 'italic',
           text: 'Text with icon',
+          shortcut: 'Meta+M',
           onAction () {
             console.log('Just Text click');
           }
