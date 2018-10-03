@@ -3,7 +3,7 @@ import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import ElementPath from './ElementPath';
 import { getDefaultOr } from '../icons/Icons';
-import * as Resize from '../resize/Resize';
+import * as Resize from '../sizing/Resize';
 
 enum ResizeTypes {
   None, Both, Vertical
