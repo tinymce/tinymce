@@ -18,7 +18,6 @@ import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
-import { console } from '@ephox/dom-globals';
 import * as Layout from '../positioning/layout/Layout';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
@@ -55,16 +54,12 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
 
           onOpenMenu (tmenu, menu) {
             const sink = lazySink().getOrDie();
-            // tslint:disable-next-line:no-console
-            console.log('hurr');
             Positioning.position(sink, anchor, menu);
             Sandboxing.decloak(sandbox);
           },
 
           onOpenSubmenu (tmenu, item, submenu) {
             const sink = lazySink().getOrDie();
-            // tslint:disable-next-line:no-console
-            console.log('durr');
             Positioning.position(sink, {
               anchor: 'submenu',
               item
