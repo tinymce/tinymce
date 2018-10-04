@@ -1,22 +1,32 @@
-.tox-dialog__table {
-   border: 1px solid #CCC;
-
-
 .tox-dialog{
     position: relative;
 }
+
+.tox-dialog__table {
+    border-collapse: collapse;
     thead {
         th{
+            color: rgba(34, 47, 62, 0.6);
             font-weight: bold;
-            border-bottom: 0.5px solid #CCC;
-            padding: 1%;
+            padding-top: 2%;
+            padding-bottom: 2%;
         }
-    }
-    
-    tbody td{
-        border-bottom: 0.5px solid #CCC;
-        padding: 1%;
+        tr{
+            border-bottom: none;
         }
     }
 
+    tbody {
+        tr:last-child {
+            border-bottom: none;
+        } 
+    }
+    td {
+        color: rgba(34, 47, 62, 0.6);
+        padding-top: 2%;
+        padding-bottom: 2%;
+    }
+    tr {
+        border-bottom: 1px solid #CCC;
+    }
 }
