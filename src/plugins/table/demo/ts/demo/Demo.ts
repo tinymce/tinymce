@@ -12,7 +12,7 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'div.tinymce',
-  plugins: 'table',
+  plugins: 'table colorpicker',
   toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
   media_dimensions: false,
   table_class_list: [

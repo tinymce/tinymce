@@ -18,12 +18,15 @@ import {
   Layout,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Result, Option } from '@ephox/katamari';
+import { Future, Id, Result, Option, Cell } from '@ephox/katamari';
 import { Css, Element, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { renderPanelButton } from '../general/PanelButton';
 import { renderLabel } from '../alien/FieldLabeller';
+import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
+
+import { SingleMenuItemApi } from '../menus/menu/SingleMenu';
 
 const colorInputChangeEvent = Id.generate('color-change');
 const colorSwatchChangeEvent = Id.generate('hex-change');
@@ -36,7 +39,38 @@ interface ColorSwatchChangeEvent extends CustomEvent {
   value: () => string;
 }
 
-export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
+const currentColors: Cell<SingleMenuItemApi[]> = Cell<SingleMenuItemApi[]>(
+  [
+    { type: 'choiceitem', text: 'Black', value: '#1abc9c' },
+    { type: 'choiceitem', text: 'Black', value: '#2ecc71' },
+    { type: 'choiceitem', text: 'Black', value: '#3498db' },
+    { type: 'choiceitem', text: 'Black', value: '#9b59b6' },
+    { type: 'choiceitem', text: 'Black', value: '#34495e' },
+
+    { type: 'choiceitem', text: 'Black', value: '#16a085' },
+    { type: 'choiceitem', text: 'Black', value: '#27ae60' },
+    { type: 'choiceitem', text: 'Black', value: '#2980b9' },
+    { type: 'choiceitem', text: 'Black', value: '#8e44ad' },
+    { type: 'choiceitem', text: 'Black', value: '#2c3e50' },
+
+    { type: 'choiceitem', text: 'Black', value: '#f1c40f' },
+    { type: 'choiceitem', text: 'Black', value: '#e67e22' },
+    { type: 'choiceitem', text: 'Black', value: '#e74c3c' },
+    { type: 'choiceitem', text: 'Black', value: '#ecf0f1' },
+    { type: 'choiceitem', text: 'Black', value: '#95a5a6' },
+
+    { type: 'choiceitem', text: 'Black', value: '#f39c12' },
+    { type: 'choiceitem', text: 'Black', value: '#d35400' },
+    { type: 'choiceitem', text: 'Black', value: '#c0392b' },
+    { type: 'choiceitem', text: 'Black', value: '#bdc3c7' },
+    { type: 'choiceitem', text: 'Black', value: '#7f8c8d' },
+
+    { type: 'choiceitem', text: 'Black', value: '#000000' },
+    { type: 'choiceitem', text: 'Black', value: '#ffffff' }
+  ]
+);
+
+export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
     inputClasses: ['tox-textfield'],
@@ -87,12 +121,31 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
 
   const pLabel: Option<AlloySpec> = spec.label.map(renderLabel);
 
+  const emitSwatchChange = (colorBit, value) => {
+    AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
+      value
+    });
+  };
+
   const onItemAction = (value) => {
     sharedBackstage.getSink().each((sink) => {
       memColorButton.getOpt(sink).each((colorBit) => {
-        AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
-          value
-        });
+        if (value === 'custom') {
+          colorInputBackstage.colorPicker((value) => {
+            emitSwatchChange(colorBit, value);
+            currentColors.set(currentColors.get().concat([
+              {
+                type: 'choiceitem',
+                text: value,
+                value
+              }
+            ]));
+          }, '#ffffff');
+        } else if (value === 'remove') {
+          emitSwatchChange(colorBit, '');
+        } else {
+          emitSwatchChange(colorBit, value);
+        }
       });
     });
   };
@@ -107,65 +160,22 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         onLtr: () => [ Layout.southwest ]
       }),
       components: [],
-      fetch: ((callback) => {
-        callback({
-          dom: {
-            tag: 'div'
+      fetch: (callback) => {
+        callback(
+          currentColors.get().concat([{
+            type: 'choiceitem',
+            text: 'Remove',
+            value: 'remove'
           },
-          components: [
-          ],
-          behaviours: Behaviour.derive([
-            Keying.config({
-              mode: 'cyclic'
-            }),
-          ])
-        });
-      }),
+          {
+            type: 'choiceitem',
+            text: 'Custom',
+            value: 'custom'
+          }])
+        );
+      },
       onItemAction,
-      items: [
-        { type: 'choiceitem', value: 'red', text: 'Red' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-        { type: 'choiceitem', value: 'black', text: 'Black' },
-
-        {
-          type: 'choiceitem',
-          text: 'Remove',
-          icon: 'remove',
-          value: 'remove'
-        },
-        {
-          type: 'choiceitem',
-          text: 'Custom',
-          icon: 'color-picker',
-          value: 'custom'
-        }
-      ]
+      items: []
     }, sharedBackstage)
   );
 
