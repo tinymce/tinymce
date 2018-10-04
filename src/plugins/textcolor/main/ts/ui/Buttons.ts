@@ -28,45 +28,18 @@ const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemAp
 
 const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
-    editor.windowManager.open({
-      title: 'Colorpicker',
-      body: {
-        type: 'panel',
-        items: [
-          { type: 'colorpicker', name: 'col' }
-        ]
-      },
-      buttons: [
+    editor.settings.color_picker_callback((color) => {
+      currentColors.set(currentColors.get().concat([
         {
-          type: 'submit',
-          text: 'OK',
-          primary: true
-        },
-        {
-          type: 'cancel',
-          text: 'Cancel'
+          type: 'choiceitem',
+          text: color,
+          icon: getIcon(color),
+          value: color
         }
-      ],
-      initialData: {
-        col: '#eeeeee'
-      },
-      onSubmit: (dialogApi) => {
-        const data = dialogApi.getData().col;
-
-        currentColors.set(currentColors.get().concat([
-          {
-            type: 'choiceitem',
-            text: data,
-            icon: getIcon(data),
-            value: data
-          }
-        ]));
-
-        dialogApi.close();
-        editor.execCommand('mceApplyTextcolor', format, data);
-        onChoice(data);
-      }
-    });
+      ]));
+      editor.execCommand('mceApplyTextcolor', format, color);
+      onChoice(color);
+    }, '#ff00ff');
   } else if (value === 'remove') {
     editor.execCommand('mceRemoveTextcolor', format);
   } else  {
@@ -77,6 +50,26 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
 
 const register = function (editor) {
   currentColors.set(Settings.getTextColorMap(editor));
+
+  const getAdditionalColors = (): Menu.ChoiceMenuItemApi[] => {
+    const type: 'choiceitem' = 'choiceitem';
+    const remove = {
+      type,
+      text: 'Remove',
+      icon: getIcon('remove'),
+      value: 'remove'
+    };
+    const custom = {
+      type,
+      text: 'Custom',
+      icon: getIcon('custom'),
+      value: 'custom'
+    };
+    return editor.settings.color_picker_callback !== undefined ? [
+        remove,
+        custom
+      ] : [ remove ];
+  };
 
   const addColorButton = (name: string, format: string, tooltip: string, cols: number) => {
     editor.ui.registry.addSplitButton(name, (() => {
@@ -90,20 +83,7 @@ const register = function (editor) {
         columns: cols,
         fetch: (callback) => {
           callback(
-            currentColors.get().concat([
-              {
-                type: 'choiceitem',
-                text: 'Remove',
-                icon: getIcon('remove'),
-                value: 'remove'
-              },
-              {
-                type: 'choiceitem',
-                text: 'Custom',
-                icon: getIcon('custom'),
-                value: 'custom'
-              }
-            ])
+            currentColors.get().concat(getAdditionalColors())
           );
         },
         onAction: (splitButtonApi) => {

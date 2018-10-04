@@ -12,7 +12,7 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'textcolor code',
+  plugins: 'textcolor code colorpicker',
   toolbar: 'forecolor backcolor code',
   height: 600,
   // textcolor_cols: 1
