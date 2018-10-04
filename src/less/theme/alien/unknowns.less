@@ -144,6 +144,16 @@
     flex: 1;
     resize: none;
   }
+
+  .tox-navobj {
+    display: flex;
+    flex: 1;
+  }
+
+  // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+  .tox-navobj :nth-child(2) {
+    flex: 1;
+  }
 }
 
 .tox-dialog--width-lg {
@@ -259,7 +269,6 @@ a {
   cursor: pointer;
   color: #2276d2;
 }
-
 
 .tox-custom-editor {
   display: flex;
