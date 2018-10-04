@@ -41,3 +41,4 @@ mentions
 **/dependency
 **/instrumented_*
 .rpt2_cache
+tinymce-*.tgz
