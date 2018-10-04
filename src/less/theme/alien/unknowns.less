@@ -1,3 +1,5 @@
+/* stylelint-disable */
+
 @input-button-focus-border-color: @button-background-color;
 @select-focus-border-color: @button-background-color;
 @checkbox-unfocused-box-shadow: 0 0 0 2px transparent;
@@ -75,20 +77,20 @@
   padding: 0;
 }
 
-// How is this used? //FD
+// * This overrides the default focus border but I don't dare to remove this now /fd 2018-10-01
+// * Class used as a wrapper for input fields to place a accessory icon on the right side within a textfield.
+//   See dialog-2.html for example //fd 2018-10-02
 .tox-input-wrap .tox-textfield {
   border: none;
 }
 
-// How is this used? //FD
 .tox-input-wrap:not(.tox-status-valid) .tox-status-icon__checkmark,
 .tox-input-wrap:not(.tox-status-unknown) .tox-status-icon__warning,
 .tox-input-wrap:not(.tox-status-invalid) .tox-status-icon__error {
   display: none;
 }
 
-// What is tox-status? Also, to be nitpicky, move the doubble dash before icon,
-// ie .tox-status__icon-checkmark. /FD
+// Statuses is used as accessory icons within .tox-input-wrap
 .tox-status {
   transform: scale(.8);
 }
@@ -111,6 +113,7 @@
   display: none;
 }
 
+// Content JS should never be styled. the *__content-js is supposed to be a hook for javascript, not for styling. //FD
 .tox-dialog__content-js {
   display: flex;
   flex: 1;
@@ -140,6 +143,16 @@
   .tox-textarea {
     flex: 1;
     resize: none;
+  }
+
+  .tox-navobj {
+    display: flex;
+    flex: 1;
+  }
+
+  .tox-navobj > iframe {
+    display: flex;
+    flex: 1;
   }
 }
 
@@ -260,8 +273,4 @@ a {
   display: flex;
 }
 
-.tox-navobj,
-iframe {
-  display: flex;
-  flex: 1;
-}
+/* stylelint-enable */

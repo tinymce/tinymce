@@ -74,6 +74,10 @@
   }
 }
 
+.tox-tbtn + .tox-tbtn {
+  margin-left: 0;
+}
+
 // An toggle on/off button's on state.
 .tox-tbtn--enabled {
   background: @toolbar-button-enabled-background-color;
@@ -82,18 +86,6 @@
 
   svg {
     fill: @toolbar-button-enabled-icon-color;
-  }
-}
-
-.tox-tbtn:disabled,
-.tox-tbtn:disabled:hover {
-  background: @toolbar-button-disabled-background-color;
-  box-shadow: @toolbar-button-disabled-box-shadow;
-  color: @toolbar-button-disabled-text-color;
-  cursor: not-allowed;
-
-  svg {
-    fill: @toolbar-button-disabled-icon-color;
   }
 }
 
@@ -127,6 +119,18 @@
   }
 }
 
+.tox-tbtn:disabled,
+.tox-tbtn:disabled:hover {
+  background: @toolbar-button-disabled-background-color;
+  box-shadow: @toolbar-button-disabled-box-shadow;
+  color: @toolbar-button-disabled-text-color;
+  cursor: not-allowed;
+
+  svg {
+    fill: @toolbar-button-disabled-icon-color;
+  }
+}
+
 .tox-tbtn:active > * {
   transform: @toolbar-button-active-transform;
 }
@@ -152,10 +156,6 @@
 .tox-tbtn--labeled {
   padding: 0 4px;
   width: unset;
-}
-
-.tox-tbtn + .tox-tbtn {
-  margin-left: 0;
 }
 
 // Vertical label

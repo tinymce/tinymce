@@ -80,11 +80,11 @@
   border-bottom: @dialog-header-separator-border;
   color: @dialog-title-text-color;
   display: flex;
+  font-size: @font-size-base;
   justify-content: space-between;
   margin-bottom: @pad-md;
   padding: @dialog-header-padding;
   position: relative;
-  font-size: @font-size-base;
 }
 
 .tox-dialog__header .tox-button {
@@ -138,13 +138,13 @@
 }
 
 .tox-dialog__body-nav-item {
-  line-height: @line-height-base;
+  border-bottom: 2px solid transparent;
   color: @text-color-muted;
   display: inline-block;
   font-size: @font-size-sm;
+  line-height: @line-height-base;
   margin-bottom: @pad-sm;
   text-decoration: none;
-  border-bottom: 2px solid transparent;
 }
 
 .tox-dialog__body-nav-item--active {
