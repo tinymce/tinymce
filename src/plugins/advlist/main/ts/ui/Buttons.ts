@@ -12,6 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -42,22 +43,11 @@ const listState = function (editor, listName) {
   };
 };
 
-// const updateSelection = function (editor) {
-//   return function (e) {
-//     const listStyleType = ListUtils.getSelectedStyleType(editor);
-//     e.control.items().each(function (ctrl) {
-//       ctrl.active(ctrl.settings.data === listStyleType);
-//     });
-//   };
-// };
-
-// <ListStyles>
 const styleValueToText = function (styleValue) {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
     return chr.toUpperCase();
   });
 };
-// </ListStyles>
 
 const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
@@ -87,15 +77,6 @@ const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
     onItemAction: (splitButtonApi, value) => {
       Actions.applyListFormat(editor, nodeName, value);
     }
-    // menu: ListStyles.toMenuItems(styles),
-    // onPostRender: listState(editor, nodeName),
-    // onshow: updateSelection(editor),
-    // onselect (e) {
-    //   Actions.applyListFormat(editor, nodeName, e.control.settings.data);
-    // },
-    // onclick () {
-    //   editor.execCommand(cmd);
-    // }
   });
 };
 
@@ -121,8 +102,8 @@ const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
 };
 
 const register = function (editor) {
-  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
-  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
+  addControl(editor, 'numlist', I18n.translate('Numbered list'), 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
+  addControl(editor, 'bullist', I18n.translate('Bullet list'), 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
 export default {
