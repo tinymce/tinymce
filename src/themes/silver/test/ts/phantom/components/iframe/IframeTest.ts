@@ -23,7 +23,8 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           name: 'frame-a',
           label: Option.some('iframe label'),
           colspan: Option.none(),
-          sandboxed: true
+          sandboxed: true,
+          flex: false
         })
       );
     },
