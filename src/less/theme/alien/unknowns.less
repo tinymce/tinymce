@@ -150,8 +150,8 @@
     flex: 1;
   }
 
-  .tox-navobj > iframe {
-    display: flex;
+  // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+  .tox-navobj :nth-child(2) {
     flex: 1;
   }
 }
