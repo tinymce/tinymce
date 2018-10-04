@@ -34,6 +34,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/agar": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/sugar": "latest",
     "@ephox/katamari": "latest",
     "@ephox/sand": "latest",

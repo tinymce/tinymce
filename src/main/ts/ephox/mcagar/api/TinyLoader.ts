@@ -1,11 +1,11 @@
 import { Fun } from '@ephox/katamari';
 import { Id } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
+import { document, console, setTimeout } from '@ephox/dom-globals';
 import 'tinymce';
 
 declare const tinymce: any;
