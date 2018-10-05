@@ -4,6 +4,7 @@ import { Keyboard } from '@ephox/agar';
 import { FocusTools } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 var cIDoc = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getDoc());

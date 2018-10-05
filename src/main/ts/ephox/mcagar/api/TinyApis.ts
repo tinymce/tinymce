@@ -9,6 +9,7 @@ import TinySelections from '../selection/TinySelections';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 export interface Presence {
   [selector:string]: number;

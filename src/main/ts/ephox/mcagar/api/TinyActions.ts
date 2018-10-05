@@ -1,7 +1,6 @@
 import { Keyboard } from '@ephox/agar';
 import { Element } from '@ephox/sugar';
-
-
+import { document } from '@ephox/dom-globals';
 
 export default function (editor) {
   var iDoc = Element.fromDom(editor.getDoc());

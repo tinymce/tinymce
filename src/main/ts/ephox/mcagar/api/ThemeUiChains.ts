@@ -11,6 +11,7 @@ import { Element } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
 
 import {ThemeSelectors, DefaultThemeSelectors} from './ThemeSelectors';
+import { document } from '@ephox/dom-globals';
 
 export default function(selectors: Partial<ThemeSelectors>) {
   const mergedSelectors = {
