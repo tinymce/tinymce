@@ -13,7 +13,7 @@ declare let tinymce: any;
 tinymce.init({
   selector: 'div.tinymce',
   plugins: 'table colorpicker',
-  toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
+  toolbar: 'forecolor backcolor table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
   media_dimensions: false,
   table_class_list: [
     {title: 'None', value: ''},
@@ -31,7 +31,10 @@ tinymce.init({
     {title: 'Snake', value: 'snake'}
   ],
   table_style_by_css: true,
-
+  textcolor_map: [
+    '000000', 'Black',
+    '993300', 'Burnt orange'
+  ],
   // table grid TBD
   table_grid: true,
 

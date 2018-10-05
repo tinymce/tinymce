@@ -11,7 +11,6 @@ import {
   Representing,
   SimpleSpec,
   AlloySpec,
-  Keying,
   Composing,
   Tabstopping,
   Focusing,
@@ -26,7 +25,7 @@ import { renderPanelButton } from '../general/PanelButton';
 import { renderLabel } from '../alien/FieldLabeller';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 
-import { SingleMenuItemApi } from '../menus/menu/SingleMenu';
+import ColorSwatch from '../core/ColorSwatch';
 
 const colorInputChangeEvent = Id.generate('color-change');
 const colorSwatchChangeEvent = Id.generate('hex-change');
@@ -38,37 +37,6 @@ interface ColorInputChangeEvent extends CustomEvent {
 interface ColorSwatchChangeEvent extends CustomEvent {
   value: () => string;
 }
-
-const currentColors: Cell<SingleMenuItemApi[]> = Cell<SingleMenuItemApi[]>(
-  [
-    { type: 'choiceitem', text: 'Black', value: '#1abc9c' },
-    { type: 'choiceitem', text: 'Black', value: '#2ecc71' },
-    { type: 'choiceitem', text: 'Black', value: '#3498db' },
-    { type: 'choiceitem', text: 'Black', value: '#9b59b6' },
-    { type: 'choiceitem', text: 'Black', value: '#34495e' },
-
-    { type: 'choiceitem', text: 'Black', value: '#16a085' },
-    { type: 'choiceitem', text: 'Black', value: '#27ae60' },
-    { type: 'choiceitem', text: 'Black', value: '#2980b9' },
-    { type: 'choiceitem', text: 'Black', value: '#8e44ad' },
-    { type: 'choiceitem', text: 'Black', value: '#2c3e50' },
-
-    { type: 'choiceitem', text: 'Black', value: '#f1c40f' },
-    { type: 'choiceitem', text: 'Black', value: '#e67e22' },
-    { type: 'choiceitem', text: 'Black', value: '#e74c3c' },
-    { type: 'choiceitem', text: 'Black', value: '#ecf0f1' },
-    { type: 'choiceitem', text: 'Black', value: '#95a5a6' },
-
-    { type: 'choiceitem', text: 'Black', value: '#f39c12' },
-    { type: 'choiceitem', text: 'Black', value: '#d35400' },
-    { type: 'choiceitem', text: 'Black', value: '#c0392b' },
-    { type: 'choiceitem', text: 'Black', value: '#bdc3c7' },
-    { type: 'choiceitem', text: 'Black', value: '#7f8c8d' },
-
-    { type: 'choiceitem', text: 'Black', value: '#000000' },
-    { type: 'choiceitem', text: 'Black', value: '#ffffff' }
-  ]
-);
 
 export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
@@ -133,13 +101,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         if (value === 'custom') {
           colorInputBackstage.colorPicker((value) => {
             emitSwatchChange(colorBit, value);
-            currentColors.set(currentColors.get().concat([
-              {
-                type: 'choiceitem',
-                text: value,
-                value
-              }
-            ]));
+            ColorSwatch.addColor(value);
           }, '#ffffff');
         } else if (value === 'remove') {
           emitSwatchChange(colorBit, '');
@@ -160,22 +122,8 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         onLtr: () => [ Layout.southwest ]
       }),
       components: [],
-      fetch: (callback) => {
-        callback(
-          currentColors.get().concat([{
-            type: 'choiceitem',
-            text: 'Remove',
-            value: 'remove'
-          },
-          {
-            type: 'choiceitem',
-            text: 'Custom',
-            value: 'custom'
-          }])
-        );
-      },
-      onItemAction,
-      items: []
+      fetch: ColorSwatch.getFetch(true),
+      onItemAction
     }, sharedBackstage)
   );
 

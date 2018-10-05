@@ -12,7 +12,7 @@ import { Future, Id, Option, Merger } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
-import { createTieredDataFrom, createPartialChoiceMenu, SingleMenuItemApi } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
+import { createTieredDataFrom, createPartialChoiceMenu } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
 import { ItemResponse } from 'tinymce/themes/silver/ui/menus/item/MenuItems';
 import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
 import { Element } from '@ephox/sugar';

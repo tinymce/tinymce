@@ -16,6 +16,10 @@ tinymce.init({
   toolbar: 'forecolor backcolor code',
   height: 600,
   // textcolor_cols: 1
+  textcolor_map: [
+    { text: 'Black', value: '#000000' },
+    { text: 'Burnt orange', value: '#993300' }
+  ],
 });
 
 export {};
