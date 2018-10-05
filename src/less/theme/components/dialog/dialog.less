@@ -235,10 +235,6 @@
   //
 }
 
-tr {
-  border-bottom: @border-width @border-style @border-color;
-}
-
 .tox-dialog__table {
   border-collapse: collapse;
 
@@ -254,13 +250,16 @@ tr {
   }
 
   tbody {
+    tr {
+      border-bottom: @dialog-border-width @dialog-border-style @dialog-border-color;
+    }
+
     tr:last-child {
       border-bottom: none;
     }
   }
 
   td {
-    //color: rgba(34, 47, 62, .6);
     padding-bottom: @pad-sm;
     padding-top: @pad-sm;
   }
