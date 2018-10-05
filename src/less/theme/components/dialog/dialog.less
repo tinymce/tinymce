@@ -236,7 +236,7 @@
 }
 
 tr {
-  border-bottom: 1px solid #ccc;
+  border-bottom: @border-width @border-style @border-color;
 }
 
 .tox-dialog__table {
@@ -244,10 +244,8 @@ tr {
 
   thead {
     th {
-      color: rgba(34, 47, 62, .6);
-      font-weight: bold;
-      padding-bottom: 2%;
-      padding-top: 2%;
+      font-weight: @font-weight-bold;
+      padding-top: @pad-sm;
     }
 
     tr {
@@ -262,8 +260,8 @@ tr {
   }
 
   td {
-    color: rgba(34, 47, 62, .6);
-    padding-bottom: 2%;
-    padding-top: 2%;
+    //color: rgba(34, 47, 62, .6);
+    padding-bottom: @pad-sm;
+    padding-top: @pad-sm;
   }
 }
