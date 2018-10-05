@@ -1,6 +1,6 @@
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { AlloySpec, RawDomSchema, DomFactory } from '@ephox/alloy';
-import { Option, Fun } from '@ephox/katamari';
+import { Option, Fun, Merger } from '@ephox/katamari';
 
 import { StyleStructureMeta } from './StyleStructure';
 import * as ItemClasses from '../ItemClasses';
@@ -17,6 +17,7 @@ export interface ItemStructureSpec {
   presets: Types.PresetItemTypes;
   iconContent: Option<string>;
   textContent: Option<string>;
+  ariaLabel: Option<string>;
   shortcutContent: Option<string>;
   checkMark: Option<AlloySpec>;
   caret: Option<AlloySpec>;
@@ -30,6 +31,7 @@ interface NormalItemSpec {
   shortcutContent: Option<string>;
   checkMark: Option<AlloySpec>;
   caret: Option<AlloySpec>;
+  ariaLabel: Option<string>;
 }
 
 const renderColorStructure = (itemValue: string, iconSvg: Option<string>): ItemStructure => {
@@ -59,12 +61,23 @@ const renderColorStructure = (itemValue: string, iconSvg: Option<string>): ItemS
 const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
   const leftIcon = info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon));
+  const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => {
+    return {
+      attributes: {
+        // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
+        // for icon only implementations we need either a title or aria label to satisfy aria requirements.
+        title: label
+      }
+    };
+  }).getOr({});
 
-  return {
-    dom: {
-      tag: 'div',
-      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ]
-    },
+  const dom = Merger.merge({
+    tag: 'div',
+    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+  }, domTitle);
+
+  const menuItem = {
+    dom,
     optComponents: [
       leftIcon,
       info.textContent.map(renderText),
@@ -72,6 +85,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
       info.caret
     ]
   };
+  return menuItem;
 };
 
 // TODO: Maybe need aria-label
