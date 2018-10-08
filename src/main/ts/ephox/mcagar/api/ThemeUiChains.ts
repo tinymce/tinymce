@@ -1,6 +1,6 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { document, console } from '@ephox/dom-globals';
-import { Arr, Fun, Merger, Result } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
+import { Fun, Merger, Result } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
 import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 

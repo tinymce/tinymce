@@ -8,6 +8,7 @@ import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
 import { Node } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
+import { console } from '@ephox/dom-globals';
 
 UnitTest.asynctest('TinyScenariosTest', function() {
   var success = arguments[arguments.length - 2];
@@ -36,10 +37,10 @@ UnitTest.asynctest('TinyScenariosTest', function() {
 
       if (editor.selection.isCollapsed()) {
       } else {
-        Assertions.assertEq('Two bold operations should create a <strong> tag at some point', true, boldInitial + boldBefore + boldAfter > 0); 
+        Assertions.assertEq('Two bold operations should create a <strong> tag at some point', true, boldInitial + boldBefore + boldAfter > 0);
       }
     });
-  
+
     Pipeline.async({}, [
       apis.sFocus,
       scenarios.sAsyncProperty('Test', Arbitraries.content('inline', { }).generator, sAssertion, {

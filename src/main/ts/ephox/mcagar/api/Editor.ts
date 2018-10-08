@@ -7,6 +7,7 @@ import { Attr } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
+import { document, setTimeout } from '@ephox/dom-globals';
 
 declare const tinymce: any;
 
