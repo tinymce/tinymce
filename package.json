@@ -66,12 +66,6 @@
     "webpack-livereload-plugin": "^2.1.1",
     "rimraf": "^2.6.2"
   },
-  "files": [
-    "js",
-    "readme.md",
-    "changelog.txt",
-    "LICENSE.TXT"
-  ],
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   }
