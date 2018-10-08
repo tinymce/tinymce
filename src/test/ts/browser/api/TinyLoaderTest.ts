@@ -6,10 +6,7 @@ import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('TinyLoaderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('TinyLoaderTest', function(success, failure) {
   var clickedOn = false;
 
   var sAssertState = function (expected, label) {
@@ -33,17 +30,12 @@ UnitTest.asynctest('TinyLoaderTest', function() {
 
   }, {
     setup: function (ed) {
-      ed.addButton('test-button', {
+      ed.ui.registry.addButton('test-button', {
         text: 'test-button',
-        icon: false,
-        onclick: function () {
-          clickedOn = true;
-        }
+        onAction: () => clickedOn = true
       });
     },
-    toolbar: [
-      'test-button'
-    ]
+    toolbar: 'test-button'
   }, success, failure);
 });
 

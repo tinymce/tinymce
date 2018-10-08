@@ -1,21 +1,11 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Visibility } from '@ephox/sugar';
-import { ThemeSelectors, DefaultThemeSelectors } from './ThemeSelectors';
+import { Assertions, Chain, Mouse, UiFinder } from '@ephox/agar';
+import { document } from '@ephox/dom-globals';
+import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Element, Visibility } from '@ephox/sugar';
+import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 
-
-
-export default function (editor, selectors?: Partial<ThemeSelectors>) {
-  const mergedSelectors = {
-    ...DefaultThemeSelectors,
-    ...selectors
-  }
+export default function (editor) {
+  const selectors: ThemeSelectors = getThemeSelectors();
 
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
@@ -24,11 +14,11 @@ export default function (editor, selectors?: Partial<ThemeSelectors>) {
   var cDialogRoot = Chain.inject(dialogRoot);
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(mergedSelectors.toolBarSelector)
+    UiFinder.cFindIn(selectors.toolBarSelector)
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(mergedSelectors.menuBarSelector)
+    UiFinder.cFindIn(selectors.menuBarSelector)
   ]);
 
   var cEditorRoot = Chain.inject(editorRoot);
@@ -132,7 +122,7 @@ export default function (editor, selectors?: Partial<ThemeSelectors>) {
 
   var cSubmitDialog = function () {
     return Chain.fromChains([
-      UiFinder.cFindIn(mergedSelectors.dialogSubmitSelector),
+      UiFinder.cFindIn(selectors.dialogSubmitSelector),
       Mouse.cClick
     ]);
   };

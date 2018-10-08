@@ -1,22 +1,11 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Visibility } from '@ephox/sugar';
+import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { document, console } from '@ephox/dom-globals';
+import { Arr, Fun, Merger, Result } from '@ephox/katamari';
+import { Element, Visibility } from '@ephox/sugar';
+import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 
-import {ThemeSelectors, DefaultThemeSelectors} from './ThemeSelectors';
-
-export default function(selectors: Partial<ThemeSelectors>) {
-  const mergedSelectors = {
-    ...DefaultThemeSelectors,
-    ...selectors
-  };
+export default function() {
+  const selectors: ThemeSelectors = getThemeSelectors();
 
   var dialogRoot = Element.fromDom(document.body);
 
@@ -32,12 +21,12 @@ export default function(selectors: Partial<ThemeSelectors>) {
 
   var cGetToolbarRoot = Chain.fromChains([
     cToolstripRoot,
-    UiFinder.cFindIn(mergedSelectors.toolBarSelector)
+    UiFinder.cFindIn(selectors.toolBarSelector)
   ]);
 
   var cGetMenuRoot = Chain.fromChains([
     cToolstripRoot,
-    UiFinder.cFindIn(mergedSelectors.menuBarSelector)
+    UiFinder.cFindIn(selectors.menuBarSelector)
   ]);
 
   var cFindIn = function (cRoot, selector: string) {
@@ -108,11 +97,8 @@ export default function(selectors: Partial<ThemeSelectors>) {
 
   var cDialogByPopup = Chain.binder(function (input: any) {
     var wins = input.editor.windowManager.getWindows();
-    var popupId = input.popupNode.dom().id;
-    var dialogs =  Arr.filter(wins, function (dialog) {
-      return popupId === dialog._id;
-    });
-    return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
+    // TODO: fix this to work with alloy dialogs
+    return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
   });
 
   var cWaitForDialog = function (selector: string) {
@@ -129,7 +115,7 @@ export default function(selectors: Partial<ThemeSelectors>) {
     return NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
       NamedChain.direct('dialog', Chain.op(function (dialog) {
-        Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
+        Assertions.assertEq('asserting contents of: ' + selector, data, dialog.getData());
       }), '_'),
       NamedChain.outputInput
     ]);
@@ -143,7 +129,7 @@ export default function(selectors: Partial<ThemeSelectors>) {
     return NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
       NamedChain.direct('dialog', Chain.op(function (dialog) {
-        dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
+        dialog.setData(Merger.merge(dialog.getData(), data));
       }), '_'),
       NamedChain.outputInput
     ]);
@@ -165,11 +151,11 @@ export default function(selectors: Partial<ThemeSelectors>) {
   };
 
   var cCloseDialog = function (selector: string) {
-    return cClickPopupButton(mergedSelectors.dialogCloseSelector, selector);
+    return cClickPopupButton(selectors.dialogCloseSelector, selector);
   };
 
   var cSubmitDialog = function (selector?: string) {
-    return cClickPopupButton(mergedSelectors.dialogSubmitSelector, selector);
+    return cClickPopupButton(selectors.dialogSubmitSelector, selector);
   };
 
   return {

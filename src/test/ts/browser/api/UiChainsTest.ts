@@ -1,9 +1,11 @@
-import { Pipeline } from '@ephox/agar';
+import { Pipeline, Step, UiFinder, Guard } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import UiChains from 'ephox/mcagar/api/UiChains';
 import Editor from 'ephox/mcagar/api/Editor';
 import { UnitTest } from '@ephox/bedrock';
+import { Visibility } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('UiChainsTest', function() {
   var success = arguments[arguments.length - 2];
@@ -20,16 +22,19 @@ UnitTest.asynctest('UiChainsTest', function() {
       UiChains.cClickOnToolbar("click Bold button", '[role="button"][aria-label="Bold"]'),
       ApiChains.cAssertContent('<p><strong>some</strong> text</p>'),
 
-      UiChains.cClickOnToolbar("click Link button", '[role="button"][aria-label="Insert/edit link"]'),
+      UiChains.cClickOnToolbar("click Link button", '[role="button"][aria-label="Link"]'),
       UiChains.cFillActiveDialog({
-        href: 'http://example.com',
+        url: { value: 'http://example.com' },
         title: "Example URL",
         target: '_blank'
       }),
       // selector is optional, if not specified current active popup will be processed
       UiChains.cSubmitDialog(),
-      ApiChains.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener"><strong>some</strong></a> text</p>'),
-
+      Chain.control(
+        // dialog takes a few ms to close - wait for it
+        ApiChains.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener"><strong>some</strong></a> text</p>'),
+        Guard.tryUntil('Link was not inserted', 10, 1000)
+      ),
       Editor.cRemove
     ])
   ], function () {

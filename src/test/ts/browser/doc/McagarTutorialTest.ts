@@ -5,10 +5,7 @@ import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('McagarTutorialTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('McagarTutorialTest', function(success, failure) {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     var ui = TinyUi(editor);
     var apis = TinyApis(editor);
@@ -28,14 +25,13 @@ UnitTest.asynctest('McagarTutorialTest', function() {
       apis.sAssertSelection([ ], 0, [ ], 1)
     ], onSuccess, onFailure);
 
-  }, { 
+  }, {
     menubar: false,
     toolbar: 'tutorial-button',
     setup: function (ed) {
-      ed.addButton('tutorial-button', {
+      ed.ui.registry.addButton('tutorial-button', {
         text: 'tutorial',
-        icon: false,
-        onclick: function () {
+        onAction: () => {
           var content = ed.getContent();
           ed.focus();
           if (content === '<p>tutorial content</p>') {
