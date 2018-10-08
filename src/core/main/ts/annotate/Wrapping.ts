@@ -1,6 +1,6 @@
 import { Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option } from '@ephox/katamari';
-import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse } from '@ephox/sugar';
+import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse, Html } from '@ephox/sugar';
 import { AnnotatorSettings } from 'tinymce/core/annotate/AnnotationsRegistry';
 import { Editor } from 'tinymce/core/api/Editor';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
@@ -20,18 +20,20 @@ export type Decorator = (
   classes?: string[]
 };
 
+// We want it to apply to trailing spaces (like removeFormat does) when dealing with non breaking spaces. There
+// will likely be other edge cases as well.
+const shouldApplyToTrailingSpaces = (rng: Range) => {
+  return rng.startContainer.nodeType === 3 && rng.startContainer.nodeValue.length >= rng.startOffset && rng.startContainer.nodeValue[rng.startOffset] === '\u00A0';
+};
+
 const applyWordGrab = (editor: Editor, rng: Range): void => {
-  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], false);
+  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], shouldApplyToTrailingSpaces(rng));
   rng.setStart(r.startContainer, r.startOffset);
   rng.setEnd(r.endContainer, r.endOffset);
   editor.selection.setRng(rng);
 };
 
-const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, { uid = Id.generate('mce-annotation'), ...data }): any[] => {
-  // Setup all the wrappers that are going to be used.
-  const newWrappers = [ ];
-
-  // Setup the spans for the comments
+const makeAnnotation = ({ uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): Element => {
   const master = Element.fromTag('span');
   Class.add(master, Markings.annotation());
   Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
@@ -40,6 +42,15 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const { attributes = { }, classes = [ ] } = decorate(uid, data);
   Attr.setAll(master, attributes);
   Classes.add(master, classes);
+  return master;
+};
+
+const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
+  // Setup all the wrappers that are going to be used.
+  const newWrappers = [ ];
+
+  // Setup the spans for the comments
+  const master = makeAnnotation(data, annotationName, decorate);
 
   // Set the current wrapping element
   const wrapper = Cell(Option.none());
@@ -110,11 +121,24 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     if (initialRng.collapsed) {
       applyWordGrab(editor, initialRng);
     }
-    // The bookmark is responsible for splitting the nodes beforehand at the selection points
-    const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
-    const rng = editor.selection.getRng();
-    annotate(editor, rng, name, settings.decorate, data);
-    editor.selection.moveToBookmark(bookmark);
+
+    // Even after applying word grab, we could not find a selection. Therefore,
+    // just make a wrapper and insert it at the current cursor
+    if (editor.selection.getRng().collapsed)  {
+      const wrapper = makeAnnotation(data, name, settings.decorate);
+      // Put something visible in the marker
+      Html.set(wrapper, '\u00A0');
+      editor.selection.getRng().insertNode(wrapper.dom());
+      editor.selection.select(wrapper.dom());
+    } else {
+      // The bookmark is responsible for splitting the nodes beforehand at the selection points
+      // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
+      // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
+      const bookmark = GetBookmark.getPersistentBookmark(editor.selection, false);
+      const rng = editor.selection.getRng();
+      annotate(editor, rng, name, settings.decorate, data);
+      editor.selection.moveToBookmark(bookmark);
+    }
   });
 };
 

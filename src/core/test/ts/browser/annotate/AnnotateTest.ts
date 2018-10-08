@@ -1,10 +1,11 @@
-import { GeneralSteps, Pipeline, Logger } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Logger, Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
+import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failure) => {
   ModernTheme();
@@ -29,7 +30,108 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestDoeNotWordGrabIfCollapsed = Logger.t(
+    const sTestCanAnnotateDirectParentOfRoot = Logger.t(
+      'Should be able to annotate a direct parent of the body (e.g. an empty paragraph)',
+      GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>First</p><p><br/></p><p>Third</p>'),
+        tinyApis.sSetSelection([ 1 ], 0, [ 1 ], 0),
+        sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'empty-paragraph' }),
+        sAssertHtmlContent(tinyApis, [
+          '<p>First</p>',
+          '<p><span data-test-anything="empty-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation"><br /></span></p>',
+          '<p>Third</p>'
+        ]),
+      ])
+    );
+
+    const sTestCanAnnotateBeforeTwoNonBreakingSpaces = Logger.t(
+      'Should annotate when the cursor is collapsed before two nbsps',
+      GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 'Annotation here '.length),
+        sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
+        Assertions.sAssertStructure(
+          'Checking body element',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text( str.is('Annotation here ') ),
+                    s.element('span', {
+                      classes: [ arr.has('mce-annotation') ],
+                      html: str.is('&nbsp;')
+                    }),
+                    s.text( str.is('\u00A0\u00A0, please'))
+                  ]
+                })
+              ]
+            });
+          }),
+          Element.fromDom(editor.getBody())
+        )
+      ])
+    );
+
+    const sTestCanAnnotateWithinTwoNonBreakingSpaces = Logger.t(
+      'Should annotate when the cursor is collapsed between two nbsps',
+      GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 'Annotation here  '.length),
+        sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
+        Assertions.sAssertStructure(
+          'Checking body element',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text( str.is('Annotation here \u00A0') ),
+                    s.element('span', {
+                      classes: [ arr.has('mce-annotation') ],
+                      html: str.is('&nbsp;')
+                    }),
+                    s.text( str.is('\u00A0, please'))
+                  ]
+                })
+              ]
+            });
+          }),
+          Element.fromDom(editor.getBody())
+        )
+      ])
+    );
+
+    const sTestCanAnnotateAfterTwoNonBreakingSpaces = Logger.t(
+      'Should annotate when the cursor is collapsed after two nbsps',
+      GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 'Annotation here   '.length),
+        sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
+        Assertions.sAssertStructure(
+          'Checking body element',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text( str.is('Annotation here \u00A0\u00A0') ),
+                    s.element('span', {
+                      classes: [ arr.has('mce-annotation') ],
+                      html: str.is(',')
+                    }),
+                    s.text( str.is(' please'))
+                  ]
+                })
+              ]
+            });
+          }),
+          Element.fromDom(editor.getBody())
+        )
+      ])
+    );
+
+    const sTestDoesNotWordGrabIfNotCollapsed = Logger.t(
       'Should not word grab if the selection is not collapsed',
       GeneralSteps.sequence([
         // '<p>This |is| the first paragraph</p><p>This is the second.</p>'
@@ -95,7 +197,11 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     Pipeline.async({}, [
       tinyApis.sFocus,
       sTestWordGrabIfCollapsed,
-      sTestDoeNotWordGrabIfCollapsed,
+      sTestDoesNotWordGrabIfNotCollapsed,
+      sTestCanAnnotateDirectParentOfRoot,
+      sTestCanAnnotateBeforeTwoNonBreakingSpaces,
+      sTestCanAnnotateWithinTwoNonBreakingSpaces,
+      sTestCanAnnotateAfterTwoNonBreakingSpaces,
       sTestInOneParagraph,
       sTestInTwoParagraphs,
       sTestInThreeParagraphs
