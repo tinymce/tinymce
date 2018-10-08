@@ -14,7 +14,7 @@ node("primary") {
     checkout scm
     sh "mkdir -p jenkins-plumbing"
     dir ("jenkins-plumbing") {
-      git([branch: "standard-build-customisation", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+      git([branch: "tinymce-5.x", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
     }
   }
 
@@ -53,12 +53,10 @@ node("primary") {
 
           echo "Installing tools"
           extNpmInstall()
-          sh "sed -i -e s/\"warn\"/\"error\"/ tslint.json"
           if (isUnix()) {
-            sh "yarn grunt && git checkout ."
+            sh "yarn grunt less"
           } else {
-            bat "yarn grunt"
-            bat "git checkout ."
+            bat "yarn grunt less"
           }
 
 
@@ -118,10 +116,7 @@ node("primary") {
 
   def runBuild = load("jenkins-plumbing/standard-build.groovy")
 
-  sh "sed -i -e s/\"warn\"/\"error\"/ tslint.json"
-  sh "yarn install --no-lockfile && npx grunt && git checkout ."
-  runBuild(runTests, "5.x", "prerelease", """
-    sed -i -e s/\"warn\"/\"error\"/ tslint.json
-    yarn install --no-lockfile && npx grunt && git checkout .
-  """)
+  extNpmInstall()
+
+  runBuild(runTests, "5.x", "prerelease")
 }
