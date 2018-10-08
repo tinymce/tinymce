@@ -23,7 +23,8 @@ export const open = (editor) => {
         {
           name: 'preview',
           type: 'iframe',
-          sandboxed: true
+          sandboxed: true,
+          flex: true
         }
       ]
     },

@@ -67,7 +67,8 @@ export default () => {
     label: Option.some('Iframe'),
     // TODO: Implement
     colspan: Option.none(),
-    sandboxed: true
+    sandboxed: true,
+    flex: false
   });
 
   const inputSpec = renderInput({

@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "5.0.0-preview-1-build.3",
+  "version": "5.0.0-preview-1-build.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -14,6 +14,7 @@
   "engines": {
     "node": ">=0.10.26"
   },
+  "main": "tinymce.js",
   "scripts": {
     "test": "grunt bedrock-auto:chrome-headless",
     "lint": "tslint src/**/*.ts",
@@ -22,26 +23,24 @@
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
-  "dependencies": {
+  "devDependencies": {
     "@ephox/alloy": "latest",
     "@ephox/acid": "latest",
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
     "@ephox/boulder": "latest",
     "@ephox/bridge": "latest",
     "@ephox/darwin": "latest",
     "@ephox/dom-globals": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
+    "@ephox/mcagar": "latest",
     "@ephox/oxide": "latest",
     "@ephox/oxide-icons-default": "latest",
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
-    "@ephox/sugar": "latest"
-  },
-  "devDependencies": {
-    "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
-    "@ephox/mcagar": "latest",
+    "@ephox/sugar": "latest",
     "@ephox/swag": "latest",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
@@ -66,12 +65,6 @@
     "webpack-livereload-plugin": "^2.1.1",
     "rimraf": "^2.6.2"
   },
-  "files": [
-    "js",
-    "readme.md",
-    "changelog.txt",
-    "LICENSE.TXT"
-  ],
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   }
