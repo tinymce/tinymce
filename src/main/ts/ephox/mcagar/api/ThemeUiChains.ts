@@ -2,10 +2,10 @@ import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { Fun, Merger, Result } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
-import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { DefaultThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 
 export default function() {
-  const selectors: ThemeSelectors = getThemeSelectors();
+  const selectors: ThemeSelectors = DefaultThemeSelectors;
 
   var dialogRoot = Element.fromDom(document.body);
 

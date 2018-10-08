@@ -2,10 +2,10 @@ import { Assertions, Chain, Mouse, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Merger } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
-import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { ThemeSelectors, DefaultThemeSelectors } from './ThemeSelectors';
 
 export default function (editor) {
-  const selectors: ThemeSelectors = getThemeSelectors();
+  const selectors: ThemeSelectors = DefaultThemeSelectors;
 
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
