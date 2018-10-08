@@ -31,10 +31,6 @@ tinymce.init({
     {title: 'Snake', value: 'snake'}
   ],
   table_style_by_css: true,
-  textcolor_map: [
-    '000000', 'Black',
-    '993300', 'Burnt orange'
-  ],
   // table grid TBD
   table_grid: true,
 

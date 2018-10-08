@@ -1,16 +1,12 @@
 import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
-import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
+import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorCommandsTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;
-
-    Theme();
-    TextcolorPlugin();
 
     const state = Cell(null);
 
@@ -66,7 +62,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorCommandsTest', (s
         ])
       ], onSuccess, onFailure);
     }, {
-      plugins: 'textcolor',
       toolbar: 'forecolor backcolor',
       skin_url: '/project/js/tinymce/skins/oxide'
     }, success, failure);

@@ -61,7 +61,7 @@ const registerCommands = (editor) => {
   });
 };
 
-const getTextColorMap = function (editor): Menu.ChoiceMenuItemApi[]  {
+const getTextColorMap = function (editor): Menu.ChoiceMenuItemApi[] {
   const unmapped = editor.getParam('textcolor_map', defaultColors);
   return Arr.map(unmapped, (item): Menu.ChoiceMenuItemApi => {
     return {
@@ -97,14 +97,15 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
     value: 'custom'
   };
   return hasCustom ? [
-      remove,
-      custom
-    ] : [ remove ];
+    remove,
+    custom
+  ] : [remove];
 };
 
 const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
-    editor.settings.color_picker_callback((color) => {
+    const dialog = colorPickerDialog(editor);
+    dialog((color) => {
       addColor(color);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
@@ -112,7 +113,7 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format);
-  } else  {
+  } else {
     onChoice(value);
     editor.execCommand('mceApplyTextcolor', format, value);
   }
@@ -148,10 +149,10 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
-          applyColour(editor,  format, splitButtonApi, lastColour.get(), () => { });
+          applyColour(editor, format, splitButtonApi, lastColour.get(), () => { });
         }
       },
-      onItemAction : (splitButtonApi, value) => {
+      onItemAction: (splitButtonApi, value) => {
         applyColour(editor, format, splitButtonApi, value, (newColour) => {
 
           const setIconFillAndStroke = (pathId, colour) => {
@@ -167,6 +168,63 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
   })());
 };
 
+const colorPickerDialog = (editor) => (callback, value) => {
+  const getOnSubmit = (callback) => {
+    return (api) => {
+      const data = api.getData();
+      callback(data.colorpicker);
+      api.close();
+    };
+  };
+
+  const onAction = (api, details) => {
+    if (details.name === 'hex-valid') {
+      if (details.value) {
+        api.enable('ok');
+      } else {
+        api.disable('ok');
+      }
+    }
+  };
+
+  const submit = getOnSubmit(callback);
+  editor.windowManager.open({
+    title: 'Color',
+    size: 'normal',
+    body: {
+      type: 'panel',
+      items: [
+        {
+          type: 'colorpicker',
+          name: 'colorpicker',
+          label: 'Color'
+        }
+      ]
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel',
+      }
+    ],
+    initialData: {
+      colorpicker: value
+    },
+    onAction,
+    onSubmit: submit,
+    onClose: () => {
+      editor.focus();
+    }
+  });
+};
+
 const registerToolbarItems = (editor) => {
   currentColors.set(getTextColorMap(editor));
   registerCommands(editor);
@@ -174,4 +232,4 @@ const registerToolbarItems = (editor) => {
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color', 5);
 };
 
-export default { registerToolbarItems, addColor, getFetch };
+export default { registerToolbarItems, addColor, getFetch, colorPickerDialog };
