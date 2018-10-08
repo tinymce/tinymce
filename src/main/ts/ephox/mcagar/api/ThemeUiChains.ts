@@ -97,7 +97,7 @@ export default function() {
 
   var cDialogByPopup = Chain.binder(function (input: any) {
     var wins = input.editor.windowManager.getWindows();
-    // TODO: fix this to work with alloy dialogs
+    // TODO: fix this to work properly with alloy dialogs
     return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
   });
 

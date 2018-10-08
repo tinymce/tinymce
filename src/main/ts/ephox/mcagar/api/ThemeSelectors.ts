@@ -1,5 +1,4 @@
 import 'tinymce';
-import { console } from '@ephox/dom-globals';
 
 declare const tinymce: any;
 

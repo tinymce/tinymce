@@ -1,11 +1,8 @@
-import { Pipeline, Step, UiFinder, Guard } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import ApiChains from 'ephox/mcagar/api/ApiChains';
-import UiChains from 'ephox/mcagar/api/UiChains';
-import Editor from 'ephox/mcagar/api/Editor';
+import { Chain, Guard, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Visibility } from '@ephox/sugar';
-import { Fun } from '@ephox/katamari';
+import ApiChains from 'ephox/mcagar/api/ApiChains';
+import Editor from 'ephox/mcagar/api/Editor';
+import UiChains from 'ephox/mcagar/api/UiChains';
 
 UnitTest.asynctest('UiChainsTest', function() {
   var success = arguments[arguments.length - 2];
