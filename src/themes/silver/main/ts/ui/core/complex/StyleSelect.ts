@@ -1,52 +1,9 @@
-import { Objects } from '@ephox/boulder';
+import { AlloyTriggers } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
+import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/FormattingSettings';
+import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
-import { AlloyTriggers } from '@ephox/alloy';
-import { updateMenuText } from '../../dropdown/CommonDropdown';
-
-const defaultStyleFormats = [
-  {
-    title: 'Headings', items: [
-      { title: 'Heading 1', format: 'h1' },
-      { title: 'Heading 2', format: 'h2' },
-      { title: 'Heading 3', format: 'h3' },
-      { title: 'Heading 4', format: 'h4' },
-      { title: 'Heading 5', format: 'h5' },
-      { title: 'Heading 6', format: 'h6' }
-    ]
-  },
-
-  {
-    title: 'Inline', items: [
-      { title: 'Bold', icon: 'bold', format: 'bold' },
-      { title: 'Italic', icon: 'italic', format: 'italic' },
-      { title: 'Underline', icon: 'underline', format: 'underline' },
-      { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
-      { title: 'Superscript', icon: 'superscript', format: 'superscript' },
-      { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-      { title: 'Code', icon: 'code', format: 'code' }
-    ]
-  },
-
-  {
-    title: 'Blocks', items: [
-      { title: 'Paragraph', format: 'p' },
-      { title: 'Blockquote', format: 'blockquote' },
-      { title: 'Div', format: 'div' },
-      { title: 'Pre', format: 'pre' }
-    ]
-  },
-
-  {
-    title: 'Alignment', items: [
-      { title: 'Left', icon: 'align-left', format: 'alignleft' },
-      { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-      { title: 'Right', icon: 'align-right', format: 'alignright' },
-      { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
-    ]
-  }
-];
 
 const getSpec = (editor): SelectSpec => {
   const isSelectedFor = (format) => {
@@ -68,8 +25,6 @@ const getSpec = (editor): SelectSpec => {
     return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
   };
 
-  const getRawFormats = () => Objects.readOptFrom(editor.settings, 'style_formats').getOr(defaultStyleFormats);
-
   const onAction = (rawItem) => () => {
     editor.undoManager.transact(() => {
       editor.focus();
@@ -86,8 +41,7 @@ const getSpec = (editor): SelectSpec => {
       const subs = fmt.items;
       return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [ { title: fmt.title, format: fmt.format } ];
     };
-    const flattenedItems = Arr.bind(getRawFormats(), getFormatItems);
-
+    const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     return (e) => {
       const detectedFormat = findNearest(editor, () => flattenedItems, e);
       const optText = detectedFormat.map((fmt) => fmt.title);
@@ -123,6 +77,4 @@ const styleSelectMenu = (editor, backstage) => {
   };
 };
 
-export {
-  createStyleSelect, styleSelectMenu
-};
+export { createStyleSelect, styleSelectMenu };
