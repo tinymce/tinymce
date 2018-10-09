@@ -1,7 +1,7 @@
 import { Option, Arr } from '@ephox/katamari';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { AlloyTriggers } from '@ephox/alloy';
-import { createSelectButton } from './BespokeSelect';
+import { createSelectButton, createMenuItems } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
@@ -19,7 +19,7 @@ const toPt = (fontSize: string, precision?: number) => {
   return fontSize;
 };
 
-const createFontsizeSelect = (editor, backstage) => {
+const getSpec = (editor) => {
   const getMatchingValue = () => {
     let matchOpt = Option.none();
     const items = dataset.data;
@@ -67,14 +67,32 @@ const createFontsizeSelect = (editor, backstage) => {
 
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
-  return createSelectButton(editor, backstage, dataset, {
+  return {
     isSelectedFor,
     getPreviewFor,
     onAction,
-    nodeChangeHandler
-  });
+    nodeChangeHandler,
+    dataset
+  };
+};
+
+const createFontsizeSelect = (editor, backstage) => {
+  const spec = getSpec(editor);
+  return createSelectButton(editor, backstage, spec.dataset, spec);
+};
+
+// TODO: Test this!
+const fontsizeSelectMenu = (editor, backstage) => {
+  const spec = getSpec(editor);
+  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  return {
+    type: 'menuitem',
+    text: 'Font Sizes',
+    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
+  };
 };
 
 export {
-  createFontsizeSelect
+  createFontsizeSelect,
+  fontsizeSelectMenu
 };
