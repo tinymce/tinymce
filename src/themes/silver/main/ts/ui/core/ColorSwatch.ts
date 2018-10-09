@@ -1,38 +1,52 @@
-import { Cell, Arr } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 
 import { Menu, Toolbar } from '@ephox/bridge';
+
+const getCurrentColor = function (editor, format) {
+  let color;
+
+  editor.dom.getParents(editor.selection.getStart(), function (elm) {
+    let value;
+
+    if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
+      color = color ? color : value;
+    }
+  });
+
+  return color;
+};
 
 const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
   []
 );
 
 const defaultColors = [
-  { text: 'Black', value: '#1abc9c' },
-  { text: 'Black', value: '#2ecc71' },
-  { text: 'Black', value: '#3498db' },
-  { text: 'Black', value: '#9b59b6' },
-  { text: 'Black', value: '#34495e' },
+  '1abc9c', 'Black',
+  '2ecc71', 'Black',
+  '3498db', 'Black',
+  '9b59b6', 'Black',
+  '34495e', 'Black',
 
-  { text: 'Black', value: '#16a085' },
-  { text: 'Black', value: '#27ae60' },
-  { text: 'Black', value: '#2980b9' },
-  { text: 'Black', value: '#8e44ad' },
-  { text: 'Black', value: '#2c3e50' },
+  '16a085', 'Black',
+  '27ae60', 'Black',
+  '2980b9', 'Black',
+  '8e44ad', 'Black',
+  '2c3e50', 'Black',
 
-  { text: 'Black', value: '#f1c40f' },
-  { text: 'Black', value: '#e67e22' },
-  { text: 'Black', value: '#e74c3c' },
-  { text: 'Black', value: '#ecf0f1' },
-  { text: 'Black', value: '#95a5a6' },
+  'f1c40f', 'Black',
+  'e67e22', 'Black',
+  'e74c3c', 'Black',
+  'ecf0f1', 'Black',
+  '95a5a6', 'Black',
 
-  { text: 'Black', value: '#f39c12' },
-  { text: 'Black', value: '#d35400' },
-  { text: 'Black', value: '#c0392b' },
-  { text: 'Black', value: '#bdc3c7' },
-  { text: 'Black', value: '#7f8c8d' },
+  'f39c12', 'Black',
+  'd35400', 'Black',
+  'c0392b', 'Black',
+  'bdc3c7', 'Black',
+  '7f8c8d', 'Black',
 
-  { text: 'Black', value: '#000000' },
-  { text: 'Black', value: '#ffffff' },
+  '000000', 'Black',
+  'ffffff', 'Black',
 ];
 
 const applyFormat = function (editor, format, value) {
@@ -61,15 +75,34 @@ const registerCommands = (editor) => {
   });
 };
 
-const getTextColorMap = function (editor): Menu.ChoiceMenuItemApi[] {
-  const unmapped = editor.getParam('textcolor_map', defaultColors);
-  return Arr.map(unmapped, (item): Menu.ChoiceMenuItemApi => {
-    return {
-      text: item.text,
-      value: item.value,
+const mapColors = function (colorMap) {
+  let i;
+  const colors = [];
+
+  for (i = 0; i < colorMap.length; i += 2) {
+    colors.push({
+      text: colorMap[i + 1],
+      value: '#' + colorMap[i],
       type: 'choiceitem'
-    };
-  });
+    });
+  }
+
+  return colors;
+};
+
+const getColorMap = function (editor): Menu.ChoiceMenuItemApi[] {
+  const unmapped = editor.getParam('color_map', defaultColors);
+  return mapColors(unmapped);
+};
+
+const calcCols = (colors) => {
+  return Math.ceil(Math.sqrt(colors));
+};
+
+const getColorCols = function (editor) {
+  const colors = getColorMap(editor);
+  const defaultCols = calcCols(colors.length);
+  return editor.getParam('color_cols', defaultCols);
 };
 
 const getIcon = (color: string) => {
@@ -135,7 +168,7 @@ const addColor = (color) => {
   ]));
 };
 
-const registerTextColorButton = (editor, name: string, format: string, tooltip: string, cols: number) => {
+const registerTextColorButton = (editor, name: string, format: string, tooltip: string) => {
   editor.ui.registry.addSplitButton(name, (() => {
     const lastColour = Cell(null);
     return {
@@ -144,7 +177,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       presets: 'color',
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
-      columns: cols,
+      columns: getColorCols(editor),
       fetch: getFetch(true), // TODO: Setting for this, maybe 'custom_colors'?
       onAction: (splitButtonApi) => {
         // do something with last colour
@@ -225,11 +258,11 @@ const colorPickerDialog = (editor) => (callback, value) => {
   });
 };
 
-const registerToolbarItems = (editor) => {
-  currentColors.set(getTextColorMap(editor));
+const register = (editor) => {
+  currentColors.set(getColorMap(editor));
   registerCommands(editor);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color', 5);
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color', 5);
+  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
 };
 
-export default { registerToolbarItems, addColor, getFetch, colorPickerDialog };
+export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, getColorMap, getColorCols, calcCols };

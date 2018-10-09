@@ -5,15 +5,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 import ColorSwatch from '../../../../../main/ts/ui/core/ColorSwatch';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.GetCurrentColorTest', (success, failure) => {
+UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;
-
-    // TextcolorPlugin();
-    ColorSwatch.getCurrentColor();
 
     const sAssertCurrentColor = (editor, format, label, expected) => Logger.t(`Assert current color ${expected}`,
       Step.sync(() => {
-        const actual = TextColor.getCurrentColor(editor, format);
+        const actual = ColorSwatch.getCurrentColor(editor, format);
 
         RawAssertions.assertEq(label, expected, actual);
       })

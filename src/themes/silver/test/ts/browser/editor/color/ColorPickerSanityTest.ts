@@ -8,7 +8,7 @@ import { Element, SelectorFilter } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import ColorSwatch from 'tinymce/themes/silver/ui/core/ColorSwatch';
 
-UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', (success, failure) => {
+UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   // mutation is yummy
   let currentColor = '';
 

@@ -18,7 +18,7 @@ const setup = (editor) => {
   Align.register(editor);
   SimpleControls.register(editor);
   UndoRedo.register(editor);
-  ColorSwatch.registerToolbarItems(editor);
+  ColorSwatch.register(editor);
   VisualAid.register(editor);
   // InsertButton.register(editor); // TODO AP-300
 };

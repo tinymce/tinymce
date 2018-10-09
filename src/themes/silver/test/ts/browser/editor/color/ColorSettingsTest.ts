@@ -1,48 +1,36 @@
 import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
-import Settings from '../../../main/ts/api/Settings';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import ColorSwatch from '../../../../../main/ts/ui/core/ColorSwatch';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.GetCurrentColorTest', (success, failure) => {
+UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   const sAssertColors = function (editor, expected) {
     return Logger.t(`Assert colors ${expected}`, Step.sync(function () {
-      const colors = Settings.getBackColorMap(editor);
+      const colors = ColorSwatch.getColorMap(editor);
       RawAssertions.assertEq('should be same', expected, colors);
     }));
   };
 
   const sAssertCols = function (editor, expected) {
     return Logger.t(`Assert colors ${expected}`, Step.sync(function () {
-      const colors = Settings.getBackColorCols(editor);
+      const colors = ColorSwatch.getColorCols(editor);
       RawAssertions.assertEq('should be same', expected, colors);
     }));
   };
 
   const sAssertCalcCols = function (editor, colors, expected) {
     return Logger.t(`Assert colors ${expected}`, Step.sync(function () {
-      const sqrt = Settings.calcCols(colors);
+      const sqrt = ColorSwatch.calcCols(colors);
       RawAssertions.assertEq('should be same', expected, sqrt);
     }));
   };
 
   const colorSettings = [
-    {
-      text: 'Black',
-      value: '#1abc9c'
-    },
-    {
-      text: 'Black',
-      value: '#2ecc71'
-    },
-    {
-      text: 'Black',
-      value: '#3498db'
-    },
-    {
-      text: 'Black',
-      value: '#9b59b6'
-    }
+    '1abc9c', 'Black',
+    '2ecc71', 'Black',
+    '3498db', 'Black',
+    '9b59b6', 'Black',
   ];
 
   const mappedColors = [
@@ -84,10 +72,10 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.GetCurrentColorTest', (suc
       ])
     , onSuccess, onFailure);
   }, {
-      plugins: 'textcolor',
+      plugins: '',
       toolbar: 'forecolor backcolor',
       skin_url: '/project/js/tinymce/skins/oxide/',
-      textcolor_map: colorSettings
+      color_map: colorSettings
     }, success, failure);
 }
 );

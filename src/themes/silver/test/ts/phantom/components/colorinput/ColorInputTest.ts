@@ -19,7 +19,6 @@ import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
-
   const memSink = Memento.record({
     dom: {
       tag: 'div',
@@ -51,7 +50,12 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                    () => Result.error('Could not find the sink!'),
                    Result.value
                  );
-               }
+               },
+               providers: {
+                icons: () => <Record<string, string>> {}
+              }
+             }, {
+               colorPicker: (callback, value) => {}
              })
           ]
         })

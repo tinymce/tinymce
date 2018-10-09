@@ -5,7 +5,7 @@ import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorCommandsTest', (success, failure) => {
+UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;
 
     const state = Cell(null);

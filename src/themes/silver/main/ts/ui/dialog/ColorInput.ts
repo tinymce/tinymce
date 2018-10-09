@@ -17,7 +17,7 @@ import {
   Layout,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Result, Option, Cell } from '@ephox/katamari';
+import { Future, Id, Result, Option } from '@ephox/katamari';
 import { Css, Element, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';

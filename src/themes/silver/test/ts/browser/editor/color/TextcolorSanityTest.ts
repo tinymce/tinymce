@@ -5,7 +5,7 @@ import Env from 'tinymce/core/api/Env';
 import 'tinymce/themes/silver/Theme';
 import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', (success, failure) => {
+UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
   const browser = PlatformDetection.detect().browser;
 
   const forecolorStruct = ApproxStructure.build(function (s, str) {
