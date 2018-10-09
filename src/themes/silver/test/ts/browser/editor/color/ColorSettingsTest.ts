@@ -5,9 +5,9 @@ import { UnitTest } from '@ephox/bedrock';
 import ColorSwatch from '../../../../../main/ts/ui/core/ColorSwatch';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
-  const sAssertColors = function (editor, expected) {
+  const sAssertColors = function (input, expected) {
     return Logger.t(`Assert colors ${expected}`, Step.sync(function () {
-      const colors = ColorSwatch.getColorMap(editor);
+      const colors = ColorSwatch.mapColors(input);
       RawAssertions.assertEq('should be same', expected, colors);
     }));
   };
@@ -59,7 +59,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({},
       Log.steps('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
-        sAssertColors(editor, mappedColors),
+        sAssertColors(colorSettings, mappedColors),
         sAssertCols(editor, 2),
         sAssertCalcCols(editor, 1, 1),
         sAssertCalcCols(editor, 2, 2),

@@ -43,15 +43,15 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
       // using this API to check if the popups appearing from things like the color input button and
       // the urlinput are on top of the dialog. Just test in Chrome.
       Pipeline.async({ }, PlatformDetection.detect().browser.isChrome() ? [
-        Log.stepsAsStep('TBA', 'Trigger the colorpicker and check that the picker appears in front of the dialog', [
+        Log.stepsAsStep('TBA', 'Trigger the colorswatch and check that the swatch appears in front of the dialog', [
           tinyApis.sFocus,
           Mouse.sClickOn(Body.body(), 'button:contains("Show Color Dialog")'),
           FocusTools.sTryOnSelector('Focus should be on colorinput', doc, 'input'),
           Keyboard.sKeydown(doc, Keys.tab(), { }),
           FocusTools.sTryOnSelector('Focus should be on colorinput button', doc, 'span[aria-haspopup="true"]'),
           Keyboard.sKeydown(doc, Keys.enter(), { }),
-          FocusTools.sTryOnSelector('Focus should be inside colorpicker', doc, '.tox-color-picker-container input'),
-          sAssertVisibleFocusInside(FocusTools.cGetFocused, '.tox-color-picker-container'),
+          FocusTools.sTryOnSelector('Focus should be inside colorpicker', doc, '.tox-swatch'),
+          sAssertVisibleFocusInside(FocusTools.cGetFocused, '.tox-swatches'),
           Keyboard.sKeydown(doc, Keys.escape(), { }),
           FocusTools.sTryOnSelector('Focus should return to colorinput button', doc, 'span[aria-haspopup="true"]'),
           Keyboard.sKeydown(doc, Keys.escape(), { }),

@@ -16,38 +16,44 @@ const getCurrentColor = function (editor, format) {
   return color;
 };
 
-const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  []
-);
+const hasCustomColors = (editor) => {
+  return editor.getParam('custom_colors') !== false;
+};
+
+const choiceItem: 'choiceitem' = 'choiceitem';
 
 const defaultColors = [
-  '1abc9c', 'Black',
-  '2ecc71', 'Black',
-  '3498db', 'Black',
-  '9b59b6', 'Black',
-  '34495e', 'Black',
+  { type: choiceItem, text: 'Black', value: '#1abc9c' },
+  { type: choiceItem, text: 'Black', value: '#2ecc71' },
+  { type: choiceItem, text: 'Black', value: '#3498db' },
+  { type: choiceItem, text: 'Black', value: '#9b59b6' },
+  { type: choiceItem, text: 'Black', value: '#34495e' },
 
-  '16a085', 'Black',
-  '27ae60', 'Black',
-  '2980b9', 'Black',
-  '8e44ad', 'Black',
-  '2c3e50', 'Black',
+  { type: choiceItem, text: 'Black', value: '#16a085' },
+  { type: choiceItem, text: 'Black', value: '#27ae60' },
+  { type: choiceItem, text: 'Black', value: '#2980b9' },
+  { type: choiceItem, text: 'Black', value: '#8e44ad' },
+  { type: choiceItem, text: 'Black', value: '#2c3e50' },
 
-  'f1c40f', 'Black',
-  'e67e22', 'Black',
-  'e74c3c', 'Black',
-  'ecf0f1', 'Black',
-  '95a5a6', 'Black',
+  { type: choiceItem, text: 'Black', value: '#f1c40f' },
+  { type: choiceItem, text: 'Black', value: '#e67e22' },
+  { type: choiceItem, text: 'Black', value: '#e74c3c' },
+  { type: choiceItem, text: 'Black', value: '#ecf0f1' },
+  { type: choiceItem, text: 'Black', value: '#95a5a6' },
 
-  'f39c12', 'Black',
-  'd35400', 'Black',
-  'c0392b', 'Black',
-  'bdc3c7', 'Black',
-  '7f8c8d', 'Black',
+  { type: choiceItem, text: 'Black', value: '#f39c12' },
+  { type: choiceItem, text: 'Black', value: '#d35400' },
+  { type: choiceItem, text: 'Black', value: '#c0392b' },
+  { type: choiceItem, text: 'Black', value: '#bdc3c7' },
+  { type: choiceItem, text: 'Black', value: '#7f8c8d' },
 
-  '000000', 'Black',
-  'ffffff', 'Black',
+  { type: choiceItem, text: 'Black', value: '#000000' },
+  { type: choiceItem, text: 'Black', value: '#ffffff' }
 ];
+
+const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
+  defaultColors
+);
 
 const applyFormat = function (editor, format, value) {
   editor.undoManager.transact(function () {
@@ -90,17 +96,12 @@ const mapColors = function (colorMap) {
   return colors;
 };
 
-const getColorMap = function (editor): Menu.ChoiceMenuItemApi[] {
-  const unmapped = editor.getParam('color_map', defaultColors);
-  return mapColors(unmapped);
-};
-
 const calcCols = (colors) => {
   return Math.ceil(Math.sqrt(colors));
 };
 
 const getColorCols = function (editor) {
-  const colors = getColorMap(editor);
+  const colors = currentColors.get();
   const defaultCols = calcCols(colors.length);
   return editor.getParam('color_cols', defaultCols);
 };
@@ -178,7 +179,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: getFetch(true), // TODO: Setting for this, maybe 'custom_colors'?
+      fetch: getFetch(hasCustomColors(editor)), // TODO: Setting for this, maybe 'custom_colors'?
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
@@ -259,10 +260,13 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  currentColors.set(getColorMap(editor));
+  const unmapped = editor.getParam('color_map');
+  if (unmapped !== undefined) {
+    currentColors.set(mapColors(unmapped));
+  }
   registerCommands(editor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
 };
 
-export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, getColorMap, getColorCols, calcCols };
+export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols, hasCustomColors };

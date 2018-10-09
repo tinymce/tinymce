@@ -55,7 +55,8 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                 icons: () => <Record<string, string>> {}
               }
              }, {
-               colorPicker: (callback, value) => {}
+               colorPicker: (callback, value) => {},
+               hasCustomColors: () => true
              })
           ]
         })
@@ -80,10 +81,10 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
       });
 
       const sOpenPicker = Logger.t(
-        'Clicking the legend should bring up the colorpicker',
+        'Clicking the legend should bring up the colorswatch',
         GeneralSteps.sequence([
           Mouse.sClickOn(legend.element(), 'root:span'),
-          UiFinder.sWaitFor('Waiting for colorpicker to show up!', component.element(), '.tox-color-picker-container')
+          UiFinder.sWaitFor('Waiting for colorswatch to show up!', component.element(), '.tox-swatches')
         ])
       );
 
@@ -185,68 +186,21 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
           ])
         ),
 
-        // TODO: Once we work out what we want to happen when the user types an incorrect colour again
-        // add some tests for the desired interaction.
-        Log.stepsAsStep('TBA', 'Check that can tab through the fields in the picker, and pressing enter on one of them submits if enabled, focuses the input, and sets the right value', [
+        Log.stepsAsStep('TBA', 'Check that pressing enter inside the picker refocuses the colorinput', [
           sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on red', doc, 'label:contains("R") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on green', doc, 'label:contains("G") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on blue', doc, 'label:contains("B") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on hex', doc, 'label:contains("#") + input'),
+          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
           Keyboard.sKeydown(doc, Keys.enter(), { }),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput input', doc, '.colorinput-container > div:not(.test-sink) input'),
-          sAssertFocusedValue('After pressing <enter> in hex', '#ffffff'),
-          UiFinder.sNotExists(component.element(), '.tox-color-picker-container')
-        ]),
-
-        Log.stepsAsStep('TBA', 'Check that pressing enter on one of them does not submit if disabled', [
-          sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on red', doc, 'label:contains("R") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on green', doc, 'label:contains("G") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on blue', doc, 'label:contains("B") + input'),
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Focus should be on hex', doc, 'label:contains("#") + input'),
-          FocusTools.sSetActiveValue(doc, 'invalid-colour'),
-          Chain.asStep(doc, [
-            FocusTools.cGetFocused,
-            Chain.op((focused) => {
-              component.getSystem().getByDom(focused).each((focusedComp) => {
-                AlloyTriggers.emit(focusedComp, NativeEvents.input());
-              });
-            }),
-            Chain.inject(component.element()),
-            UiFinder.cWaitForVisible('Waiting for button to be disabled', 'button[disabled="disabled"]:contains("Ok")'),
-          ]),
-          Keyboard.sKeydown(doc, Keys.enter(), { }),
-          FocusTools.sTryOnSelector('Focus should be stay on hex because submit is disabled', doc, 'label:contains("#") + input'),
-          UiFinder.sExists(component.element(), '.tox-color-picker-container'),
-          Keyboard.sKeydown(doc, Keys.escape(), { }),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.test-sink) span'),
-          UiFinder.sNotExists(component.element(), '.tox-color-picker-container')
-        ]),
-
-        Log.stepsAsStep('TBA', 'Check that clicking Ok focuses the colorinput input field again, closes the picker, and sets the right value', [
-          sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on red', doc, 'label:contains("R") + input'),
-          FocusTools.sSetFocus('Move focus to hex', component.element(), 'label:contains("#") + input'),
-          FocusTools.sSetActiveValue(doc, 'aaaacc'),
-          Mouse.sClickOn(component.element(), 'button:contains("Ok")'),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput input', doc, '.colorinput-container > div:not(.test-sink) input'),
-          sAssertFocusedValue('After clicking OK', '#aaaacc'),
-          UiFinder.sNotExists(component.element(), '.tox-color-picker-container')
+          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input'),
+          sAssertFocusedValue('After pressing <enter> in hex', '#1abc9c'),
+          UiFinder.sNotExists(component.element(), '.tox-swatches')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that pressing escape inside the picker refocuses the colorinput button', [
           sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on red', doc, 'label:contains("R") + input'),
+          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
           Keyboard.sKeydown(doc, Keys.escape(), { }),
           FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.test-sink) span'),
-          UiFinder.sNotExists(component.element(), '.tox-color-picker-container')
+          UiFinder.sNotExists(component.element(), '.tox-swatches')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [

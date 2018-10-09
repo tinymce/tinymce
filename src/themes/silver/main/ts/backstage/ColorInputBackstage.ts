@@ -3,6 +3,7 @@ import ColorSwatch from '../ui/core/ColorSwatch';
 
 export interface UiFactoryBackstageForColorInput {
   colorPicker: (callback, value) => void;
+  hasCustomColors: () => boolean;
 }
 
 const colorPicker = (editor) => (callback, value) => {
@@ -10,6 +11,11 @@ const colorPicker = (editor) => (callback, value) => {
   dialog(callback, value);
 };
 
+const hasCustomColors = (editor) => (): boolean => {
+  return editor.getParam('custom_colors') !== false;
+};
+
 export const ColorInputBackstage = (editor: Editor): UiFactoryBackstageForColorInput => ({
-  colorPicker: colorPicker(editor)
+  colorPicker: colorPicker(editor),
+  hasCustomColors: hasCustomColors(editor)
 });
