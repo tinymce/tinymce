@@ -12,8 +12,8 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'div.tinymce',
-  plugins: 'table colorpicker',
-  toolbar: 'forecolor backcolor table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
+  plugins: 'table',
+  toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
   media_dimensions: false,
   table_class_list: [
     {title: 'None', value: ''},
