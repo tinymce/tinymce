@@ -4,7 +4,7 @@ Welcome to the Developer Preview!
 
 [Download the preview](https://devpreview.tiny.cloud/download/tinymce.zip)
 
-[Preview documentation](https://tiny.cloud/docs-preview)
+[Preview documentation](https://tiny.cloud/docs-preview/)
 
 [Log feedback](https://github.com/tinymce/tinymce/labels/dev%20preview)
 
