@@ -1,18 +1,18 @@
 import { Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
-import { Merger, Obj, Option, Result, Arr } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { Css } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
-
 import * as Backstage from './backstage/Backstage';
+import ContextToolbar from './ContextToolbar';
 import Events from './Events';
 import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import OuterContainer from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import ContextToolbar from './ContextToolbar';
-import { Css } from '@ephox/sugar';
-import { defaultMinEditorSize } from './api/Settings';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 
 const setup = (editor) => {
   const isInline = editor.getParam('inline', false, 'boolean');
@@ -132,7 +132,7 @@ const setup = (editor) => {
     return { channels };
   };
 
-  const renderUI = function (editor: Editor, args) {
+  const renderUI = function (editor: Editor, targetNode) {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
 
     // Apply Bridge types
@@ -152,16 +152,36 @@ const setup = (editor) => {
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
 
-    // Set height and width if they were given
-    if (args.width && args.width > defaultMinEditorSize) {
-      Css.set(outerContainer.element(), 'width', args.width + 'px');
+    // Set height and width if they were given, though height only applied to iframe mode
+    let width, height, re;
+    const settings = editor.settings;
+    const elm = editor.getElement();
+
+    const DOM = DOMUtils.DOM;
+
+    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
+    height = settings.height || DOM.getStyle(elm, 'height') || Math.max(elm.offsetHeight, 300);
+    const minHeight = getMinHeightSetting(editor);
+    const minWidth = getMinWidthSetting(editor);
+    re = /^[0-9\.]+(|px)$/i;
+
+    if (re.test('' + width)) {
+      width = minWidth.map((mw) => Math.max(parseInt(width, 10), mw)).getOr(width);
     }
-    if (args.height && args.height > defaultMinEditorSize) {
-      Css.set(outerContainer.element(), 'height', args.height + 'px');
+
+    if (re.test('' + height)) {
+      height = minHeight.map((mh) => Math.max(parseInt(height, 10), mh)).getOr(height);
+    }
+
+    if (width) {
+      Css.set(outerContainer.element(), 'width', width + 'px');
+    }
+    if (!editor.inline && height) {
+      Css.set(outerContainer.element(), 'height', height + 'px');
     }
 
     const uiComponents = {mothership, uiMothership, outerContainer};
-    return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
+    return mode.render(editor, uiComponents, rawUiConfig, backstage, elm);
   };
 
   return {mothership, uiMothership, backstage, renderUI, getUi};

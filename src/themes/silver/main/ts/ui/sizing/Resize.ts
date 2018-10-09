@@ -1,6 +1,6 @@
 import { Option, Obj } from '@ephox/katamari';
 import { Css, Element, Height, Width, Traverse } from '@ephox/sugar';
-import { getMinHeightSetting, getMinWidthSetting, getOptMaxHeightSetting, getOptMaxWidthSetting } from '../../api/Settings';
+import { getMinHeightSetting, getMaxHeightSetting, getMinWidthSetting, getMaxWidthSetting } from '../../api/Settings';
 
 interface EditorDimensions {
   height?: number;
@@ -17,35 +17,34 @@ export const calcChromeHeight = (editor) => {
   return containerHeight - contentAreaHeight;
 };
 
-export const calcCappedSize = (originalSize: number, delta: number, minSize: number, maxSizeOpt: Option<number>) => {
+export const calcCappedSize = (originalSize: number, delta: number, minSize: Option<number>, maxSize: Option<number>): number => {
   const newSize = originalSize + delta;
-  if (newSize < minSize) {
-    return minSize;
-  }
-  return maxSizeOpt.fold(() => newSize, (maxSize) => newSize > maxSize ? maxSize : newSize);
+  const minOverride = minSize.filter((min) => newSize < min);
+  const maxOverride = maxSize.filter((max) => newSize > max);
+  return minOverride.or(maxOverride).getOr(newSize);
 };
 
 export const getDimensions = (editor, deltas, resizeType: ResizeTypes, chromeHeight: number, getContainerHeight: () => number, getContainerWidth: () => number) => {
   const dimensions: EditorDimensions = {};
 
-  const getMinHeight = (delta) => {
+  const getMinHeight = (delta): Option<number> => {
     const minEditableHeight = delta < 0 ? 20 : 0;
     const minHeight = getMinHeightSetting(editor);
 
     // if shrinking, keep at least one para height
     if (delta < 0) {
       const minEditorHeight = chromeHeight + minEditableHeight;
-      return minEditorHeight > minHeight ? minEditorHeight : minHeight;
+      return minHeight.filter((mh) => minEditorHeight < mh).or(Option.some(minEditorHeight));
     }
     return minHeight;
   };
 
   const originalHeight = getContainerHeight();
-  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeight(deltas.top()), getOptMaxHeightSetting(editor));
+  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeight(deltas.top()), getMaxHeightSetting(editor));
 
   if (resizeType === ResizeTypes.Both) {
     const originalWidth = getContainerWidth();
-    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(editor), getOptMaxWidthSetting(editor));
+    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
   }
 
   return dimensions;

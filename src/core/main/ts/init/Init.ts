@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Type, Obj } from '@ephox/katamari';
-import PluginManager from '../api/PluginManager';
-import ThemeManager from '../api/ThemeManager';
+import { Obj, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
-import InitContentBody from './InitContentBody';
-import InitIframe from './InitIframe';
-import Tools from '../api/util/Tools';
 import { Editor } from '../api/Editor';
 import { IconManager } from '../api/IconManager';
+import PluginManager from '../api/PluginManager';
+import ThemeManager from '../api/ThemeManager';
+import Tools from '../api/util/Tools';
+import InitContentBody from './InitContentBody';
+import InitIframe from './InitIframe';
 
 const DOM = DOMUtils.DOM;
 
@@ -87,43 +87,8 @@ const initTheme = function (editor) {
 };
 
 const renderFromLoadedTheme = function (editor) {
-  let w, h, minHeight, re, info;
-  const settings = editor.settings;
-  const elm = editor.getElement();
-
-  w = settings.width || DOM.getStyle(elm, 'width') || '100%';
-  h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
-  minHeight = settings.min_height || 100;
-  re = /^[0-9\.]+(|px)$/i;
-
-  if (re.test('' + w)) {
-    w = Math.max(parseInt(w, 10), 100);
-  }
-
-  if (re.test('' + h)) {
-    h = Math.max(parseInt(h, 10), minHeight);
-  }
-
   // Render UI
-  info = editor.theme.renderUI({
-    targetNode: elm,
-    width: w,
-    height: h,
-    deltaWidth: settings.delta_width,
-    deltaHeight: settings.delta_height
-  });
-
-  // Resize editor
-  if (!settings.content_editable) {
-    h = (info.iframeHeight || h) + (typeof h === 'number' ? (info.deltaHeight || 0) : '');
-    if (h < minHeight) {
-      h = minHeight;
-    }
-  }
-
-  info.height = h;
-
-  return info;
+  return editor.theme.renderUI();
 };
 
 const renderFromThemeFunc = function (editor) {
@@ -204,7 +169,7 @@ const init = function (editor) {
   }
 
   // Content editable mode ends here
-  if (settings.content_editable) {
+  if (editor.inline) {
     return InitContentBody.initContentBody(editor);
   } else {
     return InitIframe.init(editor, boxInfo);

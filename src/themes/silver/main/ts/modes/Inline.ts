@@ -9,8 +9,8 @@ import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 
-const render = (editor: Editor, uiComponents, rawUiConfig, backstage, args) => {
-  loadInlineSkin(editor, args);
+const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode) => {
+  loadInlineSkin(editor);
 
   const floatContainer = uiComponents.outerContainer;
   const DOM = DOMUtils.DOM;

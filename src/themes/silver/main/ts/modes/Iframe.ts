@@ -7,10 +7,10 @@ import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 
-const render = (editor: Editor, uiComponents, rawUiConfig, backstage, args) => {
-  loadIframeSkin(editor, args);
+const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode) => {
+  loadIframeSkin(editor);
 
-  Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
+  Attachment.attachSystemAfter(Element.fromDom(targetNode), uiComponents.mothership);
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
   editor.on('init', () => {
@@ -43,7 +43,7 @@ const render = (editor: Editor, uiComponents, rawUiConfig, backstage, args) => {
 
   return {
     iframeContainer: socket.element().dom(),
-    editorContainer: uiComponents.outerContainer.element().dom()
+    editorContainer: uiComponents.outerContainer.element().dom(),
   };
 };
 

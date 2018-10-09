@@ -166,13 +166,13 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   // Setup iframe body
-  if (!skipWrite && !settings.content_editable) {
+  if (!skipWrite && !editor.inline) {
     doc.open();
     doc.write(editor.iframeHTML);
     doc.close();
   }
 
-  if (settings.content_editable) {
+  if (editor.inline) {
     editor.on('remove', function () {
       const bodyEl = this.getBody();
 
@@ -218,7 +218,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     class_filter: settings.class_filter,
     update_styles: true,
     root_element: editor.inline ? editor.getBody() : null,
-    collect: settings.content_editable,
+    collect: () => editor.inline,
     schema: editor.schema,
     onSetAttrib (e) {
       editor.fire('SetAttrib', e);

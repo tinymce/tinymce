@@ -214,7 +214,7 @@ export default function (editor) {
    * See: https://bugs.webkit.org/show_bug.cgi?id=83566
    */
   const inputMethodFocus = function () {
-    if (!editor.settings.content_editable) {
+    if (!editor.inline) {
       // Case 1 IME doesn't initialize if you focus the document
       // Disabled since it was interferring with the cE=false logic
       // Also coultn't reproduce the issue on Safari 9
