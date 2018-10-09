@@ -1,64 +1,70 @@
-import { Css, Element, Height, Width } from '@ephox/sugar';
-import { defaultMaxEditorSize, defaultMinEditAreaHeight, defaultMinEditorSize } from './SizeDefaults';
+import { Option, Obj } from '@ephox/katamari';
+import { Css, Element, Height, Width, Traverse } from '@ephox/sugar';
+import { getMinHeightSetting, getMinWidthSetting, getOptMaxHeightSetting, getOptMaxWidthSetting } from '../../api/Settings';
 
 interface EditorDimensions {
-  height?: string;
-  width?: string;
+  height?: number;
+  width?: number;
 }
 
 export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const calcChromeHeight = (containerHeight: number, contentAreaHeight: number) => {
-  const chromeHeight = containerHeight - contentAreaHeight;
-  return chromeHeight + defaultMinEditAreaHeight();
+export const calcChromeHeight = (editor) => {
+  const containerHeight = editor.getContainer().scrollHeight;
+  const contentAreaHeight = editor.contentAreaContainer.scrollHeight;
+  return containerHeight - contentAreaHeight;
 };
 
-export const calcCappedSize = (originalSize: number, delta: number, minSize: number, maxSize: number) => {
+export const calcCappedSize = (originalSize: number, delta: number, minSize: number, maxSizeOpt: Option<number>) => {
   const newSize = originalSize + delta;
   if (newSize < minSize) {
     return minSize;
-  } else if (newSize > maxSize) {
-    return maxSize;
   }
-  return newSize;
+  return maxSizeOpt.fold(() => newSize, (maxSize) => newSize > maxSize ? maxSize : newSize);
 };
 
-export const getDimensions = (editor, deltas, resizeType, getContainerHeight, getContainerWidth) => {
+export const getDimensions = (editor, deltas, resizeType: ResizeTypes, chromeHeight: number, getContainerHeight: () => number, getContainerWidth: () => number) => {
   const dimensions: EditorDimensions = {};
 
-  const getMinWidthSetting = (): number => editor.getParam('min_width', defaultMinEditorSize(), 'number');
-  const getMinHeightSetting = (): number => editor.getParam('min_height', defaultMinEditorSize(), 'number');
-  const getMaxWidthSetting = (): number => editor.getParam('max_width', defaultMaxEditorSize(), 'number');
-  const getMaxHeightSetting = (): number => editor.getParam('max_height', defaultMaxEditorSize(), 'number');
+  const getMinHeight = (delta) => {
+    const minEditableHeight = delta < 0 ? 20 : 0;
+    const minHeight = getMinHeightSetting(editor);
 
-  const getMinHeight = () => {
-    const containerHeight = editor.getContainer().scrollHeight;
-    const contentAreaHeight = editor.contentAreaContainer.scrollHeight;
-    const chromeSize = calcChromeHeight(containerHeight, contentAreaHeight);
-    const minHeight = getMinHeightSetting();
-    return chromeSize > minHeight ? chromeSize : minHeight;
+    // if shrinking, keep at least one para height
+    if (delta < 0) {
+      const minEditorHeight = chromeHeight + minEditableHeight;
+      return minEditorHeight > minHeight ? minEditorHeight : minHeight;
+    }
+    return minHeight;
   };
 
   const originalHeight = getContainerHeight();
-  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeight(), getMaxHeightSetting()) + 'px';
+  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeight(deltas.top()), getOptMaxHeightSetting(editor));
 
   if (resizeType === ResizeTypes.Both) {
     const originalWidth = getContainerWidth();
-    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(), getMaxWidthSetting()) + 'px';
+    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(editor), getOptMaxWidthSetting(editor));
   }
 
   return dimensions;
 };
 
-export const resize = (editor, deltas, resizeType) => {
+export const resize = (editor, deltas, resizeType: ResizeTypes) => {
   const container = Element.fromDom(editor.getContainer());
+  const chromeHeight = calcChromeHeight(editor);
 
-  const getContainerSize = (dimension, fallback) => Css.getRaw(container, dimension).fold(fallback, (d) => parseInt(d, 10));
-  const getContainerHeight = () => getContainerSize('height', () => Height.get(container));
-  const getContainerWidth = () => getContainerSize('width', () => Width.get(container));
+  const getContainerSize = (dimension: string, fallback: () => number): number => Css.getRaw(container, dimension).fold(fallback, (d) => parseInt(d, 10));
+  const getContainerHeight = (): number => getContainerSize('height', (): number => Height.get(container));
+  const getContainerWidth = (): number => getContainerSize('width', (): number => Width.get(container));
 
-  const dimensions = getDimensions(editor, deltas, resizeType, getContainerHeight, getContainerWidth);
-  Css.setAll(container, dimensions);
+  const dimensions = getDimensions(editor, deltas, resizeType, chromeHeight, getContainerHeight, getContainerWidth);
+  Obj.each(dimensions, (val, dim) => Css.set(container, dim, val + 'px'));
+
+  const iframeOpt = Traverse.firstChild(Element.fromDom(editor.getContentAreaContainer()));
+  if (dimensions.height > 0 && iframeOpt.isSome()) {
+    const iframeHeight = dimensions.height - chromeHeight;
+    iframeOpt.each((iframe) => Css.set(iframe, 'min-height', iframeHeight + 'px'));
+  }
 };

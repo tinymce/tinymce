@@ -1,6 +1,7 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { calcCappedSize, calcChromeHeight, getDimensions, ResizeTypes } from '../../../../main/ts/ui/sizing/Resize';
+import { Option } from '@ephox/katamari';
 
 const mockEditor = (containerHeight, contentAreaHeight) => {
   const settings = {
@@ -20,33 +21,31 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
 };
 
 UnitTest.asynctest('Editor resizing tests', function (success, failure) {
-  const makeChromeSizeTest = (label, containerHeight, contentAreaHeight, expected) => {
-    return Logger.t(label, Step.sync(() => {
-      const actual = calcChromeHeight(containerHeight, contentAreaHeight);
+  const makeChromeHeightTest = (label, containerHeight, contentAreaHeight, expected) => {
+    return Log.step('TBA', label, Step.sync(() => {
+      const chromeHeight = containerHeight - contentAreaHeight;
+      const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
+      const actual = calcChromeHeight(editor);
       Assertions.assertEq('Chrome height should match expected', expected, actual);
     }));
   };
 
   const makeCappedSizeTest = (label, originalSize, delta, minSize, maxSize, expected) => {
     return Logger.t(label, Step.sync(() => {
-      const actual = calcCappedSize(originalSize, delta, minSize, maxSize);
+      const actual = calcCappedSize(originalSize, delta, minSize, Option.some(maxSize));
       Assertions.assertEq('Editor size should match expected', expected, actual);
     }));
   };
 
-  const makeDimensionsTest = (label, containerHeight, topDelta, leftDelta, resizeType, getContainerWidth, expected) => {
+  const makeDimensionsTest = (label: string, containerHeight: number, topDelta: number, leftDelta: number, resizeType: ResizeTypes, getContainerWidth: () => number, expected) => {
     return Logger.t(label, Step.sync(() => {
-      const editor = mockEditor(containerHeight, containerHeight - (containerHeight / 5)); // just need something smaller
+      const chromeHeight = containerHeight / 5; // just need something smaller
+      const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
       const deltas = { top: () => topDelta, left: () => leftDelta };
-      const actual = getDimensions(editor, deltas, resizeType, () => containerHeight, getContainerWidth);
+      const actual = getDimensions(editor, deltas, resizeType, chromeHeight, () => containerHeight, getContainerWidth);
       Assertions.assertEq('Dimensions should match expected', expected, actual);
     }));
   };
-
-  const chromeHeightTests = Log.stepsAsStep('TBA', 'Check editor height allows for at least 150px editable area height', [
-    makeChromeSizeTest('Iframe height < min editable area height', 200, 100, 250),
-    makeChromeSizeTest('Iframe height is > min editable area height', 500, 300, 350)
-  ]);
 
   const cappedSizeTests = Log.stepsAsStep('TBA', 'Check editor size stays within min and max bounds', [
     makeCappedSizeTest('Within bounds', 500, 50, 250, 600, 550),
@@ -59,20 +58,20 @@ UnitTest.asynctest('Editor resizing tests', function (success, failure) {
   ]);
 
   const getDimensionsTests = Log.stepsAsStep('TBA', 'Check the correct dimensions are returned', [
-    makeDimensionsTest('No change', 500, 0, 0, ResizeTypes.Both, () => 500, { height: '500px', width: '500px' }),
-    makeDimensionsTest('Within bounds', 500, 50, 50, ResizeTypes.Both, () => 500, { height: '550px', width: '550px' }),
-    makeDimensionsTest('Height less than minimum, only vertical resize', 500, -500, 0, ResizeTypes.Vertical, () => 500, { height: '400px' }),
-    makeDimensionsTest('Height greater than maximum, only vertical resize', 500, 500, 0, ResizeTypes.Vertical, () => 500, { height: '600px' }),
-    makeDimensionsTest('Height less than minimum, both resize, OK width change', 500, -500, 50, ResizeTypes.Both, () => 500, { height: '400px', width: '550px' }),
-    makeDimensionsTest('Height greater than maximum, both resize, OK width change', 500, 500, 50, ResizeTypes.Both, () => 500, { height: '600px', width: '550px' }),
-    makeDimensionsTest('Width less than minimum, no height change', 500, 0, -500, ResizeTypes.Both, () => 500, { height: '500px', width: '400px' }),
-    makeDimensionsTest('Width more than maximum, no height change', 500, 0, 500, ResizeTypes.Both, () => 500, { height: '500px', width: '600px' }),
-    makeDimensionsTest('Both less than minimum', 500, -500, -500, ResizeTypes.Both, () => 500, { height: '400px', width: '400px' }),
-    makeDimensionsTest('Both more than maximum', 500, 500, 500, ResizeTypes.Both, () => 500, { height: '600px', width: '600px' }),
+    makeDimensionsTest('No change', 500, 0, 0, ResizeTypes.Both, () => 500, { height: 500, width: 500 }),
+    makeDimensionsTest('Within bounds', 500, 50, 50, ResizeTypes.Both, () => 500, { height: 550, width: 550 }),
+    makeDimensionsTest('Height less than minimum, only vertical resize', 500, -500, 0, ResizeTypes.Vertical, () => 500, { height: 400 }),
+    makeDimensionsTest('Height greater than maximum, only vertical resize', 500, 500, 0, ResizeTypes.Vertical, () => 500, { height: 600 }),
+    makeDimensionsTest('Height less than minimum, both resize, OK width change', 500, -500, 50, ResizeTypes.Both, () => 500, { height: 400, width: 550 }),
+    makeDimensionsTest('Height greater than maximum, both resize, OK width change', 500, 500, 50, ResizeTypes.Both, () => 500, { height: 600, width: 550 }),
+    makeDimensionsTest('Width less than minimum, no height change', 500, 0, -500, ResizeTypes.Both, () => 500, { height: 500, width: 400 }),
+    makeDimensionsTest('Width more than maximum, no height change', 500, 0, 500, ResizeTypes.Both, () => 500, { height: 500, width: 600 }),
+    makeDimensionsTest('Both less than minimum', 500, -500, -500, ResizeTypes.Both, () => 500, { height: 400, width: 400 }),
+    makeDimensionsTest('Both more than maximum', 500, 500, 500, ResizeTypes.Both, () => 500, { height: 600, width: 600 }),
   ]);
 
   Pipeline.async({}, [
-    chromeHeightTests,
+    makeChromeHeightTest('Check chrome height is calculated correctly', 200, 100, 100),
     cappedSizeTests,
     getDimensionsTests
   ], function () {
