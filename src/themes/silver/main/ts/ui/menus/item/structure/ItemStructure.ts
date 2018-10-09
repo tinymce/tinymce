@@ -7,6 +7,7 @@ import * as ItemClasses from '../ItemClasses';
 import { renderText, renderShortcut, renderIcon } from './ItemSlices';
 import * as Icons from '../../../icons/Icons';
 import { Types } from '@ephox/bridge';
+import I18n from 'tinymce/core/api/util/I18n';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -66,7 +67,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
       attributes: {
         // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
         // for icon only implementations we need either a title or aria label to satisfy aria requirements.
-        title: label
+        title: I18n.translate(label)
       }
     };
   }).getOr({});

@@ -17,6 +17,7 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import I18n from 'tinymce/core/api/util/I18n';
 
 export interface ButtonFoo {
   name: string;
@@ -55,8 +56,8 @@ const renderCommon = (spec, action, extraBehaviours = [], dom, components): Sket
 
 export const renderIconButton = (spec: IconButtonFoo, action, icons: IconProvider, extraBehaviours = []): SketchSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
-    'aria-label': tooltip,
-    'title': tooltip
+    'aria-label': I18n.translate(tooltip),
+    'title': I18n.translate(tooltip)
   })).getOr({});
   const dom = {
     tag: 'button',
@@ -76,7 +77,7 @@ export const renderButton = (spec: ButtonFoo, action, extraBehaviours = []): Ske
   const dom = {
     tag: 'button',
     classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    innerHtml: spec.text
+    innerHtml: I18n.translate(spec.text)
   };
   const components = [];
   return renderCommon(spec, action, extraBehaviours, dom, components);

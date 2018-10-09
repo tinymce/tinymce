@@ -12,7 +12,6 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
-import I18n from 'tinymce/core/api/util/I18n';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -62,7 +61,7 @@ const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = styleValue === 'default' ? '' : styleValue;
-        const displayText = I18n.translate(styleValueToText(styleValue));
+        const displayText = styleValueToText(styleValue);
         return {
           type: 'choiceitem',
           value: itemValue,
@@ -104,8 +103,8 @@ const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
 };
 
 const register = function (editor) {
-  addControl(editor, 'numlist', I18n.translate('Numbered list'), 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
-  addControl(editor, 'bullist', I18n.translate('Bullet list'), 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
+  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
+  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
 export default {
