@@ -1,5 +1,5 @@
-import { Cell, Arr, Option } from '@ephox/katamari';
-import { Objects } from '@ephox/boulder';
+import { Arr, Cell, Option } from '@ephox/katamari';
+import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/FormattingSettings';
 import { FormatItem } from '../ui/core/complex/BespokeSelect';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
 
@@ -7,49 +7,6 @@ const flatten = (fmt): string[] => {
   const subs = fmt.items;
   return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
 };
-
-const defaultStyleFormats = [
-  {
-    title: 'Headings', items: [
-      { title: 'Heading 1', format: 'h1' },
-      { title: 'Heading 2', format: 'h2' },
-      { title: 'Heading 3', format: 'h3' },
-      { title: 'Heading 4', format: 'h4' },
-      { title: 'Heading 5', format: 'h5' },
-      { title: 'Heading 6', format: 'h6' }
-    ]
-  },
-
-  {
-    title: 'Inline', items: [
-      { title: 'Bold', icon: 'bold', format: 'bold' },
-      { title: 'Italic', icon: 'italic', format: 'italic' },
-      { title: 'Underline', icon: 'underline', format: 'underline' },
-      { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
-      { title: 'Superscript', icon: 'superscript', format: 'superscript' },
-      { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-      { title: 'Code', icon: 'code', format: 'code' }
-    ]
-  },
-
-  {
-    title: 'Blocks', items: [
-      { title: 'Paragraph', format: 'p' },
-      { title: 'Blockquote', format: 'blockquote' },
-      { title: 'Div', format: 'div' },
-      { title: 'Pre', format: 'pre' }
-    ]
-  },
-
-  {
-    title: 'Alignment', items: [
-      { title: 'Left', icon: 'align-left', format: 'alignleft' },
-      { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-      { title: 'Right', icon: 'align-right', format: 'alignright' },
-      { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
-    ]
-  }
-];
 
 export const init = (editor) => {
   const isSelectedFor = (format) => {
@@ -80,10 +37,9 @@ export const init = (editor) => {
   const replaceSettings = Cell(false);
 
   editor.on('init', () => {
-    const formats = Objects.readOptFrom(editor.settings, 'style_formats').getOr(defaultStyleFormats);
+    const formats = getStyleFormats(editor);
     const enriched = FormatRegister.register(editor, formats, isSelectedFor, getPreviewFor);
     settingsFormats.set(enriched);
-
     settingsFlattenedFormats.set(
       Arr.bind(enriched, flatten)
     );
