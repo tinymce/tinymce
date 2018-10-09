@@ -1,4 +1,4 @@
-import { Range } from '@ephox/dom-globals';
+import { Range, Document } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option } from '@ephox/katamari';
 import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse, Html } from '@ephox/sugar';
 import { AnnotatorSettings } from 'tinymce/core/annotate/AnnotationsRegistry';
@@ -33,8 +33,8 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const makeAnnotation = ({ uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): Element => {
-  const master = Element.fromTag('span');
+const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): Element => {
+  const master = Element.fromTag('span', eDoc);
   Class.add(master, Markings.annotation());
   Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
   Attr.set(master, `${Markings.dataAnnotation()}`, annotationName);
@@ -50,7 +50,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const newWrappers = [ ];
 
   // Setup the spans for the comments
-  const master = makeAnnotation(data, annotationName, decorate);
+  const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
   const wrapper = Cell(Option.none());
@@ -125,7 +125,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
     if (editor.selection.getRng().collapsed)  {
-      const wrapper = makeAnnotation(data, name, settings.decorate);
+      const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, '\u00A0');
       editor.selection.getRng().insertNode(wrapper.dom());
