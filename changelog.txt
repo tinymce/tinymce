@@ -1,5 +1,5 @@
 Version 5.0.0-preview-2 (TBD)
-
+    Added fontformats and fontsizes menu items
     Fixed preview iframe not expanding to the dialog size #AP-252
     Fixed 'meta' shortcuts not translated into platform-specific text #AP-270
     Fixed tabbed dialogs (Charmap and Emoticons) shrinking when no search results returned

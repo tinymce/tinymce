@@ -1,7 +1,7 @@
 import { AlloyTriggers } from '@ephox/alloy';
 import { Option, Arr } from '@ephox/katamari';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createSelectButton } from './BespokeSelect';
+import { createSelectButton, createMenuItems } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
@@ -22,7 +22,7 @@ const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
   'Webdings=webdings;' +
   'Wingdings=wingdings,zapf dingbats';
 
-const createFontSelect = (editor, backstage) => {
+const getSpec = (editor) => {
   const getMatchingValue = (): Option<{ title: string, format: string }> => {
     const getFirstFont = (fontFamily) => {
       return fontFamily ? fontFamily.split(',')[0] : '';
@@ -75,12 +75,29 @@ const createFontSelect = (editor, backstage) => {
 
   const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
 
-  return createSelectButton(editor, backstage, dataset, {
+  return {
     isSelectedFor,
     getPreviewFor,
     onAction,
-    nodeChangeHandler
-  });
+    nodeChangeHandler,
+    dataset
+  };
 };
 
-export { createFontSelect };
+const createFontSelect = (editor, backstage) => {
+  const spec = getSpec(editor);
+  return createSelectButton(editor, backstage, spec.dataset, spec);
+};
+
+// TODO: Test this!
+const fontSelectMenu = (editor, backstage) => {
+  const spec = getSpec(editor);
+  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  return {
+    type: 'menuitem',
+    text: 'Fonts',
+    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
+  };
+};
+
+export { createFontSelect, fontSelectMenu };
