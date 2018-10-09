@@ -1,27 +1,33 @@
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Arr } from '@ephox/katamari';
 
-export interface UserFormats {
-  title: string;
-  block: string;
-}
+// TODO AP-393: Full list of styles properly
+// somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
+// export type AllowedFormats = Separator | DirectFormat | BlockFormat | NestedFormatting
 
-export interface BlockToFormat {
-  title: string;
-  format: string;
-}
+// export type Separator = {
+//   title: string;
+// };
 
-export interface NestedFormatting {
-  title: string;
-  items: {
-    title: string;
-    format: string;
-    icon?: string;
-  }[];
-}
+// export type DirectFormat = {
+//   title: string;
+//   format: string;
+//   icon?: string;
+// }
 
-export const defaultStyleFormats: NestedFormatting[] = [
+// export type BlockFormat = {
+//   title: string;
+//   block: string;
+//   icon?: string;
+// }
+
+// export type NestedFormatting = {
+//   title: string;
+//   items: Array<DirectFormat | BlockFormat>;
+// }
+
+export const defaultStyleFormats = [
   {
     title: 'Headings', items: [
       { title: 'Heading 1', format: 'h1' },
@@ -64,14 +70,19 @@ export const defaultStyleFormats: NestedFormatting[] = [
   }
 ];
 
-const blockToFormat = (userFormats: UserFormats[]): BlockToFormat[] => {
+export const getUserFormats = (editor: Editor) => Objects.readOptFrom(editor.settings, 'style_formats');
+
+const blockToFormat = (userFormats: any[]): any[] => {
   return Arr.map(userFormats, (fmt) => {
-    return { title: fmt.title, format: fmt.block };
+    // TODO AP-393: support the full API
+    return fmt.items ?
+      { title: fmt.title, items: blockToFormat(fmt.items) }
+      : fmt.block ? { title: fmt.title, format: fmt.block } // This is needed because StyleSelect only checks for `format` to apply
+        : fmt;
   });
 };
 
-export const getUserFormats = (editor: Editor) => Objects.readOptFrom(editor.settings, 'style_formats');
 
-export const getStyleFormats = (editor: Editor): BlockToFormat[] | NestedFormatting[] => {
-  return getUserFormats(editor).map<BlockToFormat[] | NestedFormatting[]>(blockToFormat).getOr(defaultStyleFormats);
+export const getStyleFormats = (editor: Editor): any[] => {
+  return getUserFormats(editor).map(blockToFormat).getOr(defaultStyleFormats);
 };
