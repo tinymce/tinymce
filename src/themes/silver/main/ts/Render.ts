@@ -1,8 +1,10 @@
 import { Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
-import { Css, Width } from '@ephox/sugar';
+import { Css } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
+import { getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -11,8 +13,6 @@ import Inline from './modes/Inline';
 import OuterContainer from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 
 const setup = (editor) => {
   const isInline = editor.getParam('inline', false, 'boolean');
