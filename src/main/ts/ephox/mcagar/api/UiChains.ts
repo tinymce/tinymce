@@ -1,10 +1,11 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { Fun, Merger, Result } from '@ephox/katamari';
+import { Fun, Merger, Result, Arr } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
-import { DefaultThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { isSilver } from '../versions/Versioning';
 
-const selectors: ThemeSelectors = DefaultThemeSelectors;
+const selectors: ThemeSelectors = getThemeSelectors();
 
 var dialogRoot = Element.fromDom(document.body);
 
@@ -28,12 +29,8 @@ var cGetMenuRoot = Chain.fromChains([
   UiFinder.cFindIn(selectors.menuBarSelector)
 ]);
 
-var cFindIn = function (cRoot, selector: string) {
-  return Chain.fromChains([
-    cRoot,
-    UiFinder.cFindIn(selector)
-  ]);
-};
+const getDialogData = (dialog) => isSilver() ? dialog.getData() : dialog.toJSON();
+const setDialogData = (dialog, data) => isSilver() ? dialog.setData(data) : dialog.fromJSON(data);
 
 var cClickOnWithin = function (label: string, selector: string, cContext) {
     return NamedChain.asChain([
@@ -96,8 +93,15 @@ var cTriggerContextMenu = function (label: string, target, menu) {
 
 var cDialogByPopup = Chain.binder(function (input: any) {
   var wins = input.editor.windowManager.getWindows();
-  // TODO: fix this to work properly with alloy dialogs
-  return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
+  if (isSilver()) {
+    // TODO: t5 dialogs don't have ids, so just grabbing the first one. FIX!
+    return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
+  }
+  var popupId = input.popupNode.dom().id;
+  var dialogs =  Arr.filter(wins, function (dialog) {
+    return popupId === dialog._id;
+  });
+  return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
 });
 
 var cWaitForDialog = function (selector: string) {
@@ -114,7 +118,7 @@ var cAssertDialogContents = function (selector: string, data) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
     NamedChain.direct('dialog', Chain.op(function (dialog) {
-      Assertions.assertEq('asserting contents of: ' + selector, data, dialog.getData());
+      Assertions.assertEq('asserting contents of: ' + selector, data, getDialogData(dialog));
     }), '_'),
     NamedChain.outputInput
   ]);
@@ -128,7 +132,7 @@ var cFillDialog = function (selector: string, data) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
     NamedChain.direct('dialog', Chain.op(function (dialog) {
-      dialog.setData(Merger.merge(dialog.getData(), data));
+      setDialogData(dialog, Merger.merge(getDialogData(dialog), data));
     }), '_'),
     NamedChain.outputInput
   ]);

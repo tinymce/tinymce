@@ -1,18 +1,31 @@
-import 'tinymce';
+import { isModern } from "../versions/Versioning";
 
-declare const tinymce: any;
-
-export interface ThemeSelectors {
+interface ThemeSelectors {
   toolBarSelector: string;
   menuBarSelector: string;
   dialogCloseSelector: string;
   dialogSubmitSelector: string;
 }
 
-// First selector is T4, second is T5
-export const DefaultThemeSelectors: ThemeSelectors = {
-  toolBarSelector:'.mce-toolbar-grp, .tox-toolbar',
-  menuBarSelector: '.mce-menubar, .tox-menubar',
-  dialogCloseSelector: 'div[role="button"]:contains(Cancel), .tox-button:contains("Cancel")',
-  dialogSubmitSelector:'div[role="button"].mce-primary, .tox-button:contains("Ok")'
+const ModernThemeSelectors: ThemeSelectors = {
+  toolBarSelector:'.mce-toolbar-grp',
+  menuBarSelector: '.mce-menubar',
+  dialogCloseSelector: 'div[role="button"]:contains(Cancel)',
+  dialogSubmitSelector:'div[role="button"].mce-primary'
 };
+
+const SilverThemeSelectors: ThemeSelectors = {
+  toolBarSelector:'.tox-toolbar',
+  menuBarSelector: '.tox-menubar',
+  dialogCloseSelector: '.tox-button:contains("Cancel")',
+  dialogSubmitSelector: '.tox-button:contains("Ok")'
+};
+
+const getThemeSelectors = (): ThemeSelectors => {
+  return isModern() ? ModernThemeSelectors : SilverThemeSelectors;
+}
+
+export {
+  ThemeSelectors,
+  getThemeSelectors
+}
