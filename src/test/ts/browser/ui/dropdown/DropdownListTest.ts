@@ -303,7 +303,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         'Closing the dropdown should hide the menu. Currently, it will not shift focus.',
         GeneralSteps.sequence([
           Step.sync(() => {
-            Focus.focus(inputForFocus.element())
+            Focus.focus(inputForFocus.element());
           }),
           Step.sync(() => {
             Dropdown.close(component);

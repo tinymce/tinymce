@@ -7,6 +7,8 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { Element } from '@ephox/sugar';
+import { AnchorLayout } from '../../positioning/layout/Layout';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
@@ -22,6 +24,10 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   lazySink: () => Option<() => Result<AlloyComponent, Error>>;
   // TODO test getHotspot
   getHotspot: () => (comp: AlloyComponent) => Option<AlloyComponent>;
+  layouts: () => Option<{
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
+  }>;
   matchWidth: () => boolean;
   useMinWidth: () => boolean;
   sandboxClasses: () => string[];
@@ -53,6 +59,10 @@ export interface DropdownSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  layouts?: Option<{
+    onLtr: (elem: Element) => AnchorLayout[];
+    onRtl: (elem: Element) => AnchorLayout[];
+  }>;
 
   toggleClass: string;
   lazySink?: any;

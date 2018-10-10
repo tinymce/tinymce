@@ -23,7 +23,12 @@ export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const ourHotspot = detail.getHotspot()(component).getOr(component);
-  return { anchor: 'hotspot', hotspot: ourHotspot };
+  const anchor: 'hotspot' = 'hotspot';
+  return detail.layouts().fold(() => {
+    return { anchor, hotspot: ourHotspot };
+  }, (layouts) => {
+    return { anchor, hotspot: ourHotspot, layouts };
+  });
 };
 
 const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
