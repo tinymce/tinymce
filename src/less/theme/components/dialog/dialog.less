@@ -156,6 +156,8 @@
   flex: 1;
   // TODO (verify max-height for dialogs)
   max-height: 650px;
+  //overflow controls all scrolling in the dialogs
+  overflow: auto;
 
   > * {
     margin-bottom: 0;
@@ -233,4 +235,34 @@
 // the blocking div for dialogs
 .tox-dialog-blocker-wrap {
   //
+}
+
+.tox-dialog__table {
+  border-collapse: collapse;
+
+  thead {
+    th {
+      font-weight: @font-weight-bold;
+      padding-top: @pad-sm;
+    }
+
+    tr {
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: @dialog-border-width @dialog-border-style @dialog-border-color;
+    }
+
+    tr:last-child {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    padding-bottom: @pad-sm;
+    padding-top: @pad-sm;
+  }
 }
