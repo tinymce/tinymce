@@ -1,6 +1,6 @@
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { Option, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-
+import EditorManager from 'tinymce/core/api/EditorManager';
 const getSkinUrl = function (editor: Editor): string {
   const settings = editor.settings;
   const skin = settings.skin;
@@ -23,7 +23,9 @@ const isSkinDisabled = function (editor: Editor) {
   return editor.settings.skin === false;
 };
 
-export {
-  getSkinUrl,
-  isSkinDisabled
-};
+const getMinWidthSetting = (editor): Option<number> => Option.from(editor.settings.min_width).filter(Type.isNumber);
+const getMinHeightSetting = (editor): Option<number> => Option.from(editor.settings.min_height).filter(Type.isNumber);
+const getMaxWidthSetting = (editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
+const getMaxHeightSetting = (editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
+
+export { getSkinUrl, isSkinDisabled, getMinWidthSetting, getMinHeightSetting, getMaxWidthSetting, getMaxHeightSetting };

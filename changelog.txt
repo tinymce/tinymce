@@ -1,4 +1,5 @@
 Version 5.0.0-preview-2 (TBD)
+    Changed `height` configuration to apply to the editor frame (including menubar, toolbar, status bar) instead of the content area #AP-324
     Added fontformats and fontsizes menu items
     Fixed preview iframe not expanding to the dialog size #AP-252
     Fixed 'meta' shortcuts not translated into platform-specific text #AP-270

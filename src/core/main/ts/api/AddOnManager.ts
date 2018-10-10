@@ -30,7 +30,7 @@ import { Editor } from 'tinymce/core/api/Editor';
  *
  * @method renderUI
  * @param {Object} obj Object parameter containing the targetNode DOM node that will be replaced visually with an editor instance.
- * @return {Object} an object with items like iframeContainer, editorContainer, sizeContainer, deltaWidth, deltaHeight.
+ * @return {Object} an object with items like iframeContainer, editorContainer, sizeContainer.
  */
 
 /**

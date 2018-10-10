@@ -81,7 +81,7 @@ const hasInlineFocus = (editor: Editor) => {
 const hasFocus = (editor: Editor) => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 
 const focusEditor = (editor: Editor) => {
-  const selection: Selection = editor.selection, contentEditable = editor.settings.content_editable;
+  const selection: Selection = editor.selection;
   const body = editor.getBody();
   let rng = selection.getRng();
 
@@ -104,7 +104,7 @@ const focusEditor = (editor: Editor) => {
   }
 
   // Focus the window iframe
-  if (!contentEditable) {
+  if (!editor.inline) {
     // WebKit needs this call to fire focusin event properly see #5948
     // But Opera pre Blink engine will produce an empty selection so skip Opera
     if (!Env.opera) {
@@ -115,7 +115,7 @@ const focusEditor = (editor: Editor) => {
   }
 
   // Focus the body as well since it's contentEditable
-  if (Env.gecko || contentEditable) {
+  if (Env.gecko || editor.inline) {
     focusBody(body);
     normalizeSelection(editor, rng);
   }
