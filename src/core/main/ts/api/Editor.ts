@@ -22,8 +22,6 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
 import * as Mode from '../Mode';
-import Sidebar from '../ui/Sidebar';
-import Uuid from '../util/Uuid';
 import { AddOnManager } from './AddOnManager';
 import DomQuery from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -571,25 +569,8 @@ Editor.prototype = {
    */
 
   addButton (name: string, settings: Partial<AddButtonSettings>) {
-    const self = this;
-
-    if (settings.cmd) {
-      settings.onclick = function () {
-        self.execCommand(settings.cmd);
-      };
-    }
-
-    if (settings.stateSelector && typeof settings.active === 'undefined') {
-      settings.active = false;
-    }
-
-    if (!settings.text && !settings.icon) {
-      settings.icon = name;
-    }
-
-    self.buttons = self.buttons;
-    settings.tooltip = settings.tooltip || settings.title;
-    self.buttons[name] = settings;
+    // tslint:disable:no-console
+    console.error('editor.addButton is deprecated in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
   },
 
   /**
@@ -599,7 +580,7 @@ Editor.prototype = {
    * @param {String} name Sidebar name to add.
    * @param {Object} settings Settings object with icon, onshow etc.
    * @example
-   * // Adds a custom sidebar that when clicked logs the panel element
+   * // Adds a custom sidebar that when clicked warns the panel element
    * tinymce.init({
    *    ...
    *    setup: function(ed) {
@@ -614,7 +595,8 @@ Editor.prototype = {
    * });
    */
   addSidebar (name: string, settings: SidebarSettings) {
-    return Sidebar.add(this, name, settings);
+    // tslint:disable:no-console
+    console.error('editor.addSidebar is deprecated in tinymce 5x, use editor.ui.registry.addSidebar instead');
   },
 
   /**
@@ -643,16 +625,8 @@ Editor.prototype = {
    * });
    */
   addMenuItem (name: string, settings: AddMenuItem) {
-    const self = this;
-
-    if (settings.cmd) {
-      settings.onclick = function () {
-        self.execCommand(settings.cmd);
-      };
-    }
-
-    self.menuItems = self.menuItems;
-    self.menuItems[name] = settings;
+    // tslint:disable:no-console
+    console.error('editor.addMenuItem is deprecated in tinymce 5x, use editor.ui.registry.addMenuItem instead');
   },
 
   /**
@@ -663,24 +637,8 @@ Editor.prototype = {
    * @param {String} items String comma separated with items to add to the context toolbar.
    */
   addContextToolbar (predicate: (any) => boolean | string, items: string) {
-    const self = this;
-    let selector;
-
-    self.contextToolbars = self.contextToolbars || [];
-
-    // Convert selector to predicate
-    if (typeof predicate === 'string') {
-      selector = predicate;
-      predicate = function (elm): boolean {
-        return self.dom.is(elm, selector);
-      };
-    }
-
-    self.contextToolbars.push({
-      id: Uuid.uuid('mcet'),
-      predicate,
-      items
-    });
+    // tslint:disable:no-console
+    console.error('editor.addContextToolbar is deprecated in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   },
 
   /**
