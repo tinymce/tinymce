@@ -61,7 +61,7 @@ const factories: Record<string, FormPartRenderer> = {
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make(renderDialogButton),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
-  colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared)),
+  colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
   dropzone: make(renderDropZone),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),

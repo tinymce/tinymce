@@ -9,6 +9,7 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { IconProvider } from '../ui/icons/Icons';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import { UiFactoryBackstageForColorInput, ColorInputBackstage } from './ColorInputBackstage';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -36,6 +37,7 @@ export interface UiFactoryBackstage {
   urlinput?: UiFactoryBackstageForUrlInput;
   styleselect?: UiFactoryBackstageForStyleButton;
   shared?: UiFactoryBackstageShared;
+  colorinput?: UiFactoryBackstageForColorInput;
 }
 
 const init = (container, sink, editor) => {
@@ -95,7 +97,8 @@ const init = (container, sink, editor) => {
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),
-    styleselect: initStyleFormatBackstage(editor)
+    styleselect: initStyleFormatBackstage(editor),
+    colorinput: ColorInputBackstage(editor)
   };
 
   return backstage;

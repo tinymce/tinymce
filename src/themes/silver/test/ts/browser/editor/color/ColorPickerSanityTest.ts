@@ -4,11 +4,11 @@ import { TinyLoader } from '@ephox/mcagar';
 
 import 'tinymce/themes/silver/Theme';
 
-import Dialog from '../../../main/ts/ui/Dialog';
 import { Element, SelectorFilter } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
+import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
 
-UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', (success, failure) => {
+UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   // mutation is yummy
   let currentColor = '';
 
@@ -37,7 +37,8 @@ UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', 
   const sOpenDialog = (editor, docBody) => {
     return GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
       Step.sync(function () {
-        Dialog.open(editor, setColor, '#ffffff');
+        const dialog = ColorSwatch.colorPickerDialog(editor);
+        dialog(setColor, '#ffffff');
       }),
       UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
     ]));

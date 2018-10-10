@@ -9,12 +9,9 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
 
-PluginManager.add('textcolor', function (editor) {
-  Commands.register(editor);
-  Buttons.register(editor);
+PluginManager.add('textcolor', function () {
+  console.warn('Text color plugin is now built in to the core editor, please remove it from your editor configuration');
 });
 
 export default function () { }

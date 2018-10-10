@@ -2,15 +2,12 @@ import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
+import 'tinymce/themes/silver/Theme';
 import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', (success, failure) => {
+UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
   const browser = PlatformDetection.detect().browser;
 
-  Theme();
-  TextcolorPlugin();
   const forecolorStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
@@ -76,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', (
       ])
     ], onSuccess, onFailure);
   }, {
-    plugins: 'textcolor',
+    plugins: '',
     toolbar: 'forecolor backcolor fontsizeselect',
     skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
