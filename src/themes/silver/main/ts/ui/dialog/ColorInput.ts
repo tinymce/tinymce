@@ -25,7 +25,7 @@ import { renderPanelButton } from '../general/PanelButton';
 import { renderLabel } from '../alien/FieldLabeller';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 
-import ColorSwatch from '../core/ColorSwatch';
+import ColorSwatch from '../core/color/ColorSwatch';
 
 const colorInputChangeEvent = Id.generate('color-change');
 const colorSwatchChangeEvent = Id.generate('hex-change');

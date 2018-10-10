@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
-import ColorSwatch from '../../../../../main/ts/ui/core/ColorSwatch';
+import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;

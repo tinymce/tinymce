@@ -2,7 +2,7 @@ import Align from './Align';
 import SimpleControls from './SimpleControls';
 import UndoRedo from './UndoRedo';
 import VisualAid from './VisualAid';
-import ColorSwatch from './ColorSwatch';
+import ColorSwatch from './color/ColorSwatch';
 
 /**
  * FormatControls.js

@@ -2,7 +2,7 @@ import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import ColorSwatch from '../../../../../main/ts/ui/core/ColorSwatch';
+import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   const sAssertColors = function (input, expected) {

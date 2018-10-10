@@ -1,6 +1,7 @@
 import { Cell } from '@ephox/katamari';
 
 import { Menu, Toolbar } from '@ephox/bridge';
+import Settings from './Settings';
 
 const getCurrentColor = function (editor, format) {
   let color;
@@ -14,10 +15,6 @@ const getCurrentColor = function (editor, format) {
   });
 
   return color;
-};
-
-const hasCustomColors = (editor) => {
-  return editor.getParam('custom_colors') !== false;
 };
 
 const choiceItem: 'choiceitem' = 'choiceitem';
@@ -103,7 +100,7 @@ const calcCols = (colors) => {
 const getColorCols = function (editor) {
   const colors = currentColors.get();
   const defaultCols = calcCols(colors.length);
-  return editor.getParam('color_cols', defaultCols);
+  return Settings.getColorCols(editor, defaultCols);
 };
 
 const getIcon = (color: string) => {
@@ -179,7 +176,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: getFetch(hasCustomColors(editor)), // TODO: Setting for this, maybe 'custom_colors'?
+      fetch: getFetch(Settings.hasCustomColors(editor)), // TODO: Setting for this, maybe 'custom_colors'?
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
@@ -269,4 +266,4 @@ const register = (editor) => {
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
 };
 
-export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols, hasCustomColors };
+export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols };

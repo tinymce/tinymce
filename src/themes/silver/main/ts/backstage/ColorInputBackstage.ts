@@ -1,5 +1,6 @@
 import { Editor } from '../../../../../core/main/ts/api/Editor';
-import ColorSwatch from '../ui/core/ColorSwatch';
+import ColorSwatch from '../ui/core/color/ColorSwatch';
+import Settings from '../ui/core/color/Settings';
 
 export interface UiFactoryBackstageForColorInput {
   colorPicker: (callback, value) => void;
@@ -12,7 +13,7 @@ const colorPicker = (editor) => (callback, value) => {
 };
 
 const hasCustomColors = (editor) => (): boolean => {
-  return editor.getParam('custom_colors') !== false;
+  return Settings.hasCustomColors(editor);
 };
 
 export const ColorInputBackstage = (editor: Editor): UiFactoryBackstageForColorInput => ({
