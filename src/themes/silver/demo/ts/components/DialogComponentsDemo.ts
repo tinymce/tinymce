@@ -174,7 +174,7 @@ export default () => {
     name: 'colorinput-demo',
     colspan: Option.none(),
     label: Option.some('Color input label')
-  }, sharedBackstage);
+  }, sharedBackstage, helpers.extras.backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
     type: 'colorpicker',

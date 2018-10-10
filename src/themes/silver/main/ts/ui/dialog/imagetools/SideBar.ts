@@ -51,7 +51,7 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__toolbar']
+      classes: [ 'tox-image-tools__toolbar', 'tox-image-tools__sidebar']
     },
     components: [
       memUndo.asSpec(),

@@ -11,12 +11,10 @@ import {
   Representing,
   SimpleSpec,
   AlloySpec,
-  Keying,
   Composing,
-  Disabling,
-  SystemEvents,
   Tabstopping,
   Focusing,
+  Layout,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Result, Option } from '@ephox/katamari';
@@ -24,22 +22,23 @@ import { Css, Element, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { renderPanelButton } from '../general/PanelButton';
-import { renderColorPicker } from './ColorPicker';
 import { renderLabel } from '../alien/FieldLabeller';
-import { renderButton } from '../general/Button';
+import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 
-const colorChangeEvent = Id.generate('color-change');
-const hexChangeEvent = Id.generate('hex-change');
+import ColorSwatch from '../core/color/ColorSwatch';
 
-interface ColorChangeEvent extends CustomEvent {
+const colorInputChangeEvent = Id.generate('color-change');
+const colorSwatchChangeEvent = Id.generate('hex-change');
+
+interface ColorInputChangeEvent extends CustomEvent {
   color: () => string;
 }
 
-interface HexChangeEvent extends CustomEvent {
-  hex: () => string;
+interface ColorSwatchChangeEvent extends CustomEvent {
+  value: () => string;
 }
 
-export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
+export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
     inputClasses: ['tox-textfield'],
@@ -58,7 +57,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
             // onValid should pass through the value here
             // We need a snapshot of the value validated.
             const val = Representing.getValue(comp);
-            AlloyTriggers.emitWith(comp, colorChangeEvent, {
+            AlloyTriggers.emitWith(comp, colorInputChangeEvent, {
               color: val
             });
           }
@@ -90,49 +89,27 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
 
   const pLabel: Option<AlloySpec> = spec.label.map(renderLabel);
 
-  const memColorPicker = Memento.record(
-    renderColorPicker({
-      type: 'colorpicker',
-      name: spec.name + '-picker',
-      label: Option.none(),
-      colspan: Option.none()
-    })
-  );
+  const emitSwatchChange = (colorBit, value) => {
+    AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
+      value
+    });
+  };
 
-  const memSubmitButton = Memento.record(
-    renderButton({
-      name: 'ok',
-      text: 'Ok',
-      primary: true,
-      disabled: false
-    }, (api) => {
-      memColorPicker.getOpt(api).fold(() => {
-        console.error('could not find color picker');
-      },
-        (picker) => {
-          Composing.getCurrent(picker).each((pickerForm) => {
-            const hex = Representing.getValue(pickerForm);
-            memColorButton.getOpt(pickerForm).each((colorBit) => {
-              AlloyTriggers.emitWith(colorBit, hexChangeEvent, {
-                hex
-              });
-            });
-            AlloyTriggers.emit(api, SystemEvents.sandboxClose());
-          });
-        });
-    })
-  );
-
-  const onChange = (item, details) => {
-    if (details.event().name() === 'hex-valid') {
-      memSubmitButton.getOpt(item).each((button) => {
-        if (details.event().value()) {
-          Disabling.enable(button);
+  const onItemAction = (value) => {
+    sharedBackstage.getSink().each((sink) => {
+      memColorButton.getOpt(sink).each((colorBit) => {
+        if (value === 'custom') {
+          colorInputBackstage.colorPicker((value) => {
+            emitSwatchChange(colorBit, value);
+            ColorSwatch.addColor(value);
+          }, '#ffffff');
+        } else if (value === 'remove') {
+          emitSwatchChange(colorBit, '');
         } else {
-          Disabling.disable(button);
+          emitSwatchChange(colorBit, value);
         }
       });
-    }
+    });
   };
 
   const memColorButton = Memento.record(
@@ -140,43 +117,13 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
       dom: {
         tag: 'span'
       },
-      getHotspot: (button) => {
-        const prevSibling = Traverse.prevSibling(button.element());
-        return prevSibling.bind((s) => {
-          return button.getSystem().getByDom(s).toOption();
-        });
-      },
-      components: [],
-      fetch: ((callback) => {
-        callback({
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            memColorPicker.asSpec(),
-            memSubmitButton.asSpec()
-          ],
-          behaviours: Behaviour.derive([
-            Keying.config({
-              mode: 'cyclic'
-            }),
-
-            AddEventsBehaviour.config('redirect-enter-to-submit', [
-              AlloyEvents.runOnExecute((comp, se) => {
-                // If the submit button isn't disabled, redirect pressing <enter>
-                // on an input to the submit button
-                memSubmitButton.getOpt(comp).each((submit) => {
-                  // NOTE: Disabling makes components ignore execute if disabled
-                  AlloyTriggers.emitExecute(submit);
-                  // We want to stop the execute regardless of whether the button is disabled.
-                  se.stop();
-                });
-              })
-            ])
-          ])
-        });
+      layouts: Option.some({
+        onRtl: () => [ Layout.southeast ],
+        onLtr: () => [ Layout.southwest ]
       }),
-      onChange
+      components: [],
+      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors()),
+      onItemAction
     }, sharedBackstage)
   );
 
@@ -200,14 +147,14 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
 
     fieldBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('form-field-events', [
-        AlloyEvents.run<ColorChangeEvent>(colorChangeEvent, (comp, se) => {
+        AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
           memColorButton.getOpt(comp).each((colorButton) => {
             Css.set(colorButton.element(), 'background-color', se.event().color());
           });
         }),
-        AlloyEvents.run<HexChangeEvent>(hexChangeEvent, (comp, se) => {
+        AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
           FormField.getField(comp).each((field) => {
-            Representing.setValue(field, se.event().hex());
+            Representing.setValue(field, se.event().value());
             // Focus the field now that we've set its value
             Composing.getCurrent(comp).each(Focusing.focus);
           });

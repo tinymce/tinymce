@@ -1,24 +1,30 @@
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Arr, Option } from '@ephox/katamari';
 
-export interface UserFormats {
+// TODO AP-393: Full list of styles properly
+// somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
+export type AllowedFormats = Separator | DirectFormat | BlockFormat | NestedFormatting;
+
+export interface Separator {
   title: string;
-  block: string;
 }
 
-export interface BlockToFormat {
+export interface DirectFormat {
   title: string;
   format: string;
+  icon?: string;
+}
+
+export interface BlockFormat {
+  title: string;
+  block: string;
+  icon?: string;
 }
 
 export interface NestedFormatting {
   title: string;
-  items: {
-    title: string;
-    format: string;
-    icon?: string;
-  }[];
+  items: Array<DirectFormat | BlockFormat>;
 }
 
 export const defaultStyleFormats: NestedFormatting[] = [
@@ -64,14 +70,26 @@ export const defaultStyleFormats: NestedFormatting[] = [
   }
 ];
 
-const blockToFormat = (userFormats: UserFormats[]): BlockToFormat[] => {
-  return Arr.map(userFormats, (fmt) => {
-    return { title: fmt.title, format: fmt.block };
+export const getUserFormats = (editor: Editor): Option<AllowedFormats[]> => Objects.readOptFrom(editor.settings, 'style_formats');
+
+const isNestedFormat = (format: AllowedFormats): format is NestedFormatting => {
+  return Object.prototype.hasOwnProperty.call(format, 'items');
+};
+
+const isBlockFormat = (format: AllowedFormats): format is BlockFormat => {
+  return Object.prototype.hasOwnProperty.call(format, 'block');
+};
+
+const blockToFormat = (userFormats: AllowedFormats[]) => {
+  return Arr.map(userFormats, (fmt): DirectFormat | NestedFormatting | Separator => {
+    // TODO AP-393: support the full API
+    return isNestedFormat(fmt) ?
+      { title: fmt.title, items: blockToFormat(fmt.items) }
+      : isBlockFormat(fmt) ? { title: fmt.title, format: fmt.block } // This is needed because StyleSelect only checks for `format` to apply
+        : fmt;
   });
 };
 
-export const getUserFormats = (editor: Editor) => Objects.readOptFrom(editor.settings, 'style_formats');
-
-export const getStyleFormats = (editor: Editor): BlockToFormat[] | NestedFormatting[] => {
-  return getUserFormats(editor).map<BlockToFormat[] | NestedFormatting[]>(blockToFormat).getOr(defaultStyleFormats);
+export const getStyleFormats = (editor: Editor): (Separator | DirectFormat | NestedFormatting)[] => {
+  return getUserFormats(editor).map(blockToFormat).getOr(defaultStyleFormats);
 };

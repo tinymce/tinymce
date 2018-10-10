@@ -31,7 +31,6 @@ tinymce.init({
     {title: 'Snake', value: 'snake'}
   ],
   table_style_by_css: true,
-
   // table grid TBD
   table_grid: true,
 

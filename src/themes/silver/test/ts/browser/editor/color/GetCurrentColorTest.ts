@@ -1,19 +1,16 @@
 import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
-import TextColor from '../../../main/ts/core/TextColor';
+import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.GetCurrentColorTest', (success, failure) => {
+UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     const browser = PlatformDetection.detect().browser;
-
-    TextcolorPlugin();
 
     const sAssertCurrentColor = (editor, format, label, expected) => Logger.t(`Assert current color ${expected}`,
       Step.sync(() => {
-        const actual = TextColor.getCurrentColor(editor, format);
+        const actual = ColorSwatch.getCurrentColor(editor, format);
 
         RawAssertions.assertEq(label, expected, actual);
       })
@@ -37,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.GetCurrentColorTest', (suc
         ])
       ], onSuccess, onFailure);
     }, {
-      plugins: 'textcolor',
+      plugins: '',
       toolbar: 'forecolor backcolor',
       skin_url: '/project/js/tinymce/skins/oxide/'
     }, success, failure);

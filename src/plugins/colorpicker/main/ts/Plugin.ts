@@ -9,14 +9,9 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Dialog from './ui/Dialog';
 
-PluginManager.add('colorpicker', function (editor) {
-  if (!editor.settings.color_picker_callback) {
-    editor.settings.color_picker_callback = function (callback, value) {
-      Dialog.open(editor, callback, value);
-    };
-  }
+PluginManager.add('colorpicker', function () {
+  console.warn('Color picker plugin is now built in to the core editor, please remove it from your editor configuration');
 });
 
 export default function () { }
