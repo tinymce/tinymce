@@ -1,7 +1,7 @@
 import { Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
+import { Css, Width } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
@@ -166,18 +166,17 @@ const setup = (editor) => {
     re = /^[0-9\.]+(|px)$/i;
 
     if (re.test('' + width)) {
-      width = minWidth.map((mw) => Math.max(parseInt(width, 10), mw)).getOr(width);
+      width = minWidth.map((mw) => Math.max(parseInt(width, 10), mw)).getOr(width) + 'px';
     }
 
     if (re.test('' + height)) {
-      height = minHeight.map((mh) => Math.max(parseInt(height, 10), mh)).getOr(height);
+      height = minHeight.map((mh) => Math.max(parseInt(height, 10), mh)).getOr(height) + 'px';
     }
-
     if (width) {
-      Css.set(outerContainer.element(), 'width', width + 'px');
+      Css.set(outerContainer.element(), 'width', width);
     }
     if (!editor.inline && height) {
-      Css.set(outerContainer.element(), 'height', height + 'px');
+      Css.set(outerContainer.element(), 'height', height);
     }
 
     const uiComponents = {mothership, uiMothership, outerContainer};
