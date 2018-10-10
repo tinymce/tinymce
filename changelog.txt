@@ -1,6 +1,11 @@
-Version 5.0.0-preview-2 (TBD)
+Version 5.0.0-preview-2 (2018-10-10)
+    Changed configuration of color options has been simplified to `color_map`, `color_cols`, and `custom_colors` #AP-328
+    Added swatch is now shown for colorinput fields, instead of the colorpicker directly #AP-328
+    Removed `colorpicker` plugin, it is now in the theme #AP-328
+    Removed `textcolor` plugin, it is now in the theme #AP-328
+    Fixed styleselect not updating the displayed item as the cursor moved #AP-388
     Changed `height` configuration to apply to the editor frame (including menubar, toolbar, status bar) instead of the content area #AP-324
-    Added fontformats and fontsizes menu items
+    Added fontformats and fontsizes menu items #AP-390
     Fixed preview iframe not expanding to the dialog size #AP-252
     Fixed 'meta' shortcuts not translated into platform-specific text #AP-270
     Fixed tabbed dialogs (Charmap and Emoticons) shrinking when no search results returned
