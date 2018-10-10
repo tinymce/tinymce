@@ -60,8 +60,7 @@ let create = (entries, tsConfig, outDir, filename) => {
 let buildDemoEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
     var tsfile = `src/${type}/${name}/demo/ts/demo/${demo}`;
-    if (fs.existsSync(tsfile)) acc[name] = tsfile;
-    else console.log('skipping demo file that does not exist:', tsfile);
+    if (fs.existsSync(tsfile)) { acc[name] = tsfile; }
     return acc;
   }, {}
 )
