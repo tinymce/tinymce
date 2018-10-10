@@ -257,7 +257,7 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  const unmapped = editor.getParam('color_map');
+  const unmapped = Settings.getColorMap(editor);
   if (unmapped !== undefined) {
     currentColors.set(mapColors(unmapped));
   }
