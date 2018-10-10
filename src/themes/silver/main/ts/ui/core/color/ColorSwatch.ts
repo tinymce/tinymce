@@ -140,7 +140,7 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
       addColor(color);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
-    }, '#ff00ff');
+    }, '#000000');
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format);
