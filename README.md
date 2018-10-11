@@ -6,6 +6,10 @@
 
 `mcagar` is available as an `npm` package. You can install it via the npm package `@ephox/mcagar`
 
+# Installation for development
+
+You need to use `yarn` to install the mcagar devDependencies since `npm` doesn't support package aliasing and that is used in the `package.json`.
+
 ## Install from npm
 
 `npm install @ephox/mcagar`

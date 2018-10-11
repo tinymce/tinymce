@@ -29,8 +29,8 @@
     "tinymce": "latest",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0",
-    "tinymce-4.6.x": "npm:tinymce@4.6.7",
-    "tinymce-4.7.x": "npm:tinymce@4.7.13"
+    "tinymce-4.5.x": "npm:tinymce@4.5.x",
+    "tinymce-4.8.x": "npm:tinymce@4.8.x"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
