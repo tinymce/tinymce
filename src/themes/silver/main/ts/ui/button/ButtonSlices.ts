@@ -1,12 +1,14 @@
 import { Behaviour, Replacing } from '@ephox/alloy';
 import { IconProvider, getOr } from '../icons/Icons';
 import { Fun } from '@ephox/katamari';
+import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 const renderIcon = (iconHtml) =>
   ({
     dom: {
       tag: 'span',
-      innerHtml: iconHtml
+      innerHtml: iconHtml,
+      classes: [ ToolbarButtonClasses.IconWrap ]
     }
   });
 
