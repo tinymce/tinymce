@@ -22,7 +22,7 @@ const open = (editor) => {
   const currentCode: string = CodeSample.getCurrentCode(editor);
 
   editor.windowManager.open({
-    title: 'Insert/Edit code sample',
+    title: 'Insert/Edit Code Sample',
     size: 'large',
     minWidth,
     minHeight,

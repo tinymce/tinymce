@@ -140,7 +140,7 @@ const open = (editor, templateList) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
     const dialogSpec = (bodyItems = [], initialData = {}) => ({
-      title: 'Insert template',
+      title: 'Insert Template',
       size: 'large',
       layout: 'flex',
       direction: 'column',

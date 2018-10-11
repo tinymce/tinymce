@@ -72,7 +72,7 @@ const open = function (editor, currentIndexState) {
   };
 
   editor.windowManager.open({
-    title: 'Find and Replace',
+    title: 'Search and Replace',
     size: 'normal',
     body: {
       type: 'panel',

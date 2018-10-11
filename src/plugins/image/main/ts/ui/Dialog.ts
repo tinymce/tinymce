@@ -323,7 +323,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
 const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo) => {
   const state = createState(info);
   return {
-    title: 'Insert/edit image',
+    title: 'Insert/Edit Image',
     size: 'normal',
     body: makeDialogBody(info),
     buttons: [
