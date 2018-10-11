@@ -1,33 +1,44 @@
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
-import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
+import { DieFn, NextFn, Pipe, RunFn, AgarLogs } from '../pipe/Pipe';
 import { GuardFn } from './Guard';
 
-export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn) => void;
+export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) => void;
 
-const stateful = function <T, U>(f: RunFn<T, U>): Step<T, U> {
+const raw = function <T, U>(f: RunFn<T, U>): Step<T, U> {
   return Pipe(f);
+};
+
+const stateful = function <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> {
+  return Pipe<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) => {
+    f(
+      value,
+      (nextValue: U) => next(nextValue, logs),
+      (err) => die(err, logs)
+    );
+  });
 };
 
 // Chiefly used for limiting things with timeouts.
 const control = function <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> {
-  return Pipe<T, V>(function (value: T, next: NextFn<V>, die: DieFn) {
-    guard(step, value, next, die);
+  return Pipe<T, V>(function (value: T, next: NextFn<V>, die: DieFn, logs: AgarLogs) {
+    guard(step, value, next, die, logs);
   });
 };
 
 const sync = function <T>(f: () => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn) {
+  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: AgarLogs) {
     f();
-    next(value);
+    next(value, logs);
   });
 };
 
-const async = function <T>(f: (next: () => void, die: DieFn) => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn) {
-    f(function () {
-      next(value);
-    }, die);
+const async = function <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> {
+  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: AgarLogs) {
+    f(
+      () => next(value, logs),
+      (err) => die(err, logs)
+    );
   });
 };
 
@@ -57,5 +68,6 @@ export const Step = {
   log,
   wait,
   fail,
-  pass
+  pass,
+  raw
 };

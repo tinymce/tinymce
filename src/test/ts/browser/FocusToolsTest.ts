@@ -9,6 +9,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
+import { AgarLogs } from '../../../main/ts/ephox/agar/pipe/Pipe';
 
 UnitTest.asynctest('FocusToolsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -32,15 +33,15 @@ UnitTest.asynctest('FocusToolsTest', function () {
     Chain.asStep(doc, [
       FocusTools.cGetFocused,
       Chain.control(
-        Chain.on(function (active, next, die) {
+        Chain.on(function (active, next, die, logs) {
           RawAssertions.assertEq('Should be expected value', 'new value', Value.get(active));
-          next(Chain.wrap(active));
+          next(Chain.wrap(active), logs);
         }),
         Guard.addLogging('Asserting the value of the input field after it has been set.')
       )
     ]),
     Step.stateful(function (state, next, die) {
-      FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die);
+      FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die, AgarLogs.init());
     }),
     FocusTools.sTryOnSelector(
       'Should be on div[test-id] input',
@@ -79,31 +80,31 @@ UnitTest.asynctest('FocusToolsTest', function () {
     ),
 
     // TODO: Need to get rid of this boilerplate
-    Step.stateful(function (value, next, die) {
+    Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
-      ])(value, next, die);
+      ])(value, next, die, logs);
     }),
     FocusTools.sIsOnSelector('Should now be on input again', doc, 'input'),
 
-    Step.stateful(function (value, next, die) {
+    Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cSetActiveValue('chained.value')
-      ])(value, next, die);
+      ])(value, next, die, logs);
     }),
 
-    Step.stateful(function (value, next, die) {
+    Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cGetActiveValue,
         Assertions.cAssertEq('Checking the value of input after set by chaining APIs', 'chained.value')
-      ])(value, next, die);
+      ])(value, next, die, logs);
     }),
 
-    Step.stateful(function (value, next, die) {
+    Step.raw(function (value, next, die, logs) {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
         Assertions.cAssertDomEq('Checking that focused element is the input', value.input)
-      ])(value, next, die);
+      ])(value, next, die, logs);
     }),
 
     DomContainers.mTeardown

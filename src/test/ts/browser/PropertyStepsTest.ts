@@ -5,8 +5,6 @@ import * as PropertySteps from 'ephox/agar/api/PropertySteps';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 
-import { NextFn } from '../../../main/ts/ephox/agar/pipe/Pipe';
-
 UnitTest.asynctest('PropertyStepsTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
@@ -16,7 +14,7 @@ UnitTest.asynctest('PropertyStepsTest', function () {
     PropertySteps.sAsyncProperty(
       'Check number dividing by 1 is itself',
       [Jsc.integer],
-      Step.stateful(function (num: number, next: NextFn<number>, die) {
+      Step.stateful((num: number, next, die) => {
         RawAssertions.assertEq('x / 1 === x', num, num / 1);
         next(num);
       }),

@@ -3,6 +3,7 @@ import { Thunk } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { Step } from '../api/Step';
+import { AgarLogs } from '../pipe/Pipe';
 
 const logNoPromises = Thunk.cached(function () {
   console.warn('No native promise support on browser to run async property tests. Skipping!');
@@ -25,7 +26,8 @@ const stepToPromise = function <T, U>(step: Step<T, U>) {
     return typeof Promise !== "undefined" ? new Promise<true>(function (resolve, reject) {
       step(input, function () {
         resolve(true);
-      }, reject);
+      // Not sure what to do about logging for this.
+      }, reject, AgarLogs.init());
     }) : fakePromise();
   };
 };

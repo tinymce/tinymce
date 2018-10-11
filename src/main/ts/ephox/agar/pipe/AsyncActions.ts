@@ -1,6 +1,6 @@
 import { setTimeout } from '@ephox/dom-globals';
 
-import { DieFn } from './Pipe';
+import { DieFn, AgarLogs } from './Pipe';
 
 const delay = function (amount: number) {
   return function (next: () => void, die: DieFn) {
@@ -12,7 +12,7 @@ const delay = function (amount: number) {
 
 // Not really async, but can fail.
 const fail = function (message: string) {
-  return function (next: () => void, die: DieFn) {
+  return function (next: () => void, die: (err) => void) {
     die('Fake failure: ' + message);
   };
 };

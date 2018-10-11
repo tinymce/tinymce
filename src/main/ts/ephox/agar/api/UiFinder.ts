@@ -6,6 +6,7 @@ import * as UiSearcher from '../find/UiSearcher';
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import { Step } from './Step';
+import { AgarLogs } from '../pipe/Pipe';
 
 const findIn = function (container: Element, selector: string): Result<Element, string> {
   return UiSearcher.findIn(container, selector);
@@ -66,7 +67,7 @@ const sExists = function <T>(container: Element, selector: string) {
 };
 
 const sNotExists = function <T>(container: Element, selector: string) {
-  return Step.async<T>(function (next, die) {
+  return Step.async<T>((next, die) => {
     findIn(container, selector).fold(function () {
       next();
     }, function () {

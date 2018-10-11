@@ -1,6 +1,6 @@
 import { Arr, Fun, Id, Merger, Result } from '@ephox/katamari';
 
-import { DieFn, NextFn } from '../pipe/Pipe';
+import { DieFn, NextFn, AgarLogs } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';
 
 const inputNameId = Id.generate('input-name');
@@ -30,26 +30,27 @@ const asChain = function <T>(chains: NamedChain[]): Chain<T, any> {
 // Write merges in its output into input because it knows that it was
 // given a complete input.
 const write = function (name: string, chain: Chain<NamedData, any>) {
-  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die: DieFn) {
-    chain.runChain(Chain.wrap(input), function (output: Wrap<any>) {
+  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die: DieFn, logs: AgarLogs) {
+    chain.runChain(Chain.wrap(input), function (output: Wrap<any>, newLogs: AgarLogs) {
       const self = wrapSingle(name, Chain.unwrap(output));
       return next(
         Chain.wrap(
           Merger.merge(input, self) as NamedData
-        )
+        ),
+        newLogs
       );
-    }, die);
+    }, die, logs);
   });
 };
 
 // Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
 const partialWrite = function (name: string, chain: Chain<any, any>) {
-  return Chain.on(function (input: any, next: NextFn<Wrap<NamedData>>, die: DieFn) {
-    chain.runChain(Chain.wrap(input), function (output: Wrap<any>) {
+  return Chain.on(function (input: any, next: NextFn<Wrap<NamedData>>, die: DieFn, logs: AgarLogs) {
+    chain.runChain(Chain.wrap(input), function (output: Wrap<any>, newLogs: AgarLogs) {
       const self = wrapSingle(name, Chain.unwrap(output));
-      return next(Chain.wrap(self));
-    }, die);
+      return next(Chain.wrap(self), newLogs);
+    }, die, logs);
   });
 };
 
@@ -67,15 +68,15 @@ const combine = function (input: NamedData, name: string, value: any): NamedData
 };
 
 const process = function (name: string, chain: Chain<any, any>) {
-  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die) {
+  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die, logs: AgarLogs) {
     if (Object.prototype.hasOwnProperty.call(input, name)) {
       const part = Chain.wrap(input[name]);
-      chain.runChain(part, function (other) {
+      chain.runChain(part, function (other, newLogs: AgarLogs) {
         const merged: NamedData = Merger.merge(input, Chain.unwrap(other));
-        next(Chain.wrap(merged));
-      }, die);
+        next(Chain.wrap(merged), newLogs);
+      }, die, logs);
     } else {
-      die(name + ' is not a field in the index object.');
+      die(name + ' is not a field in the index object.', logs);
     }
   });
 };
@@ -96,10 +97,10 @@ const writeValue = function (name: string, value: any) {
 };
 
 const read = function (name: string, chain: Chain<any, any>) {
-  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die: DieFn) {
-    chain.runChain(Chain.wrap(input[name]), function () {
-      return next(Chain.wrap(input));
-    }, die);
+  return Chain.on(function (input: NamedData, next: NextFn<Wrap<NamedData>>, die: DieFn, logs: AgarLogs) {
+    chain.runChain(Chain.wrap(input[name]), function (_, newLogs) {
+      return next(Chain.wrap(input), newLogs);
+    }, die, logs);
   });
 };
 
@@ -123,8 +124,8 @@ const output = function (name: string) {
 
 const outputInput = output(inputNameId);
 
-const pipeline = function (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, delay_doNotUse?: number) {
-  Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay_doNotUse);
+const pipeline = function (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs: AgarLogs) {
+  Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, initLogs);
 };
 
 const inputName = () => inputNameId;

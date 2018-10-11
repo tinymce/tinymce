@@ -1,13 +1,13 @@
 import { Element, Focus } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
-import { DieFn, NextFn } from '../pipe/Pipe';
+import { DieFn, NextFn, AgarLogs } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 const triggerWith = function <T>(container: Element, selector: string, action: (ele: Element) => void) {
-  return Step.async<T>(function (next, die) {
+  return Step.async<T>((next, die) => {
     const element = UiFinder.findIn(container, selector);
     element.fold(function () {
       die(new Error('Could not find element: ' + selector));
@@ -49,10 +49,10 @@ const cClick = Chain.op(function (element: Element) {
 });
 
 const cClickOn = function (selector: string): Chain<Element, Element> {
-  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn) {
-    triggerWith(container, selector, Clicks.trigger)({}, function (v) {
-      next(Chain.wrap(container));
-    }, die);
+  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn, logs: AgarLogs) {
+    triggerWith(container, selector, Clicks.trigger)({}, function (v, newLogs) {
+      next(Chain.wrap(container), newLogs);
+    }, (err, newLogs) => die(err, newLogs), logs);
   });
 };
 

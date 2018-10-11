@@ -2,7 +2,7 @@ import { console } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn } from '../pipe/Pipe';
+import { DieFn, NextFn, AgarLogs } from '../pipe/Pipe';
 import { Step } from './Step';
 
 const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
@@ -10,12 +10,12 @@ const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
     return ErrorTypes.enrichWith(label, err);
   };
 
-  return function (value: T, next: NextFn<U>, die: DieFn) {
+  return function (value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
     const dieWith: DieFn = Fun.compose(die, enrich);
     try {
-      return f(value, next, dieWith);
+      return f(value, next, dieWith, logs);
     } catch (err) {
-      dieWith(err);
+      dieWith(err, logs);
     }
   };
 };

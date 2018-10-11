@@ -8,6 +8,7 @@ import { Keys } from 'ephox/agar/api/Keys';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
+import { AgarLogs } from '../../../main/ts/ephox/agar/pipe/Pipe';
 
 UnitTest.asynctest('KeyboardTest', function () {
   const success = arguments[arguments.length - 2];
@@ -41,7 +42,7 @@ UnitTest.asynctest('KeyboardTest', function () {
           const raw = event.raw();
           listener.unbind();
 
-          sAssertEvent(type, code, modifiers, raw)(value, next, die);
+          sAssertEvent(type, code, modifiers, raw)(value, next, die, AgarLogs.init());
         });
 
         f(Element.fromDom(document), code, modifiers)(value, function () { }, die);
@@ -68,7 +69,7 @@ UnitTest.asynctest('KeyboardTest', function () {
           });
         });
 
-        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers)(value, function () { }, die);
+        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers)(value, function () { }, die, AgarLogs.init());
       }),
       Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
     );

@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn } from "../pipe/Pipe";
+import { DieFn, NextFn, AgarLogs } from "../pipe/Pipe";
 import { Chain, Wrap } from "./Chain";
 import { GeneralSteps } from "./Main";
 import { Step } from "./Step";
@@ -15,12 +15,13 @@ const enrichErrorMsg = (label, err) => {
 };
 
 const enrichDie = (label, f) => {
-  return (value, next, die: DieFn) => {
+  return (value, next, die: DieFn, logs: AgarLogs) => {
+    // TODO: Change this to use logs instead.
     const dieWith: DieFn = Fun.compose(die, Fun.curry(enrichErrorMsg, label));
     try {
-      return f(value, next, dieWith);
+      return f(value, next, dieWith, logs);
     } catch (err) {
-      dieWith(err);
+      dieWith(err, logs);
     }
   };
 };
@@ -43,7 +44,7 @@ const stepsAsStep = <T, U>(testId: string, description: string, fs: Step<T, U>[]
 
 const chain = <T, U>(testId: string, description: string, c: Chain<T, U>): Chain<T, U>  => {
   const label = generateLogMsg(testId, description);
-  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn) => void): Chain<T, U> => {
+  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: AgarLogs) => void): Chain<T, U> => {
     return { runChain: enrichDie(label, f) };
   };
   return switchDie(c.runChain);
@@ -61,7 +62,7 @@ const chainsAsChain = <T, U>(testId: string, description: string, fs: Chain<T, U
 };
 
 const chainsAsStep = <T>(testId: string, description: string, fs: Chain<any,any>[]): Step<T,T> => {
-  return Chain.asStep({}, chains(testId, description, fs));
+  return Chain.asStep({} as T, chains(testId, description, fs));
 };
 
 export {

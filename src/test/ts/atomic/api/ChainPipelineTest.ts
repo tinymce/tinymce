@@ -7,8 +7,8 @@ UnitTest.asynctest('ChainPipelineTest', function() {
   const failure = arguments[arguments.length-1];
 
   const cAcc = function (ch) {
-    return Chain.on(function (input, next, die) {
-      next(Chain.wrap(input + ch));
+    return Chain.async(function (input, next, die) {
+      next(input + ch);
     });
   };
 

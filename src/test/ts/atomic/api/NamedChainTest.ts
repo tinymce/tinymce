@@ -13,8 +13,8 @@ UnitTest.asynctest('NamedChainTest', function() {
   const failure = arguments[arguments.length - 1];
 
   const cIsEqual = function (expected) {
-    return Chain.on(function (actual, next, die) {
-      if (expected === actual) next(Chain.wrap(actual));
+    return Chain.async((actual, next, die) => {
+      if (expected === actual) next(actual);
       else die('Unexpected input. Expected: ' + expected + ', Actual: ' + actual);
     });
   };
@@ -47,7 +47,7 @@ UnitTest.asynctest('NamedChainTest', function() {
           NamedChain.write('y', Chain.inject(8)),
           NamedChain.writeValue('z', 10),
           NamedChain.writeValue('description', 'Q1. What are the answer'),
-          
+
           NamedChain.overwrite('description', addLetters('s')),
           NamedChain.direct('description', addLetters('!'), 'shouting'),
 
