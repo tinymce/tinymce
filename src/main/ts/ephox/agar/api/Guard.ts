@@ -35,7 +35,10 @@ const tryUntil = function <T, U>(label: string, interval: number, amount: number
   return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
     const repeat = function (n: number) {
       f(value, next, function (err, newLogs) {
-        if (n <= 0) die(ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err), newLogs);
+        if (n <= 0) die(
+          ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err),
+          newLogs
+        );
         else {
           setTimeout(function () {
             repeat(n - interval);

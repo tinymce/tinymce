@@ -128,10 +128,14 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
   return Step.raw<T,T>((initValue, next, die, logs) => {
     const cs = Arr.map(chains, extract);
 
-    Pipeline.async(wrap(initial), cs, function () {
+    Pipeline.async(
+      wrap(initial),
+      cs,
       // Ignore all the values and use the original
-      (_v, ls) => next(initValue, ls)
-    }, die, logs);
+      (_v, ls) => next(initValue, ls),
+      die,
+      logs
+    );
   });
 };
 
@@ -161,8 +165,8 @@ const isInput = function (v): v is Wrap<any> {
 };
 
 const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: AgarLogs) {
-  Pipeline.async(wrap({}), Arr.map(chains, extract), (input, logs) => {
-    onSuccess(unwrap(input), logs);
+  Pipeline.async(wrap({}), Arr.map(chains, extract), (output, logs) => {
+    onSuccess(unwrap(output), logs);
   }, onFailure, AgarLogs.getOrInit(initLogs));
 };
 

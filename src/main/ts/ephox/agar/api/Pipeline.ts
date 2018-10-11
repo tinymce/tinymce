@@ -20,13 +20,18 @@ const assertSteps = function (steps: Step<any, any>[]) {
 };
 
 const callAsync = function (f) {
-  typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
+  // TEMPORARY debugging
+  f();
+  // typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
 const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: AgarLogs) {
   assertSteps(steps);
 
   const chain = function (lastLink: any, logs: AgarLogs, index: number) {
+    if (logs === undefined) {
+      throw new Error({ message: 'No logs!', lastLink, steps, initial } as any);
+    }
     if (index < steps.length) {
       const asyncOperation = steps[index];
       // FIX: Make this test elsewhere without creating a circular dependency on Chain
@@ -46,7 +51,7 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
       onSuccess(lastLink, logs);
     }
   };
-  chain(initial, 0, AgarLogs.getOrInit(initLogs));
+  chain(initial, AgarLogs.getOrInit(initLogs), 0);
 };
 
 export const Pipeline = {

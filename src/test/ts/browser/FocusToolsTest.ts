@@ -10,6 +10,7 @@ import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
 import { AgarLogs } from '../../../main/ts/ephox/agar/pipe/Pipe';
+import { Logger } from '../../../main/ts/ephox/agar/api/Main';
 
 UnitTest.asynctest('FocusToolsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -80,11 +81,12 @@ UnitTest.asynctest('FocusToolsTest', function () {
     ),
 
     // TODO: Need to get rid of this boilerplate
+    Logger.t('1',
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
       ])(value, next, die, logs);
-    }),
+    })),
     FocusTools.sIsOnSelector('Should now be on input again', doc, 'input'),
 
     Step.raw(function (value, next, die, logs) {

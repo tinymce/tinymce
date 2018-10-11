@@ -24,7 +24,7 @@ const assertError = (label: string, expectedError: any, actualError: any): Resul
 
 // We expect it to fail, and we somehow succeeded
 const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any): string => {
-  return label + ': Should not have passed. Expected error: ' + expectedError + '. ' + 
+  return label + ': Should not have passed. Expected error: ' + expectedError + '. ' +
     'Received success: ' + unexpectedSuccess;
 };
 
@@ -68,13 +68,18 @@ const passed = function (label, expected, step) {
 };
 
 const testStepsPass = function (expected, steps) {
-  return Step.async(function (next, die) {
-    return Pipeline.async({}, steps, function (v) {
-      assertSuccess('Checking final step value', expected, v).fold(die, () => next());
-    }, function (err) {
+  return Step.raw(function (v, next, die, initLogs) {
+    return Pipeline.async({}, steps, function (v, newLogs) {
+      assertSuccess('Checking final step value', expected, v).fold(
+        (err) => die(err, newLogs),
+        (_) => {
+          next(_, newLogs)
+        }
+      );
+    }, function (err, logs) {
       const msg = failOnError('testStepsPass', expected, err);
-      die(msg);
-    });
+      die(msg, logs);
+    }, initLogs);
   });
 };
 

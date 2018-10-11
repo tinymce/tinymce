@@ -17,7 +17,7 @@ const enrichErrorMsg = (label, err) => {
 const enrichDie = (label, f) => {
   return (value, next, die: DieFn, logs: AgarLogs) => {
     // TODO: Change this to use logs instead.
-    const dieWith: DieFn = Fun.compose(die, Fun.curry(enrichErrorMsg, label));
+    const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), newLogs);
     try {
       return f(value, next, dieWith, logs);
     } catch (err) {
