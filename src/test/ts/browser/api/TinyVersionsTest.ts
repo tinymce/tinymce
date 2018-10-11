@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as TinyVersions from 'ephox/mcagar/api/TinyVersions';
-import { sAssertVersion } from '../../module/VersionAssert';
+import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('TinyVersionsTest', (success, failure) => {
   Pipeline.async({}, [
