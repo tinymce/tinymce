@@ -9,6 +9,7 @@
  */
 
 import Tools from './Tools';
+import { Type, Obj } from '@ephox/katamari';
 
 /**
  * I18n class that handles translation of TinyMCE UI.
@@ -19,6 +20,29 @@ import Tools from './Tools';
 
 const data = {};
 let code = 'en';
+
+export interface TranslatedString {
+  translation: string;
+}
+
+export interface RawString {
+  raw: string;
+}
+
+export type TokenisedString = string[];
+
+export type TranslateIfNeeded = any | TranslatedString;
+
+const isRaw = (str: any): str is RawString => {
+  if (!Type.isObject(str)) {
+    return false;
+  }
+  const keys = Obj.keys(str);
+
+  return keys.length === 1 && keys[0] === 'raw' && Type.isString(str.raw);
+};
+
+const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
 
 export default {
   /**
@@ -85,9 +109,11 @@ export default {
    * @param {String/Object/Array} text Text to translate.
    * @return {String} String that got translated.
    */
-  translate (text) {
-    const langData = data[code] || {};
+  translate (text: any): TranslatedString {
+    // has already been translated
+    if (text && text.translation) { return text; }
 
+    const langData = data[code] || {};
     /**
      * number - string
      * null, undefined and empty string - empty string
@@ -106,31 +132,44 @@ export default {
     };
 
     const isEmpty = function (text) {
-      return text === '' || text === null || Tools.is(text, 'undefined');
+      return text === '' || text === null || text === undefined;
     };
 
     const getLangData = function (text) {
       // make sure we work on a string and return a string
-      text = toString(text);
-      return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
+      const textstr = toString(text);
+      return Tools.hasOwn(langData, textstr) ? toString(langData[textstr]) : textstr;
     };
 
+    const removeContext = function (str: string) {
+      return str.replace(/{context:\w+}$/, '');
+    };
+
+    const translated = (text) => {
+      return { translation: text };
+    };
+
+    // empty strings
     if (isEmpty(text)) {
-      return '';
+      return translated('');
     }
 
-    if (Tools.is(text, 'object') && Tools.hasOwn(text, 'raw')) {
-      return toString(text.raw);
+    // Raw, already translated
+    if (isRaw(text)) {
+      return translated(text.raw);
     }
 
-    if (Tools.is(text, 'array')) {
+    // Tokenised {translations}
+    if (isTokenised(text)) {
       const values = text.slice(1);
-      text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
+      const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
         return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
       });
+      return translated(removeContext(substitued));
     }
 
-    return getLangData(text).replace(/{context:\w+}$/, '');
+    // straight forward translation mapping
+    return translated(removeContext(getLangData(text)));
   },
 
   data

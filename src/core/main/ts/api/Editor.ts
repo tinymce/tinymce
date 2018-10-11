@@ -31,6 +31,7 @@ import Env from './Env';
 import Shortcuts from './Shortcuts';
 import Tools from './util/Tools';
 import URI from './util/URI';
+import Sidebar from '../ui/Sidebar';
 
 /**
  * Include the base event class documentation.
@@ -595,8 +596,9 @@ Editor.prototype = {
    * });
    */
   addSidebar (name: string, settings: SidebarSettings) {
+    return Sidebar.add(this, name, settings);
     // tslint:disable:no-console
-    console.error('editor.addSidebar is deprecated in tinymce 5x, use editor.ui.registry.addSidebar instead');
+    // console.error('editor.addSidebar is deprecated in tinymce 5x, use editor.ui.registry.addSidebar instead');
   },
 
   /**

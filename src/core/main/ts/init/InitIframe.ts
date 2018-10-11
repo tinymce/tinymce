@@ -15,6 +15,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import Uuid from '../util/Uuid';
 import { document, window } from '@ephox/dom-globals';
+import { TranslatedString } from '../api/util/I18n';
 
 const DOM = DOMUtils.DOM;
 
@@ -41,7 +42,7 @@ const relaxDomain = function (editor, ifr) {
   return false;
 };
 
-const createIframeElement = function (id, title, height, customAttrs) {
+const createIframeElement = function (id: string, title: TranslatedString, height: number, customAttrs: {}) {
   const iframe = Element.fromTag('iframe');
 
   Attr.setAll(iframe, customAttrs);
@@ -50,7 +51,7 @@ const createIframeElement = function (id, title, height, customAttrs) {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title
+    title: title.translation
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');
