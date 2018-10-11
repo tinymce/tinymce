@@ -145,7 +145,7 @@ const open = function (editor, currentIndexState) {
     initialData: {
       findtext: selectedText,
       replacetext: '',
-      matchcase: 'checked',
+      matchcase: 'unchecked',
       wholewords: 'unchecked'
     },
     onAction: (api, details) => {

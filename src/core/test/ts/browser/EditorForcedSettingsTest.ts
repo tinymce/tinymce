@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Assertions.sAssertEq('Validate should always be true', true, editor.settings.validate),
-      Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.settings.content_editable)
+      Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.inline)
     ], onSuccess, onFailure);
   }, {
     skin_url: '/project/js/tinymce/skins/oxide',

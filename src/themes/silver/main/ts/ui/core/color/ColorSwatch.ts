@@ -140,7 +140,7 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
       addColor(color);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
-    }, '#ff00ff');
+    }, '#000000');
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format);
@@ -220,7 +220,7 @@ const colorPickerDialog = (editor) => (callback, value) => {
 
   const submit = getOnSubmit(callback);
   editor.windowManager.open({
-    title: 'Color',
+    title: 'Color Picker',
     size: 'normal',
     body: {
       type: 'panel',

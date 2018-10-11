@@ -1,6 +1,9 @@
 {
-  "name": "tinymce",
-  "version": "5.0.0-preview-1-build.14",
+  "name": "@ephox/tinymce",
+  "publishConfig": {
+    "registry": "http://nexus:8081/repository/ephox-npm/"
+  },
+  "version": "5.0.0-preview-2-build.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -64,8 +67,5 @@
     "webpack-dev-server": "3.1.5",
     "webpack-livereload-plugin": "^2.1.1",
     "rimraf": "^2.6.2"
-  },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
   }
 }

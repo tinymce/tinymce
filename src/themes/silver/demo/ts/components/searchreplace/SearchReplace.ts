@@ -74,7 +74,7 @@ export const SearchReplaceDialogSpec = {
   initialData: {
     findtext: '',
     replacetext: '',
-    matchcase: 'checked',
+    matchcase: 'unchecked',
     wholewords: 'unchecked'
   },
   onAction: (api, details) => {

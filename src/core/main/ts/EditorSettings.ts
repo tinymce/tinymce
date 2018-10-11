@@ -62,8 +62,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor) {
   return {
     id,
     theme: 'silver',
-    delta_width: 0,
-    delta_height: 0,
     popup_css: '',
     plugins: '',
     document_base_url: documentBaseUrl,
@@ -146,7 +144,6 @@ const combineSettings = function (isTouchDevice, defaultSettings, defaultOverrid
     // Forced settings
     {
       validate: true,
-      content_editable: sectionResult.settings().inline,
       external_plugins: getExternalPlugins(defaultOverrideSettings, sectionResult.settings())
     }
   );
