@@ -28,13 +28,13 @@ const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn, logs
       die(new Error('Input Value is not a chain: ' + input + '\nfunction: ' + f.toString()), logs);
     }
     else {
-      f(input.chain, function (v: Wrap<U>) {
+      f(input.chain, function (v: Wrap<U>, newLogs) {
         if (!isInput(v)) {
           console.error('Invalid chain output: ', v);
-          die(new Error('Output value is not a chain: ' + v), logs);
+          die(new Error('Output value is not a chain: ' + v), newLogs);
         }
-        else next(v, logs);
-      }, (err) => die(err, logs), logs);
+        else next(v, newLogs);
+      }, (err, newLogs) => die(err, newLogs), logs);
     }
 
   });
@@ -46,8 +46,8 @@ const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn, logs
 
 const control = function <T, U, V>(chain: Chain<T, U>, guard: ChainGuard<T, U, V>) {
   return on(function (input: T, next: NextFn<Wrap<V>>, die: DieFn, logs: AgarLogs) {
-    guard(chain.runChain, wrap(input), function (v: Wrap<V>) {
-      next(v, logs);
+    guard(chain.runChain, wrap(input), function (v: Wrap<V>, newLogs: AgarLogs) {
+      next(v, newLogs);
     }, die, logs);
   });
 };
@@ -132,7 +132,9 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
       wrap(initial),
       cs,
       // Ignore all the values and use the original
-      (_v, ls) => next(initValue, ls),
+      (_v, ls) => {
+        next(initValue, ls)
+      },
       die,
       logs
     );

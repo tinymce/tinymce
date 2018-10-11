@@ -134,10 +134,10 @@ UnitTest.asynctest('ChainTest', function() {
   const testChainEnforcesInput = StepAssertions.testStepsFail(
     'Input Value is not a chain: raw.input',
     [
-      Step.async(function (next, die) {
+      Step.raw(function (_, next, die, logs) {
         Chain.on(function (input: any, n, d, clogs) {
           n(input, clogs);
-        }).runChain(<any>'raw.input', next, die, AgarLogs.init());
+        }).runChain(<any>'raw.input', next, die, logs);
       })
     ]
   );

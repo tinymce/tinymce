@@ -32,6 +32,7 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
     if (logs === undefined) {
       throw new Error({ message: 'No logs!', lastLink, steps, initial } as any);
     }
+
     if (index < steps.length) {
       const asyncOperation = steps[index];
       // FIX: Make this test elsewhere without creating a circular dependency on Chain

@@ -11,13 +11,13 @@ const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   };
 
   return function (value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
+    const updatedLogs = addLogEntry(logs, label);
     const dieWith: DieFn = (err, newLogs) => die(enrich(err), newLogs);
     try {
-      console.log({ test: label });
-      const newLogs = addLogEntry(logs, label);
-      return f(value, next, dieWith, newLogs);
+      return f(value, next, dieWith, updatedLogs);
     } catch (err) {
-      dieWith(err, logs);
+
+      dieWith(err, updatedLogs);
     }
   };
 };

@@ -25,7 +25,7 @@ export const addLogEntry = (logs: AgarLogs, message: string) => {
 const initLogsWith = (history: AgarLogEntry[]) => {
   return {
     history: history
-  }
+  };
 }
 
 export const AgarLogs = {

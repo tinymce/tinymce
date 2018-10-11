@@ -23,6 +23,7 @@ UnitTest.asynctest('FocusToolsTest', function () {
     DomContainers.mSetup,
     Step.log('cat1'),
     FocusTools.sSetFocus('Focusing body', docNode, 'body'),
+
     Step.log('cat2'),
     FocusTools.sIsOnSelector('Should be on body', doc, 'body'),
     FocusTools.sSetFocus('Focusing div', docNode, 'div[test-id]'),
@@ -41,8 +42,8 @@ UnitTest.asynctest('FocusToolsTest', function () {
         Guard.addLogging('Asserting the value of the input field after it has been set.')
       )
     ]),
-    Step.stateful(function (state, next, die) {
-      FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die, AgarLogs.init());
+    Step.raw(function (state, next, die, logs) {
+      FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die, logs);
     }),
     FocusTools.sTryOnSelector(
       'Should be on div[test-id] input',
@@ -105,12 +106,18 @@ UnitTest.asynctest('FocusToolsTest', function () {
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
-        Assertions.cAssertDomEq('Checking that focused element is the input', value.input)
+        Assertions.cAssertDomEq('Checking that focused element is the input', value.inputa)
       ])(value, next, die, logs);
     }),
 
     DomContainers.mTeardown
 
-  ], function () { success(); }, failure);
+  ], function (_, logs) {
+    console.log('logs', logs);
+    success();
+  }, (err, logs) => {
+    console.log('logs', logs);
+    failure(err);
+  });
 });
 

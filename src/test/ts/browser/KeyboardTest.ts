@@ -37,12 +37,12 @@ UnitTest.asynctest('KeyboardTest', function () {
 
   const listenOn = function (type, f, code, modifiers) {
     return Step.control(
-      Step.stateful(function (value: { container: any; }, next, die) {
+      Step.raw(function (value: { container: any; }, next, die, logs) {
         const listener = DomEvent.bind(value.container, type, function (event) {
           const raw = event.raw();
           listener.unbind();
 
-          sAssertEvent(type, code, modifiers, raw)(value, next, die, AgarLogs.init());
+          sAssertEvent(type, code, modifiers, raw)(value, next, die, logs);
         });
 
         f(Element.fromDom(document), code, modifiers)(value, function () { }, die);
@@ -53,7 +53,7 @@ UnitTest.asynctest('KeyboardTest', function () {
 
   const listenOnKeystroke = function (code, modifiers) {
     return Step.control(
-      Step.stateful(function (value: { container: any; }, next, die) {
+      Step.raw(function (value: { container: any; }, next, die, logs) {
         const keydownListener = DomEvent.bind(value.container, 'keydown', function (dEvent) {
           keydownListener.unbind();
 
@@ -63,8 +63,8 @@ UnitTest.asynctest('KeyboardTest', function () {
             Pipeline.async({}, [
               sAssertEvent('keydown', code, modifiers, dEvent.raw()),
               sAssertEvent('keyup', code, modifiers, uEvent.raw())
-            ], function () {
-              next(value);
+            ], function (v, newLogs) {
+              next(value, newLogs);
             }, die);
           });
         });
