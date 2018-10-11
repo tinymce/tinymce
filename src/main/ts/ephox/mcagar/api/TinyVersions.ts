@@ -1,7 +1,7 @@
 import { Step, GeneralSteps } from '@ephox/agar';
 import { SelectorFilter, Element, Attr, Insert, Body, Remove, DomEvent } from '@ephox/sugar';
 import { Strings, Arr } from '@ephox/katamari';
-import { getTinymce, deleteTinymceGlobals } from 'ephox/mcagar/loader/Globals';
+import { getTinymce, deleteTinymceGlobals } from '../loader/Globals';
 import { updateTinymceUrls } from '../loader/Urls';
 
 const loadScript = (url: string, success: () => void, failure: (err: Error) => void) => {

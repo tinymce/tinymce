@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { document, console, setTimeout } from '@ephox/dom-globals';
 import 'tinymce';
-import { getTinymce } from 'ephox/mcagar/loader/Globals';
+import { getTinymce } from '../loader/Globals';
 import * as TinyVersions from './TinyVersions';
 import { updateTinymceUrls } from '../loader/Urls';
 import { Step, Pipeline } from '@ephox/agar';
