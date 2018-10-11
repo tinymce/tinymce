@@ -175,7 +175,7 @@ const compileSchema = function (type) {
   if (type !== 'html4') {
     globalAttributes += ' contenteditable contextmenu draggable dropzone ' +
       'hidden spellcheck translate';
-    blockContent += ' article aside details dialog figure header footer hgroup section nav';
+    blockContent += ' article aside details dialog figure main header footer hgroup section nav';
     phrasingContent += ' audio canvas command datalist mark meter output picture ' +
       'progress time wbr video ruby bdi keygen';
   }
@@ -272,7 +272,7 @@ const compileSchema = function (type) {
     add('source', 'src srcset type media sizes');
     add('track', 'kind src srclang label default');
     add('datalist', '', [phrasingContent, 'option'].join(' '));
-    add('article section nav aside header footer', '', flowContent);
+    add('article section nav aside main header footer', '', flowContent);
     add('hgroup', '', 'h1 h2 h3 h4 h5 h6');
     add('figure', '', [flowContent, 'figcaption'].join(' '));
     add('time', 'datetime', phrasingContent);
@@ -442,7 +442,7 @@ function Schema(settings?) {
     'script pre code', shortEndedElementsMap);
   moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
   textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
-    'blockquote center dir fieldset header footer article section hgroup aside nav figure');
+    'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
   blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
     'datalist select optgroup figcaption details summary', textBlockElementsMap);
