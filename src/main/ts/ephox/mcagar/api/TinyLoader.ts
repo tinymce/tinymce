@@ -35,10 +35,11 @@ var setup = function (callback, settings, success, failure) {
     success();
   };
 
-  var onFailure = function (err) {
+  // Agar v. ??? supports logging
+  var onFailure = function (err, logs) {
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
-    failure(err);
+    failure(err, logs);
   };
 
   var settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
