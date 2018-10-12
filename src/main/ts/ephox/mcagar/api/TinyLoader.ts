@@ -30,9 +30,10 @@ var setup = function (callback, settings, success, failure) {
     Remove.remove(target);
   };
 
-  var onSuccess = function () {
+  // Agar v. ??? supports logging
+  var onSuccess = function (v, logs) {
     teardown();
-    success();
+    success(v, logs);
   };
 
   // Agar v. ??? supports logging
