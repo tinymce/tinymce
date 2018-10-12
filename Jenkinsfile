@@ -116,5 +116,9 @@ node("primary") {
 
   extNpmInstall()
 
+  // build only runs on linux
+  stage ("Type check") {
+    sh 'grunt shell:tsc tslint'
+  }
   runBuild(runTests, "5.x", "prerelease")
 }

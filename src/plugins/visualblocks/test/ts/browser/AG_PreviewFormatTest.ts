@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
   const sWaitForPluginCss = (editor: Editor) => Step.async((next, die) => {
     // The plugin can't leverage core functions to help, but tests can!
     StyleSheetLoader(editor.getDoc()).load(pluginCss, next, die);
-  })
+  });
 
   const sWaitForVisualBlocks = function (editor) {
     return Waiter.sTryUntil('Wait for background css to be applied to first element', Step.sync(function () {
