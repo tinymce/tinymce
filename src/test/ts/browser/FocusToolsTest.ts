@@ -84,11 +84,12 @@ UnitTest.asynctest('FocusToolsTest', function () {
 
     // TODO: Need to get rid of this boilerplate
     Logger.t('1',
-    Step.raw(function (value, next, die, logs) {
-      Chain.asStep(value.container, [
-        FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
-      ])(value, next, die, logs);
-    })),
+      Step.raw(function (value, next, die, logs) {
+        Chain.asStep(value.container, [
+          FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
+        ])(value, next, die, logs);
+      })
+    ),
     FocusTools.sIsOnSelector('Should now be on input again', doc, 'input'),
 
     Step.raw(function (value, next, die, logs) {
@@ -107,7 +108,7 @@ UnitTest.asynctest('FocusToolsTest', function () {
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
-        Assertions.cAssertDomEq('Checking that focused element is the input', value.inputa)
+        Assertions.cAssertDomEq('Checking that focused element is the input', value.inputHACKHERE___HEREHR)
       ])(value, next, die, logs);
     }),
 
@@ -121,23 +122,22 @@ UnitTest.asynctest('FocusToolsTest', function () {
 
     const outputToStr = (indent: string, entries: AgarLogEntry[]): string[] => {
       return Arr.bind(entries, (entry) => {
-        debugger;
+        const traceLines = entry.trace === null ? [ ] : [ '', '', '-----' ].concat(Arr.map(
+          entry.trace.split('\n'),
+          (s) => indent + '>> ' + s
+        ).concat([ '----' ]));
+
         if (entry.entries.length === 0) {
           if (entry.trace === null) {
-            return [ '*' + indent + entry.message ];
+            return [ indent + '*  ' + entry.message ];
           } else {
-            return [ '* ' + indent + entry.message ].concat(
-              Arr.map(
-                entry.trace.split('\n'),
-                (s) => '>>' + indent + s
-              )
-            )
+            return [ indent + '*  ' + entry.message ].concat(traceLines);
           }
         } else {
           // We have entries ... let's format them.
-          return [ '* ' + indent + entry.message ].concat(
+          return [ indent + '*  ' + entry.message ].concat(
             outputToStr(indent + '  ', entry.entries)
-          )
+          ).concat(traceLines);
         }
       })
     }

@@ -168,6 +168,7 @@ export const Pipe = function <T, U>(f: RunFn<T, U>): RunFn<T, U> {
     try {
       f(value, next, die, logs);
     } catch (err) {
+      debugger;
       const logsWithTrace = addStackTrace(logs, err);
       die(err, logsWithTrace);
     }

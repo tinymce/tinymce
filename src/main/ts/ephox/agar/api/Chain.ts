@@ -3,7 +3,7 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
-import { DieFn, NextFn, Pipe, RunFn, AgarLogs } from '../pipe/Pipe';
+import { DieFn, NextFn, Pipe, RunFn, AgarLogs, popLogLevel, pushLogLevel, addLogEntry } from '../pipe/Pipe';
 import { GuardFn } from './Guard';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
