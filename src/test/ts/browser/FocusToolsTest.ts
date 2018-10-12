@@ -115,10 +115,8 @@ UnitTest.asynctest('FocusToolsTest', function () {
     DomContainers.mTeardown
 
   ], function (_, logs) {
-    console.log('logs', logs);
     success();
   }, (err, logs) => {
-    console.log('logs', logs, err);
 
     const outputToStr = (indent: string, entries: AgarLogEntry[]): string[] => {
       return Arr.bind(entries, (entry) => {

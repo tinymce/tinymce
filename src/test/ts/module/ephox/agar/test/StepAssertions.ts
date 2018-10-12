@@ -44,30 +44,36 @@ const failOnError = (label: string, expectedSuccess: any, unexpectedError: any):
   return label + '\nExpected success: ' + expectedSuccess + '.\nInstead, failed: ' + errMessage;
 };
 
-const failed = function (label, expected, step) {
-  return Step.stateful(function (value, next, die) {
-    step(value, function (v) {
+const failed = function (label, expected, step: Step<any, any>) {
+  return Step.raw(function (value, next, die, initLogs) {
+    step(value, function (v, newLogs) {
       const msg = failOnSuccess(label, expected, v);
-      die(msg);
-    }, function (err) {
-      assertError(label, expected, err).fold(die, () => next(value));
-    });
+      die(msg, newLogs);
+    }, function (err, newLogs) {
+      assertError(label, expected, err).fold(
+        (err) => die(err, newLogs),
+        (_) => next(value, newLogs)
+      );
+    }, initLogs);
   });
 };
 
-const passed = function (label, expected, step) {
-  return Step.stateful(function (value, next, die) {
-    step(value, function (v) {
+const passed = function (label, expected, step: Step<any, any>) {
+  return Step.raw((value, next, die, initLogs) => {
+    step(value, function (v, newLogs) {
       const exp = expected === preserved ? value : expected;
-      assertSuccess(label, exp, v).fold(die, () => next(value));
-    }, function (err) {
+      assertSuccess(label, exp, v).fold(
+        (err) => die(err, newLogs),
+        (_) => next(value, newLogs)
+      );
+    }, function (err, newLogs) {
       const msg = failOnError(label, expected, err);
-      die(msg);
-    });
+      die(msg, newLogs);
+    }, initLogs);
   });
 };
 
-const testStepsPass = function (expected, steps) {
+const testStepsPass = function (expected, steps: Array<Step<any, any>>) {
   return Step.raw(function (v, next, die, initLogs) {
     return Pipeline.async({}, steps, function (v, newLogs) {
       assertSuccess('Checking final step value', expected, v).fold(
@@ -76,75 +82,91 @@ const testStepsPass = function (expected, steps) {
           next(_, newLogs)
         }
       );
-    }, function (err, logs) {
+    }, function (err, newLogs) {
       const msg = failOnError('testStepsPass', expected, err);
-      die(msg, logs);
+      die(msg, newLogs);
     }, initLogs);
   });
 };
 
-const testStepsFail = function (expected, steps) {
-  return Step.async(function (next, die) {
-    return Pipeline.async({}, steps, function (v) {
+const testStepsFail = function (expected, steps: Array<Step<any, any>>) {
+  return Step.raw(function (initValue, next, die, initLogs) {
+    return Pipeline.async({}, steps, function (v, newLogs) {
       const msg = failOnSuccess('testStepsFail', expected, v);
-      die(msg);
-    }, function (err) {
-      assertError('testStepsFail (pipeline die)', expected, err).fold(die, () => next());
-    });
+      die(msg, newLogs);
+    }, function (err, newLogs) {
+      assertError('testStepsFail (pipeline die)', expected, err).fold(
+        (err) => die(err, newLogs),
+        () => next(initValue, newLogs)
+      );
+    }, initLogs);
   });
 };
 
-const testStepFail = function (expected, step) {
-  return Step.stateful(function (value, next, die) {
-    step(value, function (v) {
+const testStepFail = function (expected, step: Step<any, any>) {
+  return Step.raw(function (value, next, die, initLogs) {
+    step(value, function (v, newLogs) {
       const msg = failOnSuccess('testStepFail', expected, v);
-      die(msg);
-    }, function (err) {
-      assertError('testStepFail', expected, err).fold(die, () => next(value));
-    });
+      die(msg, newLogs);
+    }, function (err, newLogs) {
+      assertError('testStepFail', expected, err).fold(
+        (err) => die(err, newLogs),
+        (_) => next(value, newLogs));
+    }, initLogs);
   });
 };
 
-const testChain = function (expected, chain) {
-  return Step.stateful(function (value,next, die) {
-    chain.runChain(Chain.wrap({}), function (actual) {
-      assertSuccess('testChain', expected, actual.chain).fold(die, () => next(value));
-    }, function (err) {
+const testChain = function (expected, chain: Chain<any, any>) {
+  return Step.raw(function (value,next, die, initLogs) {
+    chain.runChain(Chain.wrap({}), function (actual, newLogs) {
+      assertSuccess('testChain', expected, actual.chain).fold(
+        (err) => die(err, newLogs),
+        (_) => next(value, newLogs)
+      );
+    }, function (err, newLogs) {
       const msg = failOnError('testChain', expected, err);
-      die(msg);
-    });
+      die(msg, newLogs);
+    }, initLogs);
   });
 };
 
-const testChainFail = function (expected, initial, chain) {
-  return Step.async(function (next, die) {
+const testChainFail = function (expected, initial, chain: Chain<any, any>) {
+  return Step.raw(function (initValue, next, die, initLogs) {
     chain.runChain(
       Chain.wrap(initial),
-      function (actual) {
+      function (actual, newLogs) {
         const msg = failOnSuccess('testChainFail', expected, actual.chain)
-        die(msg);
+        die(msg, newLogs);
       },
-      (err) => {
-        assertError('testChainFail', expected, err).fold(die, () => next());
-      }
+      (err, newLogs) => {
+        assertError('testChainFail', expected, err).fold(
+          (err) => die(err, newLogs),
+          (_) => next(initValue, newLogs)
+        );
+      },
+      initLogs
     )
   });
 };
 
-const testChainsFail = (expected, initial, chains) => {
-  return Step.async((next, die) => {
+const testChainsFail = (expected, initial, chains: Array<Chain<any, any>>) => {
+  return Step.raw((initValue, next, die, initLogs) => {
     Chain.pipeline(
       Arr.flatten([
         [Chain.inject(initial)],
         chains
       ]),
-      (v) => {
+      (v, newLogs) => {
         const msg = failOnSuccess('testChainsFail', expected, v);
-        die(msg);
+        die(msg, newLogs);
       },
-      (err) => {
-        assertError('testChainsFail', expected, err).fold(die, () => next());
-      }
+      (err, newLogs) => {
+        assertError('testChainsFail', expected, err).fold(
+          (err) => die(err, newLogs),
+          (_) => next(initValue, newLogs)
+        );
+      },
+      initLogs
     );
   });
 };

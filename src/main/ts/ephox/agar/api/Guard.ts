@@ -1,7 +1,7 @@
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn, RunFn, AgarLogs } from '../pipe/Pipe';
+import { DieFn, NextFn, RunFn, AgarLogs, addLogEntry } from '../pipe/Pipe';
 import * as Logger from './Logger';
 
 export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: AgarLogs) => void;
@@ -34,10 +34,12 @@ const tryUntilNot = function <T, U>(label: string, interval: number, amount: num
 const tryUntil = function <T, U>(label: string, interval: number, amount: number) {
   return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
     const repeat = function (n: number) {
-      f(value, next, function (err, newLogs) {
+      f(value, (v, newLogs) => {
+        next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'))
+      }, function (err, newLogs) {
         if (n <= 0) die(
           ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err),
-          newLogs
+          addLogEntry(newLogs, 'Waited for ' + amount + 'ms for something to be successful. ')
         );
         else {
           setTimeout(function () {
