@@ -17,6 +17,8 @@ export interface AgarLogs {
   history: AgarLogEntry[ ]
 };
 
+const DISABLE_LOGGING = false;
+
 // Pop level needs to change the parent. This would be so much easier with zippers.
 const modifyStartedEntryTo = (entries: AgarLogEntry[], f): AgarLogEntry[] => {
   return Arr.last(entries).fold(
@@ -53,7 +55,7 @@ const modifyStartedEntryTo = (entries: AgarLogEntry[], f): AgarLogEntry[] => {
 };
 
 
-export const modifyStartedEntry = (logs: AgarLogs, f): AgarLogs => {
+const modifyStartedEntry = (logs: AgarLogs, f): AgarLogs => {
   return {
     history: modifyStartedEntryTo(logs.history, f)
   };
@@ -78,7 +80,7 @@ const modifyLastEntryTo = (entries: AgarLogEntry[], f): AgarLogEntry[] => {
   );
 }
 
-export const modifyLastEntry = (logs: AgarLogs, f): AgarLogs => {
+const modifyLastEntry = (logs: AgarLogs, f): AgarLogs => {
   return {
     history: modifyLastEntryTo(logs.history, f)
   };
@@ -107,6 +109,7 @@ const addLogEntryTo = (entries: AgarLogEntry[], newEntry: AgarLogEntry): AgarLog
 
 // TODO: Make a Cons List for efficiency
 export const addLogEntry = (logs: AgarLogs, message: string): AgarLogs => {
+  if (DISABLE_LOGGING) return logs;
   const newEntry = {
     message,
     trace: null,
@@ -120,6 +123,7 @@ export const addLogEntry = (logs: AgarLogs, message: string): AgarLogs => {
 }
 
 export const pushLogLevel = (logs: AgarLogs): AgarLogs => {
+  if (DISABLE_LOGGING) return logs;
   return modifyLastEntry(logs, (entry) => {
     return {
       message: entry.message,
@@ -131,6 +135,7 @@ export const pushLogLevel = (logs: AgarLogs): AgarLogs => {
 };
 
 export const popLogLevel = (logs: AgarLogs): AgarLogs => {
+  if (DISABLE_LOGGING) return logs;
   return modifyStartedEntry(logs, (entry) => {
     return {
       message: entry.message,
@@ -142,6 +147,7 @@ export const popLogLevel = (logs: AgarLogs): AgarLogs => {
 };
 
 export const addStackTrace = (logs: AgarLogs, err): AgarLogs => {
+  if (DISABLE_LOGGING) return logs;
   return modifyLastEntry(logs, (entry) => {
     return {
       message: entry.message,

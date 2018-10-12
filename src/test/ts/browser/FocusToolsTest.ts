@@ -108,7 +108,7 @@ UnitTest.asynctest('FocusToolsTest', function () {
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
-        Assertions.cAssertDomEq('Checking that focused element is the input', value.inputHACKHERE___HEREHR)
+        Assertions.cAssertDomEq('Checking that focused element is the input', value.input)
       ])(value, next, die, logs);
     }),
 
