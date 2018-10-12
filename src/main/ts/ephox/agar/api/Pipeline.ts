@@ -2,7 +2,7 @@ import { console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { AgarLogs, DieFn, NextFn } from '../pipe/Pipe';
+import { AgarLogs, DieFn, NextFn, popLogLevel, pushLogLevel } from '../pipe/Pipe';
 import { Step } from './Main';
 
 
@@ -49,10 +49,11 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
         onFailure(error, logs);
       }
     } else {
-      onSuccess(lastLink, logs);
+      const finalLogs = popLogLevel(logs);
+      onSuccess(lastLink, finalLogs);
     }
   };
-  chain(initial, AgarLogs.getOrInit(initLogs), 0);
+  chain(initial, pushLogLevel(AgarLogs.getOrInit(initLogs)), 0);
 };
 
 export const Pipeline = {

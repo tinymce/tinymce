@@ -9,8 +9,9 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
-import { AgarLogs } from '../../../main/ts/ephox/agar/pipe/Pipe';
+import { AgarLogs, AgarLogEntry } from '../../../main/ts/ephox/agar/pipe/Pipe';
 import { Logger } from '../../../main/ts/ephox/agar/api/Main';
+import { Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('FocusToolsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -116,8 +117,37 @@ UnitTest.asynctest('FocusToolsTest', function () {
     console.log('logs', logs);
     success();
   }, (err, logs) => {
-    console.log('logs', logs);
-    failure(err);
+    console.log('logs', logs, err);
+
+    const outputToStr = (indent: string, entries: AgarLogEntry[]): string[] => {
+      return Arr.bind(entries, (entry) => {
+        debugger;
+        if (entry.entries.length === 0) {
+          if (entry.trace === null) {
+            return [ '*' + indent + entry.message ];
+          } else {
+            return [ '* ' + indent + entry.message ].concat(
+              Arr.map(
+                entry.trace.split('\n'),
+                (s) => '>>' + indent + s
+              )
+            )
+          }
+        } else {
+          // We have entries ... let's format them.
+          return [ '* ' + indent + entry.message ].concat(
+            outputToStr(indent + '  ', entry.entries)
+          )
+        }
+      })
+    }
+
+    const processed = outputToStr('  ', logs.history);
+
+    failure(JSON.stringify({
+      error: err.message,
+      logs: processed
+    }, null, 2));
   });
 });
 
