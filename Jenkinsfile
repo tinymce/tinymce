@@ -28,9 +28,7 @@ node("primary") {
     // TODO: Enable IE at some point
     // ,[ name: "win10IE", os: "windows-10", browser: "ie" ]
 
-    // Safari 12 doesn't work with selenium-webdriver 3.x
-    // ,[ name: "macSafari", os: "macos", browser: "safari" ]
-
+    ,[ name: "macSafari", os: "macos", browser: "safari" ]
     ,[ name: "macChrome", os: "macos", browser: "chrome" ]
     ,[ name: "macFirefox", os: "macos", browser: "firefox" ]
   ]
