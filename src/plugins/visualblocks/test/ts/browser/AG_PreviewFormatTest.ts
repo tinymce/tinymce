@@ -9,7 +9,7 @@ import { StyleSheetLoader } from 'tinymce/core/dom/StyleSheetLoader';
 import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (success, failure) => {
-  const pluginCss = '/project/js/tinymce/plugins/visualblocks/css/visualblocks.css';
+  const pluginCss = '/project/src/plugins/visualblocks/main/css/visualblocks.css';
 
   Theme();
   VisualBlocksPlugin();
