@@ -65,7 +65,7 @@ const open = function (editor, charMap) {
   }, SEARCH_DELAY);
 
   const bridgeSpec = {
-    title: 'Special character',
+    title: 'Special Character',
     size: 'normal',
     body: {
       type: charMap.length === 1 ? 'panel' : 'tabpanel',

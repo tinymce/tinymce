@@ -230,7 +230,7 @@ const showDialog = function (editor) {
   }
 
   win = editor.windowManager.open({
-    title: 'Insert/edit media',
+    title: 'Insert/Edit Media',
     size: 'normal',
 
     body: {
