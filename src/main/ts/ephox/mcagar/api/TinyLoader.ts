@@ -11,10 +11,12 @@ import { getTinymce } from '../loader/Globals';
 import * as TinyVersions from './TinyVersions';
 import { updateTinymceUrls } from '../loader/Urls';
 import { Step, Pipeline } from '@ephox/agar';
+import { registerPlugins, readPlugins } from '../loader/Plugins';
 
 type SuccessCallback = () => void;
 type FailureCallback = (err: Error | string) => void;
 type SetupCallback = (editor, SuccessCallback, FailureCallback) => void;
+type SetupCallbackStep = <T, U>(editor) => Step<T, U>;
 
 const createTarget = function (inline: boolean) {
   const target = Element.fromTag(inline ? 'div' : 'textarea');
@@ -68,15 +70,28 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   );
 };
 
-const setupVersion = (version: string, callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
+const setupVersion = (version: string, testPlugins: string[], callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
+  const plugins = readPlugins(testPlugins);
+
   Pipeline.async({}, [
     TinyVersions.sWithVersion(version, Step.async((next, die) => {
+      registerPlugins(plugins);
       setup(callback, settings, next, die);
-    }))
+    })),
+    Step.sync(() => registerPlugins(plugins))
   ], success, failure);
+};
+
+const sSetupVersion = <T, U>(version: string, testPlugins: string[], callback: SetupCallbackStep, settings: Record<string, any>) => {
+  return Step.async((next, die) => {
+    return setupVersion(version, testPlugins, (editor, onSuccess, onError) => {
+      Pipeline.async({}, [ callback(editor) ], onSuccess, onError);
+    }, settings, next, die);
+  })
 };
 
 export default {
   setup,
-  setupVersion
+  setupVersion,
+  sSetupVersion
 };
