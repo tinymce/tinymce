@@ -4,13 +4,13 @@ import { Element } from '@ephox/sugar';
 import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OriginAdt } from '../../behaviour/positioning/PositionApis';
-import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { AnchorBox, AnchorLayout } from '../../positioning/layout/Layout';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =
-  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent) => void;
+  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent) => void;
 
 export interface CommonAnchorSpec {
   anchor: string;
@@ -19,7 +19,7 @@ export interface CommonAnchorSpec {
 export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec;
 
 export interface AnchorDetail<D> {
-  placement: () => (comp: AlloyComponent, posInfo: PositioningConfig, anchor: D, origin: OriginAdt) => Option<Anchoring>;
+  placement: () => (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Option<Anchoring>;
 }
 
 export type MaxHeightFunction =  (elem: Element, available: number) => void;

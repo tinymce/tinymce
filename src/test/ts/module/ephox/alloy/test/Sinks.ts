@@ -3,6 +3,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import { Option } from '@ephox/katamari';
 
 const fixedSink = () => {
   return GuiFactory.build(

@@ -10,6 +10,8 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Option } from '@ephox/katamari';
 
 export interface OriginAdt extends AdtInterface { }
 
@@ -26,12 +28,12 @@ const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
   return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, posConfig: PositioningConfig, placee: AlloyComponent): void => {
+const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent): void => {
   const anchor = Anchor.box(anchoring.anchorBox(), origin);
-  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), posConfig.getBounds(), anchoring.overrides());
+  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), getBounds, anchoring.overrides());
 };
 
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
+const positionCommon = (component: AlloyComponent, useFixed: boolean, getBounds: Option<() => Bounds>, anchor: AnchorSpec, placee: AlloyComponent): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
@@ -45,12 +47,12 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   // We need to calculate the origin (esp. the bounding client rect) *after* we have done
   // all the preprocessing of the component and placee. Otherwise, the relative positions
   // (bottom and right) will be using the wrong dimensions
-  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+  const origin = useFixed ? getFixedOrigin() : getRelativeOrigin(component);
 
   const placer = anchorage.placement();
-  placer(component, posConfig, anchorage, origin).each((anchoring) => {
+  placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    doPlace(component, origin, anchoring, posConfig, placee);
+    doPlace(component, origin, anchoring, getBounds, placee);
   });
 
   oldVisibility.fold(() => {
@@ -69,11 +71,20 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   ) { Css.remove(placee.element(), 'position'); }
 };
 
+const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
+  positionCommon(component, posConfig.useFixed(), posConfig.getBounds(), anchor, placee);
+};
+
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBounds: () => Bounds): void => {
+  positionCommon(component, posConfig.useFixed(), Option.some(getBounds), anchor, placee);
+};
+
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {
   return pConfig.useFixed() ? 'fixed' : 'absolute';
 };
 
 export {
   position,
+  positionWithin,
   getMode
 };

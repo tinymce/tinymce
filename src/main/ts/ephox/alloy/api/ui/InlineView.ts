@@ -16,6 +16,7 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
 
 const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
@@ -46,7 +47,7 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
       }, submenu);
     },
   });
-}
+};
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
@@ -76,7 +77,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
                 isExtraPart: Fun.constant(false),
               },
               detail.fireDismissalEventInstead().map((fe) => ({
-                'fireEventInstead': {
+                fireEventInstead: {
                   event: fe.event()
                 }
               } as any)).getOr({ })
@@ -95,6 +96,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
         showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
           const sink = detail.lazySink()().getOrDie();
           Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));
+          detail.onShow()(sandbox);
+        },
+        showWithin (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Bounds) {
+          const sink = detail.lazySink()().getOrDie();
+          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, getBounds));
           detail.onShow()(sandbox);
         },
         // TODO AP-191 write a test for showMenuAt
@@ -134,6 +140,9 @@ const InlineView = Sketcher.single({
   apis: {
     showAt (apis, component, anchor, thing) {
       apis.showAt(component, anchor, thing);
+    },
+    showWithin (apis, component, anchor, thing, bounds) {
+      apis.showWithin(component, anchor, thing, bounds);
     },
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);
