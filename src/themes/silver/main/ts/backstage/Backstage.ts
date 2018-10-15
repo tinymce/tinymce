@@ -10,6 +10,7 @@ import { IconProvider } from '../ui/icons/Icons';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 import { UiFactoryBackstageForColorInput, ColorInputBackstage } from './ColorInputBackstage';
+import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -21,6 +22,7 @@ export interface UiFactoryBackstageProviders {
 type UiFactoryBackstageForStyleButton = SelectData;
 
 export interface UiFactoryBackstageShared {
+  translate: (any) => TranslatedString;
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
@@ -43,6 +45,7 @@ export interface UiFactoryBackstage {
 const init = (container, sink, editor) => {
   const backstage: UiFactoryBackstage = {
     shared: {
+      translate: I18n.translate,
       providers: {
         icons: () => editor.ui.registry.getAll().icons
       },

@@ -40,7 +40,7 @@ const createAlignSelect = (editor, backstage) => {
       const match = getMatchingValue();
       const text = match.fold(() => 'Align', (item) => item.title);
       AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
+        text: backstage.shared.translate(text)
       });
     };
   });

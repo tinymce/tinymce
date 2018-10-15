@@ -2,6 +2,8 @@ import { Behaviour, Replacing } from '@ephox/alloy';
 import { IconProvider, getOr } from '../icons/Icons';
 import { Fun } from '@ephox/katamari';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 
 const renderIcon = (iconHtml) =>
   ({
@@ -18,7 +20,7 @@ const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
   );
 };
 
-const renderLabel = (text: string, prefix: string) => ({
+const renderLabel = (text: TranslateIfNeeded, prefix: string, sharedBackstage: UiFactoryBackstageShared) => ({
   dom: {
     tag: 'span',
     innerHtml: text,

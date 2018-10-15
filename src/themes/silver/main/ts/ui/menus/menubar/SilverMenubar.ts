@@ -21,6 +21,7 @@ import { SingleMenuItemApi } from '../menu/SingleMenu';
 import { renderMenuButton } from './Integration';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { SelectorFind, Compare } from '@ephox/sugar';
+import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -45,7 +46,7 @@ export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubar
 }
 
 export interface MenubarItemSpec {
-  text: string;
+  text: TranslatedString;
   getItems: () => SingleMenuItemApi[];
 }
 
@@ -54,7 +55,9 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
     const newMenus = Arr.map(menus, (m) => {
       // FIX: this. Make it go through bridge.
       const buttonSpec = {
-        text: Option.some(m.text),
+
+        // TODO: backstage me
+        text: Option.some(m.text.translation),
         icon: Option.none(),
         fetch: (callback) => {
           callback(m.getItems());

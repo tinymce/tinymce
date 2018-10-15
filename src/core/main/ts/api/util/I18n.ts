@@ -146,6 +146,7 @@ export default {
     };
 
     const translated = (text) => {
+      if (text === 'Headings') { debugger; }
       return { translation: text };
     };
 
@@ -169,7 +170,10 @@ export default {
     }
 
     // straight forward translation mapping
-    return translated(removeContext(getLangData(text)));
+    const bar = translated(removeContext(getLangData(text)));
+
+    if (bar.translation === 'Encabezados') {  debugger; }
+    return bar;
   },
 
   data

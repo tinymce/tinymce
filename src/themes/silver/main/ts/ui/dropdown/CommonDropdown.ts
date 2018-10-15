@@ -47,7 +47,8 @@ export interface BasketballFoo {
 }
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-  const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix)));
+
+  const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage)));
 
   /*
    * The desired behaviour here is:
