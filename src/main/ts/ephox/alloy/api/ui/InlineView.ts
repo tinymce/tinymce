@@ -57,6 +57,44 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     });
   };
 
+  const setContent = (sandbox: AlloyComponent, thing: AlloySpec) => {
+    // Keep the same location, and just change the content.
+    Sandboxing.open(sandbox, thing);
+  };
+  const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
+    const getBounds = Option.none();
+    showWithin(sandbox, anchor, thing, getBounds);
+  };
+  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: Option<() => Bounds>) => {
+    const sink = detail.lazySink()().getOrDie();
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, getBounds));
+    detail.onShow()(sandbox);
+  };
+  // TODO AP-191 write a test for showMenuAt
+  const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+    const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
+
+    Sandboxing.open(sandbox, thing);
+    detail.onShow()(sandbox);
+  };
+  const hide = (sandbox: AlloyComponent) => {
+    Sandboxing.close(sandbox);
+    detail.onHide()(sandbox);
+  };
+  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
+    return Sandboxing.getState(sandbox);
+  };
+
+  const apis = {
+    setContent,
+    showAt,
+    showWithin,
+    showMenuAt,
+    hide,
+    getContent,
+    isOpen: Sandboxing.isOpen
+  };
+
   return Merger.deepMerge(
     {
       uid: detail.uid(),
@@ -88,37 +126,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       ),
       eventOrder: detail.eventOrder(),
 
-      apis: {
-        setContent (sandbox: AlloyComponent, thing: AlloySpec) {
-          // Keep the same location, and just change the content.
-          Sandboxing.open(sandbox, thing);
-        },
-        showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
-          const sink = detail.lazySink()().getOrDie();
-          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));
-          detail.onShow()(sandbox);
-        },
-        showWithin (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Bounds) {
-          const sink = detail.lazySink()().getOrDie();
-          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, getBounds));
-          detail.onShow()(sandbox);
-        },
-        // TODO AP-191 write a test for showMenuAt
-        showMenuAt(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) {
-          const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
-
-          Sandboxing.open(sandbox, thing);
-          detail.onShow()(sandbox);
-        },
-        hide (sandbox: AlloyComponent) {
-          Sandboxing.close(sandbox);
-          detail.onHide()(sandbox);
-        },
-        getContent (sandbox: AlloyComponent): Option<AlloyComponent> {
-          return Sandboxing.getState(sandbox);
-        },
-        isOpen: Sandboxing.isOpen
-      }
+      apis
     }
   );
 };

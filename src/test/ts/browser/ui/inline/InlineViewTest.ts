@@ -149,7 +149,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
                     html: str.is('changed-html')
                   })
                 ]
-              })
+              });
             })
           )
         ])

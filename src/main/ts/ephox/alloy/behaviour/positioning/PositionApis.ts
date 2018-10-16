@@ -33,7 +33,12 @@ const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchorin
   SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), getBounds, anchoring.overrides());
 };
 
-const positionCommon = (component: AlloyComponent, useFixed: boolean, getBounds: Option<() => Bounds>, anchor: AnchorSpec, placee: AlloyComponent): void => {
+const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
+  const getBounds = Option.none();
+  positionWithin(component, posConfig, posState, anchor, placee, getBounds);
+};
+
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBounds: Option<() => Bounds>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
@@ -47,12 +52,12 @@ const positionCommon = (component: AlloyComponent, useFixed: boolean, getBounds:
   // We need to calculate the origin (esp. the bounding client rect) *after* we have done
   // all the preprocessing of the component and placee. Otherwise, the relative positions
   // (bottom and right) will be using the wrong dimensions
-  const origin = useFixed ? getFixedOrigin() : getRelativeOrigin(component);
+  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
   const placer = anchorage.placement();
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    doPlace(component, origin, anchoring, getBounds, placee);
+    doPlace(component, origin, anchoring, getBounds.or(posConfig.getBounds()), placee);
   });
 
   oldVisibility.fold(() => {
@@ -69,14 +74,6 @@ const positionCommon = (component: AlloyComponent, useFixed: boolean, getBounds:
     Css.getRaw(placee.element(), 'bottom').isNone() &&
     Css.getRaw(placee.element(), 'position').is('fixed')
   ) { Css.remove(placee.element(), 'position'); }
-};
-
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
-  positionCommon(component, posConfig.useFixed(), posConfig.getBounds(), anchor, placee);
-};
-
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBounds: () => Bounds): void => {
-  positionCommon(component, posConfig.useFixed(), Option.some(getBounds), anchor, placee);
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {

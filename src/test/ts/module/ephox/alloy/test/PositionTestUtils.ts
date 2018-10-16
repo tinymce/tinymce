@@ -1,5 +1,5 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { Result } from '@ephox/katamari';
+import { Result, Option } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -24,7 +24,7 @@ const cAddPopupToSink = (sinkName) => {
 const cAddPopupToSinkWithin = (sinkName, elem) => {
   return NamedChain.bundle((data: any) => {
     const sink = data[sinkName];
-    const getBounds = () => box(elem);
+    const getBounds = Option.some(() => box(elem));
     const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, getBounds);
     return cAddPopupToSinkCommon(data, sink, positioner);
   });
