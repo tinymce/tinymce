@@ -99,7 +99,7 @@ const open = function (editor, currentIndexState) {
             {
               type: 'checkbox',
               name: 'wholewords',
-              label: 'Whole words'
+              label: 'Find whole words only'
             }
           ]
         }
