@@ -18,7 +18,7 @@ UnitTest.asynctest(
         Log.steps('TBA', 'InsertDateTime: Click on Insertdatetime button and select the first item from the drop down menu. Assert date time is inserted', [
           tinyUi.sClickOnToolbar('click on insertdatetime button', '[aria-haspopup="true"]'),
           tinyUi.sWaitForUi('wait for menu', '[role="menu"]'),
-          tinyUi.sClickOnUi('click on first in menu', '[role="menu"] [role="menuitem"]:first'),
+          tinyUi.sClickOnUi('click on first in menu', '[role="menu"] [role="menuitemcheckbox"]:first'),
           tinyApis.sAssertContentStructure(ApproxStructure.build(function (s) {
             return s.element('body', {
               children: [
