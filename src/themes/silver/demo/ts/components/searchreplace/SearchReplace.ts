@@ -32,7 +32,7 @@ export const SearchReplaceDialogSpec = {
           {
             type: 'checkbox',
             name: 'wholewords',
-            label: 'Whole words'
+            label: 'Find whole words only'
           }
         ]
       }
