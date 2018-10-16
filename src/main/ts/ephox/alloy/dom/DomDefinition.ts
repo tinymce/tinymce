@@ -59,8 +59,8 @@ const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<
     value: defn.value().getOr('<none>'),
     innerHtml: defn.innerHtml().getOr('<none>'),
     defChildren: defn.defChildren().fold(
-      () => '<none>',
-      (d) => Json.stringify(d, null, 2)
+      () => [ '<none>' ],
+      (d) => [ Json.stringify(d, null, 2) ]
     ),
     domChildren: defn.domChildren().fold(() => {
       return '<none>';
