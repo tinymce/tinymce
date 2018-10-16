@@ -12,6 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
+import { Editor } from '../../../../../core/main/ts/api/Editor';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -29,28 +30,6 @@ const findIndex = function (list, predicate) {
   return -1;
 };
 
-const listState = function (editor, listName) {
-  return function (e) {
-    const ctrl = e.control;
-
-    editor.on('NodeChange', function (e) {
-      const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
-      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-      const lists = Tools.grep(parents, ListUtils.isListNode(editor));
-      ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
-    });
-  };
-};
-
-// const updateSelection = function (editor) {
-//   return function (e) {
-//     const listStyleType = ListUtils.getSelectedStyleType(editor);
-//     e.control.items().each(function (ctrl) {
-//       ctrl.active(ctrl.settings.data === listStyleType);
-//     });
-//   };
-// };
-
 // <ListStyles>
 const styleValueToText = function (styleValue) {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
@@ -58,6 +37,13 @@ const styleValueToText = function (styleValue) {
   });
 };
 // </ListStyles>
+
+const isWithinList = (editor: Editor, e, nodeName) => {
+  const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
+  const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+  const lists = Tools.grep(parents, ListUtils.isListNode(editor));
+  return lists.length > 0 && lists[0].nodeName === nodeName;
+};
 
 const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
@@ -81,34 +67,41 @@ const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
       });
       callback(items);
     },
-    onAction: () => {
-      editor.execCommand(cmd);
-    },
+    onAction: () => editor.execCommand(cmd),
     onItemAction: (splitButtonApi, value) => {
       Actions.applyListFormat(editor, nodeName, value);
+    },
+    select: (value) => {
+      const listStyleType = ListUtils.getSelectedStyleType(editor);
+      return listStyleType.map((listStyle) => {
+        return value === listStyle;
+      }).getOr(false);
+    },
+    onSetup: (api) => {
+      const nodeChangeHandler = (e) => {
+        api.setActive(isWithinList(editor, e, nodeName));
+      };
+      editor.on('nodeChange', nodeChangeHandler);
+
+      return () => editor.off('nodeChange', nodeChangeHandler);
     }
-    // menu: ListStyles.toMenuItems(styles),
-    // onPostRender: listState(editor, nodeName),
-    // onshow: updateSelection(editor),
-    // onselect (e) {
-    //   Actions.applyListFormat(editor, nodeName, e.control.settings.data);
-    // },
-    // onclick () {
-    //   editor.execCommand(cmd);
-    // }
   });
 };
 
 const addButton = function (editor, id, tooltip, cmd, nodeName, styles) {
-  editor.ui.registry.addButton(id, {
-    type: 'button',
+  editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
-    icon: nodeName === ListType.OrderedList ? 'icon-ordered-list' : 'icon-unordered-list',
-    onPostRender: listState(editor, nodeName),
-    onclick () {
-      editor.execCommand(cmd);
-    }
+    icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
+    onSetup: (api) => {
+      const nodeChangeHandler = (e) => {
+        api.setActive(isWithinList(editor, e, nodeName));
+      };
+      editor.on('nodeChange', nodeChangeHandler);
+
+      return () => editor.off('nodeChange', nodeChangeHandler);
+    },
+    onAction: () => editor.execCommand(cmd)
   });
 };
 
