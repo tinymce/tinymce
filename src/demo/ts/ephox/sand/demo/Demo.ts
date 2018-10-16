@@ -1,7 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import PlatformDetection from 'ephox/sand/api/PlatformDetection';
 
-var platform = PlatformDetection.detect();
+const platform = PlatformDetection.detect();
 
-var ephoxUi = document.querySelector('#ephox-ui');
+const ephoxUi = document.querySelector('#ephox-ui');
 ephoxUi.innerHTML = 'You are using: ' + platform.browser.current;

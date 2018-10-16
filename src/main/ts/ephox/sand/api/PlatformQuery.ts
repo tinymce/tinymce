@@ -1,32 +1,34 @@
-var isEdge = function (platform) {
+import { PlatformDetection } from "../core/PlatformDetection";
+
+const isEdge = function (platform: PlatformDetection) {
   return platform.browser.isEdge();
 };
 
-var isChrome = function (platform) {
+const isChrome = function (platform: PlatformDetection) {
   return platform.browser.isChrome();
 };
 
-var isFirefox = function (platform) {
+const isFirefox = function (platform: PlatformDetection) {
   return platform.browser.isFirefox();
 };
 
-var isIE11 = function (platform) {
+const isIE11 = function (platform: PlatformDetection) {
   return isIE(platform) && platform.browser.version.major === 11;
 };
 
-var isIE = function (platform) {
+const isIE = function (platform: PlatformDetection) {
   return platform.browser.isIE();
 };
 
-var isSafari = function (platform) {
+const isSafari = function (platform: PlatformDetection) {
   return platform.browser.isSafari();
 };
 
-var isOpera = function (platform) {
+const isOpera = function (platform: PlatformDetection) {
   return platform.browser.isOpera();
 };
 
-export default <any> {
+export default {
   isEdge: isEdge,
   isChrome: isChrome,
   isFirefox: isFirefox,

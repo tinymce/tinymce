@@ -1,39 +1,42 @@
-import { Arr } from '@ephox/katamari';
+export interface Version {
+  major: number;
+  minor: number;
+}
 
-var firstMatch = function (regexes, s) {
-  for (var i = 0; i < regexes.length; i++) {
-    var x = regexes[i];
+const firstMatch = function (regexes: RegExp[], s: string): RegExp | undefined {
+  for (let i = 0; i < regexes.length; i++) {
+    const x = regexes[i];
     if (x.test(s)) return x;
   }
   return undefined;
 };
 
-var find = function (regexes, agent) {
-  var r = firstMatch(regexes, agent);
+const find = function (regexes: RegExp[], agent: string): Version {
+  const r = firstMatch(regexes, agent);
   if (!r) return { major : 0, minor : 0 };
-  var group = function(i) {
+  const group = function(i: number) {
     return Number(agent.replace(r, '$' + i));
   };
   return nu(group(1), group(2));
 };
 
-var detect = function (versionRegexes, agent) {
-  var cleanedAgent = String(agent).toLowerCase();
+const detect = function (versionRegexes: RegExp[], agent: any): Version {
+  const cleanedAgent = String(agent).toLowerCase();
 
   if (versionRegexes.length === 0) return unknown();
   return find(versionRegexes, cleanedAgent);
 };
 
-var unknown = function () {
+const unknown = function (): Version {
   return nu(0, 0);
 };
 
-var nu = function (major, minor) {
+const nu = function (major: number, minor: number): Version {
   return { major: major, minor: minor };
 };
 
-export default <any> {
-  nu: nu,
-  detect: detect,
-  unknown: unknown
+export const Version = {
+  nu,
+  detect,
+  unknown
 };

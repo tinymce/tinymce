@@ -1,15 +1,21 @@
 import { Fun } from '@ephox/katamari';
 import { Strings } from '@ephox/katamari';
 
+export interface PlatformInfo {
+  name: string;
+  versionRegexes: RegExp[],
+  search: (uastring: string) => boolean;
+}
+
 var normalVersionRegex = /.*?version\/\ ?([0-9]+)\.([0-9]+).*/;
 
-var checkContains = function (target) {
-  return function (uastring) {
+var checkContains = function (target: string) {
+  return function (uastring: string) {
     return Strings.contains(uastring, target);
   };
 };
 
-var browsers = [
+var browsers: PlatformInfo[] = [
   {
     name : 'Edge',
     versionRegexes: [/.*?edge\/ ?([0-9]+)\.([0-9]+)$/],
@@ -52,7 +58,7 @@ var browsers = [
   }
 ];
 
-var oses = [
+var oses: PlatformInfo[] = [
   {
     name : 'Windows',
     search : checkContains('win'),
@@ -91,7 +97,7 @@ var oses = [
   }
 ];
 
-export default <any> {
+export const PlatformInfo = {
   browsers: Fun.constant(browsers),
   oses: Fun.constant(oses)
 };

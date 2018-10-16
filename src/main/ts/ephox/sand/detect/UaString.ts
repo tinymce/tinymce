@@ -1,8 +1,14 @@
 import { Arr } from '@ephox/katamari';
-import Version from './Version';
+import { Version } from './Version';
+import { PlatformInfo } from '../info/PlatformInfo';
 
-var detect = function (candidates, userAgent) {
-  var agent = String(userAgent).toLowerCase();
+export interface UaString {
+  current: string | undefined;
+  version: Version;
+}
+
+const detect = function (candidates: PlatformInfo[], userAgent: any) {
+  const agent = String(userAgent).toLowerCase();
   return Arr.find(candidates, function (candidate) {
     return candidate.search(agent);
   });
@@ -10,9 +16,9 @@ var detect = function (candidates, userAgent) {
 
 // They (browser and os) are the same at the moment, but they might
 // not stay that way.
-var detectBrowser = function (browsers, userAgent) {
-  return detect(browsers, userAgent).map(function (browser) {
-    var version = Version.detect(browser.versionRegexes, userAgent);
+const detectBrowser = function (browsers: PlatformInfo[], userAgent: any) {
+  return detect(browsers, userAgent).map(function (browser): UaString {
+    const version = Version.detect(browser.versionRegexes, userAgent);
     return {
       current: browser.name,
       version: version
@@ -20,9 +26,9 @@ var detectBrowser = function (browsers, userAgent) {
   });
 };
 
-var detectOs = function (oses, userAgent) {
-  return detect(oses, userAgent).map(function (os) {
-    var version = Version.detect(os.versionRegexes, userAgent);
+const detectOs = function (oses: PlatformInfo[], userAgent: any) {
+  return detect(oses, userAgent).map(function (os): UaString {
+    const version = Version.detect(os.versionRegexes, userAgent);
     return {
       current: os.name,
       version: version
@@ -30,7 +36,7 @@ var detectOs = function (oses, userAgent) {
   });
 };
 
-export default <any> {
+export const UaString = {
   detectBrowser: detectBrowser,
   detectOs: detectOs
 };

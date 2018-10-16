@@ -1,22 +1,28 @@
-import Browser from './Browser';
-import OperatingSystem from './OperatingSystem';
-import DeviceType from '../detect/DeviceType';
-import UaString from '../detect/UaString';
-import PlatformInfo from '../info/PlatformInfo';
+import { Browser } from './Browser';
+import { OperatingSystem } from './OperatingSystem';
+import { DeviceType } from '../detect/DeviceType';
+import { UaString } from '../detect/UaString';
+import { PlatformInfo } from '../info/PlatformInfo';
 
-var detect = function (userAgent) {
-  var browsers = PlatformInfo.browsers();
-  var oses = PlatformInfo.oses();
+export interface PlatformDetection {
+  browser: Browser;
+  os: OperatingSystem;
+  deviceType: DeviceType;
+}
 
-  var browser = UaString.detectBrowser(browsers, userAgent).fold(
+const detect = function (userAgent: string): PlatformDetection {
+  const browsers = PlatformInfo.browsers();
+  const oses = PlatformInfo.oses();
+
+  const browser = UaString.detectBrowser(browsers, userAgent).fold(
     Browser.unknown,
     Browser.nu
   );
-  var os = UaString.detectOs(oses, userAgent).fold(
+  const os = UaString.detectOs(oses, userAgent).fold(
     OperatingSystem.unknown,
     OperatingSystem.nu
   );
-  var deviceType = DeviceType(os, browser, userAgent);
+  const deviceType = DeviceType(os, browser, userAgent);
 
   return {
     browser: browser,
@@ -25,6 +31,6 @@ var detect = function (userAgent) {
   };
 };
 
-export default <any> {
-  detect: detect
+export const PlatformDetection = {
+  detect
 };

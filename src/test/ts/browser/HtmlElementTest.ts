@@ -3,7 +3,7 @@ import { document } from '@ephox/dom-globals';
 import { HTMLElement } from 'ephox/sand/api/Main';
 
 UnitTest.test('HtmlElementTest',function () {
-  var span = document.createElement('div');
+  const span = document.createElement('div');
   assert.eq(false, HTMLElement.isPrototypeOf(null));
   assert.eq(false, HTMLElement.isPrototypeOf(undefined));
   assert.eq(false, HTMLElement.isPrototypeOf('a string'));

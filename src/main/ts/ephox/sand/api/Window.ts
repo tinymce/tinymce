@@ -11,8 +11,8 @@ import Global from '../util/Global';
  * IE10 and above per
  * https://developer.mozilla.org/en/docs/Web/API/window.requestAnimationFrame
  */
-var requestAnimationFrame = function (callback) {
-  var f = Global.getOrDie('requestAnimationFrame');
+const requestAnimationFrame = function (callback: Function) {
+  const f: typeof requestAnimationFrame = Global.getOrDie('requestAnimationFrame');
   f(callback);
 };
 
@@ -20,12 +20,12 @@ var requestAnimationFrame = function (callback) {
  * IE10 and above per
  * https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64.atob
  */
-var atob = function (base64) {
-  var f = Global.getOrDie('atob');
+const atob = function (base64: any) {
+  const f: typeof atob = Global.getOrDie('atob');
   return f(base64);
 };
 
-export default <any> {
-  atob: atob,
-  requestAnimationFrame: requestAnimationFrame
+export default {
+  atob,
+  requestAnimationFrame
 };
