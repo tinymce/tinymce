@@ -10,6 +10,7 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { Element as DomElement } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import InsertList from './InsertList';
 import CaretPosition from '../caret/CaretPosition';
@@ -44,7 +45,7 @@ const selectionSetContent = (editor: Editor, content: string) => {
   editor.selection.setContent(content);
 };
 
-const validInsertion = function (editor: Editor, value: string, parentNode: Element) {
+const validInsertion = function (editor: Editor, value: string, parentNode: DomElement) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -61,7 +62,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: Elem
   }
 };
 
-const trimBrsFromTableCell = function (dom: DOMUtils, elm: Element) {
+const trimBrsFromTableCell = function (dom: DOMUtils, elm: DomElement) {
   Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
@@ -92,7 +93,7 @@ const markFragmentElements = (fragment: ParserNode) => {
   }
 };
 
-const umarkFragmentElements = (elm: Element) => {
+const umarkFragmentElements = (elm: DomElement) => {
   Tools.each(elm.getElementsByTagName('*'), (elm) => {
     elm.removeAttribute('data-mce-fragment');
   });
