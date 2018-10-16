@@ -16,6 +16,7 @@ import { SelectorFind, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from '../../../../../main/ts/ui/dialog/ColorInput';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
@@ -51,6 +52,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                    Result.value
                  );
                },
+               translate: I18n.translate,
                providers: {
                 icons: () => <Record<string, string>> {}
               }

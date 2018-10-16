@@ -1,31 +1,30 @@
 import {
   AddEventsBehaviour,
   AlloyEvents,
+  AlloySpec,
   AlloyTriggers,
   Behaviour,
+  Composing,
   CustomEvent,
+  Focusing,
   FormField,
   Input,
   Invalidating,
+  Layout,
   Memento,
   Representing,
   SimpleSpec,
-  AlloySpec,
-  Composing,
   Tabstopping,
-  Focusing,
-  Layout,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Result, Option } from '@ephox/katamari';
+import { Future, Id, Option, Result } from '@ephox/katamari';
 import { Css, Element, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { renderPanelButton } from '../general/PanelButton';
-import { renderLabel } from '../alien/FieldLabeller';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
-
+import { renderLabel } from '../alien/FieldLabeller';
 import ColorSwatch from '../core/color/ColorSwatch';
+import { renderPanelButton } from '../general/PanelButton';
 
 const colorInputChangeEvent = Id.generate('color-change');
 const colorSwatchChangeEvent = Id.generate('hex-change');
@@ -87,7 +86,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
     ])
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map(renderLabel);
+  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage));
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {

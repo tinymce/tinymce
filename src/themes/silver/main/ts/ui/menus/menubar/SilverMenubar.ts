@@ -21,7 +21,7 @@ import { SingleMenuItemApi } from '../menu/SingleMenu';
 import { renderMenuButton } from './Integration';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { SelectorFind, Compare } from '@ephox/sugar';
-import { TranslatedString } from 'tinymce/core/api/util/I18n';
+import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -57,7 +57,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       const buttonSpec = {
 
         // TODO: backstage me
-        text: Option.some(m.text.translation),
+        text: Option.some(m.text),
         icon: Option.none(),
         fetch: (callback) => {
           callback(m.getItems());
@@ -69,7 +69,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         MenuButtonClasses.Button,
         {
           getSink: detail.getSink(),
-          providers: detail.providers()
+          providers: detail.providers(),
+          translate: I18n.translate
         },
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         'menuitem'

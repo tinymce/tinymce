@@ -3,6 +3,7 @@ import { FormField as AlloyFormField, SketchSpec, RawDomSchema } from '@ephox/al
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
 import { Option } from '@ephox/katamari';
 import { FormFieldSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormFieldTypes';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const renderFormFieldWith = (pLabel: Option<ConfiguredPart>, pField: ConfiguredPart, extraClasses: string[]): SketchSpec => {
   const spec = renderFormFieldSpecWith(pLabel, pField, extraClasses);
@@ -38,7 +39,7 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => {
   };
 };
 
-const renderLabel = (label: string): ConfiguredPart => {
+const renderLabel = (label: string, backstage: UiFactoryBackstageShared): ConfiguredPart => {
   return AlloyFormField.parts().label({
     dom: {
       tag: 'label',

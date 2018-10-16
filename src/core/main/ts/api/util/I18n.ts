@@ -10,7 +10,6 @@
 
 import Tools from './Tools';
 import { Type, Obj } from '@ephox/katamari';
-
 /**
  * I18n class that handles translation of TinyMCE UI.
  * Uses po style with csharp style parameters.
@@ -21,17 +20,17 @@ import { Type, Obj } from '@ephox/katamari';
 const data = {};
 let code = 'en';
 
-export interface TranslatedString {
-  translation: string;
-}
-
 export interface RawString {
   raw: string;
 }
 
 export type TokenisedString = string[];
 
-export type TranslateIfNeeded = any | TranslatedString;
+export type Untranslated = any;
+
+export type TranslatedString = string;
+
+export type TranslateIfNeeded = Untranslated | TranslatedString;
 
 const isRaw = (str: any): str is RawString => {
   if (!Type.isObject(str)) {
@@ -109,10 +108,7 @@ export default {
    * @param {String/Object/Array} text Text to translate.
    * @return {String} String that got translated.
    */
-  translate (text: any): TranslatedString {
-    // has already been translated
-    if (text && text.translation) { return text; }
-
+  translate (text: Untranslated): TranslatedString {
     const langData = data[code] || {};
     /**
      * number - string
@@ -145,9 +141,9 @@ export default {
       return str.replace(/{context:\w+}$/, '');
     };
 
-    const translated = (text) => {
-      if (text === 'Headings') { debugger; }
-      return { translation: text };
+    const translated = (text): TranslatedString => {
+      // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
+      return text;
     };
 
     // empty strings
@@ -170,10 +166,7 @@ export default {
     }
 
     // straight forward translation mapping
-    const bar = translated(removeContext(getLangData(text)));
-
-    if (bar.translation === 'Encabezados') {  debugger; }
-    return bar;
+    return translated(removeContext(getLangData(text)));
   },
 
   data

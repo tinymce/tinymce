@@ -51,7 +51,7 @@ const createIframeElement = function (id: string, title: TranslatedString, heigh
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title: title.translation
+    title
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');

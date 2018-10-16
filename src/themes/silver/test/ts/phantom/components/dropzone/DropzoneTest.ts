@@ -5,8 +5,13 @@ import { Option } from '@ephox/katamari';
 
 import { renderDropZone } from '../../../../../main/ts/ui/dialog/Dropzone';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Dropzone component Test', (success, failure) => {
+  const sharedBackstage = {
+    translate: I18n.translate
+  };
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -16,7 +21,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
           name: 'drop1',
           label: Option.some('Dropzone Label'),
           colspan: Option.none()
-        })
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

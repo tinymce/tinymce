@@ -1,10 +1,11 @@
 import { Behaviour, FormField as AlloyFormField, HtmlSelect, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { renderFormField, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // I think this was from before bridge. I don't think it is used.
-export const renderListbox = (spec: ListboxFoo): SketchSpec => {
-  const pLabel = renderLabel(spec.label);
+export const renderListbox = (spec: ListboxFoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+  const pLabel = renderLabel(spec.label, sharedBackstage);
 
   const pField = AlloyFormField.parts().field({
     factory: HtmlSelect,

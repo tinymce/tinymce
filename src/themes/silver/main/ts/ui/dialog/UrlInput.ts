@@ -178,7 +178,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     }
   });
 
-  const pLabel = spec.label.map(renderLabel) as Option<AlloySpec>;
+  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage)) as Option<AlloySpec>;
 
   // TODO: Consider a way of merging with Checkbox.
   const makeIcon = (name, icon = name) => ({

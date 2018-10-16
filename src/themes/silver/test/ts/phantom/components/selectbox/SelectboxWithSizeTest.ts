@@ -7,8 +7,17 @@ import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
+
+  const sharedBackstage = {
+    translate: I18n.translate,
+    providers: {
+      icons: () => <Record<string, string>> {}
+    }
+  };
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -25,9 +34,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
             { value: 'four', text: 'Four'},
             { value: 'five', text: 'Five'}
           ]
-        }, {
-          icons: () => <Record<string, string>> {}
-        })
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

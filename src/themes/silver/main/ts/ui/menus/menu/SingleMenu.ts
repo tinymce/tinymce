@@ -47,7 +47,6 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: MenuIte
       if (item.item.type === 'menuitem') {
         return BridgeMenu.createMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
       } else if (item.item.type === 'togglemenuitem') {
-        debugger;
         return BridgeMenu.createToggleMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
       } else {
         console.error('Unsupported style item delegate', item.item);
@@ -176,9 +175,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   const hasIcons = menuHasIcons(items);
   const alloyItems = Options.cat<ItemSpec>(
     Arr.map(items, (item) => {
-      const foo = createMenuItemFromBridge(item, itemResponse, providersBackstage);
-      debugger;
-      return foo;
+      return createMenuItemFromBridge(item, itemResponse, providersBackstage);
     })
   );
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');

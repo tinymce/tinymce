@@ -7,6 +7,7 @@ import { renderIFrame } from '../../../../../main/ts/ui/dialog/IFrame';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import { PlatformDetection } from '@ephox/sand';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('IFrame component Test', (success, failure) => {
   if (PlatformDetection.detect().browser.isIE()) {
@@ -15,6 +16,11 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     success();
     return;
   }
+
+  const sharedBackstage = {
+    translate: I18n.translate
+  };
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -25,7 +31,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           colspan: Option.none(),
           sandboxed: true,
           flex: false
-        })
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

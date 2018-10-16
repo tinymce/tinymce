@@ -3,9 +3,8 @@ import { Pipeline } from '@ephox/agar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
+
   const suite = LegacyUnit.createSuite();
 
   suite.test('Translate strings', function () {
@@ -32,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function () {
     LegacyUnit.equal(translate(['untranslated value:{0}{1}', 'a']), 'untranslated value:a{1}',
       'Do not strip tokens that weren\'t replaced.');
 
-    LegacyUnit.equal(translate([{}]), '[object Object]');
+    LegacyUnit.equal(translate([{ }]), '[object Object]');
     LegacyUnit.equal(translate(function () { }), '[object Function]');
 
     LegacyUnit.equal(translate(null), '');

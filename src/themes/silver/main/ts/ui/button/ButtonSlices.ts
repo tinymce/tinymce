@@ -23,7 +23,7 @@ const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
 const renderLabel = (text: TranslateIfNeeded, prefix: string, sharedBackstage: UiFactoryBackstageShared) => ({
   dom: {
     tag: 'span',
-    innerHtml: text,
+    innerHtml: sharedBackstage.translate(text),
     classes: [ `${prefix}__select-label` ]
   },
   behaviours: Behaviour.derive([

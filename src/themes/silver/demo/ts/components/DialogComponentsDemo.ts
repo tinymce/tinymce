@@ -39,6 +39,7 @@ const helpers = setupDemo();
 
 const sharedBackstage: UiFactoryBackstageShared = {
   getSink: helpers.extras.backstage.shared.getSink,
+  translate: helpers.extras.backstage.shared.translate,
   providers: helpers.extras.backstage.shared.providers,
   interpreter: (x) => x
 };
@@ -69,7 +70,7 @@ export default () => {
     colspan: Option.none(),
     sandboxed: true,
     flex: false
-  });
+  }, sharedBackstage);
 
   const inputSpec = renderInput({
     name: 'input',
@@ -77,7 +78,7 @@ export default () => {
     validation: Option.some({
       validator: (s) => s === 'bad' ? 'Bad' : true
     })
-  });
+  }, sharedBackstage);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
@@ -86,7 +87,7 @@ export default () => {
     validation: Option.some({
       validator: (s) => s === 'so bad' ? 'So bad' : true
     })
-  });
+  }, sharedBackstage);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
     return {
@@ -111,7 +112,7 @@ export default () => {
       { value: 'gamma', text: 'Gamma' }
     ],
     initialValue: Option.some('beta')
-  });
+  }, sharedBackstage);
 
   const gridSpec = renderGrid({
     type: 'grid',
@@ -189,7 +190,7 @@ export default () => {
     name: 'dropzone-demo',
     colspan: Option.none(),
     label: Option.some('Dropzone label')
-  });
+  }, sharedBackstage);
 
   const selectBoxSpec = renderSelectBox({
     type: 'selectbox',
@@ -201,7 +202,7 @@ export default () => {
       { value: 'one', text: 'One' },
       { value: 'two', text: 'Two' }
     ]
-  }, sharedBackstage.providers);
+  }, sharedBackstage);
 
   const selectBoxSizeSpec = renderSelectBox({
     type: 'selectbox',
@@ -217,7 +218,7 @@ export default () => {
       { value: 'five', text: 'Five' },
       { value: 'six', text: 'Six' }
     ]
-  }, sharedBackstage.providers);
+  }, sharedBackstage);
 
   const sizeInputSpec = renderSizeInput({
     constrain: true,
@@ -301,7 +302,7 @@ export default () => {
       name: 'collection',
       label: Option.some('Collection: '),
       colspan: Option.none()
-    })
+    }, sharedBackstage)
   );
 
   const everything = GuiFactory.build({

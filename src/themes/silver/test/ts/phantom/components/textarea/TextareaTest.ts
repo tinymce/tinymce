@@ -6,8 +6,13 @@ import { Option } from '@ephox/katamari';
 import { renderTextarea } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
+
+  const sharedBackstage = {
+    translate: I18n.translate
+  };
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -16,7 +21,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
           flex: false,
           label: Option.some('LabelA'),
           validation: Option.none()
-        })
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

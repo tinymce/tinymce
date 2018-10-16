@@ -4,6 +4,7 @@ import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { LinkInformation, UrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const setupDemo = () => {
 // begin of demo helpers
@@ -54,6 +55,7 @@ const setupDemo = () => {
 
   const backstage: UiFactoryBackstage = {
     shared: {
+      translate: I18n.translate,
       providers: {
         icons: () => <Record<string, string>> {}
       },

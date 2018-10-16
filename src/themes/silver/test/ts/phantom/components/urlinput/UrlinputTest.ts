@@ -8,6 +8,7 @@ import { LinkTargetType } from '../../../../../main/ts/ui/core/LinkTargets';
 import { renderUrlInput } from '../../../../../main/ts/ui/dialog/UrlInput';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { UrlData } from '../../../../../main/ts/backstage/UrlInputBackstage';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   GuiSetup.setup(
@@ -43,6 +44,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                   Result.value
                 );
               },
+              translate: I18n.translate,
               providers: {
                 icons: () => <Record<string, string>> {}
               }
