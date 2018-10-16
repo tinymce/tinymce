@@ -1,7 +1,7 @@
 import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Node, Traverse, Element } from '@ephox/sugar';
+import { DomEvent, Node, Traverse, Element, Attr, SelectorExists } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
@@ -14,7 +14,7 @@ import { setTimeout, KeyboardEvent } from '@ephox/dom-globals';
 const isDangerous = (event: SugarEvent): boolean => {
   // Will trigger the Back button in the browser
   const keyEv = event.raw() as KeyboardEvent;
-  return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
+  return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target())) && !SelectorExists.closest(event.target(), '[contenteditable="true"]');
 };
 
 const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
@@ -103,7 +103,11 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
   const onKeydown = DomEvent.bind(container, 'keydown', (event) => {
     // Prevent default of backspace when not in input fields.
     const stopped = settings.triggerEvent('keydown', event);
-    if (stopped) { event.kill(); } else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
+    if (stopped) {
+      event.kill();
+    } else if (settings.stopBackspace === true && isDangerous(event)) {
+      event.prevent();
+    }
   }) as SugarListener;
 
   const onFocusIn = bindFocus(container, (event: SugarEvent) => {
