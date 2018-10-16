@@ -24,7 +24,7 @@ const createState = (blob) => {
 const makeOpen = (editor, imageUploadTimerState) => () => {
   const getLoadedSpec = (currentState) => {
     return {
-      title: 'Edit image',
+      title: 'Edit Image',
       size: 'large',
       body: {
         type: 'panel',
