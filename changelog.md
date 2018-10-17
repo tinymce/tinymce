@@ -6,15 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.48.0] - 2019-10-17
+## [3.49.0] - 2018-10-18
+### Fixed
+ - Backspace keys are no longer swallowed in content-editable sections
+
+## [3.48.0] - 2018-10-17
 ### Added
  - positionWithin API to Positioning behaviour and showWithin API to InlineView sketcher, allowing positioning within bounds without prior configuration
 
-## [3.47.0] - 2019-10-10
+## [3.47.0] - 2018-10-10
 ### Added
  - layouts property to dropdown, split dropdown and type ahead specs, to modify the position of the resulting menu of these components.
 
-## [3.46.0] - 2019-09-28
+## [3.46.0] - 2018-09-28
 ### Added
  - useMinWidth property to dropdown and split dropdown specs, to modify matchWidth's behaviour. When true, matchWidth sets min-width, when false it sets width.
 

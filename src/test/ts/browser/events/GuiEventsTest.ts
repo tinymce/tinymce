@@ -1,6 +1,6 @@
-import { Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Keys, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Attr, Css, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
+import { Attr, Css, Element, Insert, Node, Remove, Text, DomEvent } from '@ephox/sugar';
 import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import * as DomRender from 'ephox/alloy/dom/DomRender';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
@@ -19,6 +19,14 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
           uid: 'test-uid-1a',
           tag: 'input',
           classes: [ 'test-input' ]
+        },
+        {
+          uid: 'test-uid-a-editor',
+          tag: 'div',
+          attributes: {
+            contenteditable: 'true'
+          },
+          classes: [ 'test-contenteditable' ]
         },
         {
           uid: 'test-uid-1b',
@@ -56,7 +64,14 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const body = Element.fromDom(document.body);
   Insert.append(body, page);
 
+  const outerStore = TestStore();
   const store = TestStore();
+
+  const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
+    if (evt.raw().which === Keys.backspace()) {
+      outerStore.adder('Backspace on ' + Node.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
+    }
+  });
 
   const triggerEvent = (eventName, event) => {
     const target = event.target();
@@ -82,6 +97,42 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
       ]
     ),
 
+    Logger.t(
+      'Check that backspace is NOT prevent defaulted on inputs',
+      GeneralSteps.sequence([
+        Keyboard.sKeydown(doc, Keys.backspace(), { }),
+        outerStore.sAssertEq('Checking backspace gets prevent default on inputs', [ 'Backspace on input: preventDefault = false' ]),
+        outerStore.sClear
+      ])
+    ),
+
+    store.sClear
+  ]);
+
+  const sTestFocusContentEditable = GeneralSteps.sequence([
+    FocusTools.sSetFocus(
+      'Focusing test input',
+      page,
+      '.test-contenteditable'
+    ),
+
+    store.sAssertEq(
+      'Checking event log after focusing test-contenteditable',
+      [
+        { eventName: 'focusout', target: 'test-input' },
+        { eventName: 'focusin', target: 'test-contenteditable' }
+      ]
+    ),
+
+    Logger.t(
+      'Check that backspace is NOT prevent defaulted on contenteditable',
+      GeneralSteps.sequence([
+        Keyboard.sKeydown(doc, Keys.backspace(), { }),
+        outerStore.sAssertEq('Checking backspace gets prevent default on contenteditable', [ 'Backspace on div: preventDefault = false' ]),
+        outerStore.sClear
+      ])
+    ),
+
     store.sClear
   ]);
 
@@ -98,10 +149,20 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     store.sAssertEq(
       'Checking event log after focusing span',
       [
-        { eventName: 'focusout', target: 'test-input' },
+        { eventName: 'focusout', target: 'test-contenteditable' },
         { eventName: 'focusin', target: 'focusable-span' },
-        { eventName: 'alloy.blur.post', target: 'test-input' }
+        { eventName: 'alloy.blur.post', target: 'test-input' },
+        { eventName: 'alloy.blur.post', target: 'test-contenteditable' }
       ]
+    ),
+
+    Logger.t(
+      'Check that backspace is prevent defaulted on spans',
+      GeneralSteps.sequence([
+        Keyboard.sKeydown(doc, Keys.backspace(), { }),
+        outerStore.sAssertEq('Checking backspace gets prevent default on spans', [ 'Backspace on span: preventDefault = true' ]),
+        outerStore.sClear
+      ])
     ),
 
     store.sClear
@@ -231,6 +292,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   Pipeline.async({}, [
     sTestFocusInput,
+    sTestFocusContentEditable,
     sTestFocusSpan,
     sTestKeydown,
     sTestClick,
@@ -253,6 +315,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestUnbind
   ], () => {
     Remove.remove(page);
+    onBodyKeydown.unbind();
     success();
   }, failure);
 });
