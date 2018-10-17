@@ -24,7 +24,7 @@ let promise = () => {
   };
 
   // Use polyfill for setImmediate for performance gains
-  var asap = Promise.immediateFn || (typeof setImmediate === 'function' && setImmediate) ||
+  var asap = Promise.immediateFn || (typeof window.setImmediate === 'function' && window.setImmediate) ||
     function (fn) { setTimeout(fn, 1); };
 
   // Polyfill for Function.prototype.bind

@@ -187,7 +187,7 @@ function blobToCanvas(blob) {
 
 function blobToDataUri(blob) {
   return new Promise(function (resolve) {
-    var reader = new FileReader();
+    var reader = FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
@@ -199,7 +199,7 @@ function blobToDataUri(blob) {
 
 function blobToArrayBuffer(blob) {
   return new Promise(function (resolve) {
-    var reader = new FileReader();
+    var reader = FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
