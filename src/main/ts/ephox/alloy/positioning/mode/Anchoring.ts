@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { AnchorBox, AnchorLayout } from '../../positioning/layout/Layout';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Bounds } from '../../alien/Boxes';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =
