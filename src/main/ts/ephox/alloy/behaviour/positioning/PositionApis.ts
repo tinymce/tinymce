@@ -38,7 +38,7 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithin(component, posConfig, posState, anchor, placee, getBounds);
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBoxElement: Option<() => Element>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
@@ -57,7 +57,7 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   const placer = anchorage.placement();
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    doPlace(component, origin, anchoring, getBoxElement.map((getBoxElem) => () => box(getBoxElem())).or(posConfig.getBounds()), placee);
+    doPlace(component, origin, anchoring, boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds()), placee);
   });
 
   oldVisibility.fold(() => {

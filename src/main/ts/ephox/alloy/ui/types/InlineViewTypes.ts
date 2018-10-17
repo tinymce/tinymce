@@ -46,7 +46,7 @@ export interface InlineMenuSpec {
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {
   showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
-  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBoxElement: Option<() => Element>) => void;
+  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => void;
   showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;

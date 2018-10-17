@@ -24,8 +24,8 @@ const cAddPopupToSink = (sinkName) => {
 const cAddPopupToSinkWithin = (sinkName, elem) => {
   return NamedChain.bundle((data: any) => {
     const sink = data[sinkName];
-    const getBoxElement = Option.some(() => elem);
-    const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, getBoxElement);
+    const boxElement = Option.some(elem);
+    const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement);
     return cAddPopupToSinkCommon(data, sink, positioner);
   });
 };
