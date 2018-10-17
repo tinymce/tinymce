@@ -17,6 +17,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
 import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Element } from '@ephox/sugar';
 
 const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
@@ -65,9 +66,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     const getBounds = Option.none();
     showWithin(sandbox, anchor, thing, getBounds);
   };
-  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: Option<() => Bounds>) => {
+  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBoxElement: Option<() => Element>) => {
     const sink = detail.lazySink()().getOrDie();
-    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, getBounds));
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, getBoxElement));
     detail.onShow()(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt

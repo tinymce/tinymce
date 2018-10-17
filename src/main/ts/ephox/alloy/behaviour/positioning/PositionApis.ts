@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Css, Location } from '@ephox/sugar';
+import { Css, Location, Element } from '@ephox/sugar';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
@@ -10,7 +10,7 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Bounds, box } from '../../alien/Boxes';
 import { Option } from '@ephox/katamari';
 
 export interface OriginAdt extends AdtInterface { }
@@ -38,7 +38,7 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithin(component, posConfig, posState, anchor, placee, getBounds);
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBounds: Option<() => Bounds>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, getBoxElement: Option<() => Element>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
@@ -57,7 +57,7 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   const placer = anchorage.placement();
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    doPlace(component, origin, anchoring, getBounds.or(posConfig.getBounds()), placee);
+    doPlace(component, origin, anchoring, getBoxElement.map((getBoxElem) => () => box(getBoxElem())).or(posConfig.getBounds()), placee);
   });
 
   oldVisibility.fold(() => {
