@@ -32,7 +32,7 @@ export default function (settings) {
   const defaultHandler = function (blobInfo, success, failure, progress) {
     let xhr, formData;
 
-    xhr = new XMLHttpRequest();
+    xhr = XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 

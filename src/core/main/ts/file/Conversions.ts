@@ -27,7 +27,7 @@ const blobUriToBlob = function (url: string): Promise<Blob> {
     };
 
     try {
-      const xhr = new XMLHttpRequest();
+      const xhr = XMLHttpRequest();
 
       xhr.open('GET', url, true);
       xhr.responseType = 'blob';
@@ -82,7 +82,7 @@ const dataUriToBlob = function (uri: string): Promise<Blob> {
       return;
     }
 
-    arr = new Uint8Array(str.length);
+    arr = Uint8Array(str.length);
 
     for (i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
@@ -106,7 +106,7 @@ const uriToBlob = function (url: string): Promise<Blob> {
 
 const blobToDataUri = function (blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    const reader = new FileReader();
+    const reader = FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);

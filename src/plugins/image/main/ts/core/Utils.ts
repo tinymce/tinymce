@@ -170,12 +170,12 @@ const waitLoadImage = function (editor, data, imgElm) {
 
 const blobToDataUri = function (blob) {
   return new Promise<string>(function (resolve, reject) {
-    const reader = new FileReader();
+    const reader = FileReader();
     reader.onload = function () {
       resolve(reader.result);
     };
     reader.onerror = function () {
-      reject(FileReader.error.message);
+      reject(reader.error.message);
     };
     reader.readAsDataURL(blob);
   });

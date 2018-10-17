@@ -11,7 +11,7 @@ UnitTest.asynctest('atomic.core.ConvertTest', function () {
 
   const base64ToBlob = function (base64, type) {
     const buff = Window.atob(base64);
-    const bytes = new Uint8Array(buff.length);
+    const bytes = Uint8Array(buff.length);
 
     for (let i = 0; i < bytes.length; i++) {
       bytes[i] = buff.charCodeAt(i);

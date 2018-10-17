@@ -47,13 +47,13 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   const base64ToBlob = function (base64, type) {
     const buff = Window.atob(base64);
-    const bytes = new Uint8Array(buff.length);
+    const bytes = Uint8Array(buff.length);
 
     for (let i = 0; i < bytes.length; i++) {
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([bytes], { type });
+    return Blob([bytes], { type });
   };
 
   const noop = function () {
