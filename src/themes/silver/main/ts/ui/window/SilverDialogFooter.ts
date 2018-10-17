@@ -4,6 +4,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import { renderFooterButton } from '../general/Button';
 import { footerChannel } from './DialogChannels';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // FIX spelling and import location
 export interface DialogMemButton {
@@ -16,8 +17,8 @@ export interface WindowFooterFoo {
   buttons: Types.Dialog.DialogButton[];
 }
 
-const makeButton = (button: Types.Dialog.DialogButton) => {
-  return renderFooterButton(button, button.type);
+const makeButton = (button: Types.Dialog.DialogButton, sharedBackstage: UiFactoryBackstageShared) => {
+  return renderFooterButton(button, button.type, sharedBackstage);
 };
 
 const lookup = (compInSystem: ComponentApi.AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
@@ -46,10 +47,10 @@ const renderComponents = (_data, state) => {
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initFoo: WindowFooterFoo) => {
+const renderFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
   const updateState = (_comp, data: WindowFooterFoo) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
-      const memButton = Memento.record(makeButton(button));
+      const memButton = Memento.record(makeButton(button, sharedBackstage));
       return {
         name: button.name,
         align: button.align,
@@ -82,13 +83,13 @@ const renderFooter = (initFoo: WindowFooterFoo) => {
   };
 };
 
-const renderInlineFooter = (initFoo: WindowFooterFoo) => {
-  return renderFooter(initFoo);
+const renderInlineFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
+  return renderFooter(initFoo, sharedBackstage);
 };
 
-const renderModalFooter = (initFoo: WindowFooterFoo) => {
+const renderModalFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
   return ModalDialog.parts().footer(
-    renderFooter(initFoo)
+    renderFooter(initFoo, sharedBackstage)
   );
 };
 

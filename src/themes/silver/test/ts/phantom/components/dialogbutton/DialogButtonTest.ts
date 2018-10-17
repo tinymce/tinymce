@@ -4,8 +4,14 @@ import { UnitTest } from '@ephox/bedrock';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
+
+  const sharedBackstage = {
+    translate: I18n.translate
+  };
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -14,7 +20,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
           text: 'ButtonText',
           disabled: false,
           primary: true
-        }, store.adder('button.action'))
+        }, store.adder('button.action'), sharedBackstage)
       );
     },
     (_doc, _body, gui, component, store) => {

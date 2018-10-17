@@ -1,4 +1,4 @@
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { AlloyComponent, SimpleSpec, Behaviour, AddEventsBehaviour, AlloyEvents, AlloyTriggers, Representing, Disabling, SimulatedEvent, CustomEvent } from '@ephox/alloy';
 import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';
@@ -12,7 +12,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { Blob } from '@ephox/dom-globals';
 
-export const renderImageTools = (detail, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderImageTools = (detail, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
   const state = ImageToolsState.makeState(detail.currentState);
 
   const zoom = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
@@ -143,8 +143,8 @@ export const renderImageTools = (detail, providerBackstage: UiFactoryBackstagePr
   const transformApply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => manipulateApply(anyInSystem, simulatedEvent.event().transform(), simulatedEvent.event().swap());
 
   const imagePanel = ImagePanel.renderImagePanel(detail.currentState.url);
-  const sideBar = SideBar.renderSideBar(providerBackstage);
-  const editPanel = EditPanel.renderEditPanel(imagePanel, providerBackstage);
+  const sideBar = SideBar.renderSideBar(sharedBackstage);
+  const editPanel = EditPanel.renderEditPanel(imagePanel, sharedBackstage);
 
   const swap = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
     disableUndoRedo(anyInSystem);

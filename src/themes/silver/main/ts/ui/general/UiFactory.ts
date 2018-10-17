@@ -59,7 +59,7 @@ const factories: Record<string, FormPartRenderer> = {
   label: make(renderUiLabel),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared)),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
-  button: make(renderDialogButton),
+  button: make((spec, backstage) => renderDialogButton(spec, backstage.shared)),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
   colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
@@ -74,7 +74,7 @@ const factories: Record<string, FormPartRenderer> = {
   }),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers))
+  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared))
 };
 
 const noFormParts: any = {
