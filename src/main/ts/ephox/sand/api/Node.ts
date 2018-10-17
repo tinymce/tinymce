@@ -10,7 +10,7 @@ const node = function () {
 };
 
 /*
- * Most of numerosity doesn't alter the methods on the object.
+ * Most of sand doesn't alter the methods on the object.
  * We're making an exception for Node, because bitwise and is so easy to get wrong.
  *
  * Might be nice to ADT this at some point instead of having individual methods.
