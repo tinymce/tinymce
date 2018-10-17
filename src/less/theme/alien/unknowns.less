@@ -307,6 +307,17 @@ a {
   border: 0;
 }
 
+// these two rules are sadly required for the iframe to resize in IE and Edge
+.tox-edit-area {
+  position: relative;
+  display: flex;
+}
+
+.tox-edit-area__iframe {
+  position: absolute;
+  height: 100%;
+}
+
 .tox-statusbar {
   background-color: @background-color;
   border: 0;
