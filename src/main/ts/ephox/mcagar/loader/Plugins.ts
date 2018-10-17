@@ -24,7 +24,7 @@ const readPlugins = (pluginNames: string[]): PluginDetails[] => {
 };
 
 const registerPlugins = (plugins: PluginDetails[]) => {
-  return getTinymce().each((tinymce) => {
+  getTinymce().each((tinymce) => {
     Arr.each(plugins, (plugin) => {
       plugin.url.each((url) => tinymce.PluginManager.urls[plugin.name] = url);
       tinymce.PluginManager.add(plugin.name, plugin.instance);
