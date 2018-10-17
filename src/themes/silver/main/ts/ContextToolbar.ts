@@ -14,7 +14,6 @@ import ToolbarScopes, { ScopedToolbars } from './ui/context/ToolbarScopes';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { box } from '@ephox/alloy/lib/main/ts/ephox/alloy/alien/Boxes';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -27,9 +26,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const getBounds = () => {
-    return box(Element.fromDom(editor.contentAreaContainer));
-  };
+  const getBoxElement = Option.some(() => Element.fromDom(editor.contentAreaContainer));
 
   editor.on('init', () => {
     const scroller = editor.getBody().ownerDocument.defaultView;
@@ -45,7 +42,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           Css.set(contextbar.element(), 'display', 'none');
         } else {
           Css.remove(contextbar.element(), 'display');
-          Positioning.positionWithin(sink, anchor, contextbar, getBounds);
+          Positioning.positionWithin(sink, anchor, contextbar, getBoxElement);
         }
       });
     });
@@ -147,7 +144,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const anchor = getAnchor(toolbarApi.position, Element.fromDom(startNode));
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
-    InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBounds);
+    InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement);
     Css.remove(contextbar.element(), 'display');
   };
 
