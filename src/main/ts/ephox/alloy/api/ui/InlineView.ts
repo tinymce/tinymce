@@ -150,8 +150,8 @@ const InlineView = Sketcher.single({
     showAt (apis, component, anchor, thing) {
       apis.showAt(component, anchor, thing);
     },
-    showWithin (apis, component, anchor, thing, bounds) {
-      apis.showWithin(component, anchor, thing, bounds);
+    showWithin (apis, component, anchor, thing, boxElement) {
+      apis.showWithin(component, anchor, thing, boxElement);
     },
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);

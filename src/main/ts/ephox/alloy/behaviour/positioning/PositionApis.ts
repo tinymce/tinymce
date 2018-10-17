@@ -34,8 +34,8 @@ const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchorin
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
-  const getBounds = Option.none();
-  positionWithin(component, posConfig, posState, anchor, placee, getBounds);
+  const boxElement = Option.none();
+  positionWithin(component, posConfig, posState, anchor, placee, boxElement);
 };
 
 const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
@@ -57,7 +57,8 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   const placer = anchorage.placement();
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    doPlace(component, origin, anchoring, boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds()), placee);
+    const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds());
+    doPlace(component, origin, anchoring, getBounds, placee);
   });
 
   oldVisibility.fold(() => {
