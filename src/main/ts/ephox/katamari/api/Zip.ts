@@ -3,8 +3,8 @@
  *  If values is longer than keys, extra values are ignored.
  *  zipToObject :: ([key], [value]) -> {key1: value1, key2: value2 ...}
  */
-export const zipToObject = function <K extends string | number, V>(keys: K[], values: V[]) {
-  const r: Record<string | number, V | undefined> = {};
+export const zipToObject = function <V>(keys: string[] | number[], values: V[]) {
+  const r: Record<string, V | undefined> = {};
   for (let i = 0; i < keys.length; i++) {
     r[keys[i]] = values[i];
   }
