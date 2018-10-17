@@ -9,5 +9,5 @@ const detect: () => PlatformDetection = Thunk.cached(function () {
 });
 
 export default {
-  detect: detect
+  detect
 };
