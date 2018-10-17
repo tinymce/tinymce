@@ -26,7 +26,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const getBoxElement = Option.some(() => Element.fromDom(editor.contentAreaContainer));
+  const getBoxElement = () => Option.some(Element.fromDom(editor.contentAreaContainer));
 
   editor.on('init', () => {
     const scroller = editor.getBody().ownerDocument.defaultView;
@@ -42,7 +42,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           Css.set(contextbar.element(), 'display', 'none');
         } else {
           Css.remove(contextbar.element(), 'display');
-          Positioning.positionWithin(sink, anchor, contextbar, getBoxElement);
+          Positioning.positionWithin(sink, anchor, contextbar, getBoxElement());
         }
       });
     });
@@ -144,7 +144,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const anchor = getAnchor(toolbarApi.position, Element.fromDom(startNode));
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
-    InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement);
+    InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement());
     Css.remove(contextbar.element(), 'display');
   };
 
