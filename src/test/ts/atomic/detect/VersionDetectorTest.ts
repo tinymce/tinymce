@@ -1,12 +1,12 @@
-import Version from 'ephox/sand/detect/Version';
+import { Version } from 'ephox/sand/detect/Version';
 import Asserts from 'ephox/sand/test/Asserts';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('VersionDetectorTest', function() {
-  var edgeRegex = /.*?edge\/ ?([0-9]+)\.([0-9]+)$/;
+  const edgeRegex = /.*?edge\/ ?([0-9]+)\.([0-9]+)$/;
 
-  var check = function (label, expected, versionRegexes, agent) {
-    var actual = Version.detect(versionRegexes, agent);
+  const check = function (label: string, expected: Version, versionRegexes: RegExp[], agent: string) {
+    const actual = Version.detect(versionRegexes, agent);
     Asserts.assertEq(expected, actual, label);
   };
 

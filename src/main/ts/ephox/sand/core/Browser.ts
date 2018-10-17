@@ -1,35 +1,46 @@
 import { Fun } from '@ephox/katamari';
-import Version from '../detect/Version';
+import { Version } from '../detect/Version';
+import { UaString } from '../detect/UaString';
 
-var edge = 'Edge';
-var chrome = 'Chrome';
-var ie = 'IE';
-var opera = 'Opera';
-var firefox = 'Firefox';
-var safari = 'Safari';
+const edge = 'Edge';
+const chrome = 'Chrome';
+const ie = 'IE';
+const opera = 'Opera';
+const firefox = 'Firefox';
+const safari = 'Safari';
 
-var isBrowser = function (name, current) {
+export interface Browser {
+  current: string | undefined;
+  version: Version;
+  isEdge: () => boolean;
+  isChrome: () => boolean;
+  isIE: () => boolean;
+  isOpera: () => boolean;
+  isFirefox: () => boolean;
+  isSafari: () => boolean;
+}
+
+const isBrowser = function (name: string, current: string) {
   return function () {
     return current === name;
   };
 };
 
-var unknown = function () {
+const unknown = function () {
   return nu({
     current: undefined,
     version: Version.unknown()
   });
 };
 
-var nu = function (info) {
-  var current = info.current;
-  var version = info.version;
+const nu = function (info: UaString): Browser {
+  const current = info.current;
+  const version = info.version;
 
   return {
     current: current,
     version: version,
 
-    // INVESTIGATE: Rename to Edge ?
     isEdge: isBrowser(edge, current),
     isChrome: isBrowser(chrome, current),
     // NOTE: isIe just looks too weird
@@ -40,7 +51,7 @@ var nu = function (info) {
   };
 };
 
-export default <any> {
+export const Browser = {
   unknown: unknown,
   nu: nu,
   edge: Fun.constant(edge),

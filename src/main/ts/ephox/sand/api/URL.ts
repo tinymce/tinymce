@@ -1,4 +1,5 @@
 import Global from '../util/Global';
+import { URL, File, Blob, MediaSource } from '@ephox/dom-globals';
 
 /*
  * IE10 and above per
@@ -8,19 +9,19 @@ import Global from '../util/Global';
  * Safari 6.0 has 'webkitURL' instead, but doesn't support flexbox so we
  * aren't supporting it anyway
  */
-var url = function () {
+const url = function (): typeof URL {
   return Global.getOrDie('URL');
 };
 
-var createObjectURL = function (blob) {
+const createObjectURL = function (blob: File | Blob | MediaSource) {
   return url().createObjectURL(blob);
 };
 
-var revokeObjectURL = function (u) {
+const revokeObjectURL = function (u: string) {
   url().revokeObjectURL(u);
 };
 
-export default <any> {
+export default {
   createObjectURL: createObjectURL,
   revokeObjectURL: revokeObjectURL
 };

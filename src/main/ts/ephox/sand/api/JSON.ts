@@ -4,19 +4,19 @@ import Global from '../util/Global';
  * IE8 and above per
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
  */
-var json = function () {
-  return Global.getOrDie('JSON');
+const json = function () {
+  return Global.getOrDie('JSON') as typeof JSON;
 };
 
-var parse = function (obj) {
-  return json().parse(obj);
+const parse = function (text: string) {
+  return json().parse(text);
 };
 
-var stringify = function (obj, replacer, space) {
+const stringify = function (obj: any, replacer?: (key: string, value: any) => any, space?: string | number) {
   return json().stringify(obj, replacer, space);
 };
 
-export default <any> {
-  parse: parse,
-  stringify: stringify
+export default {
+  parse,
+  stringify
 };

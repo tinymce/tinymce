@@ -1,32 +1,45 @@
 import { Fun } from '@ephox/katamari';
-import Version from '../detect/Version';
+import { Version } from '../detect/Version';
+import { UaString } from '../detect/UaString';
 
-var windows = 'Windows';
-var ios = 'iOS';
-var android = 'Android';
-var linux = 'Linux';
-var osx = 'OSX';
-var solaris = 'Solaris';
-var freebsd = 'FreeBSD';
+export interface OperatingSystem {
+  current: string | undefined;
+  version: Version;
+  isWindows: () => boolean;
+  isiOS: () => boolean;
+  isAndroid: () => boolean;
+  isOSX: () => boolean;
+  isLinux: () => boolean;
+  isSolaris: () => boolean;
+  isFreeBSD: () => boolean;
+}
+
+const windows = 'Windows';
+const ios = 'iOS';
+const android = 'Android';
+const linux = 'Linux';
+const osx = 'OSX';
+const solaris = 'Solaris';
+const freebsd = 'FreeBSD';
 
 // Though there is a bit of dupe with this and Browser, trying to 
 // reuse code makes it much harder to follow and change.
-var isOS = function (name, current) {
+const isOS = function (name: string, current: string) {
   return function () {
     return current === name;
   };
 };
 
-var unknown = function () {
+const unknown = function (): OperatingSystem {
   return nu({
     current: undefined,
     version: Version.unknown()
   });
 };
 
-var nu = function (info) {
-  var current = info.current;
-  var version = info.version;
+const nu = function (info: UaString): OperatingSystem {
+  const current = info.current;
+  const version = info.version;
 
   return {
     current: current,
@@ -43,7 +56,7 @@ var nu = function (info) {
   };
 };
 
-export default <any> {
+export const OperatingSystem = {
   unknown: unknown,
   nu: nu,
 

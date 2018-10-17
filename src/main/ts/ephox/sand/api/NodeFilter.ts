@@ -1,8 +1,7 @@
 import Global from '../util/Global';
+import { NodeFilter } from '@ephox/dom-globals';
 
-
-
-export default <any> function () {
-  var f = Global.getOrDie('NodeFilter');
+export default function () {
+  const f: typeof NodeFilter = Global.getOrDie('NodeFilter');
   return f;
 };

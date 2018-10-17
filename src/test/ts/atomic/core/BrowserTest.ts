@@ -1,15 +1,14 @@
-import { Fun } from '@ephox/katamari';
 import PlatformQuery from 'ephox/sand/api/PlatformQuery';
-import PlatformDetection from 'ephox/sand/core/PlatformDetection';
+import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BrowserTest', function() {
-  function check(expectedQuery, expectedOs, expectedBrowser, expectedMajor, expectedMinor, userAgent) {
-    var platform = PlatformDetection.detect(userAgent);
+  function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {
+    const platform = PlatformDetection.detect(userAgent);
     assert.eq(expectedBrowser, platform.browser.current);
     assert.eq(expectedOs, platform.os.current);
 
-    var actualBrowserVersion = platform.browser.version;
+    const actualBrowserVersion = platform.browser.version;
     assert.eq(expectedMajor, actualBrowserVersion.major);
     assert.eq(expectedMinor, actualBrowserVersion.minor);
 
@@ -17,8 +16,8 @@ UnitTest.test('BrowserTest', function() {
     assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent +  '\nbrowser: ' + expectedBrowser);
   }
 
-  var checkOSVersion = function (expectedMajor, expectedMinor, userAgent) {
-    var platform = PlatformDetection.detect(userAgent);
+  const checkOSVersion = function (expectedMajor: number, expectedMinor: number, userAgent: string) {
+    const platform = PlatformDetection.detect(userAgent);
     assert.eq(expectedMajor, platform.os.version.major, 'invalid major OS version ' + platform.os.version.major + ' for agent: ' + userAgent);
     assert.eq(expectedMinor, platform.os.version.minor, 'invalid minor OS version ' + platform.os.version.minor + ' for agent: ' + userAgent);
   };
