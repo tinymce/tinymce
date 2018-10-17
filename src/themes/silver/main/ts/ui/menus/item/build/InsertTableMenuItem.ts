@@ -61,7 +61,7 @@ const selectCells = (cells, selectedRow, selectedColumn, numRows, numColumns) =>
 const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =>
   Arr.bind(cells, (cellRow) => Arr.map(cellRow, GuiFactory.premade));
 
-const makeLabelText = (row, col) => GuiFactory.text(`${row + 1}x${col + 1}`);
+const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
 export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): WidgetItemSpec {
   const numRows = 10;
