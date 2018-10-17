@@ -32,6 +32,8 @@ import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
 import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
+import { renderGroupLabel } from 'tinymce/themes/silver/ui/dialog/GroupLabel';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
@@ -97,10 +99,30 @@ export default () => {
     };
   };
 
+  const labelGroupSpec = renderUiLabel({
+    html: 'Group of Options',
+    name: 'helloName2',
+    items: [
+      renderCheckbox({
+        label: 'check box item 1',
+        name: 'one'
+      }, sharedBackstage.providers),
+      renderCheckbox({
+        label: 'check box item 2',
+        name: 'two'
+      }, sharedBackstage.providers),
+      renderInput({
+        label: Option.some('exampleInput'),
+        name: 'exampleinputfieldname',
+        validation: Option.none()
+      })
+    ]
+  }, sharedBackstage);
+
   const uiLabelSpec = renderUiLabel({
     name: 'label1',
     html: 'Label 1'
-  });
+  }, sharedBackstage);
 
   const listboxSpec = renderListbox({
     name: 'listbox1',
@@ -169,19 +191,19 @@ export default () => {
     };
   })();
 
-  const colorInputSpec = renderColorInput({
-    type: 'colorinput',
-    name: 'colorinput-demo',
-    colspan: Option.none(),
-    label: Option.some('Color input label')
-  }, sharedBackstage, helpers.extras.backstage.colorinput);
+  // const colorInputSpec = renderColorInput({
+  //   type: 'colorinput',
+  //   name: 'colorinput-demo',
+  //   colspan: Option.none(),
+  //   label: Option.some('Color input label')
+  // }, sharedBackstage, helpers.extras.backstage.colorinput);
 
-  const colorPickerSpec = renderColorPicker({
-    type: 'colorpicker',
-    name: 'colorpicker-demo',
-    colspan: Option.none(),
-    label: Option.some('Color picker label')
-  });
+  // const colorPickerSpec = renderColorPicker({
+  //   type: 'colorpicker',
+  //   name: 'colorpicker-demo',
+  //   colspan: Option.none(),
+  //   label: Option.some('Color picker label')
+  // });
 
   const dropzoneSpec = renderDropZone({
     type: 'dropzone',
@@ -317,11 +339,13 @@ export default () => {
       display('SelectBox', selectBoxSpec),
       display('SelectBox with Size', selectBoxSizeSpec),
       display('Grid', gridSpec),
-      display('ColorPicker', colorPickerSpec),
-      display('ColorInput', colorInputSpec),
+      // display('ColorPicker', colorPickerSpec),
+      // display('ColorInput', colorInputSpec),
       display('Checkbox', checkboxSpec),
       display('Button', buttonSpec),
       display('Listbox', listboxSpec),
+
+      display('Group Label', labelGroupSpec),
       display('Ui Label', uiLabelSpec),
       display('Autocomplete', autocompleteSpec),
       display('IFrame', iframeSpec),
