@@ -108,7 +108,12 @@ const isBrBeforeBlock = (node: Node, root: Node): boolean => {
     return false;
   }
 
-  next = findCaretPosition(1, CaretPosition.after(node), root);
+  // Handles the case <p>a|<br><span contenteditable="false">b</span></p> -> <p>a<br>|<span contenteditable="false">b</span></p>
+  if (CaretCandidate.isAtomic(node.nextSibling)) {
+    return false;
+  }
+
+  next = findCaretPosition(HDirection.Forwards, CaretPosition.after(node), root);
   if (!next) {
     return false;
   }
