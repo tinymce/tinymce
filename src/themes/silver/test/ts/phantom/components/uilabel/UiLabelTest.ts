@@ -2,13 +2,12 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
+import { renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import { renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
-import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   const helpers = setupDemo();
