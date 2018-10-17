@@ -9,15 +9,14 @@ import {
 } from '@ephox/alloy';
 import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
-import { IconProvider } from '../icons/Icons';
 
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface ButtonFoo {
   name: string;
@@ -54,17 +53,17 @@ const renderCommon = (spec, action, extraBehaviours = [], dom, components): Sket
   return AlloyButton.sketch(specFinal);
 };
 
-export const renderIconButton = (spec: IconButtonFoo, action, icons: IconProvider, extraBehaviours = []): SketchSpec => {
+export const renderIconButton = (spec: IconButtonFoo, action, sharedBackstage: UiFactoryBackstageShared, extraBehaviours = []): SketchSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
-    'aria-label': I18n.translate(tooltip),
-    'title': I18n.translate(tooltip)
+    'aria-label': sharedBackstage.translate(tooltip),
+    'title': sharedBackstage.translate(tooltip)
   })).getOr({});
   const dom = {
     tag: 'button',
     classes: [ ToolbarButtonClasses.Button ],
     attributes: tooltipAttributes
   };
-  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, icons));
+  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons));
   const components = componentRenderPipeline([
     icon
   ]);
@@ -73,11 +72,11 @@ export const renderIconButton = (spec: IconButtonFoo, action, icons: IconProvide
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButton = (spec: ButtonFoo, action, extraBehaviours = []): SketchSpec => {
+export const renderButton = (spec: ButtonFoo, action, sharedBackstage: UiFactoryBackstageShared, extraBehaviours = []): SketchSpec => {
   const dom = {
     tag: 'button',
     classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    innerHtml: I18n.translate(spec.text)
+    innerHtml: sharedBackstage.translate(spec.text)
   };
   const components = [];
   return renderCommon(spec, action, extraBehaviours, dom, components);
@@ -100,14 +99,14 @@ const getAction = (name: string, buttonType) => {
   };
 };
 
-export const renderFooterButton = (spec: ButtonFoo, buttonType: string): SketchSpec => {
+export const renderFooterButton = (spec: ButtonFoo, buttonType: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   const action = getAction(spec.name, buttonType);
-  return renderButton(spec, action, [ ]);
+  return renderButton(spec, action, sharedBackstage, [ ]);
 };
 
-export const renderDialogButton = (spec: ButtonFoo): SketchSpec => {
+export const renderDialogButton = (spec: ButtonFoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderButton(spec, action, [
+  return renderButton(spec, action, sharedBackstage, [
     RepresentingConfigs.memory(''),
     ComposingConfigs.self()
   ]);

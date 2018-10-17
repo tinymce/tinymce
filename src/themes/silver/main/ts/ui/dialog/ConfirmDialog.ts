@@ -3,8 +3,10 @@ import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
 
 export const setup = (extras) => {
-  const getSink = extras.backstage.shared.getSink;
-
+  const sharedBackstage = {
+    getSink: extras.backstage.shared.getSink,
+    translate: extras.backstage.shared.translate
+  };
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
 
@@ -18,18 +20,18 @@ export const setup = (extras) => {
         name: 'yes',
         text: 'Yes',
         primary: true
-      }, 'submit')
+      }, 'submit', sharedBackstage)
     );
 
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
       primary: true
-    }, 'cancel');
+    }, 'cancel', sharedBackstage);
 
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
-        lazySink: () => getSink(),
+        lazySink: () => sharedBackstage.getSink(),
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {

@@ -125,7 +125,7 @@ export default () => {
         primary: false
       }, () => {
         console.log('clicked on the button in the grid');
-      }) as any
+      }, sharedBackstage) as any
     ]
   }, sharedBackstage);
 
@@ -135,7 +135,7 @@ export default () => {
     primary: false
   }, () => {
     console.log('clicked on the button');
-  });
+  }, sharedBackstage);
 
   const checkboxSpec = (() => {
     const memBodyPanel = Memento.record(

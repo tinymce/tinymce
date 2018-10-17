@@ -1,0 +1,42 @@
+
+New Translations
+<new translation> [<previous translation>]
+-----------------------------------------------------
+Insert/Edit Media        [Insert/edit media]
+Insert/Edit Image        [Insert/edit image]
+Insert/Edit Code Sample  [Insert/Edit code sample]
+Source Code              [Source code]
+Spell check              [Spellcheck]
+
+Code Sample               [Code sample]
+Fonts                     [Font Family]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+No longer Used
+-----------------------------------------------------
+
+
+
+
+
+
+
+
+Items that are translated but may look like english
+-----------------------------------------------------
+Pre (es)
+Code Sample (es)
+Ok (es)
+Media (es)
