@@ -58,6 +58,7 @@ const setupDemo = () => {
       providers: {
         icons: () => <Record<string, string>> {}
       },
+      interpreter: (x) => x,
       getSink: () => Result.value(sink),
       anchors: {
         toolbar: () => {

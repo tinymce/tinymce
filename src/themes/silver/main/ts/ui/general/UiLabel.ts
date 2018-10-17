@@ -1,8 +1,9 @@
 import { Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr, Merger, Option } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 
 export interface UiLabelFoo<I> {
   name: string;
@@ -20,6 +21,7 @@ export const renderUiLabel = (spec: UiLabelFoo<SimpleSpec>, sharedBackstage: UiF
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({ }),
+      RepresentingConfigs.domHtml(Option.none()),
       Keying.config({
         mode: 'acyclic'
       }),
