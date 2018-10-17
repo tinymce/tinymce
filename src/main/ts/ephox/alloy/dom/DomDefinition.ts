@@ -49,7 +49,7 @@ const defToStr = (defn: GeneralDefinitionDetail<any, any>): string => {
   return Json.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, any> => {
+const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, string> => {
   return {
     uid: defn.uid(),
     tag: defn.tag(),
@@ -59,8 +59,8 @@ const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<
     value: defn.value().getOr('<none>'),
     innerHtml: defn.innerHtml().getOr('<none>'),
     defChildren: defn.defChildren().fold(
-      () => '<none>',
-      (d) => Json.stringify(d, null, 2)
+      () => [ '<none>' ],
+      (d) => [ Json.stringify(d, null, 2) ]
     ),
     domChildren: defn.domChildren().fold(() => {
       return '<none>';

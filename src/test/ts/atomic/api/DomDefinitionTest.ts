@@ -38,7 +38,7 @@ UnitTest.test('DomDefinitionTest', () => {
         },
         innerHtml: '<none>',
         value: '<none>',
-        defChildren: '<none>',
+        defChildren: ['<none>'],
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
         // "as any" used because I'm not using real elements when testing
@@ -79,7 +79,7 @@ UnitTest.test('DomDefinitionTest', () => {
         },
         innerHtml: 'sailor',
         value: '<none>',
-        defChildren: '<none>',
+        defChildren: ['<none>'],
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
         DomModification.merge(definition, addInnerHtml) as any
@@ -119,7 +119,7 @@ UnitTest.test('DomDefinitionTest', () => {
         },
         innerHtml: '<none>',
         value: 'sailor',
-        defChildren: '<none>',
+        defChildren: ['<none>'],
         domChildren: '<none>'
       }, DomDefinition.defToRaw(
         DomModification.merge(definition, addValue) as any
