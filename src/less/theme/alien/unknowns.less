@@ -310,7 +310,6 @@ a {
 // these two rules are sadly required for the iframe to resize in IE and Edge
 .tox-edit-area {
   position: relative;
-  display: flex;
 }
 
 .tox-edit-area__iframe {
@@ -343,6 +342,14 @@ a {
 }
 
 .tox-statusbar .tox-statusbar__path {
+  display: block;
   flex: 1 1 auto;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tox-statusbar .tox-statusbar__path * {
+  display: inline;
+  white-space: nowrap;
 }
