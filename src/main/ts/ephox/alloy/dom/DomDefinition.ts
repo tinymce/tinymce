@@ -49,7 +49,7 @@ const defToStr = (defn: GeneralDefinitionDetail<any, any>): string => {
   return Json.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, any> => {
+const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, string> => {
   return {
     uid: defn.uid(),
     tag: defn.tag(),
