@@ -14,13 +14,14 @@ import { Window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
+  const frame = Element.fromTag('iframe');
+
   GuiSetup.setup((store, doc, body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
     }
 
-    const frame = Element.fromTag('iframe');
     const onload = DomEvent.bind(frame, 'load', () => {
       onload.unbind();
       Frames.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
@@ -123,9 +124,19 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
             'relative'
           ),
+          PositionTestUtils.cTestSinkWithin(
+            'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
+            'relative',
+            frame),
+
           PositionTestUtils.cTestSink(
             'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
             'fixed'
+          ),
+          PositionTestUtils.cTestSinkWithin(
+            'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
+            'fixed',
+            frame
           ),
 
           PositionTestUtils.cScrollDown('classic', '2000px'),
@@ -133,9 +144,20 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
             'relative'
           ),
+          PositionTestUtils.cTestSinkWithin(
+            'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
+            'relative',
+            frame
+          ),
+
           PositionTestUtils.cTestSink(
             'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
             'fixed'
+          ),
+          PositionTestUtils.cTestSinkWithin(
+            'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
+            'fixed',
+            frame
           ),
 
           ChainUtils.cLogging(

@@ -8,7 +8,7 @@ import * as Origins from '../layout/Origins';
 import { nu as NuAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component, _posInfo, anchorInfo, origin) => {
+const placement = (component, anchorInfo, origin) => {
   const hotspot = anchorInfo.hotspot();
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
