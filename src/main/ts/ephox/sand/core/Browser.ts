@@ -41,7 +41,6 @@ const nu = function (info: UaString): Browser {
     current: current,
     version: version,
 
-    // INVESTIGATE: Rename to Edge ?
     isEdge: isBrowser(edge, current),
     isChrome: isBrowser(chrome, current),
     // NOTE: isIe just looks too weird
