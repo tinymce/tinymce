@@ -3,7 +3,6 @@ import { Fun, Option } from '@ephox/katamari';
 
 import { bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import * as Fields from '../../data/Fields';
 import { OriginAdt } from '../../positioning/layout/Origins';
 import * as Bubble from '../layout/Bubble';
@@ -11,7 +10,7 @@ import * as Layout from '../layout/Layout';
 import { MakeshiftAnchor, nu as NuAnchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component: AlloyComponent, posInfo: PositioningConfig, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
+const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
   const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
   const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());

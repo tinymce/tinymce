@@ -16,6 +16,8 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
+import { Bounds } from 'ephox/alloy/alien/Boxes';
+import { Element } from '@ephox/sugar';
 
 const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
@@ -46,7 +48,7 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
       }, submenu);
     },
   });
-}
+};
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
@@ -54,6 +56,44 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
+  };
+
+  const setContent = (sandbox: AlloyComponent, thing: AlloySpec) => {
+    // Keep the same location, and just change the content.
+    Sandboxing.open(sandbox, thing);
+  };
+  const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
+    const getBounds = Option.none();
+    showWithin(sandbox, anchor, thing, getBounds);
+  };
+  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
+    const sink = detail.lazySink()().getOrDie();
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, boxElement));
+    detail.onShow()(sandbox);
+  };
+  // TODO AP-191 write a test for showMenuAt
+  const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+    const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
+
+    Sandboxing.open(sandbox, thing);
+    detail.onShow()(sandbox);
+  };
+  const hide = (sandbox: AlloyComponent) => {
+    Sandboxing.close(sandbox);
+    detail.onHide()(sandbox);
+  };
+  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
+    return Sandboxing.getState(sandbox);
+  };
+
+  const apis = {
+    setContent,
+    showAt,
+    showWithin,
+    showMenuAt,
+    hide,
+    getContent,
+    isOpen: Sandboxing.isOpen
   };
 
   return Merger.deepMerge(
@@ -76,7 +116,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
                 isExtraPart: Fun.constant(false),
               },
               detail.fireDismissalEventInstead().map((fe) => ({
-                'fireEventInstead': {
+                fireEventInstead: {
                   event: fe.event()
                 }
               } as any)).getOr({ })
@@ -87,32 +127,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       ),
       eventOrder: detail.eventOrder(),
 
-      apis: {
-        setContent (sandbox: AlloyComponent, thing: AlloySpec) {
-          // Keep the same location, and just change the content.
-          Sandboxing.open(sandbox, thing);
-        },
-        showAt (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) {
-          const sink = detail.lazySink()().getOrDie();
-          Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.position(sink, anchor, sandbox));
-          detail.onShow()(sandbox);
-        },
-        // TODO AP-191 write a test for showMenuAt
-        showMenuAt(sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) {
-          const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
-
-          Sandboxing.open(sandbox, thing);
-          detail.onShow()(sandbox);
-        },
-        hide (sandbox: AlloyComponent) {
-          Sandboxing.close(sandbox);
-          detail.onHide()(sandbox);
-        },
-        getContent (sandbox: AlloyComponent): Option<AlloyComponent> {
-          return Sandboxing.getState(sandbox);
-        },
-        isOpen: Sandboxing.isOpen
-      }
+      apis
     }
   );
 };
@@ -134,6 +149,9 @@ const InlineView = Sketcher.single({
   apis: {
     showAt (apis, component, anchor, thing) {
       apis.showAt(component, anchor, thing);
+    },
+    showWithin (apis, component, anchor, thing, boxElement) {
+      apis.showWithin(component, anchor, thing, boxElement);
     },
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);

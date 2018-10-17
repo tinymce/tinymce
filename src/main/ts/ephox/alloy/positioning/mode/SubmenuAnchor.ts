@@ -8,10 +8,9 @@ import * as Origins from '../layout/Origins';
 import { nu as NuAnchoring, SubmenuAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 
-const placement = (component: AlloyComponent, posInfo: PositioningConfig, submenuInfo: SubmenuAnchor, origin: OriginAdt): Option<Anchoring> => {
+const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin: OriginAdt): Option<Anchoring> => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
   const layouts = AnchorLayouts.get(component.element(), submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
