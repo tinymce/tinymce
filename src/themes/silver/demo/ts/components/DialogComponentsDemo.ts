@@ -9,7 +9,7 @@ import {
 } from '@ephox/alloy';
 import { Menu, Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Id, Option } from '@ephox/katamari';
+import { Arr, Id, Option, Fun } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
 import * as Icons from '../../../../../themes/silver/main/ts/ui/icons/Icons';
@@ -32,7 +32,6 @@ import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
 import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
-import { renderGroupLabel } from 'tinymce/themes/silver/ui/dialog/GroupLabel';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 
 // tslint:disable:no-console
@@ -191,19 +190,25 @@ export default () => {
     };
   })();
 
-  // const colorInputSpec = renderColorInput({
-  //   type: 'colorinput',
-  //   name: 'colorinput-demo',
-  //   colspan: Option.none(),
-  //   label: Option.some('Color input label')
-  // }, sharedBackstage, helpers.extras.backstage.colorinput);
+  // This is fake because ColorInputBackstage requires Editor constructor
+  const fakecolorinputBackstage = {
+    colorPicker: Fun.noop,
+    hasCustomColors: Fun.constant(false)
+  };
 
-  // const colorPickerSpec = renderColorPicker({
-  //   type: 'colorpicker',
-  //   name: 'colorpicker-demo',
-  //   colspan: Option.none(),
-  //   label: Option.some('Color picker label')
-  // });
+  const colorInputSpec = renderColorInput({
+    type: 'colorinput',
+    name: 'colorinput-demo',
+    colspan: Option.none(),
+    label: Option.some('Color input label')
+  }, sharedBackstage, fakecolorinputBackstage);
+
+  const colorPickerSpec = renderColorPicker({
+    type: 'colorpicker',
+    name: 'colorpicker-demo',
+    colspan: Option.none(),
+    label: Option.some('Color picker label')
+  });
 
   const dropzoneSpec = renderDropZone({
     type: 'dropzone',
@@ -339,8 +344,8 @@ export default () => {
       display('SelectBox', selectBoxSpec),
       display('SelectBox with Size', selectBoxSizeSpec),
       display('Grid', gridSpec),
-      // display('ColorPicker', colorPickerSpec),
-      // display('ColorInput', colorInputSpec),
+      display('ColorPicker', colorPickerSpec),
+      display('ColorInput', colorInputSpec),
       display('Checkbox', checkboxSpec),
       display('Button', buttonSpec),
       display('Listbox', listboxSpec),
