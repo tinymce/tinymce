@@ -1,4 +1,5 @@
 Version 5.0.0-preview-3 (TBD)
+    Changed `Whole word` label in Search and Replace dialog to `Find whole words only` #AP-387
     Fixed dialog titles so they are now proper case #AP-384
     Fixed color picker default to be #000000 instead of #ff00ff #AP-216
     Fixed "match case" option on the Find and Replace dialog is no longer selected by default #AP-298
