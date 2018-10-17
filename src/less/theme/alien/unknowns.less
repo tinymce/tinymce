@@ -287,3 +287,51 @@ a {
 }
 
 /* stylelint-enable */
+
+// styles for sizing/resizing of editor and statusbar to work properly
+.tox-editor-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tox-toolbar,
+.tox-menubar {
+  border: 0;
+  flex: 0 0 auto;
+}
+
+.tox-sidebar-wrap,
+.tox-edit-area {
+  border: 0;
+}
+
+.tox-statusbar {
+  background-color: @background-color;
+  border: 0;
+  border-top: 1px solid @border-color;
+  display: flex;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.tox-statusbar__text-container {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.tox-statusbar__resize-handle {
+  flex: 0 0 auto;
+}
+
+.tox-statusbar .tox-statusbar__wordcount,
+.tox-statusbar .tox-statusbar__branding, {
+  flex: 0 0 auto;
+}
+
+.tox-statusbar .tox-statusbar__path {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
