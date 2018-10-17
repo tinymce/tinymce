@@ -74,8 +74,8 @@ const focusButtonEvent = Id.generate('focus-button');
 
 const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, sharedBackstage: UiFactoryBackstageShared) => {
   const tooltipAttributes = tooltip.map<{}>((tooltip) => ({
-    'aria-label': tooltip,
-    'title': tooltip
+    'aria-label': sharedBackstage.translate(tooltip),
+    'title': sharedBackstage.translate(tooltip)
   })).getOr({});
 
   return {
