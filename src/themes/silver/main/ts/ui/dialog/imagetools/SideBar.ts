@@ -5,10 +5,10 @@ import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { renderIconButton } from '../../general/Button';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-const createButton = (innerHtml: string, disabled: boolean, action: (button: AlloyComponent) => void, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   return renderIconButton({
     name: innerHtml,
-    icon: Option.some(innerHtml),
+    icon: Option.some(icon),
     disabled,
     tooltip: Option.some(innerHtml)
   }, action, sharedBackstage);
@@ -33,7 +33,7 @@ const renderSideBar = (sharedBackstage: UiFactoryBackstageShared) => {
   };
 
   const memUndo = Memento.record(
-    createButton('undo', true, (button) => {
+    createButton('Undo', 'undo', true, (button) => {
       AlloyTriggers.emitWith(button, ImageToolsEvents.internal.undo(), {
         direction: 1
       });
@@ -41,7 +41,7 @@ const renderSideBar = (sharedBackstage: UiFactoryBackstageShared) => {
   );
 
   const memRedo = Memento.record(
-    createButton('redo', true, (button) => {
+    createButton('Redo', 'redo', true, (button) => {
       AlloyTriggers.emitWith(button, ImageToolsEvents.internal.redo(), {
         direction: 1
       });
@@ -56,12 +56,12 @@ const renderSideBar = (sharedBackstage: UiFactoryBackstageShared) => {
     components: [
       memUndo.asSpec(),
       memRedo.asSpec(),
-      createButton('zoom-in', false, (button) => {
+      createButton('Zoom in', 'zoom-in', false, (button) => {
         AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
           direction: 1
         });
       }, sharedBackstage),
-      createButton('zoom-out', false, (button) => {
+      createButton('Zoom out', 'zoom-out', false, (button) => {
         AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
           direction: -1
         });
