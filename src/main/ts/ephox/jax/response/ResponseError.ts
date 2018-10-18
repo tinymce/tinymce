@@ -52,7 +52,13 @@ const handle = function (url: string, responseType: ResponseType, request: XMLHt
   });
 };
 
-const nu: (bag: ResponseErrorBag) => ResponseError = Struct.immutableBag([ 'message', 'status', 'responseText' ], [ ]);
+const nuErr = Struct.immutableBag<ResponseError>([ 'message', 'status', 'responseText' ], [ ]);
+
+const nu = (bag: ResponseErrorBag): ResponseError => {
+  const err = nuErr(bag);
+  err.toString = err.message;
+  return err;
+};
 
 export const ResponseError = {
   handle,

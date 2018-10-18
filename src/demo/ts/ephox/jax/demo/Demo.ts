@@ -11,7 +11,7 @@ const handler = function (label: string) {
   return function (result: Result<any, ResponseError>) {
     result.fold(
       function (err) {
-        console.error(label, err.message(), err.status(), err.responseText());
+        console.error(label + ': ' + err);
       },
       function (val) {
         console.log(label, val);
