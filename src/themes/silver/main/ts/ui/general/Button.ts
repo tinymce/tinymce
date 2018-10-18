@@ -80,7 +80,7 @@ export const renderButton = (spec: ButtonFoo, action, sharedBackstage: UiFactory
     classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
     innerHtml: translatedText,
     attributes: {
-      title: translatedText
+      title: translatedText // TODO: tooltips AP-213
     }
   };
   const components = [];

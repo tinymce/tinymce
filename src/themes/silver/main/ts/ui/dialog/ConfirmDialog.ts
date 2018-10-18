@@ -3,10 +3,7 @@ import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
 
 export const setup = (extras) => {
-  const sharedBackstage = {
-    getSink: extras.backstage.shared.getSink,
-    translate: extras.backstage.shared.translate
-  };
+  const sharedBackstage = extras.backstage.shared;
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
 
@@ -19,7 +16,7 @@ export const setup = (extras) => {
       renderFooterButton({
         name: 'yes',
         text: 'Yes',
-        primary: true
+        primary: true,
       }, 'submit', sharedBackstage)
     );
 
@@ -37,11 +34,11 @@ export const setup = (extras) => {
           close: Dialogs.pClose(() => {
             closeDialog(confirmDialog, false);
           }),
-          body: Dialogs.pBodyMessage(message),
-          footer: Dialogs.pFooter([
+          body: Dialogs.pBodyMessage(message, sharedBackstage),
+          footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterYes.asSpec(),
             footerNo
-          ])
+          ]))
         },
         onCancel: () => closeDialog(confirmDialog, false),
         onSubmit: () => closeDialog(confirmDialog, true),

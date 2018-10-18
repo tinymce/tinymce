@@ -4,10 +4,7 @@ import * as Dialogs from './Dialogs';
 import { Fun } from '@ephox/katamari';
 
 export const setup = (extras) => {
-  const sharedBackstage = {
-    getSink: extras.backstage.shared.getSink,
-    translate: extras.backstage.shared.translate
-  };
+  const sharedBackstage = extras.backstage.shared;
 
   const open = (message: string, callback: () => void) => {
 
@@ -32,10 +29,10 @@ export const setup = (extras) => {
           close: Dialogs.pClose(() => {
             closeDialog(alertDialog);
           }),
-          body: Dialogs.pBodyMessage(message),
-          footer: Dialogs.pFooter([
+          body: Dialogs.pBodyMessage(message, sharedBackstage),
+          footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterClose.asSpec()
-          ])
+          ]))
         },
         onCancel: () => closeDialog(alertDialog),
         onSubmit: Fun.noop,
