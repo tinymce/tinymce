@@ -1,12 +1,9 @@
-import { Option, Struct } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { CoordAdt } from '../../api/data/DragCoord';
-import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
+import { Struct } from '@ephox/katamari';
 
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
+import { DraggingBehaviour } from '../../dragging/common/DraggingTypes';
 import * as DragState from '../../dragging/common/DragState';
 import * as Behaviour from './Behaviour';
-import { DraggingBehaviour } from '../../dragging/common/DraggingTypes';
 
 const Dragging = Behaviour.createModes({
   branchKey: 'mode',
@@ -14,7 +11,7 @@ const Dragging = Behaviour.createModes({
   name: 'dragging',
   active: {
     events (dragConfig, dragState) {
-      const dragger = dragConfig.dragger();
+      const dragger = dragConfig.dragger;
       return dragger.handlers(dragConfig, dragState);
     }
   },

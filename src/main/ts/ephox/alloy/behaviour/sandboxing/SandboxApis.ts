@@ -15,7 +15,7 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
     Attachment.detachChildren(sandbox);
   });
 
-  const point = sConfig.getAttachPoint()();
+  const point = sConfig.getAttachPoint();
   Attachment.attach(point, sandbox);
 
   // Must be after the sandbox is in the system
@@ -28,7 +28,7 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
 // Open sandbox transfers focus to the opened menu
 const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) => {
   const newState = rebuild(sandbox, sConfig, sState, data);
-  sConfig.onOpen()(sandbox, newState);
+  sConfig.onOpen(sandbox, newState);
   return newState;
 };
 
@@ -44,7 +44,7 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   sState.get().each((data) => {
     Attachment.detachChildren(sandbox);
     Attachment.detach(sandbox);
-    sConfig.onClose()(sandbox, data);
+    sConfig.onClose(sandbox, data);
     sState.clear();
   });
 };
@@ -55,7 +55,7 @@ const isOpen = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sand
 
 const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) => {
   return isOpen(sandbox, sConfig, sState) && sState.get().exists((data) => {
-    return sConfig.isPartOf()(sandbox, data, queryElem);
+    return sConfig.isPartOf(sandbox, data, queryElem);
   });
 };
 
@@ -82,11 +82,11 @@ const restore = (sandbox, cssKey, attr) => {
 };
 
 const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
-  const sink = sConfig.getAttachPoint()();
+  const sink = sConfig.getAttachPoint();
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
   Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
-  store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
+  store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
 const hasPosition = (element: Element) => Arr.exists(['top', 'left', 'right', 'bottom'], (pos) => Css.getRaw(element, pos).isSome());
@@ -98,7 +98,7 @@ const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
     Css.remove(sandbox.element(), 'position');
   }
 
-  restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr());
+  restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr);
 };
 
 export {

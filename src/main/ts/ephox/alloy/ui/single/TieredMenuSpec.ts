@@ -46,9 +46,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
         )
       );
 
-      console.time('actual.build.menu: ' + name);
+      // console.time('actual.build.menu: ' + name);
       const x = container.getSystem().build(data);
-      console.timeEnd('actual.build.menu: ' + name);
+      // console.timeEnd('actual.build.menu: ' + name);
       return x;
     });
   };
@@ -227,25 +227,25 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
     // Open the menu as soon as it is added to the DOM
     AlloyEvents.runOnAttached((container, simulatedEvent) => {
-      console.time('setup');
+      // console.time('setup');
       setup(container).each((primary) => {
-        console.time('tmenu.dom');
+        // console.time('tmenu.dom');
         Replacing.append(container, GuiFactory.premade(primary));
         // container.element().dom().appendChild(primary.element().dom());
-        console.timeEnd('tmenu.dom');
+        // console.timeEnd('tmenu.dom');
 
-        console.time('onOpenMenu');
+        // console.time('onOpenMenu');
         detail.onOpenMenu()(container, primary);
-        console.timeEnd('onOpenMenu');
+        // console.timeEnd('onOpenMenu');
         if (detail.highlightImmediately()) {
-          console.time('setActiveMenu');
+          // console.time('setActiveMenu');
           setActiveMenu(container, primary);
-          console.timeEnd('setActiveMenu');
+          // console.timeEnd('setActiveMenu');
         }
 
 
       });
-      console.timeEnd('setup');
+      // console.timeEnd('setup');
     })
   ].concat(detail.navigateOnHover() ? [
     // Hide any irrelevant submenus and expand any submenus based

@@ -12,7 +12,7 @@ export interface TransitionRoute {
 
 // TYPIFY
 const findRoute = function <T>(component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<any> {
-  return Objects.readOptFrom(transConfig.routes(), route.start()).map(Fun.apply).bind((sConfig) => {
+  return Objects.readOptFrom(transConfig.routes, route.start()).map(Fun.apply).bind((sConfig) => {
     return Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);
   });
 };
@@ -40,22 +40,22 @@ const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfi
   getTransition(comp, transConfig, transState).each((routeTransition: any) => {
     const t = routeTransition.transition();
     Class.remove(comp.element(), t.transitionClass());
-    Attr.remove(comp.element(), transConfig.destinationAttr());
+    Attr.remove(comp.element(), transConfig.destinationAttr);
   });
 };
 
 const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string) => {
   return {
-    start: Fun.constant(Attr.get(comp.element(), transConfig.stateAttr())),
+    start: Fun.constant(Attr.get(comp.element(), transConfig.stateAttr)),
     destination: Fun.constant(destination)
   };
 };
 
 const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   const el = comp.element();
-  return Attr.has(el, transConfig.destinationAttr()) ? Option.some({
-    start: Fun.constant(Attr.get(comp.element(), transConfig.stateAttr())),
-    destination: Fun.constant(Attr.get(comp.element(), transConfig.destinationAttr()))
+  return Attr.has(el, transConfig.destinationAttr) ? Option.some({
+    start: Fun.constant(Attr.get(comp.element(), transConfig.stateAttr)),
+    destination: Fun.constant(Attr.get(comp.element(), transConfig.destinationAttr))
   }) : Option.none();
 };
 
@@ -63,14 +63,14 @@ const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transSta
   // Remove the previous transition
   disableTransition(comp, transConfig, transState);
   // Only call finish if there was an original state
-  if (Attr.has(comp.element(), transConfig.stateAttr()) && Attr.get(comp.element(), transConfig.stateAttr()) !== destination) { transConfig.onFinish()(comp, destination); }
-  Attr.set(comp.element(), transConfig.stateAttr(), destination);
+  if (Attr.has(comp.element(), transConfig.stateAttr) && Attr.get(comp.element(), transConfig.stateAttr) !== destination) { transConfig.onFinish(comp, destination); }
+  Attr.set(comp.element(), transConfig.stateAttr, destination);
 };
 
 const fasttrack = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string) => {
-  if (Attr.has(comp.element(), transConfig.destinationAttr())) {
-    Attr.set(comp.element(), transConfig.stateAttr(), Attr.get(comp.element(), transConfig.destinationAttr()));
-    Attr.remove(comp.element(), transConfig.destinationAttr());
+  if (Attr.has(comp.element(), transConfig.destinationAttr)) {
+    Attr.set(comp.element(), transConfig.stateAttr, Attr.get(comp.element(), transConfig.destinationAttr));
+    Attr.remove(comp.element(), transConfig.destinationAttr);
   }
 };
 
@@ -83,14 +83,14 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
     disableTransition(comp, transConfig, transState);
     const t = routeTransition.transition();
     Class.add(comp.element(), t.transitionClass());
-    Attr.set(comp.element(), transConfig.destinationAttr(), destination);
+    Attr.set(comp.element(), transConfig.destinationAttr, destination);
   });
 };
 
 const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   const e = comp.element();
-  return Attr.has(e, transConfig.stateAttr()) ? Option.some(
-    Attr.get(e, transConfig.stateAttr())
+  return Attr.has(e, transConfig.stateAttr) ? Option.some(
+    Attr.get(e, transConfig.stateAttr)
   ) : Option.none();
 };
 

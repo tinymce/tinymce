@@ -9,22 +9,22 @@ export interface StreamingBehaviour extends Behaviour.AlloyBehaviour<StreamingCo
 }
 
 export interface ThrottleStreamingConfig extends StreamingModeConfig {
-  delay: () => number;
-  stopEvent: () => boolean;
+  delay: number;
+  stopEvent: boolean;
 }
 
 export interface StreamingModeConfig {
-  streams: () => {
+  streams: {
     setup: (config: StreamingConfig, state: StreamingState) => (comp: AlloyComponent, evt: SimulatedEvent<EventFormat>) => void;
     state: (config: StreamingConfig) => StreamingState;
   };
 }
 
 export interface StreamingConfig extends Behaviour.BehaviourConfigDetail {
-  event: () => string;
-  cancelEvent: () => Option<string>;
-  stream: () => StreamingModeConfig;
-  onStream: () => (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
+  event: string;
+  cancelEvent: Option<string>;
+  stream: StreamingModeConfig;
+  onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
 }
 
 export interface CancellableStreamer {

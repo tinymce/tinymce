@@ -9,24 +9,24 @@ const swap = (element, addCls, removeCls) => {
 };
 
 const toAlpha = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  swap(component.element(), swapConfig.alpha(), swapConfig.omega());
+  swap(component.element(), swapConfig.alpha, swapConfig.omega);
 };
 
 const toOmega = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  swap(component.element(), swapConfig.omega(), swapConfig.alpha());
+  swap(component.element(), swapConfig.omega, swapConfig.alpha);
 };
 
 const clear = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  Class.remove(component.element(), swapConfig.alpha());
-  Class.remove(component.element(), swapConfig.omega());
+  Class.remove(component.element(), swapConfig.alpha);
+  Class.remove(component.element(), swapConfig.omega);
 };
 
 const isAlpha = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  return Class.has(component.element(), swapConfig.alpha());
+  return Class.has(component.element(), swapConfig.alpha);
 };
 
 const isOmega = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  return Class.has(component.element(), swapConfig.omega());
+  return Class.has(component.element(), swapConfig.omega);
 };
 
 export {

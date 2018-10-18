@@ -30,7 +30,7 @@ const throttle = (_config: StreamingConfig): StreamingState => {
 };
 
 const init = (spec: StreamingConfig): StreamingState => {
-  return spec.stream().streams().state(spec);
+  return spec.stream.streams.state(spec);
 };
 
 export {

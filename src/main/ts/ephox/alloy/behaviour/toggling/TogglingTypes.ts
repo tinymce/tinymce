@@ -13,15 +13,15 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConf
 }
 
 export interface AriaTogglingConfig {
-  update: () => (comp: AlloyComponent, ariaConfig: AriaTogglingConfig, state: boolean) => void;
-  syncWithExpanded: () => boolean;
+  update: (comp: AlloyComponent, ariaConfig: AriaTogglingConfig, state: boolean) => void;
+  syncWithExpanded: boolean;
 }
 
 export interface TogglingConfig extends Behaviour.BehaviourConfigDetail {
-  toggleClass: () => string;
-  aria: () => AriaTogglingConfig;
-  toggleOnExecute: () => boolean;
-  selected: () => boolean;
+  toggleClass: string;
+  aria: AriaTogglingConfig;
+  toggleOnExecute: boolean;
+  selected: boolean;
 }
 
 export interface TogglingConfigSpec extends Behaviour.BehaviourConfigSpec {

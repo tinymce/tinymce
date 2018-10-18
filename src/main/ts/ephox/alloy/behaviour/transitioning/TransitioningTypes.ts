@@ -17,12 +17,12 @@ export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour<Transit
 }
 
 export interface TransitioningConfig extends Behaviour.BehaviourConfigDetail {
-  destinationAttr: () => string;
-  stateAttr: () => string;
-  initialState: () => string;
-  routes: () => Record<string, any>;
-  onTransition: () => (comp: AlloyComponent, route: TransitionRoute) => void;
-  onFinish: () => (comp: AlloyComponent, destination: string) => void;
+  destinationAttr: string;
+  stateAttr: string;
+  initialState: string;
+  routes: Record<string, any>;
+  onTransition: (comp: AlloyComponent, route: TransitionRoute) => void;
+  onFinish: (comp: AlloyComponent, destination: string) => void;
 }
 
 export interface TransitioningConfigSpec extends Behaviour.BehaviourConfigSpec {

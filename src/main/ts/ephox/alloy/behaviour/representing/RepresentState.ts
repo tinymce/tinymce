@@ -103,7 +103,7 @@ const dataset = (): DatasetRepresentingState => {
 };
 
 const init = (spec) => {
-  return spec.store().manager().state(spec);
+  return spec.store.manager.state(spec);
 };
 
 export {
