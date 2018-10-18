@@ -1,10 +1,10 @@
-import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { renderUiLabel, renderUiGroupLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
+import { renderUiGroupLabel, renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
