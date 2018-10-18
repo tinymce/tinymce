@@ -22,7 +22,7 @@ export interface RenderInfo {
   mothership: Gui.GuiSystem;
   uiMothership: Gui.GuiSystem;
   backstage: Backstage.UiFactoryBackstage;
-  renderUI: (editor: Editor) => ModeRenderInfo;
+  renderUI: () => ModeRenderInfo;
   getUi: () => ({ channels: UiChannels });
 }
 
@@ -221,7 +221,7 @@ const setup = (editor: Editor): RenderInfo => {
     return height;
   };
 
-  const renderUI = function (editor: Editor): ModeRenderInfo {
+  const renderUI = function (): ModeRenderInfo {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
 
     // Apply Bridge types
