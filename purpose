@@ -1,0 +1,3 @@
+Track down what we can do about performance for menus etc. Let's start small ... identify what takes a long time in object construction.
+
+

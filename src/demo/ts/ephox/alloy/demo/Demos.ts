@@ -27,6 +27,7 @@ import ToolbarsDemo from './ToolbarsDemo';
 import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
 import SlotContainerDemo from './SlotContainerDemo';
+import PerformanceTestingDemo from './PerformanceTestingDemo';
 
 declare const window: any;
 
@@ -59,5 +60,6 @@ window.demos = {
   TabSectionDemo,
   ToolbarsDemo,
   TooltippingDemo,
-  TypeaheadDemo
+  TypeaheadDemo,
+  PerformanceTestingDemo
 };
