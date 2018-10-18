@@ -41,8 +41,27 @@ export interface MenuNotBuilt {
 }
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
-  const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
+  const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
+
+      const makeSketch = () => {
+        return Menu.sketch(
+          Merger.deepMerge(
+            spec,
+            {
+              value: name,
+              items: spec.items,
+              markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
+
+              // Fake focus.
+              fakeFocus: detail.fakeFocus(),
+              onHighlight: detail.onHighlight(),
+
+              focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
+            }
+          )
+        )
+      };
       // const data = Menu.sketch(
       //   Merger.deepMerge(
       //     spec,
@@ -64,29 +83,15 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       // const x = container.getSystem().build(data);
       // return {
       //   type: 'prepared',
-      //   menu: container.getSystem().build(data)
+      //   menu: container.getSystem().build(makeSketch())
       // } as MenuPrepared;
       // console.timeEnd('actual.build.menu: ' + name);
-      return {
+      return name === primaryName ? {
+        type: 'prepared',
+        menu: container.getSystem().build(makeSketch())
+      } as MenuPrepared : {
         type: 'notbuilt',
-        nbMenu: () => {
-          return Menu.sketch(
-            Merger.deepMerge(
-              spec,
-              {
-                value: name,
-                items: spec.items,
-                markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
-
-                // Fake focus.
-                fakeFocus: detail.fakeFocus(),
-                onHighlight: detail.onHighlight(),
-
-                focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
-              }
-            )
-          )
-        }
+        nbMenu: makeSketch
       } as MenuNotBuilt;
     });
   };
@@ -96,13 +101,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
     // LumberTimers.reset();
     console.time('buildMenus');
-    const componentMap = buildMenus(container, detail.data().menus());
+    const componentMap = buildMenus(container, detail.data().primary(), detail.data().menus());
 
     console.timeEnd('buildMenus');
     // LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
-    const primary = layeredState.lookupMenu(detail.data().primary()).each((prep) => buildIfRequired(container, detail.data().primary(), prep));
     return layeredState.getPrimary();
   };
 
