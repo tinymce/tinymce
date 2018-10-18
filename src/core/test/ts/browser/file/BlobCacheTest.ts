@@ -7,12 +7,12 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   const uriToBlob = function (base64, type) {
     let i;
     const str = Window.atob(base64);
-    const arr = new Uint8Array(str.length);
+    const arr = Uint8Array(str.length);
 
     for (i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
     }
-    return new Blob([arr], { type });
+    return Blob([arr], { type });
   };
 
   const id = 'blob0';

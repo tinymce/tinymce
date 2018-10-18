@@ -6,6 +6,8 @@ import { isAnnotation } from './Identification';
 import { Editor } from 'tinymce/core/api/Editor';
 
 export const enum ChildContext {
+  // Was previously used for br and zero width cursors. Keep as a state
+  // because we'll probably want to reinstate it later.
   Skipping = 'skipping',
   Existing = 'existing',
   InvalidChild = 'invalid-child',
@@ -23,8 +25,10 @@ const context = (editor: Editor, elem: any, wrapName: string, nodeName: string):
     () => ChildContext.Skipping,
 
     (parent) => {
+      // We used to skip these, but given that they might be representing empty paragraphs, it probably
+      // makes sense to treat them just like text nodes
       if (nodeName === 'br' || isZeroWidth(elem)) {
-        return ChildContext.Skipping;
+        return ChildContext.Valid;
       } else if (isAnnotation(elem)) {
         return ChildContext.Existing;
       } else if (isCaretNode(elem)) {
