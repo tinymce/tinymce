@@ -76,11 +76,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     LumberTimers.reset();
     console.time('buildMenus');
     const componentMap = buildMenus(container, detail.data().menus());
-    const primary = layeredState.lookupMenu(detail.data().primary()).each((prep) => buildIfRequired(container, detail.data().primary(), prep));
+
     console.timeEnd('buildMenus');
     LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
+    const primary = layeredState.lookupMenu(detail.data().primary()).each((prep) => buildIfRequired(container, detail.data().primary(), prep));
     return layeredState.getPrimary();
   };
 
@@ -272,6 +273,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     AlloyEvents.runOnAttached((container, simulatedEvent) => {
       // console.time('setup');
       setup(container).each((primary) => {
+
         // console.time('tmenu.dom');
         Replacing.append(container, GuiFactory.premade(primary));
         // container.element().dom().appendChild(primary.element().dom());
