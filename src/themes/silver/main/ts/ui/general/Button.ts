@@ -73,10 +73,15 @@ export const renderIconButton = (spec: IconButtonFoo, action, sharedBackstage: U
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
 export const renderButton = (spec: ButtonFoo, action, sharedBackstage: UiFactoryBackstageShared, extraBehaviours = []): SketchSpec => {
+  const translatedText = sharedBackstage.translate(spec.text);
+
   const dom = {
     tag: 'button',
     classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    innerHtml: sharedBackstage.translate(spec.text)
+    innerHtml: translatedText,
+    attributes: {
+      title: translatedText
+    }
   };
   const components = [];
   return renderCommon(spec, action, extraBehaviours, dom, components);

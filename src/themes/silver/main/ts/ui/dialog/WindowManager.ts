@@ -120,7 +120,7 @@ const setup = (extras) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const confirm = (message, callback: (flag) => void, closeWindow) => {
+  const confirm = (message: string, callback: (flag) => void, closeWindow) => {
     confirmDialog.open(message, (state) => {
       closeWindow();
       callback(state);
