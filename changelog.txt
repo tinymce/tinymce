@@ -1,4 +1,4 @@
-Version 5.0.0-preview-3 (TBD)
+Version 5.0.0-preview-3 (2018-10-18)
     Changed editor layout to use modern CSS properties over manually calculating dimensions #AP-324
     Changed `autoresize_min_height` and `autoresize_max_height` configurations to `min_height` and `max_height` #AP-324
     Fixed bugs with editor width jumping when resizing and the iframe not resizing to smaller than 150px in height #AP-324
