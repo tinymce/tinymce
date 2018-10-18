@@ -10,22 +10,24 @@
 @toolbar-group-separator-width: 1px;
 @toolbar-group-spacing-x: 0;
 
-.tox-toolbar__group {
-  align-items: center;
-  background: @toolbar-group-background-color;
-  border: @toolbar-group-border;
-  border-radius: @toolbar-group-border-radius;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 @toolbar-group-spacing-x 0 0;
-  padding: 0 @toolbar-group-padding-x;
-}
+.tox {
+  .tox-toolbar__group {
+    align-items: center;
+    background: @toolbar-group-background-color;
+    border: @toolbar-group-border;
+    border-radius: @toolbar-group-border-radius;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 @toolbar-group-spacing-x 0 0;
+    padding: 0 @toolbar-group-padding-x;
+  }
 
-.tox-toolbar__group:not(:last-of-type) {
-  border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
-}
+  .tox-toolbar__group:not(:last-of-type) {
+    border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
+  }
 
-// Align toolbar group to the right
-.tox-toolbar__group--pull-right {
-  margin-left: auto;
+  // Align toolbar group to the right
+  .tox-toolbar__group--pull-right {
+    margin-left: auto;
+  }
 }

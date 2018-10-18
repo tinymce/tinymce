@@ -9,23 +9,25 @@
 @user-name-text-color: @text-color-muted;
 @user-avatar-color: @text-color-muted;
 
-.tox-user {
-  align-items: center;
-  display: flex;
-}
+.tox {
+  .tox-user {
+    align-items: center;
+    display: flex;
+  }
 
-.tox-user__avatar svg {
-  fill: @text-color-muted;
-}
+  .tox-user__avatar svg {
+    fill: @text-color-muted;
+  }
 
-.tox-user__name {
-  color: @user-name-text-color;
-  font-size: @user-name-font-size;
-  font-style: @user-name-font-style;
-  font-weight: @user-name-font-weight;
-  text-transform: @user-name-text-transform;
-}
+  .tox-user__name {
+    color: @user-name-text-color;
+    font-size: @user-name-font-size;
+    font-style: @user-name-font-style;
+    font-weight: @user-name-font-weight;
+    text-transform: @user-name-text-transform;
+  }
 
-.tox-user__avatar + .tox-user__name {
-  margin-left: @pad-sm;
+  .tox-user__avatar + .tox-user__name {
+    margin-left: @pad-sm;
+  }
 }

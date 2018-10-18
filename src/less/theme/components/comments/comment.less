@@ -15,55 +15,56 @@
 @comment-text-color: @text-color;
 @comment-text-transform: initial;
 
-.tox-comment {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: @pad-md;
-}
+.tox {
+  .tox-comment {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: @pad-md;
+  }
 
-// A wrapper around a one or more comments
-.tox-comment__list {
-  //
-}
+  // A wrapper around a one or more comments
+  .tox-comment__list {
+    //
+  }
 
-// An individual comment
-.tox-comment__item {
-  background: @comment-background-color;
-  border: @comment-border;
-  border-radius: @comment-border-radius;
-  box-shadow: @comment-box-shadow;
-  padding: @comment-padding;
-}
+  // An individual comment
+  .tox-comment__item {
+    background: @comment-background-color;
+    border: @comment-border;
+    border-radius: @comment-border-radius;
+    box-shadow: @comment-box-shadow;
+    padding: @comment-padding;
+  }
 
-// Set spacing between comments
-.tox-comment__item + .tox-comment__item {
-  margin-top: @comment-spacing-y;
-}
+  // Set spacing between comments
+  .tox-comment__item + .tox-comment__item {
+    margin-top: @comment-spacing-y;
+  }
 
-.tox-comment__body {
-  color: @comment-text-color;
-  font-size: @comment-font-size;
-  font-style: @comment-font-style;
-  font-weight: @comment-font-weight;
-  line-height: @comment-line-height;
-  margin-top: @pad-sm;
-  text-transform: @comment-text-transform;
-}
+  .tox-comment__body {
+    color: @comment-text-color;
+    font-size: @comment-font-size;
+    font-style: @comment-font-style;
+    font-weight: @comment-font-weight;
+    line-height: @comment-line-height;
+    margin-top: @pad-sm;
+    text-transform: @comment-text-transform;
+  }
 
-.tox-comment__body p {
-  margin: 0;
-}
+  .tox-comment__body p {
+    margin: 0;
+  }
 
-// Write new comments block
-.tox-comment__reply {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  // Write new comments block
+  .tox-comment__reply {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
-  > *:first-child {
-    margin-bottom: @pad-sm;
-    width: 100%;
+    > *:first-child {
+      margin-bottom: @pad-sm;
+      width: 100%;
+    }
   }
 }
-

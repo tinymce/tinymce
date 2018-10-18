@@ -8,67 +8,69 @@
 @swatch-remove-color-stroke-color: #e74c3c;
 @swatch-outline-color: @border-color;
 
-.tox-toolbar .tox-swatches {
-  margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
-}
-
-.tox-swatches__row {
-  display: flex;
-}
-
-.tox-swatch {
-  height: @swatch-size;
-  transition: transform .15s, box-shadow .15s;
-  width: @swatch-size;
-
-  &:hover {
-    transform: scale(.8);
-  }
-}
-
-.tox-swatch--outline {
-  //
-
-  &:hover {
-    box-shadow: 0 0 0 2px @swatch-outline-color;
-  }
-}
-
-.tox-swatch--remove {
-  //
-
-  &:hover {
-    &:extend(.tox .tox-swatch--outline:hover);
+.tox {
+  .tox-toolbar .tox-swatches {
+    margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
   }
 
-  svg {
-    stroke: @swatch-remove-color-stroke-color;
-  }
-}
-
-.tox-swatches__picker-btn {
-  align-items: center;
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
-  display: flex;
-  height: @swatch-size;
-  justify-content: center;
-  margin-left: auto;
-  outline: none;
-  padding: 0;
-  width: @swatch-size;
-
-  svg {
-    height: @swatch-picker-button-icon-height;
-    width: @swatch-picker-button-icon-width;
+  .tox-swatches__row {
+    display: flex;
   }
 
-  &:hover {
-    background: @toolbar-button-hover-background-color;
+  .tox-swatch {
+    height: @swatch-size;
+    transition: transform .15s, box-shadow .15s;
+    width: @swatch-size;
+
+    &:hover {
+      transform: scale(.8);
+    }
   }
 
-  &:active > svg {
-    transform: translateY(1px);
+  .tox-swatch--outline {
+    //
+
+    &:hover {
+      box-shadow: 0 0 0 2px @swatch-outline-color;
+    }
+  }
+
+  .tox-swatch--remove {
+    //
+
+    &:hover {
+      &:extend(.tox .tox-swatch--outline:hover);
+    }
+
+    svg {
+      stroke: @swatch-remove-color-stroke-color;
+    }
+  }
+
+  .tox-swatches__picker-btn {
+    align-items: center;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    height: @swatch-size;
+    justify-content: center;
+    margin-left: auto;
+    outline: none;
+    padding: 0;
+    width: @swatch-size;
+
+    svg {
+      height: @swatch-picker-button-icon-height;
+      width: @swatch-picker-button-icon-width;
+    }
+
+    &:hover {
+      background: @toolbar-button-hover-background-color;
+    }
+
+    &:active > svg {
+      transform: translateY(1px);
+    }
   }
 }

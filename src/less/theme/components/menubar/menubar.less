@@ -13,13 +13,15 @@
 @_menubar-height: @toolbar-button-height + @toolbar-button-spacing-y + @toolbar-button-spacing-y + 1px;
 @_menubar-divider-height: @_menubar-height - 1px;
 
-.tox-menubar {
-  background: @menubar-background;
-  border: 1px solid @menubar-border-color;
-  border-bottom-width: 0;
-  display: flex;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  margin: @menubar-margin;
-  padding: @menubar-padding;
+.tox {
+  .tox-menubar {
+    background: @menubar-background;
+    border: 1px solid @menubar-border-color;
+    border-bottom-width: 0;
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    margin: @menubar-margin;
+    padding: @menubar-padding;
+  }
 }

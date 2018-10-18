@@ -34,138 +34,140 @@
 @menu-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
 @menu-item-separator-margin: @pad-xs;
 
-.tox-menu {
-  background-color: @menu-background-color;
-  border-color: @menu-border-color;
-  border-radius: @menu-border-radius;
-  border-style: @menu-border-style;
-  border-width: @menu-border-width;
-  box-shadow: @menu-box-shadow;
-  color: @menu-text-color;
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-}
-
-.tox-menu.tox-collection.tox-collection--list {
-  padding: @menu-item-collection-list-padding;
-}
-
-.tox-menu.tox-collection.tox-collection--toolbar {
-  padding: @menu-item-collection-toolbar-padding;
-}
-
-.tox-menu.tox-collection.tox-collection--grid {
-  padding: @menu-item-collection-grid-padding;
-}
-
-/*
-.tox-menu__item {
-  color: @menu-item-label-text-color;
-  cursor: pointer;
-  display: flex;
-  padding: @menu-item-padding;
-  -webkit-touch-callout: none;
-  user-select: none;
-
-  &:focus,
-  &:hover {
-    background-color: @menu-item-hover-background-color;
-    color: @menu-item-hover-text-color;
-    outline: none;
+.tox {
+  .tox-menu {
+    background-color: @menu-background-color;
+    border-color: @menu-border-color;
+    border-radius: @menu-border-radius;
+    border-style: @menu-border-style;
+    border-width: @menu-border-width;
+    box-shadow: @menu-box-shadow;
+    color: @menu-text-color;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
   }
-}
 
-.tox-menu__item--state-disabled {
-  color: @menu-item-disabled-text-color;
-  cursor: default;
-
-  &:hover {
-    background-color: unset;
-    color: @menu-item-disabled-text-color;
+  .tox-menu.tox-collection.tox-collection--list {
+    padding: @menu-item-collection-list-padding;
   }
-}
 
-// Active state in menus. Active state is indicated by a checkbox
-// and currently has no other styling.
-.tox-menu__item--state-active {
-  //
-}
+  .tox-menu.tox-collection.tox-collection--toolbar {
+    padding: @menu-item-collection-toolbar-padding;
+  }
 
-// Make space for menu item icon
-.tox-menu--has-icons {
+  .tox-menu.tox-collection.tox-collection--grid {
+    padding: @menu-item-collection-grid-padding;
+  }
+
+  /*
   .tox-menu__item {
-    > *:first-child:not(.tox-menu__icon) {
-      margin-left: @menu-item-icon-width + @pad-sm;
+    color: @menu-item-label-text-color;
+    cursor: pointer;
+    display: flex;
+    padding: @menu-item-padding;
+    -webkit-touch-callout: none;
+    user-select: none;
+
+    &:focus,
+    &:hover {
+      background-color: @menu-item-hover-background-color;
+      color: @menu-item-hover-text-color;
+      outline: none;
     }
   }
-}
 
-.tox-menu__icon {
-  align-items: center;
-  display: flex;
-  height: @menu-item-icon-height;
-  justify-content: center;
-  width: @menu-item-icon-width;
+  .tox-menu__item--state-disabled {
+    color: @menu-item-disabled-text-color;
+    cursor: default;
 
-  svg {
-    fill: currentColor;
+    &:hover {
+      background-color: unset;
+      color: @menu-item-disabled-text-color;
+    }
   }
 
-  &:first-child {
-    margin-right: @pad-sm;
+  // Active state in menus. Active state is indicated by a checkbox
+  // and currently has no other styling.
+  .tox-menu__item--state-active {
+    //
   }
-}
 
-.tox-menu__label {
-  color: currentColor;
-  display: inline-block;
-  flex: 1;
-  font-size: @menu-item-label-font-size;
-  font-style: @menu-item-font-style;
-  font-weight: @menu-item-label-font-weight;
-  line-height: @menu-item-icon-height;
-  text-transform: @menu-item-label-text-transform;
-}
-
-.tox-menu__accessory {
-  color: @menu-item-accessory-text-color;
-  display: inline-block;
-  font-size: @font-size-sm;
-  font-style: @menu-item-font-style;
-  height: @menu-item-icon-height;
-  line-height: @menu-item-icon-height;
-  margin-left: @pad-md;
-  text-align: right;
-  text-transform: normal;
-}
-
-.tox-menu__separator {
-  border-bottom-width: 0;
-  border-color: @menu-item-separator-color;
-  border-left-width: 0;
-  border-right-width: 0;
-  border-style: solid;
-  border-top-width: 1px;
-  margin: @menu-item-separator-margin 0;
-  padding: 0;
-}
-
-*/
-
-// Reset all margins for block elements when used in menu labels
-/* stylelint-disable */
-.tox-menu__label {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  blockquote,
-  code {
-    margin: 0;
+  // Make space for menu item icon
+  .tox-menu--has-icons {
+    .tox-menu__item {
+      > *:first-child:not(.tox-menu__icon) {
+        margin-left: @menu-item-icon-width + @pad-sm;
+      }
+    }
   }
+
+  .tox-menu__icon {
+    align-items: center;
+    display: flex;
+    height: @menu-item-icon-height;
+    justify-content: center;
+    width: @menu-item-icon-width;
+
+    svg {
+      fill: currentColor;
+    }
+
+    &:first-child {
+      margin-right: @pad-sm;
+    }
+  }
+
+  .tox-menu__label {
+    color: currentColor;
+    display: inline-block;
+    flex: 1;
+    font-size: @menu-item-label-font-size;
+    font-style: @menu-item-font-style;
+    font-weight: @menu-item-label-font-weight;
+    line-height: @menu-item-icon-height;
+    text-transform: @menu-item-label-text-transform;
+  }
+
+  .tox-menu__accessory {
+    color: @menu-item-accessory-text-color;
+    display: inline-block;
+    font-size: @font-size-sm;
+    font-style: @menu-item-font-style;
+    height: @menu-item-icon-height;
+    line-height: @menu-item-icon-height;
+    margin-left: @pad-md;
+    text-align: right;
+    text-transform: normal;
+  }
+
+  .tox-menu__separator {
+    border-bottom-width: 0;
+    border-color: @menu-item-separator-color;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-style: solid;
+    border-top-width: 1px;
+    margin: @menu-item-separator-margin 0;
+    padding: 0;
+  }
+
+  */
+
+  // Reset all margins for block elements when used in menu labels
+  /* stylelint-disable */
+  .tox-menu__label {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    code {
+      margin: 0;
+    }
+  }
+  /* stylelint-enable */
 }
-/* stylelint-enable */

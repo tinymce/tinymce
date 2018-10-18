@@ -10,351 +10,354 @@
 // Consider this document technical debt.
 //
 
-// Please give an exanple where this is used. /FD
-.tox-dialog-loading::before {
-  background-color: rgba(0, 0, 0, .5);
-  content: "";
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  z-index: 999;
-}
+.tox {
 
-// I assume cursor:pointer should be applied to .tox-dialog__body-nav-item in dialog.less
-// and all .tox-tab instances removed. If correct, please perform the changes and delete
-// the below declaration and this comment. /FD
-.tox-tab {
-  cursor: pointer;
-}
-
-// We decided in the Tiny Drive styles to not have styling on error textfields and just have a validation
-// message below the text field. But the classes could be useful to keep. I've replaced the below
-// declarations with `.tox-form__group--error` in form/layout.less. So please remove the below declaraions
-// from the code and replace with the above ones and delete this when done /FD
-//
-.tox-textbox-field-invalid input,
-.tox-textbox-field-invalid textarea {
-  outline: 1px solid red;
-}
-
-// If we need a very narrow dialog (and this seems ridiculously narrow), then
-// add a `.tox-dialog--width-sm` class in dialog.less. Remove this when done //FD.
-.tox-special-characters {
-  max-width: 200px;
-}
-
-// This has been replaced with .tox-menu__item--state-active. I've made the below class
-// bright red to highlight all occurances. Also, active state is indicated by a checkbox.
-// (this probably needs discussion). Please remove this block when done. /FD
-.tox-menu__item.tox-selected-item {
-  background-color: red;
-  color: white;
-}
-
-.tox-menu__item:hover:not(.tox-selected-item) {
-  background-color: inherit !important;
-  color: inherit !important;
-}
-
-// How is this used? //FD
-.tox-input-wrap {
-  align-items: center;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  background-color: @background-color;
-  border-color: @border-color;
-  border-radius: @control-border-radius;
-  border-style: solid;
-  border-width: 1px;
-  box-shadow: none;
-  box-sizing: border-box;
-  color: @text-color;
-  display: flex;
-  flex-grow: 1;
-  margin: 0;
-  outline: none;
-  padding: 0;
-}
-
-// * This overrides the default focus border but I don't dare to remove this now /fd 2018-10-01
-// * Class used as a wrapper for input fields to place a accessory icon on the right side within a textfield.
-//   See dialog-2.html for example //fd 2018-10-02
-.tox-input-wrap .tox-textfield {
-  border: none;
-}
-
-.tox-input-wrap:not(.tox-status-valid) .tox-status-icon__checkmark,
-.tox-input-wrap:not(.tox-status-unknown) .tox-status-icon__warning,
-.tox-input-wrap:not(.tox-status-invalid) .tox-status-icon__error {
-  display: none;
-}
-
-// Statuses is used as accessory icons within .tox-input-wrap
-.tox-status {
-  transform: scale(.8);
-}
-
-.tox-status-icon__checkmark svg {
-  fill: green;
-}
-
-.tox-status-icon__warning svg {
-  fill: orange;
-}
-
-.tox-status-icon__error svg {
-  fill: red;
-}
-
-// Fredrik will redo this as a component later. Please keep this declarations here until then /FD
-.tox-lock.tox-locked .tox-lock-icon__unlock,
-.tox-lock:not(.tox-locked) .tox-lock-icon__lock {
-  display: none;
-}
-
-// Content JS should never be styled. the *__content-js is supposed to be a hook for javascript, not for styling. //FD
-.tox-dialog__content-js {
-  display: flex;
-  flex: 1;
-}
-
-.tox-dialog {
-  display: flex;
-  flex-direction: column;
-}
-
-.tox-dialog__body {
-  display: flex;
-  flex: 1;
-}
-
-.tox-dialog__body-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-
-.tox-form__group--stretched {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  .tox-textarea {
-    flex: 1;
-    resize: none;
+  // Please give an exanple where this is used. /FD
+  .tox-dialog-loading::before {
+    background-color: rgba(0, 0, 0, .5);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 999;
   }
 
-  .tox-navobj {
-    display: flex;
-    flex: 1;
+  // I assume cursor:pointer should be applied to .tox-dialog__body-nav-item in dialog.less
+  // and all .tox-tab instances removed. If correct, please perform the changes and delete
+  // the below declaration and this comment. /FD
+  .tox-tab {
+    cursor: pointer;
   }
 
-  // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
-  .tox-navobj :nth-child(2) {
-    flex: 1;
-  }
-}
-
-.tox-dialog--width-lg {
-  // The height property is required to flex the textarea within large dialogs to fit to parent
-  height: 650px;
-}
-
-.tox-form {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-
-.tox-dropzone-container {
-  display: flex;
-  flex: 1;
-}
-
-.tox-dropzone {
-  justify-content: center;
-}
-
-.tox-dropzone p {
-  color: @text-color-muted;
-  margin-bottom: 1em;
-}
-
-// This is required to make popups in a dialog appear over other dialog (urlinput, colorinput etc)
-.tox-dialog__popups {
-  position: absolute;
-  width: 100%;
-  z-index: @z-index-dialogs;
-}
-
-// This is so that the focus outline on the checkbox does not move the checkbox
-.@{prefix}-checkbox__icons {
-  border-radius: @checkbox-focus-border-radius;
-  box-shadow: @checkbox-unfocused-box-shadow;
-  padding: calc(@button-padding-y - @button-border-width);
-}
-
-.tox-dialog__body-content .tox-collection {
-  display: flex;
-  flex: 1;
-}
-
-.tox-form__group--collection {
-  display: flex;
-}
-
-//For table properties advanced colorpicker
-
-.tox-color-input {
-  display: flex;
-  input {
-    border-radius: 3px 0px 0px 3px;
-    display: flex;
-    user-select: none;
-    border-right: 0;
+  // We decided in the Tiny Drive styles to not have styling on error textfields and just have a validation
+  // message below the text field. But the classes could be useful to keep. I've replaced the below
+  // declarations with `.tox-form__group--error` in form/layout.less. So please remove the below declaraions
+  // from the code and replace with the above ones and delete this when done /FD
+  //
+  .tox-textbox-field-invalid input,
+  .tox-textbox-field-invalid textarea {
+    outline: 1px solid red;
   }
 
-   span {
-    border-radius: 0 3px 3px 0;
-    box-sizing: border-box;
-    border-left: 0;
+  // If we need a very narrow dialog (and this seems ridiculously narrow), then
+  // add a `.tox-dialog--width-sm` class in dialog.less. Remove this when done //FD.
+  .tox-special-characters {
+    max-width: 200px;
+  }
+
+  // This has been replaced with .tox-menu__item--state-active. I've made the below class
+  // bright red to highlight all occurances. Also, active state is indicated by a checkbox.
+  // (this probably needs discussion). Please remove this block when done. /FD
+  .tox-menu__item.tox-selected-item {
+    background-color: red;
+    color: white;
+  }
+
+  .tox-menu__item:hover:not(.tox-selected-item) {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+
+  // How is this used? //FD
+  .tox-input-wrap {
+    align-items: center;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: @background-color;
     border-color: @border-color;
+    border-radius: @control-border-radius;
     border-style: solid;
     border-width: 1px;
     box-shadow: none;
     box-sizing: border-box;
+    color: @text-color;
     display: flex;
-    width: 35px;
+    flex-grow: 1;
+    margin: 0;
+    outline: none;
+    padding: 0;
+  }
 
-    &:focus {
-      border-color: @input-button-focus-border-color;
+  // * This overrides the default focus border but I don't dare to remove this now /fd 2018-10-01
+  // * Class used as a wrapper for input fields to place a accessory icon on the right side within a textfield.
+  //   See dialog-2.html for example //fd 2018-10-02
+  .tox-input-wrap .tox-textfield {
+    border: none;
+  }
+
+  .tox-input-wrap:not(.tox-status-valid) .tox-status-icon__checkmark,
+  .tox-input-wrap:not(.tox-status-unknown) .tox-status-icon__warning,
+  .tox-input-wrap:not(.tox-status-invalid) .tox-status-icon__error {
+    display: none;
+  }
+
+  // Statuses is used as accessory icons within .tox-input-wrap
+  .tox-status {
+    transform: scale(.8);
+  }
+
+  .tox-status-icon__checkmark svg {
+    fill: green;
+  }
+
+  .tox-status-icon__warning svg {
+    fill: orange;
+  }
+
+  .tox-status-icon__error svg {
+    fill: red;
+  }
+
+  // Fredrik will redo this as a component later. Please keep this declarations here until then /FD
+  .tox-lock.tox-locked .tox-lock-icon__unlock,
+  .tox-lock:not(.tox-locked) .tox-lock-icon__lock {
+    display: none;
+  }
+
+  // Content JS should never be styled. the *__content-js is supposed to be a hook for javascript, not for styling. //FD
+  .tox-dialog__content-js {
+    display: flex;
+    flex: 1;
+  }
+
+  .tox-dialog {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tox-dialog__body {
+    display: flex;
+    flex: 1;
+  }
+
+  .tox-dialog__body-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .tox-form__group--stretched {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .tox-textarea {
+      flex: 1;
+      resize: none;
+    }
+
+    .tox-navobj {
+      display: flex;
+      flex: 1;
+    }
+
+    // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+    .tox-navobj :nth-child(2) {
+      flex: 1;
     }
   }
-}
 
-// cap the width of the autocompleter for horizontal cases e.g. emoji picker
-.tox-autocompleter {
-  max-width: 25em;
-}
+  .tox-dialog--width-lg {
+    // The height property is required to flex the textarea within large dialogs to fit to parent
+    height: 650px;
+  }
 
-// Do we want a focus style for disabled buttons?
-.tox-collection__item.tox-collection__item--state-disabled.tox-collection__item--active {
-  background-color: @collection-item-active-background-color;
-}
+  .tox-form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
 
-.tox-selectfield select:focus {
-  border-color: @select-focus-border-color;
-}
+  .tox-dropzone-container {
+    display: flex;
+    flex: 1;
+  }
 
-.tox-tbtn--bespoke .tox-tbtn__select-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 7em;
-}
+  .tox-dropzone {
+    justify-content: center;
+  }
 
-// restore some default styles for the help dialog
-ul {
-  display: block;
-  list-style-type: disc;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  padding-inline-start: 40px;
-}
+  .tox-dropzone p {
+    color: @text-color-muted;
+    margin-bottom: 1em;
+  }
 
-a {
-  cursor: pointer;
-  color: #2276d2;
-}
+  // This is required to make popups in a dialog appear over other dialog (urlinput, colorinput etc)
+  .tox-dialog__popups {
+    position: absolute;
+    width: 100%;
+    z-index: @z-index-dialogs;
+  }
 
-.tox-custom-editor {
-  display: flex;
-}
+  // This is so that the focus outline on the checkbox does not move the checkbox
+  .@{prefix}-checkbox__icons {
+    border-radius: @checkbox-focus-border-radius;
+    box-shadow: @checkbox-unfocused-box-shadow;
+    padding: calc(@button-padding-y - @button-border-width);
+  }
 
-.tox-image-tools__image {
-  height: 410px;
-}
+  .tox-dialog__body-content .tox-collection {
+    display: flex;
+    flex: 1;
+  }
 
-.tox-image-tools-edit-panel {
-  height: 60px;
-}
+  .tox-form__group--collection {
+    display: flex;
+  }
 
-.tox-image-tools__sidebar {
-  height: 60px;
-}
+  //For table properties advanced colorpicker
 
-// Highlight the selected num/bullist item
-.tox-collection__item--enabled {
-  background: @collection-item-enabled-background-color;
-}
+  .tox-color-input {
+    display: flex;
+    input {
+      border-radius: 3px 0px 0px 3px;
+      display: flex;
+      user-select: none;
+      border-right: 0;
+    }
 
-/* stylelint-enable */
+    span {
+      border-radius: 0 3px 3px 0;
+      box-sizing: border-box;
+      border-left: 0;
+      border-color: @border-color;
+      border-style: solid;
+      border-width: 1px;
+      box-shadow: none;
+      box-sizing: border-box;
+      display: flex;
+      width: 35px;
 
-// styles for sizing/resizing of editor and statusbar to work properly
-.tox-editor-container {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  overflow: hidden;
-}
+      &:focus {
+        border-color: @input-button-focus-border-color;
+      }
+    }
+  }
 
-.tox-toolbar,
-.tox-menubar {
-  border: 0;
-  flex: 0 0 auto;
-}
+  // cap the width of the autocompleter for horizontal cases e.g. emoji picker
+  .tox-autocompleter {
+    max-width: 25em;
+  }
 
-.tox-sidebar-wrap,
-.tox-edit-area {
-  border: 0;
-}
+  // Do we want a focus style for disabled buttons?
+  .tox-collection__item.tox-collection__item--state-disabled.tox-collection__item--active {
+    background-color: @collection-item-active-background-color;
+  }
 
-// these two rules are sadly required for the iframe to resize in IE and Edge
-.tox-edit-area {
-  position: relative;
-}
+  .tox-selectfield select:focus {
+    border-color: @select-focus-border-color;
+  }
 
-.tox-edit-area__iframe {
-  height: 100%;
-  position: absolute;
-}
+  .tox-tbtn--bespoke .tox-tbtn__select-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 7em;
+  }
 
-.tox-statusbar {
-  background-color: @background-color;
-  border: 0;
-  border-top: 1px solid @border-color;
-  display: flex;
-  flex: 0 0 auto;
-  overflow: hidden;
-}
+  // restore some default styles for the help dialog
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+  }
 
-.tox-statusbar__text-container {
-  display: flex;
-  flex: 1 1 auto;
-  overflow: hidden;
-}
+  a {
+    cursor: pointer;
+    color: #2276d2;
+  }
 
-.tox-statusbar__resize-handle {
-  flex: 0 0 auto;
-}
+  .tox-custom-editor {
+    display: flex;
+  }
 
-.tox-statusbar .tox-statusbar__wordcount,
-.tox-statusbar .tox-statusbar__branding, {
-  flex: 0 0 auto;
-}
+  .tox-image-tools__image {
+    height: 410px;
+  }
 
-.tox-statusbar .tox-statusbar__path {
-  display: block;
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .tox-image-tools-edit-panel {
+    height: 60px;
+  }
 
-.tox-statusbar .tox-statusbar__path * {
-  display: inline;
-  white-space: nowrap;
+  .tox-image-tools__sidebar {
+    height: 60px;
+  }
+
+  // Highlight the selected num/bullist item
+  .tox-collection__item--enabled {
+    background: @collection-item-enabled-background-color;
+  }
+
+  /* stylelint-enable */
+
+  // styles for sizing/resizing of editor and statusbar to work properly
+  .tox-editor-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tox-toolbar,
+  .tox-menubar {
+    border: 0;
+    flex: 0 0 auto;
+  }
+
+  .tox-sidebar-wrap,
+  .tox-edit-area {
+    border: 0;
+  }
+
+  // these two rules are sadly required for the iframe to resize in IE and Edge
+  .tox-edit-area {
+    position: relative;
+  }
+
+  .tox-edit-area__iframe {
+    height: 100%;
+    position: absolute;
+  }
+
+  .tox-statusbar {
+    background-color: @background-color;
+    border: 0;
+    border-top: 1px solid @border-color;
+    display: flex;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+
+  .tox-statusbar__text-container {
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .tox-statusbar__resize-handle {
+    flex: 0 0 auto;
+  }
+
+  .tox-statusbar .tox-statusbar__wordcount,
+  .tox-statusbar .tox-statusbar__branding, {
+    flex: 0 0 auto;
+  }
+
+  .tox-statusbar .tox-statusbar__path {
+    display: block;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar .tox-statusbar__path * {
+    display: inline;
+    white-space: nowrap;
+  }
 }

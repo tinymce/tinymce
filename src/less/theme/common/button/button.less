@@ -47,63 +47,65 @@
 @button-active-box-shadow: @button-box-shadow;
 @button-active-text-color: @button-text-color;
 
-.@{prefix}-button {
-  background-color: @button-background-color;
-  background-image: @button-background-image;
-  background-position: @button-background-position;
-  background-repeat: @button-background-repeat;
-  border-color: @button-border-color;
-  border-radius: @button-border-radius;
-  border-style: @button-border-style;
-  border-width: @button-border-width;
-  box-shadow: @button-box-shadow;
-  box-sizing: border-box;
-  color: @button-text-color;
-  cursor: pointer;
-  display: inline-block;
-  font-family: @button-font-family;
-  font-size: @button-font-size;
-  font-weight: @button-font-weight;
-  letter-spacing: @button-letter-spacing;
-  line-height: @button-line-height;
-  margin: 0;
-  outline: none;
-  padding: @button-padding-y @button-padding-x;
-  text-align: @button-text-align;
-  text-decoration: @button-text-decoration;
-  text-transform: @button-text-transform;
-  white-space: nowrap;
+.@{prefix} {
+  .@{prefix}-button {
+    background-color: @button-background-color;
+    background-image: @button-background-image;
+    background-position: @button-background-position;
+    background-repeat: @button-background-repeat;
+    border-color: @button-border-color;
+    border-radius: @button-border-radius;
+    border-style: @button-border-style;
+    border-width: @button-border-width;
+    box-shadow: @button-box-shadow;
+    box-sizing: border-box;
+    color: @button-text-color;
+    cursor: pointer;
+    display: inline-block;
+    font-family: @button-font-family;
+    font-size: @button-font-size;
+    font-weight: @button-font-weight;
+    letter-spacing: @button-letter-spacing;
+    line-height: @button-line-height;
+    margin: 0;
+    outline: none;
+    padding: @button-padding-y @button-padding-x;
+    text-align: @button-text-align;
+    text-decoration: @button-text-decoration;
+    text-transform: @button-text-transform;
+    white-space: nowrap;
 
-  &[disabled] {
-    background-color: @button-disabled-background-color;
-    background-image: @button-disabled-background-image;
-    border-color: @button-disabled-border-color;
-    box-shadow: @button-disabled-box-shadow;
-    color: @button-disabled-text-color;
-    cursor: not-allowed;
-  }
+    &[disabled] {
+      background-color: @button-disabled-background-color;
+      background-image: @button-disabled-background-image;
+      border-color: @button-disabled-border-color;
+      box-shadow: @button-disabled-box-shadow;
+      color: @button-disabled-text-color;
+      cursor: not-allowed;
+    }
 
-  &:focus:not(:disabled) {
-    background-color: @button-focus-background-color;
-    background-image: @button-focus-background-image;
-    border-color: @button-focus-border-color;
-    box-shadow: @button-focus-box-shadow;
-    color: @button-focus-text-color;
-  }
+    &:focus:not(:disabled) {
+      background-color: @button-focus-background-color;
+      background-image: @button-focus-background-image;
+      border-color: @button-focus-border-color;
+      box-shadow: @button-focus-box-shadow;
+      color: @button-focus-text-color;
+    }
 
-  &:hover:not(:disabled) {
-    background-color: @button-hover-background-color;
-    background-image: @button-hover-background-image;
-    border-color: @button-hover-border-color;
-    box-shadow: @button-hover-box-shadow;
-    color: @button-hover-text-color;
-  }
+    &:hover:not(:disabled) {
+      background-color: @button-hover-background-color;
+      background-image: @button-hover-background-image;
+      border-color: @button-hover-border-color;
+      box-shadow: @button-hover-box-shadow;
+      color: @button-hover-text-color;
+    }
 
-  &:active:not(:disabled) {
-    background-color: @button-active-background-color;
-    background-image: @button-active-background-image;
-    border-color: @button-active-border-color;
-    box-shadow: @button-active-box-shadow;
-    color: @button-active-text-color;
+    &:active:not(:disabled) {
+      background-color: @button-active-background-color;
+      background-image: @button-active-background-image;
+      border-color: @button-active-border-color;
+      box-shadow: @button-active-box-shadow;
+      color: @button-active-text-color;
+    }
   }
 }
