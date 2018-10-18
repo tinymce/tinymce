@@ -153,6 +153,12 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
           cNavigate(true),
           cAssertCaretPosition([0], 2)
         ])),
+        Logger.t('should walk from after last text node offset to before CEF span', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a<br><span contenteditable="false">b</span></p>'),
+          cCreateFromPosition([0, 0], 1),
+          cNavigate(true),
+          cAssertCaretPosition([0], 2)
+        ])),
         Logger.t('Should walk from last text node offset over br to first text node offset', Chain.asStep(viewBlock, [
           cSetHtml('<p>a<br>b</p>'),
           cCreateFromPosition([0, 0], 1),
