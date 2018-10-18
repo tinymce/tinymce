@@ -1,32 +1,29 @@
+import { assert, UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
+import { Arr, FutureResult, LazyValue, Result } from '@ephox/katamari';
 import * as Ajax from 'ephox/jax/api/Ajax';
 import { ContentType } from 'ephox/jax/api/ContentType';
 import { Credentials } from 'ephox/jax/api/Credentials';
 import { ResponseType } from 'ephox/jax/api/ResponseType';
-import { Arr } from '@ephox/katamari';
-import { FutureResult } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
-import { console } from '@ephox/dom-globals';
+import { ResponseError } from 'ephox/jax/response/ResponseError';
 
-UnitTest.asynctest('AjaxTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('AjaxTest', function(success, failure) {
 
-  const expectError = function (label, response) {
-    return FutureResult.nu(function (callback) {
+  const expectError = function (label: string, response: LazyValue<Result<any, ResponseError>>) {
+    return FutureResult.nu<{},Error>(function (callback) {
       response.get(function (res) {
         res.fold(function (err) {
           console.log(label, 'successfully failed');
           callback(Result.value({ }));
         }, function (val) {
-          callback(Result.error('Unexpected value in test: ' + label));
+          callback(Result.error(new Error('Unexpected value in test: ' + label)));
         });
       });
     });
   };
 
-  const expectValue = function (label, value, response) {
-    return FutureResult.nu(function (callback) {
+  const expectValue = function (label: string, value: any, response: LazyValue<Result<any, ResponseError>>) {
+    return FutureResult.nu<{},Error>(function (callback) {
       response.get(function (res) {
         res.fold(function (err) {
           callback(Result.error(new Error(err.message())));
@@ -167,7 +164,7 @@ UnitTest.asynctest('AjaxTest', function() {
     return rest.bindFuture(function () {
       return res;
     });
-  }, FutureResult.pure({})).get(function (v) {
+  }, FutureResult.pure({})).get(function (v: Result<{},Error>) {
     v.fold(function (err) {
       failure(err);
     }, function (_) {
