@@ -112,9 +112,10 @@ gulp.task('cleanBuild', function () {
 
 
 const packages = [
-  '@ephox/oxide-icons-material'
+  '@ephox/oxide-icons-material',
+  '@ephox/oxide-icons-jam'
 ];
-gulp.task('getInternal', 
+gulp.task('getInternal',
   shell.task('npm install ' + packages.join(' ') + ' --no-save --registry http://nexus:8081/repository/npm-group/')
 );
 
