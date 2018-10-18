@@ -117,6 +117,40 @@ export default () => {
     ]
   }, sharedBackstage);
 
+  const labelGroupGridSpec = renderUiGroupLabel({
+    label: 'A label that wraps compontents in a group',
+    items: [
+      renderGrid({
+        type: 'grid',
+        columns: 5,
+        items: [
+          AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
+          renderButton({
+            name: 'gridspecbutton',
+            text: 'Click Me!',
+            primary: false
+          }, () => {
+            console.log('clicked on the button in the grid');
+          }) as any,
+          renderCheckbox({
+            label: 'check box item 1',
+            name: 'one'
+          }, sharedBackstage.providers),
+          renderCheckbox({
+            label: 'check box item 2',
+            name: 'two'
+          }, sharedBackstage.providers),
+          renderInput({
+            label: Option.some('exampleInput'),
+            name: 'exampleinputfieldname',
+            validation: Option.none()
+          })
+        ]
+      }, sharedBackstage)
+
+    ]
+  }, sharedBackstage);
+
   const uiLabelSpec = renderUiLabel({
     label: 'A stand alone label'
   }, sharedBackstage);
@@ -350,6 +384,7 @@ export default () => {
 
       display('Group Label', labelGroupSpec),
       display('Ui Label', uiLabelSpec),
+      display('Ui Group Grid', labelGroupGridSpec),
       display('Autocomplete', autocompleteSpec),
       display('IFrame', iframeSpec),
       display('Input', inputSpec),
