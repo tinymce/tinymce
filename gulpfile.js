@@ -7,10 +7,7 @@ var browserSync = require('browser-sync').create();
 var variablesOutput = require('less-plugin-variables-output');
 var concat = require('gulp-concat');
 var fileinclude = require('gulp-file-include');
-
-var iconPacks = [
-  './node_modules/@ephox/oxide-icons-default/dist/js/TinymceIcons.js',
-];
+var shell = require('gulp-shell');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
 var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin/less-variables.json'});
@@ -79,7 +76,7 @@ gulp.task('copyFilesC', function() {
 // Concat icon packs and copy iconManager
 //
 gulp.task('setupIconManager', function() {
-  return gulp.src([ 'src/demo/iconManager.js', ...iconPacks ])
+  return gulp.src([ 'src/demo/iconManager.js', './node_modules/@ephox/oxide-icons-*/dist/js/TinymceIcons.js' ])
     .pipe(concat('iconManager.js'))
     .pipe(gulp.dest('./build'));
 });
@@ -112,6 +109,14 @@ gulp.task('cleanBuild', function () {
   })
   .pipe(clean());
 });
+
+
+const packages = [
+  '@ephox/oxide-icons-material'
+];
+gulp.task('getInternal', 
+  shell.task('npm install ' + packages.join(' ') + ' --no-save --registry http://nexus:8081/repository/npm-group/')
+);
 
 //
 // clean tmp

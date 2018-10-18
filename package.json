@@ -27,6 +27,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-file-include": "^2.0.1",
     "gulp-less": "^3.5.0",
+    "gulp-shell": "^0.6.5",
     "gulp-stylelint": "^7.0.0",
     "gulp-typescript": "^5.0.0-alpha.2",
     "less-plugin-autoprefix": "^1.5.1",
