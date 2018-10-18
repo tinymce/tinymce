@@ -6,11 +6,12 @@ import ThemeManager from 'tinymce/core/api/ThemeManager';
 import { renderMobileTheme } from '../../../mobile/main/ts/Theme';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
-import Render from './Render';
+import Render, { RenderInfo } from './Render';
 import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
+import { Editor } from 'tinymce/core/api/Editor';
 
-ThemeManager.add('silver', function (editor) {
+ThemeManager.add('silver', (editor: Editor) => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
 
@@ -18,7 +19,7 @@ ThemeManager.add('silver', function (editor) {
     return renderMobileTheme(editor);
   }
 
-  const {mothership, uiMothership, backstage, renderUI, getUi} = Render.setup(editor);
+  const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
 
   FormatControls.setup(editor);
 

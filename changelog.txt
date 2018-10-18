@@ -1,4 +1,7 @@
 Version 5.0.0-preview-3 (TBD)
+    Changed editor layout to use modern CSS properties over manually calculating dimensions #AP-324
+    Changed `autoresize_min_height` and `autoresize_max_height` configurations to `min_height` and `max_height` #AP-324
+    Fixed bugs with editor width jumping when resizing and the iframe not resizing to smaller than 150px in height #AP-324
     Changed `Whole word` label in Search and Replace dialog to `Find whole words only` #AP-387
     Fixed dialog titles so they are now proper case #AP-384
     Fixed color picker default to be #000000 instead of #ff00ff #AP-216
