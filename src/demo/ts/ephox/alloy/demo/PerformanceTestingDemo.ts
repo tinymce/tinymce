@@ -7,6 +7,8 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { AlloySpec, AddEventsBehaviour } from '../../../../../main/ts/ephox/alloy/api/Main';
 import { HTMLElement, document } from '@ephox/dom-globals';
 
+import PerformanceMenuData from './PerformanceMenuData';
+
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -29,7 +31,7 @@ export default (): void => {
     return div;
   }
 
-
+  const menuData = PerformanceMenuData
 
 
   const buildToDepth = (depth: number, numChildren: number): AlloySpec => {
@@ -45,16 +47,16 @@ export default (): void => {
       // ])
     }
   }
-  console.time('spec');
-  const spec = buildToDepth(4, 10);
-  console.timeEnd('spec');
-  console.log({ spec });
+  // console.time('spec');
+  // const spec = buildToDepth(4, 10);
+  // console.timeEnd('spec');
+  // console.log({ spec });
 
 
   const before = new Date().getTime();
   // console.time('build')
   // console.profile('build');
-  const box = GuiFactory.build(spec);
+  const box = GuiFactory.build(menuData);
   const after = new Date().getTime();
   console.log({ elapsed: after - before });
   // console.profileEnd('build');
