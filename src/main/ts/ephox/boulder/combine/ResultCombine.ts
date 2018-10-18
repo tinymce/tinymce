@@ -1,23 +1,25 @@
-import { Arr, Fun, Merger, Result, Results } from '@ephox/katamari';
+import { Arr, Fun, Merger } from '@ephox/katamari';
+import { SimpleResult } from '../alien/SimpleResult';
 
-const mergeValues = function (values, base) {
-  return Result.value(
+const mergeValues = (values: Record<string, any>[], base: Record<string, any>):SimpleResult<any, Record<string, any>> => {
+  return SimpleResult.svalue(
     Merger.deepMerge.apply(undefined, [ base ].concat(values))
   );
 };
 
-const mergeErrors = function (errors) {
-  return Fun.compose(Result.error, Arr.flatten)(errors);
+const mergeErrors = function <E>(errors: E[][]): SimpleResult<E[], any> {
+  return Fun.compose(SimpleResult.serror, Arr.flatten)(errors);
 };
 
-const consolidateObj = function (objects, base) {
-  const partitions = Results.partition(objects);
-  return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
+
+const consolidateObj = <E>(objects: SimpleResult<E[], any>[], base: Record<string, any>): SimpleResult<E[], any> => {
+  const partition = SimpleResult.partition(objects);
+  return partition.errors.length > 0 ? mergeErrors(partition.errors) : mergeValues(partition.values, base);
 };
 
-const consolidateArr = function (objects) {
-  const partitions = Results.partition(objects);
-  return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : Result.value(partitions.values);
+const consolidateArr = <E>(objects: SimpleResult<E[], any>[]): SimpleResult<E[], any> => {
+  const partitions = SimpleResult.partition(objects);
+  return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : SimpleResult.svalue(partitions.values);
 };
 
 export const ResultCombine = {

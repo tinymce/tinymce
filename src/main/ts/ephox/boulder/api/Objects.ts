@@ -2,7 +2,7 @@ import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjChanger from '../core/ObjChanger';
 import * as ObjReader from '../core/ObjReader';
 import * as ObjWriter from '../core/ObjWriter';
-import { Option, Result } from '@ephox/katamari';
+import { Option, Result, Results, Merger, Fun, Arr } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
 const narrow = function (obj: {}, fields: any[]): {} {
@@ -37,8 +37,21 @@ const indexOnKey = function <T> (array: {[T: string]: any}[], key: string): {[T:
   return ObjChanger.indexOnKey(array, key);
 };
 
-const consolidate = function (objs: {}[], base: {}): Result <{}, string> {
-  return ResultCombine.consolidateObj(objs, base);
+const mergeValues = function (values, base) {
+  return Result.value(
+    Merger.deepMerge.apply(undefined, [ base ].concat(values))
+  );
+};
+
+const mergeErrors = function (errors) {
+  return Fun.compose(Result.error, Arr.flatten)(errors);
+};
+
+
+
+const consolidate = function (objs, base: {}): Result <{}, string> {
+  const partitions = Results.partition(objs);
+  return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
 };
 
 const hasKey = function (obj: {}, key: string): boolean {

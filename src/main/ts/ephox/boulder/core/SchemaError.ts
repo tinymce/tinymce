@@ -1,8 +1,9 @@
 import { formatObj } from '../format/PrettyPrinter';
 import { Result } from '@ephox/katamari';
+import { SimpleResult } from '../alien/SimpleResult';
 
 const nu = function (path, getErrorInfo) {
-  return Result.error([{
+  return SimpleResult.serror([{
     path,
     // This is lazy so that it isn't calculated unnecessarily
     getErrorInfo

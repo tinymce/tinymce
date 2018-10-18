@@ -8,7 +8,7 @@ const readOpt = function (key) {
 
 const readOr = function (key, fallback) {
   return function (obj) {
-    return readOpt(key)(obj).getOr(fallback);
+    return obj.hasOwnProperty(key) ? obj[key] : fallback;
   };
 };
 
