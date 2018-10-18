@@ -19,10 +19,7 @@ export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends Co
 const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
   const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
-  return Merger.deepMerge(
-    factory(detail, specWithUid),
-    { 'debug.sketcher': Objects.wrap(owner, spec) }
-  );
+  return factory(detail, specWithUid);
 };
 
 const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {

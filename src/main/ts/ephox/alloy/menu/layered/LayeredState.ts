@@ -1,28 +1,30 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Option, Merger } from '@ephox/katamari';
 
 import * as MenuPathing from './MenuPathing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { MenuPreparation } from '../../ui/single/TieredMenuSpec';
 
 // Object indexed by menu value. Each entry has a list of item values.
 export type MenuDirectory = Record<string, string[]>;
 
 export interface LayeredState {
-  setContents: (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
+  setContents: (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
+  setMenuBuilt: (menuName: string, built: AlloyComponent) => void;
   expand: (itemValue: string) => Option<string[]>;
   refresh: (itemValue: string) => Option<string[]>;
   collapse: (itemValue: string) => Option<string[]>;
-  lookupMenu: (menuValue: string) => Option<AlloyComponent>;
+  lookupMenu: (menuValue: string) => Option<MenuPreparation>;
   otherMenus: (path: string[]) => string[];
   getPrimary: () => Option<AlloyComponent>;
-  getMenus: () => Record<string, AlloyComponent>;
+  getMenus: () => Record<string, MenuPreparation>;
   clear: () => void;
   isClear: () => boolean;
 }
 
 const init = (): LayeredState => {
   const expansions: Cell<Record<string, string>> = Cell({ });
-  const menus: Cell<Record<string, AlloyComponent>> = Cell({ });
+  const menus: Cell<Record<string, MenuPreparation>> = Cell({ });
   const paths: Cell<Record<string, string[]>> = Cell({ });
   const primary: Cell<Option<string>> = Cell(Option.none());
 
@@ -40,7 +42,16 @@ const init = (): LayeredState => {
     return primary.get().isNone();
   };
 
-  const setContents = (sPrimary: string, sMenus: Record<string, AlloyComponent>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
+  const setMenuBuilt = (menuName: string, built: AlloyComponent) => {
+    menus.set(
+      Merger.merge(menus.get(), Objects.wrap(menuName, {
+        type: 'prepared',
+        menu: built
+      }))
+    )
+  }
+
+  const setContents = (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
     primary.set(Option.some(sPrimary));
     expansions.set(sExpansions);
     menus.set(sMenus);
@@ -68,8 +79,8 @@ const init = (): LayeredState => {
     return Objects.readOptFrom(paths.get(), itemValue) as Option<string[]>;
   };
 
-  const lookupMenu = (menuValue: string): Option<AlloyComponent> => {
-    return Objects.readOptFrom<AlloyComponent>(
+  const lookupMenu = (menuValue: string): Option<MenuPreparation> => {
+    return Objects.readOptFrom<MenuPreparation>(
       menus.get(),
       menuValue
     );
@@ -81,14 +92,19 @@ const init = (): LayeredState => {
   };
 
   const getPrimary = (): Option<AlloyComponent> => {
-    return primary.get().bind(lookupMenu);
+    return primary.get().bind((primaryName) => {
+      return lookupMenu(primaryName).bind((prep) => {
+        return prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
+      });
+    });
   };
 
-  const getMenus = (): Record<string, AlloyComponent> => {
+  const getMenus = (): Record<string, MenuPreparation> => {
     return menus.get();
   };
 
   return {
+    setMenuBuilt,
     setContents,
     expand,
     refresh,

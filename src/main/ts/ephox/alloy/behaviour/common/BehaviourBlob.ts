@@ -23,7 +23,7 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, a
    * and ensures that all the behaviours were valid. Will need to document
    * this entire process. Let's see where this is used.
    */
-  const schema: FieldProcessorAdt[] = LumberTimers.run('bBlob.schea', () => Arr.map(all, (a) => {
+  const schema: FieldProcessorAdt[] = LumberTimers.run('bBlob.schema', () => Arr.map(all, (a) => {
     // Option here probably just due to ForeignGui listing everything it supports. Can most likely
     // change it to strict once I fix the other errors.
     return FieldSchema.optionObjOf(a.name(), [
@@ -40,6 +40,7 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, a
     );
   }, (v: B) => v));
 /*
+
 
 taview: () => Option({
   config: () => tabviewconfig

@@ -25,9 +25,23 @@ import * as MenuEvents from '../../menu/util/MenuEvents';
 import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
 import { console } from '@ephox/dom-globals';
 import { LumberTimers } from '../../alien/LumberTimers';
+import { AlloySpec } from '../../api/Main';
+
+
+export type MenuPreparation = MenuPrepared | MenuNotBuilt;
+
+export interface MenuPrepared {
+  type: 'prepared';
+  menu: AlloyComponent;
+}
+
+export interface MenuNotBuilt {
+  type: 'notbuilt';
+  nbMenu: AlloySpec;
+}
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
-  const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
+  const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
       const data = Menu.sketch(
         Merger.deepMerge(
@@ -47,9 +61,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       );
 
       // console.time('actual.build.menu: ' + name);
-      const x = container.getSystem().build(data);
+      // const x = container.getSystem().build(data);
       // console.timeEnd('actual.build.menu: ' + name);
-      return x;
+      return {
+        type: 'notbuilt',
+        nbMenu: data
+      } as MenuNotBuilt;
     });
   };
 
@@ -89,13 +106,18 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] => {
     return Options.cat(
-      Arr.map(menuValues, state.lookupMenu)
+      Arr.map(menuValues, (mv) => {
+        return state.lookupMenu(mv).bind((prep) => {
+          return prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
+        })
+      })
     );
   };
 
   const closeOthers = (container: AlloyComponent, state: LayeredState, path: string[]): void => {
     const others = getMenus(state, state.otherMenus(path));
     Arr.each(others, (o) => {
+
       // May not need to do the active menu thing.
       Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
       if (! detail.stayInDom()) { Replacing.remove(container, o); }
@@ -103,47 +125,67 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   };
 
   const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => {
-    return Option.from(path[0]).bind(state.lookupMenu).map((activeMenu: AlloyComponent) => {
-      const rest = getMenus(state, path.slice(1));
-      Arr.each(rest, (r) => {
-        Class.add(r.element(), detail.markers().backgroundMenu());
+    return Option.from(path[0]).bind((latestMenuName) => {
+      return state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
+        if (menuPrep.type === 'notbuilt') return Option.none();
+        else {
+          const activeMenu = menuPrep.menu;
+          const rest = getMenus(state, path.slice(1));
+          Arr.each(rest, (r) => {
+            Class.add(r.element(), detail.markers().backgroundMenu());
+          });
+
+          if (! Body.inBody(activeMenu.element())) {
+            Replacing.append(container, GuiFactory.premade(activeMenu));
+          }
+
+          // Remove the background-menu class from the active menu
+          Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
+          setActiveMenu(container, activeMenu);
+          closeOthers(container, state, path);
+          return Option.some(activeMenu);
+        }
       });
-
-      if (! Body.inBody(activeMenu.element())) {
-        Replacing.append(container, GuiFactory.premade(activeMenu));
-      }
-
-      // Remove the background-menu class from the active menu
-      Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
-      setActiveMenu(container, activeMenu);
-      closeOthers(container, state, path);
-      return activeMenu;
     });
 
   };
 
   enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent };
 
+  const buildIfRequired = (container: AlloyComponent,menuName: string, menuPrep: MenuPreparation) => {
+    if (menuPrep.type === 'notbuilt') {
+      const menu = container.getSystem().build(menuPrep.nbMenu);
+      layeredState.setMenuBuilt(menuName, menu);
+      return menu;
+    } else {
+      return menuPrep.menu;
+    }
+  }
+
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
       // When expanding, always select the first.
-      return Option.from(path[0]).bind(layeredState.lookupMenu).bind((activeMenu) => {
-        // DUPE with above. Fix later.
-        if (! Body.inBody(activeMenu.element())) {
-          Replacing.append(container, GuiFactory.premade(activeMenu));
-        }
+      return Option.from(path[0]).bind((menuName) => {
+          return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
+          const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
-        // updateMenuPath is the code which changes the active menu. We don't always
-        // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
-        detail.onOpenSubmenu()(container, item, activeMenu);
-        if (decision === ExpandHighlightDecision.HighlightSubmenu) {
-          Highlighting.highlightFirst(activeMenu);
-          return updateMenuPath(container, layeredState, path);
-        } else {
-          Highlighting.dehighlightAll(activeMenu);
-          return Option.some(item);
-        }
+          // DUPE with above. Fix later.
+          if (! Body.inBody(activeMenu.element())) {
+            Replacing.append(container, GuiFactory.premade(activeMenu));
+          }
+
+          // updateMenuPath is the code which changes the active menu. We don't always
+          // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
+          detail.onOpenSubmenu()(container, item, activeMenu);
+          if (decision === ExpandHighlightDecision.HighlightSubmenu) {
+            Highlighting.highlightFirst(activeMenu);
+            return updateMenuPath(container, layeredState, path);
+          } else {
+            Highlighting.dehighlightAll(activeMenu);
+            return Option.some(item);
+          }
+        });
       });
     });
   };
