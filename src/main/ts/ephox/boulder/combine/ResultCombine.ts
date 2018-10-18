@@ -2,9 +2,12 @@ import { Arr, Fun, Merger } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 
 const mergeValues = (values: Record<string, any>[], base: Record<string, any>):SimpleResult<any, Record<string, any>> => {
-  return SimpleResult.svalue(
-    Merger.deepMerge.apply(undefined, [ base ].concat(values))
-  );
+  return values.length > 0 ? SimpleResult.svalue(
+    Merger.deepMerge(
+      base,
+      Merger.merge.apply(undefined, values)
+    )
+  ) : SimpleResult.svalue(base);
 };
 
 const mergeErrors = function <E>(errors: E[][]): SimpleResult<E[], any> {

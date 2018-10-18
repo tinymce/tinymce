@@ -12,7 +12,7 @@ const readOr = function (key, fallback) {
   };
 };
 
-const readOptFrom = function (obj, key) {
+const readOptFrom = <O>(obj, key): Option<O> => {
   return readOpt(key)(obj);
 };
 

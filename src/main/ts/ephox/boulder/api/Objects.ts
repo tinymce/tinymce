@@ -21,8 +21,8 @@ const readOr = function <T>(key: string, fallback: T): ({}) => T {
   return ObjReader.readOr(key, fallback);
 };
 
-const readOptFrom = function (obj: {}, key: string): Option<any> {
-  return ObjReader.readOptFrom(obj, key);
+const readOptFrom = <O>(obj: {}, key: string): Option<O> => {
+  return ObjReader.readOptFrom<O>(obj, key);
 };
 
 const wrap = function (key: string, value: {}): {} {
@@ -39,7 +39,11 @@ const indexOnKey = function <T> (array: {[T: string]: any}[], key: string): {[T:
 
 const mergeValues = function (values, base) {
   return Result.value(
-    Merger.deepMerge.apply(undefined, [ base ].concat(values))
+    Merger.deepMerge(
+      base,
+      Merger.merge.apply(undefined, values)
+    )
+    // Merger.deepMerge.apply(undefined, [ base ].concat(values))
   );
 };
 
