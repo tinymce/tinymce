@@ -30,7 +30,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   // TODO: Test this
   const isVisible = (tabbingConfig: TabbingConfig, element: Element): boolean => {
-    const target = tabbingConfig.visibilitySelector().bind((sel) => {
+    const target = tabbingConfig.visibilitySelector.bind((sel) => {
       return SelectorFind.closest(element, sel);
     }).getOr(element);
 
@@ -39,28 +39,28 @@ const create = (cyclicField: FieldProcessorAdt) => {
   };
 
   const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => {
-    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector());
+    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
     const visibles: Element[] = Arr.filter(tabstops, (elem) => {
       return isVisible(tabbingConfig, elem);
     });
 
-    return Option.from(visibles[tabbingConfig.firstTabstop()]);
+    return Option.from(visibles[tabbingConfig.firstTabstop]);
   };
 
   const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => {
-    return tabbingConfig.focusManager().get(component).bind((elem) => {
-      return SelectorFind.closest(elem, tabbingConfig.selector());
+    return tabbingConfig.focusManager.get(component).bind((elem) => {
+      return SelectorFind.closest(elem, tabbingConfig.selector);
     });
   };
 
   const isTabstop = (tabbingConfig: TabbingConfig, element: Element): boolean => {
-    return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt()(element);
+    return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
   };
 
   // Fire an alloy focus on the first visible element that matches the selector
   const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig): void => {
     findInitial(component, tabbingConfig).each((target) => {
-      tabbingConfig.focusManager().set(component, target);
+      tabbingConfig.focusManager.set(component, target);
     });
   };
 
@@ -69,9 +69,9 @@ const create = (cyclicField: FieldProcessorAdt) => {
       return isTabstop(tabbingConfig, elem);
     }).fold(() => {
       // Even if there is only one, still capture the event if cycling
-      return tabbingConfig.cyclic() ? Option.some(true) : Option.none();
+      return tabbingConfig.cyclic ? Option.some(true) : Option.none();
     }, (target) => {
-      tabbingConfig.focusManager().set(component, target);
+      tabbingConfig.focusManager.set(component, target);
       // Kill the event
       return Option.some(true);
     });
@@ -82,7 +82,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
-    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector());
+    const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
     return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
@@ -94,23 +94,23 @@ const create = (cyclicField: FieldProcessorAdt) => {
   };
 
   const goBackwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
-    const navigate = tabbingConfig.cyclic() ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
+    const navigate = tabbingConfig.cyclic ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
   const goForwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
-    const navigate = tabbingConfig.cyclic() ? ArrNavigation.cycleNext : ArrNavigation.tryNext;
+    const navigate = tabbingConfig.cyclic ? ArrNavigation.cycleNext : ArrNavigation.tryNext;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
   const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
-    return tabbingConfig.onEnter().bind((f) => {
+    return tabbingConfig.onEnter.bind((f) => {
       return f(component, simulatedEvent);
     });
   };
 
   const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
-    return tabbingConfig.onEscape().bind((f) => {
+    return tabbingConfig.onEscape.bind((f) => {
       return f(component, simulatedEvent);
     });
   };
