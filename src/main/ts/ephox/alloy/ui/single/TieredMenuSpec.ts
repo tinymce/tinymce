@@ -37,35 +37,56 @@ export interface MenuPrepared {
 
 export interface MenuNotBuilt {
   type: 'notbuilt';
-  nbMenu: AlloySpec;
+  nbMenu: () => AlloySpec;
 }
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
-      const data = Menu.sketch(
-        Merger.deepMerge(
-          spec,
-          {
-            value: name,
-            items: spec.items,
-            markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
+      // const data = Menu.sketch(
+      //   Merger.deepMerge(
+      //     spec,
+      //     {
+      //       value: name,
+      //       items: spec.items,
+      //       markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
 
-            // Fake focus.
-            fakeFocus: detail.fakeFocus(),
-            onHighlight: detail.onHighlight(),
+      //       // Fake focus.
+      //       fakeFocus: detail.fakeFocus(),
+      //       onHighlight: detail.onHighlight(),
 
-            focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
-          }
-        )
-      );
+      //       focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
+      //     }
+      //   )
+      // );
 
       // console.time('actual.build.menu: ' + name);
       // const x = container.getSystem().build(data);
+      // return {
+      //   type: 'prepared',
+      //   menu: container.getSystem().build(data)
+      // } as MenuPrepared;
       // console.timeEnd('actual.build.menu: ' + name);
       return {
         type: 'notbuilt',
-        nbMenu: data
+        nbMenu: () => {
+          return Menu.sketch(
+            Merger.deepMerge(
+              spec,
+              {
+                value: name,
+                items: spec.items,
+                markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
+
+                // Fake focus.
+                fakeFocus: detail.fakeFocus(),
+                onHighlight: detail.onHighlight(),
+
+                focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
+              }
+            )
+          )
+        }
       } as MenuNotBuilt;
     });
   };
@@ -73,12 +94,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
-    LumberTimers.reset();
+    // LumberTimers.reset();
     console.time('buildMenus');
     const componentMap = buildMenus(container, detail.data().menus());
 
     console.timeEnd('buildMenus');
-    LumberTimers.log();
+    // LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
     const primary = layeredState.lookupMenu(detail.data().primary()).each((prep) => buildIfRequired(container, detail.data().primary(), prep));
@@ -156,7 +177,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   const buildIfRequired = (container: AlloyComponent,menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {
-      const menu = container.getSystem().build(menuPrep.nbMenu);
+      console.time('building on demand');
+      const menu = container.getSystem().build(menuPrep.nbMenu());
+      console.timeEnd('building on demand');
       layeredState.setMenuBuilt(menuName, menu);
       return menu;
     } else {
