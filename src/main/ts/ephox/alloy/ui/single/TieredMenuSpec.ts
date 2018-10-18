@@ -23,6 +23,7 @@ import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
+import { console } from '@ephox/dom-globals';
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
@@ -44,14 +45,19 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
         )
       );
 
-      return container.getSystem().build(data);
+      console.time('actual.build.menu: ' + name);
+      const x = container.getSystem().build(data);
+      console.timeEnd('actual.build.menu: ' + name);
+      return x;
     });
   };
 
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
+    console.time('buildMenus');
     const componentMap = buildMenus(container, detail.data().menus());
+    console.timeEnd('buildMenus');
     const directory = toDirectory(container);
     layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
     return layeredState.getPrimary();
@@ -218,16 +224,25 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
     // Open the menu as soon as it is added to the DOM
     AlloyEvents.runOnAttached((container, simulatedEvent) => {
+      console.time('setup');
       setup(container).each((primary) => {
+        console.time('tmenu.dom');
         Replacing.append(container, GuiFactory.premade(primary));
+        // container.element().dom().appendChild(primary.element().dom());
+        console.timeEnd('tmenu.dom');
 
+        console.time('onOpenMenu');
         detail.onOpenMenu()(container, primary);
+        console.timeEnd('onOpenMenu');
         if (detail.highlightImmediately()) {
+          console.time('setActiveMenu');
           setActiveMenu(container, primary);
+          console.timeEnd('setActiveMenu');
         }
 
 
       });
+      console.timeEnd('setup');
     })
   ].concat(detail.navigateOnHover() ? [
     // Hide any irrelevant submenus and expand any submenus based
