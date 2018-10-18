@@ -76,6 +76,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     LumberTimers.reset();
     console.time('buildMenus');
     const componentMap = buildMenus(container, detail.data().menus());
+    const primary = layeredState.lookupMenu(detail.data().primary()).each((prep) => buildIfRequired(container, detail.data().primary(), prep));
     console.timeEnd('buildMenus');
     LumberTimers.log();
     const directory = toDirectory(container);
