@@ -1,15 +1,18 @@
 import { Future } from '@ephox/katamari';
 import { FileReader } from '@ephox/sand';
+import { Blob } from '@ephox/dom-globals';
 
-
-
-export default <any> function (blob) {
+const parse = function (blob: Blob) {
   return Future.nu(function (callback) {
-    var fr = FileReader();
+    const fr = FileReader();
     fr.onload = function (e) {
-      var data = e.target;
+      const data = e.target;
       callback(data.result);
     };
     fr.readAsText(blob);
   });
+};
+
+export const BlobError = {
+  parse
 };

@@ -1,17 +1,18 @@
-import Ajax from 'ephox/jax/api/Ajax';
-import ContentType from 'ephox/jax/api/ContentType';
-import Credentials from 'ephox/jax/api/Credentials';
-import ResponseType from 'ephox/jax/api/ResponseType';
+import * as Ajax from 'ephox/jax/api/Ajax';
+import { ContentType } from 'ephox/jax/api/ContentType';
+import { Credentials } from 'ephox/jax/api/Credentials';
+import { ResponseType } from 'ephox/jax/api/ResponseType';
 import { Arr } from '@ephox/katamari';
 import { FutureResult } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
 
 UnitTest.asynctest('AjaxTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var expectError = function (label, response) {
+  const expectError = function (label, response) {
     return FutureResult.nu(function (callback) {
       response.get(function (res) {
         res.fold(function (err) {
@@ -24,7 +25,7 @@ UnitTest.asynctest('AjaxTest', function() {
     });
   };
 
-  var expectValue = function (label, value, response) {
+  const expectValue = function (label, value, response) {
     return FutureResult.nu(function (callback) {
       response.get(function (res) {
         res.fold(function (err) {
@@ -42,7 +43,7 @@ UnitTest.asynctest('AjaxTest', function() {
     });
   };
 
-  var responses = [
+  const responses = [
     expectError('GET Query parameters incorrect', Ajax.get(
       '/custom/sample/get/1?word=beta',
       ResponseType.json(),
