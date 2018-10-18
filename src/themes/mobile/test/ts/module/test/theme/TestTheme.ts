@@ -42,7 +42,7 @@ const setup = function (info, onSuccess, onFailure) {
 
   ThemeManager.add(name, function (editor) {
     return {
-      renderUI (args) {
+      renderUI () {
         editor.fire('SkinLoaded');
         return {
           iframeContainer: socket.element().dom(),

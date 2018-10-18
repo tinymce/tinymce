@@ -31,7 +31,7 @@ ThemeManager.add('silver', (editor: Editor) => {
   const windowMgr = WindowManager.setup({backstage});
 
   return {
-    renderUI: Fun.curry(renderUI, editor),
+    renderUI,
     getWindowManagerImpl () {
 
       const getTop = () => {
