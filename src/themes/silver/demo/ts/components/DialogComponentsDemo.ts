@@ -99,8 +99,7 @@ export default () => {
   };
 
   const labelGroupSpec = renderUiGroupLabel({
-    html: 'Group of Options',
-    name: 'helloName2',
+    label: 'A label that wraps compontents in a group',
     items: [
       renderCheckbox({
         label: 'check box item 1',
@@ -119,8 +118,7 @@ export default () => {
   }, sharedBackstage);
 
   const uiLabelSpec = renderUiLabel({
-    name: 'label1',
-    html: 'Label 1'
+    label: 'A stand alone label'
   }, sharedBackstage);
 
   const listboxSpec = renderListbox({

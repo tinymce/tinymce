@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
@@ -17,8 +17,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderUiGroupLabel({
-          html: 'Group of Options',
-          name: 'helloName2',
+          label: 'Group of Options',
           items: [
             renderCheckbox({
               label: 'check box item 1',
@@ -30,8 +29,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
               validation: Option.none()
             }),
             renderUiLabel({
-              html: 'A stand alone label, should not have children',
-              name: 'thelabel'
+              label: 'A stand alone label, should not have children',
             }, sharedBackstage)
           ]
         }, sharedBackstage)
@@ -61,7 +59,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
             });
           }),
           component.element()
-        ),
+        )
       ];
     },
     success,
