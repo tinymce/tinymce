@@ -43,7 +43,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     renderInlineHeader({
       title: dialogInit.internalDialog.title,
       draggable: true
-    }, dialogLabelId) as SimpleSpec
+    }, dialogLabelId, backstage.shared) as SimpleSpec
   );
 
   const memBody = Memento.record(

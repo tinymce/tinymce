@@ -100,7 +100,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
           AlloyEvents.runOnDetached(spec.onDetach),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(se.event().text()) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.translate(se.event().text())) ] );
             });
           })
         ])

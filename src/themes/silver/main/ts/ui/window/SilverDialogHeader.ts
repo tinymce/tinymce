@@ -15,20 +15,22 @@ import { formCancelEvent } from '../general/FormEvents';
 import { titleChannel } from './DialogChannels';
 import { SelectorFind } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 export interface WindowHeaderFoo {
   title: string;
   draggable: boolean;
 }
 
-const renderClose = () => {
+const renderClose = (shareBackstage: UiFactoryBackstageShared) => {
   return Button.sketch({
     dom: {
       tag: 'button',
       classes: ['tox-button', 'tox-button--icon', 'tox-button--naked'],
       attributes: {
         'type': 'button',
-        'aria-label': 'Close'
+        'aria-label': shareBackstage.translate('Close'),
+        'title': shareBackstage.translate('Close'), // TODO tooltips: AP-213
       }
     },
     components: [
@@ -69,12 +71,12 @@ const renderTitle = (foo: WindowHeaderFoo, id: Option<string>): AlloySpec => {
   };
 };
 
-const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string): AlloySpec => {
+const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, shareBackstage: UiFactoryBackstageShared): AlloySpec => {
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components: [
       renderTitle(foo, Option.some(titleId)),
-      renderClose()
+      renderClose(shareBackstage)
     ],
     containerBehaviours: Behaviour.derive([
       Dragging.config({
@@ -93,7 +95,7 @@ const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string): AlloySpec =>
   });
 };
 
-const renderModalHeader = (foo: WindowHeaderFoo): AlloySpec => {
+const renderModalHeader = (foo: WindowHeaderFoo, shareBackstage: UiFactoryBackstageShared): AlloySpec => {
   const pTitle = ModalDialog.parts().title(
     renderTitle(foo, Option.none())
   );
@@ -103,7 +105,7 @@ const renderModalHeader = (foo: WindowHeaderFoo): AlloySpec => {
   });
 
   const pClose = ModalDialog.parts().close(
-    renderClose()
+    renderClose(shareBackstage)
   );
 
   const components = [ pTitle ].concat(foo.draggable ? [ pHandle ] : []).concat([ pClose ]);

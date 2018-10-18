@@ -43,7 +43,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
   const header = renderModalHeader({
     title: backstage.shared.translate(dialogInit.internalDialog.title),
     draggable: true
-  });
+  }, backstage.shared);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body
