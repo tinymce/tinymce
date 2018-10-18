@@ -8,15 +8,15 @@ import { DockingContext, DockingConfig } from '../../behaviour/docking/DockingTy
 import { SugarPosition } from '../../alien/TypeDefinitions';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
-  Class.add(component.element(), contextualInfo.transitionClass());
-  Class.remove(component.element(), contextualInfo.fadeOutClass());
-  Class.add(component.element(), contextualInfo.fadeInClass());
+  Class.add(component.element(), contextualInfo.transitionClass);
+  Class.remove(component.element(), contextualInfo.fadeOutClass);
+  Class.add(component.element(), contextualInfo.fadeInClass);
 };
 
 const disappear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
-  Class.add(component.element(), contextualInfo.transitionClass());
-  Class.remove(component.element(), contextualInfo.fadeInClass());
-  Class.add(component.element(), contextualInfo.fadeOutClass());
+  Class.add(component.element(), contextualInfo.transitionClass);
+  Class.remove(component.element(), contextualInfo.fadeInClass);
+  Class.add(component.element(), contextualInfo.fadeOutClass);
 };
 
 const isPartiallyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
@@ -35,8 +35,8 @@ const getAttr = (elem: Element, attr: string): Option<number> => {
 
 const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<Boxes.Bounds> => {
   const elem = component.element();
-  return getAttr(elem, dockInfo.leftAttr()).bind((left) => {
-    return getAttr(elem, dockInfo.topAttr()).map((top) => {
+  return getAttr(elem, dockInfo.leftAttr).bind((left) => {
+    return getAttr(elem, dockInfo.topAttr).map((top) => {
       // Only supports position absolute.
       const w = Width.get(component.element());
       const h = Height.get(component.element());
@@ -47,14 +47,14 @@ const getPrior = (component: AlloyComponent, dockInfo: DockingConfig): Option<Bo
 
 const setPrior = (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string | number, absTop: string | number): void => {
   const elem = component.element();
-  Attr.set(elem, dockInfo.leftAttr(), absLeft);
-  Attr.set(elem, dockInfo.topAttr(), absTop);
+  Attr.set(elem, dockInfo.leftAttr, absLeft);
+  Attr.set(elem, dockInfo.topAttr, absTop);
 };
 
 const clearPrior = (component: AlloyComponent, dockInfo: DockingConfig): void => {
   const elem = component.element();
-  Attr.remove(elem, dockInfo.leftAttr());
-  Attr.remove(elem, dockInfo.topAttr());
+  Attr.remove(elem, dockInfo.leftAttr);
+  Attr.remove(elem, dockInfo.topAttr);
 };
 
 const morphToAbsolute = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds): Option<DragCoord.CoordAdt> => {

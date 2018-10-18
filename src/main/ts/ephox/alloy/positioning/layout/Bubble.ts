@@ -55,7 +55,7 @@ const allAlignments = [
 
 const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
   const getClasses = (prop: string): string[] => {
-    return Objects.readOptFrom(classes, prop).getOr([ ])
+    return Objects.readOptFrom<string[]>(classes, prop).getOr([ ])
   };
 
   const make = (xDelta: number, yDelta: number, alignmentsOn: string[]) => {

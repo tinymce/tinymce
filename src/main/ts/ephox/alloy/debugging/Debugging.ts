@@ -31,6 +31,7 @@ export type EventProcessor = (logger: any) => boolean;
 
 const makeEventLogger = (eventName: string, initialTarget: Element) => {
   const sequence = [ ];
+  const startTime = new Date().getTime();
 
   return {
     logEventCut (name, target, purpose) {
@@ -49,10 +50,12 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
       sequence.push({ outcome: 'response', purpose, target });
     },
     write () {
+      const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
       // tslint:disable-next-line:no-console
       console.log(eventName, {
         event: eventName,
+        time: finishTime - startTime,
         target: initialTarget.dom(),
         sequence: Arr.map(sequence, (s) => {
           if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }

@@ -52,12 +52,12 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   // We need to calculate the origin (esp. the bounding client rect) *after* we have done
   // all the preprocessing of the component and placee. Otherwise, the relative positions
   // (bottom and right) will be using the wrong dimensions
-  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+  const origin = posConfig.useFixed ? getFixedOrigin() : getRelativeOrigin(component);
 
   const placer = anchorage.placement();
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer().getOr(place);
-    const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds());
+    const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds);
     doPlace(component, origin, anchoring, getBounds, placee);
   });
 
@@ -78,7 +78,7 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {
-  return pConfig.useFixed() ? 'fixed' : 'absolute';
+  return pConfig.useFixed ? 'fixed' : 'absolute';
 };
 
 export {

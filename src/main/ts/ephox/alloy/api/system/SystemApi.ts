@@ -27,7 +27,7 @@ export interface AlloySystemApi {
 
 export type ContractAlloySystem = (system: AlloySystemApi) => AlloySystemApi;
 
-const SystemApi = Contracts.exactly([
+const SystemApi2 = Contracts.exactly([
   'debugInfo',
   'triggerFocus',
   'triggerEvent',
@@ -47,6 +47,8 @@ const SystemApi = Contracts.exactly([
   'broadcastOn',
   'isConnected'
 ]) as ContractAlloySystem;
+
+const SystemApi = (x) => x
 
 export {
   SystemApi

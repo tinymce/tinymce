@@ -7,7 +7,7 @@ import * as FocusApis from './FocusApis';
 
 // TODO: DomModification types
 const exhibit = (base: { }, focusConfig: FocusingConfig): any => {
-  const mod = focusConfig.ignore() ? { } : {
+  const mod = focusConfig.ignore ? { } : {
     attributes: {
       tabindex: '-1'
     }
@@ -22,7 +22,7 @@ const events = (focusConfig: FocusingConfig): AlloyEvents.AlloyEventRecord => {
       FocusApis.focus(component, focusConfig);
       simulatedEvent.stop();
     })
-  ].concat(focusConfig.stopMousedown() ? [
+  ].concat(focusConfig.stopMousedown ? [
     AlloyEvents.run(NativeEvents.mousedown(), (_, simulatedEvent) => {
       // This setting is often used in tandem with ignoreFocus. Basically, if you
       // don't prevent default on a menu that has fake focus, then it can transfer

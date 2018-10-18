@@ -6,13 +6,13 @@ import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
 import { Element } from '@ephox/sugar';
 
 export interface DomModification {
-  classes(): Option<string[]>;
-  attributes(): Option<Record<string, string>>;
-  styles(): Option<Record<string, string>>;
-  value(): Option<any>;
-  innerHtml(): Option<string>;
-  defChildren(): Option<DomDefinitionDetail[]>;
-  domChildren(): Option<Element[]>;
+  classes: Option<string[]>;
+  attributes: Option<Record<string, string>>;
+  styles: Option<Record<string, string>>;
+  value: Option<any>;
+  innerHtml: Option<string>;
+  defChildren: Option<DomDefinitionDetail[]>;
+  domChildren: Option<Element[]>;
 }
 
 export interface DomModificationSpec {

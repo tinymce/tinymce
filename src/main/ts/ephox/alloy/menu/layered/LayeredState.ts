@@ -51,25 +51,25 @@ const init = (): LayeredState => {
 
   // Given an item, return a list of all menus including the one that it triggered (if there is one)
   const expand = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom(expansions.get(), itemValue).map((menu) => {
-      const current = Objects.readOptFrom(paths.get(), itemValue).getOr([ ]);
+    return Objects.readOptFrom<string>(expansions.get(), itemValue).map((menu: string) => {
+      const current: string[] = Objects.readOptFrom<string[]>(paths.get(), itemValue).getOr([ ]);
       return [ menu ].concat(current);
     });
   };
 
   const collapse = (itemValue: string): Option<string[]> => {
     // Look up which key has the itemValue
-    return Objects.readOptFrom(paths.get(), itemValue).bind((path) => {
+    return Objects.readOptFrom<string[]>(paths.get(), itemValue).bind((path) => {
       return path.length > 1 ? Option.some(path.slice(1)) : Option.none();
     });
   };
 
   const refresh = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom(paths.get(), itemValue);
+    return Objects.readOptFrom(paths.get(), itemValue) as Option<string[]>;
   };
 
   const lookupMenu = (menuValue: string): Option<AlloyComponent> => {
-    return Objects.readOptFrom(
+    return Objects.readOptFrom<AlloyComponent>(
       menus.get(),
       menuValue
     );

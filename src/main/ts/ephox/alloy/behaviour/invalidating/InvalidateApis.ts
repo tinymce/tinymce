@@ -17,50 +17,50 @@ const isAriaElement = (elem) => {
 };
 
 const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/*, invalidState */): void => {
-  const elem = invalidConfig.getRoot()(component).getOr(component.element());
-  Class.remove(elem, invalidConfig.invalidClass());
-  invalidConfig.notify().each((notifyInfo) => {
+  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  Class.remove(elem, invalidConfig.invalidClass);
+  invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
       Attr.remove(elem, 'title');
     }
-    notifyInfo.getContainer()(component).each((container) => {
-      Html.set(container, notifyInfo.validHtml());
+    notifyInfo.getContainer(component).each((container) => {
+      Html.set(container, notifyInfo.validHtml);
     });
 
-    notifyInfo.onValid()(component);
+    notifyInfo.onValid(component);
   });
 };
 
 const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless, text: string): void => {
-  const elem = invalidConfig.getRoot()(component).getOr(component.element());
-  Class.add(elem, invalidConfig.invalidClass());
-  invalidConfig.notify().each((notifyInfo) => {
+  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  Class.add(elem, invalidConfig.invalidClass);
+  invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
       // Setting the title on the element allows chrome to read it out properly
       Attr.set(component.element(), 'title', text);
     }
     // TODO: Use the aria string property here, and maybe want to make "Body" configurable as well?
     AriaVoice.shout(Body.body(), text);
-    notifyInfo.getContainer()(component).each((container) => {
+    notifyInfo.getContainer(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?
       Html.set(container, text);
     });
 
-    notifyInfo.onInvalid()(component, text);
+    notifyInfo.onInvalid(component, text);
   });
 };
 
 const query = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless): Future<Result<any, string>> => {
-  return invalidConfig.validator().fold(() => {
+  return invalidConfig.validator.fold(() => {
     return Future.pure(Result.value(true));
   }, (validatorInfo) => {
-    return validatorInfo.validate()(component);
+    return validatorInfo.validate(component);
   });
 };
 
 const run = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless): Future<Result<any, string>> => {
-  invalidConfig.notify().each((notifyInfo) => {
-    notifyInfo.onValidate()(component);
+  invalidConfig.notify.each((notifyInfo) => {
+    notifyInfo.onValidate(component);
   });
 
   return query(component, invalidConfig, invalidState).map((valid: Result<any, string>) => {
@@ -79,8 +79,8 @@ const run = (component: AlloyComponent, invalidConfig: InvalidatingConfig, inval
 };
 
 const isInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig): boolean => {
-  const elem = invalidConfig.getRoot()(component).getOr(component.element());
-  return Class.has(elem, invalidConfig.invalidClass());
+  const elem = invalidConfig.getRoot(component).getOr(component.element());
+  return Class.has(elem, invalidConfig.invalidClass);
 };
 
 export {

@@ -10,6 +10,7 @@ import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent, ComponentApi } from './ComponentApi';
 import { SimpleSpec, SimpleOrSketchSpec, AlloySpec, PremadeSpec } from '../../api/component/SpecTypes';
+import { LumberTimers } from '../../alien/LumberTimers';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Objects.readOr('components', [ ])(spec);
@@ -81,14 +82,27 @@ const external = (spec: ExternalElement): PremadeSpec => {
   return GuiTypes.premade(me);
 };
 
+const uids = (() => {
+  let counter = 0;
+
+  return (prefix) => {
+    counter++;
+    return prefix + '_' + counter;
+  };
+})();
+
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => {
-  return GuiTypes.getPremade(spec).fold(() => {
-    const userSpecWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, spec);
-    return buildFromSpec(userSpecWithUid).getOrDie();
-  }, (prebuilt) => {
-    return prebuilt;
-  });
+  // return LumberTimers.run('GuiFactory.build', () => {
+    return GuiTypes.getPremade(spec).fold(() => {
+      // return LumberTimers.run('Not premade', () => {
+        const userSpecWithUid = Merger.merge({ uid: uids('') }, spec);
+        return buildFromSpec(userSpecWithUid).getOrDie();
+      // });
+    }, (prebuilt) => {
+      return prebuilt;
+    });
+  // });
 };
 
 const premade = GuiTypes.premade;

@@ -6,15 +6,15 @@ const onLoad = (component: AlloyComponent, repConfig, repState) => {
 };
 
 const onUnload = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState) => {
-  repConfig.store().manager().onUnload(component, repConfig, repState);
+  repConfig.store.manager.onUnload(component, repConfig, repState);
 };
 
 const setValue = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState, data: any) => {
-  repConfig.store().manager().setValue(component, repConfig, repState, data);
+  repConfig.store.manager.setValue(component, repConfig, repState, data);
 };
 
 const getValue = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState) => {
-  return repConfig.store().manager().getValue(component, repConfig, repState);
+  return repConfig.store.manager.getValue(component, repConfig, repState);
 };
 
 const getState = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): RepresentingState => {

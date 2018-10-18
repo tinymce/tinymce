@@ -18,19 +18,7 @@ export interface AlloyComponent {
   events: () => Record<string, UncurriedHandler>;
 }
 
-const ComponentApi: (spec) => AlloyComponent = Contracts.exactly([
-  'getSystem',
-  'config',
-  'hasConfigured',
-  'spec',
-  'connect',
-  'disconnect',
-  'element',
-  'syncComponents',
-  'readState',
-  'components',
-  'events'
-]);
+const ComponentApi: (spec) => AlloyComponent = (x) => x
 
 export {
   ComponentApi

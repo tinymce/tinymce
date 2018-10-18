@@ -21,7 +21,7 @@ export interface MemoryStoreConfigSpec {
 }
 
 export interface MemoryStoreConfig {
-  initialValue: () => Option<RepresentingData>;
+  initialValue: Option<RepresentingData>;
 }
 
 export interface ManualStoreConfigSpec {
@@ -32,9 +32,9 @@ export interface ManualStoreConfigSpec {
 }
 
 export interface ManualStoreConfig {
-  initialValue: () => Option<RepresentingData>;
-  getValue: () => (comp: AlloyComponent) => RepresentingData;
-  setValue: () => (comp: AlloyComponent, data: RepresentingData) => void;
+  initialValue: Option<RepresentingData>;
+  getValue: (comp: AlloyComponent) => RepresentingData;
+  setValue: (comp: AlloyComponent, data: RepresentingData) => void;
 }
 
 export type DatasetStoreKey = string;
@@ -47,10 +47,10 @@ export interface DatasetStoreConfigSpec<T extends ItemDataTuple> {
 }
 
 export interface DatasetStoreConfig<T extends ItemDataTuple> {
-  initialValue?: () => Option<T>;
-  getFallbackEntry: () => (key: DatasetStoreKey) => T;
-  getDataKey?: () => (comp: AlloyComponent) => DatasetStoreKey;
-  setValue: () => (comp: AlloyComponent, data: T) => void;
+  initialValue?: Option<T>;
+  getFallbackEntry: (key: DatasetStoreKey) => T;
+  getDataKey?: (comp: AlloyComponent) => DatasetStoreKey;
+  setValue: (comp: AlloyComponent, data: T) => void;
 }
 
 export interface RepresentingConfigSpec extends Behaviour.BehaviourConfigSpec {
@@ -61,9 +61,9 @@ export interface RepresentingConfigSpec extends Behaviour.BehaviourConfigSpec {
 export interface RepresentingState extends BehaviourState { }
 
 export interface RepresentingConfig extends Behaviour.BehaviourConfigDetail {
-  resetOnDom: () => boolean;
-  store: () => {
-    manager: () => {
+  resetOnDom: boolean;
+  store: {
+    manager: {
       setValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState, data: RepresentingData) => void;
       getValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => RepresentingData;
       onLoad: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;

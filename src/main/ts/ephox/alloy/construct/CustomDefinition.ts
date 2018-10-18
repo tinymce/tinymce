@@ -10,21 +10,21 @@ import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
 export interface CustomDetail {
-  dom: () => StructDomSchema;
+  dom: StructDomSchema;
   // By this stage, the components are built.
-  components: () => AlloyComponent[];
-  uid: () => string;
-  events: () => AlloyEventRecord;
-  apis: () => Record<string, Function>;
-  eventOrder: () => Record<string, string[]>;
-  domModification: () => Option<DomModification>;
-  originalSpec: () => SimpleOrSketchSpec;
-  'debug.sketcher': () => string;
+  components: AlloyComponent[];
+  uid: string;
+  events: AlloyEventRecord;
+  apis: Record<string, Function>;
+  eventOrder: Record<string, string[]>;
+  domModification: Option<DomModification>;
+  originalSpec: SimpleOrSketchSpec;
+  'debug.sketcher': string;
 }
 
 const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
-  return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
-    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
+  return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
+    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.anyValue([
       // Note, no children.
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -39,7 +39,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
     FieldSchema.defaulted('events', {}),
     FieldSchema.defaulted('apis', Fun.constant({})),
 
-    // Use mergeWith in the future when pre-built behaviours conflict
+    // // Use mergeWith in the future when pre-built behaviours conflict
     FieldSchema.field(
       'eventOrder',
       'eventOrder',
@@ -56,42 +56,42 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
     ),
 
     FieldSchema.option('domModification'),
-    Fields.snapshot('originalSpec'),
+    // Fields.snapshot('originalSpec'),
 
-    // Need to have this initially
-    FieldSchema.defaulted('debug.sketcher', 'unknown')
+    // // Need to have this initially
+    // FieldSchema.defaulted('debug.sketcher', 'unknown')
   ]), spec);
 };
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
   const base = {
-    uid: detail.uid(),
-    tag: detail.dom().tag(),
-    classes: detail.dom().classes(),
-    attributes: detail.dom().attributes(),
-    styles: detail.dom().styles(),
-    domChildren: Arr.map(detail.components(), (comp) => comp.element())
+    uid: detail.uid,
+    tag: detail.dom.tag,
+    classes: detail.dom.classes,
+    attributes: detail.dom.attributes,
+    styles: detail.dom.styles,
+    domChildren: Arr.map(detail.components, (comp) => comp.element())
   };
 
   return NuDefinition(Merger.deepMerge(base,
-    detail.dom().innerHtml().map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
-    detail.dom().value().map((h) => Objects.wrap('value', h)).getOr({ })
+    Option.from(detail.dom.innerHtml).map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
+    Option.from(detail.dom.value).map((h) => Objects.wrap('value', h)).getOr({ })
   ));
 };
 
 const toModification = (detail: CustomDetail): DomModification => {
-  return detail.domModification().fold(() => {
+  return detail.domModification.fold(() => {
     return NuModification({ });
   }, NuModification);
 };
 
 // Probably want to pass info to these at some point.
 const toApis = (info: CustomDetail): Record<string, Function> => {
-  return info.apis();
+  return info.apis;
 };
 
 const toEvents = (info: CustomDetail): AlloyEventRecord => {
-  return info.events();
+  return info.events;
 };
 
 export {

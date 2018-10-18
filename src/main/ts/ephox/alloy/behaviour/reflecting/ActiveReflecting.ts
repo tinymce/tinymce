@@ -9,13 +9,13 @@ import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
 const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: ReflectingState<S>) => {
   const update = (component: AlloyComponent, data: I) => {
-    reflectingConfig.updateState().each((updateState) => {
+    reflectingConfig.updateState.each((updateState) => {
       const newState = updateState(component, data);
       reflectingState.set(newState);
     });
 
     // FIX: Partial duplication of Replacing + Receiving
-    reflectingConfig.renderComponents().each((renderComponents) => {
+    reflectingConfig.renderComponents.each((renderComponents) => {
       const newComponents = renderComponents(data, reflectingState.get());
       Attachment.detachChildren(component);
       Arr.each(newComponents, (c) => {
@@ -28,14 +28,14 @@ const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: R
   return AlloyEvents.derive([
 
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
-      const channel = reflectingConfig.channel();
+      const channel = reflectingConfig.channel;
       if (Arr.contains(message.channels(), channel)) {
         update(component, message.data());
       }
     }),
 
     AlloyEvents.runOnAttached((comp, se) => {
-      reflectingConfig.initialData().each((rawData) => {
+      reflectingConfig.initialData.each((rawData) => {
         update(comp, rawData);
       })
     })

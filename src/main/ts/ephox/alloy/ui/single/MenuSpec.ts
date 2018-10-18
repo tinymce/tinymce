@@ -69,7 +69,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
           Highlighting.highlight(menu, item);
         })
       ]),
-      components: components,
+      components,
       eventOrder: detail.eventOrder()
     }
   );

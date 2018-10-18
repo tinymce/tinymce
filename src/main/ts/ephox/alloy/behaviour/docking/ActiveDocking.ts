@@ -8,9 +8,9 @@ import * as DockingApis from './DockingApis';
 const events = (dockInfo: DockingConfig, dockState) => {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), (component, simulatedEvent) => {
-      dockInfo.contextual().each((contextInfo) => {
+      dockInfo.contextual.each((contextInfo) => {
         if (Compare.eq(component.element(), simulatedEvent.event().target())) {
-          Class.remove(component.element(), contextInfo.transitionClass());
+          Class.remove(component.element(), contextInfo.transitionClass);
           simulatedEvent.stop();
         }
       });

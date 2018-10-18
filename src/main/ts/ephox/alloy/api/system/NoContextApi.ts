@@ -30,6 +30,9 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
   });
 };
 
+const singleton = NoContextApi();
+
 export {
+  singleton,
   NoContextApi
 };

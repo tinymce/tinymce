@@ -46,7 +46,7 @@ const flatgrid = (spec): FlatgridState => {
 };
 
 const init = (spec) => {
-  return spec.state()(spec);
+  return spec.state(spec);
 };
 
 export {

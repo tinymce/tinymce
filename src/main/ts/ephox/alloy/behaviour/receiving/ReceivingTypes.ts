@@ -8,10 +8,10 @@ export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour<ReceivingCo
 }
 
 export interface ReceivingConfig extends Behaviour.BehaviourConfigDetail {
-  channels: () => {
-    [ key: string ]: () => {
-      schema: () => Processor;
-      onReceive: () => (comp: AlloyComponent, any) => void;
+  channels: {
+    [ key: string ]: {
+      schema: Processor;
+      onReceive: (comp: AlloyComponent, any) => void;
     }
   };
 }

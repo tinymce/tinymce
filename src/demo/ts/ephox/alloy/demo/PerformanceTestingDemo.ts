@@ -5,9 +5,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { AlloySpec, AddEventsBehaviour } from '../../../../../main/ts/ephox/alloy/api/Main';
-import { HTMLElement, document } from '@ephox/dom-globals';
+import { HTMLElement, document, setTimeout, console } from '@ephox/dom-globals';
 
 import PerformanceMenuData from './PerformanceMenuData';
+import { LumberTimers } from '../../../../../main/ts/ephox/alloy/alien/LumberTimers';
+import { Arr } from '@ephox/katamari';
 
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
@@ -52,15 +54,40 @@ export default (): void => {
   // console.timeEnd('spec');
   // console.log({ spec });
 
+  LumberTimers.reset();
+  // Arr.each([ 'info', 'nocontext', 'bBlob', 'bList',
+  //   'bData', 'modDefinition', 'renderToDom', 'events',
+  //   'subcomponents' ], LumberTimers.register);
+  // LumberTimers.register('nocontext');
 
-  const before = new Date().getTime();
-  // console.time('build')
+  // const before = new Date().getTime();
+  console.time('build')
   // console.profile('build');
-  const box = GuiFactory.build(menuData);
-  const after = new Date().getTime();
-  console.log({ elapsed: after - before });
+  const box = LumberTimers.run('box', () => {
+    return GuiFactory.build({
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        menuData,
+        menuData,
+        menuData,
+        menuData,
+        menuData,
+        menuData
+      ]
+    });
+  });
+  // const after = new Date().getTime();
+  // console.log({ elapsed: after - before });
   // console.profileEnd('build');
-  // console.timeEnd('build')
+  console.timeEnd('build')
+
+  setTimeout(() => {
+    LumberTimers.logRuns();
+  }, 2000);
+
+
 
 
   // console.time('nativeBuild');

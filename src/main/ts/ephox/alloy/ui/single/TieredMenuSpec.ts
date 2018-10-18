@@ -24,6 +24,7 @@ import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
 import { console } from '@ephox/dom-globals';
+import { LumberTimers } from '../../alien/LumberTimers';
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
@@ -55,9 +56,11 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
+    LumberTimers.reset();
     console.time('buildMenus');
     const componentMap = buildMenus(container, detail.data().menus());
     console.timeEnd('buildMenus');
+    LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
     return layeredState.getPrimary();

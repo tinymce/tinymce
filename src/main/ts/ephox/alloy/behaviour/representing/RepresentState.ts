@@ -67,8 +67,8 @@ const dataset = (): DatasetRepresentingState => {
 
   // itemString can be matching value or text.
   const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => {
-    return Objects.readOptFrom(dataByValue.get(), itemString).orThunk(() => {
-      return Objects.readOptFrom(dataByText.get(), itemString);
+    return Objects.readOptFrom<T>(dataByValue.get(), itemString).orThunk(() => {
+      return Objects.readOptFrom<T>(dataByText.get(), itemString);
     });
   };
 
@@ -79,8 +79,8 @@ const dataset = (): DatasetRepresentingState => {
     const newDataByText = { };
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
-      Objects.readOptFrom(item, 'meta').each((meta) => {
-        Objects.readOptFrom(meta, 'text').each((text) => {
+      Objects.readOptFrom<Record<string, any>>(item, 'meta').each((meta) => {
+        Objects.readOptFrom<string>(meta, 'text').each((text) => {
           newDataByText[text] = item;
         });
       });

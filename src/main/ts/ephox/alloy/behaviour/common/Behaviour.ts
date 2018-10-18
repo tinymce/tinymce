@@ -6,6 +6,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
+import { LumberTimers } from '../../alien/LumberTimers';
 
 const executeEvent = (bConfig, bState, executor): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
   return AlloyEvents.runOnExecute((component) => {
@@ -80,7 +81,7 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
     {
       revoke: Fun.curry(revokeBehaviour, name),
       config (spec) {
-        const prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
+        const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
 
         return {
           key: name,
@@ -102,7 +103,7 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
 
       exhibit (info, base) {
         return getConfig(info).bind((behaviourInfo) => {
-          return Objects.readOptFrom(active, 'exhibit').map((exhibitor) => {
+          return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
             return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
           });
         }).getOr(DomModification.nu({ }));
@@ -113,10 +114,9 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
       },
 
       handlers (info) {
-        return getConfig(info).bind((behaviourInfo) => {
-          return Objects.readOptFrom(active, 'events').map((events) => {
-            return events(behaviourInfo.config, behaviourInfo.state);
-          });
+        return getConfig(info).map((behaviourInfo) => {
+          const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
+          return LumberTimers.run('handlers.events', () => getEvents(behaviourInfo.config, behaviourInfo.state));
         }).getOr({ });
       }
     }

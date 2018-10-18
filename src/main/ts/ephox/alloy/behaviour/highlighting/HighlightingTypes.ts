@@ -28,8 +28,8 @@ export interface HighlightingConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface HighlightingConfig extends Behaviour.BehaviourConfigDetail {
-  itemClass: () => string;
-  highlightClass: () => string;
-  onHighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;
-  onDehighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;
+  itemClass: string;
+  highlightClass: string;
+  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+  onDehighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
 }

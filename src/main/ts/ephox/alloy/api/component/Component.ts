@@ -9,7 +9,7 @@ import * as ComponentEvents from '../../construct/ComponentEvents';
 import * as CustomDefinition from '../../construct/CustomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
-import { NoContextApi } from '../system/NoContextApi';
+import { NoContextApi, singleton } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
@@ -19,6 +19,7 @@ import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { AlloySystemApi } from '../../api/system/SystemApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
+import { LumberTimers } from '../../alien/LumberTimers';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
@@ -27,12 +28,22 @@ const getDomDefinition = (
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
-  const definition = CustomDefinition.toDefinition(info);
-  const baseModification = {
-    'alloy.base.modification': CustomDefinition.toModification(info)
-  };
-  const modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
-  return DomModification.merge(definition, modification);
+  const definition = LumberTimers.run('modDef.def', () => {
+    return CustomDefinition.toDefinition(info);
+  });
+  // return definition
+  const modDef = LumberTimers.run('modDef.mod', () => {
+    return CustomDefinition.toModification(info);
+  });
+
+  // const baseModification = {
+  //   'alloy.base.modification': modDef
+  // };
+
+  // This optimisation seems to improve this.
+  // const modification = LumberTimers.run('modDef.modification', () => modDef);
+  return LumberTimers.run('modDef.merge', () => DomModification.merge(definition, modDef));
+  // return definition;
 };
 
 const getEvents = (
@@ -41,9 +52,10 @@ const getEvents = (
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
-    'alloy.base.behaviour': CustomDefinition.toEvents(info)
+    'alloy.base.behaviour': LumberTimers.run('baseEvents', () => CustomDefinition.toEvents(info))
   };
-  return ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
+  // return baseEvents;
+  return LumberTimers.run('combineEvents', () => ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie());
 };
 
 const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
@@ -51,27 +63,34 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     return me;
   };
 
-  const systemApi = Cell(NoContextApi(getMe));
+  const systemApi = LumberTimers.run('nocontext', () => {
+    return Cell(singleton);
+  });
 
-  const info: CustomDefinition.CustomDetail = ValueSchema.getOrDie(CustomDefinition.toInfo(Merger.deepMerge(
-    spec,
-    {behaviours: undefined}
-  )));
+  const info: CustomDefinition.CustomDetail = LumberTimers.run('info', () => {
+      return ValueSchema.getOrDie(CustomDefinition.toInfo(spec))
+    }
+  );
 
   // FIX: this comment is outdated.
 
   // The behaviour configuration is put into info.behaviours(). For everything else,
   // we just need the list of static behaviours that this component cares about. The behaviour info
   // to pass through will come from the info.behaviours() obj.
-  const bBlob = CompBehaviours.generate(spec);
-  const bList = BehaviourBlob.getBehaviours(bBlob);
-  const bData = BehaviourBlob.getData(bBlob);
+  const bBlob = LumberTimers.run('bBlob', () => CompBehaviours.generate(spec));
 
-  const modDefinition = getDomDefinition(info, bList, bData);
-  const item = DomRender.renderToDom(modDefinition);
-  const events = getEvents(info, bList, bData);
 
-  const subcomponents = Cell(info.components());
+  const bList = LumberTimers.run('bList', () => BehaviourBlob.getBehaviours(bBlob));
+  const bData = LumberTimers.run('bData', () => BehaviourBlob.getData(bBlob));
+
+  const modDefinition = LumberTimers.run('modDefinition', () => {
+    return getDomDefinition(info, bList, bData);
+  });
+  // const modDefinition = '';
+  const item = LumberTimers.run('renderToDom', () => DomRender.renderToDom(modDefinition));
+  const events = LumberTimers.run('events', () => getEvents(info, bList, bData));
+
+  const subcomponents = LumberTimers.run('subcomponents', () => Cell(info.components));
 
   const connect = (newApi: AlloySystemApi): void => {
     systemApi.set(newApi);
@@ -99,7 +118,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
   // TYPIFY (any here is for the info.apis() pathway)
   const config = <D>(behaviour: AlloyBehaviour<any, D> | string): D | any => {
     if (behaviour === GuiTypes.apiConfig()) {
-      return info.apis();
+      return info.apis;
     } else if (Type.isString(behaviour)) {
       throw new Error('Invalid input: only API constant is allowed');
     }
@@ -121,7 +140,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     }).getOr('not enabled');
   };
 
-  const me = ComponentApi({
+  const me = LumberTimers.run('me', () => ComponentApi({
     getSystem: systemApi.get,
     config,
     hasConfigured,
@@ -134,7 +153,7 @@ const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
     syncComponents,
     components: subcomponents.get,
     events: Fun.constant(events)
-  });
+  }));
 
   return me;
 };

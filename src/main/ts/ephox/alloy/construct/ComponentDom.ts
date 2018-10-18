@@ -88,10 +88,11 @@ const combine = (
   base: DomDefinitionDetail
 ): Result<DomModification, string> => {
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
-  const modsByBehaviour: Record<string, DomModification> = Merger.deepMerge({ }, baseMod);
+  const modsByBehaviour: Record<string, DomModification> = baseMod;
   Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
+  return Result.value(baseMod['alloy.base.modification']);
 
   const nameAndMod = (name: string, modification: DomModification) => {
     return {
@@ -120,7 +121,7 @@ const combine = (
   >;
 
   const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): { } | string[]}>, aspect: string) => {
-    return Objects.readOptFrom(mergeTypes, aspect).fold(() => {
+    return Objects.readOptFrom<any>(mergeTypes, aspect).fold(() => {
       return Result.error('Unknown field type: ' + aspect);
     }, (merger) => {
       return merger(values, aspect);

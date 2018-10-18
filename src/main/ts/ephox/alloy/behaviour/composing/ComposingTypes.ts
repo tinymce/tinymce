@@ -12,5 +12,5 @@ export interface ComposingConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface ComposingConfig extends Behaviour.BehaviourConfigDetail {
-  find: () => (comp: AlloyComponent) => Option<AlloyComponent>;
+  find: (comp: AlloyComponent) => Option<AlloyComponent>;
 }

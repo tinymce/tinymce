@@ -18,5 +18,5 @@ export interface CouplingState extends BehaviourState {
 }
 
 export interface CouplingConfig extends Behaviour.BehaviourConfigDetail {
-  others: () => { [key: string]: () => ((comp: AlloyComponent) => AlloySpec) };
+  others: { [key: string]: () => ((comp: AlloyComponent) => AlloySpec) };
 }

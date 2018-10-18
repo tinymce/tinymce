@@ -44,7 +44,7 @@ const generate = (menus: MenuToItems, expansions: TriggerItemToMenu): ItemToMenu
   });
 
   return Obj.map(items, (menu: string) => {
-    return Objects.readOptFrom(menuPaths, menu).getOr([ menu ]);
+    return Objects.readOptFrom<string[]>(menuPaths, menu).getOr([ menu ]);
   });
 };
 
