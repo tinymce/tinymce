@@ -9,74 +9,11 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
-type ModificationChain<M> = Array<{ name(): string, modification(): Option<M> }>;
-
-const concat = <M>(chain: ModificationChain<M[]>, aspect: string): Result<Record<string, M[]>, Error> => {
-  const values: any[] = Arr.bind(chain, (c) => {
-    return c.modification().getOr([ ]);
-  });
-  return Result.value(
-    Objects.wrap(aspect, values)
-  );
-};
-
-const onlyOne = <M>(chain: ModificationChain<M>, aspect: string): Result<Record<string, M>, string> => {
-  if (chain.length > 1) {
-    return Result.error(
-    'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
-      Json.stringify(Arr.map(chain, (b) => b.name())) + '. At this stage, this ' +
-      'is not supported. Future releases might provide strategies for resolving this.'
-    );
-  } else if (chain.length === 0) {
-    return Result.value({ });
-  } else {
-    return Result.value(
-      chain[0].modification().fold(() => {
-        return { };
-      }, (m) => {
-        return Objects.wrap(aspect, m);
-      })
-    );
-  }
-};
-
-const duplicate = (aspect, k, obj, behaviours) => {
-  return Result.error('Mulitple behaviours have tried to change the _' + k + '_ "' + aspect + '"' +
-    '. The guilty behaviours are: ' + Json.stringify(Arr.bind(behaviours, (b) => {
-      return b.modification().getOr({})[k] !== undefined ? [ b.name() ] : [ ];
-    }), null, 2) + '. This is not currently supported.'
-  );
-};
-
-const objSafeMerge = (chain: Array<{name: string, modification(): Option<{ }>}>, aspect: string) => {
-  // return unsafeMerge(chain, aspect);
-  const y = Arr.foldl(chain, (acc, c) => {
-    const obj = c.modification().getOr({ });
-    return acc.bind((accRest) => {
-      const parts = Obj.mapToArray(obj, (v, k) => {
-        return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) :
-          Result.value(Objects.wrap(k, v));
-      });
-      return Objects.consolidate(parts, accRest);
-    });
-  }, Result.value({}));
-
-  return y.map((yValue) => {
-    return Objects.wrap(aspect, yValue);
-  });
-};
-
-const mergeTypes = {
-  classes: concat,
-  attributes: objSafeMerge,
-  styles: objSafeMerge,
-
-  // Group these together somehow
-  domChildren: onlyOne,
-  defChildren:  onlyOne,
-  innerHtml:  onlyOne,
-  // TODO: Maybe a value isn't "string"
-  value: onlyOne
+type Mergers<K extends keyof DomModification> = Record<K, (a: DomModification[K], b: DomModification[K]) => DomModification[K]>;
+const mergers = {
+  classes: (as: string[], bs: string[]) => as.concat(bs),
+  attributes: (as: Record<string, string>, bs: Record<string, string>) => Merger.deepMerge(as, bs),
+  styles: (as: Record<string, string>, bs: Record<string, string>) => Merger.deepMerge(as, bs)
 };
 
 // Based on all the behaviour exhibits, and the original dom modification, identify
@@ -86,50 +23,49 @@ const combine = (
   baseMod: Record<string, DomModification>,
   behaviours: Array<AlloyBehaviour<any, any>>,
   base: DomDefinitionDetail
-): Result<DomModification, string> => {
+): DomModification => {
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
-  const modsByBehaviour: Record<string, DomModification> = Merger.deepMerge({ }, baseMod);
+  type BehaviourName = string;
+  // classes are array of strings, styles and attributes are a record
+  type ModificationName = keyof DomModification;
+  type ModificationEffect = any;
+
+
+  const modsByBehaviour: Record<BehaviourName, DomModification> = Merger.deepMerge({ }, baseMod);
   Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
 
-  const nameAndMod = (name: string, modification: DomModification) => {
+  const nameAndMod = (name: BehaviourName, modification: ModificationEffect) => {
     return {
-      name: () => name,
-      modification
+      name,
+      modification: modification
     };
   };
 
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
   const byAspect = ObjIndex.byInnerKey<any, any>(modsByBehaviour, nameAndMod) as Record<
-    string,
-    Array<{ name: string, modification(): Option<DomModification> }>
+    ModificationName,
+    Array<{ name: BehaviourName, modification: ModificationEffect }>
   >;
 
-  const usedAspect = Obj.map(byAspect, (values: Array<{name: string, modification(): Option<DomModification>}>, aspect: string) => {
-    return Arr.bind(values, (value) => {
-      return value.modification().fold(() => {
-        return [ ];
-      }, (v) => {
-        return [ value ];
-      });
-    });
-  }) as Record<
-    string,
-    Array<{name: string, modification(): Option<DomModification>}>
-  >;
 
-  const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): Record<string, any> | string[]}>, aspect: string) => {
-    return Objects.readOptFrom<any>(mergeTypes, aspect).fold(() => {
-      return Result.error('Unknown field type: ' + aspect);
-    }, (merger) => {
-      return merger(values, aspect);
-    });
-  }) as Array<Result<{}, string>>;
+  const combineObjects = (objects: Record<any, any>[]) => Arr.foldr(objects, (b, a: { modification: string[] }) => {
+    return Merger.deepMerge(a.modification, b);
+  }, [ ]);
 
-  const consolidated: Result<{}, string> = Objects.consolidate(modifications as any, {});
 
-  return consolidated.map(NuModification);
+  const combinedClasses = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
+    return a.modification.concat(b);
+  }, [ ]);
+  const combinedAttributes = combineObjects(byAspect.attributes);
+  const combinedStyles = combineObjects(byAspect.styles);
+
+  return NuModification({
+    classes: combinedClasses,
+    attributes: combinedAttributes,
+    styles: combinedStyles
+  });
 };
 
 export {

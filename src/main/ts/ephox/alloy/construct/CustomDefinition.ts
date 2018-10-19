@@ -24,7 +24,7 @@ export interface CustomDetail {
 
 const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
   return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
-    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.anyValue([
+    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
       // Note, no children.
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -64,18 +64,20 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
 };
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
-  const base = {
-    uid: detail.uid,
-    tag: detail.dom.tag,
-    classes: detail.dom.classes,
-    attributes: detail.dom.attributes,
-    styles: detail.dom.styles,
-    domChildren: Arr.map(detail.components, (comp) => comp.element())
-  };
+  // const base = {
+  //   uid: detail.uid,
+  //   tag: detail.dom.tag,
+  //   classes: detail.dom.classes,
+  //   attributes: detail.dom.attributes,
+  //   styles: detail.dom.styles,
+  //   domChildren: Arr.map(detail.components, (comp) => comp.element())
+  // };
 
-  return NuDefinition(Merger.deepMerge(base,
-    Option.from(detail.dom.innerHtml).map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
-    Option.from(detail.dom.value).map((h) => Objects.wrap('value', h)).getOr({ })
+  return NuDefinition(Merger.merge(detail.dom,
+    {
+      uid: detail.uid,
+      domChildren: Arr.map(detail.components, (comp) => comp.element())
+    }
   ));
 };
 

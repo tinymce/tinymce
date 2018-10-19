@@ -48,7 +48,7 @@ const getDomDefinition = (
   const baseModification = {
     'alloy.base.modification': CustomDefinition.toModification(info)
   };
-  const modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
+  const modification = ComponentDom.combine(bData, baseModification, bList, definition);
   return DomModification.merge(definition, modification);
 
 //

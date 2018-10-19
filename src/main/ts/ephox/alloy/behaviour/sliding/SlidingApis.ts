@@ -4,12 +4,12 @@ import { SlidingConfig } from '../../behaviour/sliding/SlidingTypes';
 import { getAnimationRoot } from './SlidingUtils';
 import { Option } from '@ephox/katamari';
 
-const getDimensionProperty = (slideConfig) => {
-  return slideConfig.dimension().property();
+const getDimensionProperty = (slideConfig: SlidingConfig) => {
+  return slideConfig.dimension.property;
 };
 
-const getDimension = (slideConfig, elem) => {
-  return slideConfig.dimension().getDimension(elem);
+const getDimension = (slideConfig: SlidingConfig, elem) => {
+  return slideConfig.dimension.getDimension(elem);
 };
 
 const disableTransitions = (component: AlloyComponent, slideConfig: SlidingConfig) => {

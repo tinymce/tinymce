@@ -23,6 +23,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   closedClass: string;
   dimension: {
     property: string;
+    getDimension: (elem: Element) => string;
   };
   onGrown: (comp: AlloyComponent) => void;
   onShrunk: (comp: AlloyComponent) => void;
