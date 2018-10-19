@@ -37,7 +37,7 @@ const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
 
 const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
   return {
-    ...focusBehaviours,
+    ...focusBehaviours(detail),
     ...SketchBehaviours.augment(
       detail.inputBehaviours,
       [
@@ -69,7 +69,7 @@ const dom = (detail: InputDetail): RawDomSchema => {
     tag: detail.tag,
     attributes: {
       type: 'input',
-      ...detail.dom.attributes
+      ...detail.inputAttributes
     },
     styles: detail.inputStyles,
     classes: detail.inputClasses

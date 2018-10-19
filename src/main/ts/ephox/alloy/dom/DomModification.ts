@@ -2,7 +2,7 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { DomDefinitionDetail, nu as NuDefinition } from './DomDefinition';
+import { DomDefinitionDetail } from './DomDefinition';
 
 export interface DomModification {
   classes: string[];

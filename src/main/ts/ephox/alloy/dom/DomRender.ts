@@ -1,24 +1,9 @@
-import { Arr } from '@ephox/katamari';
 import { Attr, Classes, Css, Element, Html, InsertAll, Value } from '@ephox/sugar';
 
-import * as DomDefinition from './DomDefinition';
 import * as Tagger from '../registry/Tagger';
-import { StructDomSchema } from '../api/component/SpecTypes';
+import * as DomDefinition from './DomDefinition';
 
-const getChildren = (definition) => {
-  if (definition.domChildren().isSome() && definition.defChildren().isSome()) {
-    throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
-  } else {
-    return definition.domChildren().fold(() => {
-      const defChildren = definition.defChildren().getOr([ ]);
-      return Arr.map(defChildren, renderDef);
-    }, (domChildren) => {
-      return domChildren;
-    });
-  }
-};
-
-const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<any,any>) => {
+const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>) => {
   const subject = Element.fromTag(definition.tag);
   Attr.setAll(subject, definition.attributes);
   Classes.add(subject, definition.classes);
@@ -40,11 +25,6 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<any,any>)
   Tagger.writeOnly(subject, definition.uid);
 
   return subject;
-};
-
-const renderDef = (spec) => {
-  const definition = DomDefinition.nu(spec);
-  return renderToDom(definition);
 };
 
 export {

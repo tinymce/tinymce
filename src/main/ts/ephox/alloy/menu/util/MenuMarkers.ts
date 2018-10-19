@@ -11,11 +11,11 @@ const itemFields: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('selectedItem')
 ]);
 
-const schema: () => Processor = Fun.constant(ValueSchema.objOfOnly(
+const schema: () => Processor = Fun.constant(ValueSchema.objOf(
   itemFields().concat(menuFields())
 ));
 
-const itemSchema: () => Processor = Fun.constant(ValueSchema.objOfOnly(itemFields()));
+const itemSchema: () => Processor = Fun.constant(ValueSchema.objOf(itemFields()));
 
 export {
   menuFields,

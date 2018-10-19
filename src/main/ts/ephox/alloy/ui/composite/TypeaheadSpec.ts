@@ -250,7 +250,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     dom: InputBase.dom(detail),
     behaviours: {
       ...focusBehaviours,
-      SketchBehaviours.augment(
+      ...SketchBehaviours.augment(
         detail.typeaheadBehaviours,
         behaviours
       )

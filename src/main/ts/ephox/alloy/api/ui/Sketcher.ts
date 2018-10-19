@@ -77,7 +77,7 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig) {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig): any {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
   const sketch = (spec) => {

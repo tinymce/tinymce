@@ -16,7 +16,9 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
     'debug.sketcher': 'Tabbar',
 
     domModification: {
-      role: 'tablist'
+      attributes: {
+        role: 'tablist'
+      }
     },
 
     'behaviours': SketchBehaviours.augment(

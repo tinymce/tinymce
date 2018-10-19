@@ -19,7 +19,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
     },
     items: spec.items,
     components: [
-      Menu.parts.items({ })
+      Menu.parts().items({ })
     ]
   };
 };
@@ -78,7 +78,7 @@ const mStoreMenuUid = (component) => {
 };
 
 const mWaitForNewMenu = (component) => {
-  return Step.stateful((value: any, next, die) => {
+  return Step.raw((value: any, next, die, logs) => {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
       Step.sync(() => {
@@ -89,7 +89,7 @@ const mWaitForNewMenu = (component) => {
       }),
       100,
       3000
-    )(value, next, die);
+    )(value, next, die, logs);
   });
 };
 

@@ -137,7 +137,7 @@ const onUp = handleMovement(-1);
 const onDown = handleMovement(1);
 
 // Edge Click Actions
-const edgeActions = Fun.constant({
+const edgeActions = {
   'top-left': Option.none(),
   'top': Option.some(EdgeActions.setToTEdge),
   'top-right': Option.none(),
@@ -146,7 +146,7 @@ const edgeActions = Fun.constant({
   'bottom': Option.some(EdgeActions.setToBEdge),
   'bottom-left': Option.none(),
   'left': Option.none()
-});
+};
 
 export {
   setValueFrom,

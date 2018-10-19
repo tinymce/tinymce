@@ -2,6 +2,7 @@ import { Logger } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
+import { Option } from '@ephox/katamari';
 
 UnitTest.test('DomDefinitionTest', () => {
   /* global assert */
@@ -10,14 +11,19 @@ UnitTest.test('DomDefinitionTest', () => {
   Logger.sync(
     'Testing definition without any children or childspecs',
     () => {
-      const definition = DomDefinition.nu({
+      const definition = {
         uid: 'john-uid',
         tag: 'person',
+        classes: [ ],
+        styles: { },
         attributes: {
           name: 'john',
           age: '14'
-        }
-      });
+        },
+        domChildren: [ ],
+        value: Option.none(),
+        innerHtml: Option.none()
+      };
 
       const addStyles = DomModification.nu({
         styles: {
@@ -50,20 +56,24 @@ UnitTest.test('DomDefinitionTest', () => {
   Logger.sync(
     'Testing definition without any children or childspecs, but innerHtml',
     () => {
-      const definition = DomDefinition.nu({
+      const definition = {
         uid: 'john-uid',
         tag: 'person',
+        classes: [ ],
         attributes: {
           name: 'john',
           age: '14'
-        }
-      });
+        },
+        styles: { },
+        domChildren: [ ],
+        value: Option.none(),
+        innerHtml: Option.none()
+      };
 
       const addInnerHtml = DomModification.nu({
         styles: {
           fighting: 'drunken'
-        },
-        innerHtml: 'sailor'
+        }
       });
 
       assert.eq({
@@ -90,20 +100,24 @@ UnitTest.test('DomDefinitionTest', () => {
   Logger.sync(
     'Testing definition without any children or childspecs, but value',
     () => {
-      const definition = DomDefinition.nu({
+      const definition = {
         uid: 'john-uid',
         tag: 'person',
+        classes: [ ],
         attributes: {
           name: 'john',
           age: '14'
-        }
-      });
+        },
+        styles: { },
+        value: Option.none(),
+        innerHtml: Option.none(),
+        domChildren: [ ]
+      };
 
       const addValue = DomModification.nu({
         styles: {
           fighting: 'drunken'
-        },
-        value: 'sailor'
+        }
       });
 
       assert.eq({

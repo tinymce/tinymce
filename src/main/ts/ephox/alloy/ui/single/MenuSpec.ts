@@ -17,6 +17,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
   return {
     uid: detail.uid,
     dom: detail.dom,
+    markers: detail.markers,
 
     behaviours: SketchBehaviours.augment(
       detail.menuBehaviours,

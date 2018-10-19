@@ -1,5 +1,5 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
@@ -13,22 +13,34 @@ import * as Sketcher from './Sketcher';
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action);
 
-  const optTag = Objects.readOptFrom(detail.dom, 'tag');
+  const tag = detail.dom.tag;
 
+  const lookupAttr = (attr: string): Option<string> => {
+    return Objects.readOptFrom(detail.dom, 'attributes').bind((attrs) => {
+      return Objects.readOptFrom(attrs, attr);
+    });
+  }
+
+  // Button tags should not have a default role of button, and only buttons should
+  // get a type of button.
   const getModAttributes = () => {
-    if (optTag.is('button')) {
-      // Ignore type, but set role if if isn't the normal role
-      return detail.role.fold(
-        () => ({ }),
-        (role: string) => ({ role })
-      );
-    } else {
-      // They can override role, but not type. At the moment.
-      const role = detail.role.getOr('button');
+    if (tag === 'button') {
+      // Default to type button, unless specified otherwise
+      const type = lookupAttr('type').getOr('button')
+      // Only use a role if it is specified
+      const roleAttrs = lookupAttr('role').map(
+        (role: string) => ({ role } as Record<string, string>)
+      ).getOr({ })
+
       return {
-        type: 'button',
-        role
+        type,
+        ...roleAttrs
       };
+    } else {
+      // We are not a button, so type is irrelevant (unless specified)
+      // Default role to button
+      const role =  lookupAttr('role').getOr('button');
+      return { role };
     }
   }
 

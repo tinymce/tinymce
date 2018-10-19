@@ -46,8 +46,7 @@ export default (): void => {
           },
           styles: {
             background: 'blue'
-          },
-          value: 10
+          }
         });
       }
     }

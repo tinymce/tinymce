@@ -50,7 +50,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           ...spec,
           value: name,
           items: spec.items,
-          markers: spec.markers,
+          markers: detail.markers,
 
           // Fake focus.
           fakeFocus: detail.fakeFocus,
@@ -327,6 +327,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   return {
     uid: detail.uid,
     dom: detail.dom,
+    markers: detail.markers,
     behaviours: SketchBehaviours.augment(
       detail.tmenuBehaviours,
       [

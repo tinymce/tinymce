@@ -2,7 +2,7 @@ import { JSON as Json } from '@ephox/sand';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-export interface GeneralDefinitionSpec<EC, DC> {
+export interface GeneralDefinitionSpec<EC> {
   uid: string;
   tag?: string;
   attributes?: Record<string, any>;
@@ -14,11 +14,11 @@ export interface GeneralDefinitionSpec<EC, DC> {
   // defChildren?: DC[];
 }
 
-export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element[], DomDefinitionSpec> {
+export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element> {
 
 }
 
-export interface GeneralDefinitionDetail<EC, DC> {
+export interface GeneralDefinitionDetail<EC> {
   uid: string;
   tag: string;
   attributes: Record<string, any>;
@@ -29,16 +29,16 @@ export interface GeneralDefinitionDetail<EC, DC> {
   domChildren: EC[];
 }
 
-export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element[], DomDefinitionDetail[]> {
+export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element> {
 
 }
 
-const defToStr = (defn: GeneralDefinitionDetail<any, any>): string => {
+const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
   const raw = defToRaw(defn);
   return Json.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<string, any>>): GeneralDefinitionSpec<string, string> => {
+const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => {
   return {
     uid: defn.uid,
     tag: defn.tag,
@@ -47,10 +47,6 @@ const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<
     styles: defn.styles,
     value: defn.value.getOr('<none>'),
     innerHtml: defn.innerHtml.getOr('<none>'),
-    // defChildren: defn.defChildren.fold(
-    //   () => [ '<none>' ],
-    //   (d) => [ Json.stringify(d, null, 2) ]
-    // ),
     domChildren: defn.domChildren.length === 0 ? '0 children, but still specified' : String(defn.domChildren.length)
   };
 };

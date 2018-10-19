@@ -5,6 +5,7 @@ import TestStore from './TestStore';
 import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
 import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
 import { document, console } from '@ephox/dom-globals';
+import { AgarLogs } from '@ephox/agar/lib/main/ts/ephox/agar/pipe/Pipe';
 
 const setup = (createComponent, f, success, failure) => {
   const store = TestStore();
@@ -22,11 +23,11 @@ const setup = (createComponent, f, success, failure) => {
   Pipeline.async({}, f(doc, body, gui, component, store), () => {
     Attachment.detachSystem(gui);
     success();
-  }, (e) => {
+  }, (e, logs) => {
     // tslint:disable-next-line
     console.error(e);
-    failure(e);
-  });
+    failure(e, logs);
+  }, AgarLogs.init());
 };
 
 const mSetupKeyLogger = (body) => {

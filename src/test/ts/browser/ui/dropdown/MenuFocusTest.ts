@@ -71,7 +71,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts.items({ })
+        Menu.parts().items({ })
       ],
 
       markers
@@ -85,7 +85,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts.items({ })
+        Menu.parts().items({ })
       ],
       fakeFocus: true,
       focusManager: FocusManagers.highlights(),
