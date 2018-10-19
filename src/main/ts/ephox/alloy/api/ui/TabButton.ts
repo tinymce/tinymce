@@ -18,8 +18,9 @@ const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, sp
     dom: detail.dom,
     components: detail.components,
     events: events(detail.action),
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.tabButtonBehaviours,
+      [
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
@@ -32,8 +33,7 @@ const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, sp
             initialValue: detail.value
           }
         })
-      ]),
-      SketchBehaviours.get(detail.tabButtonBehaviours)
+      ]
     ),
 
     domModification: detail.domModification

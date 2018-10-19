@@ -32,8 +32,9 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
     dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.chooserBehaviours,
+      [
         Keying.config({
           mode: 'flow',
           selector: '.' + detail.markers.choiceClass,
@@ -80,8 +81,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.chooserBehaviours)
+      ]
     ),
 
     events: AlloyEvents.derive([

@@ -17,8 +17,9 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
     dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.coupledFieldBehaviours,
+      [
         Composing.config({ find: Option.some }),
 
         Representing.config({
@@ -39,8 +40,7 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.coupledFieldBehaviours)
+      ]
     ),
     apis: {
       getField1: (component) => AlloyParts.getPart(component, detail, 'field1'),

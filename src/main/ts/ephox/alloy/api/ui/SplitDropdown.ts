@@ -39,59 +39,56 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const buttonEvents = ButtonBase.events(Option.some(action));
 
-  return Merger.deepMerge(
-    {
-      uid: detail.uid,
-      dom: detail.dom,
-      components,
-      eventOrder: {
-        // Order, the button state is toggled first, so assumed !selected means close.
-        'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-      },
-
-      events: buttonEvents,
-
-      behaviours: Merger.deepMerge(
-        Behaviour.derive([
-          Coupling.config({
-            others: {
-              sandbox (hotspot) {
-                const arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
-                const extras = {
-                  onOpen () {
-                    Toggling.on(arrow);
-                  },
-                  onClose () {
-                    Toggling.off(arrow);
-                  }
-                };
-
-                return DropdownUtils.makeSandbox(detail, hotspot, extras);
-              }
-            }
-          }),
-          Keying.config({
-            mode: 'special',
-            onSpace: executeOnButton,
-            onEnter: executeOnButton,
-            onDown (comp) {
-              action(comp);
-              return Option.some(true);
-            }
-          }),
-          Focusing.config({ })
-        ]),
-        SketchBehaviours.get(detail.splitDropdownBehaviours)
-      )
+  return {
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
+    eventOrder: {
+      // Order, the button state is toggled first, so assumed !selected means close.
+      'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
     },
-    {
-      dom: {
-        attributes: {
-          role: 'presentation'
-        }
+
+    events: buttonEvents,
+
+    behaviours: SketchBehaviours.augment(
+      detail.splitDropdownBehaviours,
+      [
+        Coupling.config({
+          others: {
+            sandbox (hotspot) {
+              const arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
+              const extras = {
+                onOpen () {
+                  Toggling.on(arrow);
+                },
+                onClose () {
+                  Toggling.off(arrow);
+                }
+              };
+
+              return DropdownUtils.makeSandbox(detail, hotspot, extras);
+            }
+          }
+        }),
+        Keying.config({
+          mode: 'special',
+          onSpace: executeOnButton,
+          onEnter: executeOnButton,
+          onDown (comp) {
+            action(comp);
+            return Option.some(true);
+          }
+        }),
+        Focusing.config({ })
+      ]
+    ),
+
+    domModification: {
+      attributes: {
+        role: 'presentation'
       }
     }
-  );
+  };
 };
 
 const SplitDropdown = Sketcher.composite({

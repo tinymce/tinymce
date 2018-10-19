@@ -86,12 +86,14 @@ const dataset = (): DatasetRepresentingState => {
       });
     });
 
-    dataByValue.set(
-      Merger.deepMerge(currentDataByValue, newDataByValue)
-    );
-    dataByText.set(
-      Merger.deepMerge(currentDataByText, newDataByText)
-    );
+    dataByValue.set({
+      ...currentDataByValue,
+      ...newDataByValue
+    });
+    dataByText.set({
+      ...currentDataByText,
+      ...newDataByText
+    })
   };
 
   return nuState({

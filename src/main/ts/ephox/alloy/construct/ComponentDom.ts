@@ -10,12 +10,6 @@ import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 type Mergers<K extends keyof DomModification> = Record<K, (a: DomModification[K], b: DomModification[K]) => DomModification[K]>;
-const mergers = {
-  classes: (as: string[], bs: string[]) => as.concat(bs),
-  attributes: (as: Record<string, string>, bs: Record<string, string>) => Merger.deepMerge(as, bs),
-  styles: (as: Record<string, string>, bs: Record<string, string>) => Merger.deepMerge(as, bs)
-};
-
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
@@ -51,16 +45,16 @@ const combine = (
   >;
 
 
-  const combineObjects = (objects: Record<any, any>[]) => Arr.foldr(objects, (b, a: { modification: string[] }) => {
-    return Merger.deepMerge(a.modification, b);
-  }, [ ]);
+  const combineObjects = (objects: Record<any, any>[]) => Arr.foldr(objects, (b, a: { modification: Record<string, string> }) => {
+    return { ...a.modification, ... b}
+  }, { });
 
 
-  const combinedClasses = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
+  const combinedClasses: string[] = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
     return a.modification.concat(b);
   }, [ ]);
-  const combinedAttributes = combineObjects(byAspect.attributes);
-  const combinedStyles = combineObjects(byAspect.styles);
+  const combinedAttributes: Record<string, string> = combineObjects(byAspect.attributes);
+  const combinedStyles: Record<string, string> = combineObjects(byAspect.styles);
 
   return NuModification({
     classes: combinedClasses,

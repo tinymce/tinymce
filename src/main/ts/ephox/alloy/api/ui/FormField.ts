@@ -15,8 +15,9 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, spec, externals): SketchSpec => {
-  const behaviours = Merger.deepMerge(
-    Behaviour.derive([
+  const behaviours = SketchBehaviours.augment(
+    detail.fieldBehaviours,
+    [
       Composing.config({
         find (container) {
           return AlloyParts.getPart(container, detail, 'field');
@@ -36,8 +37,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
           }
         }
       })
-    ]),
-    SketchBehaviours.get(detail.fieldBehaviours)
+    ]
   );
 
   const events = AlloyEvents.derive([

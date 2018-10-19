@@ -136,12 +136,10 @@ const slotApis = Obj.map({
   showSlot: (apis, c, key) => apis.showSlot(c, key),
 }, GuiTypes.makeApi);
 
-const SlotContainer = Merger.deepMerge(
-  slotApis,
-  {
-    sketch
-  }
-) as SlotContainerSketcher;
+const SlotContainer = {
+  ...slotApis,
+  ...{ sketch }
+} as SlotContainerSketcher;
 
 export {
   SlotContainer

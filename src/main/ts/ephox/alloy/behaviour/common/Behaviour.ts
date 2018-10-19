@@ -75,52 +75,50 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
     return FunctionAnnotator.markAsExtraApi(extraF, extraName);
   });
 
-  const me = Merger.deepMerge(
-    wrappedExtra,
-    wrappedApis,
-    {
-      revoke: Fun.curry(revokeBehaviour, name),
-      config (spec) {
-        const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
+  const me = {
+    ...wrappedExtra,
+    ...wrappedApis,
+    revoke: Fun.curry(revokeBehaviour, name),
+    config (spec) {
+      const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
 
-        return {
-          key: name,
-          value: {
-            config: prepared,
-            me,
-            configAsRaw: Thunk.cached(() => {
-              return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
-            }),
-            initialConfig: spec,
-            state
-          }
-        };
-      },
+      return {
+        key: name,
+        value: {
+          config: prepared,
+          me,
+          configAsRaw: Thunk.cached(() => {
+            return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
+          }),
+          initialConfig: spec,
+          state
+        }
+      };
+    },
 
-      schema () {
-        return schemaSchema;
-      },
+    schema () {
+      return schemaSchema;
+    },
 
-      exhibit (info, base) {
-        return getConfig(info).bind((behaviourInfo) => {
-          return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
-            return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
-          });
-        }).getOr(DomModification.nu({ }));
-      },
+    exhibit (info, base) {
+      return getConfig(info).bind((behaviourInfo) => {
+        return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
+          return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
+        });
+      }).getOr(DomModification.nu({ }));
+    },
 
-      name () {
-        return name;
-      },
+    name () {
+      return name;
+    },
 
-      handlers (info) {
-        return getConfig(info).map((behaviourInfo) => {
-          const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
-          return LumberTimers.run('handlers.events', () => getEvents(behaviourInfo.config, behaviourInfo.state));
-        }).getOr({ });
-      }
+    handlers (info) {
+      return getConfig(info).map((behaviourInfo) => {
+        const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
+        return LumberTimers.run('handlers.events', () => getEvents(behaviourInfo.config, behaviourInfo.state));
+      }).getOr({ });
     }
-  );
+  };
 
   return me;
 };

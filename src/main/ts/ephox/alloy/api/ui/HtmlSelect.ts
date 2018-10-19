@@ -26,41 +26,37 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
     return Objects.wrap('initialValue', v);
   }).getOr({ });
 
-  return Merger.deepMerge(
-    {
-      uid: detail.uid,
-      dom: {
-        tag: 'select',
-        classes: detail.selectClasses,
-        attributes: detail.selectAttributes
-      },
-      components: options,
-      behaviours: Merger.deepMerge(
-        Behaviour.derive([
-          Focusing.config({ }),
-          Representing.config({
-            store: Merger.deepMerge(
-              {
-                mode: 'manual',
-                getValue (select) {
-                  return Value.get(select.element());
-                },
-                setValue (select, newValue) {
-                  // This is probably generically useful ... may become a part of Representing.
-                  const found = Arr.find(detail.options, (opt) => {
-                    return opt.value === newValue;
-                  });
-                  if (found.isSome()) { Value.set(select.element(), newValue); }
-                }
-              },
-              initialValues
-            )
-          })
-        ]),
-        SketchBehaviours.get(detail.selectBehaviours)
-      )
-    }
-  );
+  return {
+    uid: detail.uid,
+    dom: {
+      tag: 'select',
+      classes: detail.selectClasses,
+      attributes: detail.selectAttributes
+    },
+    components: options,
+    behaviours: SketchBehaviours.augment(
+      detail.selectBehaviours,
+      [
+        Focusing.config({ }),
+        Representing.config({
+          store: {
+            mode: 'manual',
+            getValue (select) {
+              return Value.get(select.element());
+            },
+            setValue (select, newValue) {
+              // This is probably generically useful ... may become a part of Representing.
+              const found = Arr.find(detail.options, (opt) => {
+                return opt.value === newValue;
+              });
+              if (found.isSome()) { Value.set(select.element(), newValue); }
+            },
+            ...initialValues
+          }
+        })
+      ]
+    )
+  };
 };
 
 const HtmlSelect = Sketcher.single({

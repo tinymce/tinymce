@@ -23,7 +23,7 @@ const single = function <D extends SingleSketchDetail, S extends SingleSketchSpe
 };
 
 const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
-  const specWithUid = supplyUid(spec);
+  const specWithUid = supplyUid<S>(spec);
 
   // Identify any information required for external parts
   const partSchemas = AlloyParts.schemas(partTypes);
@@ -42,12 +42,11 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   return factory(detail, components, specWithUid, subs.externals())
 };
 
-const supplyUid = function <S>(spec: S): S {
-  return Merger.deepMerge(
-    {
-      uid: Tagger.generate('uid')
-    }, spec
-  );
+const supplyUid = function <S>(spec: any): S {
+  return spec.hasOwnProperty('uid') ? spec : {
+    ...spec,
+    uid: Tagger.generate('uid')
+  };
 };
 
 export {

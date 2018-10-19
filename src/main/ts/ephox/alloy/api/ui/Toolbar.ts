@@ -38,9 +38,9 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
     dom: detail.dom,
     components: extra.components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive(extra.behaviours),
-      SketchBehaviours.get(detail.toolbarBehaviours)
+    behaviours: SketchBehaviours.augment(
+      detail.toolbarBehaviours,
+      extra.behaviours
     ),
     apis: {
       setGroups

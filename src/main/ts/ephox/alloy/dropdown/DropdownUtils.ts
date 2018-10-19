@@ -43,39 +43,36 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
 
   // TODO: Make this potentially a single menu also
   return futureData.map((data) => {
-    return TieredMenu.sketch(
-      Merger.deepMerge(
-        externals.menu(),
-        {
-          uid: Tagger.generate(''),
-          data,
+    return TieredMenu.sketch({
+      ...externals.menu(),
 
-          highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
+      uid: Tagger.generate(''),
+      data,
 
-          onOpenMenu (tmenu, menu) {
-            const sink = lazySink().getOrDie();
-            Positioning.position(sink, anchor, menu);
-            Sandboxing.decloak(sandbox);
-          },
+      highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-          onOpenSubmenu (tmenu, item, submenu) {
-            const sink = lazySink().getOrDie();
-            Positioning.position(sink, {
-              anchor: 'submenu',
-              item
-            }, submenu);
-            Sandboxing.decloak(sandbox);
+      onOpenMenu (tmenu, menu) {
+        const sink = lazySink().getOrDie();
+        Positioning.position(sink, anchor, menu);
+        Sandboxing.decloak(sandbox);
+      },
 
-          },
-          onEscape () {
-            // Focus the triggering component after escaping the menu
-            Focusing.focus(component);
-            Sandboxing.close(sandbox);
-            return Option.some(true);
-          }
-        }
-      )
-    );
+      onOpenSubmenu (tmenu, item, submenu) {
+        const sink = lazySink().getOrDie();
+        Positioning.position(sink, {
+          anchor: 'submenu',
+          item
+        }, submenu);
+        Sandboxing.decloak(sandbox);
+
+      },
+      onEscape () {
+        // Focus the triggering component after escaping the menu
+        Focusing.focus(component);
+        Sandboxing.close(sandbox);
+        return Option.some(true);
+      }
+    });
   });
 
 };
@@ -163,8 +160,9 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
         id: ariaOwner.id()
       }
     },
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.sandboxBehaviours,
+      [
         Representing.config({
           store: {
             mode: 'memory',
@@ -191,8 +189,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
         Dismissal.receivingConfig({
           isExtraPart: Fun.constant(false)
         })
-      ]),
-      SketchBehaviours.get(detail.sandboxBehaviours)
+      ]
     )
   };
 };

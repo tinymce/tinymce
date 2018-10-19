@@ -39,7 +39,10 @@ const nameToHandlers = (behaviours, info) => {
 };
 
 const groupByEvents = (info, behaviours, base) => {
-  const behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
+  const behaviourEvents = {
+    ...base,
+    ...nameToHandlers(behaviours, info)
+  });
   // Now, with all of these events, we need to index by event name
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };

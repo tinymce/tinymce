@@ -57,8 +57,9 @@ const make = (detail: FormDetail, components, spec) => {
     'components': components,
 
     // Form has an assumption that every field must have composing, and that the composed element has representing.
-    'behaviours': Merger.deepMerge(
-      Behaviour.derive([
+    'behaviours': SketchBehaviours.augment(
+      detail.formBehaviours,
+      [
         Representing.config({
           store: {
             mode: 'manual',
@@ -82,8 +83,7 @@ const make = (detail: FormDetail, components, spec) => {
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.formBehaviours)
+      ]
     ),
 
     'apis': {

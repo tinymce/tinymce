@@ -96,40 +96,34 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     isOpen: Sandboxing.isOpen
   };
 
-  return Merger.deepMerge(
-    {
-      uid: detail.uid,
-      dom: detail.dom,
-      behaviours: Merger.deepMerge(
-        Behaviour.derive([
-          Sandboxing.config({
-            isPartOf (container, data, queryElem) {
-              return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
-            },
-            getAttachPoint () {
-              return detail.lazySink().getOrDie();
+  return {
+    uid: detail.uid,
+    dom: detail.dom,
+    behaviours: SketchBehaviours.augment(
+      detail.inlineBehaviours,
+      [
+        Sandboxing.config({
+          isPartOf (container, data, queryElem) {
+            return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
+          },
+          getAttachPoint () {
+            return detail.lazySink().getOrDie();
+          }
+        }),
+        Dismissal.receivingConfig({
+          isExtraPart: Fun.constant(false),
+          ...detail.fireDismissalEventInstead.map((fe) => ({
+            fireEventInstead: {
+              event: fe.event
             }
-          }),
-          Dismissal.receivingConfig(
-            Merger.deepMerge(
-              {
-                isExtraPart: Fun.constant(false),
-              },
-              detail.fireDismissalEventInstead.map((fe) => ({
-                fireEventInstead: {
-                  event: fe.event
-                }
-              } as any)).getOr({ })
-            )
-          )
-        ]),
-        SketchBehaviours.get(detail.inlineBehaviours)
-      ),
-      eventOrder: detail.eventOrder,
+          } as any)).getOr({ })
+        })
+      ]
+    ),
+    eventOrder: detail.eventOrder,
 
-      apis
-    }
-  );
+    apis
+  };
 };
 
 const InlineView = Sketcher.single({
