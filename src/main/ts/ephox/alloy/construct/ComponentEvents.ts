@@ -69,29 +69,66 @@ const missingOrderError = (eventName, tuples) => {
   ]);
 };
 
-const fuse = (tuples, eventOrder, eventName) => {
+const fuse = (tuples, eventOrder, eventName): Result<any, any> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
-  if (! order) { return missingOrderError(eventName, tuples); } else { return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map((sortedTuples) => {
-    const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
-    return EventHandler.fuse(handlers);
-  });
+  if (! order) {
+    return missingOrderError(eventName, tuples);
+  } else {
+    return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map(
+      (sortedTuples) => {
+        const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
+        return EventHandler.fuse(handlers);
+      }
+    );
   }
 };
 
 const combineGroups = (byEventName, eventOrder) => {
-  const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
-    const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
-    return combined.map((handler) => {
-      const assembled = assemble(handler);
-      const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
-        return Arr.contains(tuples, (t) => t.name() === o);
-      }).join(' > ') : tuples[0].name();
-      return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
-    });
+  const success = { };
+  const failed = [ ];
+
+  Obj.each(byEventName, (tuples, eventName) => {
+    if (tuples.length === 1) {
+      success[eventName] = DescribedHandler.uncurried(
+        assemble(tuples[0].handler()),
+        'Purpose?'
+      )
+    } else {
+      const fused = fuse(tuples, eventOrder, eventName);
+      fused.fold<any>(
+        (err: any) => { failed.push(err) },
+        (val) => {
+          success[eventName] = DescribedHandler.uncurried(
+            assemble(tuples[0].handler()),
+            'Purpose?'
+          )
+        }
+      )
+    }
+    // const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
   });
 
-  return Objects.consolidate(r, {});
+
+
+  if (failed.length > 0) {
+    return Result.error(failed);
+  } else {
+    return Result.value(success);
+  }
+
+  // const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
+  //   const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
+  //   return combined.map((handler) => {
+  //     const assembled = assemble(handler);
+  //     const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
+  //       return Arr.contains(tuples, (t) => t.name() === o);
+  //     }).join(' > ') : tuples[0].name();
+  //     return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
+  //   });
+  // });
+
+  // return Objects.consolidate(r, {});
 };
 
 export {
