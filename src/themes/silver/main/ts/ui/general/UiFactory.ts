@@ -56,7 +56,7 @@ const factories: Record<string, FormPartRenderer> = {
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
   listbox: make(renderListbox),
-  label: make(renderUiLabel),
+  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
   iframe: makeIframe(renderIFrame),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make(renderDialogButton),
