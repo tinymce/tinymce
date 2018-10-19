@@ -36,9 +36,7 @@ const isRaw = (str: any): str is RawString => {
   if (!Type.isObject(str)) {
     return false;
   }
-  const keys = Obj.keys(str);
-
-  return keys.length === 1 && keys[0] === 'raw' && Type.isString(str.raw);
+  return Tools.is(str, 'object') && Tools.hasOwn(str, 'raw');
 };
 
 const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
@@ -77,6 +75,7 @@ export default {
 
   /**
    * Adds translations for a specific language code.
+   * Translation keys are set to be case insensitive.
    *
    * @method add
    * @param {String} code Language code like sv_SE.
@@ -90,7 +89,7 @@ export default {
     }
 
     for (const name in items) {
-      langData[name] = items[name];
+      langData[name.toLowerCase()] = items[name];
     }
 
     this.setCode(code);
@@ -134,7 +133,8 @@ export default {
     const getLangData = function (text) {
       // make sure we work on a string and return a string
       const textstr = toString(text);
-      return Tools.hasOwn(langData, textstr) ? toString(langData[textstr]) : textstr;
+      const lowercaseTextstr = textstr.toLowerCase();
+      return Tools.hasOwn(langData, lowercaseTextstr) ? toString(langData[lowercaseTextstr]) : textstr;
     };
 
     const removeContext = function (str: string) {
@@ -153,7 +153,7 @@ export default {
 
     // Raw, already translated
     if (isRaw(text)) {
-      return translated(text.raw);
+      return translated(toString(text.raw));
     }
 
     // Tokenised {translations}

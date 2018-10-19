@@ -12,6 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
 
     I18n.add('code', {
       'text': 'text translation',
+      'text translation': 'this should return the wrong translation when a translation matches a key, in nested translate calls',
       'value:{0}{1}': 'value translation:{0}{1}',
       'text{context:something}': 'text translation with context',
       'value:{0}{1}{context:something}': 'value translation:{0}{1} with context',
@@ -35,6 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
     LegacyUnit.equal(translate(function () { }), '[object Function]');
 
     LegacyUnit.equal(translate(null), '');
+    LegacyUnit.equal(translate(undefined), '');
     LegacyUnit.equal(translate(0), '0', '0');
     LegacyUnit.equal(translate(true), 'true', 'true');
     LegacyUnit.equal(translate(false), 'false', 'false');
@@ -51,6 +53,16 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
       hasOwnProperty: 'good'
     });
     LegacyUnit.equal(translate('hasOwnProperty'), 'good');
+
+    // Translate is case insensitive
+    LegacyUnit.equal(translate('TeXt'), 'text translation');
+    LegacyUnit.equal(translate('Value:{0}{1}{context:someThinG}'), 'value translation:{0}{1} with context');
+
+    // can be called multiple times
+    LegacyUnit.equal(translate(translate(translate(translate('value:{0}{1}')))), 'value translation:{0}{1}');
+
+    // When any translation string is the same as a key, a wrong translation will be made in nested translation calls.
+    LegacyUnit.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
   });
 
   suite.test('Switch language', function () {
