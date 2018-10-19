@@ -516,7 +516,6 @@ Editor.prototype = {
       settings.icon = name;
     }
 
-    self.buttons = self.buttons;
     settings.tooltip = settings.tooltip || settings.title;
     self.buttons[name] = settings;
   },
@@ -580,7 +579,6 @@ Editor.prototype = {
       };
     }
 
-    self.menuItems = self.menuItems;
     self.menuItems[name] = settings;
   },
 
