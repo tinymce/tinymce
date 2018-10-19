@@ -99,12 +99,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
-    LumberTimers.reset();
-    console.profile('buildMenus');
+    // LumberTimers.reset();
+    // console.profile('buildMenus');
     const componentMap = buildMenus(container, detail.data.primary, detail.data.menus);
 
-    console.profileEnd('buildMenus');
-    LumberTimers.log();
+    // console.profileEnd('buildMenus');
+    // LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data.primary, componentMap, detail.data.expansions, directory);
     return layeredState.getPrimary();

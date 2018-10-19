@@ -114,7 +114,7 @@ const substitutePlaces = (owner, detail, components, placeholders) => {
     if (p.used() === false && p.required()) {
       throw new Error(
         'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
-        Json.stringify(detail.components(), null, 2)
+        Json.stringify(detail.components, null, 2)
       );
     }
   });

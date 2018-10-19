@@ -8,9 +8,9 @@ import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketche
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
 export interface FormDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  formBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  formBehaviours: SketchBehaviours;
 }
 
 export interface FormSpec extends CompositeSketchSpec {
