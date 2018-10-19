@@ -9,7 +9,7 @@ import {
 } from '@ephox/alloy';
 import { Menu, Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Id, Option } from '@ephox/katamari';
+import { Arr, Id, Option, Fun } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
 import * as Icons from '../../../../../themes/silver/main/ts/ui/icons/Icons';
@@ -32,6 +32,7 @@ import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
 import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
@@ -98,10 +99,58 @@ export default () => {
     };
   };
 
-  const uiLabelSpec = renderUiLabel({
-    name: 'label1',
-    html: 'Label 1'
-  });
+  const labelSpec = renderUiLabel({
+    label: 'A label wraps components in a group',
+    items: [
+      renderCheckbox({
+        label: 'check box item 1',
+        name: 'one'
+      }, sharedBackstage.providers),
+      renderCheckbox({
+        label: 'check box item 2',
+        name: 'two'
+      }, sharedBackstage.providers),
+      renderInput({
+        label: Option.some('exampleInput'),
+        name: 'exampleinputfieldname',
+        validation: Option.none()
+      })
+    ]
+  }, sharedBackstage);
+
+  const labelGridSpec = renderUiLabel({
+    label: 'A label wraps a grid compontent',
+    items: [
+      renderGrid({
+        type: 'grid',
+        columns: 2,
+        items: [
+          AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
+          renderButton({
+            name: 'gridspecbutton',
+            text: 'Click Me!',
+            primary: false
+          }, () => {
+            console.log('clicked on the button in the grid');
+          }) as any,
+          renderCheckbox({
+            label: 'check box item 1',
+            name: 'one'
+          }, sharedBackstage.providers),
+          renderCheckbox({
+            label: 'check box item 2',
+            name: 'two'
+          }, sharedBackstage.providers),
+          renderInput({
+            label: Option.some('exampleInput'),
+            name: 'exampleinputfieldname',
+            validation: Option.none()
+          })
+        ]
+      }, sharedBackstage)
+
+    ]
+  }, sharedBackstage);
 
   const listboxSpec = renderListbox({
     name: 'listbox1',
@@ -170,12 +219,18 @@ export default () => {
     };
   })();
 
+  // This is fake because ColorInputBackstage requires Editor constructor
+  const fakecolorinputBackstage = {
+    colorPicker: Fun.noop,
+    hasCustomColors: Fun.constant(false)
+  };
+
   const colorInputSpec = renderColorInput({
     type: 'colorinput',
     name: 'colorinput-demo',
     colspan: Option.none(),
     label: Option.some('Color input label')
-  }, sharedBackstage, helpers.extras.backstage.colorinput);
+  }, sharedBackstage, fakecolorinputBackstage);
 
   const colorPickerSpec = renderColorPicker({
     type: 'colorpicker',
@@ -323,7 +378,8 @@ export default () => {
       display('Checkbox', checkboxSpec),
       display('Button', buttonSpec),
       display('Listbox', listboxSpec),
-      display('Ui Label', uiLabelSpec),
+      display('Label', labelSpec),
+      display('Grid Label', labelGridSpec),
       display('Autocomplete', autocompleteSpec),
       display('IFrame', iframeSpec),
       display('Input', inputSpec),
