@@ -29,7 +29,7 @@ import { renderUrlInput } from '../../../main/ts/ui/dialog/UrlInput';
 import { renderButton } from '../../../main/ts/ui/general/Button';
 import { renderListbox } from '../../../main/ts/ui/general/Listbox';
 import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
-import { renderUiLabel, renderUiGroupLabel } from '../../../main/ts/ui/general/UiLabel';
+import { renderLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -98,8 +98,8 @@ export default () => {
     };
   };
 
-  const labelGroupSpec = renderUiGroupLabel({
-    label: 'A label that wraps compontents in a group',
+  const labelSpec = renderLabel({
+    label: 'A label wraps components in a group',
     items: [
       renderCheckbox({
         label: 'check box item 1',
@@ -117,12 +117,12 @@ export default () => {
     ]
   }, sharedBackstage);
 
-  const labelGroupGridSpec = renderUiGroupLabel({
-    label: 'A label that wraps compontents in a group',
+  const labelGridSpec = renderLabel({
+    label: 'A label wraps a grid compontent',
     items: [
       renderGrid({
         type: 'grid',
-        columns: 5,
+        columns: 2,
         items: [
           AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
           renderButton({
@@ -149,10 +149,6 @@ export default () => {
       }, sharedBackstage)
 
     ]
-  }, sharedBackstage);
-
-  const uiLabelSpec = renderUiLabel({
-    label: 'A stand alone label'
   }, sharedBackstage);
 
   const listboxSpec = renderListbox({
@@ -381,10 +377,8 @@ export default () => {
       display('Checkbox', checkboxSpec),
       display('Button', buttonSpec),
       display('Listbox', listboxSpec),
-
-      display('Group Label', labelGroupSpec),
-      display('Ui Label', uiLabelSpec),
-      display('Ui Group Grid', labelGroupGridSpec),
+      display('Label', labelSpec),
+      display('Grid Label', labelGridSpec),
       display('Autocomplete', autocompleteSpec),
       display('IFrame', iframeSpec),
       display('Input', inputSpec),

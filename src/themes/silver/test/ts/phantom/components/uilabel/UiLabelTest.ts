@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { renderUiGroupLabel, renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
+import { renderLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
@@ -16,7 +16,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
-        renderUiGroupLabel({
+        renderLabel({
           label: 'Group of Options',
           items: [
             renderCheckbox({
@@ -27,10 +27,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
               label: Option.some('exampleInput'),
               name: 'exampleinputfieldname',
               validation: Option.none()
-            }),
-            renderUiLabel({
-              label: 'A stand alone label, should not have children',
-            }, sharedBackstage)
+            })
           ]
         }, sharedBackstage)
       );
@@ -42,7 +39,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
             return s.element('label', {
-              classes: [ arr.has('tox-label'), arr.has('tox-label-group') ],
+              classes: [ arr.has('tox-label') ],
               children: [
                 s.text(str.is('Group of Options')),
                 s.element('label', {
@@ -50,10 +47,6 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-form__group') ]
-                }),
-                s.element('label', {
-                  classes: [ arr.has('tox-label') ],
-                  html: str.is('A stand alone label, should not have children')
                 })
               ]
             });
