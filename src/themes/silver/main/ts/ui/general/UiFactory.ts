@@ -66,7 +66,7 @@ const factories: Record<string, FormPartRenderer> = {
   dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared)),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
   selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared)),
-  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
+  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared)),
   urlinput: make((spec, backstage) => {
     return renderUrlInput(
       spec, backstage.shared, backstage.urlinput

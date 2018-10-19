@@ -5,11 +5,11 @@ import { Option } from '@ephox/katamari';
 
 import { renderSizeInput } from '../../../../main/ts/ui/dialog/SizeInput';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
-  const providers = {
-    icons: () => <Record<string, string>> {}
-  };
+  const helpers = setupDemo();
+  const sharedBackstage = helpers.extras.backstage.shared;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -20,7 +20,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
           colspan: Option.none(),
           label: Option.some('size'),
           constrain: true
-        }, providers)
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

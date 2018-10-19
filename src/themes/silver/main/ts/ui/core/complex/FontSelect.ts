@@ -95,7 +95,7 @@ const fontSelectMenu = (editor, backstage) => {
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   return {
     type: 'menuitem',
-    text: 'Fonts',
+    text: backstage.shared.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   };
 };

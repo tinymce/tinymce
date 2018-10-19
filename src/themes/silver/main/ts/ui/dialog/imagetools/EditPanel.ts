@@ -122,7 +122,7 @@ const renderEditPanel = (imagePanel, sharedBackstage: UiFactoryBackstageShared) 
       colspan: none,
       type: 'sizeinput',
       constrain: true
-    }, sharedBackstage.providers)
+    }, sharedBackstage)
   );
 
   const makeResizeTransform = (width: number, height: number): ((ir: any) => any) => (ir: any): any => {

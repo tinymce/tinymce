@@ -226,7 +226,7 @@ export default () => {
     name: 'sizeinput-demo',
     label: Option.none(),
     colspan: Option.none(),
-  }, sharedBackstage.providers);
+  }, sharedBackstage);
 
   const urlInputSpec = renderUrlInput({
     type: 'urlinput',

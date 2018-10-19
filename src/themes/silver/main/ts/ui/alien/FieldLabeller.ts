@@ -22,6 +22,11 @@ const renderFormFieldSpec = (pLabel: Option<ConfiguredPart>, pField: ConfiguredP
 };
 
 const renderFormFieldSpecWith = (pLabel: Option<ConfiguredPart>, pField: ConfiguredPart, extraClasses: string[]): FormFieldSpec => {
+  pLabel.each((l) => {
+    console.log(l.config.dom);
+    console.trace();
+  });
+
   return {
     dom: renderFormFieldDomWith(extraClasses),
     components: pLabel.toArray().concat([ pField ])
@@ -39,12 +44,12 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => {
   };
 };
 
-const renderLabel = (label: string, backstage: UiFactoryBackstageShared): ConfiguredPart => {
+const renderLabel = (label: string, sharedBackstage: UiFactoryBackstageShared): ConfiguredPart => {
   return AlloyFormField.parts().label({
     dom: {
       tag: 'label',
       classes: ['tox-label'],
-      innerHtml: label
+      innerHtml: sharedBackstage.translate(label)
     }
   });
 };

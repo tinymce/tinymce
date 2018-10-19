@@ -2,17 +2,17 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderTextarea } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
 
-  const sharedBackstage = {
-    translate: I18n.translate
-  };
+  const helpers = setupDemo();
+  const sharedBackstage = helpers.extras.backstage.shared;
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(

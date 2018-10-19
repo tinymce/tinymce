@@ -2,16 +2,10 @@
 New Translations
 <new translation> [<previous translation>]
 -----------------------------------------------------
-Insert/Edit Media        [Insert/edit media]
-Insert/Edit Image        [Insert/edit image]
-Insert/Edit Code Sample  [Insert/Edit code sample]
-Source Code              [Source code]
 Spell check              [Spellcheck]
-Edit Image               [Edit image]
-
-Code Sample               [Code sample]
 Fonts                     [Font Family]
-
+Image title               <new>
+Border width              <new>
 
 
 
@@ -41,3 +35,4 @@ Pre (es)
 Code Sample (es)
 Ok (es)
 Media (es)
+General (es)

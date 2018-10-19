@@ -28,8 +28,10 @@ const fieldStructure = (s, str, arr, label) => {
 };
 
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
-  const providers = {
-    icons: () => <Record<string, string>> {}
+  const sharedBackstage = {
+    providers: {
+      icons: () => <Record<string, string>> {}
+    }
   };
 
   GuiSetup.setup(
@@ -41,7 +43,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           colspan: Option.none(),
           label: Option.some('size'),
           constrain: true
-        }, providers)
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

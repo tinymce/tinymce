@@ -56,7 +56,7 @@ export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBack
       dom: {
         tag: 'div',
         classes: [ 'tox-dialog__body-nav-item' ],
-        innerHtml: tab.title
+        innerHtml: backstage.shared.translate(tab.title)
       },
       view () {
         return [
