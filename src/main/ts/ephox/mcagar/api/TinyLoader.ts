@@ -95,11 +95,7 @@ const sSetupVersion = <T, U>(version: string, testPlugins: string[], callback: S
 };
 
 export default {
-<<<<<<< HEAD
-  setup: setup
-=======
   setup,
   setupVersion,
   sSetupVersion
->>>>>>> origin/master
 };
