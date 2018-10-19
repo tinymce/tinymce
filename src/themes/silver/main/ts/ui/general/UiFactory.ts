@@ -21,7 +21,7 @@ import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';
 import { renderListbox } from './Listbox';
-import { renderLabel } from './UiLabel';
+import { renderUiLabel } from './UiLabel';
 import { renderCollection } from '../dialog/Collection';
 
 // tslint:disable:no-console
@@ -56,7 +56,7 @@ const factories: Record<string, FormPartRenderer> = {
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
   listbox: make(renderListbox),
-  label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
+  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
   iframe: makeIframe(renderIFrame),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make(renderDialogButton),

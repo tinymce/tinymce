@@ -29,7 +29,7 @@ import { renderUrlInput } from '../../../main/ts/ui/dialog/UrlInput';
 import { renderButton } from '../../../main/ts/ui/general/Button';
 import { renderListbox } from '../../../main/ts/ui/general/Listbox';
 import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
-import { renderLabel } from '../../../main/ts/ui/general/UiLabel';
+import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -98,7 +98,7 @@ export default () => {
     };
   };
 
-  const labelSpec = renderLabel({
+  const labelSpec = renderUiLabel({
     label: 'A label wraps components in a group',
     items: [
       renderCheckbox({
@@ -117,7 +117,7 @@ export default () => {
     ]
   }, sharedBackstage);
 
-  const labelGridSpec = renderLabel({
+  const labelGridSpec = renderUiLabel({
     label: 'A label wraps a grid compontent',
     items: [
       renderGrid({

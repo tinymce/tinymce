@@ -5,12 +5,12 @@ import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 
-export interface RenderLabel<I> {
+export interface RenderUiLabel<I> {
   label: string;
   items: I[];
 }
 
-export const renderLabel = (spec: RenderLabel<SimpleSpec>, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
+export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
   return {
     dom: {
       tag: 'label',

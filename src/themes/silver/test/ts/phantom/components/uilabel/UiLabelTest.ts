@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { renderLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
+import { renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
@@ -16,7 +16,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
-        renderLabel({
+        renderUiLabel({
           label: 'Group of Options',
           items: [
             renderCheckbox({
