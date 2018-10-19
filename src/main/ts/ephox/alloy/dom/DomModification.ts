@@ -34,9 +34,9 @@ const modToRaw = (mod: DomModification): any => {
 const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => {
   return {
     ...defnA,
-    attributes: Merger.merge(defnA.attributes, mod.attributes),
-    styles: Merger.merge(defnA.styles, mod.styles),
-    classes: defnA.classes.concat(mod.classes),
+    attributes: { ...defnA.attributes, ...mod.attributes },
+    styles: { ...defnA.styles, ...mod.styles },
+    classes: defnA.classes.concat(mod.classes)
   };
 };
 

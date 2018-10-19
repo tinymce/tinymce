@@ -32,7 +32,7 @@ const combine = (
 
 
   // Clone the object so we can change it.
-  const modsByBehaviour: Record<BehaviourName, DomModification> = Merger.merge(baseMod);
+  const modsByBehaviour: Record<BehaviourName, DomModification> = { ...baseMod };
   Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });

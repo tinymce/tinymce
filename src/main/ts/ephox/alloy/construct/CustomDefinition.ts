@@ -69,7 +69,7 @@ const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
     ...detail.dom,
     uid: detail.uid,
     domChildren: Arr.map(detail.components, (comp) => comp.element())
-  );
+  };
 };
 
 const toModification = (detail: CustomDetail): DomModification => {

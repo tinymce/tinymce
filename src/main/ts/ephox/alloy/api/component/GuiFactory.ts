@@ -95,7 +95,10 @@ const uids = (() => {
 const build = (spec: AlloySpec): AlloyComponent => {
   return GuiTypes.getPremade(spec).fold(() => {
     // EFFICIENCY: Consider not merging here, and passing uid through separately
-    const userSpecWithUid = Merger.merge({ uid: uids('') }, spec);
+    const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
+      uid: uids(''),
+      ...spec,
+    } as SimpleOrSketchSpec;
     return buildFromSpec(userSpecWithUid).getOrDie();
   }, (prebuilt) => {
     return prebuilt;
