@@ -1,6 +1,29 @@
 import { Adt } from '@ephox/katamari';
 
-var adt = Adt.generate([
+export interface ResponseType extends Adt {
+  fold: <T>(
+    jsonHandler: () => T,
+    blobHandler: () => T,
+    textHandler: () => T,
+    htmlHandler: () => T,
+    xmlHandler: () => T
+  ) => T;
+  match: <T>(branches: {
+    json: () => T,
+    blob: () => T,
+    text: () => T,
+    html: () => T,
+    xml: () => T
+  }) => T;
+};
+
+const adt: {
+  json: () => ResponseType;
+  blob: () => ResponseType;
+  text: () => ResponseType;
+  html: () => ResponseType;
+  xml: () => ResponseType;
+} = Adt.generate([
   // NOTE: "json" does not have 100% browser support
   { json: [ ] },
   { blob: [ ] },
@@ -9,7 +32,7 @@ var adt = Adt.generate([
   { xml: [ ] }
 ]);
 
-var cata = function (subject, onJson, onBlob, onText, onHtml, onXml) {
+const cata = function <T> (subject: ResponseType, onJson: () => T, onBlob: () => T, onText: () => T, onHtml: () => T, onXml: () => T) {
   return subject.match({
     json: onJson,
     blob: onBlob,
@@ -19,7 +42,7 @@ var cata = function (subject, onJson, onBlob, onText, onHtml, onXml) {
   });
 };
 
-export default <any> {
+export const ResponseType = {
   json: adt.json,
   blob: adt.blob,
   text: adt.text,

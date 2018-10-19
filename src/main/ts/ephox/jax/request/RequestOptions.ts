@@ -1,11 +1,22 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { ContentType } from '../api/ContentType';
+import { Credentials } from '../api/Credentials';
+import { ResponseType } from "../api/ResponseType";
 
-var generate = function (cType, rType, creds, custom) {
-  var contentType = cType.bind(function (adt) {
+export interface RequestOptions {
+  contentType: () => Option<string>;
+  credentials: () => Option<boolean>;
+  responseType: () => Option<'blob' | 'document' | 'text'>;
+  accept: () => string;
+  headers: () => any;
+}
+
+const generate = function (cType: Option<ContentType>, rType: ResponseType, creds: Credentials, custom): RequestOptions {
+  const contentType = cType.bind(function (adt) {
     return adt.match({
       file: function () {
-        return Option.none(); // browser sets this automatically
+        return Option.none<string>(); // browser sets this automatically
       },
       form: function () {
         return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
@@ -22,22 +33,22 @@ var generate = function (cType, rType, creds, custom) {
     });
   });
 
-  var credentials = creds.match({
+  const credentials = creds.match<Option<boolean>>({
     none: Option.none,
     xhr: Fun.constant(Option.some(true))
   });
 
-  var responseType = rType.match({
+  const responseType = rType.match<Option<'blob' | 'document' | 'text'>>({
     // Not supported by IE, so we have to manually process it
     json: Option.none,
-    blob: Fun.constant(Option.some('blob')),
+    blob: Fun.constant(Option.some<'blob'>('blob')),
     // Check if cross-browser
-    xml: Fun.constant(Option.some('document')),
-    html: Fun.constant(Option.some('document')),
-    text: Fun.constant(Option.some('text'))
+    xml: Fun.constant(Option.some<'document'>('document')),
+    html: Fun.constant(Option.some<'document'>('document')),
+    text: Fun.constant(Option.some<'text'>('text'))
   });
 
-  var exactAccept = rType.match({
+  const exactAccept = rType.match({
     json: Fun.constant('application/json, text/javascript'),
     blob: Fun.constant('application/octet-stream'),
     text: Fun.constant('text/plain'),
@@ -46,9 +57,9 @@ var generate = function (cType, rType, creds, custom) {
   });
 
   // Always accept everything.
-  var accept = exactAccept + ', */*; q=0.01';
+  const accept = exactAccept + ', */*; q=0.01';
 
-  var headers = custom;
+  const headers = custom;
 
   return {
     contentType: Fun.constant(contentType),
@@ -59,6 +70,6 @@ var generate = function (cType, rType, creds, custom) {
   };
 };
 
-export default <any> {
-  generate: generate
+export const RequestOptions = {
+  generate
 };

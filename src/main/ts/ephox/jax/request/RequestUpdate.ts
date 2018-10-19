@@ -1,12 +1,14 @@
 import { Obj } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
+import { RequestOptions } from './RequestOptions';
+import { XMLHttpRequest, console } from '@ephox/dom-globals';
 
-var mutate = function (request, options) {
+const mutate = function (request: XMLHttpRequest, options: RequestOptions) {
   options.contentType().each(function (contentType) {
     request.setRequestHeader('Content-Type', contentType);
   });
 
-  var accept = options.accept();
+  const accept = options.accept();
   request.setRequestHeader('Accept', accept);
 
   options.credentials().each(function (creds) {
@@ -18,13 +20,13 @@ var mutate = function (request, options) {
     request.responseType = responseType;
   });
 
-  var extra = options.headers();
+  const extra = options.headers();
   Obj.each(extra, function (v, k) {
     if (!Type.isString(k) && !Type.isString(v)) console.error('Request header data was not a string: ', k, ' -> ', v);
     else request.setRequestHeader(k, v);
   });
 };
 
-export default <any> {
-  mutate: mutate
+export const RequestUpdate = {
+  mutate
 };
