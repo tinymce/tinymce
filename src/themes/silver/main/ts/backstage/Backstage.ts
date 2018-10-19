@@ -27,7 +27,7 @@ export interface UiFactoryBackstageShared {
     toolbar: () => AnchorSpec,
     banner: () => AnchorSpec,
     cursor: () => AnchorSpec,
-    node: (elem: Element) => AnchorSpec
+    node: (elem: Option<Element>) => AnchorSpec
   };
   formInterpreter?: (parts: FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
@@ -84,13 +84,11 @@ const init = (container, sink, editor) => {
             }
           };
         },
-        node: (element: Element) => {
+        node: (element: Option<Element>) => {
           return {
-            anchor: 'selection',
+            anchor: 'node',
             root: Element.fromDom(editor.getBody()),
-            getSelection: () => {
-              return Option.some(Selection.range(element, 0, element, 0));
-            }
+            node: element
           };
         }
       },

@@ -112,11 +112,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
   });
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Element) => {
-    return Merger.deepMerge(
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
+    const anchor = Merger.deepMerge(
       extras.backstage.shared.anchors.node(element),
       {
-        bubble: Bubble.nu(10, 12, {
+        bubble: Bubble.nu(0, 12, {
           valignCentre: [ ],
           alignCentre: [ ],
           alignLeft: [ 'tox-pop--align-left' ],
@@ -135,13 +135,14 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         }
       }
     );
+    return anchor;
   };
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
     const toolbarSpec = buildToolbar(toolbarApi);
-    const startNode = editor.selection.getNode();
-    const anchor = getAnchor(toolbarApi.position, Element.fromDom(startNode));
+    const sElem = elem.map(Element.fromDom);
+    const anchor = getAnchor(toolbarApi.position, sElem);
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
     InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement());
