@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
-import { Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
+import { Fun, Option, Struct, Unicode, Arr } from '@ephox/katamari';
+import { Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection, Compare } from '@ephox/sugar';
 
 import { Window } from '@ephox/dom-globals';
 
@@ -59,8 +59,8 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
       // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
       const point = CssPosition.screen(
         Position(
-          Math.max(0, rawRect.left()),
-          Math.max(0, rawRect.top())
+          rawRect.left(),
+          rawRect.top()
         )
       );
 

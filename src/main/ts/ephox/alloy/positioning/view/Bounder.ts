@@ -83,21 +83,20 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
     candidateYforTest: newY
   });
 
+  // useful debugging that I don't want to lose
+  // console.log(candidate.label());
+  // console.log('xfit', (boundsX + boundsWidth), ',', (newX + width), ',', newX);
+  // console.log('yfit', (boundsY + boundsHeight), ',', (newY + height), ',', newY, ',', height);
+  // console.log('x', xInBounds, xFit, '\t', Math.round(deltaW), '\t', (boundsX === 0 ? '000' : Math.round(boundsX)), '\t', Math.round(boundsWidth), '\t', Math.round(candidate.x()), '\t', Math.round(newX), '\t', '---', '\t', width);
+  // console.log('y', yInBounds, yFit, '\t', Math.round(deltaH), '\t', (boundsY === 0 ? '000' : Math.round(boundsY)), '\t', Math.round(boundsHeight), '\t', Math.round(candidate.y()), '\t', Math.round(newY), '\t', height);
+  // console.log('maxheight:', deltaH, maxHeight);
+  // console.log('originInBounds:', originInBounds);
+  // console.log('sizeInBounds:', sizeInBounds);
+  // console.log(originInBounds && sizeInBounds ? 'fit' : 'nofit');
+
   // Take special note that we don't use the futz values in the nofit case; whether this position is a good fit is separate
   // to ensuring that if we choose it the popup is actually on screen properly.
   return originInBounds && sizeInBounds ? adt.fit(reposition) : adt.nofit(reposition, deltaW, deltaH);
-
-  // useful debugging that I don't want to lose
-  /*
-  console.log(candidate.label());
-  console.log('xfit', (boundsX + boundsWidth), ',', (newX + width), ',',newX);
-  console.log('yfit', (boundsY + boundsHeight), ',', (newY + height), ',',newY, ',',height);
-  console.log(sizeInBounds);
-  console.log('x', xInBounds, xFit, '\t', Math.round(deltaW), '\t', (boundsX === 0 ? '000' : Math.round(boundsX)), '\t', Math.round(boundsWidth), '\t', Math.round(candidate.x()), '\t', Math.round(newX), '\t', '---', '\t', width);
-  console.log('y', yInBounds, yFit, '\t', Math.round(deltaH), '\t', (boundsY === 0 ? '000' : Math.round(boundsY)), '\t', Math.round(boundsHeight), '\t', Math.round(candidate.y()), '\t', Math.round(newY), '\t', height);
-  console.log('maxheight:', deltaH, maxHeight);
-  console.log(originInBounds && sizeInBounds ? 'fit' : 'nofit');
-  */
 };
 
 /**
@@ -118,7 +117,8 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 
     // unwrapping fit only to rewrap seems... silly
     return attemptLayout.fold(adt.fit, (newReposition, newDeltaW, newDeltaH) => {
-      const improved = newDeltaW > deltaW || newDeltaH > deltaH;
+      // console.log(`label: ${next.label()}, newDeltaW: ${newDeltaW}, deltaW: ${deltaW}, newDeltaH: ${newDeltaH}, deltaH: ${deltaH}`);
+      const improved = newDeltaH > deltaH || newDeltaW > deltaW;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
       return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)

@@ -26,7 +26,8 @@ const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options
   Css.remove(element, 'max-height');
 
   const elementBox = elementSize(element);
-  return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
+  const final = Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
+  return final;
 };
 
 const setClasses = (element, decision: RepositionDecision) => {
