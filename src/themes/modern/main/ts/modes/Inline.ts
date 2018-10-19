@@ -88,7 +88,7 @@ const render = function (editor, theme, args) {
       direction: 'column',
       align: 'stretch',
       autohide: false,
-      autofix: isFixed(inlineToolbarContainer, editor),
+      autofix: true,
       fixed: isFixed(inlineToolbarContainer, editor),
       border: 1,
       items: [
