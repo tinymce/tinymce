@@ -63,13 +63,15 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
 };
 
 // TODO: Find a place for this.
-const renderInputButton = (eventName: string, className: string, iconName: string, providersBackstage: UiFactoryBackstageProviders) => {
+const renderInputButton = (label: Option<string>, eventName: string, className: string, iconName: string, sharedBackstage: UiFactoryBackstageShared) => {
   return AlloyButton.sketch({
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button, className ],
-      // TODO: Change the icon
-      innerHtml: Icons.get(iconName, providersBackstage.icons)
+      innerHtml: Icons.get(iconName, sharedBackstage.providers.icons),
+      attributes: {
+        title: sharedBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
+      }
     },
     action: (component) => {
       AlloyTriggers.emit(component, eventName);
@@ -229,7 +231,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage.providers)).toArray()
+        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage)).toArray()
       ])
     };
   };
