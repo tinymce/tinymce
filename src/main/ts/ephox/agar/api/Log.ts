@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn, AgarLogs } from "../pipe/Pipe";
+import { DieFn, NextFn, AgarLogs, popLogLevel, pushLogLevel, addLogEntry } from "../pipe/Pipe";
 import { Chain, Wrap } from "./Chain";
 import { GeneralSteps } from "./Main";
 import { Step } from "./Step";
@@ -16,12 +16,13 @@ const enrichErrorMsg = (label, err) => {
 
 const enrichDie = (label, f) => {
   return (value, next, die: DieFn, logs: AgarLogs) => {
+    const updatedLogs = pushLogLevel(addLogEntry(logs, label));
     // TODO: Change this to use logs instead.
-    const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), newLogs);
+    const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), popLogLevel(newLogs));
     try {
-      return f(value, next, dieWith, logs);
+      return f(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
     } catch (err) {
-      dieWith(err, logs);
+      dieWith(err, updatedLogs);
     }
   };
 };
