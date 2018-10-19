@@ -20,7 +20,7 @@ const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
 const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
   const spec: SimpleOrSketchSpec = CustomSpec.make(userSpec);
 
-  // Build the subcomponents
+  // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
 
   const completeSpec: SimpleOrSketchSpec = Merger.deepMerge(
@@ -93,16 +93,13 @@ const uids = (() => {
 
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => {
-  // return LumberTimers.run('GuiFactory.build', () => {
-    return GuiTypes.getPremade(spec).fold(() => {
-      // return LumberTimers.run('Not premade', () => {
-        const userSpecWithUid = Merger.merge({ uid: uids('') }, spec);
-        return buildFromSpec(userSpecWithUid).getOrDie();
-      // });
-    }, (prebuilt) => {
-      return prebuilt;
-    });
-  // });
+  return GuiTypes.getPremade(spec).fold(() => {
+    // EFFICIENCY: Consider not merging here, and passing uid through separately
+    const userSpecWithUid = Merger.merge({ uid: uids('') }, spec);
+    return buildFromSpec(userSpecWithUid).getOrDie();
+  }, (prebuilt) => {
+    return prebuilt;
+  });
 };
 
 const premade = GuiTypes.premade;

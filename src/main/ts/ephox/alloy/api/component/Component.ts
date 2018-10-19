@@ -28,46 +28,22 @@ const getDomDefinition = (
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
-  // const definition = LumberTimers.run('modDef.def', () => {
-  //   return CustomDefinition.toDefinition(info);
-  // });
-  // // return definition
-  // const modDef = LumberTimers.run('modDef.mod', () => {
-  //   return CustomDefinition.toModification(info);
-  // });
-
-  // // const baseModification = {
-  // //   'alloy.base.modification': modDef
-  // // };
-
-  // // This optimisation seems to improve this.
-  // // const modification = LumberTimers.run('modDef.modification', () => modDef);
-  // return LumberTimers.run('modDef.merge', () => DomModification.merge(definition, modDef));
-  // // return definition;
+  // Get the current DOM definition from the spec
   const definition = CustomDefinition.toDefinition(info);
+
+  // Get the current DOM modification definition from the spec
+  const infoModification = CustomDefinition.toModification(info);
+
+  // Treat the DOM modification like it came from a behaviour
   const baseModification = {
-    'alloy.base.modification': CustomDefinition.toModification(info)
+    'alloy.base.modification': infoModification
   };
-  const modification = ComponentDom.combine(bData, baseModification, bList, definition);
+
+  // Combine the modifications from any defined behaviours
+  const modification = bList.length > 0 ? ComponentDom.combine(bData, baseModification, bList, definition) : infoModification;
+
+  // Transform the DOM definition with the combined dom modifications to make a new DOM definition
   return DomModification.merge(definition, modification);
-
-//
-  // const definition = LumberTimers.run('modDef.def', () => {
-    //   return CustomDefinition.toDefinition(info);
-    // });
-    // // return definition
-    // const modDef = LumberTimers.run('modDef.mod', () => {
-    //   return CustomDefinition.toModification(info);
-    // });
-
-    // // const baseModification = {
-    // //   'alloy.base.modification': modDef
-    // // };
-
-    // // This optimisation seems to improve this.
-    // // const modification = LumberTimers.run('modDef.modification', () => modDef);
-    // return LumberTimers.run('modDef.merge', () => DomModification.merge(definition, modDef));
-    // // return de
 };
 
 const getEvents = (

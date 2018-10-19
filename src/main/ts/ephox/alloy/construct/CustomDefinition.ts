@@ -64,21 +64,12 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
 };
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
-  // const base = {
-  //   uid: detail.uid,
-  //   tag: detail.dom.tag,
-  //   classes: detail.dom.classes,
-  //   attributes: detail.dom.attributes,
-  //   styles: detail.dom.styles,
-  //   domChildren: Arr.map(detail.components, (comp) => comp.element())
-  // };
-
-  return NuDefinition(Merger.merge(detail.dom,
-    {
-      uid: detail.uid,
-      domChildren: Arr.map(detail.components, (comp) => comp.element())
-    }
-  ));
+  // EFFICIENCY: Consider not merging here.
+  return {
+    ...detail.dom,
+    uid: detail.uid,
+    domChildren: Arr.map(detail.components, (comp) => comp.element())
+  );
 };
 
 const toModification = (detail: CustomDetail): DomModification => {

@@ -1,5 +1,5 @@
 import { JSON as Json } from '@ephox/sand';
-import { Struct, Option, Arr } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 export interface GeneralDefinitionSpec<EC, DC> {
@@ -33,8 +33,6 @@ export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element[], 
 
 }
 
-const nu = (x) => x;
-
 const defToStr = (defn: GeneralDefinitionDetail<any, any>): string => {
   const raw = defToRaw(defn);
   return Json.stringify(raw, null, 2);
@@ -58,7 +56,6 @@ const defToRaw = (defn: GeneralDefinitionDetail<string, GeneralDefinitionDetail<
 };
 
 export {
-  nu,
   defToStr,
   defToRaw
 };

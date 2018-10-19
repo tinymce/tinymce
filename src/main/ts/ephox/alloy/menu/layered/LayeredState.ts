@@ -43,12 +43,13 @@ const init = (): LayeredState => {
   };
 
   const setMenuBuilt = (menuName: string, built: AlloyComponent) => {
-    menus.set(
-      Merger.merge(menus.get(), Objects.wrap(menuName, {
+    menus.set({
+      ...menus.get(),
+      [menuName]: {
         type: 'prepared',
         menu: built
-      }))
-    )
+      }
+    });
   }
 
   const setContents = (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {

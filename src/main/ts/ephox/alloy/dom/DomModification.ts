@@ -32,16 +32,12 @@ const modToRaw = (mod: DomModification): any => {
 };
 
 const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => {
-  const raw = Merger.merge(
-    defnA,
-    {
-      attributes: Merger.merge(defnA.attributes, mod.attributes),
-      styles: Merger.merge(defnA.styles, mod.styles),
-      classes: defnA.classes.concat(mod.classes)
-    }
-  );
-
-  return NuDefinition(raw);
+  return {
+    ...defnA,
+    attributes: Merger.merge(defnA.attributes, mod.attributes),
+    styles: Merger.merge(defnA.styles, mod.styles),
+    classes: defnA.classes.concat(mod.classes),
+  };
 };
 
 export {

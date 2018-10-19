@@ -31,7 +31,8 @@ const combine = (
   type ModificationEffect = any;
 
 
-  const modsByBehaviour: Record<BehaviourName, DomModification> = Merger.deepMerge({ }, baseMod);
+  // Clone the object so we can change it.
+  const modsByBehaviour: Record<BehaviourName, DomModification> = Merger.merge(baseMod);
   Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });

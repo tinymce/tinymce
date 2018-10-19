@@ -75,10 +75,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     factory: {
       sketch: (spec, detail) => {
         // Merging should take care of the uid
-        return Merger.merge(spec, {
+        return {
+          ...spec,
           dom: detail.dom,
           components: detail.components
-        });
+        };
       }
     },
     schema: [
