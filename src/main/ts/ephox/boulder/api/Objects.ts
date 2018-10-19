@@ -38,7 +38,7 @@ const indexOnKey = function <T> (array: {[T: string]: any}[], key: string): {[T:
 };
 
 const mergeValues = function (values, base) {
-  return Result.value(
+  return values.length === 0 ? Result.value(base) : Result.value(
     Merger.deepMerge(
       base,
       Merger.merge.apply(undefined, values)

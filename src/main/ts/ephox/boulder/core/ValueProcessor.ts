@@ -143,15 +143,14 @@ const cExtract = function (path, obj, fields, strength) {
 };
 
 const value = function (validator: ValueValidator): Processor {
-
   const extract = function (path, strength, val) {
-    // NOTE: Intentionally allowing strength to be passed through internally
     return SimpleResult.bindError(
+      // NOTE: Intentionally allowing strength to be passed through internally
       validator(val, strength),
       function (err) {
         return SchemaError.custom(path, err);
       }
-    ); // ignore strength
+    );
   };
 
   const toString = function () {
@@ -202,7 +201,6 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
     toDsl: delegate.toDsl
   };
 };
-
 
 const objOf = function (fields: FieldProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
@@ -272,7 +270,6 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
     const validatedKeys = validateKeys(path, keys);
     return SimpleResult.bind(validatedKeys, function (validKeys) {
       const schema = Arr.map(validKeys, function (vk) {
-        // vk is getting set to undefined here because of validateKeys returning [ undefined ]
         return adt.field(vk, vk, FieldPresence.strict(), prop);
       });
 
@@ -343,16 +340,6 @@ const thunk = function (desc: string, processor: () => Processor): Processor {
 
 const anyValue = Fun.constant(value(SimpleResult.svalue));
 const arrOfObj = Fun.compose(arrOf, objOf);
-
-
-// const state = (okey, instantiator) => {
-//   return adt.state(okey, instantiator);
-// };
-
-// const field = (a, b, c, d) => {
-//   return adt.field(a, b, c, d);
-// };
-
 
 const state = adt.state;
 const field = adt.field;
