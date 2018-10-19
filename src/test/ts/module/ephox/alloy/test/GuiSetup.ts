@@ -25,7 +25,7 @@ const setup = (createComponent, f, success, failure) => {
     success();
   }, (e, logs) => {
     // tslint:disable-next-line
-    console.error(e);
+    // console.error(e);
     failure(e, logs);
   }, AgarLogs.init());
 };

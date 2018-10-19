@@ -34,8 +34,8 @@ const edgePart = (name: string): PartType.PartTypeAdt => {
 
           const mouseEvents = AlloyEvents.derive([
             AlloyEvents.runActionExtra(NativeEvents.mousedown(), a, [detail]),
-            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det) => {
-              if (det.mouseIsDown().get()) { a(l, det); }
+            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det: SliderDetail) => {
+              if (det.mouseIsDown.get()) { a(l, det); }
             }, [detail])
           ]);
 

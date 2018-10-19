@@ -28,11 +28,11 @@ const getBehaviours = (spec): Array<AlloyBehaviour<any, any>> => {
   });
 };
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, any>>): BehaviourBlob.BehaviourData => {
+const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any>>): BehaviourBlob.BehaviourData => {
   return BehaviourBlob.generateFrom(spec, all);
 };
 
-const generate = (spec: SimpleOrSketchSpec): BehaviourBlob.BehaviourData => {
+const generate = (spec: { behaviours: AlloyBehaviourRecord }): BehaviourBlob.BehaviourData => {
   const all = getBehaviours(spec);
   return generateFrom(spec, all);
 };

@@ -4,7 +4,7 @@ import { JSON } from '@ephox/sand';
 
 import { NoState, BehaviourStateInitialiser, BehaviourState } from '../../behaviour/common/BehaviourState';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { LumberTimers } from '../../alien/LumberTimers';
 
 export interface BehaviourConfigAndState<C, S> {
@@ -17,7 +17,7 @@ export interface BehaviourData {
   data: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>;
 }
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
+const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
   /*
    * This takes a basic record of configured behaviours, defaults their state
    * and ensures that all the behaviours were valid. Will need to document

@@ -28,7 +28,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
                   FieldSchema.strict('dummy')
                 ]),
                 onReceive (component, data) {
-                  store.adder('received: ' + data.dummy())();
+                  store.adder('received: ' + data.dummy)();
                 }
               }
             }

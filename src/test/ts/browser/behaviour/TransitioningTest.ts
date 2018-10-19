@@ -27,7 +27,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
             }
           }),
           onTransition (comp, route) {
-            store.adder(route.start() + '->' + route.destination())();
+            store.adder(route.start + '->' + route.destination)();
           },
           onFinish (comp, finishState) {
             store.adder('finish: ' + finishState)();

@@ -84,7 +84,8 @@ const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: Dr
   const snaps = snapInfo.getSnapPoints(component);
 
   // HERE
-  return Options.findMap(snaps, (snap: any) => {
+  return Options.findMap(snaps, (snap) => {
+    // FIX: Check these values.
     const sensor = snap.sensor();
     const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
     return inRange ? Option.some(

@@ -26,8 +26,8 @@ import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
+import { TransitioningConfigSpec, TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
 
 type TouchHoverState = (comp: AlloyComponent) => void;
 
@@ -108,7 +108,9 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                       'open',
                       'closed',
                       detail.menuTransition.map((t) => {
-                        return Objects.wrap('transition', t) as TransitionProperties;
+                        return {
+                          transition: t
+                        } as TransitionPropertiesSpec
                       }).getOr({ })
                     ),
 

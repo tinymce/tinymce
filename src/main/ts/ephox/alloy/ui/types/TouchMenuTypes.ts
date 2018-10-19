@@ -10,6 +10,7 @@ import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
+import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
   uid: string;
@@ -24,7 +25,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onExecute: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap: (comp: AlloyComponent) => void;
 
-  menuTransition: Option<{ property: string; transitionClass: string }>;
+  menuTransition: TransitionProperties['transition'];
 
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed: (sandbox: AlloyComponent, inline: AlloyComponent) => void;

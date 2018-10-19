@@ -1,16 +1,15 @@
 import { Objects } from '@ephox/boulder';
-import { Obj, Option, Result } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Obj } from '@ephox/katamari';
 
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
+import { TransitioningBehaviour, TransitionPropertiesSpec, TransitioningConfigSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
-import { TransitioningBehaviour } from '../../behaviour/transitioning/TransitioningTypes';
 
-const createRoutes = (routes) => {
-  const r = { };
-  Obj.each(routes, (v, k) => {
+const createRoutes = (routes): TransitioningConfigSpec['routes'] => {
+  const r: TransitioningConfigSpec['routes'] = { };
+  Obj.each(routes, (v: TransitionPropertiesSpec, k: string) => {
     const waypoints = k.split('<->');
     r[waypoints[0]] = Objects.wrap(waypoints[1], v);
     r[waypoints[1]] = Objects.wrap(waypoints[0], v);
@@ -18,14 +17,14 @@ const createRoutes = (routes) => {
   return r;
 };
 
-const createBistate = (first, second, transitions) => {
+const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
   return Objects.wrapAll([
     { key: first, value: Objects.wrap(second, transitions) },
     { key: second, value: Objects.wrap(first, transitions) }
   ]);
 };
 
-const createTristate = (first, second, third, transitions) => {
+const createTristate = (first: string, second: string, third: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
   return Objects.wrapAll([
     {
       key: first,

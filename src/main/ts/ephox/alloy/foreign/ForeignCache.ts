@@ -1,41 +1,34 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Objects } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
-import { Element } from '@ephox/sugar';
 import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import { SketchSpec } from '../api/component/SpecTypes';
+import { Dispatcher, DispatchedAlloyConfig } from '../api/system/ForeignGui';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
-import { UncurriedHandler } from '../events/EventRegistry';
 
 export default () => {
-  const getEvents = (elem: Element, spec: SketchSpec) => {
+  const getEvents = (elem: Element, spec: DispatchedAlloyConfig) => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
-      const info = ValueSchema.asRawOrDie('foreign.cache.configuration', ValueSchema.objOfOnly([
-        FieldSchema.defaulted('events', { }),
-        FieldSchema.optionObjOf('behaviours', [
-          // NOTE: Note all behaviours are supported at the moment
-          Toggling.schema(),
-          Dragging.schema(),
-          Pinching.schema()
-        ]),
-        FieldSchema.defaulted('eventOrder', {})
+      const info = {
+        events: Objects.hasKey(spec, 'events') ? spec.events : { },
+        eventOrder: Objects.hasKey(spec, 'eventOrder') ? spec.eventOrder : { }
+      };
 
-      ]), Objects.narrow(spec, [ 'events', 'eventOrder' ]));
-
+      // NOTE: Note all behaviours are supported at the moment
       const bInfo = CompBehaviours.generateFrom(spec, [ Toggling, Dragging, Pinching ]);
       const baseEvents = {
-        'alloy.base.behaviour': info.events()
+        'alloy.base.behaviour': info.events
       };
 
       const bData = BehaviourBlob.getData(bInfo);
-      return ComponentEvents.combine(bData, info.eventOrder(), [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
+      return ComponentEvents.combine(bData, info.eventOrder, [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
     });
 
     return {

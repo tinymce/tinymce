@@ -50,7 +50,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         exhibit (base, info) {
           const extra = {
             attributes: {
-              'behaviour-b-exhibit': info.attr()
+              'behaviour-b-exhibit': info.attr
             }
           };
           return DomModification.nu(extra);

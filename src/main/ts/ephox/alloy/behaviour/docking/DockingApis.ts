@@ -3,12 +3,13 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Dockables from './Dockables';
+import { DockingConfig } from './DockingTypes';
 
-const refresh = (component, config, state) => {
+const refresh = (component, config: DockingConfig, state) => {
   // Absolute coordinates (considers scroll)
   const viewport = config.lazyViewport(component);
 
-  config.contextual().each((contextInfo) => {
+  config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((elem) => {
       const box: Boxes.Bounds = Boxes.box(elem);
