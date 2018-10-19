@@ -15,7 +15,7 @@ tinymce.baseURL = document.location.protocol + '//' + document.location.host + '
 tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
 var cFromElement = function (element, settings) {
-  return Chain.on(function (_, next, die) {
+  return Chain.async(function (_, next, die) {
     var randomId = Id.generate('tiny-loader');
 
     Attr.set(element, 'id', randomId);
@@ -26,7 +26,7 @@ var cFromElement = function (element, settings) {
       setup: function (editor) {
         editor.on('SkinLoaded', function () {
           setTimeout(function () {
-            next(Chain.wrap(editor));
+            next(editor);
           }, 0);
         });
       }
