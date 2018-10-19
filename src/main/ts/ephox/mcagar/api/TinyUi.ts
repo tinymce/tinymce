@@ -105,19 +105,19 @@ export default function (editor, selectors?: Partial<ThemeSelectors>) {
   };
 
   var cAssertDialogContents = function (data) {
-    return Chain.on(function (element, next, die) {
-      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
+    return Chain.on(function (element, next, die, logs) {
+      getDialogByElement(element).fold(() => die('Can not find dialog', logs), function (win) {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
-        next(Chain.wrap(element));
+        next(Chain.wrap(element), logs);
       });
     });
   };
 
   var cFillDialogWith = function (data) {
-    return Chain.on(function (element, next, die) {
-      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
+    return Chain.on(function (element, next, die, logs) {
+      getDialogByElement(element).fold(() => die('Can not find dialog', logs), function (win) {
         win.fromJSON(Merger.merge(win.toJSON(), data));
-        next(Chain.wrap(element));
+        next(Chain.wrap(element), logs);
       });
     });
   };
