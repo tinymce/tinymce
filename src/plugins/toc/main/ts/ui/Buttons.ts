@@ -11,48 +11,45 @@
 import Settings from '../api/Settings';
 import Toc from '../core/Toc';
 
-const toggleState = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
+const toggleState = (editor) => (api) => {
+  const toggleDisabledState = () => api.setDisabled(editor.readonly || !Toc.hasHeaders(editor));
 
-    editor.on('LoadContent SetContent change', function () {
-      ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
-    });
-  };
+  toggleDisabledState();
+  editor.on('LoadContent SetContent change', toggleDisabledState);
+  return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = function (editor) {
-  return function (elm) {
+const isToc = (editor) => {
+  return (elm) => {
     return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
   };
 };
 
-const register = function (editor) {
+const register = (editor) => {
   editor.ui.registry.addButton('toc', {
+    icon: 'toc',
     tooltip: 'Table of Contents',
     onAction: () => editor.execCommand('mceInsertToc'),
-    icon: 'toc',
-    onPostRender: toggleState(editor)
+    onSetup: toggleState(editor)
   });
 
   editor.ui.registry.addButton('tocupdate', {
+    icon: 'reload',
     tooltip: 'Update',
-    onAction: () => editor.execCommand('mceUpdateToc'),
-    icon: 'reload'
+    onAction: () => editor.execCommand('mceUpdateToc')
   });
 
   editor.ui.registry.addMenuItem('toc', {
+    icon: 'toc',
     text: 'Table of Contents',
     onAction: () => editor.execCommand('mceInsertToc'),
-    icon: 'toc',
-    onPostRender: toggleState(editor)
+    onSetup: toggleState(editor)
   });
 
   editor.ui.registry.addContextToolbar('toc', {
-    type: 'contexttoolbar',
     items: [ 'tocupdate' ],
     predicate: isToc(editor),
-    position: 'node'
+    scope: 'node'
   });
 };
 
