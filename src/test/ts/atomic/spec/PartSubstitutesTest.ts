@@ -12,21 +12,21 @@ UnitTest.test('PartSubstitutesTest', () => {
     'Testing subs',
     () => {
       const detail = {
-        partUids: () => ({
+        partUids: ({
           'required.A': 'a-uid',
           'optional.B' : 'b-uid',
           'external.C': 'c-uid',
           'group.D': 'd-uid'
         }),
-        parts: () => ({
-          'required.A': () => ({ }),
-          'optional.B': () => ({ }),
-          'external.C': () => ({
-            entirety: () => ({ })
+        parts: ({
+          'required.A': ({ }),
+          'optional.B': ({ }),
+          'external.C': ({
+            entirety: ({ })
           }),
-          'group.D': () => ({ })
+          'group.D': ({ })
         }),
-        'group.D': () => [
+        'group.D': [
           {
             uid: 'group.D.1'
           },
@@ -111,10 +111,7 @@ UnitTest.test('PartSubstitutesTest', () => {
         required: true,
         factory: 'factory.A',
         spec: {
-          uid: 'a-uid',
-          'debug.sketcher': {
-            'part-required.A': { }
-          }
+          uid: 'a-uid'
         }
       }, internals['part:a']);
 
@@ -122,10 +119,7 @@ UnitTest.test('PartSubstitutesTest', () => {
         required: false,
         factory: 'factory.B',
         spec: {
-          uid: 'b-uid',
-          'debug.sketcher': {
-            'part-optional.B': { }
-          }
+          uid: 'b-uid'
         }
       }, internals['part:b']);
 
@@ -135,10 +129,7 @@ UnitTest.test('PartSubstitutesTest', () => {
         RawAssertions.assertEq('Checking result', {
           factory: 'factory.C',
           spec: {
-            uid: 'c-uid',
-            'debug.sketcher': {
-              'part-external.C': { }
-            }
+            uid: 'c-uid'
           }
         }, outcome);
       });
@@ -169,7 +160,6 @@ UnitTest.test('PartSubstitutesTest', () => {
         });
       });
 
-      debugger;
     }
   );
 });
