@@ -7,9 +7,10 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Type } from '@ephox/katamari';
 
 import Tools from './Tools';
-import { Type, Obj } from '@ephox/katamari';
+
 /**
  * I18n class that handles translation of TinyMCE UI.
  * Uses po style with csharp style parameters.
