@@ -6,6 +6,9 @@ Spell check              [Spellcheck]
 Fonts                     [Font Family]
 Image title               <new>
 Border width              <new>
+Error
+Warn
+Valid
 
 
 
