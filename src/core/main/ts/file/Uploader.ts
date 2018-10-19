@@ -51,7 +51,7 @@ export default function (uploadStatus, settings) {
   const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
     let xhr, formData;
 
-    xhr = new XMLHttpRequest();
+    xhr = XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 

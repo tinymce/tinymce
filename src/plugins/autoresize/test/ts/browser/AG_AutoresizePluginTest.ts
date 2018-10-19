@@ -54,16 +54,16 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 2000), 10, 3000)
         ]),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 1000 based and restrict by max height', [
-          tinyApis.sSetSetting('autoresize_max_height', 200),
+          tinyApis.sSetSetting('max_height', 200),
           tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 500), 10, 3000),
-          tinyApis.sSetSetting('autoresize_max_height', 0)
+          tinyApis.sSetSetting('max_height', 0)
         ]),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 10 and set min height to 500', [
-          tinyApis.sSetSetting('autoresize_min_height', 500),
+          tinyApis.sSetSetting('min_height', 500),
           tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 300), 10, 3000),
-          tinyApis.sSetSetting('autoresize_min_height', 0)
+          tinyApis.sSetSetting('min_height', 0)
         ])
       ] : []
     , onSuccess, onFailure);

@@ -10,8 +10,8 @@ import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   // Theme();
 
-  const cCreateEditorWithToolbar = (toolbar) => McagarEditor.cFromSettings({
-    toolbar,
+  const cCreateEditorWithToolbar = (toolbarVal) => McagarEditor.cFromSettings({
+    toolbar: toolbarVal,
     theme: 'silver',
     skin_url: '/project/js/tinymce/skins/oxide',
   });

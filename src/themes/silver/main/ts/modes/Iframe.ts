@@ -1,16 +1,17 @@
 import { Attachment } from '@ephox/alloy';
 import { Body, Element } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
-
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
+import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
+import { UiFactoryBackstage } from '../backstage/Backstage';
 
-const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode) => {
+const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   loadIframeSkin(editor);
 
-  Attachment.attachSystemAfter(Element.fromDom(targetNode), uiComponents.mothership);
+  Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
   editor.on('init', () => {

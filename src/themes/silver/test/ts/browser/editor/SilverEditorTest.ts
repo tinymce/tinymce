@@ -28,146 +28,150 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                   classes: [ arr.has('tox-tinymce') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-menubar') ],
-                      attrs: { role: str.is('menubar') },
+                      classes: [ arr.has('tox-editor-container') ],
                       children: [
-                        // Dropdown via text
-                        s.element('button', {
-                          classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
+                        s.element('div', {
+                          classes: [ arr.has('tox-menubar') ],
+                          attrs: { role: str.is('menubar') },
                           children: [
-                            s.element('span', {
-                              classes: [ arr.has('tox-mbtn__select-label') ],
-                              html: str.is('test')
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-mbtn__select-chevron') ],
+                            // Dropdown via text
+                            s.element('button', {
+                              classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
                               children: [
-                                s.element('svg', { })
+                                s.element('span', {
+                                  classes: [ arr.has('tox-mbtn__select-label') ],
+                                  html: str.is('test')
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-mbtn__select-chevron') ],
+                                  children: [
+                                    s.element('svg', { })
+                                  ]
+                                }),
                               ]
                             }),
                           ]
                         }),
-                      ]
-                    }),
 
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar') ],
-                      attrs: { role: str.is('group') },
-                      children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-toolbar__group') ],
+                          classes: [ arr.has('tox-toolbar') ],
+                          attrs: { role: str.is('group') },
                           children: [
-                            // Basic button
-                            s.element('button', {
-                              classes: [ arr.has('tox-tbtn') ]
-                            }),
-
-                            // Toggle button
-                            s.element('button', {
-                              classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ]
-                            }),
-
-                            // Dropdown via text
-                            s.element('button', {
-                              classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
-                              children: [
-                                s.element('span', {
-                                  classes: [ arr.has('tox-tbtn__select-label') ],
-                                  html: str.is('dropdown1')
-                                }),
-                                s.element('div', {
-                                  classes: [ arr.has('tox-tbtn__select-chevron') ],
-                                  children: [
-                                    s.element('svg', { })
-                                  ]
-                                }),
-                              ]
-                            }),
-
-                            // Dropdown via icon
-                            s.element('button', {
-                              classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
-                              children: [
-                                s.element('span', {
-                                  // NOTE: Not sure what this should be?
-                                  classes: [  ],
-                                  children: [
-                                    s.element('svg', { })
-                                  ]
-                                }),
-                                s.element('div', {
-                                  classes: [ arr.has('tox-tbtn__select-chevron') ],
-                                  children: [
-                                    s.element('svg', { })
-                                  ]
-                                }),
-                              ]
-                            }),
-
-                            // Splitbutton with text
                             s.element('div', {
-                              classes: [ arr.has('tox-split-button') ],
+                              classes: [ arr.has('tox-toolbar__group') ],
                               children: [
+                                // Basic button
                                 s.element('button', {
-                                  classes: [ arr.has('tox-tbtn') ],
+                                  classes: [ arr.has('tox-tbtn') ]
+                                }),
+
+                                // Toggle button
+                                s.element('button', {
+                                  classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ]
+                                }),
+
+                                // Dropdown via text
+                                s.element('button', {
+                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
                                   children: [
                                     s.element('span', {
                                       classes: [ arr.has('tox-tbtn__select-label') ],
-                                      html: str.is('Delta')
-                                    })
+                                      html: str.is('dropdown1')
+                                    }),
+                                    s.element('div', {
+                                      classes: [ arr.has('tox-tbtn__select-chevron') ],
+                                      children: [
+                                        s.element('svg', { })
+                                      ]
+                                    }),
                                   ]
                                 }),
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
-                                  children: [
-                                    s.element('svg', { })
-                                  ]
-                                })
-                              ]
-                            }),
 
-                            // Splitbutton with icon
-                            s.element('div', {
-                              classes: [ arr.has('tox-split-button') ],
-                              children: [
+                                // Dropdown via icon
                                 s.element('button', {
-                                  classes: [ arr.has('tox-tbtn') ],
+                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
                                   children: [
                                     s.element('span', {
+                                      // NOTE: Not sure what this should be?
+                                      classes: [  ],
+                                      children: [
+                                        s.element('svg', { })
+                                      ]
+                                    }),
+                                    s.element('div', {
+                                      classes: [ arr.has('tox-tbtn__select-chevron') ],
+                                      children: [
+                                        s.element('svg', { })
+                                      ]
+                                    }),
+                                  ]
+                                }),
+
+                                // Splitbutton with text
+                                s.element('div', {
+                                  classes: [ arr.has('tox-split-button') ],
+                                  children: [
+                                    s.element('button', {
+                                      classes: [ arr.has('tox-tbtn') ],
+                                      children: [
+                                        s.element('span', {
+                                          classes: [ arr.has('tox-tbtn__select-label') ],
+                                          html: str.is('Delta')
+                                        })
+                                      ]
+                                    }),
+                                    s.element('button', {
+                                      classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
                                       ]
                                     })
                                   ]
                                 }),
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+
+                                // Splitbutton with icon
+                                s.element('div', {
+                                  classes: [ arr.has('tox-split-button') ],
                                   children: [
-                                    s.element('svg', { })
+                                    s.element('button', {
+                                      classes: [ arr.has('tox-tbtn') ],
+                                      children: [
+                                        s.element('span', {
+                                          children: [
+                                            s.element('svg', { })
+                                          ]
+                                        })
+                                      ]
+                                    }),
+                                    s.element('button', {
+                                      classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+                                      children: [
+                                        s.element('svg', { })
+                                      ]
+                                    })
                                   ]
                                 })
                               ]
                             })
                           ]
-                        })
-                      ]
-                    }),
+                        }),
 
-                    s.element('div', {
-                      classes: [ arr.has('tox-sidebar-wrap')],
-                      children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-edit-area') ],
+                          classes: [ arr.has('tox-sidebar-wrap')],
                           children: [
-                            s.element('iframe', { })
+                            s.element('div', {
+                              classes: [ arr.has('tox-edit-area') ],
+                              children: [
+                                s.element('iframe', { })
+                              ]
+                            }),
+                            s.element('div', {
+                              classes: [ arr.has('tox-sidebar') ]
+                            }),
                           ]
                         }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-sidebar') ]
-                        }),
                       ]
                     }),
-
                     s.element('div', {
                       classes: [ arr.has('tox-statusbar') ]
                     })
