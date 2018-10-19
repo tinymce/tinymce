@@ -19,7 +19,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
     },
     items: spec.items,
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ]
   };
 };

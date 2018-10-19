@@ -26,21 +26,21 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
   };
 
   const getGroupContainer = (component) => {
-    return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
+    return detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
-  const extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
+  const extra = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
     { behaviours: [ ], components };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components: extra.components,
 
     behaviours: Merger.deepMerge(
       Behaviour.derive(extra.behaviours),
-      SketchBehaviours.get(detail.toolbarBehaviours())
+      SketchBehaviours.get(detail.toolbarBehaviours)
     ),
     apis: {
       setGroups

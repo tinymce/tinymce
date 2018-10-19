@@ -81,7 +81,7 @@ const stopDrag = (component: AlloyComponent, snapInfo: SnapsConfig): void => {
 // deltaY: the amount the mouse has moved vertically
 const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
-  const snaps = snapInfo.getSnapPoints()(component);
+  const snaps = snapInfo.getSnapPoints(component);
 
   // HERE
   return Options.findMap(snaps, (snap: any) => {

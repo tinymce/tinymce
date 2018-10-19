@@ -6,11 +6,11 @@ import * as Dockables from './Dockables';
 
 const refresh = (component, config, state) => {
   // Absolute coordinates (considers scroll)
-  const viewport = config.lazyViewport()(component);
+  const viewport = config.lazyViewport(component);
 
   config.contextual().each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
-    contextInfo.lazyContext()(component).each((elem) => {
+    contextInfo.lazyContext(component).each((elem) => {
       const box: Boxes.Bounds = Boxes.box(elem);
       const isVisible = Dockables.isPartiallyVisible(box, viewport);
       const method = isVisible ? Dockables.appear : Dockables.disappear;

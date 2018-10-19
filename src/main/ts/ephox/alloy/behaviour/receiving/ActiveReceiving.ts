@@ -25,7 +25,7 @@ const events = (receiveConfig: ReceivingConfig/*, receiveState */) => {
       Arr.each(targetChannels, (ch) => {
         const channelInfo = channelMap[ch];
         const channelSchema = channelInfo.schema;
-        const data = ValueSchema.asStructOrDie(
+        const data = ValueSchema.asRawOrDie(
           'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
           // FIX: Recieving event ignores the whole simulated event part.
           channelSchema, message.data()

@@ -35,7 +35,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             getTarget (handle) {
               return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
-            blockerClass: detail.dragBlockClass().getOrDie(
+            blockerClass: detail.dragBlockClass.getOrDie(
               // TODO: Support errors in Option getOrDie.
               new Error(
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
@@ -76,7 +76,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       sketch: (spec, detail) => {
         // Merging should take care of the uid
         return Merger.merge(spec, {
-          dom: detail.dom(),
+          dom: detail.dom,
           components: detail.components()
         });
       }

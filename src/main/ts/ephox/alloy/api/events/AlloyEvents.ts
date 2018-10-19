@@ -114,7 +114,7 @@ const redirectToUid = function <T extends EventFormat>(name, uid): AlloyEventKey
 };
 
 const redirectToPart = function <T extends EventFormat>(name, detail, partName): AlloyEventKeyAndHandler<T> {
-  const uid = detail.partUids()[partName];
+  const uid = detail.partUids[partName];
   return redirectToUid(name, uid);
 };
 

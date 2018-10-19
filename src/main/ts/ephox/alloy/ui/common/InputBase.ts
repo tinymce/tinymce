@@ -26,7 +26,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
   return Behaviour.derive([
     Focusing.config({
-      onFocus: detail.selectOnFocus() === false ? Fun.noop : (component) => {
+      onFocus: detail.selectOnFocus === false ? Fun.noop : (component) => {
         const input = component.element();
         const value = Value.get(input);
         input.dom().setSelectionRange(0, value.length);
@@ -42,7 +42,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
         store: {
           mode: 'manual',
           // Propagating its Option
-          initialValue: detail.data().getOr(undefined),
+          initialValue: detail.data.getOr(undefined),
           getValue (input) {
             return Value.get(input.element());
           },
@@ -54,23 +54,23 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
             }
           }
         },
-        onSetValue: detail.onSetValue()
+        onSetValue: detail.onSetValue
       })
     ]),
     focusBehaviours(detail),
-    SketchBehaviours.get(detail.inputBehaviours())
+    SketchBehaviours.get(detail.inputBehaviours)
   );
 };
 
 const dom = (detail: InputDetail): RawDomSchema => {
   return {
-    tag: detail.tag(),
+    tag: detail.tag,
     attributes: Merger.deepMerge(
       { type: 'input' },
-      detail.inputAttributes()
+      detail.inputAttributes
     ),
-    styles: detail.inputStyles(),
-    classes: detail.inputClasses()
+    styles: detail.inputStyles,
+    classes: detail.inputClasses
   };
 };
 

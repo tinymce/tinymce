@@ -7,13 +7,13 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface ButtonDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  buttonBehaviours: () => SketchBehaviours;
-  action: () => Option<() => ButtonAction>;
-  role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  buttonBehaviours: SketchBehaviours;
+  action: Option<() => ButtonAction>;
+  role: Option<string>;
+  eventOrder: Record<string, string[]>;
 }
 
 export type ButtonAction = (comp: AlloyComponent) => void;

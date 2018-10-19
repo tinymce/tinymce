@@ -12,15 +12,15 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
-  const events = ButtonBase.events(detail.action());
+  const events = ButtonBase.events(detail.action);
 
-  const optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));
-  const optTag = Objects.readOptFrom(detail.dom(), 'tag');
+  const optType = Objects.readOptFrom(detail.dom, 'attributes').bind(Objects.readOpt('type'));
+  const optTag = Objects.readOptFrom(detail.dom, 'tag');
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
-    components: detail.components(),
+    uid: detail.uid,
+    dom: detail.dom,
+    components: detail.components,
     events,
     behaviours: Merger.deepMerge(
       Behaviour.derive([
@@ -34,7 +34,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
           useEnter: true
         })
       ]),
-      SketchBehaviours.get(detail.buttonBehaviours())
+      SketchBehaviours.get(detail.buttonBehaviours)
     ),
     domModification: {
       attributes: Merger.deepMerge(
@@ -44,11 +44,11 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
           return { };
         }),
         {
-          role: detail.role().getOr('button')
+          role: detail.role.getOr('button')
         }
       )
     },
-    eventOrder: detail.eventOrder()
+    eventOrder: detail.eventOrder
   };
 };
 

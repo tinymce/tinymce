@@ -12,7 +12,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {
-    'uid': detail.uid(),
+    'uid': detail.uid,
     'dom': Merger.deepMerge(
       {
         tag: 'div',
@@ -20,7 +20,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
           role: 'tablist'
         }
       },
-      detail.dom()
+      detail.dom
     ),
     'components': components,
     'debug.sketcher': 'Tabbar',
@@ -28,8 +28,8 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
     'behaviours': Merger.deepMerge(
       Behaviour.derive([
         Highlighting.config({
-          highlightClass: detail.markers().selectedClass(),
-          itemClass: detail.markers().tabClass(),
+          highlightClass: detail.markers.selectedClass,
+          itemClass: detail.markers.tabClass,
 
           // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
           // Consider a more seam-less way of combining highlighting and toggling
@@ -50,12 +50,12 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
               return tab.element();
             });
           },
-          selector: '.' + detail.markers().tabClass(),
+          selector: '.' + detail.markers.tabClass,
           executeOnMove: true
         })
       ]),
       // Add the permitted fields.
-      SketchBehaviours.get(detail.tabbarBehaviours())
+      SketchBehaviours.get(detail.tabbarBehaviours)
     )
   };
 };

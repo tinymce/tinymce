@@ -4,15 +4,15 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface ToolbarGroupDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  tgroupBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  tgroupBehaviours: SketchBehaviours;
 
-  markers: () => {
-    itemSelector: () => string;
+  markers: {
+    itemSelector: string;
   };
-  items: () => AlloySpec[];
+  items: AlloySpec[];
 }
 
 export interface ToolbarGroupSpec extends CompositeSketchSpec {

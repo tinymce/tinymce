@@ -17,18 +17,18 @@ const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (d
       }
     },
     {
-      'uid': detail.uid(),
-      'dom': detail.dom(),
+      'uid': detail.uid,
+      'dom': detail.dom,
       'components': components,
 
       'behaviours': Merger.deepMerge(
         Behaviour.derive([
           Keying.config({
             mode: 'flow',
-            selector: detail.markers().itemSelector()
+            selector: detail.markers.itemSelector
           })
         ]),
-        SketchBehaviours.get(detail.tgroupBehaviours())
+        SketchBehaviours.get(detail.tgroupBehaviours)
       ),
 
       'debug.sketcher': spec['debug.sketcher']

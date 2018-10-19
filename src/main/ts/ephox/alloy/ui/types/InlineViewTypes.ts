@@ -10,17 +10,17 @@ import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 import { Element } from '@ephox/sugar';
 
 export interface InlineViewDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  inlineBehaviours: () => SketchBehaviours;
-  onShow: () => (component: AlloyComponent) => void;
-  onHide: () => (component: AlloyComponent) => void;
-  getRelated: () => (component: AlloyComponent) => Option<AlloyComponent>;
-  lazySink: () =>  () => Result<AlloyComponent, Error>;
-  eventOrder: () => Record<string, string[]>;
-  fireDismissalEventInstead: () => Option<{
-    event: () => string
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  inlineBehaviours: SketchBehaviours;
+  onShow: (component: AlloyComponent) => void;
+  onHide: (component: AlloyComponent) => void;
+  getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
+  lazySink: () =>  Result<AlloyComponent, Error>;
+  eventOrder: Record<string, string[]>;
+  fireDismissalEventInstead: Option<{
+    event: string
   }>;
 }
 

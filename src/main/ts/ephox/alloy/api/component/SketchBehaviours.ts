@@ -5,7 +5,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { AlloyBehaviourRecord, ConfiguredBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface SketchBehaviours {
-  dump: () => AlloyBehaviourRecord;
+  dump: AlloyBehaviourRecord;
 }
 
 const field = (name: string, forbidden: Array<{ name: () => string }>): FieldProcessorAdt => {
@@ -17,7 +17,7 @@ const field = (name: string, forbidden: Array<{ name: () => string }>): FieldPro
 };
 
 const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
-  return data.dump();
+  return data.dump;
 };
 
 export const SketchBehaviours = {

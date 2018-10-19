@@ -4,12 +4,12 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface FormChooserDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  chooserBehaviours: () => SketchBehaviours;
-  markers: () => {
-    choiceClass: () => string;
-    selectedClass: () => string;
+  uid: string;
+  dom: RawDomSchema;
+  chooserBehaviours: SketchBehaviours;
+  markers: {
+    choiceClass: string;
+    selectedClass: string;
   };
 }
 

@@ -17,7 +17,7 @@ export default () => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
-      const info = ValueSchema.asStructOrDie('foreign.cache.configuration', ValueSchema.objOfOnly([
+      const info = ValueSchema.asRawOrDie('foreign.cache.configuration', ValueSchema.objOfOnly([
         FieldSchema.defaulted('events', { }),
         FieldSchema.optionObjOf('behaviours', [
           // NOTE: Note all behaviours are supported at the moment

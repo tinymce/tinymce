@@ -8,17 +8,17 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 
 // The V is because this is shared with Typeahead.
 export interface InputDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  inputBehaviours: () => SketchBehaviours;
-  inputStyles: () => { };
-  inputClasses: () => string[];
-  inputAttributes: () => { };
-  tag: () => string;
-  data: () => Option<string>;
-  onSetValue: () => (comp: AlloyComponent, data: string) => void;
-  selectOnFocus: () => boolean;
-  eventOrder: () => Record<string, string[]>;
+  uid: string;
+  dom: RawDomSchema;
+  inputBehaviours: SketchBehaviours;
+  inputStyles: { };
+  inputClasses: string[];
+  inputAttributes: { };
+  tag: string;
+  data: Option<string>;
+  onSetValue: (comp: AlloyComponent, data: string) => void;
+  selectOnFocus: boolean;
+  eventOrder: Record<string, string[]>;
 }
 
 export interface InputSpec extends SingleSketchSpec {

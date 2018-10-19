@@ -52,12 +52,12 @@ const arrowPart = PartType.required({
   overrides (detail) {
     return {
       action (arrow) {
-        arrow.getSystem().getByUid(detail.uid()).each(AlloyTriggers.emitExecute);
+        arrow.getSystem().getByUid(detail.uid).each(AlloyTriggers.emitExecute);
       },
       buttonBehaviours: Behaviour.derive([
         Toggling.config({
           toggleOnExecute: false,
-          toggleClass: detail.toggleClass(),
+          toggleClass: detail.toggleClass,
           aria: {
             mode: 'pressed'
           }
@@ -87,8 +87,8 @@ const buttonPart = PartType.required({
   overrides (detail) {
     return {
       action (btn) {
-        btn.getSystem().getByUid(detail.uid()).each((splitDropdown) => {
-          detail.onExecute()(splitDropdown, btn);
+        btn.getSystem().getByUid(detail.uid).each((splitDropdown) => {
+          detail.onExecute(splitDropdown, btn);
         });
       }
     };
@@ -107,8 +107,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     defaults (detail) {
       return {
         onExecute (tmenu, item) {
-          tmenu.getSystem().getByUid(detail.uid()).each((splitDropdown) => {
-            detail.onItemExecute()(splitDropdown, tmenu, item);
+          tmenu.getSystem().getByUid(detail.uid).each((splitDropdown) => {
+            detail.onItemExecute(splitDropdown, tmenu, item);
           });
         }
       };

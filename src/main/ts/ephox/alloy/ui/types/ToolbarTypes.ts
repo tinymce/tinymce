@@ -5,11 +5,11 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface ToolbarDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  toolbarBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  toolbarBehaviours: SketchBehaviours;
 
-  shell: () => boolean;
+  shell: boolean;
 }
 
 export interface ToolbarSpec extends CompositeSketchSpec {

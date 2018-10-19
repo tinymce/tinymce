@@ -105,8 +105,9 @@ const base = (label, partSchemas, partUidsSchemas, spec) => {
   ]).concat(partUidsSchemas);
 };
 
-const asRawOrDie = (label, schema, spec, partSchemas, partUidsSchemas) => {
-  const baseS = base(label, partSchemas, spec, partUidsSchemas);
+const asRawOrDie = <D, S>(label, schema, spec: S, partSchemas, partUidsSchemas): D => {
+  // OBVIOUSLY NEVER USED RAW BEFORE !!!!!!!!!!!!!!!!!!!!!
+  const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 

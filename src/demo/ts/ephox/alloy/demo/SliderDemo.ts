@@ -12,6 +12,7 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document } from '@ephox/dom-globals';
 import { SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
+import { GeneratedParts, ConfiguredPart } from '../../../../../main/ts/ephox/alloy/parts/AlloyParts';
 
 export default (): void => {
   const gui = Gui.create();
@@ -45,7 +46,7 @@ export default (): void => {
               outline: '4px solid green'
             }
           }
-        }),
+        }) as ConfiguredPart,
         Slider.parts().thumb({
           dom: {
             tag: 'div',

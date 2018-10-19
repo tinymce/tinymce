@@ -4,7 +4,7 @@ import { Element } from '@ephox/sugar';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 
 export interface MouseDraggingConfig extends DraggingConfig {
-  blockerClass: () => string;
+  blockerClass: string;
 }
 
 export interface DragApi {

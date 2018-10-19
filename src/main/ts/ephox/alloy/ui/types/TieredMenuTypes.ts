@@ -9,40 +9,40 @@ import { ItemDataTuple } from './ItemTypes';
 import { MenuSpec } from './MenuTypes';
 
 export interface TieredMenuDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  tmenuBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  tmenuBehaviours: SketchBehaviours;
 
-  fakeFocus: () => boolean;
-  onHighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;
+  fakeFocus: boolean;
+  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
 
-  markers: () => {
-    item: () => string;
-    menu: () => string;
-    backgroundMenu: () => string;
-    selectedMenu: () => string;
-    selectedItem: () => string;
+  markers: {
+    item: string;
+    menu: string;
+    backgroundMenu: string;
+    selectedMenu: string;
+    selectedItem: string;
   };
 
-  onEscape: () => (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
-  onExecute: () => (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
-  onOpenMenu: () => (comp: AlloyComponent, menu: AlloyComponent) => void;
-  onOpenSubmenu: () => (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
-  onCollapseMenu: () => (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
-  onHover: () => (comp: AlloyComponent, item: AlloyComponent) => void;
+  onEscape: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onExecute: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onCollapseMenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onHover: (comp: AlloyComponent, item: AlloyComponent) => void;
 
-  navigateOnHover: () => boolean;
-  highlightImmediately: () => boolean;
+  navigateOnHover: boolean;
+  highlightImmediately: boolean;
 
-  stayInDom: () => boolean;
+  stayInDom: boolean;
 
-  eventOrder: () => Record<string, string[]>;
+  eventOrder: Record<string, string[]>;
 
-  data: () => {
-    primary: () => string;
-    expansions: () => Record<string, string>;
-    menus: () => Record<string, PartialMenuSpec>;
+  data: {
+    primary: string;
+    expansions: Record<string, string>;
+    menus: Record<string, PartialMenuSpec>;
   };
 }
 

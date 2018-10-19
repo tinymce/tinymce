@@ -45,7 +45,7 @@ const text = (textContent: string): PremadeSpec => {
 // Rename.
 export interface ExternalElement { uid ?: string; element: Element; }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Option<string>, element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
@@ -62,8 +62,8 @@ const external = (spec: ExternalElement): PremadeSpec => {
     }));
   };
 
-  extSpec.uid().each((uid) => {
-    Tagger.writeOnly(extSpec.element(), uid);
+  extSpec.uid.each((uid) => {
+    Tagger.writeOnly(extSpec.element, uid);
   });
 
   const me = ComponentApi({
@@ -72,7 +72,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
     hasConfigured: Fun.constant(false),
     connect,
     disconnect,
-    element: Fun.constant(extSpec.element()),
+    element: Fun.constant(extSpec.element),
     spec: Fun.constant(spec),
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,

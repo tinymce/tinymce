@@ -41,19 +41,20 @@ export interface SnapPin {
 }
 
 export interface SnapsConfig {
-  getSnapPoints: () => (comp: AlloyComponent) => SnapConfig[];
-  leftAttr: () => string;
-  topAttr: () => string;
-  onSensor?: () => (component: AlloyComponent, extra: {}) => void;
+  getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
+  leftAttr: string;
+  topAttr: string;
+  onSensor?: (component: AlloyComponent, extra: {}) => void;
+  // FIX ?
   lazyViewport?: (component: AlloyComponent) => any;
 }
 
 export interface DraggingConfig {
-  getTarget: () => (comp: Element) => Element;
-  snaps: () => Option<SnapsConfig>;
-  onDrop: () => (comp: AlloyComponent, Element) => void;
-  repositionTarget: () => boolean;
-  onDrag: () => (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
+  getTarget: (comp: Element) => Element;
+  snaps: Option<SnapsConfig>;
+  onDrop: (comp: AlloyComponent, Element) => void;
+  repositionTarget: boolean;
+  onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
 }
 
 // FieldSchema.strict('getSnapPoints'),

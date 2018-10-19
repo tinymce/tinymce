@@ -11,18 +11,18 @@ import { MakeshiftAnchor, nu as NuAnchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
 const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
-  const anchorBox = bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
+  const anchorBox = bounds(anchorInfo.x, anchorInfo.y, anchorInfo.width, anchorInfo.height);
 
   const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     NuAnchoring({
-      anchorBox: Fun.constant(anchorBox),
+      anchorBox: anchorBox,
       bubble: anchorInfo.bubble,
-      // maxHeightFunction: Fun.constant(MaxHeight.available()),
-      overrides: Fun.constant({ }),
-      layouts: Fun.constant(layouts),
-      placer: Option.none
+      // maxHeightFunction: MaxHeight.available()),
+      overrides: { },
+      layouts: layouts,
+      placer: Option.none()
     })
   );
 };

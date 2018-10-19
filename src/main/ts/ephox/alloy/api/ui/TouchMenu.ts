@@ -47,27 +47,27 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
   };
 
   const forceHoverOn = (component: AlloyComponent): void => {
-    detail.onHoverOn()(component);
+    detail.onHoverOn(component);
     hoveredState.set(true);
   };
 
   const hoverOff = (component: AlloyComponent): void => {
     if (hoveredState.get() === true) {
-      detail.onHoverOff()(component);
+      detail.onHoverOff(component);
       hoveredState.set(false);
     }
   };
 
   return Merger.deepMerge(
     {
-      uid: detail.uid(),
-      dom: detail.dom(),
+      uid: detail.uid,
+      dom: detail.dom,
       components,
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           // Button showing the the touch menu is depressed
           Toggling.config({
-            toggleClass: detail.toggleClass(),
+            toggleClass: detail.toggleClass,
             aria: {
               mode: 'pressed',
               syncWithExpanded: true
@@ -89,7 +89,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                           AlloyEvents.runOnExecute((c, s) => {
                             const target = s.event().target();
                             c.getSystem().getByDom(target).each((item) => {
-                              detail.onExecute()(hotspot, c, item, Representing.getValue(item));
+                              detail.onExecute(hotspot, c, item, Representing.getValue(item));
                             });
                           })
                         ]),
@@ -103,7 +103,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                           routes: Transitioning.createBistate(
                             'open',
                             'closed',
-                            detail.menuTransition().map((t) => {
+                            detail.menuTransition.map((t) => {
                               return Objects.wrap('transition', t) as TransitionProperties;
                             }).getOr({ })
                           ),
@@ -111,7 +111,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                           onFinish (view, destination) {
                             if (destination === 'closed') {
                               InlineView.hide(view);
-                              detail.onClosed()(hotspot, view);
+                              detail.onClosed(hotspot, view);
                             }
                           }
                         })
@@ -128,7 +128,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
             }
           })
         ]),
-        SketchBehaviours.get(detail.touchmenuBehaviours())
+        SketchBehaviours.get(detail.touchmenuBehaviours)
       ),
 
       events: AlloyEvents.derive([
@@ -140,12 +140,12 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
         }),
 
         AlloyEvents.run(SystemEvents.tap(), (comp, se) => {
-          detail.onTap()(comp);
+          detail.onTap(comp);
         }),
 
         // On longpress, create the menu items to show, and put them in the sandbox.
         AlloyEvents.run(SystemEvents.longpress(), (component, simulatedEvent) => {
-          detail.fetch()(component).get((items) => {
+          detail.fetch(component).get((items) => {
             forceHoverOn(component);
             const iMenu = Menu.sketch(
               Merger.deepMerge(
@@ -157,7 +157,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
             );
 
             const sandbox = Coupling.getCoupled(component, 'sandbox');
-            const anchor = detail.getAnchor()(component);
+            const anchor = detail.getAnchor(component);
             InlineView.showAt(sandbox, anchor, iMenu);
           });
         }),
@@ -216,7 +216,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
       ]),
 
       eventOrder: Merger.deepMerge(
-        detail.eventOrder(),
+        detail.eventOrder,
         {
           // Order, the button state is toggled first, so assumed !selected means close.
           'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
@@ -226,7 +226,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
     {
       dom: {
         attributes: {
-          role: detail.role().getOr('button')
+          role: detail.role.getOr('button')
         }
       }
     }

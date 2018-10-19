@@ -9,7 +9,7 @@ const getDimensionProperty = (slideConfig) => {
 };
 
 const getDimension = (slideConfig, elem) => {
-  return slideConfig.dimension().getDimension()(elem);
+  return slideConfig.dimension().getDimension(elem);
 };
 
 const disableTransitions = (component: AlloyComponent, slideConfig: SlidingConfig) => {

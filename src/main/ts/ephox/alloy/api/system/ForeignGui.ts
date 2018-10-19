@@ -72,7 +72,7 @@ const supportedEvents = [
 // dispatcher may also change the target.
 const findDispatcher = (dispatchers, target): any => {
   return Options.findMap(dispatchers, (dispatcher: any) => {
-    return dispatcher.getTarget()(target).map((newTarget) => {
+    return dispatcher.getTarget(target).map((newTarget) => {
       return {
         target: Fun.constant(newTarget),
         dispatcher: Fun.constant(dispatcher)
@@ -96,12 +96,13 @@ const getProxy = (event, target) => {
 };
 
 const engage = (spec: ForeignGuiSpec) => {
-  const detail = ValueSchema.asStructOrDie('ForeignGui', schema, spec);
+  // FIX
+  const detail = ValueSchema.asRawOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used
   // as the system for all behaviours
   const gui = Gui.create();
-  detail.insertion()(detail.root(), gui);
+  detail.insertion(detail.root(), gui);
 
   const cache = ForeignCache();
 

@@ -25,8 +25,8 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
 
     behaviours: Merger.deepMerge(
@@ -52,7 +52,7 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
           }
         })
       ]),
-      SketchBehaviours.get(detail.expandableBehaviours())
+      SketchBehaviours.get(detail.expandableBehaviours)
     ),
 
     apis: {

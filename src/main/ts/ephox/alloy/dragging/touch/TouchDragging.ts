@@ -27,12 +27,12 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
     }),
 
     AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
-      dragConfig.snaps().each((snapInfo) => {
+      dragConfig.snaps.each((snapInfo) => {
         Snappables.stopDrag(component, snapInfo);
       });
-      const target = dragConfig.getTarget()(component.element());
+      const target = dragConfig.getTarget(component.element());
       dragState.reset();
-      dragConfig.onDrop()(component, target);
+      dragConfig.onDrop(component, target);
     })
   ]);
 };

@@ -22,9 +22,9 @@ import { Representing } from '../api/behaviour/Representing';
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
-  const ourHotspot = detail.getHotspot()(component).getOr(component);
+  const ourHotspot = detail.getHotspot(component).getOr(component);
   const anchor: 'hotspot' = 'hotspot';
-  return detail.layouts().fold(() => {
+  return detail.layouts.fold(() => {
     return { anchor, hotspot: ourHotspot };
   }, (layouts) => {
     return { anchor, hotspot: ourHotspot, layouts };
@@ -32,7 +32,7 @@ const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyCom
 };
 
 const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
-  const fetcher = detail.fetch();
+  const fetcher = detail.fetch;
   return fetcher(component).map(mapFetch);
 };
 
@@ -117,17 +117,17 @@ const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWi
 };
 
 interface SinkDetail {
-  uid: () => string;
-  lazySink: () => Option<() => Result<AlloyComponent, any>>;
+  uid: string;
+  lazySink: Option<() => Result<AlloyComponent, any>>;
 }
 
 const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail) => {
-  return anyInSystem.getSystem().getByUid(sinkDetail.uid() + '-' + InternalSink.suffix()).map((internalSink) => {
+  return anyInSystem.getSystem().getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).map((internalSink) => {
     return Fun.constant(
       Result.value(internalSink)
     );
   }).getOrThunk(() => {
-    return sinkDetail.lazySink().fold(() => {
+    return sinkDetail.lazySink.fold(() => {
       return Fun.constant(
         Result.error(new Error(
           'No internal sink is specified, nor could an external sink be found'
@@ -143,8 +143,8 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
-    if (detail.matchWidth()) { matchWidth(anchor.hotspot, menu, detail.useMinWidth()); }
-    detail.onOpen()(anchor, component, menu);
+    if (detail.matchWidth) { matchWidth(anchor.hotspot, menu, detail.useMinWidth); }
+    detail.onOpen(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
 
@@ -158,7 +158,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   return {
     dom: {
       tag: 'div',
-      classes: detail.sandboxClasses(),
+      classes: detail.sandboxClasses,
       attributes: {
         id: ariaOwner.id()
       }
@@ -192,7 +192,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
           isExtraPart: Fun.constant(false)
         })
       ]),
-      SketchBehaviours.get(detail.sandboxBehaviours())
+      SketchBehaviours.get(detail.sandboxBehaviours)
     )
   };
 };

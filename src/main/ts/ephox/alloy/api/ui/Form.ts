@@ -56,8 +56,8 @@ const make = (detail: FormDetail, components, spec) => {
       'debug.sketcher': {
         Form: spec
       },
-      'uid': detail.uid(),
-      'dom': detail.dom(),
+      'uid': detail.uid,
+      'dom': detail.dom,
       'components': components,
 
       // Form has an assumption that every field must have composing, and that the composed element has representing.

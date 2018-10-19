@@ -55,37 +55,37 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             dimension: {
               property: 'height'
             },
-            closedClass: detail.markers().closedClass(),
-            openClass: detail.markers().openClass(),
-            shrinkingClass: detail.markers().shrinkingClass(),
-            growingClass: detail.markers().growingClass(),
+            closedClass: detail.markers.closedClass,
+            openClass: detail.markers.openClass,
+            shrinkingClass: detail.markers.shrinkingClass,
+            growingClass: detail.markers.growingClass,
             expanded: true,
             onStartShrink (extra: AlloyComponent) {
               // If the focus is inside the extra part, move the focus to the expander button
               Focus.search(extra.element()).each((_) => {
-                const comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
+                const comp = extra.getSystem().getByUid(detail.uid).getOrDie();
                 Keying.focusIn(comp);
               });
 
-              extra.getSystem().getByUid(detail.uid()).each((form) => {
-                Class.remove(form.element(), detail.markers().expandedClass());
-                Class.add(form.element(), detail.markers().collapsedClass());
+              extra.getSystem().getByUid(detail.uid).each((form) => {
+                Class.remove(form.element(), detail.markers.expandedClass);
+                Class.add(form.element(), detail.markers.collapsedClass);
               });
             },
             onStartGrow (extra: AlloyComponent) {
-              extra.getSystem().getByUid(detail.uid()).each((form) => {
-                Class.add(form.element(), detail.markers().expandedClass());
-                Class.remove(form.element(), detail.markers().collapsedClass());
+              extra.getSystem().getByUid(detail.uid).each((form) => {
+                Class.add(form.element(), detail.markers.expandedClass);
+                Class.remove(form.element(), detail.markers.collapsedClass);
               });
             },
             onShrunk (extra: AlloyComponent) {
-              detail.onShrunk()(extra);
+              detail.onShrunk(extra);
             },
             onGrown (extra: AlloyComponent) {
-              detail.onGrown()(extra);
+              detail.onGrown(extra);
             },
             getAnimationRoot (extra: AlloyComponent) {
-              return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
+              return extra.getSystem().getByUid(detail.uid).getOrDie().element();
             }
           })
         ])

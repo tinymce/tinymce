@@ -37,7 +37,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
         }
       })
     ]),
-    SketchBehaviours.get(detail.fieldBehaviours())
+    SketchBehaviours.get(detail.fieldBehaviours)
   );
 
   const events = AlloyEvents.derive([
@@ -45,7 +45,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
     AlloyEvents.runOnAttached((component, simulatedEvent) => {
       const ps = AlloyParts.getParts(component, detail, [ 'label', 'field', 'aria-descriptor' ]);
       ps.field().each((field) => {
-        const id = Id.generate(detail.prefix());
+        const id = Id.generate(detail.prefix);
         ps.label().each((label) => {
           // TODO: Find a nicer way of doing this.
           Attr.set(label.element(), 'for', id);
@@ -53,7 +53,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
         });
 
         ps['aria-descriptor']().each((descriptor) => {
-          const descriptorId = Id.generate(detail.prefix());
+          const descriptorId = Id.generate(detail.prefix);
           Attr.set(descriptor.element(), 'id', descriptorId);
           Attr.set(field.element(), 'aria-labelledby', descriptorId);
         });
@@ -72,8 +72,8 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
     behaviours,
     events,

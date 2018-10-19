@@ -17,7 +17,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             store: {
               mode: 'manual',
               getValue (component) {
-                return detail.data();
+                return detail.data;
               },
               setValue () { }
             }

@@ -6,14 +6,14 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface HtmlSelectDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  selectBehaviours: () => SketchBehaviours;
-  selectAttributes: () => Record<string, any>;
-  selectClasses: () => string[];
-  options: () => [{ value: string; text: string }];
-  data: () => Option<string>;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  selectBehaviours: SketchBehaviours;
+  selectAttributes: Record<string, any>;
+  selectClasses: string[];
+  options: [{ value: string; text: string }];
+  data: Option<string>;
 }
 
 export interface HtmlSelectSpec extends SingleSketchSpec {

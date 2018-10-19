@@ -29,8 +29,8 @@ const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
 };
 
 const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent): void => {
-  const anchor = Anchor.box(anchoring.anchorBox(), origin);
-  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), getBounds, anchoring.overrides());
+  const anchor = Anchor.box(anchoring.anchorBox, origin);
+  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
@@ -39,7 +39,7 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
 };
 
 const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
-  const anchorage: AnchorDetail<any> = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
+  const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
   // when calculating anchors
@@ -54,9 +54,9 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   // (bottom and right) will be using the wrong dimensions
   const origin = posConfig.useFixed ? getFixedOrigin() : getRelativeOrigin(component);
 
-  const placer = anchorage.placement();
-  placer(component, anchorage, origin).each((anchoring) => {
-    const doPlace = anchoring.placer().getOr(place);
+  const placer = anchorage.placement;
+  placer(component, anchorage, origin).each((anchoring: Anchoring) => {
+    const doPlace = anchoring.placer.getOr(place);
     const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds);
     doPlace(component, origin, anchoring, getBounds, placee);
   });

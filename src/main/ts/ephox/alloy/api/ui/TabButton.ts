@@ -14,10 +14,10 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, spec) => {
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
-    components: detail.components(),
-    events: events(detail.action()),
+    uid: detail.uid,
+    dom: detail.dom,
+    components: detail.components,
+    events: events(detail.action),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Focusing.config({ }),
@@ -29,14 +29,14 @@ const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, sp
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: detail.value()
+            initialValue: detail.value
           }
         })
       ]),
-      SketchBehaviours.get(detail.tabButtonBehaviours())
+      SketchBehaviours.get(detail.tabButtonBehaviours)
     ),
 
-    domModification: detail.domModification()
+    domModification: detail.domModification
   };
 };
 

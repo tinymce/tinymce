@@ -27,7 +27,7 @@ const descendOnce = (element, offset) => {
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SugarRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
-  const getSelection = anchorInfo.getSelection().getOrThunk(() => {
+  const getSelection = anchorInfo.getSelection.getOrThunk(() => {
     return () => {
       return WindowSelection.getExact(win);
     };
@@ -41,7 +41,7 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<Su
 };
 
 const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
-  const win: Window = Traverse.defaultView(anchorInfo.root()).dom();
+  const win: Window = Traverse.defaultView(anchorInfo.root).dom();
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {
@@ -94,13 +94,13 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     });
 
     const layoutsLtr = (): Layout.AnchorLayout[] => {
-      return anchorInfo.showAbove() ?
+      return anchorInfo.showAbove ?
         [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.north, Layout.south ] :
         [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.south, Layout.south ];
     };
 
     const layoutsRtl = (): Layout.AnchorLayout[] => {
-      return anchorInfo.showAbove() ?
+      return anchorInfo.showAbove ?
         [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.north, Layout.south ] :
         [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.south, Layout.north ];
     };
@@ -109,11 +109,11 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     const layouts = AnchorLayouts.get(elem, anchorInfo, layoutsLtr(), layoutsRtl());
 
     return NuAnchor({
-      anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble.fallback())),
+      anchorBox,
+      bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: anchorInfo.overrides,
-      layouts: Fun.constant(layouts),
-      placer: Option.none
+      layouts,
+      placer: Option.none()
     });
   });
 };

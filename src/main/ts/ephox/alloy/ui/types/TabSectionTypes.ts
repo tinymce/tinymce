@@ -7,16 +7,16 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TabSectionDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  tabSectionBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  tabSectionBehaviours: SketchBehaviours;
 
   // Maybe these are components due to caching.
-  tabs: () => [{ value: string; view: () => AlloySpec[] } ];
-  onChangeTab: () => (component: AlloyComponent, button: AlloyComponent, panel: AlloySpec[]) => void;
-  selectFirst: () => boolean;
-  onDismissTab: () => (component: AlloyComponent, button: AlloyComponent) => void;
+  tabs: [{ value: string; view: () => AlloySpec[] } ];
+  onChangeTab: (component: AlloyComponent, button: AlloyComponent, panel: AlloySpec[]) => void;
+  selectFirst: boolean;
+  onDismissTab: (component: AlloyComponent, button: AlloyComponent) => void;
 }
 
 export interface TabSectionSpec extends CompositeSketchSpec {

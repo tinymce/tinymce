@@ -33,46 +33,46 @@ export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | M
 
 // config: (detail: MenuDetail,  movementInfo: MenuMovement) => KeyingConfigSpec
 export interface MenuGridMovement {
-  mode: () => 'grid';
-  config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
-  initSize?: () => {
-    numColumns: () => number;
-    numRows: () => number;
+  mode: 'grid';
+  config: (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
+  initSize?: {
+    numColumns: number;
+    numRows: number;
   };
 }
 
 export interface MenuMatrixMovement {
-  mode: () => 'matrix';
-  config: () => (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
-  rowSelector: () => string;
+  mode: 'matrix';
+  config: (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
+  rowSelector: string;
 }
 
 export interface MenuNormalMovement {
-  mode: () => 'menu';
-  config: () => (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
-  moveOnTab: () => boolean;
+  mode: 'menu';
+  config: (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
+  moveOnTab: boolean;
 }
 
 export type MenuMovement = MenuGridMovement | MenuMatrixMovement | MenuNormalMovement;
 
 export interface MenuDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  menuBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  menuBehaviours: SketchBehaviours;
 
-  fakeFocus: () => boolean;
-  markers: () => {
-    item: () => string;
-    selectedItem: () => string;
+  fakeFocus: boolean;
+  markers: {
+    item: string;
+    selectedItem: string;
   };
 
-  onHighlight: () => (comp: AlloyComponent, target: AlloyComponent) => void;
-  value: () => string;
-  movement: () => MenuMovement;
+  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+  value: string;
+  movement: MenuMovement;
 
-  focusManager: () => FocusManager;
-  eventOrder: () => Record<string, string[]>;
+  focusManager: FocusManager;
+  eventOrder: Record<string, string[]>;
 }
 
 export interface MenuSpec extends CompositeSketchSpec {

@@ -63,13 +63,13 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
       )
     },
     {
-      uid: detail.uid(),
-      dom: detail.dom(),
+      uid: detail.uid,
+      dom: detail.dom,
       components,
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           Toggling.config({
-            toggleClass: detail.toggleClass(),
+            toggleClass: detail.toggleClass,
             aria: {
               // INVESTIGATE: Are we sure we want aria-pressed as well as aria-expanded here?
               mode: 'pressed',
@@ -111,11 +111,11 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           }),
           Focusing.config({ })
         ]),
-        SketchBehaviours.get(detail.dropdownBehaviours())
+        SketchBehaviours.get(detail.dropdownBehaviours)
       ),
 
       eventOrder: Merger.deepMerge(
-        detail.eventOrder(),
+        detail.eventOrder,
         {
           // Order, the button state is toggled first, so assumed !selected means close.
           'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
@@ -127,7 +127,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     {
       dom: {
         attributes: {
-          'role': detail.role().getOr('button'),
+          'role': detail.role.getOr('button'),
           'aria-haspopup': 'true'
         }
       }

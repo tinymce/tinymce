@@ -4,9 +4,9 @@ import { RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TabviewDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  tabviewBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  tabviewBehaviours: SketchBehaviours;
 }
 
 export interface TabviewSpec extends SingleSketchSpec {

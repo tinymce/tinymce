@@ -20,16 +20,16 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 const builder = (detail: NormalItemDetail): AlloySpec => {
   return {
     dom: Merger.deepMerge(
-      detail.dom(),
+      detail.dom,
       {
         attributes: {
-          role: detail.toggling().isSome() ? 'menuitemcheckbox' : 'menuitem'
+          role: detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem'
         }
       }
     ),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
-        detail.toggling().fold(Toggling.revoke, (tConfig) => {
+        detail.toggling.fold(Toggling.revoke, (tConfig) => {
           return Toggling.config(
             Merger.deepMerge({
               aria: {
@@ -39,12 +39,12 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
           );
         }),
         Focusing.config({
-          ignore: detail.ignoreFocus(),
+          ignore: detail.ignoreFocus,
           // Rationale: because nothing is focusable, when you click
           // on the items to choose them, the focus jumps to the first
           // focusable outer container ... often the body. If we prevent
           // mouseDown ... that doesn't happen. But only tested on Chrome/FF.
-          stopMousedown: detail.ignoreFocus(),
+          stopMousedown: detail.ignoreFocus,
           onFocus (component) {
             ItemEvents.onFocus(component);
           }
@@ -55,7 +55,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: detail.data()
+            initialValue: detail.data
           }
         }),
 
@@ -71,14 +71,14 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
           AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
         ])
       ]),
-      SketchBehaviours.get(detail.itemBehaviours()),
+      SketchBehaviours.get(detail.itemBehaviours),
 
     ),
-    components: detail.components(),
+    components: detail.components,
 
-    domModification: detail.domModification(),
+    domModification: detail.domModification,
 
-    eventOrder: detail.eventOrder()
+    eventOrder: detail.eventOrder
   };
 };
 

@@ -9,7 +9,7 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): SketchSpec => {
   return {
-    uid: detail.uid(),
+    uid: detail.uid,
     dom: Merger.deepMerge(
       {
         tag: 'div',
@@ -17,13 +17,13 @@ const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): S
           role: 'presentation'
         }
       },
-      detail.dom()
+      detail.dom
     ),
-    components: detail.components(),
-    behaviours: SketchBehaviours.get(detail.containerBehaviours()),
-    events: detail.events(),
-    domModification: detail.domModification(),
-    eventOrder: detail.eventOrder()
+    components: detail.components,
+    behaviours: SketchBehaviours.get(detail.containerBehaviours),
+    events: detail.events,
+    domModification: detail.domModification,
+    eventOrder: detail.eventOrder
   };
 };
 

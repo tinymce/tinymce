@@ -44,11 +44,11 @@ const tabsPart = PartType.group({
 
     return {
       action (button) {
-        const tabbar = button.getSystem().getByUid(barDetail.uid()).getOrDie();
+        const tabbar = button.getSystem().getByUid(barDetail.uid).getOrDie();
         const activeButton = Highlighting.isHighlighted(tabbar, button);
 
         const response = (() => {
-          if (activeButton && barDetail.clickToDismiss()) {
+          if (activeButton && barDetail.clickToDismiss) {
             return dismissTab;
           } else if (! activeButton) {
             return changeTab;
@@ -61,7 +61,7 @@ const tabsPart = PartType.group({
       },
 
       domModification: {
-        classes: [ barDetail.markers().tabClass() ]
+        classes: [ barDetail.markers.tabClass ]
       }
     };
   }

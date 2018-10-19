@@ -17,12 +17,12 @@ export interface OptionalDomSchema {
 }
 
 export interface StructDomSchema {
-  tag: () => string;
-  attributes: () => Record<string, any>;
-  styles: () => Record<string, string>;
-  classes: () => string[];
-  value: () => Option<string>;
-  innerHtml: () => Option<string>;
+  tag: string;
+  attributes: Record<string, any>;
+  styles: Record<string, string>;
+  classes: string[];
+  value: Option<string>;
+  innerHtml: Option<string>;
 }
 
 export interface RawDomSchema extends OptionalDomSchema {

@@ -20,7 +20,7 @@ const edgePart = (name: string): PartType.PartTypeAdt => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides(detail: SliderDetail) {
-      const action = detail.model().manager().edgeActions()[name];
+      const action = detail.model.manager.edgeActions[name];
       // Not all edges have actions for all sliders.
       // A horizontal slider will only have left and right, for instance,
       // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
@@ -103,8 +103,8 @@ const spectrumPart = PartType.required({
   ],
   name: 'spectrum',
   overrides(detail: SliderDetail) {
-    const modelDetail = detail.model();
-    const model = modelDetail.manager();
+    const modelDetail = detail.model;
+    const model = modelDetail.manager;
 
     const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
       return model.getValueFromEvent(simulatedEvent).map((value: number | SugarPosition) => {
@@ -120,7 +120,7 @@ const spectrumPart = PartType.required({
     const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
       AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
-        if (detail.mouseIsDown().get()) { setValueFrom(spectrum, se); }
+        if (detail.mouseIsDown.get()) { setValueFrom(spectrum, se); }
       })
     ]);
 

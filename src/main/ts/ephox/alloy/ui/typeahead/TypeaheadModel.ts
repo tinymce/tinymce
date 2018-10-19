@@ -32,14 +32,14 @@ const setSelectionToEnd = (input: AlloyComponent, startOffset: number): void => 
 };
 
 const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Option<() => void> => {
-  if (!model.selectsOver()) {
+  if (!model.selectsOver) {
     return Option.none();
   } else {
     const currentValue = Representing.getValue(input);
-    const inputDisplay = model.getDisplayText()(currentValue);
+    const inputDisplay = model.getDisplayText(currentValue);
 
     const itemValue = Representing.getValue(item);
-    const itemDisplay = model.getDisplayText()(itemValue);
+    const itemDisplay = model.getDisplayText(itemValue);
 
     return itemDisplay.indexOf(inputDisplay) === 0 ?
       Option.some(() => {

@@ -41,7 +41,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = (dialog) => {
-    const sink = detail.lazySink()().getOrDie();
+    const sink = detail.lazySink().getOrDie();
 
     const busyComp = Cell(Option.none());
 
@@ -117,17 +117,17 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
-    ...detail.eventOrder(),
-    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder()['alloy.system.attached'] || [])
+    ...detail.eventOrder,
+    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {
-    uid: detail.uid(),
+    uid: detail.uid,
     dom: Merger.deepMerge({
       attributes: {
         role: 'dialog'
       }
-    }, detail.dom()),
+    }, detail.dom),
     components,
     apis: {
       show: showDialog,
@@ -143,9 +143,9 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         Replacing.config({ }),
         Keying.config({
           mode: 'cyclic',
-          onEnter: detail.onExecute(),
-          onEscape: detail.onEscape(),
-          useTabstopAt: detail.useTabstopAt()
+          onEnter: detail.onExecute,
+          onEscape: detail.onEscape,
+          useTabstopAt: detail.useTabstopAt
         }),
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
@@ -153,7 +153,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           })
         ])
       ]),
-      SketchBehaviours.get(detail.modalBehaviours())
+      SketchBehaviours.get(detail.modalBehaviours)
     )
   };
 };

@@ -120,10 +120,10 @@ const make = (detail: SlotContainerDetail, components, spec) => {
     'debug.sketcher': {
       SlotContainer: spec
     },
-    'uid': detail.uid(),
-    'dom': detail.dom(),
+    'uid': detail.uid,
+    'dom': detail.dom,
     'components': components,
-    'behaviours': SketchBehaviours.get(detail.slotBehaviours()),
+    'behaviours': SketchBehaviours.get(detail.slotBehaviours),
     'apis': apis
   };
 };

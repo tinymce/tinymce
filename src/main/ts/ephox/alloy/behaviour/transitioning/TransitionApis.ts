@@ -39,7 +39,7 @@ const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfi
   // Disable the current transition
   getTransition(comp, transConfig, transState).each((routeTransition: any) => {
     const t = routeTransition.transition();
-    Class.remove(comp.element(), t.transitionClass());
+    Class.remove(comp.element(), t.transitionClass);
     Attr.remove(comp.element(), transConfig.destinationAttr);
   });
 };
@@ -82,7 +82,7 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   }, (routeTransition) => {
     disableTransition(comp, transConfig, transState);
     const t = routeTransition.transition();
-    Class.add(comp.element(), t.transitionClass());
+    Class.add(comp.element(), t.transitionClass);
     Attr.set(comp.element(), transConfig.destinationAttr, destination);
   });
 };

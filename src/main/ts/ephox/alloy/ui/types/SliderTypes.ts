@@ -52,39 +52,39 @@ export interface Manager {
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
-  edgeActions: () => EdgeActions;
+  edgeActions: EdgeActions;
 }
 
 export interface SliderModelDetail {
-  minX?: () => number;
-  maxX?: () => number;
-  minY?: () => number;
-  maxY?: () => number;
-  value: () => Cell<SliderValue>;
-  getInitialValue: () => () => SliderValue;
-  manager: () => Manager;
+  minX?: number;
+  maxX?: number;
+  minY?: number;
+  maxY?: number;
+  value: Cell<SliderValue>;
+  getInitialValue: () => SliderValue;
+  manager: Manager;
 }
 
 export interface SliderDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[];
-  sliderBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[];
+  sliderBehaviours: SketchBehaviours;
 
-  model: () => SliderModelDetail;
-  rounded?: () => boolean;
-  stepSize: () => number;
-  snapToGrid: () => boolean;
-  snapStart: () => Option<number>;
+  model: SliderModelDetail;
+  rounded?: boolean;
+  stepSize: number;
+  snapToGrid: boolean;
+  snapStart: Option<number>;
 
-  onChange: () => (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
-  onChoose: () => (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
-  onDragStart: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
-  onDragEnd: () => (component: AlloyComponent, thumb: AlloyComponent) => void;
+  onChange: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
+  onChoose: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
+  onDragStart: (component: AlloyComponent, thumb: AlloyComponent) => void;
+  onDragEnd: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  onInit: () => (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: number | SliderValue) => void;
+  onInit: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: number | SliderValue) => void;
 
-  mouseIsDown: () => Cell<boolean>;
+  mouseIsDown: Cell<boolean>;
 }
 
 export interface HorizontalSliderSpecMode {

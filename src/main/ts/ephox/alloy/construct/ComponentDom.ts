@@ -119,8 +119,8 @@ const combine = (
     Array<{name: string, modification(): Option<DomModification>}>
   >;
 
-  const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): { } | string[]}>, aspect: string) => {
-    return Objects.readOptFrom(mergeTypes, aspect).fold(() => {
+  const modifications = Obj.mapToArray(usedAspect, (values: Array<{name: string, modification(): Record<string, any> | string[]}>, aspect: string) => {
+    return Objects.readOptFrom<any>(mergeTypes, aspect).fold(() => {
       return Result.error('Unknown field type: ' + aspect);
     }, (merger) => {
       return merger(values, aspect);

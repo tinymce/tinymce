@@ -31,7 +31,7 @@ const builder = (detail: WidgetItemDetail) => {
 
   const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
     return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (() => {
-      if (detail.autofocus()) {
+      if (detail.autofocus) {
         simulatedEvent.setSource(component.element());
         return Option.none();
       } else {
@@ -41,9 +41,9 @@ const builder = (detail: WidgetItemDetail) => {
   };
 
   return Merger.deepMerge({
-    dom: detail.dom(),
+    dom: detail.dom,
     components,
-    domModification: detail.domModification(),
+    domModification: detail.domModification,
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((component, simulatedEvent) => {
         focusWidget(component).each((widget) => {
@@ -54,7 +54,7 @@ const builder = (detail: WidgetItemDetail) => {
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
       AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
-        if (detail.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
+        if (detail.autofocus) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
     behaviours: Merger.deepMerge(
@@ -62,11 +62,11 @@ const builder = (detail: WidgetItemDetail) => {
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: detail.data()
+            initialValue: detail.data
           }
         }),
         Focusing.config({
-          ignore: detail.ignoreFocus(),
+          ignore: detail.ignoreFocus,
           // What about stopMousedown from ItemType?
           onFocus (component) {
             ItemEvents.onFocus(component);
@@ -75,7 +75,7 @@ const builder = (detail: WidgetItemDetail) => {
         Keying.config({
           mode: 'special',
           // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
-          focusIn: detail.autofocus() ? (component) => {
+          focusIn: detail.autofocus ? (component) => {
             focusWidget(component);
           } : Behaviour.revoke(),
           onLeft: onHorizontalArrow,
@@ -85,10 +85,10 @@ const builder = (detail: WidgetItemDetail) => {
             // then focus it (i.e. escape the inner widget). Only do if not autofocusing
             // Autofocusing should treat the widget like it is the only item, so it should
             // let its outer menu handle escape
-            if (! Focusing.isFocused(component) && !detail.autofocus()) {
+            if (! Focusing.isFocused(component) && !detail.autofocus) {
               Focusing.focus(component);
               return Option.some(true);
-            } else if (detail.autofocus()) {
+            } else if (detail.autofocus) {
               simulatedEvent.setSource(component.element());
               return Option.none();
             } else {
@@ -98,7 +98,7 @@ const builder = (detail: WidgetItemDetail) => {
         })
       ]),
 
-      SketchBehaviours.get(detail.widgetBehaviours())
+      SketchBehaviours.get(detail.widgetBehaviours)
     )
   });
 };

@@ -17,12 +17,12 @@ const get = (
   defaultLtr: AnchorLayout[],
   defaultRtl: AnchorLayout[]
 ): AnchorLayout[] => {
-  const ltr = info.layouts().map((ls) => {
-    return ls.onLtr()(elem);
+  const ltr = info.layouts.map((ls) => {
+    return ls.onLtr(elem);
   }).getOr(defaultLtr);
 
-  const rtl = info.layouts().map((ls) => {
-    return ls.onRtl()(elem);
+  const rtl = info.layouts.map((ls) => {
+    return ls.onRtl(elem);
   }).getOr(defaultRtl);
 
   const f = Direction.onDirection(ltr, rtl);

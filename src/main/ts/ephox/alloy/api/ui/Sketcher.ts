@@ -12,20 +12,20 @@ export interface SingleSketchSpec {
   uid?: string;
 }
 export interface SingleSketchDetail {
-  uid: () => string;
+  uid: string;
 }
 
 export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
+  name: string;
+  configFields: FieldProcessorAdt[];
   sketch: (spec: S) => SketchSpec;
   factory: UiSketcher.SingleSketchFactory<D, S>;
 }
 
 export interface CompositeSketchSpec { }
 export interface CompositeSketchDetail {
-  partUids: () => Record<string, string>;
-  components: () => AlloySpec[];
+  partUids: Record<string, string>;
+  components: AlloySpec[];
 }
 
 export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {

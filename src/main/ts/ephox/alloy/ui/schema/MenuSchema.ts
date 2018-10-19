@@ -30,12 +30,12 @@ const itemSchema = ValueSchema.choose(
 const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => {
   return {
     mode: 'flatgrid',
-    selector: '.' + detail.markers().item(),
+    selector: '.' + detail.markers.item,
     initSize: {
-      numColumns: movementInfo.initSize().numColumns(),
-      numRows: movementInfo.initSize().numRows()
+      numColumns: movementInfo.initSize.numColumns,
+      numRows: movementInfo.initSize.numRows
     },
-    focusManager: detail.focusManager()
+    focusManager: detail.focusManager
   };
 };
 
@@ -43,19 +43,19 @@ const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): 
   return {
     mode: 'matrix',
     selectors: {
-      row: movementInfo.rowSelector(),
-      cell: '.' + detail.markers().item(),
+      row: movementInfo.rowSelector,
+      cell: '.' + detail.markers.item,
     },
-    focusManager: detail.focusManager()
+    focusManager: detail.focusManager
   };
 };
 
 const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => {
   return {
     mode: 'menu',
-    selector: '.' + detail.markers().item(),
-    moveOnTab: movementInfo.moveOnTab(),
-    focusManager: detail.focusManager()
+    selector: '.' + detail.markers.item,
+    moveOnTab: movementInfo.moveOnTab,
+    focusManager: detail.focusManager
   };
 };
 
@@ -63,8 +63,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     factory: {
       sketch (spec: ItemSpec) {
-        const itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, spec);
-        return itemInfo.builder()(itemInfo);
+        const itemInfo = ValueSchema.asRawOrDie('menu.spec item', itemSchema, spec);
+        return itemInfo.builder(itemInfo);
       }
     },
     name: 'items',
@@ -81,9 +81,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     overrides (detail: MenuDetail, u) {
       return {
         type: u.type,
-        ignoreFocus: detail.fakeFocus(),
+        ignoreFocus: detail.fakeFocus,
         domModification: {
-          classes: [ detail.markers().item() ]
+          classes: [ detail.markers.item ]
         }
       };
     }

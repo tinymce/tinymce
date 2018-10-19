@@ -11,7 +11,7 @@ import { SelectionAnchor } from '../../positioning/mode/Anchoring';
 // same document as the positioning element (component), then identify the offset
 // difference between the iframe and the component.
 const getOffset = <I extends SelectionAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): Option<SugarPosition> => {
-  const win = Traverse.defaultView(anchorInfo.root()).dom();
+  const win = Traverse.defaultView(anchorInfo.root).dom();
 
   const hasSameOwner = (frame) => {
     const frameOwner = Traverse.owner(frame);

@@ -17,35 +17,35 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
   return Merger.deepMerge(
     {
       dom: Merger.deepMerge(
-        detail.dom(),
+        detail.dom,
         {
           attributes: {
             role: 'menu'
           }
         }
       ),
-      uid: detail.uid(),
+      uid: detail.uid,
 
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           Highlighting.config({
             // Highlighting for a menu is selecting items inside the menu
-            highlightClass: detail.markers().selectedItem(),
-            itemClass: detail.markers().item(),
-            onHighlight: detail.onHighlight()
+            highlightClass: detail.markers.selectedItem,
+            itemClass: detail.markers.item,
+            onHighlight: detail.onHighlight
           }),
           Representing.config({
             store: {
               mode: 'memory',
-              initialValue: detail.value()
+              initialValue: detail.value
             }
           }),
           Composing.config({
             find: Option.some
           }),
-          Keying.config(detail.movement().config()(detail, detail.movement()))
+          Keying.config(detail.movement.config(detail, detail.movement))
         ]),
-        SketchBehaviours.get(detail.menuBehaviours())
+        SketchBehaviours.get(detail.menuBehaviours)
       ),
       events: AlloyEvents.derive([
         // This is dispatched from a menu to tell an item to be highlighted.
@@ -70,7 +70,7 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
         })
       ]),
       components,
-      eventOrder: detail.eventOrder()
+      eventOrder: detail.eventOrder
     }
   );
 };

@@ -13,25 +13,25 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => {
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: detail.getInitialValue()()
+            initialValue: detail.getInitialValue()
           }
         }),
         Composing.config({
           find: Option.some
         })
       ]),
-      SketchBehaviours.get(detail.dataBehaviours())
+      SketchBehaviours.get(detail.dataBehaviours)
     ),
     events: AlloyEvents.derive([
       AlloyEvents.runOnAttached((component, simulatedEvent) => {
-        Representing.setValue(component, detail.getInitialValue()());
+        Representing.setValue(component, detail.getInitialValue());
       })
     ])
   };

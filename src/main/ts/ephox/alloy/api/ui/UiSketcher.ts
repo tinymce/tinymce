@@ -18,7 +18,7 @@ export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends Co
 
 const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
-  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
+  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
   return factory(detail, specWithUid);
 };
 
@@ -31,7 +31,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Generate partUids for all parts (external and otherwise)
   const partUidsSchema = AlloyParts.defaultUidsSchema(partTypes);
 
-  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
+  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
 
   // Create (internals, externals) substitutions
   const subs = AlloyParts.substitutes(owner, detail, partTypes);

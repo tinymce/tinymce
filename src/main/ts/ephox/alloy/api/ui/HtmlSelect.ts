@@ -12,7 +12,7 @@ import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/t
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
-  const options = Arr.map(detail.options(), (option) => {
+  const options = Arr.map(detail.options, (option) => {
     return {
       dom: {
         tag: 'option',
@@ -22,17 +22,17 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
     };
   });
 
-  const initialValues = detail.data().map((v) => {
+  const initialValues = detail.data.map((v) => {
     return Objects.wrap('initialValue', v);
   }).getOr({ });
 
   return Merger.deepMerge(
     {
-      uid: detail.uid(),
+      uid: detail.uid,
       dom: {
         tag: 'select',
-        classes: detail.selectClasses(),
-        attributes: detail.selectAttributes()
+        classes: detail.selectClasses,
+        attributes: detail.selectAttributes
       },
       components: options,
       behaviours: Merger.deepMerge(
@@ -47,7 +47,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
                 },
                 setValue (select, newValue) {
                   // This is probably generically useful ... may become a part of Representing.
-                  const found = Arr.find(detail.options(), (opt) => {
+                  const found = Arr.find(detail.options, (opt) => {
                     return opt.value === newValue;
                   });
                   if (found.isSome()) { Value.set(select.element(), newValue); }
@@ -57,7 +57,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
             )
           })
         ]),
-        SketchBehaviours.get(detail.selectBehaviours())
+        SketchBehaviours.get(detail.selectBehaviours)
       )
     }
   );

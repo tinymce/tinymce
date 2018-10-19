@@ -52,7 +52,7 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
-    const related = detail.getRelated()(container);
+    const related = detail.getRelated(container);
     return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
@@ -67,20 +67,20 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     showWithin(sandbox, anchor, thing, getBounds);
   };
   const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
-    const sink = detail.lazySink()().getOrDie();
+    const sink = detail.lazySink().getOrDie();
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, boxElement));
-    detail.onShow()(sandbox);
+    detail.onShow(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
+    const thing = makeMenu(detail.lazySink, sandbox, anchor, menuSpec);
 
     Sandboxing.open(sandbox, thing);
-    detail.onShow()(sandbox);
+    detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
     Sandboxing.close(sandbox);
-    detail.onHide()(sandbox);
+    detail.onHide(sandbox);
   };
   const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
     return Sandboxing.getState(sandbox);
@@ -98,8 +98,8 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
 
   return Merger.deepMerge(
     {
-      uid: detail.uid(),
-      dom: detail.dom(),
+      uid: detail.uid,
+      dom: detail.dom,
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           Sandboxing.config({
@@ -107,7 +107,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
               return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
             },
             getAttachPoint () {
-              return detail.lazySink()().getOrDie();
+              return detail.lazySink().getOrDie();
             }
           }),
           Dismissal.receivingConfig(
@@ -115,17 +115,17 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
               {
                 isExtraPart: Fun.constant(false),
               },
-              detail.fireDismissalEventInstead().map((fe) => ({
+              detail.fireDismissalEventInstead.map((fe) => ({
                 fireEventInstead: {
-                  event: fe.event()
+                  event: fe.event
                 }
               } as any)).getOr({ })
             )
           )
         ]),
-        SketchBehaviours.get(detail.inlineBehaviours())
+        SketchBehaviours.get(detail.inlineBehaviours)
       ),
-      eventOrder: detail.eventOrder(),
+      eventOrder: detail.eventOrder,
 
       apis
     }

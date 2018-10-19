@@ -41,8 +41,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   return Merger.deepMerge(
     {
-      uid: detail.uid(),
-      dom: detail.dom(),
+      uid: detail.uid,
+      dom: detail.dom,
       components,
       eventOrder: {
         // Order, the button state is toggled first, so assumed !selected means close.
@@ -81,7 +81,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
           }),
           Focusing.config({ })
         ]),
-        SketchBehaviours.get(detail.splitDropdownBehaviours())
+        SketchBehaviours.get(detail.splitDropdownBehaviours)
       )
     },
     {

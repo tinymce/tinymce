@@ -39,10 +39,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             dimension: {
               property: 'height'
             },
-            closedClass: detail.markers().closedClass(),
-            openClass: detail.markers().openClass(),
-            shrinkingClass: detail.markers().shrinkingClass(),
-            growingClass: detail.markers().growingClass()
+            closedClass: detail.markers.closedClass,
+            openClass: detail.markers.openClass,
+            shrinkingClass: detail.markers.shrinkingClass,
+            growingClass: detail.markers.growingClass
           })
         ])
       };
