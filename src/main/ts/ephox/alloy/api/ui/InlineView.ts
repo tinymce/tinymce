@@ -1,5 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Merger, Option, Result } from '@ephox/katamari';
+import { Fun, Option, Result } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
@@ -8,16 +10,13 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as Fields from '../../data/Fields';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
-import { InlineViewDetail, InlineViewSketcher, InlineViewSpec, InlineMenuSpec } from '../../ui/types/InlineViewTypes';
-import * as Behaviour from '../behaviour/Behaviour';
+import { InlineMenuSpec, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
-import { Element } from '@ephox/sugar';
 
 const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({

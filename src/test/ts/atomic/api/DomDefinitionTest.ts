@@ -89,7 +89,6 @@ UnitTest.test('DomDefinitionTest', () => {
       arbModification
     ], (defn, mod) => {
       const result = DomModification.merge(defn, mod);
-      console.log({ defn, mod, result });
       RawAssertions.assertEq(
         'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
         [ ],
