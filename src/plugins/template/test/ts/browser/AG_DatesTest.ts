@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
 
     const docBody = Element.fromDom(document.body);
     const dialogSelector = 'div.tox-dialog';
-    const toolbarButtonSelector = '[role="toolbar"] [role="button"][aria-label="Insert template"]';
+    const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
     const sDeleteSetting = (key) => {
       return Logger.t('Deleting Setting ' + key, Step.sync(() => {

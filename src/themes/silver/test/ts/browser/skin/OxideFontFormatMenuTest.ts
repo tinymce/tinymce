@@ -38,7 +38,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
           apis.sSetContent('<blockquote>Text</blockquote>'),
           apis.sSetCursor([ 0, 0 ], 'Te'.length),
 
-          Mouse.sClickOn(Body.body(), '[role="button"]'),
+          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
           UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),

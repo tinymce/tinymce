@@ -74,8 +74,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                               attrs: {
                                 'aria-label': str.is('Close'),
                                 'data-alloy-tabstop': str.is('true'),
-                                'type': str.is('button'),
-                                'role': str.is('button')
+                                'type': str.is('button')
                               },
                               html: str.is('')
                             })
@@ -97,7 +96,6 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                               ],
                               attrs: {
                                 'type': str.is('button'),
-                                'role': str.is('button'),
                                 'data-alloy-tabstop': str.is('true')
                               },
                             })
