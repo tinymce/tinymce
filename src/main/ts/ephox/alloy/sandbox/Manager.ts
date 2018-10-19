@@ -1,12 +1,6 @@
 import { Contracts } from '@ephox/katamari';
 
-const contract = Contracts.exactly([
-  'clear',
-  'populate',
-  'preview',
-  'enter',
-  'isPartOf'
-]);
+const contract = (s) => s
 
 const clear = (sandbox, sInfo) => {
   sInfo.state().get().each((state) => {

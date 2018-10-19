@@ -117,9 +117,6 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   };
 
   return {
-    'debug.sketcher': {
-      SlotContainer: spec
-    },
     'uid': detail.uid,
     'dom': detail.dom,
     'components': components,

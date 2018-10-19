@@ -15,11 +15,11 @@ export interface DomModificationSpec extends Partial<DomModification> {
 }
 
 // Maybe we'll need to allow add/remove
-const nu = (s) => ValueSchema.asRawOrDie('mod', ValueSchema.objOf([
-  FieldSchema.defaulted('classes', [ ]),
-  FieldSchema.defaulted('attributes', { }),
-  FieldSchema.defaulted('styles', { })
-]), s);
+const nu = (s:DomModificationSpec): DomModification => ({
+  classes: s.classes !== undefined ? s.classes : [ ],
+  attributes: s.attributes !== undefined ? s.attributes : { },
+  styles: s.styles !== undefined ? s.styles : { }
+});
 
 
 const modToStr = (mod: DomModification): string => {

@@ -23,7 +23,7 @@ export interface Stateless extends BehaviourState {
 }
 
 const nu = (spec): BehaviourState => {
-  Contracts.ensure([ 'readState' ])(spec);
+  // Contracts.ensure([ 'readState' ])(spec);
   return spec;
 };
 

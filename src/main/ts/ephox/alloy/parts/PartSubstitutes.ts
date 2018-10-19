@@ -12,10 +12,7 @@ const combine: any = (detail, data: PartType.PartSpec<any>, partSpec, partValida
     data.defaults(detail, partSpec, partValidated),
     partSpec,
     { uid: detail.partUids[data.name] },
-    data.overrides(detail, partSpec, partValidated),
-    {
-      'debug.sketcher': Objects.wrap('part-' + data.name, spec)
-    }
+    data.overrides(detail, partSpec, partValidated)
   );
 };
 

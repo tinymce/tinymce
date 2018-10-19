@@ -29,9 +29,7 @@ const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (d
           })
         ]),
         SketchBehaviours.get(detail.tgroupBehaviours)
-      ),
-
-      'debug.sketcher': spec['debug.sketcher']
+      )
     }
   );
 };

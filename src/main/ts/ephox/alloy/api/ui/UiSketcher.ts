@@ -39,11 +39,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Work out the components by substituting internals
   const components = AlloyParts.components(owner, detail, subs.internals());
 
-  return Merger.deepMerge(
-    // Pass through the substituted components and the externals
-    factory(detail, components, specWithUid, subs.externals()),
-    { 'debug.sketcher': Objects.wrap(owner, spec) }
-  );
+  return factory(detail, components, specWithUid, subs.externals())
 };
 
 const supplyUid = function <S>(spec: S): S {
