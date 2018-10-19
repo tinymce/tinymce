@@ -56,9 +56,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-pop__dialog' ],
+        classes: ['tox-pop__dialog'],
       },
-      components: [ toolbarSpec ],
+      components: [toolbarSpec],
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic'
@@ -112,28 +112,43 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
   });
 
+  const bubbleAlignments = {
+    valignCentre: [],
+    alignCentre: [],
+    alignLeft: ['tox-pop--align-left'],
+    alignRight: ['tox-pop--align-right'],
+    right: ['tox-pop--right'],
+    left: ['tox-pop--left'],
+    bottom: ['tox-pop--bottom'],
+    top: ['tox-pop--top']
+  };
+
+  const lineAnchorSpec = {
+    bubble: Bubble.nu(12, 0, bubbleAlignments),
+    layouts: {
+      onLtr: () => [Layout.east],
+      onRtl: () => [Layout.west]
+    },
+    overrides: {
+      maxHeightFunction: expandable()
+    }
+  };
+
+  const anchorSpec = {
+    bubble: Bubble.nu(0, 12, bubbleAlignments),
+    layouts: {
+      onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest],
+      onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast]
+    },
+    overrides: {
+      maxHeightFunction: expandable()
+    }
+  };
+
   const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
     const anchor = Merger.deepMerge(
       extras.backstage.shared.anchors.node(element),
-      {
-        bubble: Bubble.nu(0, 12, {
-          valignCentre: [ ],
-          alignCentre: [ ],
-          alignLeft: [ 'tox-pop--align-left' ],
-          alignRight: [ 'tox-pop--align-right' ],
-          right: [ 'tox-pop--right' ],
-          left: [ 'tox-pop--left' ],
-          bottom: [ 'tox-pop--bottom' ],
-          top: [ 'tox-pop--top' ]
-        }),
-        layouts: {
-          onLtr: () => position === 'line' ? [ Layout.east ] : [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ],
-          onRtl: () => position === 'line' ? [ Layout.west ] : [ Layout.north, Layout.south ]
-        },
-        overrides: {
-          maxHeightFunction: expandable()
-        }
-      }
+      position === 'line' ? lineAnchorSpec : anchorSpec
     );
     return anchor;
   };
@@ -183,7 +198,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       Delay.setEditorTimeout(editor, launchContextToolbar, 0)
     );
   });
-};
+}
 
 export default {
   register
