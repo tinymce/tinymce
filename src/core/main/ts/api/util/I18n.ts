@@ -7,7 +7,7 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-import { Type } from '@ephox/katamari';
+import { Type, Obj } from '@ephox/katamari';
 
 import Tools from './Tools';
 
@@ -33,12 +33,7 @@ export type TranslatedString = string;
 
 export type TranslateIfNeeded = Untranslated | TranslatedString;
 
-const isRaw = (str: any): str is RawString => {
-  if (!Type.isObject(str)) {
-    return false;
-  }
-  return Tools.is(str, 'object') && Tools.hasOwn(str, 'raw');
-};
+const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
 const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
 
