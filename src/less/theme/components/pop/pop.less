@@ -2,135 +2,137 @@
 // Pop
 //
 
-.tox-pop {
-  display: inline-block;
-  position: relative;
-}
-
-.tox-pop--resizing {
-  transition: width .1s ease;
-
-  .tox-toolbar {
-    // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
-    flex-wrap: nowrap;
+.tox {
+  .tox-pop {
+    display: inline-block;
+    position: relative;
   }
-}
 
-.tox-pop__dialog {
-  border: 1px solid @toolbar-border-color;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
-  min-width: 0;
-  overflow: hidden;
+  .tox-pop--resizing {
+    transition: width .1s ease;
 
-  > *:not(.tox-toolbar) {
-    margin: @pad-xs @pad-xs @pad-xs @pad-sm;
+    .tox-toolbar {
+      // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
+      flex-wrap: nowrap;
+    }
   }
-}
 
-//
-// Arrows
-//
+  .tox-pop__dialog {
+    border: 1px solid @toolbar-border-color;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+    min-width: 0;
+    overflow: hidden;
 
-// Common styles
-.tox-pop::before,
-.tox-pop::after {
-  border-style: solid;
-  content: '';
-  display: block;
-  height: 0;
-  position: absolute;
-  width: 0;
-}
+    > *:not(.tox-toolbar) {
+      margin: @pad-xs @pad-xs @pad-xs @pad-sm;
+    }
+  }
 
-// Default (bottom) pointing arrow
-.tox-pop.tox-pop--bottom::before,
-.tox-pop.tox-pop--bottom::after {
-  left: 50%;
-  top: 100%;
-}
+  //
+  // Arrows
+  //
 
-.tox-pop.tox-pop--bottom::after {
-  border-color: @toolbar-background-color transparent transparent transparent;
-  border-width: 8px;
-  margin-left: -8px;
-  margin-top: -1px;
-}
+  // Common styles
+  .tox-pop::before,
+  .tox-pop::after {
+    border-style: solid;
+    content: '';
+    display: block;
+    height: 0;
+    position: absolute;
+    width: 0;
+  }
 
-.tox-pop.tox-pop--bottom::before {
-  border-color: @toolbar-border-color transparent transparent transparent;
-  border-width: 9px;
-  margin-left: -9px;
-}
+  // Default (bottom) pointing arrow
+  .tox-pop.tox-pop--bottom::before,
+  .tox-pop.tox-pop--bottom::after {
+    left: 50%;
+    top: 100%;
+  }
 
-// Top pointing arrow
-.tox-pop.tox-pop--top::before,
-.tox-pop.tox-pop--top::after {
-  left: 50%;
-  top: 0;
-  transform: translateY(-100%);
-}
+  .tox-pop.tox-pop--bottom::after {
+    border-color: @toolbar-background-color transparent transparent transparent;
+    border-width: 8px;
+    margin-left: -8px;
+    margin-top: -1px;
+  }
 
-.tox-pop.tox-pop--top::after {
-  border-color: transparent transparent @toolbar-background-color transparent;
-  border-width: 8px;
-  margin-left: -8px;
-  margin-top: 1px;
-}
+  .tox-pop.tox-pop--bottom::before {
+    border-color: @toolbar-border-color transparent transparent transparent;
+    border-width: 9px;
+    margin-left: -9px;
+  }
 
-.tox-pop.tox-pop--top::before {
-  border-color: transparent transparent @toolbar-border-color transparent;
-  border-width: 9px;
-  margin-left: -9px;
-}
+  // Top pointing arrow
+  .tox-pop.tox-pop--top::before,
+  .tox-pop.tox-pop--top::after {
+    left: 50%;
+    top: 0;
+    transform: translateY(-100%);
+  }
 
-// Left pointing arrow
-.tox-pop.tox-pop--left::before,
-.tox-pop.tox-pop--left::after {
-  left: 0;
-  top: calc(~'50% - 1px');
-  transform: translateY(-50%);
-}
+  .tox-pop.tox-pop--top::after {
+    border-color: transparent transparent @toolbar-background-color transparent;
+    border-width: 8px;
+    margin-left: -8px;
+    margin-top: 1px;
+  }
 
-.tox-pop.tox-pop--left::after {
-  border-color: transparent @toolbar-background-color transparent transparent;
-  border-width: 8px;
-  margin-left: -15px;
-}
+  .tox-pop.tox-pop--top::before {
+    border-color: transparent transparent @toolbar-border-color transparent;
+    border-width: 9px;
+    margin-left: -9px;
+  }
 
-.tox-pop.tox-pop--left::before {
-  border-color: transparent @toolbar-border-color transparent transparent;
-  border-width: 10px;
-  margin-left: -19px;
-}
+  // Left pointing arrow
+  .tox-pop.tox-pop--left::before,
+  .tox-pop.tox-pop--left::after {
+    left: 0;
+    top: calc(~'50% - 1px');
+    transform: translateY(-50%);
+  }
 
-// Right pointing arrow
-.tox-pop.tox-pop--right::before,
-.tox-pop.tox-pop--right::after {
-  left: 100%;
-  top: calc(~'50% + 1px');
-  transform: translateY(-50%);
-}
+  .tox-pop.tox-pop--left::after {
+    border-color: transparent @toolbar-background-color transparent transparent;
+    border-width: 8px;
+    margin-left: -15px;
+  }
 
-.tox-pop.tox-pop--right::after {
-  border-color: transparent transparent transparent @toolbar-background-color;
-  border-width: 8px;
-  margin-left: -1px;
-}
+  .tox-pop.tox-pop--left::before {
+    border-color: transparent @toolbar-border-color transparent transparent;
+    border-width: 10px;
+    margin-left: -19px;
+  }
 
-.tox-pop.tox-pop--right::before {
-  border-color: transparent transparent transparent @toolbar-border-color;
-  border-width: 10px;
-  margin-left: -1px;
-}
+  // Right pointing arrow
+  .tox-pop.tox-pop--right::before,
+  .tox-pop.tox-pop--right::after {
+    left: 100%;
+    top: calc(~'50% + 1px');
+    transform: translateY(-50%);
+  }
 
-// Top/Bottom arrow alignment arrows. Centered is default and requires no class
-.tox-pop.tox-pop--align-left::before,
-.tox-pop.tox-pop--align-left::after {
-  left: 20px;
-}
+  .tox-pop.tox-pop--right::after {
+    border-color: transparent transparent transparent @toolbar-background-color;
+    border-width: 8px;
+    margin-left: -1px;
+  }
 
-.tox-pop.tox-pop--align-right::before,
-.tox-pop.tox-pop--align-right::after {
-  left: calc(~'100% - 20px');
+  .tox-pop.tox-pop--right::before {
+    border-color: transparent transparent transparent @toolbar-border-color;
+    border-width: 10px;
+    margin-left: -1px;
+  }
+
+  // Top/Bottom arrow alignment arrows. Centered is default and requires no class
+  .tox-pop.tox-pop--align-left::before,
+  .tox-pop.tox-pop--align-left::after {
+    left: 20px;
+  }
+
+  .tox-pop.tox-pop--align-right::before,
+  .tox-pop.tox-pop--align-right::after {
+    left: calc(~'100% - 20px');
+  }
 }

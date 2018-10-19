@@ -13,32 +13,34 @@
 @_toolbar-divider-height: @_toolbar-height - 1px;
 @_toolbar-height: @toolbar-button-height + @toolbar-button-spacing-y + @toolbar-button-spacing-y + 1px;
 
-.tox-toolbar {
-  background: @toolbar-background;
-  border: 1px solid @toolbar-border-color;
-  border-bottom-width: 0;
-  display: flex;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  margin: @toolbar-margin;
-  padding: @toolbar-padding;
-}
+.tox {
+  .tox-toolbar {
+    background: @toolbar-background;
+    border: 1px solid @toolbar-border-color;
+    border-bottom-width: 0;
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    margin: @toolbar-margin;
+    padding: @toolbar-padding;
+  }
 
-.tox-pop .tox-toolbar {
-  border-width: 0;
-  margin-bottom: -1px;
-}
+  .tox-pop .tox-toolbar {
+    border-width: 0;
+    margin-bottom: -1px;
+  }
 
-.tox-menubar + .tox-toolbar {
-  border-top: none;
-}
+  .tox-menubar + .tox-toolbar {
+    border-top: none;
+  }
 
-.tox-toolbar--no-divider {
-  background-image: none;
-}
+  .tox-toolbar--no-divider {
+    background-image: none;
+  }
 
-// Prevent double border between edit area and toolbars
-.tox-toolbar + .tox-edit-area,
-.tox-toolbar + .tox-sidebar-wrap .tox-edit-area {
-  border-top: 0;
+  // Prevent double border between edit area and toolbars
+  .tox-toolbar + .tox-edit-area,
+  .tox-toolbar + .tox-sidebar-wrap .tox-edit-area {
+    border-top: 0;
+  }
 }

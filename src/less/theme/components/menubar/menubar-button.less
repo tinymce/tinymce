@@ -28,58 +28,60 @@
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
 @menubar-select-active-text-color: @toolbar-button-active-text-color;
 
-.tox-mbtn {
-  align-items: center;
-  background: @menubar-select-background-color;
-  border: @menubar-select-border;
-  border-radius: @menubar-select-border-radius;
-  box-shadow: @menubar-select-box-shadow;
-  color: @menubar-select-text-color;
-  display: flex;
-  flex: 0 0 auto;
-  font-size: @menubar-select-font-size;
-  font-style: @menubar-select-font-style;
-  font-weight: @menubar-select-font-weight;
-  height: @menubar-select-height;
-  justify-content: center;
-  margin: @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0;
-  outline: none;
-  overflow: hidden;
-  padding: 0 4px;
-  text-transform: @menubar-select-text-transform;
-  width: auto;
-}
+.tox {
+  .tox-mbtn {
+    align-items: center;
+    background: @menubar-select-background-color;
+    border: @menubar-select-border;
+    border-radius: @menubar-select-border-radius;
+    box-shadow: @menubar-select-box-shadow;
+    color: @menubar-select-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @menubar-select-font-size;
+    font-style: @menubar-select-font-style;
+    font-weight: @menubar-select-font-weight;
+    height: @menubar-select-height;
+    justify-content: center;
+    margin: @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 4px;
+    text-transform: @menubar-select-text-transform;
+    width: auto;
+  }
 
-.tox-mbtn:hover {
-  background: @menubar-select-hover-background-color;
-  box-shadow: @menubar-select-hover-box-shadow;
-  color: @menubar-select-hover-text-color;
-}
+  .tox-mbtn:hover {
+    background: @menubar-select-hover-background-color;
+    box-shadow: @menubar-select-hover-box-shadow;
+    color: @menubar-select-hover-text-color;
+  }
 
-.tox-mbtn:focus {
-  background: @menubar-select-focus-background-color;
-  box-shadow: @menubar-select-focus-box-shadow;
-  color: @menubar-select-text-color;
-}
+  .tox-mbtn:focus {
+    background: @menubar-select-focus-background-color;
+    box-shadow: @menubar-select-focus-box-shadow;
+    color: @menubar-select-text-color;
+  }
 
-// Active state applied using class
-.tox-mbtn--active {
-  background: @menubar-select-active-background-color;
-  box-shadow: @menubar-select-active-box-shadow;
-  color: @menubar-select-active-text-color;
-}
+  // Active state applied using class
+  .tox-mbtn--active {
+    background: @menubar-select-active-background-color;
+    box-shadow: @menubar-select-active-box-shadow;
+    color: @menubar-select-active-text-color;
+  }
 
-.tox-mbtn__select-label {
-  margin: 0 4px;
-}
+  .tox-mbtn__select-label {
+    margin: 0 4px;
+  }
 
-.tox-mbtn__select-chevron {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 16px;
+  .tox-mbtn__select-chevron {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 16px;
 
-  & when (@menubar-select-enable-chevron = false) {
-    display: none;
+    & when (@menubar-select-enable-chevron = false) {
+      display: none;
+    }
   }
 }

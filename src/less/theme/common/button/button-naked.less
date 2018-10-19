@@ -21,42 +21,44 @@
 @button-naked-active-box-shadow: @button-secondary-active-box-shadow;
 @button-naked-active-icon-color: @button-secondary-active-text-color;
 
-.@{prefix}-button--naked {
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: unset;
-  color: @button-naked-icon-color;
+.@{prefix} {
+  .@{prefix}-button--naked {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: unset;
+    color: @button-naked-icon-color;
 
-  &:hover:not(:disabled) {
-    background-color: @button-naked-hover-background-color;
-    border-color: @button-naked-focus-border-color;
-    box-shadow: @button-naked-hover-box-shadow;
-    color: @button-naked-hover-icon-color;
+    &:hover:not(:disabled) {
+      background-color: @button-naked-hover-background-color;
+      border-color: @button-naked-focus-border-color;
+      box-shadow: @button-naked-hover-box-shadow;
+      color: @button-naked-hover-icon-color;
+    }
+
+    &:focus:not(:disabled) {
+      background-color: @button-naked-focus-background-color;
+      border-color: @button-naked-focus-border-color;
+      box-shadow: @button-naked-focus-box-shadow;
+      color: @button-naked-focus-icon-color;
+    }
+
+    &:active:not(:disabled) {
+      background-color: @button-naked-active-background-color;
+      border-color: @button-naked-active-border-color;
+      box-shadow: @button-naked-active-box-shadow;
+      color: @button-naked-active-icon-color;
+    }
+
+    .@{prefix}-icon svg {
+      fill: currentColor;
+    }
   }
 
-  &:focus:not(:disabled) {
-    background-color: @button-naked-focus-background-color;
-    border-color: @button-naked-focus-border-color;
-    box-shadow: @button-naked-focus-box-shadow;
-    color: @button-naked-focus-icon-color;
-  }
+  .@{prefix}-button--naked.@{prefix}-button--icon {
+    color: currentColor;
 
-  &:active:not(:disabled) {
-    background-color: @button-naked-active-background-color;
-    border-color: @button-naked-active-border-color;
-    box-shadow: @button-naked-active-box-shadow;
-    color: @button-naked-active-icon-color;
-  }
-
-  .@{prefix}-icon svg {
-    fill: currentColor;
-  }
-}
-
-.@{prefix}-button--naked.@{prefix}-button--icon {
-  color: currentColor;
-
-  &:hover:not(:disabled) {
-    color: @button-naked-hover-icon-color;
+    &:hover:not(:disabled) {
+      color: @button-naked-hover-icon-color;
+    }
   }
 }

@@ -8,75 +8,77 @@
 @checkbox-focus-box-shadow: 0 0 0 1px @button-background-color;
 @checkbox-focus-border-radius: @control-border-radius;
 
-.@{prefix}-checkbox {
-  align-items: center;
-  border-radius: @control-border-radius;
-  cursor: pointer;
-  display: flex;
-  height: 36px;
-  min-width: 36px;
-}
-
-.@{prefix}-checkbox__input {
-  /* Hide from view but visible to screen readers */
-  height: 1px;
-  left: -10000px;
-  overflow: hidden;
-  position: absolute;
-  top: auto;
-  width: 1px;
-}
-
-.@{prefix}-checkbox__icons {
-  height: @textfield-line-height;
-  width: @textfield-line-height;
-
-  .@{prefix}-checkbox-icon__unchecked svg {
-    display: block;
-    fill: @checkbox-unselected-color;
+.@{prefix} {
+  .@{prefix}-checkbox {
+    align-items: center;
+    border-radius: @control-border-radius;
+    cursor: pointer;
+    display: flex;
+    height: 36px;
+    min-width: 36px;
   }
 
-  .@{prefix}-checkbox-icon__indeterminate svg {
-    display: none;
-    fill: @checkbox-indeterminate-color;
+  .@{prefix}-checkbox__input {
+    /* Hide from view but visible to screen readers */
+    height: 1px;
+    left: -10000px;
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    width: 1px;
   }
 
-  .@{prefix}-checkbox-icon__checked svg {
-    display: none;
-    fill: @checkbox-selected-color;
-  }
-}
+  .@{prefix}-checkbox__icons {
+    height: @textfield-line-height;
+    width: @textfield-line-height;
 
-.@{prefix}-checkbox__icon {
-  //
-}
+    .@{prefix}-checkbox-icon__unchecked svg {
+      display: block;
+      fill: @checkbox-unselected-color;
+    }
 
-.@{prefix}-checkbox__label {
-  margin-left: @pad-xs;
-}
+    .@{prefix}-checkbox-icon__indeterminate svg {
+      display: none;
+      fill: @checkbox-indeterminate-color;
+    }
 
-input.@{prefix}-checkbox__input:checked + .@{prefix}-checkbox__icons {
-  .@{prefix}-checkbox-icon__unchecked svg {
-    display: none;
-  }
-
-  .@{prefix}-checkbox-icon__checked svg {
-    display: block;
-  }
-}
-
-input.@{prefix}-checkbox__input:indeterminate + .@{prefix}-checkbox__icons {
-  .@{prefix}-checkbox-icon__unchecked svg {
-    display: none;
+    .@{prefix}-checkbox-icon__checked svg {
+      display: none;
+      fill: @checkbox-selected-color;
+    }
   }
 
-  .@{prefix}-checkbox-icon__indeterminate svg {
-    display: block;
+  .@{prefix}-checkbox__icon {
+    //
   }
-}
 
-input.@{prefix}-checkbox__input:focus + .@{prefix}-checkbox__icons {
-  border-radius: @checkbox-focus-border-radius;
-  box-shadow: @checkbox-focus-box-shadow;
-  padding: calc(@button-padding-y - @button-border-width);
+  .@{prefix}-checkbox__label {
+    margin-left: @pad-xs;
+  }
+
+  input.@{prefix}-checkbox__input:checked + .@{prefix}-checkbox__icons {
+    .@{prefix}-checkbox-icon__unchecked svg {
+      display: none;
+    }
+
+    .@{prefix}-checkbox-icon__checked svg {
+      display: block;
+    }
+  }
+
+  input.@{prefix}-checkbox__input:indeterminate + .@{prefix}-checkbox__icons {
+    .@{prefix}-checkbox-icon__unchecked svg {
+      display: none;
+    }
+
+    .@{prefix}-checkbox-icon__indeterminate svg {
+      display: block;
+    }
+  }
+
+  input.@{prefix}-checkbox__input:focus + .@{prefix}-checkbox__icons {
+    border-radius: @checkbox-focus-border-radius;
+    box-shadow: @checkbox-focus-box-shadow;
+    padding: calc(@button-padding-y - @button-border-width);
+  }
 }

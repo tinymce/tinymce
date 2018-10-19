@@ -5,33 +5,35 @@
 @spinner-color: @text-color-muted;
 @spinner-size: @base-value / 2;
 
-.@{prefix}-spinner {
-  display: flex;
+.@{prefix} {
+  .@{prefix}-spinner {
+    display: flex;
 
-  > div {
-    animation: tam-bouncing-dots 1.5s ease-in-out 0s infinite both;
-    background-color: @spinner-color;
-    border-radius: 100%;
-    height: @spinner-size;
-    width: @spinner-size;
+    > div {
+      animation: tam-bouncing-dots 1.5s ease-in-out 0s infinite both;
+      background-color: @spinner-color;
+      border-radius: 100%;
+      height: @spinner-size;
+      width: @spinner-size;
 
-    &:nth-child(1) { animation-delay: -.32s; }
-    &:nth-child(2) { animation-delay: -.16s; }
+      &:nth-child(1) { animation-delay: -.32s; }
+      &:nth-child(2) { animation-delay: -.16s; }
 
-    &:not(:first-child) {
-      margin-left: @spinner-size / 2;
+      &:not(:first-child) {
+        margin-left: @spinner-size / 2;
+      }
     }
   }
-}
 
-@keyframes tam-bouncing-dots {
-  0%,
-  80%,
-  100% {
-    transform: scale(0);
-  }
+  @keyframes tam-bouncing-dots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
 
-  40% {
-    transform: scale(1);
+    40% {
+      transform: scale(1);
+    }
   }
 }

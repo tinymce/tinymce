@@ -5,49 +5,51 @@
 @insert-table-picker-cell-size: @base-value;
 @insert-table-picker-selected-background-color: fade(@color-tint, 50%);
 
-.tox-insert-table-picker {
-  display: flex;
-  flex-wrap: wrap;
-  width: @insert-table-picker-cell-size * 10 + 9px;
+.tox {
+  .tox-insert-table-picker {
+    display: flex;
+    flex-wrap: wrap;
+    width: @insert-table-picker-cell-size * 10 + 9px;
 
-  // Cell styles
-  > div {
-    border-color: @border-color;
-    border-style: solid;
-    border-width: 0 1px 1px 0;
-    box-sizing: content-box;
-    height: @insert-table-picker-cell-size;
-    width: @insert-table-picker-cell-size;
+    // Cell styles
+    > div {
+      border-color: @border-color;
+      border-style: solid;
+      border-width: 0 1px 1px 0;
+      box-sizing: content-box;
+      height: @insert-table-picker-cell-size;
+      width: @insert-table-picker-cell-size;
 
-    // Remove border on last cell of every row
-    &:nth-child(10n) {
-      border-right: 0;
-    }
+      // Remove border on last cell of every row
+      &:nth-child(10n) {
+        border-right: 0;
+      }
 
-    // Option for removing colors on bottom row
-    &:nth-last-child(-n+10) {
-      //
+      // Option for removing colors on bottom row
+      &:nth-last-child(-n+10) {
+        //
+      }
     }
   }
-}
 
-// Remove menu padding when picker is used in a menu context
-.tox-menu .tox-insert-table-picker {
-  margin: -@menu-padding-y 0;
-}
+  // Remove menu padding when picker is used in a menu context
+  .tox-menu .tox-insert-table-picker {
+    margin: -@menu-padding-y 0;
+  }
 
-// Selected cell
-.tox-insert-table-picker .tox-insert-table-picker__selected {
-  background-color: @insert-table-picker-selected-background-color;
-  border-color: @insert-table-picker-selected-background-color;
-}
+  // Selected cell
+  .tox-insert-table-picker .tox-insert-table-picker__selected {
+    background-color: @insert-table-picker-selected-background-color;
+    border-color: @insert-table-picker-selected-background-color;
+  }
 
-// Label for selected cells
-.tox-insert-table-picker__label {
-  color: @text-color-muted;
-  display: block;
-  font-size: @font-size-sm;
-  padding: @pad-xs;
-  text-align: center;
-  width: 100%;
+  // Label for selected cells
+  .tox-insert-table-picker__label {
+    color: @text-color-muted;
+    display: block;
+    font-size: @font-size-sm;
+    padding: @pad-xs;
+    text-align: center;
+    width: 100%;
+  }
 }

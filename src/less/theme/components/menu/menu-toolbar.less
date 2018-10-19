@@ -2,30 +2,31 @@
 // Menu toolbar
 //
 
-.tox-menu__toolbar {
-  display: flex;
-}
+.tox {
+  .tox-menu__toolbar {
+    display: flex;
+  }
 
-.tox-menu__toolbar-group {
-  align-items: center;
-  background: @toolbar-group-background-color;
-  border: @toolbar-group-border;
-  border-radius: @toolbar-group-border-radius;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  margin: 0 @toolbar-group-spacing-x 0 0;
-  padding: 0 @toolbar-group-padding-x;
-}
+  .tox-menu__toolbar-group {
+    align-items: center;
+    background: @toolbar-group-background-color;
+    border: @toolbar-group-border;
+    border-radius: @toolbar-group-border-radius;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    margin: 0 @toolbar-group-spacing-x 0 0;
+    padding: 0 @toolbar-group-padding-x;
+  }
 
-.tox-menu__toolbar-group:not(:last-of-type) {
-  border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
-}
+  .tox-menu__toolbar-group:not(:last-of-type) {
+    border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
+  }
 
-// Margin overrides
-.tox-menu__toolbar-group .tox-tbtn,
-.tox-menu__toolbar-group .tox-toolbar-textfield,
-.tox-menu__toolbar-group .tox-split-button {
-  margin: 0;
+  // Margin overrides
+  .tox-menu__toolbar-group .tox-tbtn,
+  .tox-menu__toolbar-group .tox-toolbar-textfield,
+  .tox-menu__toolbar-group .tox-split-button {
+    margin: 0;
+  }
 }
-

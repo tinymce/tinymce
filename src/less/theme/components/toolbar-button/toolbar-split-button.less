@@ -2,35 +2,37 @@
 // Toolbar split button
 //
 
-.tox-split-button {
-  border: 0;
-  border-radius: @toolbar-button-border-radius;
-  box-sizing: border-box;
-  display: flex;
-  margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
-  overflow: hidden;
-}
+.tox {
+  .tox-split-button {
+    border: 0;
+    border-radius: @toolbar-button-border-radius;
+    box-sizing: border-box;
+    display: flex;
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    overflow: hidden;
+  }
 
-.tox-split-button:hover {
-  box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset;
-}
+  .tox-split-button:hover {
+    box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset;
+  }
 
-.tox-split-button > * {
-  border-radius: 0;
-}
+  .tox-split-button > * {
+    border-radius: 0;
+  }
 
-.tox-split-button__chevron {
-  width: @toolbar-button-chevron-width;
-}
+  .tox-split-button__chevron {
+    width: @toolbar-button-chevron-width;
+  }
 
-.tox-split-button__chevron svg {
-  fill: @toolbar-button-chevron-color;
-}
+  .tox-split-button__chevron svg {
+    fill: @toolbar-button-chevron-color;
+  }
 
-.tox-pop .tox-split-button__chevron svg {
-  transform: rotate(-90deg);
-}
+  .tox-pop .tox-split-button__chevron svg {
+    transform: rotate(-90deg);
+  }
 
-.tox-split-button .tox-tbtn {
-  margin: 0;
+  .tox-split-button .tox-tbtn {
+    margin: 0;
+  }
 }

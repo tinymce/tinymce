@@ -41,51 +41,53 @@
 @button-secondary-active-box-shadow: @button-secondary-box-shadow;
 @button-secondary-active-text-color: @button-secondary-text-color;
 
-.@{prefix}-button--secondary {
-  background-color: @button-secondary-background-color;
-  background-image: @button-secondary-background-image;
-  background-position: @button-secondary-background-position;
-  background-repeat: @button-secondary-background-repeat;
-  border-color: @button-secondary-border-color;
-  border-radius: @button-secondary-border-radius;
-  border-style: @button-secondary-border-style;
-  border-width: @button-secondary-border-width;
-  box-shadow: @button-secondary-box-shadow;
-  color: @button-secondary-text-color;
-  outline: @button-secondary-outline;
-  padding: @button-padding-y @button-padding-x;
-  text-decoration: @button-secondary-text-decoration;
-  text-transform: @button-secondary-text-transform;
+.@{prefix} {
+  .@{prefix}-button--secondary {
+    background-color: @button-secondary-background-color;
+    background-image: @button-secondary-background-image;
+    background-position: @button-secondary-background-position;
+    background-repeat: @button-secondary-background-repeat;
+    border-color: @button-secondary-border-color;
+    border-radius: @button-secondary-border-radius;
+    border-style: @button-secondary-border-style;
+    border-width: @button-secondary-border-width;
+    box-shadow: @button-secondary-box-shadow;
+    color: @button-secondary-text-color;
+    outline: @button-secondary-outline;
+    padding: @button-padding-y @button-padding-x;
+    text-decoration: @button-secondary-text-decoration;
+    text-transform: @button-secondary-text-transform;
 
-  &[disabled] {
-    background-color: @button-secondary-disabled-background-color;
-    background-image: @button-secondary-disabled-background-image;
-    border-color: @button-secondary-disabled-border-color;
-    box-shadow: @button-secondary-disabled-box-shadow;
-    color: @button-secondary-disabled-text-color;
-  }
+    &[disabled] {
+      background-color: @button-secondary-disabled-background-color;
+      background-image: @button-secondary-disabled-background-image;
+      border-color: @button-secondary-disabled-border-color;
+      box-shadow: @button-secondary-disabled-box-shadow;
+      color: @button-secondary-disabled-text-color;
+    }
 
-  &:focus:not(:disabled) {
-    background-color: @button-secondary-focus-background-color;
-    background-image: @button-secondary-focus-background-image;
-    border-color: @button-secondary-focus-border-color;
-    box-shadow: @button-secondary-focus-box-shadow;
-    color: @button-secondary-focus-text-color;
-  }
+    &:focus:not(:disabled) {
+      background-color: @button-secondary-focus-background-color;
+      background-image: @button-secondary-focus-background-image;
+      border-color: @button-secondary-focus-border-color;
+      box-shadow: @button-secondary-focus-box-shadow;
+      color: @button-secondary-focus-text-color;
+    }
 
-  &:hover:not(:disabled) {
-    background-color: @button-secondary-hover-background-color;
-    background-image: @button-secondary-hover-background-image;
-    border-color: @button-secondary-hover-border-color;
-    box-shadow: @button-secondary-hover-box-shadow;
-    color: @button-secondary-hover-text-color;
-  }
+    &:hover:not(:disabled) {
+      background-color: @button-secondary-hover-background-color;
+      background-image: @button-secondary-hover-background-image;
+      border-color: @button-secondary-hover-border-color;
+      box-shadow: @button-secondary-hover-box-shadow;
+      color: @button-secondary-hover-text-color;
+    }
 
-  &:active:not(:disabled) {
-    background-color: @button-secondary-active-background-color;
-    background-image: @button-secondary-active-background-image;
-    border-color: @button-secondary-active-border-color;
-    box-shadow: @button-secondary-active-box-shadow;
-    color: @button-secondary-active-text-color;
+    &:active:not(:disabled) {
+      background-color: @button-secondary-active-background-color;
+      background-image: @button-secondary-active-background-image;
+      border-color: @button-secondary-active-border-color;
+      box-shadow: @button-secondary-active-box-shadow;
+      color: @button-secondary-active-text-color;
+    }
   }
 }

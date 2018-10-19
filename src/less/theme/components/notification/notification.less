@@ -2,113 +2,115 @@
 // Notification
 //
 
-// Wraps around many notifications
-.tox-notifications-container {
-  //
-}
+.tox {
+  // Wraps around many notifications
+  .tox-notifications-container {
+    //
+  }
 
-// An individual notification
-.tox-notification {
-  background-color: #fff;
-  border-color: #c5c5c5;
-  border-style: solid;
-  border-width: 1px;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
-  margin-top: 5px;
-  opacity: 0;
-  padding: 5px;
-  transition: transform 100ms ease-in, opacity 150ms ease-in;
-}
+  // An individual notification
+  .tox-notification {
+    background-color: #fff;
+    border-color: #c5c5c5;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+    margin-top: 5px;
+    opacity: 0;
+    padding: 5px;
+    transition: transform 100ms ease-in, opacity 150ms ease-in;
+  }
 
-.tox-notification--in {
-  opacity: 1;
-}
+  .tox-notification--in {
+    opacity: 1;
+  }
 
-.tox-notification--success {
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
-}
+  .tox-notification--success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
 
-.tox-notification--error {
-  background-color: #f2dede;
-  border-color: #ebccd1;
-}
+  .tox-notification--error {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
 
-.tox-notification--warning {
-  background-color: #fcf8e3;
-  border-color: #faebcc;
-}
+  .tox-notification--warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+  }
 
-.tox-notification--info {
-  background-color: #d9edf7;
-  border-color: #779ecb;
-}
+  .tox-notification--info {
+    background-color: #d9edf7;
+    border-color: #779ecb;
+  }
 
-// Content within the notification
-.tox-notification__body {
-  align-self: center;
-  color: #31708f;
-  font-size: 14px;
-  grid-column-end: 3;
-  -ms-grid-column-span: 1;
-  grid-column-start: 2;
-  grid-row-end: 2;
-  grid-row-start: 1;
-  hyphens: auto;
-  text-align: center;
-  white-space: normal;
-  word-break: break-all;
-  word-break: break-word;
-  word-wrap: break-word;
-}
+  // Content within the notification
+  .tox-notification__body {
+    align-self: center;
+    color: #31708f;
+    font-size: 14px;
+    grid-column-end: 3;
+    -ms-grid-column-span: 1;
+    grid-column-start: 2;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    hyphens: auto;
+    text-align: center;
+    white-space: normal;
+    word-break: break-all;
+    word-break: break-word;
+    word-wrap: break-word;
+  }
 
-.tox-notification__body > * {
-  margin: 0;
-}
+  .tox-notification__body > * {
+    margin: 0;
+  }
 
-.tox-notification__body > * + * {
-  margin-top: 1rem;
-}
+  .tox-notification__body > * + * {
+    margin-top: 1rem;
+  }
 
-.tox-notification-inner a {
-  //
-}
+  .tox-notification-inner a {
+    //
+  }
 
-.tox-notification__icon {
-  align-self: center;
-  -ms-grid-column-align: end;
-  grid-column-end: 2;
-  -ms-grid-column-span: 1;
-  grid-column-start: 1;
-  grid-row-end: 2;
-  grid-row-start: 1;
-  justify-self: end;
-}
+  .tox-notification__icon {
+    align-self: center;
+    -ms-grid-column-align: end;
+    grid-column-end: 2;
+    -ms-grid-column-span: 1;
+    grid-column-start: 1;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    justify-self: end;
+  }
 
-.tox-notification__icon svg {
-  display: block;
-}
+  .tox-notification__icon svg {
+    display: block;
+  }
 
-.tox-notification__dismiss {
-  align-self: start;
-  -ms-grid-column-align: end;
-  grid-column-end: 4;
-  -ms-grid-column-span: 1;
-  grid-column-start: 3;
-  grid-row-end: 2;
-  grid-row-start: 1;
-  justify-self: end;
-}
+  .tox-notification__dismiss {
+    align-self: start;
+    -ms-grid-column-align: end;
+    grid-column-end: 4;
+    -ms-grid-column-span: 1;
+    grid-column-start: 3;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    justify-self: end;
+  }
 
-.tox-notification .tox-progress-bar {
-  -ms-grid-column-align: center;
-  grid-column-end: 4;
-  -ms-grid-column-span: 3;
-  grid-column-start: 1;
-  grid-row-end: 3;
-  -ms-grid-row-span: 1;
-  grid-row-start: 2;
-  justify-self: center;
+  .tox-notification .tox-progress-bar {
+    -ms-grid-column-align: center;
+    grid-column-end: 4;
+    -ms-grid-column-span: 3;
+    grid-column-start: 1;
+    grid-row-end: 3;
+    -ms-grid-row-span: 1;
+    grid-row-start: 2;
+    justify-self: center;
+  }
 }

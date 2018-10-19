@@ -16,41 +16,42 @@
 //   grid-column: span 2;
 // }
 
-.tox-form {
-  //
-}
+.tox {
+  .tox-form {
+    //
+  }
 
-// Wraps a label and input combo.
-.tox-form__group {
-  //
-}
+  // Wraps a label and input combo.
+  .tox-form__group {
+    //
+  }
 
-.tox-form > .tox-form__group:not(:last-child) {
-  margin-bottom: @pad-xs;
-}
+  .tox-form > .tox-form__group:not(:last-child) {
+    margin-bottom: @pad-xs;
+  }
 
-// Modifier for validation error
-.tox-form__group--error {
-  //
-}
+  // Modifier for validation error
+  .tox-form__group--error {
+    //
+  }
 
-.tox-form--2col {
-  display: grid;
-  grid-gap: 0 @pad-md;
-  grid-template-columns: repeat(2, 1fr);
-}
+  .tox-form--2col {
+    display: grid;
+    grid-gap: 0 @pad-md;
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-.tox-form__controls-h-stack {
-  align-items: center;
-  display: flex;
+  .tox-form__controls-h-stack {
+    align-items: center;
+    display: flex;
 
-  > *:not(:first-child) {
-    margin-left: @pad-xs;
+    > *:not(:first-child) {
+      margin-left: @pad-xs;
+    }
+  }
+
+  .tox-form__group--inline {
+    align-items: center;
+    display: flex;
   }
 }
-
-.tox-form__group--inline {
-  align-items: center;
-  display: flex;
-}
-
