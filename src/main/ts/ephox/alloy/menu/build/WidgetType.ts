@@ -40,7 +40,7 @@ const builder = (detail: WidgetItemDetail) => {
     })();
   };
 
-  return Merger.deepMerge({
+  return {
     dom: detail.dom,
     components,
     domModification: detail.domModification,
@@ -57,8 +57,9 @@ const builder = (detail: WidgetItemDetail) => {
         if (detail.autofocus) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.widgetBehaviours,
+      [
         Representing.config({
           store: {
             mode: 'memory',
@@ -96,11 +97,9 @@ const builder = (detail: WidgetItemDetail) => {
             }
           }
         })
-      ]),
-
-      SketchBehaviours.get(detail.widgetBehaviours)
+      ]
     )
-  });
+  };
 };
 
 const schema = [

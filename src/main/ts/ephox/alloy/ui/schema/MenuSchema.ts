@@ -70,13 +70,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'items',
     unit: 'item',
     defaults (detail: MenuDetail, u) {
-      const fallbackUid = Tagger.generate('');
-      return Merger.deepMerge(
-        {
-          uid: fallbackUid
-        },
-        u
-      );
+      // Switch this to a common library
+      return u.hasOwnProperty('uid') ? u : {
+        ...u,
+        uid: Tagger.generate('item')
+      }
     },
     overrides (detail: MenuDetail, u) {
       return {

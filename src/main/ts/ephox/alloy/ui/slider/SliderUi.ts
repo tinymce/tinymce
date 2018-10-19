@@ -84,49 +84,47 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive(
-        Arr.flatten<any>([
-          !isTouch ? [
-            Keying.config({
-              mode: 'special',
-              focusIn (slider) {
-                return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+    behaviours: SketchBehaviours.augment(
+      detail.sliderBehaviours,
+      Arr.flatten<any>([
+        !isTouch ? [
+          Keying.config({
+            mode: 'special',
+            focusIn (slider) {
+              return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+            }
+          })
+        ] : [],
+        [
+          Representing.config({
+            store: {
+              mode: 'manual',
+              getValue (_) {
+                return modelDetail.value.get();
               }
-            })
-          ] : [],
-          [
-            Representing.config({
-              store: {
-                mode: 'manual',
-                getValue (_) {
-                  return modelDetail.value.get();
-                }
-              }
-            }),
+            }
+          }),
 
-            Receiving.config({
-              channels: {
-                'mouse.released': {
-                  onReceive: (slider, se) => {
-                    const wasDown = detail.mouseIsDown.get();
-                    detail.mouseIsDown.set(false);
+          Receiving.config({
+            channels: {
+              'mouse.released': {
+                onReceive: (slider, se) => {
+                  const wasDown = detail.mouseIsDown.get();
+                  detail.mouseIsDown.set(false);
 
-                    // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
-                    if (wasDown) {
-                      AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
-                        const value = modelDetail.value.get();
-                        detail.onChoose(slider, thumb, value);
-                      });
-                    }
+                  // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
+                  if (wasDown) {
+                    AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
+                      const value = modelDetail.value.get();
+                      detail.onChoose(slider, thumb, value);
+                    });
                   }
                 }
               }
-            })
-          ]
-        ])
-      ),
-      SketchBehaviours.get(detail.sliderBehaviours)
+            }
+          })
+        ]
+      ])
     ),
 
     events: AlloyEvents.derive(

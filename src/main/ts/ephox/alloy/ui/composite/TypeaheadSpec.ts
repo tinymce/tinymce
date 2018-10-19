@@ -89,26 +89,24 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     return tdata;
   };
 
-  const behaviours = Behaviour.derive([
+  const behaviours = [
     Focusing.config({ }),
     Representing.config({
-      store: Merger.deepMerge(
-        {
-          mode: 'dataset',
-          getDataKey: (comp) => Value.get(comp.element()),
-          // This really needs to be configurable
-          getFallbackEntry: (itemString) => ({
-            value: itemString,
-            meta: { }
-          }),
-          setValue: (comp, data) => {
-            Value.set(comp.element(), detail.model.getDisplayText(data));
-          }
+      store: {
+        mode: 'dataset',
+        getDataKey: (comp) => Value.get(comp.element()),
+        // This really needs to be configurable
+        getFallbackEntry: (itemString) => ({
+          value: itemString,
+          meta: { }
+        }),
+        setValue: (comp, data) => {
+          Value.set(comp.element(), detail.model.getDisplayText(data));
         },
-        detail.initialData.map((d) => {
+        ...detail.initialData.map((d) => {
           return Objects.wrap('initialValue', d);
         }).getOr({ })
-      )
+      }
     }),
     Streaming.config({
       stream: {
@@ -245,17 +243,18 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         }
       })
     ] : [ ]))
-  ]);
+  ];
 
   return {
     uid: detail.uid,
     dom: InputBase.dom(detail),
-    behaviours: Merger.deepMerge(
-      focusBehaviours,
-      behaviours,
-      SketchBehaviours.get(detail.typeaheadBehaviours)
-    ),
-
+    behaviours: {
+      ...focusBehaviours,
+      SketchBehaviours.augment(
+        detail.typeaheadBehaviours,
+        behaviours
+      )
+    },
     eventOrder: detail.eventOrder
   };
 };

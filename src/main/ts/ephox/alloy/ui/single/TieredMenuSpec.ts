@@ -45,47 +45,22 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
 
       const makeSketch = () => {
-        return Menu.sketch(
-          Merger.deepMerge(
-            spec,
-            {
-              value: name,
-              items: spec.items,
-              markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
+        return Menu.sketch({
+          dom: spec.dom,
+          ...spec,
+          value: name,
+          items: spec.items,
+          markers: spec.markers,
 
-              // Fake focus.
-              fakeFocus: detail.fakeFocus,
-              onHighlight: detail.onHighlight,
+          // Fake focus.
+          fakeFocus: detail.fakeFocus,
+          onHighlight: detail.onHighlight,
 
-              focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
-            }
-          )
-        )
+          focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
+        })
       };
-      // const data = Menu.sketch(
-      //   Merger.deepMerge(
-      //     spec,
-      //     {
-      //       value: name,
-      //       items: spec.items,
-      //       markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
 
-      //       // Fake focus.
-      //       fakeFocus: detail.fakeFocus(),
-      //       onHighlight: detail.onHighlight(),
-
-      //       focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
-      //     }
-      //   )
-      // );
-
-      // console.time('actual.build.menu: ' + name);
-      // const x = container.getSystem().build(data);
-      // return {
-      //   type: 'prepared',
-      //   menu: container.getSystem().build(makeSketch())
-      // } as MenuPrepared;
-      // console.timeEnd('actual.build.menu: ' + name);
+      // Only build the primary at first. Build the others as needed.
       return name === primaryName ? {
         type: 'prepared',
         menu: container.getSystem().build(makeSketch())
@@ -352,8 +327,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   return {
     uid: detail.uid,
     dom: detail.dom,
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.tmenuBehaviours,
+      [
         Keying.config({
           mode: 'special',
           onRight: keyOnItem(onRight),
@@ -376,8 +352,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           }
         }),
         Replacing.config({ })
-      ]),
-      SketchBehaviours.get(detail.tmenuBehaviours)
+      ]
     ),
     eventOrder: detail.eventOrder,
     apis,

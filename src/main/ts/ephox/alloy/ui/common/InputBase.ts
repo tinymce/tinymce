@@ -36,39 +36,41 @@ const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
 };
 
 const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
-  return Merger.deepMerge(
-    Behaviour.derive([
-      Representing.config({
-        store: {
-          mode: 'manual',
-          // Propagating its Option
-          initialValue: detail.data.getOr(undefined),
-          getValue (input) {
-            return Value.get(input.element());
-          },
-          setValue (input, data) {
-            const current = Value.get(input.element());
-            // Only set it if it has changed ... otherwise the cursor goes to the end.
-            if (current !== data) {
-              Value.set(input.element(), data);
+  return {
+    ...focusBehaviours,
+    ...SketchBehaviours.augment(
+      detail.inputBehaviours,
+      [
+        Representing.config({
+          store: {
+            mode: 'manual',
+            // Propagating its Option
+            initialValue: detail.data.getOr(undefined),
+            getValue (input) {
+              return Value.get(input.element());
+            },
+            setValue (input, data) {
+              const current = Value.get(input.element());
+              // Only set it if it has changed ... otherwise the cursor goes to the end.
+              if (current !== data) {
+                Value.set(input.element(), data);
+              }
             }
-          }
-        },
-        onSetValue: detail.onSetValue
-      })
-    ]),
-    focusBehaviours(detail),
-    SketchBehaviours.get(detail.inputBehaviours)
-  );
+          },
+          onSetValue: detail.onSetValue
+        })
+      ]
+    )
+  };
 };
 
 const dom = (detail: InputDetail): RawDomSchema => {
   return {
     tag: detail.tag,
-    attributes: Merger.deepMerge(
-      { type: 'input' },
-      detail.inputAttributes
-    ),
+    attributes: {
+      type: 'input',
+      ...detail.dom.attributes
+    },
     styles: detail.inputStyles,
     classes: detail.inputClasses
   };

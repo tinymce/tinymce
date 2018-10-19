@@ -42,10 +42,11 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
       const g: UnconfiguredPart = doGenerateOne(owner, np.pname);
       r[np.name] = (config) => {
         const validated = ValueSchema.asRawOrDie('Part: ' + np.name + ' in ' + owner, ValueSchema.objOf(np.schema), config);
-        return Merger.deepMerge(g, {
+        return {
+          ...g,
           config,
           validated
-        }) as ConfiguredPart;
+        }
       };
     });
   });

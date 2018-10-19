@@ -116,21 +116,9 @@ const asStructOrDie = function <D, S>(label: string, schema: AdtInterface[], spe
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const extend = (builder, original, nu) => {
-  // Merge all at the moment.
-  const newSpec = Merger.deepMerge(original, nu);
-  return builder(newSpec);
-};
-
-const addBehaviours = (original, behaviours) => {
-  return Merger.deepMerge(original, behaviours);
-};
 
 export {
   asRawOrDie,
   asStructOrDie,
-  addBehaviours,
-
-  getPartsSchema,
-  extend
+  getPartsSchema
 };

@@ -51,9 +51,10 @@ const substitute = (owner, detail, compSpec, placeholders) => {
         return substitute(owner, detail, c, placeholders);
       });
       return [
-        Merger.deepMerge(value, {
+        {
+          ...value,
           components: substituted
-        })
+        }
       ];
     },
     (req, valuesThunk) => {
