@@ -22,9 +22,10 @@ const dispatch = (component: AlloyComponent, target: Element, event: string): vo
 };
 
 const dispatchWith = (component: AlloyComponent, target: Element, event: string, properties: {}): void => {
-  const data = Merger.deepMerge({
-    target
-  }, properties);
+  const data = {
+    target,
+    ...properties
+  };
   component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 

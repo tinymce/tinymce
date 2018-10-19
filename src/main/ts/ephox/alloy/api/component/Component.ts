@@ -58,7 +58,7 @@ const getEvents = (
   return LumberTimers.run('combineEvents', () => ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie());
 };
 
-const build = (spec: SimpleOrSketchSpec): AlloyComponent => {
+const build = (spec): AlloyComponent => {
   const getMe = () => {
     return me;
   };

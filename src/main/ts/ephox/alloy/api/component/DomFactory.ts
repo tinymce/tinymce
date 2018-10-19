@@ -8,7 +8,11 @@ const getAttrs = (elem) => {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
   return Arr.foldl(attributes, (b, attr) => {
     // Make class go through the class path. Do not list it as an attribute.
-    if (attr.name === 'class') { return b; } else { return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value)); }
+    if (attr.name === 'class') {
+      return b;
+    } else {
+      return { ...b, [attr.name]: attr.value };
+    }
   }, {});
 };
 
@@ -24,19 +28,19 @@ const fromHtml = (html: string): RawDomSchema => {
   const classes = getClasses(elem);
   const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem) };
 
-  return Merger.deepMerge({
+  return {
     tag: Node.name(elem),
     classes,
-    attributes: attrs
-  }, contents);
+    attributes: attrs,
+    ...contents
+  };
 };
 
 const sketch = (sketcher, html, config) => {
-  return sketcher.sketch(
-    Merger.deepMerge({
-      dom: fromHtml(html)
-    }, config)
-  );
+  return sketcher.sketch({
+    dom: fromHtml(html),
+    ...config
+  });
 };
 
 const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => {
@@ -59,6 +63,8 @@ const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
 }
 
 export {
+  getAttrs,
+  getClasses,
   fromHtml,
   sketch,
   simple,

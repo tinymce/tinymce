@@ -18,18 +18,19 @@ const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
 };
 
 const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
-  const spec: SimpleOrSketchSpec = CustomSpec.make(userSpec);
+  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(userSpec);
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
 
-  const completeSpec: SimpleOrSketchSpec = Merger.deepMerge(
-    DefaultEvents,
-    spec,
-    Objects.wrap('components', components)
-  );
+  const completeSpec = {
+    ...spec,
+    events:  { ...DefaultEvents, ...specEvents },
+    components
+  };
 
   return Result.value(
+    // Note, this isn't a spec any more, because it has built children
     Component.build(completeSpec)
   );
 };

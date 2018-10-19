@@ -5,25 +5,40 @@ import { SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
-import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
-import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action);
 
-  const optType = Objects.readOptFrom(detail.dom, 'attributes').bind(Objects.readOpt('type'));
   const optTag = Objects.readOptFrom(detail.dom, 'tag');
+
+  const getModAttributes = () => {
+    if (optTag.is('button')) {
+      // Ignore type, but set role if if isn't the normal role
+      return detail.role.fold(
+        () => ({ }),
+        (role: string) => ({ role })
+      );
+    } else {
+      // They can override role, but not type. At the moment.
+      const role = detail.role.getOr('button');
+      return {
+        type: 'button',
+        role
+      };
+    }
+  }
 
   return {
     uid: detail.uid,
     dom: detail.dom,
     components: detail.components,
     events,
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.buttonBehaviours, [
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
@@ -33,20 +48,10 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
           useSpace: true,
           useEnter: true
         })
-      ]),
-      SketchBehaviours.get(detail.buttonBehaviours)
+      ]
     ),
     domModification: {
-      attributes: Merger.deepMerge(
-        optType.fold(() => {
-          return optTag.is('button') ? { type: 'button' } : { };
-        }, (t) => {
-          return { };
-        }),
-        {
-          role: detail.role.getOr('button')
-        }
-      )
+      attributes: getModAttributes()
     },
     eventOrder: detail.eventOrder
   };

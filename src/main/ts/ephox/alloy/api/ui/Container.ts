@@ -8,17 +8,17 @@ import { ContainerDetail, ContainerSketcher, ContainerSpec } from '../../ui/type
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): SketchSpec => {
+  const { attributes, ...domWithoutAttributes } = detail.dom;
   return {
     uid: detail.uid,
-    dom: Merger.deepMerge(
-      {
-        tag: 'div',
-        attributes: {
-          role: 'presentation'
-        }
+    dom: {
+      tag: 'div',
+      attributes: {
+        role: 'presentation',
+        ...attributes
       },
-      detail.dom
-    ),
+      ...domWithoutAttributes
+    },
     components: detail.components,
     behaviours: SketchBehaviours.get(detail.containerBehaviours),
     events: detail.events,
