@@ -1,6 +1,9 @@
 // import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: any;
 
+import { LumberTimers } from '@ephox/alloy/lib/main/ts/ephox/alloy/alien/LumberTimers';
+import { Arr } from '@ephox/katamari';
+
 export default function () {
   tinymce.init({
     // TODO: Investigate. Should thisget the styles (e.g. margin) of the div/textarea?
@@ -11,7 +14,7 @@ export default function () {
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
       'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove'
     ].join(' '),
-    content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
+    // content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
@@ -143,4 +146,43 @@ export default function () {
 
     }
   });
+
+  Arr.each([
+    'info',
+    'bBlob',
+    // 'bBlob.schema',
+    // 'bBlob.data',
+    // 'bBlob.validated',
+    'modDefinition',
+    'renderToDom',
+    'events'
+  ], LumberTimers.register);
 }
+
+// const systemApi = LumberTimers.run('nocontext', () => {
+//   return Cell(singleton);
+// });
+
+// const info: CustomDefinition.CustomDetail = LumberTimers.run('info', () => {
+//     return ValueSchema.getOrDie(CustomDefinition.toInfo(spec))
+//   }
+// );
+
+// // FIX: this comment is outdated.
+
+// // The behaviour configuration is put into info.behaviours(). For everything else,
+// // we just need the list of static behaviours that this component cares about. The behaviour info
+// // to pass through will come from the info.behaviours() obj.
+// const bBlob = LumberTimers.run('bBlob', () => CompBehaviours.generate(spec));
+
+// const bList = LumberTimers.run('bList', () => BehaviourBlob.getBehaviours(bBlob));
+// const bData = LumberTimers.run('bData', () => BehaviourBlob.getData(bBlob));
+
+// const modDefinition = LumberTimers.run('modDefinition', () => {
+//   return getDomDefinition(info, bList, bData);
+// });
+// // const modDefinition = '';
+// const item = LumberTimers.run('renderToDom', () => DomRender.renderToDom(modDefinition));
+// const events = LumberTimers.run('events', () => getEvents(info, bList, bData));
+
+// const subcomponents = LumberTimers.run('subcomponents', () => Cell(info.components));

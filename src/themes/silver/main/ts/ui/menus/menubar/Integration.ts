@@ -24,7 +24,8 @@ const defaultMenus = {
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
   insert: { title: 'Insert', items: 'image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime' },
-  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | removeformat' },
+  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align formats formats formats formats formats formats formats formats formats formats formats formats formats formats | removeformat' },
+  // format: { title: 'Fx', items: 'blockformats blockformats blockformats blockformats' },
   tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code' },
   table: { title: 'Table', items: 'inserttable tableprops deletetable row column cell' }, // TODO
   help: { title: 'Help', items: 'help' }

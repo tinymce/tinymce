@@ -70,7 +70,7 @@ const types = {
 };
 
 const extractFrom = function (spec: AddButtonSettings, extras): Option<SketchSpec> {
-  return Objects.readOptFrom(types, spec.type).fold(
+  return Objects.readOptFrom<any>(types, spec.type).fold(
     () => {
       console.error('skipping button defined by', spec);
       return Option.none();
@@ -100,7 +100,7 @@ const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
     return Arr.bind(group, (toolbarItem) => {
       return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(registry.buttons, toolbarItem.toLowerCase()).fold(
         () => {
-          return Objects.readOptFrom(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
+          return Objects.readOptFrom<any>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
             return r(editor, extras);
           }).orThunk(() => {
             console.error('No representation for toolbarItem: ' + toolbarItem);

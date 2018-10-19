@@ -31,12 +31,12 @@ export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
 }
 
 export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  onEscape: () => (comp: ComponentApi.AlloyComponent) => void;
-  onSetup: () => (comp: ComponentApi.AlloyComponent) => void;
-  getSink: () => () => Result<ComponentApi.AlloyComponent, Error>;
-  providers: () => UiFactoryBackstageProviders;
+  uid: string;
+  dom: RawDomSchema;
+  onEscape: (comp: ComponentApi.AlloyComponent) => void;
+  onSetup: (comp: ComponentApi.AlloyComponent) => void;
+  getSink: () => Result<ComponentApi.AlloyComponent, Error>;
+  providers: UiFactoryBackstageProviders;
 }
 
 export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec, SilverMenubarDetail> {
@@ -65,8 +65,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       return renderMenuButton(buttonSpec as any,
         MenuButtonClasses.Button,
         {
-          getSink: detail.getSink(),
-          providers: detail.providers()
+          getSink: detail.getSink,
+          providers: detail.providers
         },
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         'menuitem'
@@ -82,15 +82,15 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components: [ ],
 
     behaviours: Behaviour.derive([
       Replacing.config({ }),
       AddEventsBehaviour.config('menubar-events', [
         AlloyEvents.runOnAttached(function (component) {
-          detail.onSetup()(component);
+          detail.onSetup(component);
         }),
 
         AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
@@ -126,7 +126,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         mode: 'flow',
         selector: '.' + MenuButtonClasses.Button,
         onEscape: (comp) => {
-          detail.onEscape()(comp);
+          detail.onEscape(comp);
           return Option.some(true);
         }
       })

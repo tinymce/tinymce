@@ -31,7 +31,7 @@ export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) 
 
 const make = function (render: NoFormRenderer): FormPartRenderer {
   return (parts, spec, backstage) => {
-    return Objects.readOptFrom(spec, 'name').fold(
+    return Objects.readOptFrom<string>(spec, 'name').fold(
       () => render(spec, backstage),
       (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
     );

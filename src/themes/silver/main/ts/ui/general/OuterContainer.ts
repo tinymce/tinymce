@@ -25,9 +25,9 @@ export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
 }
 
 export interface OuterContainerSketchDetail extends Sketcher.CompositeSketchDetail {
-  dom: () => RawDomSchema;
-  uid: () => string;
-  behaviours: () => Record<string, ConfiguredBehaviour<any, any>>;
+  dom: RawDomSchema;
+  uid: string;
+  behaviours: Record<string, ConfiguredBehaviour<any, any>>;
 }
 export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec, OuterContainerSketchDetail>, OuterContainerApis {
 }
@@ -91,11 +91,11 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
     apis,
-    behaviours: detail.behaviours()
+    behaviours: detail.behaviours
   };
 };
 
