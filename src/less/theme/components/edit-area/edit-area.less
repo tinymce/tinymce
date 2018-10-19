@@ -9,12 +9,15 @@
     border: 1px solid @edit-area-border-color;
     display: flex;
     flex: 1;
+    position: relative; // Required for the iframe to resize in IE and Edge
   }
 
   .tox-edit-area__iframe {
     border: 0;
     box-sizing: border-box;
     flex: 1;
+    height: 100%;
+    position: absolute; // Required for the iframe to resize in IE and Edge
     width: calc(~"100% - 2px"); //deduce border width
   }
 }
