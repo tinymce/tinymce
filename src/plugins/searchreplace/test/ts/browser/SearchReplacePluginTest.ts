@@ -80,6 +80,13 @@ UnitTest.asynctest(
       LegacyUnit.equal('<p>x b x</p>', editor.getContent());
     });
 
+    suite.test('Find and replace all spaces with new lines', function (editor) {
+      editor.setContent('a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c');
+      editor.plugins.searchreplace.find(' ');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
+      LegacyUnit.equal('<p>axxxb<br /><br />abxc</p>', editor.getContent());
+    });
+
     suite.test('Find multiple matches, move to next and replace', function (editor) {
       editor.setContent('a a');
       LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
@@ -133,7 +140,7 @@ UnitTest.asynctest(
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'searchreplace',
-      valid_elements: 'b,i',
+      valid_elements: 'b,i,br',
       indent: false,
       skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);

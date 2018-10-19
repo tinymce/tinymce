@@ -104,7 +104,7 @@ const removeNode = function (dom, node) {
 
 const find = function (editor, currentIndexState, text, matchCase, wholeWord) {
   text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-  text = text.replace(/\s/g, '\\s');
+  text = text.replace(/\s/g, '[^\\S\\r\\n]');
   text = wholeWord ? '\\b' + text + '\\b' : text;
 
   const count = markAllMatches(editor, currentIndexState, new RegExp(text, matchCase ? 'g' : 'gi'));
