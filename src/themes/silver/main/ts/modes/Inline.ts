@@ -8,8 +8,10 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
+import { UiFactoryBackstage } from '../backstage/Backstage';
 
-const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode) => {
+const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   loadInlineSkin(editor);
 
   const floatContainer = uiComponents.outerContainer;
