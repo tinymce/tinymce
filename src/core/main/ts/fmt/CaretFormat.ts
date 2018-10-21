@@ -21,8 +21,9 @@ import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Fun from '../util/Fun';
 import { Selection } from '../api/dom/Selection';
-import { Editor } from 'tinymce/core/api/Editor';
+import { Editor } from '../api/Editor';
 import { isCaretNode, getParentCaretContainer } from './FormatContainer';
+import DeleteElement from "../delete/DeleteElement";
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
@@ -95,20 +96,17 @@ const trimZwspFromCaretContainer = function (caretContainerNode) {
   return textNode;
 };
 
-const removeCaretContainerNode = function (dom, selection, node, moveCaret) {
-  let rng, block, textNode;
-
-  rng = selection.getRng(true);
-  block = dom.getParent(node, dom.isBlock);
+const removeCaretContainerNode = function (editor, node, moveCaret) {
+  const dom = editor.dom, selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    if (moveCaret !== false) {
-      rng.setStartBefore(node);
-      rng.setEndBefore(node);
-    }
-
-    dom.remove(node);
+    DeleteElement.deleteElement(editor, false, Element.fromDom(node), moveCaret);
   } else {
+    let rng, block, textNode;
+
+    rng = selection.getRng();
+    block = dom.getParent(node, dom.isBlock);
+
     textNode = trimZwspFromCaretContainer(node);
     if (rng.startContainer === textNode && rng.startOffset > 0) {
       rng.setStart(textNode, rng.startOffset - 1);
@@ -119,27 +117,28 @@ const removeCaretContainerNode = function (dom, selection, node, moveCaret) {
     }
 
     dom.remove(node, true);
-  }
 
-  if (block && dom.isEmpty(block)) {
-    PaddingBr.fillWithPaddingBr(Element.fromDom(block));
-  }
+    if (block && dom.isEmpty(block)) {
+      PaddingBr.fillWithPaddingBr(Element.fromDom(block));
+    }
 
-  selection.setRng(rng);
+    selection.setRng(rng);
+  }
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = function (body, dom, selection: Selection, node, moveCaret?) {
+const removeCaretContainer = function (editor, node, moveCaret?) {
+  const dom = editor.dom, selection = editor.selection;
   if (!node) {
-    node = getParentCaretContainer(body, selection.getStart());
+    node = getParentCaretContainer(editor.getBody(), selection.getStart());
 
     if (!node) {
       while ((node = dom.get(CARET_ID))) {
-        removeCaretContainerNode(dom, selection, node, false);
+        removeCaretContainerNode(editor, node, false);
       }
     }
   } else {
-    removeCaretContainerNode(dom, selection, node, moveCaret);
+    removeCaretContainerNode(editor, node, moveCaret);
   }
 };
 
@@ -286,7 +285,7 @@ const removeCaretFormat = function (editor: Editor, name, vars, similar) {
       insertCaretContainerNode(editor, newCaretContainer, formatNode);
     }
 
-    removeCaretContainerNode(dom, selection, caretContainer, false);
+    removeCaretContainerNode(editor, caretContainer, false);
     selection.setCursorLocation(caretNode, 1);
 
     if (dom.isEmpty(formatNode)) {
@@ -295,26 +294,25 @@ const removeCaretFormat = function (editor: Editor, name, vars, similar) {
   }
 };
 
-const disableCaretContainer = function (body, dom, selection: Selection, keyCode) {
-  removeCaretContainer(body, dom, selection, null, false);
+const disableCaretContainer = function (editor, keyCode) {
+  const selection = editor.selection, body = editor.getBody();
+
+  removeCaretContainer(editor, null, false);
 
   // Remove caret container if it's empty
-  if (keyCode === 8 && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
-    removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
+  if ((keyCode === 8 || keyCode == 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
   }
 
   // Remove caret container on keydown and it's left/right arrow keys
   if (keyCode === 37 || keyCode === 39) {
-    removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
   }
 };
 
 const setup = function (editor) {
-  const dom = editor.dom, selection = editor.selection;
-  const body = editor.getBody();
-
   editor.on('mouseup keydown', function (e) {
-    disableCaretContainer(body, dom, selection, e.keyCode);
+    disableCaretContainer(editor, e.keyCode);
   });
 };
 
@@ -332,10 +330,15 @@ const isFormatElement = function (editor, element) {
   return inlineElements.hasOwnProperty(Node.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
 };
 
+const isEmptyCaretFormatElement = function (element) {
+  return isCaretNode(element.dom()) && isCaretContainerEmpty(element.dom());
+};
+
 export {
   setup,
   applyCaretFormat,
   removeCaretFormat,
   replaceWithCaretFormat,
-  isFormatElement
+  isFormatElement,
+  isEmptyCaretFormatElement
 };
