@@ -123,15 +123,17 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     top: ['tox-pop--top']
   };
 
+  const anchorOverrides = {
+    maxHeightFunction: expandable()
+  };
+
   const lineAnchorSpec = {
     bubble: Bubble.nu(12, 0, bubbleAlignments),
     layouts: {
       onLtr: () => [Layout.east],
       onRtl: () => [Layout.west]
     },
-    overrides: {
-      maxHeightFunction: expandable()
-    }
+    overrides: anchorOverrides
   };
 
   const anchorSpec = {
@@ -140,9 +142,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest],
       onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast]
     },
-    overrides: {
-      maxHeightFunction: expandable()
-    }
+    overrides: anchorOverrides
   };
 
   const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
@@ -198,7 +198,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       Delay.setEditorTimeout(editor, launchContextToolbar, 0)
     );
   });
-}
+};
 
 export default {
   register
