@@ -53,7 +53,7 @@ const southY = (anchor: AnchorBox): number => {
 
 // display element below, top edge against the bottom of the anchor
 const centreY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() + anchor.height() - element.height() / 2;
+  return anchor.y() + (anchor.height() / 2) - element.height() / 2;
 };
 
 const eastEdgeX = (anchor: AnchorBox): number => {
