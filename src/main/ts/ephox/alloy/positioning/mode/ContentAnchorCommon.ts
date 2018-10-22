@@ -1,4 +1,4 @@
-import { nu as NuAnchor } from './Anchoring';
+import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
 import { Option, Fun } from '@ephox/katamari';
 import * as Boxes from '../../alien/Boxes';
 import * as Bubble from '../layout/Bubble';
@@ -6,8 +6,9 @@ import * as CssPosition from '../../alien/CssPosition';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import * as AnchorLayouts from './AnchorLayouts';
+import { Element } from '@ephox/sugar';
 
-const calcNewAnchor = (optBox, rootPoint, anchorInfo, origin, elem) => {
+const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: Element) => {
   return optBox.map((box) => {
     const points = [rootPoint, box.point()];
     const topLeft = Origins.cata(origin,
