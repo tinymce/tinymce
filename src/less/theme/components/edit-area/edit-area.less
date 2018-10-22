@@ -3,10 +3,14 @@
 //
 
 @edit-area-border-color: @border-color;
+@edit-area-border-style: solid;
+@edit-area-border-width: 1px;
 
 .tox {
   .tox-edit-area {
-    border: 1px solid @edit-area-border-color;
+    border-color: @edit-area-border-color;
+    border-style: @edit-area-border-style;
+    border-width: @edit-area-border-width;
     display: flex;
     flex: 1;
     margin-top: -1px; // Remove double borders
