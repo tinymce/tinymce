@@ -16,7 +16,8 @@ const register = function (editor) {
   editor.ui.registry.addContextToolbar('imagetools', {
     items: Settings.getToolbarItems(editor),
     predicate: Fun.curry(Actions.isEditableImage, editor),
-    position: 'node'
+    position: 'node',
+    scope: 'node'
   });
 };
 
