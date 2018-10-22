@@ -2,13 +2,13 @@
 New Translations
 <new translation> [<previous translation>]
 -----------------------------------------------------
-Spell check              [Spellcheck]
+Spell check               [Spellcheck]
 Fonts                     [Font Family]
 Image title               <new>
 Border width              <new>
-Error
-Warn
-Valid
+Error                     <new>
+Warn                      <new>
+Valid                     <new>
 
 
 

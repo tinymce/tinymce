@@ -20,23 +20,23 @@ import { BehaviourConfigDetail, BehaviourConfigSpec } from '@ephox/alloy/lib/mai
 import { PartialMenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { Attr, SelectorFind } from '@ephox/sugar';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
-import { UiFactoryBackstageShared, UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
-import { renderLabel, renderIconFromPack } from '../../button/ButtonSlices';
+import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
+import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
+import { classForPreset } from '../../menus/item/ItemClasses';
 import { ItemResponse } from '../../menus/item/MenuItems';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/SingleMenu';
-import { SelectorFind, Attr } from '@ephox/sugar';
-import { classForPreset } from '../../menus/item/ItemClasses';
-import { DisablingConfigs } from '../../alien/DisablingConfigs';
-import * as Icons from '../../icons/Icons';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>;
@@ -147,11 +147,11 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
   });
 };
 
-const renderToolbarButton = (spec: Toolbar.ToolbarButton, extras) => {
-  return renderToolbarButtonWith(spec, extras, [ ]);
+const renderToolbarButton = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderToolbarButtonWith(spec, providersBackstage, [ ]);
 };
 
-const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, extras, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]) => {
+const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]) => {
   return renderCommonToolbarButton(spec, {
     toolbarButtonBehaviours: [ ].concat(bonusEvents.length > 0 ? [
       // TODO: May have to pass through eventOrder if events start clashing
@@ -159,14 +159,14 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, extras, bonusEvent
     ] : [ ]) ,
     getApi: getButtonApi,
     onSetup: spec.onSetup
-  }, extras.backstage.shared);
+  }, providersBackstage);
 };
 
-const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, extras) => {
-  return renderToolbarToggleButtonWith(spec, extras, [ ]);
+const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderToolbarToggleButtonWith(spec, providersBackstage, [ ]);
 };
 
-const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, extras, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]) => {
+const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]) => {
   return Merger.deepMerge(
     renderCommonToolbarButton(spec,
       {
@@ -181,7 +181,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, extras
         getApi: getToggleApi,
         onSetup: spec.onSetup
       },
-      extras.backstage.shared
+      providersBackstage
     )
   ) as SketchSpec;
 };

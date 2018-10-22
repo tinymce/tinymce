@@ -3,6 +3,8 @@ import { Option, Arr } from '@ephox/katamari';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createSelectButton, createMenuItems } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
   'Arial=arial,helvetica,sans-serif;' +
@@ -84,18 +86,18 @@ const getSpec = (editor) => {
   };
 };
 
-const createFontSelect = (editor, backstage) => {
+const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   const spec = getSpec(editor);
   return createSelectButton(editor, backstage, spec.dataset, spec);
 };
 
 // TODO: Test this!
-const fontSelectMenu = (editor, backstage) => {
+const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   return {
     type: 'menuitem',
-    text: backstage.shared.translate('Fonts'),
+    text: backstage.shared.providers.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   };
 };

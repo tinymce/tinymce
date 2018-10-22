@@ -9,6 +9,8 @@ import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { BasicSelectDataset, AdvancedSelectDataset } from './SelectDatasets';
 import { AlloyComponent } from '@ephox/alloy';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 export interface PreviewSpec {
   tag: string;
@@ -44,9 +46,9 @@ export interface SelectData {
 // TODO: AP-226: Read this from hte appropriate setting
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
-const generateSelectItems = (editor, backstage, spec) => {
+const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): SingleMenuItemApi => {
-    const translatedText = backstage.shared.translate(rawItem.title);
+    const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return {
         type: 'separator',
@@ -114,7 +116,7 @@ const generateSelectItems = (editor, backstage, spec) => {
   };
 };
 
-const createMenuItems = (editor, backstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -122,7 +124,7 @@ const createMenuItems = (editor, backstage, dataset: BasicSelectDataset | Advanc
   };
 };
 
-const createSelectButton = (editor, backstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
   return renderCommonDropdown(
     {

@@ -17,6 +17,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
+import I18n from 'tinymce/core/api/util/I18n';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -79,7 +80,8 @@ const setup = (editor: Editor): RenderInfo => {
     },
     getSink: lazySink,
     providers: {
-      icons: () => editor.ui.registry.getAll().icons
+      icons: () => editor.ui.registry.getAll().icons,
+      translate: I18n.translate
     },
     onEscape () {
       editor.focus();
