@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.50.0] - 2018-10-22
+### Added
+ - NodeAnchor positioning mode
+
 ## [3.49.0] - 2018-10-18
 ### Fixed
  - Backspace keys are no longer swallowed in content-editable sections

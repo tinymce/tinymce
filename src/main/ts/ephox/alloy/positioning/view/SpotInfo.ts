@@ -1,11 +1,10 @@
 import { Struct } from '@ephox/katamari';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { BubbleInstance, Bubble } from '../layout/Bubble';
 
 export interface SpotInfo {
   x: () => number;
   y: () => number;
-  bubble: () => BubbleInstance,
+  bubble: () => BubbleInstance;
   // TYPIFY
   direction: () => any;
   label: () => string;
