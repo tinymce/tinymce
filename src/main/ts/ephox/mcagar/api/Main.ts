@@ -9,6 +9,7 @@ import TinyLoader from './TinyLoader';
 import TinyScenarios from './TinyScenarios';
 import TinyUi from './TinyUi';
 import UiChains from './UiChains';
+import * as TinyVersions from './TinyVersions';
 
 export {
   ActionChains,
@@ -21,5 +22,6 @@ export {
   TinyLoader,
   TinyScenarios,
   TinyUi,
-  UiChains
+  UiChains,
+  TinyVersions
 };
