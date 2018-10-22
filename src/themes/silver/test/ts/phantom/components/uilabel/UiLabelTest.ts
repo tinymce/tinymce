@@ -55,7 +55,10 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
         )
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });
