@@ -2,16 +2,16 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Input component Test', (success, failure) => {
-  const sharedBackstage = {
-    translate: I18n.translate
-  };
+
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -20,7 +20,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
           name: 'input',
           label: Option.some('LabelA'),
           validation: Option.none()
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -52,7 +52,10 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

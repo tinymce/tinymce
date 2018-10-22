@@ -11,7 +11,7 @@ import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
 
   const helpers = setupDemo();
-  const sharedBackstage = helpers.extras.backstage.shared;
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -21,7 +21,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
           flex: false,
           label: Option.some('LabelA'),
           validation: Option.none()
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -53,7 +53,10 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

@@ -1,27 +1,27 @@
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import {
   AddEventsBehaviour,
   AlloyEvents,
   Behaviour,
   ComponentApi,
+  Dropdown,
+  Focusing,
   Keying,
+  NativeEvents,
   RawDomSchema,
   Replacing,
   Sketcher,
-  UiSketcher,
-  Dropdown,
   SystemEvents,
-  NativeEvents,
-  Focusing,
+  UiSketcher,
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Compare, SelectorFind } from '@ephox/sugar';
+import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { SingleMenuItemApi } from '../menu/SingleMenu';
 import { renderMenuButton } from './Integration';
-import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { SelectorFind, Compare } from '@ephox/sugar';
-import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -69,8 +69,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         MenuButtonClasses.Button,
         {
           getSink: detail.getSink(),
-          providers: detail.providers(),
-          translate: I18n.translate
+          providers: detail.providers()
         },
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         'menuitem'

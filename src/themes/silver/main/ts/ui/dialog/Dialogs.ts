@@ -12,7 +12,7 @@ import {
 } from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
 
 const pClose = (onClose) => ModalDialog.parts().close(
@@ -44,14 +44,14 @@ const pUntitled = () => ModalDialog.parts().title({
   }
 });
 
-const pBodyMessage = (message: string, sharedBackstage: UiFactoryBackstageShared) => ModalDialog.parts().body({
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__body', 'todo-tox-fit' ]
   },
   components: [
     {
-      dom: DomFactory.fromHtml(`<p>${sharedBackstage.translate(message)}</p>`)
+      dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
     }
   ]
 });

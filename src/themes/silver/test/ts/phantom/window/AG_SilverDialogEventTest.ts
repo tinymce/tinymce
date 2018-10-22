@@ -7,7 +7,6 @@ import { Fun, Result } from '@ephox/katamari';
 
 import { renderDialog } from '../../../../main/ts/ui/window/SilverDialog';
 import { GuiSetup } from '../../module/AlloyTestUtils';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
@@ -78,8 +77,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           },
           {
             shared: {
-              getSink: () => Result.value(sink),
-              translate: I18n.translate
+              getSink: () => Result.value(sink)
             }
           }
         );

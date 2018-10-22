@@ -1,9 +1,10 @@
 import { Behaviour, Replacing } from '@ephox/alloy';
-import { IconProvider, getOr } from '../icons/Icons';
 import { Fun } from '@ephox/katamari';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { getOr, IconProvider } from '../icons/Icons';
+import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 const renderIcon = (iconHtml) =>
   ({
@@ -20,10 +21,10 @@ const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
   );
 };
 
-const renderLabel = (text: TranslateIfNeeded, prefix: string, sharedBackstage: UiFactoryBackstageShared) => ({
+const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {
     tag: 'span',
-    innerHtml: sharedBackstage.translate(text),
+    innerHtml: providersBackstage.translate(text),
     classes: [ `${prefix}__select-label` ]
   },
   behaviours: Behaviour.derive([

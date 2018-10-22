@@ -41,9 +41,9 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
   };
 
   const header = renderModalHeader({
-    title: backstage.shared.translate(dialogInit.internalDialog.title),
+    title: backstage.shared.providers.translate(dialogInit.internalDialog.title),
     draggable: true
-  }, backstage.shared);
+  }, backstage.shared.providers);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body
@@ -51,7 +51,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
 
   const footer = renderModalFooter({
     buttons: dialogInit.internalDialog.buttons
-  }, backstage.shared);
+  }, backstage.shared.providers);
 
   const dialogEvents = SilverDialogEvents.init(
     () => instanceApi,

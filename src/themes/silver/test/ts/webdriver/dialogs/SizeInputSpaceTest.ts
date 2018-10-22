@@ -9,7 +9,7 @@ import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
   const helpers = setupDemo();
-  const sharedBackstage = helpers.extras.backstage.shared;
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -20,7 +20,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
           colspan: Option.none(),
           label: Option.some('size'),
           constrain: true
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -56,7 +56,10 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
         sAssertLockedStatus('Firing space on a non-pressed button', true)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

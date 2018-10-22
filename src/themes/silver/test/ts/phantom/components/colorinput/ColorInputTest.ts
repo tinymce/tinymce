@@ -52,9 +52,9 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                    Result.value
                  );
                },
-               translate: I18n.translate,
                providers: {
-                icons: () => <Record<string, string>> {}
+                icons: () => <Record<string, string>> {},
+                translate: I18n.translate,
               }
              }, {
                colorPicker: (callback, value) => {},

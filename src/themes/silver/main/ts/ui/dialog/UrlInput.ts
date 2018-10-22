@@ -63,14 +63,14 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
 };
 
 // TODO: Find a place for this.
-const renderInputButton = (label: Option<string>, eventName: string, className: string, iconName: string, sharedBackstage: UiFactoryBackstageShared) => {
+const renderInputButton = (label: Option<string>, eventName: string, className: string, iconName: string, providersBackstage: UiFactoryBackstageProviders) => {
   return AlloyButton.sketch({
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button, className ],
-      innerHtml: Icons.get(iconName, sharedBackstage.providers.icons),
+      innerHtml: Icons.get(iconName, providersBackstage.icons),
       attributes: {
-        title: sharedBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
+        title: providersBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
       }
     },
     action: (component) => {
@@ -180,7 +180,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     }
   });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage)) as Option<AlloySpec>;
+  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage.providers)) as Option<AlloySpec>;
 
   // TODO: Consider a way of merging with Checkbox.
   const makeIcon = (name, icon = name, label = name) => {
@@ -191,7 +191,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
         classes: ['tox-icon', 'tox-status-icon__' + name],
         innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons),
         attributes: {
-          title: sharedBackstage.translate(label)   // TODO: tooltips AP-213
+          title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
         }
       }
     });
@@ -231,7 +231,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage)).toArray()
+        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage.providers)).toArray()
       ])
     };
   };

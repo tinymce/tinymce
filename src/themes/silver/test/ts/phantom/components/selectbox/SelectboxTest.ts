@@ -2,21 +2,17 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
-  const sharedBackstage = {
-    translate: I18n.translate,
-    providers: {
-      icons: () => <Record<string, string>> {}
-    }
-  };
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -32,7 +28,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
             { value: 'two', text: 'Two' },
             { value: 'three', text: 'Three' },
           ]
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -80,7 +76,10 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

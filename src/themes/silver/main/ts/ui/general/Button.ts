@@ -10,7 +10,7 @@ import {
 import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -53,17 +53,17 @@ const renderCommon = (spec, action, extraBehaviours = [], dom, components): Sket
   return AlloyButton.sketch(specFinal);
 };
 
-export const renderIconButton = (spec: IconButtonFoo, action, sharedBackstage: UiFactoryBackstageShared, extraBehaviours = []): SketchSpec => {
+export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
-    'aria-label': sharedBackstage.translate(tooltip),
-    'title': sharedBackstage.translate(tooltip)
+    'aria-label': providersBackstage.translate(tooltip),
+    'title': providersBackstage.translate(tooltip)
   })).getOr({});
   const dom = {
     tag: 'button',
     classes: [ ToolbarButtonClasses.Button ],
     attributes: tooltipAttributes
   };
-  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons));
+  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = componentRenderPipeline([
     icon
   ]);
@@ -72,8 +72,8 @@ export const renderIconButton = (spec: IconButtonFoo, action, sharedBackstage: U
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButton = (spec: ButtonFoo, action, sharedBackstage: UiFactoryBackstageShared, extraBehaviours = []): SketchSpec => {
-  const translatedText = sharedBackstage.translate(spec.text);
+export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+  const translatedText = providersBackstage.translate(spec.text);
 
   const dom = {
     tag: 'button',
@@ -104,14 +104,14 @@ const getAction = (name: string, buttonType) => {
   };
 };
 
-export const renderFooterButton = (spec: ButtonFoo, buttonType: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderFooterButton = (spec: ButtonFoo, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, buttonType);
-  return renderButton(spec, action, sharedBackstage, [ ]);
+  return renderButton(spec, action, providersBackstage, [ ]);
 };
 
-export const renderDialogButton = (spec: ButtonFoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderDialogButton = (spec: ButtonFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderButton(spec, action, sharedBackstage, [
+  return renderButton(spec, action, providersBackstage, [
     RepresentingConfigs.memory(''),
     ComposingConfigs.self()
   ]);

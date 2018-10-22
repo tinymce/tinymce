@@ -15,18 +15,17 @@ import {
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
+import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
-import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { renderLabel } from '../alien/FieldLabeller';
 
 interface RatioEvent extends CustomEvent {
   isField1: () => boolean;
 }
 
-export const renderSizeInput = (spec: Types.SizeInput.SizeInput, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   let converter: SizeConversion = noSizeConversion;
 
   const ratioEvent = Id.generate('ratio-event');
@@ -89,14 +88,14 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, sharedBackstage
         dom: {
           tag: 'span',
           classes: ['tox-icon', 'tox-lock-icon__lock'],
-          innerHtml: Icons.get('icon-lock', sharedBackstage.providers.icons)
+          innerHtml: Icons.get('icon-lock', providersBackstage.icons)
         }
       },
       {
         dom: {
           tag: 'span',
           classes: ['tox-icon', 'tox-lock-icon__unlock'],
-          innerHtml: Icons.get('icon-unlock', sharedBackstage.providers.icons)
+          innerHtml: Icons.get('icon-unlock', providersBackstage.icons)
         }
       }
     ],
@@ -115,7 +114,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, sharedBackstage
         dom: {
           tag: 'label',
           classes: [ 'tox-label' ],
-          innerHtml: sharedBackstage.translate('Dimensions')
+          innerHtml: providersBackstage.translate('Dimensions')
         }
       },
       {

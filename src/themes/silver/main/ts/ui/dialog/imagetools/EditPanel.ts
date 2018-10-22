@@ -15,19 +15,19 @@ import { SliderValueX } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/Slid
 import { ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { renderButton, renderIconButton } from '../../general/Button';
 import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-const renderEditPanel = (imagePanel, sharedBackstage: UiFactoryBackstageShared) => {
+const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
   const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): SketchSpec => {
     return renderButton({
       name: text,
       text,
       disabled,
       primary
-    }, action, sharedBackstage);
+    }, action, providersBackstage);
   };
 
   const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): SketchSpec => {
@@ -36,7 +36,7 @@ const renderEditPanel = (imagePanel, sharedBackstage: UiFactoryBackstageShared) 
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
       disabled
-    }, action, sharedBackstage);
+    }, action, providersBackstage);
   };
 
   const panelDom = {
@@ -122,7 +122,7 @@ const renderEditPanel = (imagePanel, sharedBackstage: UiFactoryBackstageShared) 
       colspan: none,
       type: 'sizeinput',
       constrain: true
-    }, sharedBackstage)
+    }, providersBackstage)
   );
 
   const makeResizeTransform = (width: number, height: number): ((ir: any) => any) => (ir: any): any => {

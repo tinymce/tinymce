@@ -1,10 +1,20 @@
-import { Behaviour, ComponentApi, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
+import {
+  Behaviour,
+  ComponentApi,
+  Container,
+  DomFactory,
+  Memento,
+  MementoRecord,
+  ModalDialog,
+  Reflecting,
+  SketchSpec,
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 import { footerChannel } from './DialogChannels';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // FIX spelling and import location
 export interface DialogMemButton {
@@ -17,8 +27,8 @@ export interface WindowFooterFoo {
   buttons: Types.Dialog.DialogButton[];
 }
 
-const makeButton = (button: Types.Dialog.DialogButton, sharedBackstage: UiFactoryBackstageShared) => {
-  return renderFooterButton(button, button.type, sharedBackstage);
+const makeButton = (button: Types.Dialog.DialogButton, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderFooterButton(button, button.type, providersBackstage);
 };
 
 const lookup = (compInSystem: ComponentApi.AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
@@ -47,10 +57,10 @@ const renderComponents = (_data, state) => {
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
+const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
   const updateState = (_comp, data: WindowFooterFoo) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
-      const memButton = Memento.record(makeButton(button, sharedBackstage));
+      const memButton = Memento.record(makeButton(button, providersBackstage));
       return {
         name: button.name,
         align: button.align,
@@ -83,13 +93,13 @@ const renderFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackst
   };
 };
 
-const renderInlineFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
-  return renderFooter(initFoo, sharedBackstage);
+const renderInlineFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderFooter(initFoo, providersBackstage);
 };
 
-const renderModalFooter = (initFoo: WindowFooterFoo, sharedBackstage: UiFactoryBackstageShared) => {
+const renderModalFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
   return ModalDialog.parts().footer(
-    renderFooter(initFoo, sharedBackstage)
+    renderFooter(initFoo, providersBackstage)
   );
 };
 

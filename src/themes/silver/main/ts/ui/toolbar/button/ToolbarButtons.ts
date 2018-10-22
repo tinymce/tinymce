@@ -72,10 +72,10 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, sharedBackstage: UiFactoryBackstageShared) => {
+const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, providersBackstage: UiFactoryBackstageProviders) => {
   const tooltipAttributes = tooltip.map<{}>((tooltip) => ({
-    'aria-label': sharedBackstage.translate(tooltip),
-    'title': sharedBackstage.translate(tooltip)
+    'aria-label': providersBackstage.translate(tooltip),
+    'title': providersBackstage.translate(tooltip)
   })).getOr({});
 
   return {
@@ -85,8 +85,8 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
       attributes: tooltipAttributes
     },
     components: componentRenderPipeline([
-      icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons)),
-      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, sharedBackstage))
+      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
     ]),
 
     eventOrder: {
@@ -112,8 +112,8 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
             initialData: { icon, text },
             renderComponents: (data, _state) => {
               return componentRenderPipeline([
-                data.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons)),
-                data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, sharedBackstage))
+                data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+                data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
               ]);
             }
           });
@@ -123,9 +123,9 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
   };
 };
 
-const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, sharedBackstage: UiFactoryBackstageShared) => {
+const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders) => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), sharedBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -293,7 +293,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     components: [
       AlloySplitDropdown.parts().button(
-        renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.some(displayChannel), sharedBackstage)
+        renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.some(displayChannel), sharedBackstage.providers)
       ),
       AlloySplitDropdown.parts().arrow({
         dom: {

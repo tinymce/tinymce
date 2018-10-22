@@ -5,32 +5,32 @@ import {
   Button,
   Container,
   DomFactory,
+  Dragging,
   GuiFactory,
   ModalDialog,
   Reflecting,
-  Dragging,
 } from '@ephox/alloy';
+import { Option } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import { titleChannel } from './DialogChannels';
-import { SelectorFind } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 export interface WindowHeaderFoo {
   title: string;
   draggable: boolean;
 }
 
-const renderClose = (shareBackstage: UiFactoryBackstageShared) => {
+const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
   return Button.sketch({
     dom: {
       tag: 'button',
       classes: ['tox-button', 'tox-button--icon', 'tox-button--naked'],
       attributes: {
         'type': 'button',
-        'aria-label': shareBackstage.translate('Close'),
-        'title': shareBackstage.translate('Close'), // TODO tooltips: AP-213
+        'aria-label': providersBackstage.translate('Close'),
+        'title': providersBackstage.translate('Close'), // TODO tooltips: AP-213
       }
     },
     components: [
@@ -71,12 +71,12 @@ const renderTitle = (foo: WindowHeaderFoo, id: Option<string>): AlloySpec => {
   };
 };
 
-const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, shareBackstage: UiFactoryBackstageShared): AlloySpec => {
+const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components: [
       renderTitle(foo, Option.some(titleId)),
-      renderClose(shareBackstage)
+      renderClose(providersBackstage)
     ],
     containerBehaviours: Behaviour.derive([
       Dragging.config({
@@ -95,7 +95,7 @@ const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, shareBackstag
   });
 };
 
-const renderModalHeader = (foo: WindowHeaderFoo, shareBackstage: UiFactoryBackstageShared): AlloySpec => {
+const renderModalHeader = (foo: WindowHeaderFoo, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   const pTitle = ModalDialog.parts().title(
     renderTitle(foo, Option.none())
   );
@@ -105,7 +105,7 @@ const renderModalHeader = (foo: WindowHeaderFoo, shareBackstage: UiFactoryBackst
   });
 
   const pClose = ModalDialog.parts().close(
-    renderClose(shareBackstage)
+    renderClose(providersBackstage)
   );
 
   const components = [ pTitle ].concat(foo.draggable ? [ pHandle ] : []).concat([ pClose ]);

@@ -62,9 +62,9 @@ const setupDemo = () => {
 
   const backstage: UiFactoryBackstage = {
     shared: {
-      translate: I18n.translate,
       providers: {
-        icons: () => <Record<string, string>> {}
+        icons: () => <Record<string, string>> {},
+        translate: I18n.translate,
       },
       interpreter: (x) => x,
       getSink: () => Result.value(sink),

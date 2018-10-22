@@ -17,12 +17,12 @@ export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
+  translate: (any) => TranslatedString;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
 
 export interface UiFactoryBackstageShared {
-  translate: (any) => TranslatedString;
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
@@ -45,9 +45,9 @@ export interface UiFactoryBackstage {
 const init = (container, sink, editor) => {
   const backstage: UiFactoryBackstage = {
     shared: {
-      translate: I18n.translate,
       providers: {
-        icons: () => editor.ui.registry.getAll().icons
+        icons: () => editor.ui.registry.getAll().icons,
+        translate: I18n.translate,
       },
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);

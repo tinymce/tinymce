@@ -13,15 +13,15 @@ import {
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
 import { formChangeEvent } from '../general/FormEvents';
 
-export const renderSelectBox = (spec: Types.SelectBox.SelectBox, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.
-  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage));
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const pField = AlloyFormField.parts().field({
     // TODO: Alloy should not allow dom changing of an HTML select!
@@ -46,7 +46,7 @@ export const renderSelectBox = (spec: Types.SelectBox.SelectBox, sharedBackstage
         dom: {
           tag: 'div',
           classes: ['tox-selectfield__icon-js'],
-          innerHtml: Icons.get('icon-chevron-down', sharedBackstage.providers.icons)
+          innerHtml: Icons.get('icon-chevron-down', providersBackstage.icons)
         }
       });
 

@@ -2,12 +2,12 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Composing, GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderIFrame } from '../../../../../main/ts/ui/dialog/IFrame';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import { PlatformDetection } from '@ephox/sand';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('IFrame component Test', (success, failure) => {
   if (PlatformDetection.detect().browser.isIE()) {
@@ -17,9 +17,8 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     return;
   }
 
-  const sharedBackstage = {
-    translate: I18n.translate
-  };
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -31,7 +30,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           colspan: Option.none(),
           sandboxed: true,
           flex: false
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -100,7 +99,10 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         )
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

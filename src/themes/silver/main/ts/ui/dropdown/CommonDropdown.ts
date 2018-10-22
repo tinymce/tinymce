@@ -48,7 +48,7 @@ export interface BasketballFoo {
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
 
-  const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage)));
+  const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers)));
 
   /*
    * The desired behaviour here is:
@@ -100,7 +100,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
           AlloyEvents.runOnDetached(spec.onDetach),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.translate(se.event().text())) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event().text())) ] );
             });
           })
         ])

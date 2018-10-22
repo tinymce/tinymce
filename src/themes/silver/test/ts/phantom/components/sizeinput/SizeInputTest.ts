@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from 
 import { GuiFactory, NativeEvents } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderSizeInput } from '../../../../../main/ts/ui/dialog/SizeInput';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
@@ -28,11 +29,8 @@ const fieldStructure = (s, str, arr, label) => {
 };
 
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
-  const sharedBackstage = {
-    providers: {
-      icons: () => <Record<string, string>> {}
-    }
-  };
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -43,7 +41,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           colspan: Option.none(),
           label: Option.some('size'),
           constrain: true
-        }, sharedBackstage)
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -118,7 +116,10 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         sAssertDimensions('300px', '100px')
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

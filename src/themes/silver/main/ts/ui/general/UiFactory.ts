@@ -48,25 +48,25 @@ const makeIframe = (render: NoFormRenderer): FormPartRenderer => {
 };
 
 const factories: Record<string, FormPartRenderer> = {
-  collection: make((spec, backstage) => renderCollection(spec, backstage.shared)),
+  collection: make((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
   alloy: make(Fun.identity),
   alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
-  input: make((spec, backstage) => renderInput(spec, backstage.shared)),
-  textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared)),
+  input: make((spec, backstage) => renderInput(spec, backstage.shared.providers)),
+  textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
-  listbox: make((spec, backstage) => renderListbox(spec, backstage.shared)),
-  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
-  iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared)),
+  listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
+  label: make(renderUiLabel),
+  iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
-  button: make((spec, backstage) => renderDialogButton(spec, backstage.shared)),
+  button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
   colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
-  dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared)),
+  dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
-  selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared)),
-  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared)),
+  selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
+  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
   urlinput: make((spec, backstage) => {
     return renderUrlInput(
       spec, backstage.shared, backstage.urlinput
@@ -74,7 +74,7 @@ const factories: Record<string, FormPartRenderer> = {
   }),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared))
+  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers))
 };
 
 const noFormParts: any = {

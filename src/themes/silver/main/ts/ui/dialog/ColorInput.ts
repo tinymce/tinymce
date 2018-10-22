@@ -86,7 +86,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
     ])
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage));
+  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
