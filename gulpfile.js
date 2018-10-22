@@ -93,7 +93,7 @@ gulp.task('serve', function() {
     open: false // Don't open a browser by default.
   });
 
-  gulp.watch('./src/**/*.less', gulp.series('lint', 'less'));
+  gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesC', 'less'));
   gulp.watch('./src/demo/**/*.html', gulp.series('buildHtml', 'copyFiles'));
   gulp.watch(['./src/demo/**/*.css', './src/demo/**/*.js'], gulp.series('buildHtml', 'copyFiles'));
   gulp.watch('./build/**/*.*').on('change', browserSync.reload);
