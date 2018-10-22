@@ -66,7 +66,8 @@ const renderStatusbar = (editor): SimpleSpec => {
   };
 
   const getResizeType = (editor): ResizeTypes => {
-    const resize = editor.getParam('resize', true);
+    // If autoresize is enabled, disable resize
+    const resize = editor.getParam('resize', !Strings.contains(editor.settings.plugins, 'autoresize'));
     if (resize === false) {
       return ResizeTypes.None;
     } else if (resize === 'both') {
