@@ -146,8 +146,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
+    const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     const anchor = Merger.deepMerge(
-      extras.backstage.shared.anchors.node(element),
+      anchorage,
       position === 'line' ? lineAnchorSpec : anchorSpec
     );
     return anchor;
