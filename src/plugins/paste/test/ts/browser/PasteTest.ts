@@ -674,6 +674,11 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
   });
 
+  suite.test('paste innerText of P with WBR', function (editor) {
+    editor.setContent('<p>a<wbr>b</p>');
+    LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'ab');
+  });
+
   suite.test('paste innerText of P with VIDEO', function (editor) {
     editor.setContent('<p>a<video>b<br>c</video>d</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a d');
