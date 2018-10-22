@@ -22,7 +22,7 @@
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    margin: 0 0 (@toolbar-spacing - 1px) 0;
+    margin: 0 0 @toolbar-spacing 0;
     padding: @toolbar-padding;
   }
 
@@ -31,26 +31,11 @@
     margin-bottom: -1px;
   }
 
-  .tox-menubar + .tox-toolbar {
-    //border-top: none;
-  }
-
   .tox-toolbar--no-divider {
     background-image: none;
   }
 
-  // Prevent double border between edit area and toolbars
-  .tox-toolbar + .tox-edit-area,
-  .tox-toolbar + .tox-sidebar-wrap .tox-edit-area {
-    //border-top: 0;
-  }
-}
-
-.tox.tox-tinymce-inline {
-  .tox-toolbar {
-    margin-bottom: @toolbar-spacing;
-  }
-
+  // Remove double borders
   .tox-menubar + .tox-toolbar {
     margin-top: -1px;
   }
