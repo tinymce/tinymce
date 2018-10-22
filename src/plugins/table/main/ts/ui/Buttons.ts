@@ -146,7 +146,8 @@ const addToolbars = (editor: Editor) => {
     editor.ui.registry.addContextToolbar('table', {
       predicate: isTable,
       items: toolbar,
-      scope: 'node'
+      scope: 'node',
+      position: 'node'
     });
   }
 };
