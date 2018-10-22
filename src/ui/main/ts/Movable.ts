@@ -121,8 +121,8 @@ const getWindowViewPort = () => {
   return {
     x,
     y,
-    w: x + w,
-    h: y + h
+    w,
+    h
   };
 };
 
@@ -151,7 +151,7 @@ export default {
           return rels[i];
         }
       } else {
-        if (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w && pos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h) {
+        if (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w + viewPortRect.x && pos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h + viewPortRect.y) {
           return rels[i];
         }
       }
@@ -222,8 +222,8 @@ export default {
       const viewPortRect = getViewPortRect(this);
       const layoutRect = self.layoutRect();
 
-      x = constrain(x, viewPortRect.w, layoutRect.w);
-      y = constrain(y, viewPortRect.h, layoutRect.h);
+      x = constrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
+      y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
     }
 
     const uiContainer = UiContainer.getUiContainer(self);
