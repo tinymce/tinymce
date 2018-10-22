@@ -6,6 +6,12 @@ import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { LinkInformation, UrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 
 const setupDemo = () => {
+
+  const oldSink = document.querySelectorAll('.mce-silver-sink');
+  if (oldSink.length > 0) {
+    throw Error('old sinks found, a previous test did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
+  }
+
 // begin of demo helpers
   const sink = GuiFactory.build({
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
