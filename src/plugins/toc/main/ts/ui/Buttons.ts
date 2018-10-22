@@ -49,7 +49,8 @@ const register = (editor) => {
   editor.ui.registry.addContextToolbar('toc', {
     items: [ 'tocupdate' ],
     predicate: isToc(editor),
-    scope: 'node'
+    scope: 'node',
+    position: 'node'
   });
 };
 
