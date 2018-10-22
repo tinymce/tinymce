@@ -5,7 +5,7 @@ import { Element, Visibility } from '@ephox/sugar';
 import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 import { isSilver } from '../versions/Versioning';
 
-const selectors: ThemeSelectors = getThemeSelectors();
+const selectors = (): ThemeSelectors => getThemeSelectors();
 
 var dialogRoot = Element.fromDom(document.body);
 
@@ -21,12 +21,12 @@ var cDialogRoot = Chain.inject(dialogRoot);
 
 var cGetToolbarRoot = Chain.fromChains([
   cToolstripRoot,
-  UiFinder.cFindIn(selectors.toolBarSelector)
+  UiFinder.cFindIn(selectors().toolBarSelector)
 ]);
 
 var cGetMenuRoot = Chain.fromChains([
   cToolstripRoot,
-  UiFinder.cFindIn(selectors.menuBarSelector)
+  UiFinder.cFindIn(selectors().menuBarSelector)
 ]);
 
 const getDialogData = (dialog) => isSilver() ? dialog.getData() : dialog.toJSON();
@@ -91,18 +91,22 @@ var cTriggerContextMenu = function (label: string, target, menu) {
   ]);
 };
 
-var cDialogByPopup = Chain.binder(function (input: any) {
+var cSilverDialogByPopup = Chain.binder(function (input: any) {
   var wins = input.editor.windowManager.getWindows();
-  if (isSilver()) {
-    // TODO: t5 dialogs don't have ids, so just grabbing the first one. FIX!
-    return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
-  }
+  // TODO: t5 dialogs don't have ids, so just grabbing the first one. FIX!
+  return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
+});
+
+var cModernDialogByPopup = Chain.binder(function (input: any) {
+  var wins = input.editor.windowManager.getWindows();
   var popupId = input.popupNode.dom().id;
   var dialogs =  Arr.filter(wins, function (dialog) {
     return popupId === dialog._id;
   });
   return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
 });
+
+var cDialogByPopup = isSilver() ? cSilverDialogByPopup : cModernDialogByPopup;
 
 var cWaitForDialog = function (selector: string) {
   return NamedChain.asChain([
@@ -154,11 +158,11 @@ var cClickPopupButton = function (btnSelector: string, selector?: string) {
 };
 
 var cCloseDialog = function (selector: string) {
-  return cClickPopupButton(selectors.dialogCloseSelector, selector);
+  return cClickPopupButton(selectors().dialogCloseSelector, selector);
 };
 
 var cSubmitDialog = function (selector?: string) {
-  return cClickPopupButton(selectors.dialogSubmitSelector, selector);
+  return cClickPopupButton(selectors().dialogSubmitSelector, selector);
 };
 
 export default {

@@ -5,7 +5,7 @@ import { Element, Visibility } from '@ephox/sugar';
 import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
 
 export default function (editor) {
-  const selectors: ThemeSelectors = getThemeSelectors();
+  const selectors = (): ThemeSelectors => getThemeSelectors();
 
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
@@ -14,11 +14,11 @@ export default function (editor) {
   var cDialogRoot = Chain.inject(dialogRoot);
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(selectors.toolBarSelector)
+    UiFinder.cFindIn(selectors().toolBarSelector)
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(selectors.menuBarSelector)
+    UiFinder.cFindIn(selectors().menuBarSelector)
   ]);
 
   var cEditorRoot = Chain.inject(editorRoot);
@@ -122,7 +122,7 @@ export default function (editor) {
 
   var cSubmitDialog = function () {
     return Chain.fromChains([
-      UiFinder.cFindIn(selectors.dialogSubmitSelector),
+      UiFinder.cFindIn(selectors().dialogSubmitSelector),
       Mouse.cClick
     ]);
   };
