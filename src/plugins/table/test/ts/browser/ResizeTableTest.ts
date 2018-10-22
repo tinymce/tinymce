@@ -155,5 +155,5 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     NamedChain.read('editor', Editor.cRemove)
   ], function () {
     success();
-  }, failure);
+  }, failure, undefined);
 });

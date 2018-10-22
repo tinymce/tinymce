@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(''),
       sWaitForWordcount(0)
-    ], 0);
+    ]);
   };
 
   const sAssertWordcount = function (num) {
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
       sReset(tinyApis),
       tinyApis.sSetContent('<p>hello world</p>'),
       sWaitForWordcount(2)
-    ], 0);
+    ]);
   };
 
   const sTestKeystroke = function (editor, tinyApis) {
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
       sFakeTyping(editor, 'a b c'),
       sAssertWordcount(0),
       sWaitForWordcount(3)
-    ], 0);
+    ]);
   };
 
   const sExecCommand = function (editor, command) {
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
       tinyApis.sSetRawContent('<p>hello world</p>'),
       sExecCommand(editor, 'mceAddUndoLevel'),
       sWaitForWordcount(2)
-    ], 0);
+    ]);
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

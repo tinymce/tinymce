@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () 
   };
 
   const cFromSettings = function (settings, html) {
-    return Chain.on(function (_, next, die) {
+    return Chain.async(function (_, next, die) {
       const randomId = Id.generate('tiny-loader');
       settings = settings || {};
       const target = Element.fromHtml(html);
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () 
         selector: '#' + randomId,
         init_instance_callback (editor) {
           setTimeout(function () {
-            next(Chain.wrap(editor));
+            next(editor);
           }, 0);
         }
       }));

@@ -13,13 +13,13 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
     skin_url: '/project/js/tinymce/skins/lightgray'
   };
 
-  const cAssertBogusExist = Chain.on((val, next, die) => {
+  const cAssertBogusExist = Chain.async((val, next, die) => {
     UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
       () => {
         die('Should be data-mce-bogus tags present');
       },
       () => {
-        next(Chain.wrap(val));
+        next(val);
       }
     );
   });

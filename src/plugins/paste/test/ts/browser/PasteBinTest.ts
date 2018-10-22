@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
   const viewBlock = ViewBlock();
 
   const cCreateEditorFromSettings = function (settings?, html?) {
-    return Chain.on(function (viewBlock: any, next, die) {
+    return Chain.async(function (viewBlock: any, next, die) {
       const randomId = Id.generate('tiny');
       html = html || '<textarea></textarea>';
 
@@ -48,7 +48,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
         setup (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
-              next(Chain.wrap(editor));
+              next(editor);
             }, 0);
           });
         }
