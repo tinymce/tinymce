@@ -1,5 +1,5 @@
-import Html from 'ephox/sugar/api/properties/Html';
-import Insert from 'ephox/sugar/api/dom/Insert';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 

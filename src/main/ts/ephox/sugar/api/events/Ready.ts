@@ -1,4 +1,4 @@
-import DomEvent from './DomEvent';
+import * as DomEvent from './DomEvent';
 import Element from '../node/Element';
 import { document } from '@ephox/dom-globals';
 
@@ -28,6 +28,6 @@ var execute = function (f) {
   }
 };
 
-export default {
+export {
   execute
 };

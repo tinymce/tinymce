@@ -1,5 +1,4 @@
 import { Fun } from '@ephox/katamari';
-import { SVGAnimatedTransformList } from '@ephox/dom-globals';
 
 export interface Position {
   left: () => number,

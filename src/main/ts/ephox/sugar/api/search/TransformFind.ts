@@ -26,7 +26,7 @@ var closest = function <A>(scope: Element, transform: (e: Element) => Option<A>,
   });
 };
 
-export default {
+export {
   ancestor,
   closest,
 };

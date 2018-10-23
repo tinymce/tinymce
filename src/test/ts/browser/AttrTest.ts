@@ -1,4 +1,4 @@
-import Attr from 'ephox/sugar/api/properties/Attr';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';

@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Thunk } from '@ephox/katamari';
 import Element from '../../api/node/Element';
-import NativeRange from './NativeRange';
+import * as NativeRange from './NativeRange';
 import { Window, Range } from '@ephox/dom-globals';
 
 var adt = Adt.generate([
@@ -97,9 +97,12 @@ var asLtrRange = function (win: Window, selection) {
   });
 };
 
-export default {
-  ltr: adt.ltr,
-  rtl: adt.rtl,
+const ltr = adt.ltr;
+const rtl = adt.rtl;
+
+export {
+  ltr,
+  rtl,
   diagnose,
   asLtrRange,
 };

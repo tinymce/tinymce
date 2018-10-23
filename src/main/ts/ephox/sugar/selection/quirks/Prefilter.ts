@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import Element from '../../api/node/Element';
-import Node from '../../api/node/Node';
-import Selection from '../../api/selection/Selection';
+import * as Node from '../../api/node/Node';
+import * as Selection from '../../api/selection/Selection';
 import Situ from '../../api/selection/Situ';
 import { Range } from '@ephox/dom-globals';
 
@@ -40,7 +40,7 @@ var preprocess = function (selection) {
   });
 };
 
-export default {
+export {
   beforeSpecial,
   preprocess,
   preprocessRelative,

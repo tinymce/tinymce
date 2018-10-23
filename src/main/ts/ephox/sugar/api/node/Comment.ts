@@ -1,4 +1,4 @@
-import Node from './Node';
+import * as Node from './Node';
 import NodeValue from '../../impl/NodeValue';
 import Element from './Element';
 import { Option } from '@ephox/katamari';
@@ -17,7 +17,7 @@ var set = function (element: Element, value: string) {
   api.set(element, value);
 };
 
-export default {
+export {
   get,
   getOption,
   set,

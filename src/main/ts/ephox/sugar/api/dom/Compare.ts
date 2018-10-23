@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Node } from '@ephox/sand';
 import { PlatformDetection } from '@ephox/sand';
-import Selectors from '../search/Selectors';
+import * as Selectors from '../search/Selectors';
 import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
 
@@ -39,12 +39,14 @@ var browser = PlatformDetection.detect().browser;
 // (returns false if e1===e2: A node does not contain itself).
 var contains = browser.isIE() ? ieContains : regularContains;
 
-export default {
+const is = Selectors.is;
+
+export {
   eq,
   isEqualNode,
   member,
   contains,
 
   // Only used by DomUniverse. Remove (or should Selectors.is move here?)
-  is: Selectors.is
+  is
 };

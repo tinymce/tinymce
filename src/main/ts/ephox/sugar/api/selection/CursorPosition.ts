@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
-import PredicateFind from '../search/PredicateFind';
-import Traverse from '../search/Traverse';
-import Awareness from './Awareness';
+import * as PredicateFind from '../search/PredicateFind';
+import * as Traverse from '../search/Traverse';
+import * as Awareness from './Awareness';
 import Element from '../node/Element';
 
 var first = function (element: Element) {
@@ -29,7 +29,7 @@ var descendantRtl = function (scope: Element, predicate) {
   return descend(scope);
 };
 
-export default {
+export {
   first,
   last,
 };

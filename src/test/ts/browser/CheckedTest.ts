@@ -1,7 +1,7 @@
-import Checked from 'ephox/sugar/api/properties/Checked';
+import * as Checked from 'ephox/sugar/api/properties/Checked';
 import Element from 'ephox/sugar/api/node/Element';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Value from 'ephox/sugar/api/properties/Value';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Value from 'ephox/sugar/api/properties/Value';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CheckedTest', function() {

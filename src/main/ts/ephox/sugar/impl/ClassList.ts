@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import AttrList from '../api/properties/AttrList';
+import * as AttrList from '../api/properties/AttrList';
 import Element from '../api/node/Element';
 import { Element as DomElement } from '@ephox/dom-globals';
 
@@ -28,7 +28,7 @@ var toggle = function (element: Element, clazz: string) {
   }
 };
 
-export default {
+export {
   get,
   add,
   remove,

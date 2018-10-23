@@ -1,9 +1,9 @@
 import Element from '../node/Element';
-import Elements from '../node/Elements';
-import Insert from '../dom/Insert';
-import InsertAll from '../dom/InsertAll';
-import Remove from '../dom/Remove';
-import Traverse from '../search/Traverse';
+import * as Elements from '../node/Elements';
+import * as Insert from '../dom/Insert';
+import * as InsertAll from '../dom/InsertAll';
+import * as Remove from '../dom/Remove';
+import * as Traverse from '../search/Traverse';
 import { HTMLElement, Document, Node } from '@ephox/dom-globals';
 
 var get = function (element: Element) {
@@ -30,7 +30,7 @@ var getOuter = function (element: Element) {
   return get(container);
 };
 
-export default {
+export {
   get,
   set,
   getOuter,

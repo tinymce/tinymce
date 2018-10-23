@@ -1,11 +1,11 @@
-import Compare from 'ephox/sugar/api/dom/Compare';
-import DocumentPosition from 'ephox/sugar/api/dom/DocumentPosition';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as DocumentPosition from 'ephox/sugar/api/dom/DocumentPosition';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Html from 'ephox/sugar/api/properties/Html';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DocumentPositionTest', function() {

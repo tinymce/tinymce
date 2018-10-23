@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Compare from './Compare';
-import Traverse from '../search/Traverse';
+import * as Compare from './Compare';
+import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
 
 /*
@@ -34,7 +34,7 @@ var follow = function (ancestor: Element, descendantPath: number[]): Option<Elem
   }
 };
 
-export default {
+export {
   path,
   follow,
 };

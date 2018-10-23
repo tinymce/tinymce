@@ -32,7 +32,7 @@ var inRect = function (rect: ClientRect | DOMRect, x: number, y: number) {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 };
 
-export default {
+export {
   inRect,
   searchForPoint,
 };

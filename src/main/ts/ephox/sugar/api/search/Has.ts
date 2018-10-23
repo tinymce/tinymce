@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import Compare from '../dom/Compare';
-import PredicateExists from './PredicateExists';
+import * as Compare from '../dom/Compare';
+import * as PredicateExists from './PredicateExists';
 import Element from '../node/Element';
 
 var ancestor = function (element: Element, target: Element) {
@@ -26,7 +26,7 @@ var descendant = function (element: Element, target: Element) {
   return PredicateExists.descendant(element, Fun.curry(Compare.eq, target));
 };
 
-export default {
+export {
   ancestor,
   anyAncestor,
   sibling,

@@ -1,7 +1,7 @@
-import Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
+import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import Element from 'ephox/sugar/api/node/Element';
-import Html from 'ephox/sugar/api/properties/Html';
-import Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: PrefilterTest', function() {

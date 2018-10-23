@@ -1,6 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
-import Text from 'ephox/sugar/api/node/Text';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Text from 'ephox/sugar/api/node/Text';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TextTest', function() {

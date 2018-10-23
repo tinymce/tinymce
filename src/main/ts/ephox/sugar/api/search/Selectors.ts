@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
-import NodeTypes from '../node/NodeTypes';
+import * as NodeTypes from '../node/NodeTypes';
 import { document, Element as DomElement } from '@ephox/dom-globals';
 
 const ELEMENT = NodeTypes.ELEMENT;
@@ -38,7 +38,7 @@ const one = function (selector: string, scope?: Element) {
   return bypassSelector(base) ? Option.none<Element>() : Option.from(base.querySelector(selector)).map(Element.fromDom);
 };
 
-export default {
+export {
   all,
   is,
   one,

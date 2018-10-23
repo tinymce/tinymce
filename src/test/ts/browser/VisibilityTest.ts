@@ -1,11 +1,11 @@
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Css from 'ephox/sugar/api/properties/Css';
-import Visibility from 'ephox/sugar/api/view/Visibility';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 

@@ -1,5 +1,5 @@
-import Class from './Class';
-import Classes from './Classes';
+import * as Class from './Class';
+import * as Classes from './Classes';
 import Element from '../node/Element';
 
 var addClass = function (clazz: string) {
@@ -26,7 +26,7 @@ var hasClass = function (clazz: string) {
   };
 };
 
-export default {
+export {
   addClass,
   removeClass,
   removeClasses,

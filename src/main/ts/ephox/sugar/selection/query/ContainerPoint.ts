@@ -1,9 +1,9 @@
 import { Option } from '@ephox/katamari';
 import { Options } from '@ephox/katamari';
-import Node from '../../api/node/Node';
-import Traverse from '../../api/search/Traverse';
-import Geometry from '../alien/Geometry';
-import TextPoint from './TextPoint';
+import * as Node from '../../api/node/Node';
+import * as Traverse from '../../api/search/Traverse';
+import * as Geometry from '../alien/Geometry';
+import * as TextPoint from './TextPoint';
 import Element from '../../api/node/Element';
 import { Document, Range } from '@ephox/dom-globals';
 
@@ -46,6 +46,6 @@ var locate = function (doc: Element, node: Element, x: number, y: number) {
   return locateNode(doc, node, boundedX, boundedY);
 };
 
-export default {
+export {
   locate
 };

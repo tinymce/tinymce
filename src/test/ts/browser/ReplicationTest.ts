@@ -1,6 +1,6 @@
-import Replication from 'ephox/sugar/api/dom/Replication';
+import * as Replication from 'ephox/sugar/api/dom/Replication';
 import Element from 'ephox/sugar/api/node/Element';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ReplicationTest', function() {

@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
-import Css from '../api/properties/Css';
-import Style from './Style';
+import * as Css from '../api/properties/Css';
+import * as Style from './Style';
 import Element from '../api/node/Element';
 
 export default function (name: string, getOffset: (e: Element) => number) {

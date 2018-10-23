@@ -1,12 +1,9 @@
-import { Arr } from '@ephox/katamari';
-import Body from 'ephox/sugar/api/node/Body';
-import Class from 'ephox/sugar/api/properties/Class';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Resize from 'ephox/sugar/api/events/Resize';
-import Width from 'ephox/sugar/api/view/Width';
-import Monitors from 'ephox/sugar/impl/Monitors';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Resize from 'ephox/sugar/api/events/Resize';
+import * as Monitors from 'ephox/sugar/impl/Monitors';
 import { UnitTest } from '@ephox/bedrock';
 import { setTimeout } from '@ephox/dom-globals';
 

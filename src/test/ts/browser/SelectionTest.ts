@@ -1,16 +1,16 @@
 import { PlatformDetection } from '@ephox/sand';
-import Compare from 'ephox/sugar/api/dom/Compare';
-import Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Elements from 'ephox/sugar/api/node/Elements';
-import Html from 'ephox/sugar/api/properties/Html';
-import Traverse from 'ephox/sugar/api/search/Traverse';
-import Selection from 'ephox/sugar/api/selection/Selection';
+import * as Elements from 'ephox/sugar/api/node/Elements';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Selection from 'ephox/sugar/api/selection/Selection';
 import Situ from 'ephox/sugar/api/selection/Situ';
-import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
+import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { window } from '@ephox/dom-globals';
 

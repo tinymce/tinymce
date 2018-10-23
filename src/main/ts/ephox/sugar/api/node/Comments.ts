@@ -44,6 +44,6 @@ var find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
   return getNodes(texas);
 };
 
-export default {
+export {
   find
 };

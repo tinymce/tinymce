@@ -1,13 +1,13 @@
 import { Arr } from '@ephox/katamari';
-import Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Node from 'ephox/sugar/api/node/Node';
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Html from 'ephox/sugar/api/properties/Html';
-import ElementAddress from 'ephox/sugar/api/search/ElementAddress';
+import * as Node from 'ephox/sugar/api/node/Node';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as ElementAddress from 'ephox/sugar/api/search/ElementAddress';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ElementAddressTest', function() {

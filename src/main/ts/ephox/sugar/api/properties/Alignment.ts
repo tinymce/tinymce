@@ -1,6 +1,6 @@
-import Css from './Css';
-import Direction from './Direction';
-import Node from '../node/Node';
+import * as Css from './Css';
+import * as Direction from './Direction';
+import * as Node from '../node/Node';
 import Element from '../node/Element';
 
 var normal = function (value: string) {
@@ -26,6 +26,6 @@ var hasAlignment = function (element: Element, property: string, value: string) 
   return Node.isText(element) ? false : getAlignment(element, property) === value;
 };
 
-export default {
+export {
   hasAlignment
 };

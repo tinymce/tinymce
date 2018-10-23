@@ -10,7 +10,7 @@ var set = function (element: Element, value: string) {
   (element.dom() as Node).textContent = value;
 };
 
-export default {
+export {
   get,
   set,
 };

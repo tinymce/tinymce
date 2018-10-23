@@ -5,6 +5,6 @@ var isSupported = function (dom: HTMLElement) {
   return dom.style !== undefined;
 };
 
-export default {
+export {
   isSupported
 };

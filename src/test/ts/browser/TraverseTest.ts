@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
-import Attr from 'ephox/sugar/api/properties/Attr';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { document, window } from '@ephox/dom-globals';
 

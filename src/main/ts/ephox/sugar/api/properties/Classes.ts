@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import Class from './Class';
-import ClassList from '../../impl/ClassList';
+import * as Class from './Class';
+import * as ClassList from '../../impl/ClassList';
 import Element from '../node/Element';
 import { Element as DomElement } from '@ephox/dom-globals';
 
@@ -51,7 +51,7 @@ var get = function (element: Element) {
   return ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 };
 
-export default {
+export {
   add,
   remove,
   toggle,

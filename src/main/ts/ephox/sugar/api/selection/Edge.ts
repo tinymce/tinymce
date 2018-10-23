@@ -1,6 +1,6 @@
-import Compare from '../dom/Compare';
-import Awareness from './Awareness';
-import CursorPosition from './CursorPosition';
+import * as Compare from '../dom/Compare';
+import * as Awareness from './Awareness';
+import * as CursorPosition from './CursorPosition';
 import Element from '../node/Element';
 
 var isAtEdge = function (parent: Element, current: Element, currentOffset: number, descent, awareness) {
@@ -31,7 +31,7 @@ var isAtRightEdge = function (parent: Element, element: Element, offset: number)
   return isAtEdge(parent, element, offset, CursorPosition.last, Awareness.isEnd);
 };
 
-export default {
+export {
   isLeft,
   isAtLeftEdge,
   isRight,

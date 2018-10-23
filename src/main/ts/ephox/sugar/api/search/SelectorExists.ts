@@ -1,4 +1,4 @@
-import SelectorFind from './SelectorFind';
+import * as SelectorFind from './SelectorFind';
 import Element from '../node/Element';
 
 var any = function (selector: string) {
@@ -25,7 +25,7 @@ var closest = function (scope: Element, selector: string, isRoot?) {
   return SelectorFind.closest(scope, selector, isRoot).isSome();
 };
 
-export default {
+export {
   any,
   ancestor,
   sibling,

@@ -1,15 +1,15 @@
 import { PlatformDetection } from '@ephox/sand';
-import Compare from 'ephox/sugar/api/dom/Compare';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import DomEvent from 'ephox/sugar/api/events/DomEvent';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Node from 'ephox/sugar/api/node/Node';
-import Selectors from 'ephox/sugar/api/search/Selectors';
-import Traverse from 'ephox/sugar/api/search/Traverse';
-import Selection from 'ephox/sugar/api/selection/Selection';
-import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
+import * as Node from 'ephox/sugar/api/node/Node';
+import * as Selectors from 'ephox/sugar/api/search/Selectors';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Selection from 'ephox/sugar/api/selection/Selection';
+import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { setTimeout } from '@ephox/dom-globals';
 

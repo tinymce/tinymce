@@ -1,10 +1,10 @@
-import Compare from 'ephox/sugar/api/dom/Compare';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import Element from 'ephox/sugar/api/node/Element';
-import Html from 'ephox/sugar/api/properties/Html';
-import Awareness from 'ephox/sugar/api/selection/Awareness';
-import CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
-import Edge from 'ephox/sugar/api/selection/Edge';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Awareness from 'ephox/sugar/api/selection/Awareness';
+import * as CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
+import * as Edge from 'ephox/sugar/api/selection/Edge';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: CursorPositionTest', function() {

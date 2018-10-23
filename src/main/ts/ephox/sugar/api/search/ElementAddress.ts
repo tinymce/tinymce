@@ -3,11 +3,11 @@ import { Fun } from '@ephox/katamari';
 // TS reports this as unused but it's needed for cleaner JS
 import { Option } from '@ephox/katamari';
 import { Struct } from '@ephox/katamari';
-import Compare from '../dom/Compare';
-import PredicateFind from './PredicateFind';
-import SelectorFilter from './SelectorFilter';
-import SelectorFind from './SelectorFind';
-import Traverse from './Traverse';
+import * as Compare from '../dom/Compare';
+import * as PredicateFind from './PredicateFind';
+import * as SelectorFilter from './SelectorFilter';
+import * as SelectorFind from './SelectorFind';
+import * as Traverse from './Traverse';
 import Element from '../node/Element';
 
 var inAncestor = Struct.immutable('ancestor', 'descendants', 'element', 'index');
@@ -52,7 +52,7 @@ var descendantsInAncestor = function (element: Element, ancestorSelector: string
   });
 };
 
-export default {
+export {
   childOf,
   indexOf,
   indexInParent,

@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Compare from './Compare';
+import * as Compare from './Compare';
 import Element from '../node/Element';
-import PredicateExists from '../search/PredicateExists';
-import Traverse from '../search/Traverse';
+import * as PredicateExists from '../search/PredicateExists';
+import * as Traverse from '../search/Traverse';
 import { document, HTMLElement, Document } from '@ephox/dom-globals';
 
 var focus = function (element: Element) {
@@ -47,7 +47,7 @@ var search = function (element: Element) {
   });
 };
 
-export default {
+export {
   hasFocus,
   focus,
   blur,

@@ -11,6 +11,6 @@ var fromElements = function (elements: Element[], scope?: Document) {
   return Element.fromDom(fragment);
 };
 
-export default {
+export {
   fromElements
 };

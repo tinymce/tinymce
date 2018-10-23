@@ -1,6 +1,6 @@
-import Attr from '../properties/Attr';
+import * as Attr from '../properties/Attr';
 import Element from '../node/Element';
-import Insert from './Insert';
+import * as Insert from './Insert';
 import { document } from '@ephox/dom-globals';
 
 var addToHead = function (doc: Element, tag: Element) {
@@ -27,6 +27,6 @@ var addStylesheet = function (url: string, scope?: Element) {
   return link;
 };
 
-export default {
+export {
   addStylesheet
 };

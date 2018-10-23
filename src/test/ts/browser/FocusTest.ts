@@ -1,10 +1,10 @@
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Body from 'ephox/sugar/api/node/Body';
-import Compare from 'ephox/sugar/api/dom/Compare';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
 import Element from 'ephox/sugar/api/node/Element';
-import Focus from 'ephox/sugar/api/dom/Focus';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
+import * as Focus from 'ephox/sugar/api/dom/Focus';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FocusTest', function() {

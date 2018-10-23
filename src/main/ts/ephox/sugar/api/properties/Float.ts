@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
-import Css from './Css';
-import Style from '../../impl/Style';
+import * as Css from './Css';
+import * as Style from '../../impl/Style';
 import { HTMLElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
@@ -36,7 +36,7 @@ var setCentered = function (element: Element) {
   });
 };
 
-export default {
+export {
   isCentered,
   divine,
   getRaw,

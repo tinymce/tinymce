@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Insert from './Insert';
+import * as Insert from './Insert';
 import Element from '../node/Element';
 
 var before = function (marker: Element, elements: Element[]) {
@@ -27,7 +27,7 @@ var append = function (parent: Element, elements: Element[]) {
   });
 };
 
-export default {
+export {
   before,
   after,
   prepend,

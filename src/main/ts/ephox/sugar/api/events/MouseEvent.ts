@@ -1,4 +1,4 @@
-import FilteredEvent from '../../impl/FilteredEvent';
+import * as FilteredEvent from '../../impl/FilteredEvent';
 import { MouseEvent } from '@ephox/dom-globals';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
@@ -36,9 +36,14 @@ var filtered = function (event, filter) {
   };
 };
 
-export default {
-  realClick: filtered('click', isRealClick),
-  leftDown: filtered('mousedown', isLeftClick),
-  leftPressedOver: filtered('mouseover', isLeftButtonPressed),
-  leftUp: filtered('mouseup', isLeftClick)
+const realClick = filtered('click', isRealClick);
+const leftDown = filtered('mousedown', isLeftClick);
+const leftPressedOver = filtered('mouseover', isLeftButtonPressed);
+const leftUp = filtered('mouseup', isLeftClick);
+
+export {
+  realClick,
+  leftDown,
+  leftPressedOver,
+  leftUp,
 };

@@ -1,4 +1,4 @@
-import Ready from 'ephox/sugar/api/events/Ready';
+import * as Ready from 'ephox/sugar/api/events/Ready';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ReadyTest', function() {

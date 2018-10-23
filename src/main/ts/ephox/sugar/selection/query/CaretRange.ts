@@ -1,9 +1,9 @@
 import { Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
-import Traverse from '../../api/search/Traverse';
-import Selection from '../../api/selection/Selection';
-import ContainerPoint from './ContainerPoint';
-import EdgePoint from './EdgePoint';
+import * as Traverse from '../../api/search/Traverse';
+import * as Selection from '../../api/selection/Selection';
+import * as ContainerPoint from './ContainerPoint';
+import * as EdgePoint from './EdgePoint';
 import { Window, Document, Range } from '@ephox/dom-globals';
 
 declare const document: any;
@@ -66,6 +66,6 @@ var fromPoint = function (win: Window, x: number, y: number) {
   });
 };
 
-export default {
+export {
   fromPoint
 };

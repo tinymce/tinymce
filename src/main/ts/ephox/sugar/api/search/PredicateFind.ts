@@ -2,8 +2,8 @@ import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Body from '../node/Body';
-import Compare from '../dom/Compare';
+import * as Body from '../node/Body';
+import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import { Node as DomNode } from '@ephox/dom-globals';
@@ -66,7 +66,7 @@ var descendant = function (scope: Element, predicate: (e: Element) => boolean) {
   return descend(scope.dom());
 };
 
-export default {
+export {
   first,
   ancestor,
   closest,

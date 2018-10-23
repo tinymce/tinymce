@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
-import Comment from 'ephox/sugar/api/node/Comment';
-import Comments from 'ephox/sugar/api/node/Comments';
+import * as Comment from 'ephox/sugar/api/node/Comment';
+import * as Comments from 'ephox/sugar/api/node/Comments';
 import Element from 'ephox/sugar/api/node/Element';
 import { UnitTest, assert } from '@ephox/bedrock';
 

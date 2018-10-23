@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import Node from '../node/Node';
-import Text from '../node/Text';
-import Traverse from '../search/Traverse';
+import * as Node from '../node/Node';
+import * as Text from '../node/Text';
+import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
 
 var getEnd = function (element: Element) {
@@ -36,7 +36,7 @@ var isCursorPosition = function (elem: Element) {
   return hasCursorPosition || Arr.contains(elementsWithCursorPosition, Node.name(elem));
 };
 
-export default {
+export {
   getEnd,
   isEnd,
   isStart,

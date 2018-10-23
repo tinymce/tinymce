@@ -1,7 +1,6 @@
-import { PlatformDetection } from '@ephox/sand';
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Class from 'ephox/sugar/api/properties/Class';
-import Classes from 'ephox/sugar/api/properties/Classes';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Class from 'ephox/sugar/api/properties/Class';
+import * as Classes from 'ephox/sugar/api/properties/Classes';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';

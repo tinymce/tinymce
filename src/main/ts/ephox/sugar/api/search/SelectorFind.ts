@@ -1,5 +1,5 @@
-import PredicateFind from './PredicateFind';
-import Selectors from './Selectors';
+import * as PredicateFind from './PredicateFind';
+import * as Selectors from './Selectors';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import Element from '../node/Element';
 import { Option } from '@ephox/katamari';
@@ -37,7 +37,7 @@ var closest = function (scope: Element, selector: string, isRoot?) {
   return ClosestOrAncestor(Selectors.is, ancestor, scope, selector, isRoot);
 };
 
-export default {
+export {
   first,
   ancestor,
   sibling,

@@ -1,10 +1,10 @@
-import Alignment from 'ephox/sugar/api/properties/Alignment';
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Alignment from 'ephox/sugar/api/properties/Alignment';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 

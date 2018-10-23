@@ -1,7 +1,7 @@
-import Body from 'ephox/sugar/api/node/Body';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 
 /*
       <div>
