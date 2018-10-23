@@ -35,4 +35,5 @@ export const resize = (editor, deltas, resizeType: ResizeTypes) => {
 
   const dimensions = getDimensions(editor, deltas, resizeType, editor.getContainer().scrollHeight, Width.get(container));
   Obj.each(dimensions, (val, dim) => Css.set(container, dim, val + 'px'));
+  editor.fire('resize', { dimensions });
 };
