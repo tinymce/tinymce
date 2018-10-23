@@ -5,6 +5,7 @@
 @toolbar-background-color: @background-color;
 @toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-border-color}'/%3E%3C/svg%3E") 0 0 @toolbar-background-color;
 @toolbar-border-color: @border-color;
+@toolbar-border-radius: 0;
 @toolbar-padding: 0;
 @toolbar-spacing: 0;
 
@@ -18,6 +19,7 @@
     background: @toolbar-background;
     border: 1px solid @toolbar-border-color;
     border-bottom-width: 0;
+    border-radius: @toolbar-border-radius;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
