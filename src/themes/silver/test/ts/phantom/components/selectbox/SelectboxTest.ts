@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
@@ -9,6 +10,10 @@ import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
+
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -23,9 +28,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
             { value: 'two', text: 'Two' },
             { value: 'three', text: 'Three' },
           ]
-        }, {
-          icons: () => <Record<string, string>> {}
-        })
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -73,7 +76,10 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

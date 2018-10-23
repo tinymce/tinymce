@@ -1,26 +1,27 @@
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import {
   AddEventsBehaviour,
   AlloyEvents,
   Behaviour,
   ComponentApi,
+  Dropdown,
+  Focusing,
   Keying,
+  NativeEvents,
   RawDomSchema,
   Replacing,
   Sketcher,
-  UiSketcher,
-  Dropdown,
   SystemEvents,
-  NativeEvents,
-  Focusing,
+  UiSketcher,
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Compare, SelectorFind } from '@ephox/sugar';
+import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { SingleMenuItemApi } from '../menu/SingleMenu';
 import { renderMenuButton } from './Integration';
-import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { SelectorFind, Compare } from '@ephox/sugar';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -45,7 +46,7 @@ export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubar
 }
 
 export interface MenubarItemSpec {
-  text: string;
+  text: TranslatedString;
   getItems: () => SingleMenuItemApi[];
 }
 
@@ -54,6 +55,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
     const newMenus = Arr.map(menus, (m) => {
       // FIX: this. Make it go through bridge.
       const buttonSpec = {
+
+        // TODO: backstage me
         text: Option.some(m.text),
         icon: Option.none(),
         fetch: (callback) => {

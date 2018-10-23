@@ -19,7 +19,7 @@ export interface AutocompleteGoo {
 }
 
 export const renderAutocomplete = (spec: AutocompleteGoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-  const pLabel = renderLabel(spec.label.getOr('?'));
+  const pLabel = renderLabel(spec.label.getOr('?'), sharedBackstage.providers);
 
   const pField = AlloyFormField.parts().field({
     factory: Typeahead,

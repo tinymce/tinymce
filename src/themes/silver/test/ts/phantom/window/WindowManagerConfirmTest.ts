@@ -85,27 +85,41 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                         s.element('div', {
                           classes: [ arr.has('tox-dialog__footer') ],
                           children: [
-                            s.element('button', {
-                              html: str.is('Yes'),
-                              classes: [
-                                arr.has('tox-button'),
-                              ],
+                            s.element('div', {
+                              classes: [ arr.has('tox-dialog__footer-start') ],
                               attrs: {
-                                'type': str.is('button'),
-                                'role': str.is('button'),
-                                'data-alloy-tabstop': str.is('true')
-                              },
+                                role: str.is('presentation')
+                              }
                             }),
-                            s.element('button', {
-                              html: str.is('No'),
-                              classes: [
-                                arr.has('tox-button'),
-                              ],
+                            s.element('div', {
+                              classes: [ arr.has('tox-dialog__footer-end') ],
                               attrs: {
-                                'type': str.is('button'),
-                                'role': str.is('button'),
-                                'data-alloy-tabstop': str.is('true')
+                                role: str.is('presentation')
                               },
+                              children: [
+                                s.element('button', {
+                                  html: str.is('Yes'),
+                                  classes: [
+                                    arr.has('tox-button'),
+                                  ],
+                                  attrs: {
+                                    'type': str.is('button'),
+                                    'role': str.is('button'),
+                                    'data-alloy-tabstop': str.is('true')
+                                  },
+                                }),
+                                s.element('button', {
+                                  html: str.is('No'),
+                                  classes: [
+                                    arr.has('tox-button'),
+                                  ],
+                                  attrs: {
+                                    'type': str.is('button'),
+                                    'role': str.is('button'),
+                                    'data-alloy-tabstop': str.is('true')
+                                  },
+                                })
+                              ]
                             })
                           ]
                         })

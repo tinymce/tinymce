@@ -4,7 +4,12 @@ import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { AddButtonSettings } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
-import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import {
+  renderSplitButton,
+  renderToolbarButton,
+  renderToolbarToggleButton,
+} from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
@@ -33,12 +38,22 @@ const renderFromBridge = <BI, BO>(bridgeBuilder: (i: BI) => Result<BO, ValueSche
 const types = {
   button: renderFromBridge(
     Toolbar.createToolbarButton,
-    renderToolbarButton
+    (s: Toolbar.ToolbarButton, extras) => {
+      return renderToolbarButton(
+        s,
+        extras.backstage.shared.providers,
+      );
+    }
   ),
 
   togglebutton: renderFromBridge(
     Toolbar.createToggleButton,
-    renderToolbarToggleButton
+    (s: Toolbar.ToolbarToggleButton, extras) => {
+      return renderToolbarToggleButton(
+        s,
+        extras.backstage.shared.providers,
+      );
+    }
   ),
   menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonApi, Toolbar.ToolbarMenuButton>(
     Toolbar.createMenuButton,

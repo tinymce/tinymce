@@ -36,7 +36,6 @@ const styleValueToText = function (styleValue) {
     return chr.toUpperCase();
   });
 };
-// </ListStyles>
 
 const isWithinList = (editor: Editor, e, nodeName) => {
   const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
@@ -58,11 +57,13 @@ const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = styleValue === 'default' ? '' : styleValue;
+        const displayText = styleValueToText(styleValue);
         return {
           type: 'choiceitem',
           value: itemValue,
           icon: 'list-' +  iconStyle + '-' + iconName,
-          text: styleValueToText(styleValue)
+          text: displayText,
+          ariaLabel: displayText
         };
       });
       callback(items);

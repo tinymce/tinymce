@@ -70,7 +70,7 @@ export default () => {
     colspan: Option.none(),
     sandboxed: true,
     flex: false
-  });
+  }, sharedBackstage.providers);
 
   const inputSpec = renderInput({
     name: 'input',
@@ -78,7 +78,7 @@ export default () => {
     validation: Option.some({
       validator: (s) => s === 'bad' ? 'Bad' : true
     })
-  });
+  }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
@@ -87,7 +87,7 @@ export default () => {
     validation: Option.some({
       validator: (s) => s === 'so bad' ? 'So bad' : true
     })
-  });
+  }, sharedBackstage.providers);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
     return {
@@ -113,9 +113,9 @@ export default () => {
         label: Option.some('exampleInput'),
         name: 'exampleinputfieldname',
         validation: Option.none()
-      })
+      }, sharedBackstage.providers)
     ]
-  }, sharedBackstage);
+  });
 
   const labelGridSpec = renderUiLabel({
     label: 'A label wraps a grid compontent',
@@ -131,7 +131,7 @@ export default () => {
             primary: false
           }, () => {
             console.log('clicked on the button in the grid');
-          }) as any,
+          }, sharedBackstage.providers) as any,
           renderCheckbox({
             label: 'check box item 1',
             name: 'one'
@@ -144,12 +144,11 @@ export default () => {
             label: Option.some('exampleInput'),
             name: 'exampleinputfieldname',
             validation: Option.none()
-          })
+          }, sharedBackstage.providers)
         ]
       }, sharedBackstage)
-
     ]
-  }, sharedBackstage);
+  });
 
   const listboxSpec = renderListbox({
     name: 'listbox1',
@@ -160,7 +159,7 @@ export default () => {
       { value: 'gamma', text: 'Gamma' }
     ],
     initialValue: Option.some('beta')
-  });
+  }, sharedBackstage.providers);
 
   const gridSpec = renderGrid({
     type: 'grid',
@@ -173,7 +172,7 @@ export default () => {
         primary: false
       }, () => {
         console.log('clicked on the button in the grid');
-      }) as any
+      }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
 
@@ -183,7 +182,7 @@ export default () => {
     primary: false
   }, () => {
     console.log('clicked on the button');
-  });
+  }, sharedBackstage.providers);
 
   const checkboxSpec = (() => {
     const memBodyPanel = Memento.record(
@@ -244,7 +243,7 @@ export default () => {
     name: 'dropzone-demo',
     colspan: Option.none(),
     label: Option.some('Dropzone label')
-  });
+  }, sharedBackstage.providers);
 
   const selectBoxSpec = renderSelectBox({
     type: 'selectbox',
@@ -356,7 +355,7 @@ export default () => {
       name: 'collection',
       label: Option.some('Collection: '),
       colspan: Option.none()
-    })
+    }, sharedBackstage.providers)
   );
 
   const everything = GuiFactory.build({

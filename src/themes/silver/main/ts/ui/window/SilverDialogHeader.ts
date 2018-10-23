@@ -5,30 +5,32 @@ import {
   Button,
   Container,
   DomFactory,
+  Dragging,
   GuiFactory,
   ModalDialog,
   Reflecting,
-  Dragging,
 } from '@ephox/alloy';
+import { Option } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import { titleChannel } from './DialogChannels';
-import { SelectorFind } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
 
 export interface WindowHeaderFoo {
   title: string;
   draggable: boolean;
 }
 
-const renderClose = () => {
+const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
   return Button.sketch({
     dom: {
       tag: 'button',
       classes: ['tox-button', 'tox-button--icon', 'tox-button--naked'],
       attributes: {
         'type': 'button',
-        'aria-label': 'Close'
+        'aria-label': providersBackstage.translate('Close'),
+        'title': providersBackstage.translate('Close'), // TODO tooltips: AP-213
       }
     },
     components: [
@@ -69,12 +71,12 @@ const renderTitle = (foo: WindowHeaderFoo, id: Option<string>): AlloySpec => {
   };
 };
 
-const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string): AlloySpec => {
+const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components: [
       renderTitle(foo, Option.some(titleId)),
-      renderClose()
+      renderClose(providersBackstage)
     ],
     containerBehaviours: Behaviour.derive([
       Dragging.config({
@@ -93,7 +95,7 @@ const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string): AlloySpec =>
   });
 };
 
-const renderModalHeader = (foo: WindowHeaderFoo): AlloySpec => {
+const renderModalHeader = (foo: WindowHeaderFoo, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   const pTitle = ModalDialog.parts().title(
     renderTitle(foo, Option.none())
   );
@@ -103,7 +105,7 @@ const renderModalHeader = (foo: WindowHeaderFoo): AlloySpec => {
   });
 
   const pClose = ModalDialog.parts().close(
-    renderClose()
+    renderClose(providersBackstage)
   );
 
   const components = [ pTitle ].concat(foo.draggable ? [ pHandle ] : []).concat([ pClose ]);

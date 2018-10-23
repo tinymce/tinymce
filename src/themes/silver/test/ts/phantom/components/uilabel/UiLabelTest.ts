@@ -11,7 +11,7 @@ import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   const helpers = setupDemo();
-  const sharedBackstage = helpers.extras.backstage.shared;
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -22,14 +22,14 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
             renderCheckbox({
               label: 'check box item 1',
               name: 'one'
-            }, sharedBackstage.providers),
+            }, providers),
             renderInput({
               label: Option.some('exampleInput'),
               name: 'exampleinputfieldname',
               validation: Option.none()
-            })
+            }, providers)
           ]
-        }, sharedBackstage)
+        })
       );
     },
     (doc, body, gui, component, store) => {

@@ -4,9 +4,15 @@ import { UnitTest } from '@ephox/bedrock';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
 import { GuiSetup } from '../../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Grid component Test', (success, failure) => {
+
+  const sharedBackstage = {
+    interpreter: (x) => x,
+    translate: I18n.translate
+  };
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -28,9 +34,7 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
               }
             } as any
           ]
-         }, {
-           interpreter: (x) => x
-         })
+         }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {

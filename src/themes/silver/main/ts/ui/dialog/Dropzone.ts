@@ -21,8 +21,9 @@ import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
+import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
@@ -33,7 +34,7 @@ const filterByExtension = function (files: FileList) {
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
-export const renderDropZone = (spec: Types.DropZone.DropZone): SimpleSpec => {
+export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   // TODO: Consider moving to alloy
   const stopper: EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
@@ -150,7 +151,7 @@ export const renderDropZone = (spec: Types.DropZone.DropZone): SimpleSpec => {
     };
   };
 
-  const pLabel = spec.label.map(renderLabel);
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
   const pField = AlloyFormField.parts().field({
     factory: { sketch: renderField }
   });
