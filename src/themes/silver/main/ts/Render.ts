@@ -157,7 +157,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'],
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
