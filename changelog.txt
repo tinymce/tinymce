@@ -1,3 +1,17 @@
+Version 4.8.4 (2018-10-23)
+    Added support for the HTML5 `main` element. #TINY-1877
+    Changed the keyboard shortcut to move focus to contextual toolbars to Ctrl+F9. #TINY-1812
+    Fixed a bug where content css could not be loaded from another domain. #TINY-1891
+    Fixed a bug on FireFox where the cursor would get stuck between two contenteditable false inline elements located inside of the same block element divided by a BR. #TINY-1878
+    Fixed a bug with the insertContent method where nonbreaking spaces would be inserted incorrectly. #TINY-1868
+    Fixed a bug where the toolbar of the inline editor would not be visible in some scenarios. #TINY-1862
+    Fixed a bug where removing the editor while more than one notification was open would throw an error. #TINY-1845
+    Fixed a bug where the menubutton would be rendered on top of the menu if the viewport didn't have enough height. #TINY-1678
+    Fixed a bug with the annotations api where annotating collapsed selections caused problems. #TBS-2449
+    Fixed a bug where wbr elements were being transformed into whitespace when using the Paste Plugin's paste as text setting. #GH-4638
+    Fixed a bug where the Search and Replace didn't replace spaces correctly. #GH-4632
+    Fixed a bug with sublist items not persisting selection. #GH-4628
+    Fixed a bug with mceInsertRawHTML command not working as expected. #GH-4625
 Version 4.8.3 (2018-09-13)
     Fixed a bug where the Wordcount Plugin didn't correctly count words within tables on IE11. #TINY-1770
     Fixed a bug where it wasn't possible to move the caret out of a table on IE11 and Firefox. #TINY-1682
