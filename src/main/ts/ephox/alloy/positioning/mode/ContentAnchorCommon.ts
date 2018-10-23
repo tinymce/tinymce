@@ -6,7 +6,22 @@ import * as CssPosition from '../../alien/CssPosition';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import * as AnchorLayouts from './AnchorLayouts';
-import { Element } from '@ephox/sugar';
+import { Element, Position } from '@ephox/sugar';
+
+const capRect = (left: number, top: number, width: number, height: number): Option<Boxes.BoxByPoint> => {
+  let newLeft = left, newTop = top, newWidth = width, newHeight = height;
+  // Try to prevent the context toolbar from getting above the editor toolbar
+  if (left < 0) {
+    newLeft = 0;
+    newWidth = width + left;
+  }
+  if (top < 0) {
+    newTop = 0;
+    newHeight = height + top;
+  }
+  const point = CssPosition.screen(Position(newLeft, newTop));
+  return Option.some(Boxes.pointed(point, newWidth, newHeight));
+};
 
 const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: Element) => {
   return optBox.map((box) => {
@@ -55,5 +70,6 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
 };
 
 export default {
+  capRect,
   calcNewAnchor
 };

@@ -17,8 +17,7 @@ const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Or
 
   return anchorInfo.node().bind((target) => {
     const rect = target.dom().getBoundingClientRect();
-    const point = CssPosition.screen(Position(rect.left, rect.top));
-    const nodeBox = Option.some(Boxes.pointed(point, rect.width, rect.height));
+    const nodeBox = ContentAnchorCommon.capRect(rect.left, rect.top, rect.width, rect.height);
     const elem = anchorInfo.node().getOr(component.element());
     return ContentAnchorCommon.calcNewAnchor(nodeBox, rootPoint, anchorInfo, origin, elem);
   });
