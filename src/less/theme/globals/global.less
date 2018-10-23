@@ -3,10 +3,9 @@
 //
 
 @tinymce-container-padding: 0;
-@tinymce-container-border: 1px solid @border-color;
 
 .tox-tinymce {
-  border: @tinymce-container-border;
+  border: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -14,6 +13,14 @@
   overflow: hidden;
   padding: @tinymce-container-padding;
   visibility: inherit !important;
+}
+
+// styles for making statusbar appear above toolbars when making the editor height very small
+.tox-editor-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .tox-tinymce-aux {

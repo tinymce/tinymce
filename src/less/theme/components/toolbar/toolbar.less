@@ -4,9 +4,9 @@
 
 @toolbar-background-color: @background-color;
 @toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-border-color}'/%3E%3C/svg%3E") 0 0 @toolbar-background-color;
-@toolbar-border-color: darken(@toolbar-background-color, 20);
-@toolbar-margin: 0;
+@toolbar-border-color: @border-color;
 @toolbar-padding: 0;
+@toolbar-spacing: 0;
 
 // private variables
 @_toolbar-border-color: escape('@{toolbar-border-color}');
@@ -19,9 +19,10 @@
     border: 1px solid @toolbar-border-color;
     border-bottom-width: 0;
     display: flex;
+    flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    margin: @toolbar-margin;
+    margin: 0 0 @toolbar-spacing 0;
     padding: @toolbar-padding;
   }
 
@@ -30,18 +31,13 @@
     margin-bottom: -1px;
   }
 
-  .tox-menubar + .tox-toolbar {
-    border-top: none;
-  }
-
   .tox-toolbar--no-divider {
     background-image: none;
   }
 
-  // Prevent double border between edit area and toolbars
-  .tox-toolbar + .tox-edit-area,
-  .tox-toolbar + .tox-sidebar-wrap .tox-edit-area {
-    border-top: 0;
+  // Remove double borders
+  .tox-menubar + .tox-toolbar {
+    margin-top: -1px;
   }
 
   // Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
