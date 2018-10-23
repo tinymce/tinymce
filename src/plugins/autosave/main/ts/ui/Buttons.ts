@@ -24,7 +24,7 @@ const register = function (editor, started) {
 
   editor.ui.registry.addButton('restoredraft', {
     type: 'button',
-    text: 'Restore last draft',
+    tooltip: 'Restore last draft',
     icon: 'restore-draft',
     onAction: () => {
       Storage.restoreLastDraft(editor);

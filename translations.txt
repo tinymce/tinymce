@@ -10,6 +10,16 @@ Error                     <new>
 Warn                      <new>
 Valid                     <new>
 
+Search                     <new>Charmap
+All                        <new>Charmap
+Finance                    <new>Charmap
+Signs                      <new>Charmap
+Quotations                 <new>Charmap
+Mathematical               <new>Charmap
+Extended Latin             <new>Charmap
+Symbols                    <new>Charmap
+Arrows                     <new>Charmap
+User Defined               <new>Charmap
 
 
 
