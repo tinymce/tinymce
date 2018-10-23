@@ -1,8 +1,12 @@
 import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-export const setup = (extras) => {
+export interface ConfirmDialogSetup {
+    backstage: UiFactoryBackstage;
+}
+export const setup = (extras: ConfirmDialogSetup) => {
   const sharedBackstage = extras.backstage.shared;
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
@@ -17,14 +21,14 @@ export const setup = (extras) => {
         name: 'yes',
         text: 'Yes',
         primary: true,
-      }, 'submit', sharedBackstage)
+      }, 'submit', sharedBackstage.providers)
     );
 
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
       primary: true
-    }, 'cancel', sharedBackstage);
+    }, 'cancel', sharedBackstage.providers);
 
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
@@ -34,7 +38,7 @@ export const setup = (extras) => {
           close: Dialogs.pClose(() => {
             closeDialog(confirmDialog, false);
           }),
-          body: Dialogs.pBodyMessage(message, sharedBackstage),
+          body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterYes.asSpec(),
             footerNo

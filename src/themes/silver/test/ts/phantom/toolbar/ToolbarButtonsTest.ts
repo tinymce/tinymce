@@ -11,6 +11,7 @@ import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
   const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   const shouldDisable = Cell(false);
   const shouldActivate = Cell(false);
@@ -43,7 +44,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     store.adder('onAction.1')();
                     api.setDisabled(shouldDisable.get());
                   }
-                }, helpers.extras)
+                }, providers)
               ]
             },
 
@@ -69,7 +70,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     api.setDisabled(shouldDisable.get());
                     api.setActive(shouldActivate.get());
                   }
-                }, helpers.extras)
+                }, providers)
               ]
             },
 

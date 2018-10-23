@@ -17,12 +17,17 @@ import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-const validateData = (data, validator) => {
+export interface WindowManagerSetup {
+  backstage: UiFactoryBackstage;
+}
+
+const validateData = (data: Record<string, string>, validator: Processor) => {
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 };
 
-const setup = (extras) => {
+const setup = (extras: WindowManagerSetup) => {
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
@@ -69,7 +74,7 @@ const setup = (extras) => {
   };
 
   const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void) => {
-    const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+    const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData: Record<string, string>, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData(internalInitialData, dataValidator);
 
       const dialogInit = {

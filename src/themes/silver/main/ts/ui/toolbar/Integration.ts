@@ -4,7 +4,12 @@ import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { AddButtonSettings } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
-import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton, ToolbarButtonExtras } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import {
+  renderSplitButton,
+  renderToolbarButton,
+  renderToolbarToggleButton,
+} from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
