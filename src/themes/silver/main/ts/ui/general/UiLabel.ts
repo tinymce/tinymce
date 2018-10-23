@@ -1,24 +1,30 @@
-import { Behaviour, Replacing, SimpleSpec } from '@ephox/alloy';
-
-import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import { Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
-export interface UiLabelFoo {
-  name: string;
-  html: string;
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+
+export interface RenderUiLabel<I> {
+  label: string;
+  items: I[];
 }
 
-export const renderUiLabel = function (spec: UiLabelFoo): SimpleSpec {
+export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
   return {
     dom: {
       tag: 'label',
-      innerHtml: spec.html
+      innerHtml: spec.label,
+      classes: [ 'tox-label' ]
     },
+    components: spec.items,
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({ }),
-      RepresentingConfigs.domHtml(Option.some(spec.html))
+      RepresentingConfigs.domHtml(Option.none()),
+      Keying.config({
+        mode: 'acyclic'
+      }),
     ])
   };
 };

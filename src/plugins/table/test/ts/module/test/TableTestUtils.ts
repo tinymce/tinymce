@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Mouse, Step, UiFinder, Waiter, UiControls, Logger } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Mouse, Step, UiFinder, Waiter, UiControls, Logger, NamedChain } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyDom } from '@ephox/mcagar';
 import { Element, SelectorFind, Body } from '@ephox/sugar';
@@ -140,6 +140,70 @@ const sAssertSelectValue = (label, section, expected) => Logger.t('Assert select
   Assertions.cAssertEq('Checking select: ' + label, expected)
 ]));
 
+const cGetBody = Chain.control(
+  Chain.mapper(function (editor: any) {
+    return TinyDom.fromDom(editor.getBody());
+  }),
+  Guard.addLogging('Get body')
+);
+
+const cInsertTable = function (cols, rows) {
+  return Chain.mapper(function (editor: any) {
+    return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
+  });
+};
+
+const cMergeCells = (keys) => Chain.control(
+  Chain.mapper((editor: any) => {
+    keys(editor);
+    editor.execCommand('mceTableMergeCells');
+  }),
+  Guard.addLogging('Merge cells')
+);
+
+const cSplitCells = Chain.control(
+  Chain.mapper((editor: any) => {
+    editor.execCommand('mceTableSplitCells');
+  }),
+  Guard.addLogging('Split cells')
+);
+
+const cDragHandle = function (id, deltaH, deltaV) {
+  return Chain.control(
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cGetBody, 'editorBody'),
+      NamedChain.read('editorBody', Chain.control(
+        UiFinder.cFindIn('#mceResizeHandle' + id),
+        Guard.tryUntil('wait for resize handlers', 100, 40000)
+      )),
+      NamedChain.read('editorBody', Chain.fromChains([
+        UiFinder.cFindIn('#mceResizeHandle' + id),
+        Mouse.cMouseDown,
+        Mouse.cMouseMoveTo(deltaH, deltaV),
+        Mouse.cMouseUp
+      ])),
+      NamedChain.outputInput
+    ]),
+    Guard.addLogging('Drag handle')
+  );
+};
+
+const cGetWidth = Chain.control(
+  Chain.mapper(function (input: any) {
+    const editor = input.editor;
+    const elm = input.element.dom();
+    const rawWidth = editor.dom.getStyle(elm, 'width');
+    const pxWidth = editor.dom.getStyle(elm, 'width', true);
+    return {
+      raw: parseFloat(rawWidth),
+      px: parseInt(pxWidth, 10),
+      isPercent: /%$/.test(rawWidth)
+    };
+  }),
+  Guard.addLogging('Get width')
+);
+
 export default {
   sAssertDialogPresence,
   sAssertSelectValue,
@@ -154,5 +218,11 @@ export default {
   sAssertElementStructure,
   sAssertApproxElementStructure,
   cSetInputValue,
-  cWaitForDialog
+  cWaitForDialog,
+  cGetBody,
+  cInsertTable,
+  cMergeCells,
+  cSplitCells,
+  cDragHandle,
+  cGetWidth
 };

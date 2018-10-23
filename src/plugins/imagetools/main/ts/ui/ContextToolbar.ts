@@ -15,7 +15,9 @@ import Actions from '../core/Actions';
 const register = function (editor) {
   editor.ui.registry.addContextToolbar('imagetools', {
     items: Settings.getToolbarItems(editor),
-    predicate: Fun.curry(Actions.isEditableImage, editor)
+    predicate: Fun.curry(Actions.isEditableImage, editor),
+    position: 'node',
+    scope: 'node'
   });
 };
 
