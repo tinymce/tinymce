@@ -18,7 +18,7 @@ export const setup = (extras) => {
         name: 'close-alert',
         text: 'Ok',
         primary: true
-      }, 'cancel', sharedBackstage)
+      }, 'cancel', sharedBackstage.providers)
     );
 
     const alertDialog = GuiFactory.build(
@@ -29,7 +29,7 @@ export const setup = (extras) => {
           close: Dialogs.pClose(() => {
             closeDialog(alertDialog);
           }),
-          body: Dialogs.pBodyMessage(message, sharedBackstage),
+          body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterClose.asSpec()
           ]))
