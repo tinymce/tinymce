@@ -172,6 +172,13 @@ const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, on
   }, onFailure, AgarLogs.getOrInit(initLogs));
 };
 
+const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O> => {
+  return Chain.on((input: I, next, die, initLogs) => {
+    const steps = getSteps(input);
+    Pipeline.async({ }, steps, next, die, initLogs);
+  });
+}
+
 export const Chain = {
   on,
   op,
@@ -180,6 +187,8 @@ export const Chain = {
   mapper,
   identity,
   binder,
+
+  runStepsOnValue,
 
   inject,
   fromChains,
