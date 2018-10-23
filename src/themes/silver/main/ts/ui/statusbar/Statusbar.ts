@@ -4,13 +4,18 @@ import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
 import ElementPath from './ElementPath';
 import { ResizeTypes, resize } from '../sizing/Resize';
+import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-const renderStatusbar = (editor): SimpleSpec => {
+const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
     return {
       dom: {
         tag: 'div',
         classes: [ 'tox-statusbar__resize-handle' ],
+        attributes: {
+          title: providersBackstage.translate('Resize') // TODO: tooltips AP-213
+        },
         innerHtml: getDefaultOr('icon-resize-handle', () => ''),
       },
       behaviours: Behaviour.derive([

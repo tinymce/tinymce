@@ -3,14 +3,14 @@ import { AnchorSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/mod
 import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
 import { Option, Result } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
+import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
+
 import { SelectData } from '../ui/core/complex/BespokeSelect';
-import OuterContainer from '../ui/general/OuterContainer';
 import { IconProvider } from '../ui/icons/Icons';
+import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-import { UiFactoryBackstageForColorInput, ColorInputBackstage } from './ColorInputBackstage';
-import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -42,7 +42,7 @@ export interface UiFactoryBackstage {
   colorinput?: UiFactoryBackstageForColorInput;
 }
 
-const init = (container, sink, editor) => {
+const init = (sink, editor, lazyToolbar) => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -57,7 +57,7 @@ const init = (container, sink, editor) => {
           return {
             anchor: 'hotspot',
             // TODO AP-174 (below)
-            hotspot: OuterContainer.getToolbar(container).getOrDie('Could not find a toolbar element'),
+            hotspot: lazyToolbar(),
             layouts: {
               onRtl: () => [ Layout.southeast ],
               onLtr: () => [ Layout.southwest ]
@@ -68,7 +68,7 @@ const init = (container, sink, editor) => {
           return {
             anchor: 'hotspot',
             // TODO AP-174 (below)
-            hotspot: OuterContainer.getToolbar(container).getOrDie('Could not find a toolbar element'),
+            hotspot: lazyToolbar(),
             layouts: {
               onRtl: () => [ Layout.south ],
               onLtr: () => [ Layout.south ]
