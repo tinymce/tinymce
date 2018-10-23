@@ -122,7 +122,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
         Options.cat([
           catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
           catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
-          catalogs.targets.map(ListOptions.createUi('target', 'Targets')),
+          catalogs.targets.map(ListOptions.createUi('target', 'Target')),
           catalogs.link.map(ListOptions.createUi('link', 'Link list')),
           catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
         ])
