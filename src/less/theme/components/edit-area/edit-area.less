@@ -3,18 +3,26 @@
 //
 
 @edit-area-border-color: @border-color;
+@edit-area-border-style: solid;
+@edit-area-border-width: 1px;
 
 .tox {
   .tox-edit-area {
-    border: 1px solid @edit-area-border-color;
+    border-color: @edit-area-border-color;
+    border-style: @edit-area-border-style;
+    border-width: @edit-area-border-width;
     display: flex;
     flex: 1;
+    margin-top: -1px; // Remove double borders
+    position: relative; // Required for the iframe to resize in IE and Edge
   }
 
   .tox-edit-area__iframe {
     border: 0;
     box-sizing: border-box;
     flex: 1;
+    height: 100%;
+    position: absolute; // Required for the iframe to resize in IE and Edge
     width: 100%;
   }
 }
