@@ -60,7 +60,14 @@ const modifyStartedEntry = (logs: TestLogs, f): TestLogs => {
 const modifyLastEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => {
   // Consider consolidating with modifyStartedEntryTo
   return Arr.last(entries).fold(
-    () => entries,
+    () => [
+      f({
+        message: 'Unknown',
+        state: TestLogEntryState.Original,
+        entries: [ ],
+        trace: null
+      })
+    ],
     (lastEntry) => {
       if (lastEntry.state === TestLogEntryState.Started) {
         return entries.slice(0, entries.length - 1).concat([{

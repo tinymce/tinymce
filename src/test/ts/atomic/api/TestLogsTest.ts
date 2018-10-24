@@ -22,6 +22,11 @@ UnitTest.test('TestLogsTest', () => {
 
   Arr.foldl([
     addToLog('alpha'),
+    addTraceToLog({ stack: 'alpha-first' }),
+    assertLog([
+      { message: 'alpha', entries: [ ], state: TestLogEntryState.Original, trace: 'alpha-first' }
+    ]),
+    addTraceToLog({ stack: null }),
     assertLog([
       { message: 'alpha', entries: [ ], state: TestLogEntryState.Original, trace: null }
     ]),
