@@ -16,7 +16,7 @@ var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin/less-
 // Lint less files using stylelint
 //
 gulp.task('lint', function() {
-  return gulp.src('./src/**/*.less')
+  return gulp.src('./src/less/**/*.less')
     .pipe(gulpStylelint({
       failAfterError: false,
       reporters: [
@@ -63,7 +63,7 @@ gulp.task('copyFilesA', function() {
 });
 
 gulp.task('copyFilesB', function() {
-  return gulp.src(['./src/demo/skin/*.css', './src/demo/skin/*.js'])
+  return gulp.src(['./src/demo/skin/*.less', './src/demo/skin/*.css', './src/demo/skin/*.js'])
     .pipe(gulp.dest('./build/skin'));
 });
 
