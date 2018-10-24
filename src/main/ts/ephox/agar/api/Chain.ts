@@ -87,6 +87,12 @@ const inject = function <U>(value: U) {
   });
 };
 
+const injectThunked = <U>(f: () => U) => {
+  return on((_input: any, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => {
+    next(wrap(f()), logs);
+  });
+};
+
 const extract = function <T, U>(chain: Chain<T, U>): ChainRunFn<T, U> {
   if (!chain.runChain) throw ('Step: ' + chain.toString() + ' is not a chain');
   else return chain.runChain;
@@ -191,6 +197,7 @@ export const Chain = {
   runStepsOnValue,
 
   inject,
+  injectThunked,
   fromChains,
   fromChainsWith,
   fromParent,
