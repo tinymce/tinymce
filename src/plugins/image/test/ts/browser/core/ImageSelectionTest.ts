@@ -1,4 +1,4 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Merger } from '@ephox/katamari';
@@ -7,11 +7,9 @@ import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
+import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Theme();
   Plugin();
 
@@ -34,6 +32,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
     });
   };
 
+  const sWaitForDragHandles = (editor: any): Step<any, any> => {
+    return Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 100, 5000);
+  };
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
@@ -46,6 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
           height: '100',
           width: '100'
         }),
+        sWaitForDragHandles(editor),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('div', {
             children: [
@@ -61,7 +64,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
                   }),
                   s.element('br', {})
                 ]
-              })
+              }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
             ]
           });
         }))
@@ -75,6 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
           height: '100',
           width: '100'
         }),
+        sWaitForDragHandles(editor),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('div', {
             children: [
@@ -103,7 +111,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
                 ]
               }),
               s.element('p', {}),
-              s.anything()
+              s.anything(),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
             ]
           });
         }))
@@ -120,6 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
           height: '100',
           width: '100'
         }),
+        sWaitForDragHandles(editor),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('div', {
             children: [
@@ -148,7 +161,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
                   })
                 ]
               }),
-              s.anything()
+              s.anything(),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
             ]
           });
         }))
@@ -163,6 +180,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
           height: '100',
           width: '100'
         }),
+        sWaitForDragHandles(editor),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('div', {
             children: [
@@ -178,7 +196,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', func
                     }
                   })
                 ]
-              })
+              }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
             ]
           });
         }))
