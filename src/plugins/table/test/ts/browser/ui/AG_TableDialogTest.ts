@@ -256,7 +256,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         backgroundcolor: ''
       };
 
-      const newHtml = '<table class="dog" style="width: 500px; height: 500px; float: left; background-color: #0000ff; border: 1px dotted #ff0000; border-spacing: 5px;"><caption>&nbsp;</caption><tbody><tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr></tbody></table>';
+      const newHtml = '<table class="dog" style="width: 500px; height: 500px; float: left; background-color: #0000ff; border: 1px dotted #ff0000; border-spacing: 5px; border-collapse: collapse;" border="1"><caption>&nbsp;</caption><tbody><tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr></tbody></table>';
 
       const newData = {
         width: '500px',
