@@ -1,4 +1,4 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions } from '@ephox/agar';
+import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   '</table>';
 
   const cOnSelector = function (selector) {
-    return Chain.on(function (_, next) {
+    return Chain.async(function (_, next, _die) {
       EditorManager.init({
         selector,
         inline: true,
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
         setup (editor) {
           editor.on('SkinLoaded', function () {
               setTimeout(function () {
-                  next(Chain.wrap(editor));
+                  next(editor);
               }, 0);
           });
       }
@@ -51,13 +51,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   };
 
   NamedChain.pipeline([
-    NamedChain.write('container', Chain.on((input, next) => {
+    NamedChain.write('container', Chain.async((input, next) => {
       const container = Element.fromTag('div');
       Attr.set(container, 'id', 'test-container-div');
       Html.set(container, containerHtml);
       Insert.append(Body.body(), container);
 
-      next(Chain.wrap(container));
+      next(container);
     })),
     NamedChain.write('editor', cOnSelector('div.tinymce')),
     NamedChain.direct('container', Chain.fromChains([
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     ]), '_'),
     NamedChain.read('editor', Editor.cRemove),
     NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
-  ], function () {
+  ], function (v, newLogs) {
     success();
-  }, failure);
+  }, failure, TestLogs.init());
 });

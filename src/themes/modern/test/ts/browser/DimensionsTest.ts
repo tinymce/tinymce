@@ -15,7 +15,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
   const viewBlock = ViewBlock();
 
   const cCreateEditorFromSettings = function (settings, html?) {
-    return Chain.on(function (viewBlock: any, next, die) {
+    return Chain.async(function (viewBlock: any, next, die) {
       const randomId = Id.generate('tiny-');
       html = html || '<textarea></textarea>';
 
@@ -28,7 +28,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
         setup (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
-              next(Chain.wrap(editor));
+              next(editor);
             }, 0);
           });
         }
@@ -47,14 +47,14 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
   };
 
   const cAssertEditorDimension = function (dimension, value) {
-    return Chain.on(function (editor: any, next, die) {
+    return Chain.async(function (editor: any, next, die) {
       const container = editor.iframeElement;
       const getter = dimension === 'width' ? Width.get : Height.get;
       const actualValue = typeof value === 'string' ? container.style[dimension] : getter(Element.fromDom(container));
 
       Assertions.assertEq('Editors content area has expected ' + dimension, value, actualValue);
 
-      next(Chain.wrap(editor));
+      next(editor);
     });
   };
 

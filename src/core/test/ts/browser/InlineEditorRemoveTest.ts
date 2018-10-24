@@ -12,10 +12,10 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
     skin_url: '/project/js/tinymce/skins/lightgray'
   };
 
-  const cAssertBogusNotExist = Chain.on((val, next, die) => {
+  const cAssertBogusNotExist = Chain.async((val, next, die) => {
     UiFinder.findIn(Body.body(), '[data-mce-bogus]').fold(
       () => {
-        next(Chain.wrap(val));
+        next(val);
       },
       () => {
         die('Should not be any data-mce-bogus tags present');

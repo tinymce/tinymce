@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   Theme();
 
   const cCreateInlineEditor = function (html) {
-    return Chain.on(function (viewBlock: any, next, die) {
+    return Chain.async(function (viewBlock: any, next, die) {
       viewBlock.update(html);
 
       EditorManager.init({
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
         skin_url: '/project/js/tinymce/skins/lightgray',
         setup (editor) {
           editor.on('SkinLoaded', function () {
-            next(Chain.wrap(editor));
+            next(editor);
           });
         }
       });

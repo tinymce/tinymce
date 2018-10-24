@@ -24,11 +24,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
     const cPopupToDialog = function (selector) {
       return Chain.fromChains([
         ui.cWaitForPopup('Locate popup', selector),
-        Chain.on(function (container, next, die) {
+        Chain.async(function (container, next, die) {
           return Arr.find(editor.windowManager.getWindows(), function (win) {
             return container.dom().id === win._id;
           }).fold(() => die('Could not find popup window'), function (win) {
-            next(Chain.wrap(win));
+            next(win);
           });
         })
       ]);
