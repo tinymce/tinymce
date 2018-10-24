@@ -8,9 +8,6 @@ UnitTest.test('Name', () => {
   const logs = AgarLogs.init();
 
   const addToLog = (s: string) => (logs) => {
-    if (s === 'beta-1') {
-      debugger;
-    }
     return addLogEntry(logs, s);
   };
   const assertLog = (expected) => (logs) => {
