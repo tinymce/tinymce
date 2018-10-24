@@ -26,6 +26,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     getByDom: fail('getByDom'),
     broadcast: fail('broadcast'),
     broadcastOn: fail('broadcastOn'),
+    broadcastEvent: fail('broadcastEvent'),
     isConnected: Fun.constant(false)
   });
 };
