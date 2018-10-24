@@ -19,7 +19,6 @@ const enrichErrorMsg = (label, err) => {
 const enrichDie = (label, f) => {
   return (value, next, die: DieFn, logs: TestLogs) => {
     const updatedLogs = pushLogLevel(addLogEntry(logs, label));
-    // TODO: Change this to use logs instead.
     const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), popLogLevel(newLogs));
     try {
       return f(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
