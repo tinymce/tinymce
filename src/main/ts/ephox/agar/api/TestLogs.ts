@@ -38,7 +38,7 @@ const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => {
                 entries: modifyStartedEntryTo(lastEntry.entries, f)
               } ]);
             } else {
-              // We have no further nesteing, so just modify us
+              // We have no further nesting, so just modify us
               return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);
             }
           }
@@ -58,7 +58,7 @@ const modifyStartedEntry = (logs: TestLogs, f): TestLogs => {
 }
 
 const modifyLastEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => {
-  // DUPE :(
+  // Consider consolidating with modifyStartedEntryTo
   return Arr.last(entries).fold(
     () => entries,
     (lastEntry) => {
