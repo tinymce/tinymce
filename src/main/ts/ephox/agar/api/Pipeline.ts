@@ -44,12 +44,11 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
         onFailure(error, logs);
       }
     } else {
-      // const finalLogs = popLogLevel(logs);
       const finalLogs = logs;
       onSuccess(lastLink, finalLogs);
     }
   };
-  // const startLogs = pushLogLevel(addLogEntry(TestLogs.getOrInit(initLogs), '');
+
   const startLogs = TestLogs.getOrInit(initLogs);
   chain(initial, startLogs, 0);
 };
