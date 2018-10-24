@@ -1,4 +1,4 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions } from '@ephox/agar';
+import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -69,5 +69,5 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
   ], function (v, newLogs) {
     success();
-  }, failure, undefined);
+  }, failure, TestLogs.init());
 });
