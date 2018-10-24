@@ -21,14 +21,12 @@ const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
 export interface GuiEventSettings {
   triggerEvent: (eventName: string, event: EventFormat) => boolean;
-  broadcastEvent: (eventName: string, event: EventFormat) => boolean;
   stopBackspace?: boolean;
 }
 
 const settingsSchema: Processor = ValueSchema.objOfOnly([
   // triggerEvent(eventName, event)
   FieldSchema.strictFunction('triggerEvent'),
-  FieldSchema.strictFunction('broadcastEvent'),
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
@@ -127,12 +125,6 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     }, 0);
   });
 
-  const defaultView = Traverse.defaultView(container);
-  const onWindowScroll = DomEvent.bind(defaultView, 'scroll', (event: SugarEvent) => {
-    const stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
-    if (stopped) { event.kill(); }
-  }) as SugarListener;
-
   const unbind = (): void => {
     Arr.each(simpleEvents, (e) => {
       e.unbind();
@@ -140,7 +132,6 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     onKeydown.unbind();
     onFocusIn.unbind();
     onFocusOut.unbind();
-    onWindowScroll.unbind();
   };
 
   return {
