@@ -53,7 +53,7 @@ UnitTest.asynctest('KeyboardTest', function () {
 
   const listenOnKeystroke = function (code, modifiers) {
     return Step.control(
-      Step.raw(function (value: { container: any; }, next, die, logs) {
+      Step.raw(function (value: { container: any; }, next, die, initLogs) {
         const keydownListener = DomEvent.bind(value.container, 'keydown', function (dEvent) {
           keydownListener.unbind();
 
@@ -65,7 +65,7 @@ UnitTest.asynctest('KeyboardTest', function () {
               sAssertEvent('keyup', code, modifiers, uEvent.raw())
             ], function (v, newLogs) {
               next(value, newLogs);
-            }, die);
+            }, die, initLogs);
           });
         });
 
