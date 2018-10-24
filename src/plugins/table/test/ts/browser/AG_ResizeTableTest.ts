@@ -1,10 +1,11 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor, TinyDom, ApiChains } from '@ephox/mcagar';
+import { Editor, ApiChains } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
 import { Cell } from '@ephox/katamari';
+import TableTestUtils from '../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
   const lastObjectResizeStartEvent = Cell<any>(null);
@@ -12,46 +13,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
   Plugin();
   SilverTheme();
-
-  const cGetBody = Chain.mapper(function (editor: any) {
-    return TinyDom.fromDom(editor.getBody());
-  });
-
-  const cInsertTable = function (cols, rows) {
-    return Chain.mapper(function (editor: any) {
-      return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
-    });
-  };
-
-  const cDragHandle = function (id, deltaH, deltaV) {
-    return NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetBody, 'editorBody'),
-      NamedChain.read('editorBody', Chain.control(
-        UiFinder.cFindIn('#mceResizeHandle' + id),
-        Guard.tryUntil('wait for resize handlers', 100, 40000)
-      )),
-      NamedChain.read('editorBody', Chain.fromChains([
-        UiFinder.cFindIn('#mceResizeHandle' + id),
-        Mouse.cMouseDown,
-        Mouse.cMouseMoveTo(deltaH, deltaV),
-        Mouse.cMouseUp
-      ])),
-      NamedChain.outputInput
-    ]);
-  };
-
-  const cGetWidth = Chain.mapper(function (input: any) {
-    const editor = input.editor;
-    const elm = input.element.dom();
-    const rawWidth = editor.dom.getStyle(elm, 'width');
-    const pxWidth = editor.dom.getStyle(elm, 'width', true);
-    return {
-      raw: parseFloat(rawWidth),
-      px: parseInt(pxWidth, 10),
-      isPercent: /%$/.test(rawWidth)
-    };
-  });
 
   const assertWithin = function (value, min, max) {
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
@@ -99,11 +60,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   const cTableInsertResizeMeasure = NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.write('events', cBindResizeEvents),
-    NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
-    NamedChain.write('widthBefore', cGetWidth),
+    NamedChain.direct('editor', TableTestUtils.cInsertTable(5, 2), 'element'),
+    NamedChain.write('widthBefore', TableTestUtils.cGetWidth),
     NamedChain.read('element', Mouse.cTrueClick),
-    NamedChain.read('editor', cDragHandle('se', -100, 0)),
-    NamedChain.write('widthAfter', cGetWidth),
+    NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0)),
+    NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
     NamedChain.write('events', cUnbindResizeEvents),
     NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
     NamedChain.output('widths')
