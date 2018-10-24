@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { RawAssertions } from '../../../../main/ts/ephox/agar/api/Main';
 import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState } from '../../../../main/ts/ephox/agar/api/TestLogs';
 
-UnitTest.test('Name', () => {
+UnitTest.test('TestLogsTest', () => {
 
   const logs = TestLogs.init();
 
