@@ -84,13 +84,11 @@ UnitTest.asynctest('FocusToolsTest', function () {
     ),
 
     // TODO: Need to get rid of this boilerplate
-    Logger.t('1',
-      Step.raw(function (value, next, die, logs) {
-        Chain.asStep(value.container, [
-          FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
-        ])(value, next, die, logs);
-      })
-    ),
+    Step.raw(function (value, next, die, logs) {
+      Chain.asStep(value.container, [
+        FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
+      ])(value, next, die, logs);
+    }),
     FocusTools.sIsOnSelector('Should now be on input again', doc, 'input'),
 
     Step.raw(function (value, next, die, logs) {
