@@ -1,4 +1,6 @@
 Version 5.0.0-preview-4 (TBD)
+    Fixed `EditorResize` event not being fired upon editor resize #AP-327
+    Fixed tables losing styles when updating through the dialog #AP-368
     Fixed context toolbar positioning to be more consistent near the edges of the editor #AP-318
     Added `label` component type for dialogs to group components under a label
     Fixed table of contents plugin now works with v5 toolbar APIs correctly #AP-347
