@@ -167,13 +167,13 @@ UnitTest.asynctest('ChainTest', function() {
   );
 
   const testChainRunStepsOnValue = StepAssertions.testChain(
-    'runStepsOnValue=succ!',
+    'runSteps*runStepsOnValue=succ!',
     Chain.fromChains([
       Chain.inject('runSteps'),
       Chain.runStepsOnValue(
         (s: string) => [
-          Step.stateful((_, next, die) => {
-            next(s + 'OnValue');
+          Step.stateful((initial, next, die) => {
+            next(initial + '*' + s + 'OnValue');
           }),
           Step.stateful((v, next, die) => {
             next(v + '=succ!');
