@@ -1,4 +1,4 @@
-import SelectorFind from '../search/SelectorFind';
+import * as SelectorFind from '../search/SelectorFind';
 import Element from '../node/Element';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
@@ -13,7 +13,7 @@ var find = function (parent: Element): Option<Element> {
   return SelectorFind.descendant(parent, 'input:checked');
 };
 
-export default{
+export {
   set,
   find,
 };

@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
-import Traverse from '../../api/search/Traverse';
-import CursorPosition from '../../api/selection/CursorPosition';
+import * as Traverse from '../../api/search/Traverse';
+import * as CursorPosition from '../../api/selection/CursorPosition';
 import Element from '../../api/node/Element';
 import { DOMRect, ClientRect } from '@ephox/dom-globals';
 import { Document } from '@ephox/dom-globals';
@@ -51,6 +51,6 @@ var search = function (doc: Element, node: Element, x: number) {
   return f(doc, node, x);
 };
 
-export default {
+export {
   search
 };

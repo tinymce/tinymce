@@ -1,4 +1,4 @@
-import Traverse from '../search/Traverse';
+import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
 
 const before = function (marker: Element, element: Element) {
@@ -46,7 +46,7 @@ const wrap = function (element: Element, wrapper: Element) {
   append(wrapper, element);
 };
 
-export default {
+export {
   before,
   after,
   prepend,

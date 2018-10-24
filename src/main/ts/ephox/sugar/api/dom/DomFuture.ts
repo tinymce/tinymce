@@ -1,7 +1,7 @@
 import { Future } from '@ephox/katamari';
 import { LazyValue } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import DomEvent from '../events/DomEvent';
+import * as DomEvent from '../events/DomEvent';
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
@@ -28,7 +28,7 @@ var waitFor = function (element: Element, eventType: string, timeout: number) {
   return w(Future.nu, element, eventType, timeout);
 };
 
-export default {
+export {
   cWaitFor,
   waitFor,
 };

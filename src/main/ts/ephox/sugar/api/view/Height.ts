@@ -1,5 +1,5 @@
-import Body from '../node/Body';
-import Css from '../properties/Css';
+import * as Body from '../node/Body';
+import * as Css from '../properties/Css';
 import Dimension from '../../impl/Dimension';
 import Element from '../node/Element';
 import { HTMLElement } from '@ephox/dom-globals';
@@ -29,7 +29,7 @@ var setMax = function (element: Element, value: number) {
   Css.set(element, 'max-height', absMax + 'px');
 };
 
-export default {
+export {
   set,
   get,
   getOuter,

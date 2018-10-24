@@ -1,6 +1,6 @@
-import Comment from 'ephox/sugar/api/node/Comment';
+import * as Comment from 'ephox/sugar/api/node/Comment';
 import Element from 'ephox/sugar/api/node/Element';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CommentTest', function() {

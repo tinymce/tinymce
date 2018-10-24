@@ -1,5 +1,5 @@
 import Element from 'ephox/sugar/api/node/Element';
-import OnNode from 'ephox/sugar/api/properties/OnNode';
+import * as OnNode from 'ephox/sugar/api/properties/OnNode';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OnNodeTest', function() {

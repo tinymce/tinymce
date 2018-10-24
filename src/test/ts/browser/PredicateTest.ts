@@ -1,10 +1,10 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Node from 'ephox/sugar/api/node/Node';
-import PredicateExists from 'ephox/sugar/api/search/PredicateExists';
-import PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
-import PredicateFind from 'ephox/sugar/api/search/PredicateFind';
-import Remove from 'ephox/sugar/api/dom/Remove';
+import * as Node from 'ephox/sugar/api/node/Node';
+import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
+import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
+import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import Checkers from 'ephox/sugar/test/Checkers';
 import TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock';

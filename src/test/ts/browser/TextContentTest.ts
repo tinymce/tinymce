@@ -1,6 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
-import Text from 'ephox/sugar/api/node/Text';
-import TextContent from 'ephox/sugar/api/properties/TextContent';
+import * as Text from 'ephox/sugar/api/node/Text';
+import * as TextContent from 'ephox/sugar/api/properties/TextContent';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 

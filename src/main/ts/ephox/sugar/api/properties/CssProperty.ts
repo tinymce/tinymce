@@ -1,7 +1,5 @@
-import Css from './Css';
+import * as Css from './Css';
 import Element from '../node/Element';
-
-
 
 export default function (property: string, value: string) {
   var is = function (element: Element) {

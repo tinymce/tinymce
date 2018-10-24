@@ -1,11 +1,11 @@
 import { Option } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Insert from '../dom/Insert';
-import Remove from '../dom/Remove';
-import Body from '../node/Body';
+import * as Insert from '../dom/Insert';
+import * as Remove from '../dom/Remove';
+import * as Body from '../node/Body';
 import Element from '../node/Element';
-import Location from './Location';
+import * as Location from './Location';
 import { Position } from './Position';
 import { document, Window, HTMLElement } from '@ephox/dom-globals';
 
@@ -107,7 +107,7 @@ var scrollBarWidth = function () {
   return w;
 };
 
-export default {
+export {
   get,
   to,
   by,

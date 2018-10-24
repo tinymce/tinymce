@@ -1,8 +1,8 @@
-import Body from 'ephox/sugar/api/node/Body';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import SelectorFind from 'ephox/sugar/api/search/SelectorFind';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BodyTest', function() {

@@ -1,8 +1,8 @@
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Body from 'ephox/sugar/api/node/Body';
-import Direction from 'ephox/sugar/api/properties/Direction';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Direction from 'ephox/sugar/api/properties/Direction';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 

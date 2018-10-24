@@ -1,6 +1,6 @@
 import { Thunk } from '@ephox/katamari';
 import Element from './Element';
-import Node from './Node';
+import * as Node from './Node';
 import { document, Document } from '@ephox/dom-globals';
 
 // Node.contains() is very, very, very good performance
@@ -25,7 +25,7 @@ var getBody = function (doc: Element) {
   return Element.fromDom(body);
 };
 
-export default {
+export {
   body,
   getBody,
   inBody,

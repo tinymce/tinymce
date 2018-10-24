@@ -1,4 +1,4 @@
-import PredicateFind from './PredicateFind';
+import * as PredicateFind from './PredicateFind';
 import Element from '../node/Element';
 
 var any = function (predicate: (e: Element) => boolean) {
@@ -25,7 +25,7 @@ var descendant = function (scope: Element, predicate: (e: Element) => boolean) {
   return PredicateFind.descendant(scope, predicate).isSome();
 };
 
-export default {
+export {
   any,
   ancestor,
   closest,

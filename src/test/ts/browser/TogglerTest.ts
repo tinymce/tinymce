@@ -1,10 +1,9 @@
-import { PlatformDetection } from '@ephox/sand';
-import Body from 'ephox/sugar/api/node/Body';
-import Class from 'ephox/sugar/api/properties/Class';
-import Css from 'ephox/sugar/api/properties/Css';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Visibility from 'ephox/sugar/api/view/Visibility';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Class from 'ephox/sugar/api/properties/Class';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 

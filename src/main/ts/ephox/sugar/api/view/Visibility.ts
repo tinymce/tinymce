@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import Toggler from '../properties/Toggler';
-import Css from '../properties/Css';
+import * as Css from '../properties/Css';
 import { HTMLElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
@@ -34,7 +34,7 @@ var isVisible = function (element: Element) {
   return !isHidden(dom);
 };
 
-export default {
+export {
   toggler,
   displayToggler,
   isVisible,

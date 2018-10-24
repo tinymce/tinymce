@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Compare from '../api/dom/Compare';
+import * as Compare from '../api/dom/Compare';
 import Element from '../api/node/Element';
 
 export interface Polling {
@@ -54,7 +54,7 @@ var end = function (element: Element) {
   poller.unbind();
 };
 
-export default {
+export {
   begin,
   query,
   end,

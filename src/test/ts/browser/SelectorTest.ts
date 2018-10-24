@@ -1,11 +1,11 @@
 import { Option } from '@ephox/katamari';
-import Class from 'ephox/sugar/api/properties/Class';
+import * as Class from 'ephox/sugar/api/properties/Class';
 import Element from 'ephox/sugar/api/node/Element';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import SelectorExists from 'ephox/sugar/api/search/SelectorExists';
-import SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
-import SelectorFind from 'ephox/sugar/api/search/SelectorFind';
-import Selectors from 'ephox/sugar/api/search/Selectors';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
+import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
+import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
+import * as Selectors from 'ephox/sugar/api/search/Selectors';
 import Checkers from 'ephox/sugar/test/Checkers';
 import Div from 'ephox/sugar/test/Div';
 import TestPage from 'ephox/sugar/test/TestPage';

@@ -1,7 +1,7 @@
-import Class from 'ephox/sugar/api/properties/Class';
-import Classes from 'ephox/sugar/api/properties/Classes';
-import Html from 'ephox/sugar/api/properties/Html';
-import Insert from 'ephox/sugar/api/dom/Insert';
+import * as Class from 'ephox/sugar/api/properties/Class';
+import * as Classes from 'ephox/sugar/api/properties/Classes';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
 import Div from 'ephox/sugar/test/Div';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';

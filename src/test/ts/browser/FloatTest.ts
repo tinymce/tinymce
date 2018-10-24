@@ -1,10 +1,9 @@
-import { Fun } from '@ephox/katamari';
-import Body from 'ephox/sugar/api/node/Body';
-import Css from 'ephox/sugar/api/properties/Css';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Css from 'ephox/sugar/api/properties/Css';
 import Element from 'ephox/sugar/api/node/Element';
-import Float from 'ephox/sugar/api/properties/Float';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
+import * as Float from 'ephox/sugar/api/properties/Float';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import MathElement from 'ephox/sugar/test/MathElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 

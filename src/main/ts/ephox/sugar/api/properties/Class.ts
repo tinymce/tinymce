@@ -1,6 +1,6 @@
 import Toggler from './Toggler';
-import Attr from './Attr';
-import ClassList from '../../impl/ClassList';
+import * as Attr from './Attr';
+import * as ClassList from '../../impl/ClassList';
 import Element from '../node/Element';
 import { Element as DomElement } from '@ephox/dom-globals';
 
@@ -60,7 +60,7 @@ var has = function (element: Element, clazz: string) {
   return ClassList.supports(element) && (element.dom() as DomElement).classList.contains(clazz);
 };
 
-export default {
+export {
   add,
   remove,
   toggle,

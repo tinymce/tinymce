@@ -1,11 +1,11 @@
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Css from 'ephox/sugar/api/properties/Css';
-import Height from 'ephox/sugar/api/view/Height';
-import Width from 'ephox/sugar/api/view/Width';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Height from 'ephox/sugar/api/view/Height';
+import * as Width from 'ephox/sugar/api/view/Width';
 import Dimension from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';

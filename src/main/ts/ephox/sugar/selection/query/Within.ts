@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
 import Element from '../../api/node/Element';
-import Node from '../../api/node/Node';
-import SelectorFilter from '../../api/search/SelectorFilter';
-import Selectors from '../../api/search/Selectors';
-import NativeRange from '../core/NativeRange';
-import SelectionDirection from '../core/SelectionDirection';
+import * as Node from '../../api/node/Node';
+import * as SelectorFilter from '../../api/search/SelectorFilter';
+import * as Selectors from '../../api/search/Selectors';
+import * as NativeRange from '../core/NativeRange';
+import * as SelectionDirection from '../core/SelectionDirection';
 import { Window } from '@ephox/dom-globals';
 
 var withinContainer = function (win: Window, ancestor, outerRange, selector) {
@@ -27,6 +27,6 @@ var find = function (win: Window, selection, selector) {
     withinContainer(win, ancestor, outerRange, selector) : [];
 };
 
-export default {
+export {
   find
 };

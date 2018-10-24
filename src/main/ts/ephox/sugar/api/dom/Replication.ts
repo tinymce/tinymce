@@ -1,9 +1,9 @@
-import Attr from '../properties/Attr';
+import * as Attr from '../properties/Attr';
 import Element from '../node/Element';
-import Insert from './Insert';
-import InsertAll from './InsertAll';
-import Remove from './Remove';
-import Traverse from '../search/Traverse';
+import * as Insert from './Insert';
+import * as InsertAll from './InsertAll';
+import * as Remove from './Remove';
+import * as Traverse from '../search/Traverse';
 
 var clone = function (original: Element, deep: boolean) {
   return Element.fromDom(original.dom().cloneNode(deep));
@@ -56,7 +56,7 @@ var mutate = function (original: Element, tag: string) {
   return nu;
 };
 
-export default {
+export {
   shallow,
   shallowAs,
   deep,

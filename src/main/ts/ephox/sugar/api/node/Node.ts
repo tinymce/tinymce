@@ -1,4 +1,4 @@
-import NodeTypes from './NodeTypes';
+import * as NodeTypes from './NodeTypes';
 import { Node } from '@ephox/dom-globals';
 import Element from './Element';
 
@@ -29,7 +29,7 @@ var isElement = isType(NodeTypes.ELEMENT);
 var isText = isType(NodeTypes.TEXT);
 var isDocument = isType(NodeTypes.DOCUMENT);
 
-export default {
+export {
   name,
   type,
   value,

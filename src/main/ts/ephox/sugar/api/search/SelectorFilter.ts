@@ -1,5 +1,5 @@
-import PredicateFilter from './PredicateFilter';
-import Selectors from './Selectors';
+import * as PredicateFilter from './PredicateFilter';
+import * as Selectors from './Selectors';
 import Element from '../node/Element';
 
 var all = function (selector: string) {
@@ -40,7 +40,7 @@ var descendants = function (scope: Element, selector: string) {
   return Selectors.all(selector, scope);
 };
 
-export default {
+export {
   all,
   ancestors,
   siblings,

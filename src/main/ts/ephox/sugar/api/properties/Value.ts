@@ -10,7 +10,7 @@ var set = function (element: Element, value: string) {
   (element.dom() as HTMLInputElement).value = value;
 };
 
-export default {
+export {
   set,
   get,
 };

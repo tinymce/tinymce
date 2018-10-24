@@ -1,14 +1,14 @@
 import { Option } from '@ephox/katamari';
-import DocumentPosition from '../dom/DocumentPosition';
+import * as DocumentPosition from '../dom/DocumentPosition';
 import Element from '../node/Element';
-import Fragment from '../node/Fragment';
-import Selection from './Selection';
-import NativeRange from '../../selection/core/NativeRange';
-import SelectionDirection from '../../selection/core/SelectionDirection';
-import CaretRange from '../../selection/query/CaretRange';
-import Within from '../../selection/query/Within';
-import Prefilter from '../../selection/quirks/Prefilter';
-import Compare from '../dom/Compare';
+import * as Fragment from '../node/Fragment';
+import * as Selection from './Selection';
+import * as NativeRange from '../../selection/core/NativeRange';
+import * as SelectionDirection from '../../selection/core/SelectionDirection';
+import * as CaretRange from '../../selection/query/CaretRange';
+import * as Within from '../../selection/query/Within';
+import * as Prefilter from '../../selection/quirks/Prefilter';
+import * as Compare from '../dom/Compare';
 
 var doSetNativeRange = function (win, rng) {
   Option.from(win.getSelection()).each(function(selection) {
@@ -183,7 +183,7 @@ var isCollapsed = function (start: Element, soffset: number, finish: Element, fo
   return Compare.eq(start, finish) && soffset === foffset;
 };
 
-export default {
+export {
   setExact,
   getExact,
   get,

@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import Node from '../node/Node';
+import * as Node from '../node/Node';
 import { console, HTMLElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
@@ -74,7 +74,7 @@ var transfer = function (source: Element, destination: Element, attrs: string[])
   });
 };
 
-export default {
+export {
   clone,
   set,
   setAll,

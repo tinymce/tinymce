@@ -1,7 +1,5 @@
-import Attr from './Attr';
+import * as Attr from './Attr';
 import Element from '../node/Element';
-
-
 
 export default function (attribute, value) {
   var is = function (element: Element) {

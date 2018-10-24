@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import Body from '../node/Body';
-import Traverse from './Traverse';
+import * as Body from '../node/Body';
+import * as Traverse from './Traverse';
 import Element from '../node/Element';
 
 // maybe TraverseWith, similar to traverse but with a predicate?
@@ -34,7 +34,7 @@ var descendants = function (scope: Element, predicate: (e: Element) => boolean) 
   return result;
 };
 
-export default {
+export {
   all,
   ancestors,
   siblings,

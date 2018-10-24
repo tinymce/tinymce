@@ -2,14 +2,14 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Window } from '@ephox/sand';
-import Compare from '../dom/Compare';
-import DomEvent from './DomEvent';
-import Viewable from './Viewable';
+import * as Compare from '../dom/Compare';
+import * as DomEvent from './DomEvent';
+import * as Viewable from './Viewable';
 import Element from '../node/Element';
-import Height from '../view/Height';
-import Visibility from '../view/Visibility';
-import Width from '../view/Width';
-import Monitors from '../../impl/Monitors';
+import * as Height from '../view/Height';
+import * as Visibility from '../view/Visibility';
+import * as Width from '../view/Width';
+import * as Monitors from '../../impl/Monitors';
 import { setTimeout, window } from '@ephox/dom-globals';
 
 interface Monitored {
@@ -123,7 +123,7 @@ var stop = function () {
   });
 };
 
-export default {
+export {
   bind,
   unbind,
 };

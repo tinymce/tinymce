@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import Compare from 'ephox/sugar/api/dom/Compare';
-import Node from 'ephox/sugar/api/node/Node';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as Node from 'ephox/sugar/api/node/Node';
 import { assert } from '@ephox/bedrock';
 
 var expectedSome = Fun.curry(assert.fail, 'Expected actual to be some, was none');

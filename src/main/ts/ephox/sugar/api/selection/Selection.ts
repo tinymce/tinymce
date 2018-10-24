@@ -1,7 +1,7 @@
 import { Adt } from '@ephox/katamari';
 import { Struct } from '@ephox/katamari';
 import Element from '../node/Element';
-import Traverse from '../search/Traverse';
+import * as Traverse from '../search/Traverse';
 import Situ from './Situ';
 
 // Consider adding a type for "element"
@@ -42,10 +42,14 @@ var getWin = function (selection) {
   return Traverse.defaultView(start);
 };
 
-export default {
-  domRange: type.domRange,
-  relative: type.relative,
-  exact: type.exact,
+const domRange = type.domRange;
+const relative = type.relative;
+const exact = type.exact;
+
+export {
+  domRange,
+  relative,
+  exact,
 
   exactFromRange,
   range,

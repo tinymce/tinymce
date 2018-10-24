@@ -1,9 +1,9 @@
-import Insert from 'ephox/sugar/api/dom/Insert';
-import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import DomEvent from 'ephox/sugar/api/events/DomEvent';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import Element from 'ephox/sugar/api/node/Element';
-import Css from 'ephox/sugar/api/properties/Css';
-import Html from 'ephox/sugar/api/properties/Html';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import { document, console } from '@ephox/dom-globals';
 
 var container = Element.fromTag('div');

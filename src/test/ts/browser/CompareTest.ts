@@ -1,6 +1,6 @@
-import Compare from 'ephox/sugar/api/dom/Compare';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
 import Element from 'ephox/sugar/api/node/Element';
-import Remove from 'ephox/sugar/api/dom/Remove';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock';
 

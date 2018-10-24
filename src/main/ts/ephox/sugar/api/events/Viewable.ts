@@ -1,8 +1,8 @@
 import { Fun } from '@ephox/katamari';
 import { Throttler } from '@ephox/katamari';
 import { Window } from '@ephox/sand';
-import Traverse from '../search/Traverse';
-import Visibility from '../view/Visibility';
+import * as Traverse from '../search/Traverse';
+import * as Visibility from '../view/Visibility';
 import { setInterval, clearInterval } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
@@ -61,6 +61,6 @@ var onShow = function (element: Element, f) {
   }
 };
 
-export default {
+export {
   onShow
 };

@@ -2,11 +2,11 @@ import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Attr from './Attr';
-import Body from '../node/Body';
+import * as Attr from './Attr';
+import * as Body from '../node/Body';
 import Element from '../node/Element';
-import Node from '../node/Node';
-import Style from '../../impl/Style';
+import * as Node from '../node/Node';
+import * as Style from '../../impl/Style';
 import { Strings } from '@ephox/katamari';
 import { console, window, HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 
@@ -174,7 +174,7 @@ var transfer = function (source: Element, destination: Element, styles: string[]
   });
 };
 
-export default {
+export {
   copy,
   set,
   preserve,

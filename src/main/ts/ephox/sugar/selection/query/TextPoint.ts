@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Options } from '@ephox/katamari';
-import Text from '../../api/node/Text';
-import Geometry from '../alien/Geometry';
+import * as Text from '../../api/node/Text';
+import * as Geometry from '../alien/Geometry';
 import Element from '../../api/node/Element';
 import { Document } from '@ephox/dom-globals';
 import { ClientRect } from '@ephox/dom-globals';
@@ -39,6 +39,6 @@ var locate = function (doc: Element, node: Element, x: number, y: number) {
   });
 };
 
-export default {
+export {
   locate
 };

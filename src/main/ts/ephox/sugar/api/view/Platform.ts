@@ -48,7 +48,7 @@ const isSmallAndroid = function () {
   return isSmallTouch() && isAndroid();
 };
 
-export default {
+export {
   isTouch,
   choice,
   isLarge,

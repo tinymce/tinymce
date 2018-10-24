@@ -1,5 +1,5 @@
 import Element from 'ephox/sugar/api/node/Element';
-import Value from 'ephox/sugar/api/properties/Value';
+import * as Value from 'ephox/sugar/api/properties/Value';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ValueTest', function() {

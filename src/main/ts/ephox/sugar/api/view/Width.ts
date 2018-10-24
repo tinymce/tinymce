@@ -1,4 +1,4 @@
-import Css from '../properties/Css';
+import * as Css from '../properties/Css';
 import Dimension from '../../impl/Dimension';
 import Element from '../node/Element';
 import { HTMLElement } from '@ephox/dom-globals';
@@ -27,7 +27,7 @@ var setMax = function (element: Element, value: number) {
   Css.set(element, 'max-width', absMax + 'px');
 };
 
-export default {
+export {
   set,
   get,
   getOuter,

@@ -1,6 +1,6 @@
-import Compare from './Compare';
+import * as Compare from './Compare';
 import Element from '../node/Element';
-import Traverse from '../search/Traverse';
+import * as Traverse from '../search/Traverse';
 import { Document } from '@ephox/dom-globals';
 
 var makeRange = function (start: Element, soffset: number, finish: Element, foffset: number) {
@@ -28,7 +28,7 @@ var after = function (start: Element, soffset: number, finish: Element, foffset:
   return r.collapsed && !same;
 };
 
-export default {
+export {
   after,
   commonAncestorContainer,
 };

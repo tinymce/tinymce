@@ -1,5 +1,5 @@
-import DomEvent from './DomEvent';
-import Scroll from '../view/Scroll';
+import * as DomEvent from './DomEvent';
+import * as Scroll from '../view/Scroll';
 import Element from '../node/Element';
 
 /* Some browsers (Firefox) fire a scroll event even if the values for scroll don't
@@ -20,6 +20,6 @@ var bind = function (doc: Element, handler) {
   };
 };
 
-export default {
+export {
   bind
 };

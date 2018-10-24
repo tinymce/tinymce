@@ -1,9 +1,9 @@
 import { Arr } from '@ephox/katamari';
-import Compare from 'ephox/sugar/api/dom/Compare';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Body from 'ephox/sugar/api/node/Body';
-import Css from 'ephox/sugar/api/properties/Css';
+import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Css from 'ephox/sugar/api/properties/Css';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';

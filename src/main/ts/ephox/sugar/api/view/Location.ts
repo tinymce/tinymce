@@ -1,4 +1,4 @@
-import Dom from '../dom/Dom';
+import * as Dom from '../dom/Dom';
 import Element from '../node/Element';
 import { Position } from './Position';
 import { Element as DomElement, HTMLElement, Node } from '@ephox/dom-globals';
@@ -58,7 +58,7 @@ var viewport = function (element: Element) {
   return boxPosition(dom);
 };
 
-export default {
+export {
   absolute,
   relative,
   viewport,

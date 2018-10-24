@@ -1,9 +1,9 @@
-import Body from 'ephox/sugar/api/node/Body';
-import Css from 'ephox/sugar/api/properties/Css';
-import Height from 'ephox/sugar/api/view/Height';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Width from 'ephox/sugar/api/view/Width';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Height from 'ephox/sugar/api/view/Height';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Width from 'ephox/sugar/api/view/Width';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 

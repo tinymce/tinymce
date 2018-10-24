@@ -1,17 +1,16 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import DomEvent from 'ephox/sugar/api/events/DomEvent';
-import Body from 'ephox/sugar/api/node/Body';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
+import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
-import Attr from 'ephox/sugar/api/properties/Attr';
-import Css from 'ephox/sugar/api/properties/Css';
-import Height from 'ephox/sugar/api/view/Height';
-import Location from 'ephox/sugar/api/view/Location';
-import Scroll from 'ephox/sugar/api/view/Scroll';
-import Width from 'ephox/sugar/api/view/Width';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Location from 'ephox/sugar/api/view/Location';
+import * as Scroll from 'ephox/sugar/api/view/Scroll';
+import * as Width from 'ephox/sugar/api/view/Width';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('ScrollTest', function() {

@@ -100,7 +100,7 @@ var toString = function (rng: Range) {
   return rng.toString();
 };
 
-export default {
+export {
   create,
   replaceWith,
   selectNodeContents,

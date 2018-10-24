@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Attr from './Attr';
+import * as Attr from './Attr';
 import Element from '../node/Element';
 
 // Methods for handling attributes that contain a list of values <div foo="alpha beta theta">
@@ -24,7 +24,7 @@ var remove = function (element: Element, attr, id) {
   return false;
 };
 
-export default {
+export {
   read,
   add,
   remove,

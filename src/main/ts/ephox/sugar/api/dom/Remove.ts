@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import InsertAll from './InsertAll';
-import Traverse from '../search/Traverse';
+import * as InsertAll from './InsertAll';
+import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
 import { Node } from '@ephox/dom-globals';
 
@@ -30,7 +30,7 @@ const unwrap = function (wrapper: Element) {
   remove(wrapper);
 };
 
-export default {
+export {
   empty,
   remove,
   unwrap,

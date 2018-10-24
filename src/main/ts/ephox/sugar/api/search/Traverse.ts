@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Struct } from '@ephox/katamari';
 import Recurse from '../../alien/Recurse';
-import Compare from '../dom/Compare';
+import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import { Node as DomNode, HTMLElement as DomElement } from '@ephox/dom-globals';
 
@@ -125,7 +125,7 @@ var leaf = function (element: Element, offset: number) {
   return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
 };
 
-export default {
+export {
   owner,
   defaultView,
   documentElement,

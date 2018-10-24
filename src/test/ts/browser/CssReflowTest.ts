@@ -1,11 +1,11 @@
-import Body from 'ephox/sugar/api/node/Body';
-import Css from 'ephox/sugar/api/properties/Css';
-import DomEvent from 'ephox/sugar/api/events/DomEvent';
+import * as Body from 'ephox/sugar/api/node/Body';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import Element from 'ephox/sugar/api/node/Element';
-import Html from 'ephox/sugar/api/properties/Html';
-import Insert from 'ephox/sugar/api/dom/Insert';
-import Remove from 'ephox/sugar/api/dom/Remove';
-import Traverse from 'ephox/sugar/api/search/Traverse';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('CssReflowTest', function() {

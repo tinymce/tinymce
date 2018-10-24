@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import Attr from 'ephox/sugar/api/properties/Attr';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 
