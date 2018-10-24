@@ -1,6 +1,6 @@
 import { Adt } from '@ephox/katamari';
 
-export interface Credentials extends Adt {
+export interface Credentials {
   fold: <T>(
     noneHandler: () => T,
     xhrHandler: () => T,
@@ -9,6 +9,7 @@ export interface Credentials extends Adt {
     none: () => T,
     xhr: () => T
   }) => T;
+  log: (label: string) => void;
 };
 
 const adt: {

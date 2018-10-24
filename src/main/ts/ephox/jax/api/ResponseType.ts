@@ -1,6 +1,6 @@
 import { Adt } from '@ephox/katamari';
 
-export interface ResponseType extends Adt {
+export interface ResponseType {
   fold: <T>(
     jsonHandler: () => T,
     blobHandler: () => T,
@@ -15,6 +15,7 @@ export interface ResponseType extends Adt {
     html: () => T,
     xml: () => T
   }) => T;
+  log: (label: string) => void;
 };
 
 const adt: {
