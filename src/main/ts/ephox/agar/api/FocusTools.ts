@@ -41,7 +41,7 @@ const sIsOn = function <T>(label: string, element: Element): Step<T,T> {
 
 const sIsOnSelector = function <T>(label: string, doc: Element, selector: string) {
   return Logger.t(
-    label + `: sIsOnSelector(${selector})`,
+    `${label}: sIsOnSelector(${selector})`,
     Chain.asStep<T, Element>(doc, [
       cGetFocused,
       Chain.binder(function (active: Element): Result<Element, string> {

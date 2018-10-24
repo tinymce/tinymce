@@ -95,9 +95,8 @@ const extract = function <T, U>(chain: Chain<T, U>): ChainRunFn<T, U> {
 const fromChains = function (chains: Chain<any, any>[]) {
   const cs = Arr.map(chains, extract);
 
-  return on<any, any>((value, next, die, logs) => {
-    // Should we combine logs into this in any way?
-    Pipeline.async(wrap(value), cs, (v, ls) => next(v, ls), die, logs);
+  return on<any, any>((value, next, die, initLogs) => {
+    Pipeline.async(wrap(value), cs, (v, newLogs) => next(v, newLogs), die, initLogs);
   });
 };
 
