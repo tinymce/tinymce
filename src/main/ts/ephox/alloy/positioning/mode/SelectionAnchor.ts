@@ -53,16 +53,8 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return rect;
       });
     }) as Option<{ left: () => number, top: () => number, width: () => number, height: () => number}>;
-    return optRect.map((rawRect) => {
-      // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
-      const point = CssPosition.screen(
-        Position(
-          rawRect.left(),
-          rawRect.top()
-        )
-      );
-
-      return Boxes.pointed(point, rawRect.width(), rawRect.height());
+    return optRect.bind((rawRect) => {
+      return ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height());
     });
   });
 
