@@ -1,11 +1,10 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor, TinyDom, ApiChains } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { Cell } from '@ephox/katamari';
-import { TestLogs } from '@ephox/agar';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
   const lastObjectResizeStartEvent = Cell<any>(null);
