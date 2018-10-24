@@ -193,7 +193,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-  editor.on('click keyup setContent ObjectResized nodeChange', (e) => {
+  editor.on('click keyup setContent ObjectResized nodeChange ResizeEditor', (e) => {
     // Fixing issue with chrome focus on img.
     resetTimer(
       Delay.setEditorTimeout(editor, launchContextToolbar, 0)

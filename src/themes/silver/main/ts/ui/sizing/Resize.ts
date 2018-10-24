@@ -1,6 +1,7 @@
 import { Obj, Option } from '@ephox/katamari';
 import { Css, Element, Width } from '@ephox/sugar';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
+import Events from '../../api/Events';
 
 interface EditorDimensions {
   height?: number;
@@ -35,4 +36,5 @@ export const resize = (editor, deltas, resizeType: ResizeTypes) => {
 
   const dimensions = getDimensions(editor, deltas, resizeType, editor.getContainer().scrollHeight, Width.get(container));
   Obj.each(dimensions, (val, dim) => Css.set(container, dim, val + 'px'));
+  Events.fireResizeEditor(editor);
 };

@@ -9,7 +9,7 @@
  */
 
 import { Element } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { Fun, Merger } from '@ephox/katamari';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
@@ -17,8 +17,8 @@ import Tools from 'tinymce/core/api/util/Tools';
 import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss } from '../api/Settings';
-import Helpers, { TableData } from './Helpers';
+import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getDefaultAttributes, getDefaultStyles } from '../api/Settings';
+import Helpers from './Helpers';
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) => {
@@ -52,11 +52,9 @@ const applyDataToElement = (editor, tableElm, data) => {
     styles['border-width'] = Util.addSizeSuffix(data.border);
     styles['border-spacing'] = Util.addSizeSuffix(data.cellspacing);
   } else {
-    Tools.extend(attrs, {
-      border: data.border,
-      cellpadding: data.cellpadding,
-      cellspacing: data.cellspacing
-    });
+    attrs.border = data.border;
+    attrs.cellpadding = data.cellpadding;
+    attrs.cellspacing = data.cellspacing;
   }
 
   // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
@@ -81,8 +79,8 @@ const applyDataToElement = (editor, tableElm, data) => {
     styles['border-style'] = data.borderstyle;
   }
 
-  attrs.style = dom.serializeStyle(styles);
-  dom.setAttribs(tableElm, attrs);
+  attrs.style = dom.serializeStyle(Merger.merge(getDefaultStyles(editor), styles));
+  dom.setAttribs(tableElm, Merger.merge(getDefaultAttributes(editor), attrs));
 };
 
 const onSubmitTableForm = (editor, tableElm, api) => {
@@ -130,17 +128,8 @@ const onSubmitTableForm = (editor, tableElm, api) => {
 
 const open = (editor, isNew?) => {
   const dom = editor.dom;
-  let tableElm, data: TableData = {
-    height: '',
-    width: '100%',
-    cellspacing: '',
-    cellpadding: '',
-    caption: 'unchecked',
-    class: '',
-    align: '',
-    type: '',
-    border: ''
-  };
+  let tableElm;
+  let data = Helpers.extractDataFromSettings(editor, hasAdvancedTableTab(editor));
 
   // Cases for creation/update of tables:
   // 1. isNew == true - called by mceInsertTable - we are inserting a new table so we don't care what the selection's parent is,
