@@ -40,14 +40,17 @@ const sIsOn = function <T>(label: string, element: Element): Step<T,T> {
 };
 
 const sIsOnSelector = function <T>(label: string, doc: Element, selector: string) {
-  return Chain.asStep<T, Element>(doc, [
-    cGetFocused,
-    Chain.binder(function (active: Element): Result<Element, string> {
-      return SizzleFind.matches(active, selector) ? Result.value(active) : Result.error(
-        label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active)
-      );
-    })
-  ]);
+  return Logger.t(
+    `${label}: sIsOnSelector(${selector})`,
+    Chain.asStep<T, Element>(doc, [
+      cGetFocused,
+      Chain.binder(function (active: Element): Result<Element, string> {
+        return SizzleFind.matches(active, selector) ? Result.value(active) : Result.error(
+          label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active)
+        );
+      })
+    ])
+  );
 };
 
 const sTryOnSelector = function <T>(label: string, doc: Element, selector: string) {

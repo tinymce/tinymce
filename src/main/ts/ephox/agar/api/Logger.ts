@@ -1,21 +1,24 @@
 import { console } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
+import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
 
 const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   const enrich = function (err) {
     return ErrorTypes.enrichWith(label, err);
   };
 
-  return function (value: T, next: NextFn<U>, die: DieFn) {
-    const dieWith: DieFn = Fun.compose(die, enrich);
+  return function (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
+    const updatedLogs = pushLogLevel(addLogEntry(logs, label));
+    const dieWith: DieFn = (err, newLogs) => die(enrich(err), popLogLevel(newLogs));
     try {
-      return f(value, next, dieWith);
+      return f(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
     } catch (err) {
-      dieWith(err);
+
+      dieWith(err, updatedLogs);
     }
   };
 };

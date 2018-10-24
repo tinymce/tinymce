@@ -4,7 +4,7 @@ import { Step } from './Step';
 
 const sTryUntilPredicate = function <T>(label: string, predicate: (value: T) => boolean, interval: number, amount: number) {
   const guard = Guard.tryUntil<T, T>(label, interval, amount);
-  return Step.control(Step.stateful((value: T, next: NextFn<T>, die: DieFn) => {
+  return Step.control(Step.stateful<T, T>((value: T, next, die) => {
     predicate(value) ? next(value) : die('predicate did not succeed');
   }), guard);
 };

@@ -3,11 +3,12 @@ import { clearInterval, setInterval, setTimeout } from '@ephox/dom-globals';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
+import { TestLogs } from './TestLogs';
 
 // This module needs tests
-const sequence = function (steps: Step<any, any>[], delay_doNotUse?: number) {
-  return Step.stateful<any, any>(function (value, next, die) {
-    Pipeline.async(value, steps, next, die, delay_doNotUse);
+const sequence = function (steps: Step<any, any>[]) {
+  return Step.raw<any, any>((value, next, die, initLogs: TestLogs) => {
+    Pipeline.async(value, steps, next, die, initLogs);
   });
 };
 
@@ -26,16 +27,17 @@ const sequenceRepeat = function <T>(amount: number, step: Step<T, T>): Step<T, T
 
 // TODO deprecate? This function is weird and we don't seem to use it.
 const repeatUntil = function <T, U>(label: string, repeatStep: Step<T, T>, successStep: Step<T, U>, numAttempts: number) {
-  return Step.stateful(function (value: T, next: NextFn<U>, die: DieFn) {
+  return Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     const again = function (num: number) {
       if (num <= 0) {
-        die(label + '\nRan out of attempts');
+        die(label + '\nRan out of attempts', logs);
       } else {
         repeatStep(value, function () {
+          // Any fancy setting of log here? Or ignore previous attempts?
           successStep(value, next, function () {
             again(num - 1);
-          });
-        }, die);
+          }, logs);
+        }, die, logs);
       }
     };
 
@@ -43,8 +45,8 @@ const repeatUntil = function <T, U>(label: string, repeatStep: Step<T, T>, succe
   });
 };
 
-const waitForPredicate = function <T>(label: string, interval: number, amount: number, predicate: () => boolean) {
-  return Step.async<T>(function (next, die) {
+const waitForPredicate = <T>(label: string, interval: number, amount: number, predicate: () => boolean) => {
+  return Step.async<T>((next, die) => {
     if (predicate()) {
       // Must use a setTimeout here otherwise FontSizeTest gets 'too much recursion' on Firefox
       setTimeout(function () { next(); });

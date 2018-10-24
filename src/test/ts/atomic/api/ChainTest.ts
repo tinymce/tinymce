@@ -10,30 +10,30 @@ UnitTest.asynctest('ChainTest', function() {
   const failure = arguments[arguments.length - 1];
 
   const cIsEqual = function (expected) {
-    return Chain.on(function (actual, next, die) {
-      if (expected === actual) next(Chain.wrap(actual));
+    return Chain.async(function (actual, next, die) {
+      if (expected === actual) next(actual);
       else die('Cat is not a dog');
     });
   };
 
   const cIsEqualAndChange = function (expected, newValue) {
-    return Chain.on(function (actual, next, die) {
-      if (expected === actual) next(Chain.wrap(newValue));
+    return Chain.async(function (actual, next, die) {
+      if (expected === actual) next(newValue);
       else die('Cat is not a dog');
     });
   };
 
   const acc = function (ch) {
-    return Chain.on(function (input, next, die) {
-      next(Chain.wrap(input + ch));
+    return Chain.async(function (input, next, die) {
+      next(input + ch);
     });
   };
   const testInputValueFails = StepAssertions.testStepsFail(
     'Output value is not a chain: dog',
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie) {
-          cNext(<any>'dog');
+        Chain.on(function (cInput, cNext, cDie, cLogs) {
+          cNext(<any>'dog', cLogs);
         })
       ])
     ]
@@ -43,8 +43,8 @@ UnitTest.asynctest('ChainTest', function() {
     {},
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie) {
-          cNext(Chain.wrap('doge'));
+        Chain.on(function (cInput, cNext, cDie, cLogs) {
+          cNext(Chain.wrap('doge'), cLogs);
         })
       ])
     ]
@@ -54,8 +54,8 @@ UnitTest.asynctest('ChainTest', function() {
     {},
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie) {
-          cNext(Chain.wrap(undefined));
+        Chain.on(function (cInput, cNext, cDie, cLogs) {
+          cNext(Chain.wrap(undefined), cLogs);
         })
       ])
     ]
@@ -133,10 +133,10 @@ UnitTest.asynctest('ChainTest', function() {
   const testChainEnforcesInput = StepAssertions.testStepsFail(
     'Input Value is not a chain: raw.input',
     [
-      Step.async(function (next, die) {
-        Chain.on(function (input: any, n, d) {
-          n(input);
-        }).runChain(<any>'raw.input', next, die);
+      Step.raw(function (_, next, die, logs) {
+        Chain.on(function (input: any, n, d, clogs) {
+          n(input, clogs);
+        }).runChain(<any>'raw.input', next, die, logs);
       })
     ]
   );
@@ -163,6 +163,23 @@ UnitTest.asynctest('ChainTest', function() {
       Chain.async((value, next, _die) => {
         next(value)
       })
+    ])
+  );
+
+  const testChainRunStepsOnValue = StepAssertions.testChain(
+    'runStepsOnValue=succ!',
+    Chain.fromChains([
+      Chain.inject('runSteps'),
+      Chain.runStepsOnValue(
+        (s: string) => [
+          Step.stateful((_, next, die) => {
+            next(s + 'OnValue');
+          }),
+          Step.stateful((v, next, die) => {
+            next(v + '=succ!');
+          })
+        ]
+      )
     ])
   );
 
@@ -242,6 +259,11 @@ UnitTest.asynctest('ChainTest', function() {
       Chain.asStep({}, [
         Chain.wait(1000)
       ])
+    ),
+
+    Logger.t(
+      '[Complex API: Chain.runStepsOnValue\n',
+      testChainRunStepsOnValue
     )
   ], function () {
     success();

@@ -66,7 +66,7 @@ const sExists = function <T>(container: Element, selector: string) {
 };
 
 const sNotExists = function <T>(container: Element, selector: string) {
-  return Step.async<T>(function (next, die) {
+  return Step.async<T>((next, die) => {
     findIn(container, selector).fold(function () {
       next();
     }, function () {
