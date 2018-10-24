@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 
 import { RawAssertions } from '../../../../main/ts/ephox/agar/api/Main';
-import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState } from '../../../../main/ts/ephox/agar/api/TestLogs';
+import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState, addStackTrace } from '../../../../main/ts/ephox/agar/api/TestLogs';
 
 UnitTest.test('TestLogsTest', () => {
 
@@ -14,6 +14,10 @@ UnitTest.test('TestLogsTest', () => {
   const assertLog = (expected) => (logs) => {
     RawAssertions.assertEq('Checking logs', expected, logs.history);
     return logs;
+  };
+
+  const addTraceToLog = (trace: { stack: any }) => (logs) => {
+    return addStackTrace(logs, trace);
   };
 
   Arr.foldl([
@@ -128,6 +132,31 @@ UnitTest.test('TestLogsTest', () => {
         trace: null
       }
     ]),
+    addTraceToLog({ stack: 'during beta-2' }),
+    assertLog([
+      { message: 'alpha', entries: [ ], state: TestLogEntryState.Original, trace: null },
+      {
+        message: 'beta',
+        state: TestLogEntryState.Started,
+        entries: [
+          {
+            message: 'beta-1',
+            state: TestLogEntryState.Finished,
+            entries: [
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+            ],
+            trace: null
+          },
+          {
+            message: 'beta-2',
+            state: TestLogEntryState.Original,
+            entries: [ ],
+            trace: 'during beta-2'
+          }
+        ],
+        trace: null
+      }
+    ]),
     popLogLevel,
     assertLog([
       { message: 'alpha', entries: [ ], state: TestLogEntryState.Original, trace: null },
@@ -147,7 +176,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-2',
             state: TestLogEntryState.Original,
             entries: [ ],
-            trace: null
+            trace: 'during beta-2'
           }
         ],
         trace: null
@@ -172,12 +201,39 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-2',
             state: TestLogEntryState.Original,
             entries: [ ],
-            trace: null
+            trace: 'during beta-2'
           }
         ],
         trace: null
       },
-      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: null }
+      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: null },
+    ]),
+
+    addTraceToLog({ stack: 'gamma-trace!' }),
+    assertLog([
+      { message: 'alpha', entries: [ ], state: TestLogEntryState.Original, trace: null },
+      {
+        message: 'beta',
+        state: TestLogEntryState.Finished,
+        entries: [
+          {
+            message: 'beta-1',
+            state: TestLogEntryState.Finished,
+            entries: [
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+            ],
+            trace: null
+          },
+          {
+            message: 'beta-2',
+            state: TestLogEntryState.Original,
+            entries: [ ],
+            trace: 'during beta-2'
+          }
+        ],
+        trace: null
+      },
+      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: 'gamma-trace!' },
     ]),
   ], (b, a) => {
     const next = a(b);

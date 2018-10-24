@@ -142,7 +142,7 @@ export const popLogLevel = (logs: TestLogs): TestLogs => {
   })
 };
 
-export const addStackTrace = (logs: TestLogs, err): TestLogs => {
+export const addStackTrace = (logs: TestLogs, err: { stack: any }): TestLogs => {
   if (DISABLE_LOGGING) return logs;
   return modifyLastEntry(logs, (entry) => {
     return {
