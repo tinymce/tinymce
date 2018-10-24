@@ -1,6 +1,6 @@
 import { Adt } from '@ephox/katamari';
 
-export interface Methods extends Adt {
+export interface Methods {
   fold: <T>(
     getHandler: () => T,
     postHandler: () => T,
@@ -13,6 +13,7 @@ export interface Methods extends Adt {
     put: () => T,
     del: () => T,
   }) => T;
+  log: (label: string) => void;
 };
 
 const adt: {

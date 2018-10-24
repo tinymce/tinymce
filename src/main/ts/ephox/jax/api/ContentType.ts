@@ -7,7 +7,7 @@ type JsonData = any;
 type PlainData = USVString;
 type HtmlData = USVString | Document;
 
-export interface ContentType extends Adt {
+export interface ContentType {
   fold: <T>(
     fileHandler: (data: FileData) => T,
     formHandler: (data: FormData_) => T,
@@ -22,6 +22,7 @@ export interface ContentType extends Adt {
     plain: (data: PlainData) => T,
     html: (data: HtmlData) => T
   }) => T;
+  log: (label: string) => void;
 };
 
 const adt: {
