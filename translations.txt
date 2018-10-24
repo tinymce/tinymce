@@ -21,7 +21,7 @@ Symbols                    <new>Charmap
 Arrows                     <new>Charmap
 User Defined               <new>Charmap
 
-
+Color Picker              <new>Color Picker
 
 
 
