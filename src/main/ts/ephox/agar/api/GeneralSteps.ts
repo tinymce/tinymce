@@ -1,13 +1,13 @@
 import { clearInterval, setInterval, setTimeout } from '@ephox/dom-globals';
 
-import { DieFn, NextFn, AgarLogs } from '../pipe/Pipe';
+import { DieFn, NextFn } from '../pipe/Pipe';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
+import { TestLogs } from './TestLogs';
 
 // This module needs tests
 const sequence = function (steps: Step<any, any>[]) {
-  return Step.raw<any, any>((value, next, die, initLogs: AgarLogs) => {
-    // TODO: Do we combine logs into this is any way (next ls)
+  return Step.raw<any, any>((value, next, die, initLogs: TestLogs) => {
     Pipeline.async(value, steps, next, die, initLogs);
   });
 };
@@ -27,7 +27,7 @@ const sequenceRepeat = function <T>(amount: number, step: Step<T, T>): Step<T, T
 
 // TODO deprecate? This function is weird and we don't seem to use it.
 const repeatUntil = function <T, U>(label: string, repeatStep: Step<T, T>, successStep: Step<T, U>, numAttempts: number) {
-  return Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) => {
+  return Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     const again = function (num: number) {
       if (num <= 0) {
         die(label + '\nRan out of attempts', logs);

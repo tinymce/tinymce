@@ -1,9 +1,10 @@
 import { Element, Focus } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
-import { DieFn, NextFn, AgarLogs } from '../pipe/Pipe';
+import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';
 import { Step } from './Step';
+import { TestLogs } from './TestLogs';
 import * as UiFinder from './UiFinder';
 
 const triggerWith = function <T>(container: Element, selector: string, action: (ele: Element) => void) {
@@ -49,7 +50,7 @@ const cClick = Chain.op(function (element: Element) {
 });
 
 const cClickOn = function (selector: string): Chain<Element, Element> {
-  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn, logs: AgarLogs) {
+  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn, logs: TestLogs) {
     triggerWith(container, selector, Clicks.trigger)({}, function (v, newLogs) {
       next(Chain.wrap(container), newLogs);
     }, (err, newLogs) => die(err, newLogs), logs);

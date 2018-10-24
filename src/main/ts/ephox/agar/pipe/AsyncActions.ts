@@ -1,6 +1,6 @@
 import { setTimeout } from '@ephox/dom-globals';
 
-import { DieFn, AgarLogs } from './Pipe';
+import { DieFn } from './Pipe';
 
 const delay = function (amount: number) {
   return function (next: () => void, die: DieFn) {

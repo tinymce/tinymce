@@ -1,9 +1,11 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
+
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn, AgarLogs, popLogLevel, pushLogLevel, addLogEntry } from "../pipe/Pipe";
-import { Chain, Wrap } from "./Chain";
-import { GeneralSteps } from "./Main";
-import { Step } from "./Step";
+import { DieFn, NextFn } from '../pipe/Pipe';
+import { Chain, Wrap } from './Chain';
+import { GeneralSteps } from './Main';
+import { Step } from './Step';
+import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
 
 const generateLogMsg = (testId: string, description: string) => {
   // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA:> <description of the test>'
@@ -15,7 +17,7 @@ const enrichErrorMsg = (label, err) => {
 };
 
 const enrichDie = (label, f) => {
-  return (value, next, die: DieFn, logs: AgarLogs) => {
+  return (value, next, die: DieFn, logs: TestLogs) => {
     const updatedLogs = pushLogLevel(addLogEntry(logs, label));
     // TODO: Change this to use logs instead.
     const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), popLogLevel(newLogs));
@@ -45,7 +47,7 @@ const stepsAsStep = <T, U>(testId: string, description: string, fs: Step<T, U>[]
 
 const chain = <T, U>(testId: string, description: string, c: Chain<T, U>): Chain<T, U>  => {
   const label = generateLogMsg(testId, description);
-  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: AgarLogs) => void): Chain<T, U> => {
+  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => void): Chain<T, U> => {
     return { runChain: enrichDie(label, f) };
   };
   return switchDie(c.runChain);

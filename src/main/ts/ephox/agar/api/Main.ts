@@ -22,6 +22,7 @@ import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
+import { TestLogs } from './TestLogs';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as UnitTest from './UnitTest';
@@ -53,6 +54,7 @@ export {
   RealKeys,
   RealMouse,
   Step,
+  TestLogs,
   UiControls,
   UiFinder,
   UnitTest,

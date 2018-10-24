@@ -1,17 +1,18 @@
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 
 import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn, RunFn, AgarLogs, addLogEntry } from '../pipe/Pipe';
+import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
 import * as Logger from './Logger';
+import { TestLogs, addLogEntry } from './TestLogs';
 
-export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: AgarLogs) => void;
+export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => void;
 
 const nu = function <T, U, V>(f: GuardFn<T, U, V>) {
   return f;
 };
 
 const tryUntilNot = function <T, U>(label: string, interval: number, amount: number) {
-  return nu<T, U, T>(function (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn, logs: AgarLogs) {
+  return nu<T, U, T>(function (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     const repeat = function (n: number) {
       f(value, function (v, newLogs) {
         if (n <= 0) die(new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label), newLogs);
@@ -32,7 +33,7 @@ const tryUntilNot = function <T, U>(label: string, interval: number, amount: num
 };
 
 const tryUntil = function <T, U>(label: string, interval: number, amount: number) {
-  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     const repeat = function (n: number) {
       f(value, (v, newLogs) => {
         next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'))
@@ -53,7 +54,7 @@ const tryUntil = function <T, U>(label: string, interval: number, amount: number
 };
 
 const timeout = function <T, U>(label: string, limit: number) {
-  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     let passed = false;
     let failed = false;
 
@@ -68,7 +69,7 @@ const timeout = function <T, U>(label: string, limit: number) {
       }
     }, limit);
 
-    f(value, function (v: U, newLogs: AgarLogs) {
+    f(value, function (v: U, newLogs: TestLogs) {
       clearTimeout(timer);
       if (hasNotExited()) {
         passed = true;
@@ -84,7 +85,7 @@ const timeout = function <T, U>(label: string, limit: number) {
 };
 
 const addLogging = function <T, U>(label: string) {
-  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: AgarLogs) {
+  return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     return Logger.t(label, f)(value, next, die, logs);
   });
 };

@@ -2,7 +2,8 @@ import { console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { AgarLogs, DieFn, NextFn, popLogLevel, pushLogLevel, addLogEntry } from '../pipe/Pipe';
+import { TestLogs } from '../api/TestLogs';
+import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Main';
 
 
@@ -23,10 +24,10 @@ const callAsync = function (f) {
   typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
-const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: AgarLogs) {
+const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) {
   assertSteps(steps);
 
-  const chain = function (lastLink: any, logs: AgarLogs, index: number) {
+  const chain = function (lastLink: any, logs: TestLogs, index: number) {
     if (index < steps.length) {
       const asyncOperation = steps[index];
       // FIX: Make this test elsewhere without creating a circular dependency on Chain
@@ -48,8 +49,8 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
       onSuccess(lastLink, finalLogs);
     }
   };
-  // const startLogs = pushLogLevel(addLogEntry(AgarLogs.getOrInit(initLogs), '');
-  const startLogs = AgarLogs.getOrInit(initLogs);
+  // const startLogs = pushLogLevel(addLogEntry(TestLogs.getOrInit(initLogs), '');
+  const startLogs = TestLogs.getOrInit(initLogs);
   chain(initial, startLogs, 0);
 };
 

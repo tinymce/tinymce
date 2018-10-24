@@ -4,7 +4,6 @@ import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
-import { AgarLogs } from '../../../../main/ts/ephox/agar/pipe/Pipe';
 
 UnitTest.asynctest('ChainTest', function() {
   const success = arguments[arguments.length - 2];

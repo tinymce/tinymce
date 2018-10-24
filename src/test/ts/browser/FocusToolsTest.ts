@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import { Element, Value } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
@@ -9,9 +10,9 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
-import { AgarLogs, AgarLogEntry } from '../../../main/ts/ephox/agar/pipe/Pipe';
+
 import { Logger } from '../../../main/ts/ephox/agar/api/Main';
-import { Arr } from '@ephox/katamari';
+import { TestLogEntry } from '../../../main/ts/ephox/agar/api/TestLogs';
 
 UnitTest.asynctest('FocusToolsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -116,36 +117,6 @@ UnitTest.asynctest('FocusToolsTest', function () {
 
   ], function (_, logs) {
     success();
-  }, (err, logs) => {
-
-    const outputToStr = (indent: string, entries: AgarLogEntry[]): string[] => {
-      return Arr.bind(entries, (entry) => {
-        const traceLines = entry.trace === null ? [ ] : [ '', '', '-----' ].concat(Arr.map(
-          entry.trace.split('\n'),
-          (s) => indent + '>> ' + s
-        ).concat([ '----' ]));
-
-        if (entry.entries.length === 0) {
-          if (entry.trace === null) {
-            return [ indent + '*  ' + entry.message ];
-          } else {
-            return [ indent + '*  ' + entry.message ].concat(traceLines);
-          }
-        } else {
-          // We have entries ... let's format them.
-          return [ indent + '*  ' + entry.message ].concat(
-            outputToStr(indent + '  ', entry.entries)
-          ).concat(traceLines);
-        }
-      })
-    }
-
-    const processed = outputToStr('  ', logs.history);
-
-    failure(JSON.stringify({
-      error: err.message,
-      logs: processed
-    }, null, 2));
-  });
+  }, failure);
 });
 

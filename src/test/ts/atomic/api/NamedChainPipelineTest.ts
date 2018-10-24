@@ -2,8 +2,8 @@ import { UnitTest } from '@ephox/bedrock';
 import { Chain } from 'ephox/agar/api/Chain';
 import { NamedChain } from 'ephox/agar/api/NamedChain';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
+import { TestLogs } from '../../../../main/ts/ephox/agar/api/Main';
 
-import { AgarLogs } from '../../../../main/ts/ephox/agar/pipe/Pipe';
 
 UnitTest.asynctest('NamedChainPipelineTest', function() {
   const success = arguments[arguments.length-2];
@@ -27,6 +27,6 @@ UnitTest.asynctest('NamedChainPipelineTest', function() {
       } catch (err) {
           failure(err);
       }
-  }, failure, AgarLogs.init());
+  }, failure, TestLogs.init());
 });
 
