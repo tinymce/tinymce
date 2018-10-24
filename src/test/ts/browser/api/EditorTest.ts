@@ -1,4 +1,4 @@
-import { Pipeline, Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
