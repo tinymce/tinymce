@@ -73,12 +73,12 @@ export interface ContextToggleButton extends BaseToolbarToggleButton<ContextTogg
 
 export interface ContextToolbarApi extends ContextBarApi {
   type?: 'contexttoolbar';
-  items: string[];
+  items: string;
 }
 
 export interface ContextToolbar extends ContextBar {
   type: 'contexttoolbar';
-  items: string[];
+  items: string;
 }
 
 export interface ContextFormInstanceApi {
@@ -148,7 +148,7 @@ const contextFormSchema = ValueSchema.objOf([
 
 const contextToolbarSchema = ValueSchema.objOf([
   FieldSchema.defaulted('type', 'contexttoolbar'),
-  FieldSchema.strictArrayOf('items', ValueSchema.string)
+  FieldSchema.strictString('items')
 ].concat(contextBarFields));
 
 export const createContextToolbar = (spec: ContextToolbarApi): Result<ContextToolbar, ValueSchema.SchemaError<any>> => {
