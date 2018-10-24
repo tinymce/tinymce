@@ -3,17 +3,20 @@
 //
 
 @edit-area-border-color: @border-color;
+@edit-area-border-radius: 0;
 @edit-area-border-style: solid;
 @edit-area-border-width: 1px;
 
 .tox {
   .tox-edit-area {
     border-color: @edit-area-border-color;
+    border-radius: @edit-area-border-radius;
     border-style: @edit-area-border-style;
     border-width: @edit-area-border-width;
     display: flex;
     flex: 1;
     margin-top: -1px; // Remove double borders
+    overflow: hidden;
     position: relative; // Required for the iframe to resize in IE and Edge
   }
 
