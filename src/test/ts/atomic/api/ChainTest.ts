@@ -167,6 +167,23 @@ UnitTest.asynctest('ChainTest', function() {
     ])
   );
 
+  const testChainRunStepsOnValue = StepAssertions.testChain(
+    'runStepsOnValue=succ!',
+    Chain.fromChains([
+      Chain.inject('runSteps'),
+      Chain.runStepsOnValue(
+        (s: string) => [
+          Step.stateful((_, next, die) => {
+            next(s + 'OnValue');
+          }),
+          Step.stateful((v, next, die) => {
+            next(v + '=succ!');
+          })
+        ]
+      )
+    ])
+  );
+
   return Pipeline.async({}, [
     Logger.t(
       '[Should fail validation if the chain function does not wrap the output]\n',
@@ -243,6 +260,11 @@ UnitTest.asynctest('ChainTest', function() {
       Chain.asStep({}, [
         Chain.wait(1000)
       ])
+    ),
+
+    Logger.t(
+      '[Complex API: Chain.runStepsOnValue\n',
+      testChainRunStepsOnValue
     )
   ], function () {
     success();

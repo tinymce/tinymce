@@ -175,7 +175,7 @@ const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, on
 const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O> => {
   return Chain.on((input: I, next, die, initLogs) => {
     const steps = getSteps(input);
-    Pipeline.async({ }, steps, next, die, initLogs);
+    Pipeline.async({ }, steps, (stepsOutput, newLogs) => next(Chain.wrap(stepsOutput), newLogs), die, initLogs);
   });
 }
 
