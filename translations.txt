@@ -1,0 +1,42 @@
+
+New Translations
+<new translation> [<previous translation>]
+-----------------------------------------------------
+Spell check               [Spellcheck]
+Fonts                     [Font Family]
+Image title               <new>
+Border width              <new>
+Error                     <new>
+Warn                      <new>
+Valid                     <new>
+
+
+
+
+
+
+
+
+
+
+
+
+
+No longer Used
+-----------------------------------------------------
+
+
+
+
+
+
+
+
+Items that are translated but may look like english
+-----------------------------------------------------
+Pre (es)
+Code Sample (es)
+Ok (es)
+Media (es)
+General (es)
+URL (es)

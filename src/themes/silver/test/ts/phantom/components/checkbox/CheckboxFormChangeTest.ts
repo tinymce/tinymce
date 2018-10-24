@@ -5,10 +5,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { renderCheckbox } from '../../../../../main/ts/ui/general/Checkbox';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
   const providers = {
-    icons: () => <Record<string, string>> {}
+    icons: () => <Record<string, string>> {},
+    translate: I18n.translate
   };
 
   GuiSetup.setup(

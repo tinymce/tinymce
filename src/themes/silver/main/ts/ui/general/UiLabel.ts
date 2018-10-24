@@ -10,7 +10,11 @@ export interface RenderUiLabel<I> {
   items: I[];
 }
 
+<<<<<<< HEAD
 export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
+=======
+export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>): SimpleSpec => {
+>>>>>>> 5.x
   return {
     dom: {
       tag: 'label',

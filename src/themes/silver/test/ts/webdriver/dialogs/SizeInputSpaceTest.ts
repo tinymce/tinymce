@@ -5,11 +5,11 @@ import { Option } from '@ephox/katamari';
 
 import { renderSizeInput } from '../../../../main/ts/ui/dialog/SizeInput';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
-  const providers = {
-    icons: () => <Record<string, string>> {}
-  };
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
 
   GuiSetup.setup(
     (store, doc, body) => {
@@ -56,7 +56,10 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
         sAssertLockedStatus('Firing space on a non-pressed button', true)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

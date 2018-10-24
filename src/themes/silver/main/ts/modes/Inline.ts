@@ -60,7 +60,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.on('activate focus', show);
   editor.on('deactivate blur hide', hide);
 
-  return { };
+  return {
+    editorContainer: uiComponents.outerContainer.element().dom()
+  };
 };
 
 const getBehaviours = (editor) => {

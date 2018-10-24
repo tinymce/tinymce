@@ -1,11 +1,24 @@
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
-import { Container, AlloyTriggers, Memento, Behaviour, Replacing, Slider, Focusing, Representing, AlloyComponent, SketchSpec, AlloySpec } from '@ephox/alloy';
-import * as ImageToolsEvents from './ImageToolsEvents';
-import { Fun, Option } from '@ephox/katamari';
+import {
+  AlloyComponent,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  Container,
+  Focusing,
+  Memento,
+  Replacing,
+  Representing,
+  SketchSpec,
+  Slider,
+} from '@ephox/alloy';
 import { SliderValueX } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SliderTypes';
 import { ImageTransformations } from '@ephox/imagetools';
+import { Fun, Option } from '@ephox/katamari';
+
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { renderButton, renderIconButton } from '../../general/Button';
 import { renderSizeInput } from '../SizeInput';
+import * as ImageToolsEvents from './ImageToolsEvents';
 
 const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
   const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): SketchSpec => {
@@ -14,7 +27,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       text,
       disabled,
       primary
-    }, action);
+    }, action, providersBackstage);
   };
 
   const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): SketchSpec => {
@@ -23,7 +36,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
       disabled
-    }, action, providersBackstage.icons);
+    }, action, providersBackstage);
   };
 
   const panelDom = {

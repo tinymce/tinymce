@@ -25,10 +25,11 @@ import { detectSize } from '../alien/FlatgridAutodetect';
 import { formActionEvent, formResizeEvent } from '../general/FormEvents';
 import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 import * as ItemClasses from '../menus/item/ItemClasses';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-export const renderCollection = (spec: Types.Collection.Collection): SketchSpec => {
+export const renderCollection = (spec: Types.Collection.Collection, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.
-  const pLabel = spec.label.map(renderLabel);
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const runOnItem = (f: (c: AlloyComponent, tgt: Element, itemValue: string) => void) => <T extends EventFormat>(comp: AlloyComponent, se: SimulatedEvent<T>) => {
     SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target) => {

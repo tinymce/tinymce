@@ -8,6 +8,7 @@ import { Attr } from '@ephox/sugar';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import NavigableObject from '../general/NavigableObject';
 import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 const platformNeedsSandboxing = !PlatformDetection.detect().browser.isIE();
 
@@ -44,7 +45,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
   };
 };
 
-const renderIFrame = (spec: Types.Iframe.Iframe) => {
+const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const sandboxAttrs = isSandbox ? {
@@ -53,7 +54,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe) => {
 
   const sourcing = getDynamicSource(isSandbox);
 
-  const pLabel = spec.label.map(renderLabel);
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const factory = (newSpec: { uid: string }) => {
     return NavigableObject.craft(

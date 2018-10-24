@@ -1,17 +1,17 @@
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
-import { AlloyComponent, Container, AlloyTriggers, Memento, Disabling, SketchSpec } from '@ephox/alloy';
-import * as ImageToolsEvents from './ImageToolsEvents';
-import { renderIconButton } from '../../general/Button';
+import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { IconProvider } from '../../icons/Icons';
 
-const createButton = (innerHtml: string, disabled: boolean, action: (button: AlloyComponent) => void, icons: IconProvider): SketchSpec => {
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { renderIconButton } from '../../general/Button';
+import * as ImageToolsEvents from './ImageToolsEvents';
+
+const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderIconButton({
     name: innerHtml,
-    icon: Option.some(innerHtml),
+    icon: Option.some(icon),
     disabled,
     tooltip: Option.some(innerHtml)
-  }, action, icons);
+  }, action, providersBackstage);
 };
 
 const setButtonEnabled = (button: AlloyComponent, enabled: boolean): void => {
@@ -33,19 +33,19 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
   };
 
   const memUndo = Memento.record(
-    createButton('undo', true, (button) => {
+    createButton('Undo', 'undo', true, (button) => {
       AlloyTriggers.emitWith(button, ImageToolsEvents.internal.undo(), {
         direction: 1
       });
-    }, providersBackstage.icons)
+    }, providersBackstage)
   );
 
   const memRedo = Memento.record(
-    createButton('redo', true, (button) => {
+    createButton('Redo', 'redo', true, (button) => {
       AlloyTriggers.emitWith(button, ImageToolsEvents.internal.redo(), {
         direction: 1
       });
-    }, providersBackstage.icons)
+    }, providersBackstage)
   );
 
   const container = Container.sketch({
@@ -56,16 +56,16 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
     components: [
       memUndo.asSpec(),
       memRedo.asSpec(),
-      createButton('zoom-in', false, (button) => {
+      createButton('Zoom in', 'zoom-in', false, (button) => {
         AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
           direction: 1
         });
-      }, providersBackstage.icons),
-      createButton('zoom-out', false, (button) => {
+      }, providersBackstage),
+      createButton('Zoom out', 'zoom-out', false, (button) => {
         AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
           direction: -1
         });
-      }, providersBackstage.icons)
+      }, providersBackstage)
     ]
   });
 

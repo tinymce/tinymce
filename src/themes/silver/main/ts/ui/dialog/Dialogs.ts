@@ -1,5 +1,18 @@
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, Behaviour, Button, ComponentApi, DomFactory, ModalDialog, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloySpec,
+  Behaviour,
+  Button,
+  ComponentApi,
+  Container,
+  DomFactory,
+  ModalDialog,
+  Tabstopping,
+} from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
+
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
 
 const pClose = (onClose) => ModalDialog.parts().close(
@@ -31,14 +44,14 @@ const pUntitled = () => ModalDialog.parts().title({
   }
 });
 
-const pBodyMessage = (message) => ModalDialog.parts().body({
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__body', 'todo-tox-fit' ]
   },
   components: [
     {
-      dom: DomFactory.fromHtml(`<p>${message}</p>`)
+      dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
     }
   ]
 });
@@ -48,8 +61,27 @@ const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts().footer({
     tag: 'div',
     classes: [ 'tox-dialog__footer' ]
   },
-  components: buttons
+  components: buttons,
 });
+
+const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
+  return [
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ `tox-dialog__footer-start` ]
+      },
+      components: startButtons
+    }),
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ `tox-dialog__footer-end` ]
+      },
+      components: endButtons
+    })
+  ];
+};
 
 export interface DialogFoo {
   lazySink: () => Result<ComponentApi.AlloyComponent, any>;
@@ -119,4 +151,4 @@ const renderDialog = (spec: DialogFoo) => {
   );
 };
 
-export { pClose, pUntitled, pBodyMessage, pFooter, renderDialog };
+export { pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };

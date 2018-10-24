@@ -41,7 +41,7 @@ const renderContextButton = (memInput: MementoRecord, button: Toolbar.ContextBut
     })
   );
 
-  return renderToolbarButtonWith(bridged, extras, [
+  return renderToolbarButtonWith(bridged, extras.backstage.shared.providers, [
     runOnExecute<Toolbar.ToolbarButtonInstanceApi>(memInput, button)
   ]);
 };
@@ -56,7 +56,7 @@ const renderContextToggleButton = (memInput: MementoRecord, button: Toolbar.Cont
     })
   );
 
-  return renderToolbarToggleButtonWith(bridged, extras, [
+  return renderToolbarToggleButtonWith(bridged, extras.backstage.shared.providers, [
     runOnExecute<Toolbar.ToolbarButtonInstanceApi>(memInput, button)
   ]);
 };

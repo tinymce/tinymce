@@ -1,11 +1,17 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
+
+  const helpers = setupDemo();
+
+  const providers = helpers.extras.backstage.shared.providers;
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -14,7 +20,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
           text: 'ButtonText',
           disabled: false,
           primary: true
-        }, store.adder('button.action'))
+        }, store.adder('button.action'), providers)
       );
     },
     (_doc, _body, gui, component, store) => {
@@ -38,7 +44,10 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
         store.sAssertEq('Button action should have fired', [ 'button.action' ])
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

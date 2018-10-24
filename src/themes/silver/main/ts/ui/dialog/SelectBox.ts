@@ -1,14 +1,27 @@
-import { FormField as AlloyFormField, HtmlSelect as AlloyHtmlSelect, SketchSpec, Behaviour, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyTriggers, Tabstopping, AlloySpec, SimpleSpec } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  FormField as AlloyFormField,
+  HtmlSelect as AlloyHtmlSelect,
+  NativeEvents,
+  SimpleSpec,
+  SketchSpec,
+  Tabstopping,
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
-import { formChangeEvent } from '../general/FormEvents';
-import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { Arr, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
+import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
+
+import { formChangeEvent } from '../general/FormEvents';
 
 export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.
-  const pLabel = spec.label.map(renderLabel);
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const pField = AlloyFormField.parts().field({
     // TODO: Alloy should not allow dom changing of an HTML select!

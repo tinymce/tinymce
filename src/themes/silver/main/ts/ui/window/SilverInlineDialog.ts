@@ -43,7 +43,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     renderInlineHeader({
       title: dialogInit.internalDialog.title,
       draggable: true
-    }, dialogLabelId) as SimpleSpec
+    }, dialogLabelId, backstage.shared.providers) as SimpleSpec
   );
 
   const memBody = Memento.record(
@@ -55,7 +55,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: dialogInit.internalDialog.buttons
-    })
+    }, backstage.shared.providers)
   );
 
   const dialogEvents = SilverDialogEvents.init(

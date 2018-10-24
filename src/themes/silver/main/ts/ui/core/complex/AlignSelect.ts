@@ -5,6 +5,8 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
+import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 const alignMenuItems = [
   { title: 'Left', icon: 'align-left', format: 'alignleft'},
@@ -13,7 +15,7 @@ const alignMenuItems = [
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
 ];
 
-const createAlignSelect = (editor, backstage) => {
+const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   const getMatchingValue = (): Option<Partial<FormatItem>> => {
     return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
   };
@@ -40,7 +42,7 @@ const createAlignSelect = (editor, backstage) => {
       const match = getMatchingValue();
       const text = match.fold(() => 'Align', (item) => item.title);
       AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
+        text: backstage.shared.providers.translate(text)
       });
     };
   });
