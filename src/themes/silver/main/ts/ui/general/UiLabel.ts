@@ -1,7 +1,6 @@
 import { Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 
@@ -10,11 +9,7 @@ export interface RenderUiLabel<I> {
   items: I[];
 }
 
-<<<<<<< HEAD
-export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>, sharedBackstage: UiFactoryBackstageShared): SimpleSpec => {
-=======
 export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>): SimpleSpec => {
->>>>>>> 5.x
   return {
     dom: {
       tag: 'label',

@@ -55,15 +55,9 @@ const factories: Record<string, FormPartRenderer> = {
   textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
-<<<<<<< HEAD
-  listbox: make(renderListbox),
-  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
-  iframe: makeIframe(renderIFrame),
-=======
   listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
   label: make(renderUiLabel),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
->>>>>>> 5.x
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),

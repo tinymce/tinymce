@@ -113,15 +113,9 @@ export default () => {
         label: Option.some('exampleInput'),
         name: 'exampleinputfieldname',
         validation: Option.none()
-<<<<<<< HEAD
-      })
-    ]
-  }, sharedBackstage);
-=======
       }, sharedBackstage.providers)
     ]
   });
->>>>>>> 5.x
 
   const labelGridSpec = renderUiLabel({
     label: 'A label wraps a grid compontent',
@@ -137,11 +131,7 @@ export default () => {
             primary: false
           }, () => {
             console.log('clicked on the button in the grid');
-<<<<<<< HEAD
-          }) as any,
-=======
           }, sharedBackstage.providers) as any,
->>>>>>> 5.x
           renderCheckbox({
             label: 'check box item 1',
             name: 'one'
@@ -154,20 +144,11 @@ export default () => {
             label: Option.some('exampleInput'),
             name: 'exampleinputfieldname',
             validation: Option.none()
-<<<<<<< HEAD
-          })
-        ]
-      }, sharedBackstage)
-
-    ]
-  }, sharedBackstage);
-=======
           }, sharedBackstage.providers)
         ]
       }, sharedBackstage)
     ]
   });
->>>>>>> 5.x
 
   const listboxSpec = renderListbox({
     name: 'listbox1',
