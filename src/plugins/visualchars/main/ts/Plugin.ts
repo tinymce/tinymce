@@ -13,6 +13,7 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
 import Commands from './api/Commands';
 import Keyboard from './core/Keyboard';
+import Bindings from './core/Bindings';
 import * as Buttons from './ui/Buttons';
 
 PluginManager.add('visualchars', function (editor) {
@@ -21,6 +22,7 @@ PluginManager.add('visualchars', function (editor) {
   Commands.register(editor, toggleState);
   Buttons.register(editor);
   Keyboard.setup(editor, toggleState);
+  Bindings.setup(editor, toggleState);
 
   return Api.get(toggleState);
 });
