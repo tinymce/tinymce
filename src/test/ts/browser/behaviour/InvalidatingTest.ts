@@ -176,15 +176,15 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       Step.wait(100)
     ]);
 
-    const cQueryApi = Chain.on((value, next, die) => {
+    const cQueryApi = Chain.async((value, next, die) => {
       Invalidating.query(component).get((res) => {
-        next(Chain.wrap(res));
+        next(res);
       });
     });
 
-    const cRunApi = Chain.on((value, next, die) => {
+    const cRunApi = Chain.async((value, next, die) => {
       Invalidating.run(component).get((res) => {
-        next(Chain.wrap(res));
+        next(res);
       });
     });
 

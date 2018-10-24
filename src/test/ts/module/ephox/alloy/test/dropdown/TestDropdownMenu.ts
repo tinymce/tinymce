@@ -78,7 +78,8 @@ const mStoreMenuUid = (component) => {
 };
 
 const mWaitForNewMenu = (component) => {
-  return Step.stateful((value: any, next, die) => {
+  // TODO: Create an API to hide this detail
+  return Step.raw((value: any, next, die, logs) => {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
       Step.sync(() => {
@@ -89,7 +90,7 @@ const mWaitForNewMenu = (component) => {
       }),
       100,
       3000
-    )(value, next, die);
+    )(value, next, die, logs);
   });
 };
 
