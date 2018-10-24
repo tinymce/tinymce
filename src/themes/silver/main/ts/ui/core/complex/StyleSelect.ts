@@ -44,11 +44,9 @@ const getSpec = (editor): SelectSpec => {
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     return (e) => {
       const detectedFormat = findNearest(editor, () => flattenedItems, e);
-      const optText = detectedFormat.map((fmt) => fmt.title);
-      optText.each((text) => {
-        AlloyTriggers.emitWith(comp, updateMenuText, {
-          text
-        });
+      const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+      AlloyTriggers.emitWith(comp, updateMenuText, {
+        text
       });
     };
   });
