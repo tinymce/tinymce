@@ -1,21 +1,21 @@
 import { Attachment, Docking } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Option, Throttler } from '@ephox/katamari';
 import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
-
+import { UiFactoryBackstage } from '../backstage/Backstage';
+import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
-import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
-import { UiFactoryBackstage } from '../backstage/Backstage';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   loadInlineSkin(editor);
 
   const floatContainer = uiComponents.outerContainer;
   const DOM = DOMUtils.DOM;
+  Css.set(uiComponents.outerContainer.element(), 'display', 'none');
 
   Attachment.attachSystem(Body.body(), uiComponents.mothership);
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
@@ -49,7 +49,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     Docking.refresh(floatContainer);
   };
 
+  const showThrottle = Throttler.last(show, 50);
+
   const hide = function () {
+    showThrottle.cancel();
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
@@ -57,7 +60,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   editor.on('ResizeWindow', setPosition);
-  editor.on('activate focus', show);
+  editor.on('activate focus', showThrottle.throttle);
   editor.on('deactivate blur hide', hide);
 
   return {

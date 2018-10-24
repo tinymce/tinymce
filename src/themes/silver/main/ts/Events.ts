@@ -1,5 +1,5 @@
-import { Channels, Attachment } from '@ephox/alloy';
-import { document } from '@ephox/dom-globals';
+import { Channels, Attachment, NativeEvents, SystemEvents } from '@ephox/alloy';
+import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
 
@@ -51,6 +51,16 @@ const setup = (editor, mothership, uiMothership) => {
   };
   editor.on('mouseup', onContentMouseup);
 
+  const onWindowScroll = DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      // Hacky - if anyone has a better idea, please fix
+      // @ts-ignore
+      if (tinymce.activeEditor === editor) {
+        ship.broadcastEvent(SystemEvents.windowScroll(), evt);
+      }
+    });
+  });
+
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
     editor.off('mousedown', onContentMousedown);
@@ -64,6 +74,8 @@ const setup = (editor, mothership, uiMothership) => {
     onMousedown.unbind();
     onTouchstart.unbind();
     onMouseup.unbind();
+
+    onWindowScroll.unbind();
   });
 };
 
