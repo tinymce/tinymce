@@ -50,10 +50,10 @@ const cClick = Chain.op(function (element: Element) {
 });
 
 const cClickOn = function (selector: string): Chain<Element, Element> {
-  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn, logs: TestLogs) {
+  return Chain.on(function (container: Element, next: NextFn<Wrap<Element>>, die: DieFn, initLogs: TestLogs) {
     triggerWith(container, selector, Clicks.trigger)({}, function (v, newLogs) {
       next(Chain.wrap(container), newLogs);
-    }, (err, newLogs) => die(err, newLogs), logs);
+    }, (err, newLogs) => die(err, newLogs), initLogs);
   });
 };
 
