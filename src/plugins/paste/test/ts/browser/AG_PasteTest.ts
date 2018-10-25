@@ -77,7 +77,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(editor.getContent(), '<p>1TEST4</p>');
   });
 
-  suite.test('Paste text with meta and nbsp', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste text with meta and nbsp', function (editor) {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1&nbsp;</p>');
@@ -90,7 +90,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(editor.getContent(), '<p>1 TEST</p>');
   });
 
-  suite.test('Paste styled text content', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste styled text content', function (editor) {
     const rng = editor.dom.createRng();
 
     editor.settings.paste_remove_styles_if_webkit = false;
@@ -685,12 +685,12 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
   });
 
-  suite.test('paste innerText of P with WBR', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of P with WBR', function (editor) {
     editor.setContent('<p>a<wbr>b</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'ab');
   });
 
-  suite.test('paste innerText of P with VIDEO', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of P with VIDEO', function (editor) {
     editor.setContent('<p>a<video>b<br>c</video>d</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a d');
   });
