@@ -17,7 +17,7 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 
 const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
   MatchKeys.execute([
-    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
+    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
   ], evt).each(function (_) {
     evt.preventDefault();
   });

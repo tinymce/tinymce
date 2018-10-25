@@ -36,16 +36,16 @@ const needsNbsp = (root: Element, pos: CaretPosition) => {
   return isAtStartOfBlock(root, pos) || isAtEndOfBlock(root, pos) || isAtBr(root, pos) || isNextToSpace(root, pos);
 };
 
-const insertAtCaret = (root: Element, pos: CaretPosition): Option<CaretPosition> => {
+const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> => {
   return needsNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 };
 
-const insertAtSelection = (editor: Editor): boolean => {
+const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
   const root = Element.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {
-    return insertAtCaret(root, pos).map((pos) => {
+    return insertSpaceOrNbspAtPosition(root, pos).map((pos) => {
       editor.selection.setRng(pos.toRange());
       return true;
     }).getOr(false);
@@ -55,6 +55,6 @@ const insertAtSelection = (editor: Editor): boolean => {
 };
 
 export {
-  insertAtCaret,
-  insertAtSelection
+  insertSpaceOrNbspAtPosition,
+  insertSpaceOrNbspAtSelection
 };
