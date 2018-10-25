@@ -11,9 +11,10 @@
     "prepublishOnly": "tsc"
   },
   "dependencies": {
-    "@ephox/katamari": "latest",
     "@ephox/boulder": "latest",
-    "@ephox/dom-globals": "latest"
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest",
+    "gulp": "^3.9.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -29,7 +30,7 @@
     "webpack": "^4.2.0",
     "webpack-livereload-plugin": "^2.1.1",
     "tslint": "^5.9.1",
-    "typescript": "^2.8.1"
+    "typescript": "^3.0.0"
   },
   "files": [
     "lib/main",

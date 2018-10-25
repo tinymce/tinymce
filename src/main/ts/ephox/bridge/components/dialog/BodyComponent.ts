@@ -13,6 +13,7 @@ import { ColorPickerApi, ColorPicker } from './ColorPicker';
 import { ImageToolsApi, ImageTools } from './ImageTools';
 import { AlertBannerApi, AlertBanner } from './AlertBanner';
 import { CollectionApi, Collection } from './Collection';
+import { LabelApi, Label } from './Label';
 
 export type BodyComponentApi
   = ButtonApi
@@ -29,7 +30,8 @@ export type BodyComponentApi
   | ColorPickerApi
   | ImageToolsApi
   | AlertBannerApi
-  | CollectionApi;
+  | CollectionApi
+  | LabelApi;
 
 export type BodyComponent
   = Button
@@ -46,4 +48,5 @@ export type BodyComponent
   | ColorPicker
   | ImageTools
   | AlertBanner
-  | Collection;
+  | Collection
+  | Label;
