@@ -9,14 +9,14 @@
  */
 
 import { Element } from '@ephox/sugar';
-import BlockBoundary from './BlockBoundary';
+import BlockMergeBoundary from './BlockMergeBoundary';
 import MergeBlocks from './MergeBlocks';
 
 const backspaceDelete = function (editor, forward) {
   let position;
   const rootNode = Element.fromDom(editor.getBody());
 
-  position = BlockBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
+  position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
     return MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block());
   });
 
