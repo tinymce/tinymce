@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun, Option, Options } from '@ephox/katamari';
+import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
 import { Node } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
@@ -153,7 +153,7 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
 };
 
 const isInlineElement = (editor: Editor, element: Element): boolean =>
-  editor.schema.getTextInlineElements().hasOwnProperty(SugarNode.name(element));
+  Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
 const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret: boolean = true) => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
