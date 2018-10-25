@@ -1,4 +1,4 @@
-import { Channels, Attachment, NativeEvents, SystemEvents } from '@ephox/alloy';
+import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
