@@ -1,8 +1,8 @@
 /**
- * CaretFinder.js
+ * CaretFinder.ts
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -90,12 +90,21 @@ const positionIn = (forward: boolean, element: Element): Option<CaretPosition> =
   }
 };
 
+const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
+const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
+
+const isAdjacentTo = (root: Element, pos: CaretPosition, predicate: (forward: boolean, pos: CaretPosition) => boolean) => {
+  const check = (forward: boolean) => (pos: CaretPosition) => predicate(forward, pos);
+  return prevPosition(root, pos).exists(check(false)) || nextPosition(root, pos).exists(check(true));
+};
+
 export default {
   fromPosition,
-  nextPosition: Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>,
-  prevPosition: Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>,
+  nextPosition,
+  prevPosition,
   navigate,
   positionIn,
   firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
-  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>
+  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>,
+  isAdjacentTo
 };
