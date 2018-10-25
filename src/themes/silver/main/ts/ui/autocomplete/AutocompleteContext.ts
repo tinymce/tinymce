@@ -30,7 +30,7 @@ const parse = (text: string, index: number, ch: string, minChars): Option<string
   return Option.some(text.substring(i + 1, index));
 };
 
-const getContext = (initRange: Range, ch: string, text: string, index: number, minChars: number): Option<{ rng: Range, text: string }> => {
+const getContext = (initRange: Range, ch: string, text: string, index: number, minChars: number = 0 ): Option<{ rng: Range, text: string }> => {
   if (!isValidTextRange(initRange)) {
     return Option.none();
   }
