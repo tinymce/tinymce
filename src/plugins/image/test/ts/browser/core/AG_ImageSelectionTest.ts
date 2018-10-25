@@ -4,13 +4,14 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Merger } from '@ephox/katamari';
 
 import Plugin from 'tinymce/plugins/image/Plugin';
-import 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Plugin();
+  Theme();
 
   const sUpdateImageOrFigure = (editor, data) => {
     return Step.sync(() => {
@@ -209,6 +210,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
     plugins: 'image',
     indent: false,
     inline: true,
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/oxide'
   }, success, failure);
 });
