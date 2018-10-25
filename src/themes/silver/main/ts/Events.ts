@@ -53,11 +53,7 @@ const setup = (editor, mothership, uiMothership) => {
 
   const onWindowScroll = DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
-      // Hacky - if anyone has a better idea, please fix
-      // @ts-ignore
-      if (tinymce.activeEditor === editor) {
-        ship.broadcastEvent(SystemEvents.windowScroll(), evt);
-      }
+      ship.broadcastEvent(SystemEvents.windowScroll(), evt);
     });
   });
 
