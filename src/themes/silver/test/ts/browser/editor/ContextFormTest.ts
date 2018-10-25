@@ -230,7 +230,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
 
         ed.ui.registry.addContextToolbar('test-toolbar', {
           predicate: () => false,
-          items: [ 'form:test-form' ]
+          items: 'form:test-form'
         });
       }
     },

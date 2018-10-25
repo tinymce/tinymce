@@ -37,11 +37,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cValidateBookmark = function (rootPath) {
-    return Chain.on(function (input: any, next, die) {
+    return Chain.async(function (input: any, next, die) {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
-        return next(Chain.wrap(SelectionBookmark.validate(root, b)));
+        return next(SelectionBookmark.validate(root, b));
       });
     });
   };

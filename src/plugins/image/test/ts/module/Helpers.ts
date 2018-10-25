@@ -115,9 +115,9 @@ const cWaitForDialog = () => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.direct('editor', cTinyUI, 'tinyUi'),
-    NamedChain.direct('tinyUi', Chain.on((tinyUi, next, die) => {
+    NamedChain.direct('tinyUi', Chain.async((tinyUi, next, die) => {
       const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
-      Chain.pipeline([subchain], (value) => next(Chain.wrap(value)), die);
+      Chain.pipeline([subchain], (value) => next(value), die);
     }), '_'),
     NamedChain.outputInput
   ]),
@@ -146,8 +146,8 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
 );
 
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
-  Chain.on((value, next, die) => {
-    Chain.pipeline([Chain.inject(value)].concat(chains), () => next(Chain.wrap(value)), die);
+  Chain.async((value, next, die) => {
+    Chain.pipeline([Chain.inject(value)].concat(chains), () => next(value), die);
   }),
   Guard.addLogging('Chain operations')
 );

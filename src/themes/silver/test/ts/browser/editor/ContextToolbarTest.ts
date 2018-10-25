@@ -42,7 +42,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
         });
         ed.ui.registry.addContextToolbar('test-toolbar', {
           predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',
-          items: [ 'alpha' ]
+          items: 'alpha'
         });
       }
     },

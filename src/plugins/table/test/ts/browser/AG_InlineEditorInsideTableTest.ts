@@ -1,4 +1,4 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log } from '@ephox/agar';
+import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
 
   const cOnSelector = function (selector) {
     return Chain.control(
-      Chain.on(function (_, next) {
+      Chain.async(function (_, next) {
         EditorManager.init({
           selector,
           inline: true,
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           setup (editor) {
             editor.on('SkinLoaded', function () {
                 setTimeout(function () {
-                    next(Chain.wrap(editor));
+                    next(editor);
                 }, 0);
             });
         }
@@ -59,13 +59,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
 
   const step = Step.async((next, die) => {
     NamedChain.pipeline([
-      NamedChain.write('container', Chain.on((input, next) => {
+      NamedChain.write('container', Chain.async((input, next) => {
         const container = Element.fromTag('div');
         Attr.set(container, 'id', 'test-container-div');
         Html.set(container, containerHtml);
         Insert.append(Body.body(), container);
 
-        next(Chain.wrap(container));
+        next(container);
       })),
       NamedChain.write('editor', cOnSelector('div.tinymce')),
       NamedChain.direct('container', Chain.fromChains([
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
       ]), '_'),
       NamedChain.read('editor', Editor.cRemove),
       NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
-    ], next, die);
+    ], next, die, TestLogs.init());
   });
 
   Pipeline.async({}, [Log.step('TBA', 'Table: Table outside of inline editor should not become resizable',

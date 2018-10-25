@@ -1,4 +1,4 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder, Log, Keyboard, Keys } from '@ephox/agar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder, Log, Keyboard, Keys, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
@@ -330,5 +330,5 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
     NamedChain.read('editor', Editor.cRemove)
   ]), function () {
     success();
-  }, failure);
+  }, failure, TestLogs.init());
 });
