@@ -22,11 +22,6 @@ const renderFormFieldSpec = (pLabel: Option<ConfiguredPart>, pField: ConfiguredP
 };
 
 const renderFormFieldSpecWith = (pLabel: Option<ConfiguredPart>, pField: ConfiguredPart, extraClasses: string[]): FormFieldSpec => {
-  pLabel.each((l) => {
-    console.log(l.config.dom);
-    console.trace();
-  });
-
   return {
     dom: renderFormFieldDomWith(extraClasses),
     components: pLabel.toArray().concat([ pField ])

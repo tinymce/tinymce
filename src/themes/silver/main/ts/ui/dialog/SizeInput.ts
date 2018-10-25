@@ -82,6 +82,9 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     dom: {
       tag: 'button',
       classes: ['tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
+      attributes: {
+        title: providersBackstage.translate(spec.label.getOr('Constrain proportions'))
+      }
     },
     components: [
       {
