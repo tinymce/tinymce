@@ -9,28 +9,26 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import { Compare, Traverse } from '@ephox/sugar';
+import { Compare, Traverse, Element } from '@ephox/sugar';
 
-const dropLast = function (xs) {
-  return xs.slice(0, -1);
-};
+const dropLast = <T>(xs: T[]): T[] => xs.slice(0, -1);
 
-const parentsUntil = function (startNode, rootElm, predicate) {
-  if (Compare.contains(rootElm, startNode)) {
-    return dropLast(Traverse.parents(startNode, function (elm) {
-      return predicate(elm) || Compare.eq(elm, rootElm);
+const parentsUntil = (start: Element, root: Element, predicate: (elm: Element) => boolean): Element[] => {
+  if (Compare.contains(root, start)) {
+    return dropLast(Traverse.parents(start, function (elm) {
+      return predicate(elm) || Compare.eq(elm, root);
     }));
   } else {
     return [];
   }
 };
 
-const parents = function (startNode, rootElm) {
-  return parentsUntil(startNode, rootElm, Fun.constant(false));
+const parents = (start: Element, root: Element): Element[] => {
+  return parentsUntil(start, root, Fun.constant(false));
 };
 
-const parentsAndSelf = function (startNode, rootElm) {
-  return [startNode].concat(parents(startNode, rootElm));
+const parentsAndSelf = (start: Element, root: Element): Element[] => {
+  return [start].concat(parents(start, root));
 };
 
 export default {
