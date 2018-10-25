@@ -64,7 +64,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       return elem.dom().getBoundingClientRect();
     });
 
-    const cGetComponent = Chain.binder((elem) => {
+    const cGetComponent = Chain.binder((elem: Element) => {
       return component.getSystem().getByDom(elem);
     });
 

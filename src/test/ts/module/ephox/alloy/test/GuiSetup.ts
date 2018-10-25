@@ -5,8 +5,9 @@ import TestStore from './TestStore';
 import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
 import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
 import { document, console } from '@ephox/dom-globals';
+import { AlloyComponent } from '../../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
-const setup = (createComponent, f, success, failure) => {
+const setup = (createComponent, f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store) => Array<Step<any, any>>, success, failure) => {
   const store = TestStore();
 
   const gui = Gui.create();

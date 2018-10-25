@@ -65,7 +65,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       return elem.dom().getBoundingClientRect();
     });
 
-    const cGetComponent = Chain.binder((elem) => {
+    const cGetComponent = Chain.binder((elem: Element) => {
       return component.getSystem().getByDom(elem);
     });
 

@@ -166,20 +166,20 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
                 children: [ ]
               })
             ]
-          })
+          });
         }),
         component.element()
       ),
 
       Step.sync(() => {
-        gui.broadcastOn([ 'channel-1' ], 'blah');
+        gui.broadcastOn([ 'channel-1' ], {blah: true});
       }),
 
-      sAssertReflectState('reflector 1', 'blah', '.reflector-1'),
+      sAssertReflectState('reflector 1', {blah: true}, '.reflector-1'),
       store.sAssertEq('No attached/detached should have occurred', [ ]),
 
       Step.sync(() => {
-        gui.broadcastOn([ 'channel-2' ], [ 'alpha', 'beta' ])
+        gui.broadcastOn([ 'channel-2' ], [ 'alpha', 'beta' ]);
       }),
 
       store.sAssertEq('Attached and detached should have occurred when broadcasting on channel 2', [
@@ -227,13 +227,13 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
                 children: [ ]
               })
             ]
-          })
+          });
         }),
         component.element()
       ),
 
       Step.sync(() => {
-        gui.broadcastOn([ 'channel-3' ], [ 'gamma' ])
+        gui.broadcastOn([ 'channel-3' ], [ 'gamma' ]);
       }),
 
       Assertions.sAssertStructure(
@@ -270,7 +270,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
                 ]
               })
             ]
-          })
+          });
         }),
         component.element()
       ),

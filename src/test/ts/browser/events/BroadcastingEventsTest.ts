@@ -6,9 +6,13 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { document, console, window } from '@ephox/dom-globals';
+import { window } from '@ephox/dom-globals';
+import { DomEvent, Element } from '@ephox/sugar';
+import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, failure) => {
+
+  const cleanup = Cleaner();
 
   const bodyMargin = [
     'body { margin-top: 2000px; }'
@@ -34,6 +38,11 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
     );
 
   }, (doc, body, gui, component, store) => {
+    cleanup.add(
+      DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+        gui.broadcastEvent(SystemEvents.windowScroll(), evt);
+      }).unbind
+    );
     return [
       GuiSetup.mAddStyles(doc, bodyMargin),
       store.sClear,
@@ -59,5 +68,5 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       store.sClear,
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, cleanup.wrap(success), cleanup.wrap(failure));
 });
