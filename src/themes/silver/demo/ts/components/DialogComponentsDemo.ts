@@ -277,7 +277,7 @@ export default () => {
     constrain: true,
     type: 'sizeinput',
     name: 'sizeinput-demo',
-    label: Option.none(),
+    label: Option.some('kustom fixed ratio'),
     colspan: Option.none(),
   }, sharedBackstage.providers);
 

@@ -3,10 +3,9 @@ import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import { setupDemo } from '../DemoHelpers';
 import { Fun } from '@ephox/katamari';
 
-const helpers = setupDemo();
-const winMgr = WindowManager.setup(helpers.extras);
-
 export default () => {
+  const helpers = setupDemo();
+  const winMgr = WindowManager.setup(helpers.extras);
 
   // The end user will use this as config
   winMgr.open(

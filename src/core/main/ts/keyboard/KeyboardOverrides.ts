@@ -16,7 +16,7 @@ import SpaceKey from './SpaceKey';
 import CaretContainerInput from 'tinymce/core/caret/CaretContainerInput';
 import { Editor } from 'tinymce/core/api/Editor';
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor): void => {
   const caret = BoundarySelection.setupSelectedState(editor);
 
   CaretContainerInput.setup(editor);
