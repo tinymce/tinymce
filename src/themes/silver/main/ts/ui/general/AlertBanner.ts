@@ -33,7 +33,7 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
           tag: 'div',
           classes: [ 'tox-notification__body'],
           // TODO: AP-247: Escape this text so that it can't contain script tags
-          innerHtml: spec.text
+          innerHtml: providersBackstage.translate(spec.text)
         }
       },
       Button.sketch({
