@@ -49,11 +49,9 @@ const getSpec = (editor): SelectSpec & { dataset } => {
   const nodeChangeHandler = Option.some((comp) => {
     return (e) => {
       const detectedFormat = getMatchingValue(e);
-      const optText = detectedFormat.map((fmt) => fmt.title);
-      optText.each((text) => {
-        AlloyTriggers.emitWith(comp, updateMenuText, {
-          text
-        });
+      const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+      AlloyTriggers.emitWith(comp, updateMenuText, {
+        text
       });
     };
   });
