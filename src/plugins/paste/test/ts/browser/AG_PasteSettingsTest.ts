@@ -16,7 +16,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', (success, 
 
   const cCreateInlineEditor = function (settings) {
     return Chain.control(
-      Chain.on(function (viewBlock: any, next, die) {
+      Chain.async(function (viewBlock: any, next, die) {
         viewBlock.update('<div id="inline-tiny"></div>');
 
         EditorManager.init(Merger.merge({
@@ -25,7 +25,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', (success, 
           skin_url: '/project/js/tinymce/skins/oxide',
           setup (editor) {
             editor.on('SkinLoaded', function () {
-              next(Chain.wrap(editor));
+              next(editor);
             });
           }
         }, settings));

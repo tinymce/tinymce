@@ -1,4 +1,4 @@
-import { Attachment, Docking } from '@ephox/alloy';
+import { Attachment, Docking, Focusing } from '@ephox/alloy';
 import { Option, Throttler } from '@ephox/katamari';
 import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -81,7 +81,8 @@ const getBehaviours = (editor) => {
         fadeOutClass: 'tox-toolbar-dock-fadeout',
         transitionClass: 'tox-toolbar-dock-transition'
       }
-    })
+    }),
+    Focusing.config({ })
   ];
 };
 

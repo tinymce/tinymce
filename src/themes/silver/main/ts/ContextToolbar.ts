@@ -91,7 +91,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
       const allButtons = Merger.merge(buttons, scopes.formNavigators);
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items.join(' ') }, extras);
+      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras);
       return renderToolbar({
         uid: Id.generate('context-toolbar'),
         initGroups: Arr.map(initGroups, (g) => ({ items: g })),
