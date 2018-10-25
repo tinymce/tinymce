@@ -113,6 +113,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function () {
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
   });
 
+  suite.test('from text node to before cef span over br', function () {
+    setupHtml('<p>a<br><span contenteditable="false">X</span></p>');
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p'), 1)), CaretPosition(findElm('p'), 2));
+  });
+
   suite.test('prev br to br across elements', function () {
     setupHtml('<p><br></p><p><br></p>');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 0));

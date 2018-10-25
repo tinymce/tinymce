@@ -380,6 +380,12 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
     return wrapAndSplit(ed, formatList, formatRoot, container, container, true, format, vars);
   };
 
+  const isRemoveBookmarkNode = function (node: Node) {
+    // Make sure to only check for bookmarks created here (eg _start or _end)
+    // as there maybe nested bookmarks
+    return Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
+  };
+
   // Merges the styles for each node
   const process = function (node) {
     let children, i, l, lastContentEditable, hasContentEditableState;
@@ -424,7 +430,7 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
     // If the end is placed within the start the result will be removed
     // So this checks if the out node is a bookmark node if it is it
     // checks for another more suitable node
-    if (Bookmarks.isBookmarkNode(out)) {
+    if (isRemoveBookmarkNode(out)) {
       out = out[start ? 'firstChild' : 'lastChild'];
     }
 

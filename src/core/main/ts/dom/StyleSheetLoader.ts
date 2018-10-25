@@ -170,6 +170,7 @@ export function StyleSheetLoader(document, settings?): StyleSheetLoader {
     link.id = 'u' + (idCount++);
     link.async = false;
     link.defer = false;
+    link.crossOrigin = 'anonymous';
     startTime = new Date().getTime();
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
