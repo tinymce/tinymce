@@ -12,8 +12,14 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 
+const removeMeta = (editor: Editor, html: string) => {
+  const body = editor.dom.create('body', {}, html);
+  Tools.each(body.querySelectorAll('meta'), (elm) => elm.parentNode.removeChild(elm));
+  return body.innerHTML;
+};
+
 const pasteHtml = function (editor: Editor, html: string) {
-  editor.insertContent(html, {
+  editor.insertContent(removeMeta(editor, html), {
     merge: Settings.shouldMergeFormats(editor),
     paste: true
   });

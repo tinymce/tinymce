@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
     skin_url: '/project/js/tinymce/skins/oxide'
   };
 
-  const cCreateEditor = Chain.async((_, next, die) => next(new Editor('editor', {}, EditorManager)));
+  const cCreateEditor = Chain.mapper((_) => new Editor('editor', {}, EditorManager));
 
   const cSetContentAndAssertReturn = (content) => Chain.op((editor: any) => {
     const actual = editor.setContent(content);
