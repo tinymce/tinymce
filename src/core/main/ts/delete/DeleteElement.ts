@@ -8,14 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Option, Strings } from '@ephox/katamari';
-import { Insert, Remove, Element, Node as SugarNode, PredicateFind } from '@ephox/sugar';
+import { Fun, Option, Options } from '@ephox/katamari';
+import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
+import { Node } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import MergeText from './MergeText';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
-import { Node } from '@ephox/dom-globals';
+import { Editor } from '../api/Editor';
 
 const needsReposition = function (pos, elm) {
   const container = pos.container();
@@ -126,105 +128,37 @@ const paddEmptyBlock = function (elm) {
   }
 };
 
-const isWhitespace = function (c) {
-  // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
-  return ' \f\n\r\t\v'.indexOf(c) !== -1;
-};
-
-// normalize the whitespace from the merge, such as <p>a <span></span> b</p> -> <p>a &nsbp;b</p>
-// or <p><span></span> a</p> -> <p>&nbsp;a</a>
-const normalizeWhitespace = function (node, forward: boolean, offset: number) {
-  let start, whitespaceCount, content;
-  if (forward) {
-    content = node.data.slice(offset);
-    whitespaceCount = content.length - Strings.lTrim(content).length;
-    start = offset;
-  } else {
-    content = node.data.slice(0, offset);
-    whitespaceCount = content.length - Strings.rTrim(content).length;
-    start = offset - whitespaceCount;
-  }
-
-  if (whitespaceCount === 0) {
-    return;
-  }
-
-  // Get the whitespace
-  let whitespace = node.data.slice(start, start + whitespaceCount);
-
-  // Regenerate the whitespace ensuring to alternate between a space and nbsp
-  const isEndOfContent = start + whitespaceCount >= node.data.length;
-  const isStartOfContent = start === 0;
-  let previousCharIsSpace = false;
-  whitespace = Arr.map(whitespace.split(""), (c, count) => {
-    // Are we dealing with a char other than a space or nbsp? if so then just use it as is
-    if (!isWhitespace(c) && c !== '\u00a0') {
-      previousCharIsSpace = false;
-      return c;
-    } else {
-      if (previousCharIsSpace || (count === 0 && isStartOfContent) || (count === whitespace.length - 1 && isEndOfContent)) {
-        previousCharIsSpace = false;
-        return '\u00a0';
-      } else {
-        previousCharIsSpace = true;
-        return ' ';
-      }
-    }
-  }).join("");
-
-  // Replace the original whitespace with the normalized whitespace content
-  node.replaceData(start, whitespaceCount, whitespace);
-};
-
-
-const deleteNormalized = function (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespaces?: boolean) {
-  return afterDeletePosOpt.map(
-    (pos) => {
-      const node = elm.dom();
-      const prevNode = node.previousSibling, nextNode = node.nextSibling;
-      const hasPrevTextNode = NodeType.isText(prevNode);
-      const hasNextTextNode = NodeType.isText(nextNode);
-
-      // Fix any whitespace issues by ensuring the next/previous text nodes are correctly padded
-      if (hasPrevTextNode && hasNextTextNode) {
-        let offset = prevNode.data.length;
-        let whitespaceOffset = Strings.rTrim(prevNode.data).length;
-        // Merge the elements
-        prevNode.appendData(nextNode.data);
-        Remove.remove(Element.fromDom(nextNode));
-        // Normalize the whitespace around the merged elements, to ensure it doesn't get lost
-        if (normalizeWhitespaces) {
-          normalizeWhitespace(prevNode, true, whitespaceOffset);
-        }
-        // Update the cursor position
-        if (pos.container() === prevNode || pos.container() === nextNode) {
-          pos = CaretPosition(prevNode, offset);
-        }
-      } else if (hasPrevTextNode && normalizeWhitespaces) {
-        // Normalize the whitespace at the end and ensure that it doesn't end with a space
-        normalizeWhitespace(prevNode, false, prevNode.data.length);
-      } else if (hasNextTextNode && normalizeWhitespaces) {
-        // Normalize the whitespace at the start of the node
-        normalizeWhitespace(nextNode, true, 0);
-      }
-
-      return pos;
-    }
-  );
-};
-
-const isInlineElement = function (editor, element: Element) {
-  const inlineElements = editor.schema.getTextInlineElements();
-  return inlineElements.hasOwnProperty(SugarNode.name(element));
-};
-
-const deleteElement = function (editor, forward: boolean, elm: Element, moveCaret?: boolean) {
-  const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
-  const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));
+const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
+  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom()));
+  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom()));
 
   // Delete the element
   Remove.remove(elm);
+
+  // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
+  // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
+  return Options.liftN([ prevTextOpt, nextTextOpt, afterDeletePosOpt ], (prev, next, pos) => {
+    const prevNode = prev.dom(), nextNode = next.dom();
+    const offset = prevNode.data.length;
+    MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
+    // Update the cursor position if required
+    return pos.container() === nextNode ? CaretPosition(prevNode, offset) : pos;
+  }).orThunk(() => {
+    if (normalizeWhitespace) {
+      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom(), elm.dom().length));
+      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom(), 0));
+    }
+    return afterDeletePosOpt;
+  });
+};
+
+const isInlineElement = (editor: Editor, element: Element): boolean =>
+  editor.schema.getTextInlineElements().hasOwnProperty(SugarNode.name(element));
+
+const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret: boolean = true) => {
+  const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
+  const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
+  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));
 
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
@@ -232,12 +166,12 @@ const deleteElement = function (editor, forward: boolean, elm: Element, moveCare
   } else {
     parentBlock.bind(paddEmptyBlock).fold(
       function () {
-        if (moveCaret !== false) {
+        if (moveCaret) {
           setSelection(editor, forward, normalizedAfterDeletePos);
         }
       },
       function (paddPos) {
-        if (moveCaret !== false) {
+        if (moveCaret) {
           setSelection(editor, forward, Option.some(paddPos));
         }
       }
