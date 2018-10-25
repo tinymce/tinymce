@@ -95,7 +95,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
     const alphaButton = component.getSystem().getByDom(
       SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
-    ).getOrDie('Could not find alpha button component');
+    ).toOption().getOrDie('Could not find alpha button component');
 
     const sAssertSinkContents = (children) => Waiter.sTryUntil(
       'Waiting for tooltip to appear in sink',

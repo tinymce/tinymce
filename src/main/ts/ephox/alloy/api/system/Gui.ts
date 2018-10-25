@@ -31,6 +31,7 @@ export interface GuiSystem {
   broadcast: (message: message) => void;
   broadcastOn: (channels: string[], message: message) => void;
 
+  // TODO FIXME this is no longer tested directly
   broadcastEvent: (eventName: string, event: SugarEvent) => void;
 }
 

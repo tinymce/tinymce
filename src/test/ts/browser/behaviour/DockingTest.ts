@@ -7,8 +7,12 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { window } from '@ephox/dom-globals';
+import { DomEvent, Element } from '@ephox/sugar';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('DockingTest', (success, failure) => {
+  const cleanup = Cleaner();
 
   const subject = Memento.record(
     Container.sketch({
@@ -45,7 +49,11 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
 
   }, (doc, body, gui, component, store) => {
     const box = subject.get(component);
-
+    cleanup.add(
+      DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+        gui.broadcastEvent(SystemEvents.windowScroll(), evt);
+      }).unbind
+    );
     const boxWithNoPosition = () => {
       return ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
@@ -110,5 +118,5 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         1000
       )
     ];
-  }, () => { success(); }, failure);
+  }, cleanup.wrap(success), cleanup.wrap(failure));
 });

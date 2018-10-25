@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [3.51.0] - 2018-10-25
+### Changed
+- Window scroll events are not automatically detected by the mothership
+
 ## [3.50.0] - 2018-10-22
 ### Added
  - NodeAnchor positioning mode

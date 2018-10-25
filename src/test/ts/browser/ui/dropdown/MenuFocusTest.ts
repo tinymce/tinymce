@@ -93,7 +93,6 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
       markers
     });
 
-
     return GuiFactory.build(
       {
         dom: {
@@ -117,11 +116,11 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
-          FocusTools.sSetFocus('Focus input field' ,component.element(), 'input'),
+          FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
           Chain.asStep(component.element(), [
             UiFinder.cFindIn(focusTarget),
             Chain.op((alphaWidget) => {
-              Focusing.focus(component.getSystem().getByDom(alphaWidget).getOrDie('Could not find selector: ' + focusTarget));
+              Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
             })
           ]),
           FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
@@ -141,6 +140,6 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
       sAssertFocusShift('Focusing on alpha-widget-2 (fakeFocus)', 'input', '.alpha-widget-2'),
       sAssertFocusShift('Focusing on beta-item-2 (fakeFocus)', 'input', '.beta-item-2')
-    ]
+    ];
   }, () => { success(); }, failure);
 });
