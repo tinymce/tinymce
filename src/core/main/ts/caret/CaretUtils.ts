@@ -19,6 +19,7 @@ import { HDirection } from 'tinymce/core/caret/CaretWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 import { Node, Range, Text } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
+import { isWhiteSpace } from '../text/CharType';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -323,9 +324,8 @@ const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: Care
   });
 };
 
-const isSpace = (c) => c === ' ';
-const isBeforeSpace = Fun.curry(isChar, true, isSpace);
-const isAfterSpace = Fun.curry(isChar, false, isSpace);
+const isBeforeSpace = Fun.curry(isChar, true, isWhiteSpace);
+const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
 
 const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
 

@@ -22,8 +22,8 @@ const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) 
   });
 };
 
-const isAtStartOfBlock = Fun.curry(isAtBlockBoundary, true);
-const isAtEndOfBlock = Fun.curry(isAtBlockBoundary, false);
+const isAtStartOfBlock = Fun.curry(isAtBlockBoundary, false);
+const isAtEndOfBlock = Fun.curry(isAtBlockBoundary, true);
 
 export {
   isAtStartOfBlock,

@@ -93,11 +93,6 @@ const positionIn = (forward: boolean, element: Element): Option<CaretPosition> =
 const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 
-const isAdjacentTo = (root: Element, pos: CaretPosition, predicate: (forward: boolean, pos: CaretPosition) => boolean) => {
-  const check = (forward: boolean) => (pos: CaretPosition) => predicate(forward, pos);
-  return prevPosition(root, pos).exists(check(false)) || nextPosition(root, pos).exists(check(true));
-};
-
 export default {
   fromPosition,
   nextPosition,
@@ -105,6 +100,5 @@ export default {
   navigate,
   positionIn,
   firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
-  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>,
-  isAdjacentTo
+  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>
 };

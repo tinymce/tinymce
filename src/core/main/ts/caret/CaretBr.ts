@@ -21,7 +21,7 @@ const isBeforeBr = (pos: CaretPosition) => getElementFromPosition(pos).exists(El
 const isAtBr = (root: Element, pos: CaretPosition) => {
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
   const scope = Arr.head(parentBlocks).getOr(root);
-  return isBeforeBr(pos) || CaretFinder.isAdjacentTo(scope, pos, (_, pos) => isBeforeBr(pos));
+  return isBeforeBr(pos) || CaretFinder.nextPosition(scope.dom(), pos).exists(isBeforeBr);
 };
 
 export {
