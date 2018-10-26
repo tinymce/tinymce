@@ -48,10 +48,12 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
   });
 };
 
-const renderTitle = (foo: WindowHeaderFoo, id: Option<string>): AlloySpec => {
-  const renderComponents = (data: WindowHeaderFoo) => [
-    GuiFactory.text(data.title)
-  ];
+const renderTitle = (foo: WindowHeaderFoo, id: Option<string>, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
+  const renderComponents = (data: WindowHeaderFoo) => {
+    return [
+      GuiFactory.text(providersBackstage.translate(data.title))
+    ];
+  };
 
   return {
     dom: {
@@ -75,7 +77,7 @@ const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, providersBack
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components: [
-      renderTitle(foo, Option.some(titleId)),
+      renderTitle(foo, Option.some(titleId), providersBackstage),
       renderClose(providersBackstage)
     ],
     containerBehaviours: Behaviour.derive([
@@ -97,7 +99,7 @@ const renderInlineHeader = (foo: WindowHeaderFoo, titleId: string, providersBack
 
 const renderModalHeader = (foo: WindowHeaderFoo, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   const pTitle = ModalDialog.parts().title(
-    renderTitle(foo, Option.none())
+    renderTitle(foo, Option.none(), providersBackstage)
   );
 
   const pHandle = ModalDialog.parts().draghandle({

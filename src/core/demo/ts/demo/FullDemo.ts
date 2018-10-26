@@ -15,7 +15,6 @@ declare let tinymce: any;
 export default function () {
 
   const settings = {
-    language: 'es',
     skin_url: '../../../../js/tinymce/skins/oxide',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
     visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',

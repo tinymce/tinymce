@@ -27,7 +27,7 @@ const register = function (editor) {
 
   editor.ui.registry.addMenuItem('template', {
     icon: 'template',
-    text: 'Template',
+    text: 'Insert template',
     onAction: Templates.createTemplateList(editor.settings, showDialog(editor)),
   });
 };

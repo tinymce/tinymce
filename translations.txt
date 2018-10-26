@@ -37,7 +37,10 @@ Show caption               [Caption] Insert image/media
 Error: Form submit field collision.   <new> Save
 Error: No form element found.         <new> Save
 
+Border width            <new> Table (better description than just 'border')
+Border style            <new> Table (better description than just 'style')
 
+Update                  <new> TOC
 
 
 No longer Used
@@ -58,3 +61,10 @@ Ok (es)
 Media (es)
 General (es)
 URL (es)
+
+
+
+skipped Items, circle back
+-----------------------------------------------------
+Spellcheck -> unable to run demo
+Inlite -> very broken atm
