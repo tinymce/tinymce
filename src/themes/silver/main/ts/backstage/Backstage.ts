@@ -11,6 +11,7 @@ import { IconProvider } from '../ui/icons/Icons';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import { Editor } from 'tinymce/core/api/Editor';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -42,7 +43,7 @@ export interface UiFactoryBackstage {
   colorinput?: UiFactoryBackstageForColorInput;
 }
 
-const init = (sink, editor, lazyToolbar) => {
+const init = (sink: AlloyComponent, editor: Editor, lazyToolbar: () => AlloyComponent): UiFactoryBackstage => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {

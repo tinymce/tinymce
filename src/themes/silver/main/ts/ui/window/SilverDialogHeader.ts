@@ -49,11 +49,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
 };
 
 const renderTitle = (foo: WindowHeaderFoo, id: Option<string>, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
-  const renderComponents = (data: WindowHeaderFoo) => {
-    return [
-      GuiFactory.text(providersBackstage.translate(data.title))
-    ];
-  };
+  const renderComponents = (data: WindowHeaderFoo) => [ GuiFactory.text(providersBackstage.translate(data.title)) ];
 
   return {
     dom: {

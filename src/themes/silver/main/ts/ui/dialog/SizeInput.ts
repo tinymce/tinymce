@@ -78,8 +78,6 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     renderDimensionField({ label: 'Height', isField1: false })
   );
 
-  console.log(spec.label.getOrDie());
-
   const pLock = AlloyFormCoupledInputs.parts().lock({
     dom: {
       tag: 'button',

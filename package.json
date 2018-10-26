@@ -36,6 +36,7 @@
     "@ephox/darwin": "latest",
     "@ephox/dom-globals": "latest",
     "@ephox/imagetools": "latest",
+    "@ephox/wrap-jsverify": "latest",
     "@ephox/katamari": "latest",
     "@ephox/mcagar": "latest",
     "@ephox/oxide": "latest",
