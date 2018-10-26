@@ -15,7 +15,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cCreateEditorFromSettings = function (settings, html?) {
     return Chain.control(
-      Chain.on(function (viewBlock: any, next, die) {
+      Chain.async(function (viewBlock: any, next, die) {
         const randomId = Id.generate('tiny-');
         html = html || '<textarea></textarea>';
 
@@ -29,7 +29,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
           setup (editor) {
             editor.on('SkinLoaded', function () {
               setTimeout(function () {
-                next(Chain.wrap(editor));
+                next(editor);
               }, 0);
             });
           }
@@ -50,9 +50,9 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cClearEditor = function () {
     return Chain.control(
-      Chain.on(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, die) {
       editor.setContent('');
-      next(Chain.wrap(editor));
+      next(editor);
     }),
     Guard.addLogging('Clear editor')
   );
@@ -60,9 +60,9 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cFireFakePasteEvent = function (data) {
     return Chain.control(
-      Chain.on(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, die) {
       editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
-      next(Chain.wrap(editor));
+      next(editor);
     }),
     Guard.addLogging(`Fire fake paste event ${data}`)
   );
@@ -70,9 +70,9 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const cAssertEditorContent = function (label, expected) {
     return Chain.control(
-      Chain.on(function (editor: any, next, die) {
+      Chain.async(function (editor: any, next, die) {
       Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
-      next(Chain.wrap(editor));
+      next(editor);
     }),
     Guard.addLogging(`Assert editor content ${expected}`)
   );

@@ -54,12 +54,17 @@ function innerText(html: string) {
       return;
     }
 
-    // img/input/hr
+    // Ignore wbr, to replicate innerText on Chrome/Firefox
+    if (name === 'wbr') {
+      return;
+    }
+
+    // img/input/hr but ignore wbr as it's just a potential word break
     if (shortEndedElements[name]) {
       text += ' ';
     }
 
-    // Ingore script, video contents
+    // Ignore script, video contents
     if (ignoreElements[name]) {
       text += ' ';
       return;
