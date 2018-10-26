@@ -93,7 +93,7 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
     dom: {
       tag: 'span',
       classes: ['tox-checkbox__label'],
-      innerHtml: spec.label
+      innerHtml: providerBackstage.translate(spec.label)
     },
     behaviours: Behaviour.derive([
       Unselecting.config({})
