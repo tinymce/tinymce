@@ -14,6 +14,7 @@ import { ImageToolsApi, ImageTools } from './ImageTools';
 import { AlertBannerApi, AlertBanner } from './AlertBanner';
 import { CollectionApi, Collection } from './Collection';
 import { LabelApi, Label } from './Label';
+import { TableApi, Table } from './Table';
 
 export type BodyComponentApi
   = ButtonApi
@@ -31,7 +32,8 @@ export type BodyComponentApi
   | ImageToolsApi
   | AlertBannerApi
   | CollectionApi
-  | LabelApi;
+  | LabelApi
+  | TableApi;
 
 export type BodyComponent
   = Button
@@ -49,4 +51,5 @@ export type BodyComponent
   | ImageTools
   | AlertBanner
   | Collection
-  | Label;
+  | Label
+  | Table;

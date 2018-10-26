@@ -17,6 +17,7 @@ import { htmlPanelFields } from './HtmlPanel';
 import { imageToolsFields } from './ImageTools';
 import { collectionFields } from './Collection';
 import { labelFields } from './Label';
+import { tableFields } from './Table';
 
 export const itemSchema = ValueSchema.choose('type', {
   alertbanner: alertBannerFields,
@@ -36,5 +37,6 @@ export const itemSchema = ValueSchema.choose('type', {
   htmlpanel: htmlPanelFields,
   imagetools: imageToolsFields,
   collection: collectionFields,
-  label: labelFields
+  label: labelFields,
+  table: tableFields
 });
