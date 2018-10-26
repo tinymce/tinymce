@@ -34,7 +34,8 @@ Flags                     <new> Emoticons
 
 Show caption               [Caption] Insert image/media
 
-
+Error: Form submit field collision.   <new> Save
+Error: No form element found.         <new> Save
 
 
 
