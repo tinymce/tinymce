@@ -14,7 +14,7 @@ import { Node } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import MergeText from './MergeText';
+import * as MergeText from './MergeText';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
 import { Editor } from '../api/Editor';

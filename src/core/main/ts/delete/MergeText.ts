@@ -66,7 +66,7 @@ const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: bo
   return prevNode;
 };
 
-export default {
+export {
   normalizeWhitespaceAfter,
   normalizeWhitespaceBefore,
   mergeTextNodes
