@@ -2,6 +2,7 @@ import { AlloyComponent, Behaviour, Button, GuiFactory, Memento, Replacing, Sket
 import { FieldSchema } from '@ephox/boulder';
 import { Option, Arr } from '@ephox/katamari';
 import { IconProvider, get as getIcon, getFirstOr, getDefaultFirstOr } from '../icons/Icons';
+import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -16,6 +17,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   progress: boolean;
   onAction: Function;
   iconProvider: IconProvider;
+  translationProvider: (text: Untranslated) => TranslatedString;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -26,6 +28,7 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   onAction: () => Function;
   progress: () => Boolean;
   iconProvider: () => IconProvider;
+  translationProvider: () => (text: Untranslated) => TranslatedString;
 }
 
 export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec, NotificationSketchDetail>, NotificationSketchApis {
@@ -46,7 +49,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const memBannerText = Memento.record({
     dom: {
       tag: 'p',
-      innerHtml: detail.text()
+      innerHtml: detail.translationProvider()(detail.text())
     },
     behaviours: Behaviour.derive([
       Replacing.config({ })
@@ -201,6 +204,7 @@ export const Notification = Sketcher.single<NotificationSketchSpec, Notification
     FieldSchema.strict('onAction'),
     FieldSchema.strict('text'),
     FieldSchema.strict('iconProvider'),
+    FieldSchema.strict('translationProvider'),
   ],
   apis: {
     updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {

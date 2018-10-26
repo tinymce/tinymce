@@ -72,9 +72,9 @@ const setup = (editor: Editor): RenderInfo => {
     ])
   });
 
-  const lazyToolbar = () => lazyOuterContainer.map((container) => {
-    return OuterContainer.getToolbar(container).getOrDie('Could not find a toolbar element');
-  });
+  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getToolbar(container);
+  }).getOrDie('Could not find a toolbar element');
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyToolbar);
 
