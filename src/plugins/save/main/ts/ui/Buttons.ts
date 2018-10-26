@@ -34,7 +34,7 @@ const register = function (editor) {
     icon: 'cancel',
     tooltip: 'Cancel',
     disabled: true,
-    onAction: () => editor.execCommand('mceSave'),
+    onAction: () => editor.execCommand('mceCancel'),
     onSetup: stateToggle(editor)
   });
 
