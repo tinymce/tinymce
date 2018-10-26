@@ -8,20 +8,18 @@ const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> 
       Option.some(item).filter((i) => i.value === value);
   });
 };
-const getDelta = (previousText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<{url, text: string}> => {
+const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<{url, text: string}> => {
   const value = data[fieldName];
-  const currentText = data.text;
-  const shouldReplaceText = currentText === '' || previousText === currentText;
   return value !== undefined ? findTextByValue(value, catalog).map((i) => {
     return {
       url: {
         value: i.value,
         meta: {
-          text: shouldReplaceText ? i.text : currentText,
+          text: persistentText ? persistentText : i.text,
           attach: Fun.noop
         }
       },
-      text: shouldReplaceText ? i.text : currentText
+      text: persistentText ? persistentText : i.text
     };
   }) : Option.none();
 };
@@ -37,15 +35,14 @@ const findCatalog = (settings: LinkDialogInfo, fieldName: string): Option<ListIt
 };
 
 const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
-  const previousText = Cell(initialData.text);
+  const persistentText = Cell(initialData.text);
 
   const onUrlChange = (data: LinkDialogData) => {
-    // We are going to change the text, because it hasn't changed since our last update.
-    if (data.text === previousText.get() || (data.text !== undefined && data.text.length === 0)) {
+    // We are going to change the text, because it has not manually entered by the user.
+    if (!persistentText.get()) {
       const urlText = data.url.meta.text !== undefined ? data.url.meta.text : data.url.value;
-      previousText.set(urlText);
       return Option.some({
-        text: previousText.get()
+        text: urlText
       });
     } else {
       return Option.none();
@@ -55,11 +52,7 @@ const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
 
   const onCatalogChange = (data: LinkDialogData, change: { name: string }): Option<Partial<LinkDialogData>> => {
     const catalog = findCatalog(linkSettings, change.name).getOr([ ]);
-    const optDelta = getDelta(previousText.get(), change.name, catalog, data);
-    optDelta.each((delta) => {
-      previousText.set(delta.text);
-    });
-    return optDelta;
+    return getDelta(persistentText.get(), change.name, catalog, data);
   };
 
   const onChange = (getData: () => LinkDialogData, change: { name: string }): Option<Partial<LinkDialogData>> => {
@@ -67,6 +60,10 @@ const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
       return onUrlChange(getData());
     } else if (Arr.contains([ 'anchor', 'link' ], change.name)) {
       return onCatalogChange(getData(), change);
+    } else if (change.name === 'text') {
+      // Update the persistent text state, as a user has input custom text
+      persistentText.set(getData().text);
+      return Option.none();
     } else {
       return Option.none();
     }
