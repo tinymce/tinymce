@@ -3,8 +3,9 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { emojisFrom } from '../core/Lookup';
 import { EmojiDatabase } from '../core/EmojiDatabase';
 import { Option } from '@ephox/katamari';
+import { Range } from '@ephox/dom-globals';
 
-const isStartOfWord = (rng, text) => rng.startOffset === 0 || /\s/.test(text.charAt(rng.startOffset - 1));
+const isStartOfWord = (rng: Range, text: string) => rng.startOffset === 0 || /\s/.test(text.charAt(rng.startOffset - 1));
 
 const init = (editor: Editor, database: EmojiDatabase): void => {
   editor.ui.registry.addAutocompleter('emoticons', {
