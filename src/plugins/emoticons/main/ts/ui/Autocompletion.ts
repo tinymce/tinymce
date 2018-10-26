@@ -4,10 +4,13 @@ import { emojisFrom } from '../core/Lookup';
 import { EmojiDatabase } from '../core/EmojiDatabase';
 import { Option } from '@ephox/katamari';
 
+const isStartOfWord = (rng, text) => rng.startOffset === 0 || /\s/.test(text.charAt(rng.startOffset - 1));
+
 const init = (editor: Editor, database: EmojiDatabase): void => {
   editor.ui.registry.addAutocompleter('emoticons', {
     ch: ':',
     columns: 'auto',
+    matches: isStartOfWord,
     fetch: (pattern, maxResults) => {
       return database.waitForLoad().then(() => {
         const candidates = database.listAll();

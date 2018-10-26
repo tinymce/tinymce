@@ -18,17 +18,14 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Autocomplete, trigger an autocomplete and check it appears', [
         tinyApis.sFocus,
-        tinyApis.sSetContent('<p>:</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], ':'.length),
-        Keyboard.sKeypress(eDoc, ':'.charCodeAt(0), { }),
+        tinyApis.sSetContent('<p>:ha</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 3),
+        Keyboard.sKeypress(eDoc, 'a'.charCodeAt(0), { }),
         UiFinder.sWaitForVisible('Waiting for autocomplete menu', Body.body(), '.tox-autocompleter .tox-collection__item'),
-        Keyboard.sKeydown(eDoc, Keys.down(), { }),
-        Keyboard.sKeydown(eDoc, Keys.right(), { }),
-        Keyboard.sKeydown(eDoc, Keys.right(), { }),
         Keyboard.sKeydown(eDoc, Keys.right(), { }),
         Keyboard.sKeydown(eDoc, Keys.right(), { }),
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),
-        tinyApis.sAssertContent('<p>😀</p>')
+        tinyApis.sAssertContent('<p>😂</p>')
       ])
     , onSuccess, onFailure);
   }, {
