@@ -66,8 +66,8 @@ const joinMenuLists = function (items: BridgeMenu.MenuItemApi[][]) {
 const filterByQuery = function (term: string, menuItems: BridgeMenu.MenuItemApi[]) {
   const lowerCaseTerm = term.toLowerCase();
   return Arr.filter(menuItems, function (item) {
-    const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.value;
-    return text.toLowerCase().indexOf(lowerCaseTerm) !== -1;
+    const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.text;
+    return text.toLowerCase().indexOf(lowerCaseTerm) !== -1 || item.value.toLowerCase().indexOf(lowerCaseTerm) !== -1;
   });
 };
 
