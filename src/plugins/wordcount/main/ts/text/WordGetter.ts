@@ -8,19 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import UnicodeData from './UnicodeData';
-import StringMapper from './StringMapper';
-import WordBoundary from './WordBoundary';
+import * as UnicodeData from './UnicodeData';
+import * as StringMapper from './StringMapper';
+import * as WordBoundary from './WordBoundary';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
 const WHITESPACE = UnicodeData.WHITESPACE;
 const PUNCTUATION = UnicodeData.PUNCTUATION;
 
-const isProtocol = function (word) {
+const isProtocol = (word: string) => {
   return word === 'http' || word === 'https';
 };
 
-const findWordEnd = function (str, index) {
+const findWordEnd = (str: string, index: number) => {
   let i;
   for (i = index; i < str.length; ++i) {
     const chr = str.charAt(i);
@@ -32,7 +32,7 @@ const findWordEnd = function (str, index) {
   return i;
 };
 
-const extractUrl = function (word, str, index) {
+const extractUrl = (word: string, str: string, index: number) => {
   const endIndex = findWordEnd(str, index + 1);
   const peakedWord = str.substring(index + 1, endIndex);
   if (peakedWord.substr(0, 3) === '://') {
@@ -48,7 +48,13 @@ const extractUrl = function (word, str, index) {
   };
 };
 
-const doGetWords = function (str, options) {
+interface GetWordsOptions {
+  includePunctuation?: boolean;
+  ignoreCase?: boolean;
+  includeWhitespace?: boolean;
+}
+
+const doGetWords = (str: string, options: GetWordsOptions = {}): string[] => {
   let i = 0;
   const map = StringMapper.classify(str);
   const len = map.length;
@@ -57,10 +63,6 @@ const doGetWords = function (str, options) {
   let chr;
   let includePunctuation;
   let includeWhitespace;
-
-  if (!options) {
-    options = {};
-  }
 
   if (options.ignoreCase) {
     str = str.toLowerCase();
@@ -103,10 +105,10 @@ const doGetWords = function (str, options) {
   return words;
 };
 
-const getWords = function (str, options?) {
+const getWords = (str: string, options?) => {
   return doGetWords(str.replace(/\ufeff/g, ''), options);
 };
 
-export default {
+export {
   getWords
 };

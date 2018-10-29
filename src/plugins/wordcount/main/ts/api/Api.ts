@@ -8,11 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import WordCount from '../text/WordCount';
+import * as WordCount from '../text/WordCount';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const get = function (editor) {
-  const getCount = function () {
-    return WordCount.getCount(editor);
+const get = (editor: Editor) => {
+  const getCount = () => {
+    return WordCount.getEditorWordcount(editor).words;
   };
 
   return {
@@ -20,6 +21,6 @@ const get = function (editor) {
   };
 };
 
-export default {
+export {
   get
 };

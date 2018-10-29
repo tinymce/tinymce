@@ -13,7 +13,7 @@ import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
-import WordGetter from './WordGetter';
+import * as WordGetter from './WordGetter';
 
 const getText = (node: Node, schema: Schema): string => {
   const blockElements: SchemaMap = schema.getBlockElements();
@@ -28,7 +28,7 @@ const getText = (node: Node, schema: Schema): string => {
   while ((node = treeWalker.next())) {
     if (node.nodeType === 3) {
       txt += (node as CharacterData).data;
-    } else if (isSeparator(node)) {
+    } else if (txt.length !== 0 && isSeparator(node)) {
       txt += ' ';
     }
   }
@@ -36,18 +36,34 @@ const getText = (node: Node, schema: Schema): string => {
   return txt;
 };
 
-const innerText = (node: Node, schema: Schema) => {
+const innerText = (node: Node, schema: Schema): string => {
   return Env.ie ? getText(node, schema) : (node as any).innerText;
 };
 
-const getTextContent = (editor: Editor) => {
+const getTextContent = (editor: Editor): string => {
   return editor.removed ? '' : innerText(editor.getBody(), editor.schema);
 };
 
-const getCount = (editor: Editor) => {
-  return WordGetter.getWords(getTextContent(editor)).length;
+const getCount = (textContent: string) => {
+  return {
+    words: WordGetter.getWords(textContent).length,
+    characters: textContent.length,
+    charactersNoSpace: textContent.replace(/\s/g, '').length
+  };
 };
 
-export default {
-  getCount
+const getEditorWordcount = (editor: Editor) => {
+  return getCount(getTextContent(editor));
+};
+
+const getSelectionWordcount = (editor: Editor) => {
+  const selectedText = getText(editor.selection.getRng().cloneContents(), editor.schema);
+  console.log(selectedText);
+  return editor.selection.isCollapsed() ? getCount('') : getCount(selectedText);
+};
+
+export {
+  getText,
+  getEditorWordcount,
+  getSelectionWordcount
 };

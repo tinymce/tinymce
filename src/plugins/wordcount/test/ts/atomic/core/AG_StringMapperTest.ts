@@ -1,5 +1,5 @@
-import StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
-import UnicodeData from 'tinymce/plugins/wordcount/text/UnicodeData';
+import * as StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
+import * as UnicodeData from 'tinymce/plugins/wordcount/text/UnicodeData';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('atomic.core.StringMapperTest', function () {

@@ -9,10 +9,12 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Wordcounter from './core/WordCounter';
+import * as Api from './api/Api';
+import * as Wordcounter from './core/WordCounter';
+import * as Buttons from './ui/Buttons';
 
 PluginManager.add('wordcount', function (editor) {
+  Buttons.register(editor);
   Wordcounter.setup(editor);
   return Api.get(editor);
 });
