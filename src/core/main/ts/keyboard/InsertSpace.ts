@@ -16,17 +16,18 @@ import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText
 import InlineUtils from './InlineUtils';
 import BoundaryLocation from './BoundaryLocation';
 import { needsToHaveNbsp } from './Nbsps';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
 
 const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> => {
   return needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 };
 
-const locationToCaretPosition = (location) => {
+const locationToCaretPosition = (root: Element) => (location) => {
   return location.fold(
-    CaretPosition.before,
-    (element) => CaretPosition(element, 0),
-    (element) => CaretPosition(element, element.childNodes.length),
-    CaretPosition.after
+    (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
+    (element) => CaretFinder.firstPositionIn(element),
+    (element) => CaretFinder.lastPositionIn(element),
+    (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
   );
 };
 
@@ -49,7 +50,7 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
     const caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
 
     return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
-      .map(locationToCaretPosition)
+      .bind(locationToCaretPosition(root))
       .bind(insertInlineBoundarySpaceOrNbsp(root, pos))
       .fold(
         () => insertSpaceOrNbspAtPosition(root, pos).map(setSelection(editor)).getOr(false),
