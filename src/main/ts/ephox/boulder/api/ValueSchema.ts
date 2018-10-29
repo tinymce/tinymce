@@ -1,16 +1,16 @@
 import { Fun, Result, Type } from '@ephox/katamari';
 
-import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
+import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import { FieldProcessorAdt } from './DslType';
-
+import { SimpleResult } from '../alien/SimpleResult';
 export interface SchemaError <T> {
   input: T;
   errors: any[];
 }
 
-const _anyValue: Processor = value(Result.value);
+const _anyValue: Processor = value(SimpleResult.svalue);
 
 const arrOfObj = function (objFields: ValueProcessorAdt[]): Processor {
   return _arrOfObj(objFields);
@@ -20,37 +20,46 @@ const arrOfVal = function (): Processor {
   return arrOf(_anyValue);
 };
 
-const valueOf = function (validator: ValueValidator): Processor {
-  return value(function (v) {
+const valueOf = function (validator: (a) => Result<any, any>): Processor {
+  return value((v) => {
     // Intentionally not exposing "strength" at the API level
-    return validator(v);
+    return validator(v).fold(SimpleResult.serror, SimpleResult.svalue);
   });
 };
 
-const extract = function (label: string, prop: Processor, strength, obj: any): Result<any, any> {
-  return prop.extract([ label ], strength, obj).fold(function (errs) {
-    return Result.error({
-      input: obj,
-      errors: errs
-    });
-  }, Result.value);
+const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => {
+  return doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
+};
+
+const extract = function (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> {
+  const res = prop.extract([ label ], strength, obj);
+  return SimpleResult.mapError(res, (errs) => {
+    return { input: obj, errors: errs };
+  });
 };
 
 const asStruct = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
-  return extract(label, prop, Fun.constant, obj);
+  return SimpleResult.toResult(
+    extract(label, prop, Fun.constant, obj)
+  );
 };
 
 const asRaw = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
-  return extract(label, prop, Fun.identity, obj);
+  return SimpleResult.toResult(
+    extract(label, prop, Fun.identity, obj)
+  );
 };
 
 const getOrDie = function (extraction: Result<any, any>): any {
-  return extraction.fold(function (errInfo) {
-    // A readable version of the error.
-    throw new Error(
-      formatError(errInfo)
-    );
-  }, Fun.identity);
+  return extraction.fold(
+    function (errInfo) {
+      // A readable version of the error.
+      throw new Error(
+        formatError(errInfo)
+      );
+    },
+    Fun.identity
+  );
 };
 
 const asRawOrDie = function (label: string, prop: Processor, obj: any): any {
@@ -77,7 +86,7 @@ const thunkOf = function (desc: string, schema: () => Processor): Processor {
 const funcOrDie = function (args: any[], prop: Processor): Processor {
   const retriever = function (output, strength) {
     return getOrDie(
-      extract('()', prop, strength, output)
+      SimpleResult.toResult(extract('()', prop, strength, output))
     );
   };
   return func(args, prop, retriever);
@@ -87,7 +96,7 @@ const anyValue = Fun.constant(_anyValue);
 
 const typedValue = (validator: (a: any) => boolean, expectedType: string) => value((a) => {
   const actualType = typeof a;
-  return validator(a) ? Result.value(a) : Result.error(`Expected type: ${expectedType} but got: ${actualType}`)
+  return validator(a) ? SimpleResult.svalue(a) : SimpleResult.serror(`Expected type: ${expectedType} but got: ${actualType}`)
 });
 
 const number = typedValue(Type.isNumber, 'number');

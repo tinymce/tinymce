@@ -8,11 +8,12 @@ import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
 import { AdtInterface } from '../alien/AdtDefinition';
+import { SimpleResult } from '../alien/SimpleResult';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidator = (a, strength?: () => any) => Result<any, string>;
-export type PropExtractor = (path: string[], strength, val: any) => Result<any, any>;
-export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => Result<any, string>;
+export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
+export type PropExtractor = (path: string[], strength, val: any) => SimpleResult<any, any>;
+export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => SimpleResult<any, string>;
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
@@ -49,32 +50,33 @@ const strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
   return ObjReader.readOptFrom(obj, key).fold(function () {
     return SchemaError.missingStrict(path, key, obj);
-  }, Result.value);
+  }, SimpleResult.svalue);
 };
 
 const fallbackAccess = function (obj, key, fallbackThunk) {
   const v = ObjReader.readOptFrom(obj, key).fold(function () {
     return fallbackThunk(obj);
   }, Fun.identity);
-  return Result.value(v);
+  return SimpleResult.svalue(v);
 };
 
 const optionAccess = function (obj, key) {
-  return Result.value(ObjReader.readOptFrom(obj, key));
+  return SimpleResult.svalue(ObjReader.readOptFrom(obj, key));
 };
 
 const optionDefaultedAccess = function (obj, key, fallback) {
   const opt = ObjReader.readOptFrom(obj, key).map(function (val) {
     return val === true ? fallback(obj) : val;
   });
-  return Result.value(opt);
+  return SimpleResult.svalue(opt);
 };
 
 const cExtractOne = function (path, obj, field, strength) {
   return field.fold(
     function (key, okey, presence, prop) {
       const bundle = function (av) {
-        return prop.extract(path.concat([ key ]), strength, av).map(function (res) {
+        const result = prop.extract(path.concat([ key ]), strength, av);
+        return SimpleResult.map(result, (res) => {
           return ObjWriter.wrap(okey, strength(res));
         });
       };
@@ -82,9 +84,10 @@ const cExtractOne = function (path, obj, field, strength) {
       const bundleAsOption = function (optValue) {
         return optValue.fold(function () {
           const outcome = ObjWriter.wrap(okey, strength(Option.none()));
-          return Result.value(outcome);
+          return SimpleResult.svalue(outcome);
         }, function (ov) {
-          return prop.extract(path.concat([ key ]), strength, ov).map(function (res) {
+          const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
+          return SimpleResult.map(result, function (res) {
             return ObjWriter.wrap(okey, strength(Option.some(res)));
           });
         });
@@ -92,25 +95,41 @@ const cExtractOne = function (path, obj, field, strength) {
 
       return (function () {
         return presence.fold(function () {
-          return strictAccess(path, obj, key).bind(bundle);
+          return SimpleResult.bind(
+            strictAccess(path, obj, key),
+            bundle
+          );
         }, function (fallbackThunk) {
-          return fallbackAccess(obj, key, fallbackThunk).bind(bundle);
+          return SimpleResult.bind(
+            fallbackAccess(obj, key, fallbackThunk),
+            bundle
+          );
         }, function () {
-          return optionAccess(obj, key).bind(bundleAsOption);
+          return SimpleResult.bind(
+            optionAccess(obj, key),
+            bundleAsOption
+          );
         }, function (fallbackThunk) {
           // Defaulted option access
-          return optionDefaultedAccess(obj, key, fallbackThunk).bind(bundleAsOption);
+          return SimpleResult.bind(
+            optionDefaultedAccess(obj, key, fallbackThunk),
+            bundleAsOption
+          )
         }, function (baseThunk) {
           const base = baseThunk(obj);
-          return fallbackAccess(obj, key, Fun.constant({})).map(function (v) {
-            return Merger.deepMerge(base, v);
-          }).bind(bundle);
+          const result = SimpleResult.map(
+            fallbackAccess(obj, key, Fun.constant({})),
+            (v) => {
+              return Merger.deepMerge(base, v);
+            }
+          )
+          return SimpleResult.bind(result, bundle);
         });
       })();
     },
     function (okey, instantiator) {
       const state = instantiator(obj);
-      return Result.value(ObjWriter.wrap(okey, strength(state)));
+      return SimpleResult.svalue(ObjWriter.wrap(okey, strength(state)));
     }
   );
 };
@@ -124,12 +143,14 @@ const cExtract = function (path, obj, fields, strength) {
 };
 
 const value = function (validator: ValueValidator): Processor {
-
   const extract = function (path, strength, val) {
-    // NOTE: Intentionally allowing strength to be passed through internally
-    return validator(val, strength).fold(function (err) {
-      return SchemaError.custom(path, err);
-    }, Result.value); // ignore strength
+    return SimpleResult.bindError(
+      // NOTE: Intentionally allowing strength to be passed through internally
+      validator(val, strength),
+      function (err) {
+        return SchemaError.custom(path, err);
+      }
+    );
   };
 
   const toString = function () {
@@ -246,7 +267,8 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
   const extract = function (path, strength, o) {
     //
     const keys = Obj.keys(o);
-    return validateKeys(path, keys).bind(function (validKeys) {
+    const validatedKeys = validateKeys(path, keys);
+    return SimpleResult.bind(validatedKeys, function (validKeys) {
       const schema = Arr.map(validKeys, function (vk) {
         return adt.field(vk, vk, FieldPresence.strict(), prop);
       });
@@ -273,12 +295,12 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 // retriever is passed in. See funcOrDie in ValueSchema
 const func = function (args: string[], schema: Processor, retriever): Processor {
   const delegate = value(function (f, strength) {
-    return Type.isFunction(f) ? Result.value(function () {
+    return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>(function () {
       const gArgs = Array.prototype.slice.call(arguments, 0);
       const allowedArgs = gArgs.slice(0, args.length);
       const o = f.apply(null, allowedArgs);
       return retriever(o, strength);
-    }) : Result.error('Not a function');
+    }) : SimpleResult.serror('Not a function');
   });
 
   return {
@@ -316,7 +338,7 @@ const thunk = function (desc: string, processor: () => Processor): Processor {
   };
 };
 
-const anyValue = Fun.constant(value(Result.value));
+const anyValue = Fun.constant(value(SimpleResult.svalue));
 const arrOfObj = Fun.compose(arrOf, objOf);
 
 const state = adt.state;

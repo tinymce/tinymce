@@ -1,12 +1,12 @@
 import { Obj, Result } from '@ephox/katamari';
 
 import * as Objects from '../api/Objects';
-import { typeAdt } from '../format/TypeTokens';
+import { typeAdt, FieldProcessorAdt } from '../format/TypeTokens';
 import { missingBranch, missingKey } from './SchemaError';
 import * as ValueProcessor from './ValueProcessor';
 
 const chooseFrom = function (path, strength, input, branches, ch) {
-  const fields = Objects.readOptFrom(branches, ch);
+  const fields = Objects.readOptFrom<FieldProcessorAdt[]>(branches, ch);
   return fields.fold(function () {
     return missingBranch(path, branches, ch);
   }, function (fs) {

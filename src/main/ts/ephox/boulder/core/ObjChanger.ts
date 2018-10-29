@@ -3,7 +3,8 @@ import { Arr, Obj } from '@ephox/katamari';
 const narrow = function (obj, fields) {
   const r = { };
   Arr.each(fields, function (field) {
-    if (obj[field] !== undefined && obj.hasOwnProperty(field)) { r[field] = obj[field]; }
+    // TODO: Investigate if the undefined check is relied upon by something
+    if (obj[field] !== undefined && Obj.has(obj, field)) { r[field] = obj[field]; }
   });
 
   return r;

@@ -3,6 +3,7 @@ import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, s
 import * as FieldPresence from './FieldPresence';
 import { FieldProcessorAdt } from '../format/TypeTokens';
 import * as ValueSchema from './ValueSchema';
+import { SimpleResult } from '../alien/SimpleResult';
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
@@ -34,7 +35,7 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
     key,
     FieldPresence.asOption(),
     value(function (v) {
-      return Result.error('The field: ' + key + ' is forbidden. ' + message);
+      return SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message);
     })
   );
 };
