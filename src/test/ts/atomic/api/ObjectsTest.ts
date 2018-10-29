@@ -206,7 +206,7 @@ UnitTest.test('ObjectsTest', function () {
     Jsc.syncProperty(
       'Testing consolidate with base',
       [ inputList, Jsc.nestring, Jsc.json ],
-      function (input, baseKey, baseValue) {
+      function (input, baseKey: string, baseValue) {
         const actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
         const hasError = Arr.exists(input.results, function (res) {
           return res.isError();
@@ -214,7 +214,7 @@ UnitTest.test('ObjectsTest', function () {
 
         if (hasError) { return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall'; } else {
           assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
-          return Jsc.eq(true, actual.getOrDie().hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
+          return Jsc.eq(true, Obj.has(actual.getOrDie() as any, baseKey)) ? true : 'Missing base key: ' + baseKey;
         }
       }
     );

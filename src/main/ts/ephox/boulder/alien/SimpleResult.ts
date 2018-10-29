@@ -3,22 +3,20 @@ import { Arr, Result } from "@ephox/katamari";
 // An experiment to make a more efficient boulder.
 export type SimpleResult<E,A> = SimpleError<E> | SimpleValue<A>
 
+export enum SimpleResultType { Error, Value }
+
 export interface SimpleError<E> {
-  stype: 'error';
+  stype: SimpleResultType.Error;
   serror: E;
 }
 
 export interface SimpleValue<A> {
-  stype: 'value';
+  stype: SimpleResultType.Value;
   svalue: A;
 }
 
 const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B => {
-  if (res.stype === 'error') {
-    return onError(res.serror);
-  } else {
-    return onValue(res.svalue);
-  }
+  return res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 };
 
 const partition = <E, A>(results: SimpleResult<E[], any>[]): { values: any[], errors: E[][] } => {
@@ -35,8 +33,8 @@ const partition = <E, A>(results: SimpleResult<E[], any>[]): { values: any[], er
 };
 
 const mapError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => F): SimpleResult<F, A> => {
-  if (res.stype === 'error') {
-    return { stype: 'error', serror: f(res.serror) }
+  if (res.stype === SimpleResultType.Error) {
+    return { stype: SimpleResultType.Error, serror: f(res.serror) }
   }
   else {
     return res;
@@ -44,8 +42,8 @@ const mapError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => F): SimpleResul
 }
 
 const map = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => B): SimpleResult<E, B> => {
-  if (res.stype === 'value') {
-    return { stype: 'value', svalue: f(res.svalue) }
+  if (res.stype === SimpleResultType.Value) {
+    return { stype: SimpleResultType.Value, svalue: f(res.svalue) }
   }
   else {
     return res;
@@ -54,7 +52,7 @@ const map = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => B): SimpleResult<E, 
 
 
 const bind = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => SimpleResult<E, B>): SimpleResult<E, B> => {
-  if (res.stype === 'value') {
+  if (res.stype === SimpleResultType.Value) {
     return f(res.svalue);
   }
   else {
@@ -63,7 +61,7 @@ const bind = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => SimpleResult<E, B>)
 };
 
 const bindError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => SimpleResult<F, A>): SimpleResult<F, A> => {
-  if (res.stype === 'error') {
+  if (res.stype === SimpleResultType.Error) {
     return f(res.serror);
   }
   else {
@@ -72,11 +70,11 @@ const bindError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => SimpleResult<F
 };
 
 const svalue = <E, A>(v: A): SimpleResult<E, A> => {
-  return { stype: 'value', svalue: v };
+  return { stype: SimpleResultType.Value, svalue: v };
 };
 
 const serror = <E, A>(e: E): SimpleResult<E, A> => {
-  return { stype: 'error', serror: e };
+  return { stype: SimpleResultType.Error, serror: e };
 };
 
 const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => {
