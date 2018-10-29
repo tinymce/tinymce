@@ -1,9 +1,7 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Body, Class, Classes, SelectorFind } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
@@ -16,16 +14,14 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
+import { AlloySpec } from '../../api/Main';
 import { Menu } from '../../api/ui/Menu';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
-import { console } from '@ephox/dom-globals';
-import { LumberTimers } from '../../alien/LumberTimers';
-import { AlloySpec } from '../../api/Main';
+import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
@@ -74,12 +70,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
-    // LumberTimers.reset();
-    // console.profile('buildMenus');
     const componentMap = buildMenus(container, detail.data.primary, detail.data.menus);
-
-    // console.profileEnd('buildMenus');
-    // LumberTimers.log();
     const directory = toDirectory(container);
     layeredState.setContents(detail.data.primary, componentMap, detail.data.expansions, directory);
     return layeredState.getPrimary();
@@ -156,9 +147,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   const buildIfRequired = (container: AlloyComponent,menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {
-      console.time('building on demand');
       const menu = container.getSystem().build(menuPrep.nbMenu());
-      console.timeEnd('building on demand');
       layeredState.setMenuBuilt(menuName, menu);
       return menu;
     } else {
@@ -273,26 +262,13 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
     // Open the menu as soon as it is added to the DOM
     AlloyEvents.runOnAttached((container, simulatedEvent) => {
-      // console.time('setup');
       setup(container).each((primary) => {
-
-        // console.time('tmenu.dom');
         Replacing.append(container, GuiFactory.premade(primary));
-        // container.element().dom().appendChild(primary.element().dom());
-        // console.timeEnd('tmenu.dom');
-
-        // console.time('onOpenMenu');
         detail.onOpenMenu(container, primary);
-        // console.timeEnd('onOpenMenu');
         if (detail.highlightImmediately) {
-          // console.time('setActiveMenu');
           setActiveMenu(container, primary);
-          // console.timeEnd('setActiveMenu');
         }
-
-
       });
-      // console.timeEnd('setup');
     })
   ].concat(detail.navigateOnHover ? [
     // Hide any irrelevant submenus and expand any submenus based
