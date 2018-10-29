@@ -123,7 +123,7 @@ const normalizeNbsps = (root: Element, pos: CaretPosition): Option<CaretPosition
   return Option.some(pos).filter(hasNbsp).bind((pos) => {
     const container = pos.container() as Text;
     const text = container.nodeValue;
-    const newText = normalizeNbspMiddle(normalizeNbspAtEnd(root, container, normalizeNbspAtStart(root, container, text)));
+    const newText = normalizeNbspAtStart(root, container, normalizeNbspMiddle(normalizeNbspAtEnd(root, container, text)));
 
     if (text !== newText) {
       pos.container().nodeValue = newText;

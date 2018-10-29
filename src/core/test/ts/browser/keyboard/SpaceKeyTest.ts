@@ -9,6 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyTest', (success, failu
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
+    const img = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" />';
 
     Pipeline.async({}, [
       Logger.t('Space key around inline boundary elements', GeneralSteps.sequence([
@@ -234,29 +235,29 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyTest', (success, failu
         ]))
       ])),
       Logger.t('Space key at node indexes', GeneralSteps.sequence([
-        Logger.t('Press space before input element in block', GeneralSteps.sequence([
+        Logger.t('Press space before image element in block', GeneralSteps.sequence([
           tinyApis.sFocus,
-          tinyApis.sSetRawContent('<p><input type="text" /></p>'),
+          tinyApis.sSetRawContent(`<p>${img}</p>`),
           tinyApis.sSetCursor([0], 0),
           tinyActions.sContentKeystroke(Keys.space(), {}),
           tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1),
-          tinyApis.sAssertContent('<p>&nbsp;<input type="text" /></p>')
+          tinyApis.sAssertContent(`<p>&nbsp;${img}</p>`)
         ])),
-        Logger.t('Press space between two input elements in block', GeneralSteps.sequence([
+        Logger.t('Press space between two image elements in block', GeneralSteps.sequence([
           tinyApis.sFocus,
-          tinyApis.sSetRawContent('<p><input type="text" /><input type="text" /></p>'),
+          tinyApis.sSetRawContent(`<p>${img}${img}</p>`),
           tinyApis.sSetCursor([0], 1),
           tinyActions.sContentKeystroke(Keys.space(), {}),
           tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
-          tinyApis.sAssertContent('<p><input type="text" /> <input type="text" /></p>')
+          tinyApis.sAssertContent(`<p>${img} ${img}</p>`)
         ])),
-        Logger.t('Press space after input element in block', GeneralSteps.sequence([
+        Logger.t('Press space after image element in block', GeneralSteps.sequence([
           tinyApis.sFocus,
-          tinyApis.sSetRawContent('<p><input type="text" /></p>'),
+          tinyApis.sSetRawContent(`<p>${img}</p>`),
           tinyApis.sSetCursor([0], 1),
           tinyActions.sContentKeystroke(Keys.space(), {}),
           tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
-          tinyApis.sAssertContent('<p><input type="text" />&nbsp;</p>')
+          tinyApis.sAssertContent(`<p>${img}&nbsp;</p>`)
         ]))
       ]))
     ], onSuccess, onFailure);
