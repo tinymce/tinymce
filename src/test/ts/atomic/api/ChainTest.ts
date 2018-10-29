@@ -183,6 +183,16 @@ UnitTest.asynctest('ChainTest', function() {
     ])
   );
 
+  const testChainInjectThunked = StepAssertions.testStepsPass(
+    {},
+    [
+      Chain.asStep({}, [
+        Chain.injectThunked(() => 'cat'),
+        cIsEqual('cat')
+      ])
+    ]
+  );
+
   return Pipeline.async({}, [
     Logger.t(
       '[Should fail validation if the chain function does not wrap the output]\n',
@@ -264,6 +274,11 @@ UnitTest.asynctest('ChainTest', function() {
     Logger.t(
       '[Complex API: Chain.runStepsOnValue\n',
       testChainRunStepsOnValue
+    ),
+
+    Logger.t(
+      '[Basic API: Chain.injectThunked\n',
+      testChainInjectThunked
     )
   ], function () {
     success();
