@@ -11,6 +11,7 @@ const init = (editor: Editor, database: EmojiDatabase): void => {
   editor.ui.registry.addAutocompleter('emoticons', {
     ch: ':',
     columns: 'auto',
+    minChars: 2,
     matches: isStartOfWord,
     fetch: (pattern, maxResults) => {
       return database.waitForLoad().then(() => {

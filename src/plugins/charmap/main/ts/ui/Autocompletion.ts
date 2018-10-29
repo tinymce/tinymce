@@ -9,6 +9,7 @@ const init = (editor: Editor, all) => {
   editor.ui.registry.addAutocompleter('charmap', {
     ch: ':',
     columns: 'auto',
+    minChars: 2,
     matches: isStartOfWord,
     fetch: (pattern, maxResults) => {
       return new Promise((resolve, reject) => {
