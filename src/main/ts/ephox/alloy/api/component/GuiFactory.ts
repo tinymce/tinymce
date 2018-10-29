@@ -1,7 +1,8 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
+import { Arr, Cell, Fun, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
@@ -9,8 +10,6 @@ import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent, ComponentApi } from './ComponentApi';
-import { SimpleSpec, SimpleOrSketchSpec, AlloySpec, PremadeSpec } from '../../api/component/SpecTypes';
-import { LumberTimers } from '../../alien/LumberTimers';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Objects.readOr('components', [ ])(spec);

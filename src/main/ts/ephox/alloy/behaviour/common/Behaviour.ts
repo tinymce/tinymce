@@ -1,12 +1,11 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger, Obj, Option, Thunk } from '@ephox/katamari';
+import { Fun, Obj, Option, Thunk } from '@ephox/katamari';
 
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
-import { LumberTimers } from '../../alien/LumberTimers';
 
 const executeEvent = (bConfig, bState, executor): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
   return AlloyEvents.runOnExecute((component) => {
@@ -115,7 +114,7 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
     handlers (info) {
       return getConfig(info).map((behaviourInfo) => {
         const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
-        return LumberTimers.run('handlers.events', () => getEvents(behaviourInfo.config, behaviourInfo.state));
+        return getEvents(behaviourInfo.config, behaviourInfo.state);
       }).getOr({ });
     }
   };
