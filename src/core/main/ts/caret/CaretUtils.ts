@@ -1,5 +1,5 @@
 /**
- * CaretUtils.st
+ * CaretUtils.ts
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2018 Ephox Corp. All rights reserved

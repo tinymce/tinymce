@@ -1,3 +1,13 @@
+/**
+ * CharType.ts
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 const is = (expected: string) => (actual: string) => expected === actual;
 
 const isNbsp = is('\u00a0');

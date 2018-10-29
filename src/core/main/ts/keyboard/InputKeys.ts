@@ -1,5 +1,5 @@
 /**
- * InputKeys.js
+ * InputKeys.ts
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
