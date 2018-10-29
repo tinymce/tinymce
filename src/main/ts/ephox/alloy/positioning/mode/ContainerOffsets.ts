@@ -5,12 +5,12 @@ import * as CssPosition from '../../alien/CssPosition';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { OriginAdt } from '../../positioning/layout/Origins';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SelectionAnchor } from '../../positioning/mode/Anchoring';
+import { SelectionAnchor, NodeAnchor } from '../../positioning/mode/Anchoring';
 
 // In one mode, the window is inside an iframe. If that iframe is in the
 // same document as the positioning element (component), then identify the offset
 // difference between the iframe and the component.
-const getOffset = <I extends SelectionAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): Option<SugarPosition> => {
+const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): Option<SugarPosition> => {
   const win = Traverse.defaultView(anchorInfo.root).dom();
 
   const hasSameOwner = (frame) => {
@@ -23,7 +23,7 @@ const getOffset = <I extends SelectionAnchor>(component: AlloyComponent, origin:
     filter(hasSameOwner).map(Location.absolute);
 };
 
-const getRootPoint = <I extends SelectionAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): CssPosition.CssPositionAdt => {
+const getRootPoint = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): CssPosition.CssPositionAdt => {
   const doc = Traverse.owner(component.element());
   const outerScroll: SugarPosition = Scroll.get(doc);
 

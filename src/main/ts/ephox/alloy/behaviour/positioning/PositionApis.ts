@@ -55,9 +55,11 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
   const origin = posConfig.useFixed ? getFixedOrigin() : getRelativeOrigin(component);
 
   const placer = anchorage.placement;
-  placer(component, anchorage, origin).each((anchoring: Anchoring) => {
+
+  const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds);
+
+  placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer.getOr(place);
-    const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds);
     doPlace(component, origin, anchoring, getBounds, placee);
   });
 

@@ -33,7 +33,7 @@ const eastX = (anchor: AnchorBox): number => {
 
 // element centre aligned horizontally with the anchor
 const middleX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() + anchor.width() - element.width() / 2;
+  return anchor.x() + (anchor.width() / 2) - (element.width() / 2);
 };
 
 // display element to the left, right edge against the right of the anchor
@@ -53,16 +53,16 @@ const southY = (anchor: AnchorBox): number => {
 
 // display element below, top edge against the bottom of the anchor
 const centreY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() + anchor.height() - element.height() / 2;
+  return anchor.y() + (anchor.height() / 2) - (element.height() / 2);
 };
 
 const eastEdgeX = (anchor: AnchorBox): number => {
   return anchor.x() + anchor.width();
-}
+};
 
 const westEdgeX = (anchor: AnchorBox, element: AnchorElement): number => {
   return anchor.x() - element.width();
-}
+};
 
 const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
   return NuSpotInfo(eastX(anchor), southY(anchor), bubbles.southeast(), Direction.southeast(), 'layout-se');

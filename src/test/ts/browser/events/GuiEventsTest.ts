@@ -17,8 +17,11 @@ import { document, window } from '@ephox/dom-globals';
 import { Attr, Css, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 import TestStore from 'ephox/alloy/test/TestStore';
+import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
+
+  const cleanup = Cleaner();
 
   const page = Element.fromHtml(
     `<div class="gui-events-test-container">
@@ -34,6 +37,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const doc = Element.fromDom(document);
   const body = Element.fromDom(document.body);
   Insert.append(body, page);
+  cleanup.add(() => Remove.remove(page));
 
   const outerStore = TestStore();
   const store = TestStore();
@@ -43,15 +47,12 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
       outerStore.adder('Backspace on ' + Node.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
     }
   });
+  cleanup.add(onBodyKeydown.unbind);
 
   const triggerEvent = (eventName, event) => {
     const target = event.target();
     const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
-  };
-
-  const broadcastEvent = (eventName, event) => {
-    store.adder({ broadcastEventName: eventName })();
   };
 
   const sTestFocusInput = GeneralSteps.sequence([
@@ -203,26 +204,6 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     ]);
   };
 
-  const sTestWindowScroll = GeneralSteps.sequence([
-    store.sClear,
-    Step.sync(() => {
-      Css.set(page, 'margin-top', '2000px');
-      window.scrollTo(0, 1000);
-    }),
-    // Wait for window scroll to come through
-    Waiter.sTryUntil(
-      'Waiting for window scroll event to broadcast',
-      store.sAssertEq('Checking scroll should have fired', [ { broadcastEventName: 'alloy.system.scroll' } ]),
-      100,
-      1000
-    ),
-    Step.sync(() => {
-      Css.remove(page, 'margin-top');
-      window.scrollTo(0, 0);
-    }),
-    store.sClear
-  ]);
-
   const sTestUnbind = GeneralSteps.sequence([
     Step.sync(() => {
       gui.unbind();
@@ -258,7 +239,6 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const gui = GuiEvents.setup(page, {
     triggerEvent,
-    broadcastEvent
   });
 
   Pipeline.async({}, [
@@ -281,12 +261,6 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestChange,
     sTestTransitionEnd,
 
-    sTestWindowScroll,
-
     sTestUnbind
-  ], () => {
-    Remove.remove(page);
-    onBodyKeydown.unbind();
-    success();
-  }, failure);
+  ], cleanup.wrap(success), cleanup.wrap(failure));
 });

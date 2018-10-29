@@ -30,6 +30,9 @@ export interface GuiSystem {
 
   broadcast: (message: message) => void;
   broadcastOn: (channels: string[], message: message) => void;
+
+  // TODO FIXME this is no longer tested directly
+  broadcastEvent: (eventName: string, event: SugarEvent) => void;
 }
 
 export type message = Record<string, any>;
@@ -69,15 +72,6 @@ const takeover = (root: AlloyComponent): GuiSystem => {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
     },
-
-    // This doesn't follow usual DOM bubbling. It will just dispatch on all
-    // targets that have the event. It is the general case of the more specialised
-    // "message". "messages" may actually just go away. This is used for things
-    // like window scroll.
-    broadcastEvent (eventName: string, event: SugarEvent) {
-      const listeners = registry.filter(eventName);
-      return Triggers.broadcast(listeners, event);
-    }
   });
 
   const systemApi = SystemApi({
@@ -128,6 +122,9 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     },
     broadcastOn (channels, message) {
       broadcastOn(channels, message);
+    },
+    broadcastEvent (eventName: string, event: SugarEvent) {
+      broadcastEvent(eventName, event);
     },
     isConnected: Fun.constant(true)
   });
@@ -187,6 +184,15 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     });
   };
 
+  // This doesn't follow usual DOM bubbling. It will just dispatch on all
+  // targets that have the event. It is the general case of the more specialised
+  // "message". "messages" may actually just go away. This is used for things
+  // like window scroll.
+  const broadcastEvent = (eventName: string, event: SugarEvent) => {
+    const listeners = registry.filter(eventName);
+    return Triggers.broadcast(listeners, event);
+  };
+
   const getByUid = (uid) => {
     return registry.getById(uid).fold(() => {
       return Result.error(
@@ -215,7 +221,9 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     removeFromWorld,
 
     broadcast,
-    broadcastOn
+    broadcastOn,
+
+    broadcastEvent
   };
 };
 

@@ -16,7 +16,7 @@ export interface CommonAnchorSpec {
   anchor: string;
 }
 
-export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec;
+export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec;
 
 export interface AnchorDetail<D> {
   placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Option<Anchoring>;
@@ -52,6 +52,23 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSp
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
   getSelection: Option<() => Option<SugarRange>>;
+  root: Element;
+  bubble: Option<Bubble>;
+  overrides: AnchorOverrides;
+  showAbove: boolean;
+}
+
+export interface NodeAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+  anchor: 'node';
+  node: Option<Element>;
+  root: Element;
+  bubble?: Bubble;
+  overrides?: AnchorOverrides;
+  showAbove?: boolean;
+}
+
+export interface NodeAnchor extends AnchorDetail<NodeAnchor>, HasLayoutAnchor {
+  node: Option<Element>;
   root: Element;
   bubble: Option<Bubble>;
   overrides: AnchorOverrides;

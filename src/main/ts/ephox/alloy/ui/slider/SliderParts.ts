@@ -16,6 +16,11 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
+const labelPart = PartType.optional({
+  schema: [ FieldSchema.strict('dom') ],
+  name: 'label'
+});
+
 const edgePart = (name: string): PartType.PartTypeAdt => {
   return PartType.optional({
     name: '' + name + '-edge',
@@ -153,6 +158,7 @@ const spectrumPart = PartType.required({
 });
 
 export default [
+  labelPart,
   ledgePart,
   redgePart,
   tedgePart,

@@ -4,12 +4,14 @@ import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 export interface AlloySystemApi {
   addToGui: (comp: AlloyComponent) => void;
   addToWorld: (comp: AlloyComponent) => void;
   broadcast: (message: any) => void;
   broadcastOn: (channels: string[], message: any) => void;
+  broadcastEvent: (eventName: string, event: SugarEvent) => void;
   build: (spec: AlloySpec) => AlloyComponent;
   debugInfo: () => string;
   getByDom: (element: Element) => Result<AlloyComponent, string | Error>;
@@ -45,6 +47,7 @@ const SystemApi2 = Contracts.exactly([
 
   'broadcast',
   'broadcastOn',
+  'broadcastEvent',
   'isConnected'
 ]) as ContractAlloySystem;
 

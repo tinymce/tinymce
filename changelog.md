@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [3.52.0] - 2018-10-25
+### Added
+- Label part for sliders
+
+# [3.51.0] - 2018-10-25
+### Changed
+- Window scroll events are not automatically detected by the mothership
+
+## [3.50.0] - 2018-10-22
+### Added
+ - NodeAnchor positioning mode
+
 ## [3.49.0] - 2018-10-18
 ### Fixed
  - Backspace keys are no longer swallowed in content-editable sections

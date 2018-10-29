@@ -17,10 +17,6 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
       store.adder(name)();
       return true;
     },
-    broadcastEvent: (name) => {
-      store.adder('broadcast: ' + name)();
-      return true;
-    }
   });
 
   const alpha = Element.fromText('alpha');

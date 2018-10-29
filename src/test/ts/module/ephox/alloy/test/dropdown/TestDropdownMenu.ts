@@ -78,6 +78,7 @@ const mStoreMenuUid = (component) => {
 };
 
 const mWaitForNewMenu = (component) => {
+  // TODO: Create an API to hide this detail
   return Step.raw((value: any, next, die, logs) => {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
