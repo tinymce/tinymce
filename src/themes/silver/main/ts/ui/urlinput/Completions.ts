@@ -1,5 +1,5 @@
 import { Menu as BridgeMenu } from '@ephox/bridge';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Strings } from '@ephox/katamari';
 
 import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
 import { LinkInformation } from '../../backstage/UrlInputBackstage';
@@ -67,7 +67,7 @@ const filterByQuery = function (term: string, menuItems: BridgeMenu.MenuItemApi[
   const lowerCaseTerm = term.toLowerCase();
   return Arr.filter(menuItems, function (item) {
     const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.text;
-    return text.toLowerCase().indexOf(lowerCaseTerm) !== -1 || item.value.toLowerCase().indexOf(lowerCaseTerm) !== -1;
+    return Strings.contains(text.toLowerCase(), lowerCaseTerm) || Strings.contains(item.value.toLowerCase(), lowerCaseTerm);
   });
 };
 
