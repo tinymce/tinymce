@@ -104,6 +104,8 @@ export const defaultStyleFormats: AllowedFormat[] = [
 
 export const getUserFormats = (editor: Editor): Option<AllowedFormat[]> => Objects.readOptFrom(editor.settings, 'style_formats');
 
+export const isMergeFormats = (editor: Editor): Option<boolean> => Objects.readOptFrom(editor.settings, 'style_formats_merge');
+
 const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => {
   return Object.prototype.hasOwnProperty.call(format, 'items');
 };
@@ -174,6 +176,11 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (S
 export const getStyleFormats = (editor: Editor): (Separator | FormatReference | NestedFormatting)[] => {
   return getUserFormats(editor).map((userFormats) => {
     // Ensure that any custom formats specified by the user are registered with the editor
-    return registerCustomFormats(editor, userFormats);
+    const registeredUserFormats = registerCustomFormats(editor, userFormats);
+    // Merge the default formats with the custom formats if required
+    return isMergeFormats(editor).fold(
+      () => registeredUserFormats,
+      (mergeFormats) => mergeFormats ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats
+    );
   }).getOr(defaultStyleFormats);
 };
