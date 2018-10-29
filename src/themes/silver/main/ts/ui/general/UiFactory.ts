@@ -23,6 +23,7 @@ import { renderHtmlPanel } from './HtmlPanel';
 import { renderListbox } from './Listbox';
 import { renderUiLabel } from './UiLabel';
 import { renderCollection } from '../dialog/Collection';
+import { renderTable } from '../dialog/Table';
 
 // tslint:disable:no-console
 
@@ -74,7 +75,8 @@ const factories: Record<string, FormPartRenderer> = {
   }),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers))
+  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
+  table: make((spec, backstage) => renderTable(spec, backstage.shared.providers))
 };
 
 const noFormParts: any = {
