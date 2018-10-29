@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.0.0] - 2018-10-30
+### Changed
+- All sketcher configs are no longer wrapped in functions
+- Only non-button HTML tags get a role of button
+- TieredMenu submenus are built on-demand and then cached
+
 # [3.52.0] - 2018-10-25
 ### Added
 - Label part for sliders
