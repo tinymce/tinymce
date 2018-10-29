@@ -1,3 +1,5 @@
+import Actions from '../core/Actions';
+
 /**
  * Buttons.js
  *
@@ -38,7 +40,14 @@ const register = function (editor) {
   editor.ui.registry.addButton('editimage', {
     tooltip: 'Edit image',
     icon: 'edit-image',
-    onAction: cmd('mceEditImage')
+    onAction: cmd('mceEditImage'),
+    onSetup: (buttonApi) => {
+      editor.on('NodeChange', () => {
+        const element = Actions.getSelectedImage(editor);
+        const disabled = !Actions.isEditableImage(editor, element);
+        buttonApi.setDisabled(disabled);
+      });
+    }
   });
 
   editor.ui.registry.addButton('imageoptions', {
@@ -50,7 +59,7 @@ const register = function (editor) {
   editor.ui.registry.addContextMenu('imagetools', {
     update: (element) => {
       // since there's no menu item available, this has to be it's own thing
-      return !element.src ? [] : [{
+      return !Actions.isEditableImage(editor, element) ? [] : [{
         text: 'Edit image',
         icon: 'edit-image',
         onAction: cmd('mceEditImage')
