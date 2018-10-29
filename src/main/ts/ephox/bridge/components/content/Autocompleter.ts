@@ -1,4 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Range } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 
 import { ColumnTypes } from '../toolbar/ToolbarSplitButton';
@@ -23,7 +24,9 @@ export interface AutocompleterItem {
 export interface AutocompleterApi {
   type?: 'autocompleter';
   ch: string;
+  minChars?: number;
   columns?: ColumnTypes;
+  matches?: (rng: Range, text: string, pattern: string) => boolean;
   fetch: (pattern: string, maxResults: number) => Promise<AutocompleterItemApi[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults?: number;
@@ -36,7 +39,9 @@ export interface AutocompleterInstanceApi {
 export interface Autocompleter {
   type: 'autocompleter';
   ch: string;
+  minChars: number;
   columns: ColumnTypes;
+  matches: (rng: Range, text: string, pattern: string) => boolean;
   fetch: (pattern: string, maxResults: number) => Promise<AutocompleterItemApi[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;
@@ -56,8 +61,10 @@ const autocompleterItemSchema = ValueSchema.objOf([
 const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.strictString('ch'),
+  FieldSchema.defaultedNumber('minChars', 0),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.defaultedNumber('maxResults', 10),
+  FieldSchema.defaultedFunction('matches', () => true),
   FieldSchema.strictFunction('fetch'),
   FieldSchema.strictFunction('onAction')
 ]);
