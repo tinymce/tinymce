@@ -32,7 +32,7 @@
     "gulp-typescript": "^5.0.0-alpha.2",
     "less-plugin-autoprefix": "^1.5.1",
     "less-plugin-variables-output": "^1.2.0",
-    "stylelint": "^9.6.0",
+    "stylelint": "9.6.0",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-order": "^0.8.1"
   },
