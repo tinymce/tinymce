@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
 import { Objects } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
 import { SelectData } from './BespokeSelect';
 
 const process = (rawFormats): Array<{ title: string, format: string}> => {
@@ -46,7 +46,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
 };
 
 const buildBasicSettingsDataset = (editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
-  const rawFormats = Objects.readOptFrom<any>(editor.settings, settingName).getOr(defaults);
+  const rawFormats = Objects.readOptFrom<string>(editor.settings, settingName).getOr(defaults);
   const data = process(split(rawFormats, delimiter));
   return {
     type: 'basic',

@@ -10,7 +10,7 @@ import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
 
-const getValue = function (item) {
+const getValue = function (item): string {
   return Objects.readOptFrom<string>(item, 'format').getOr(item.title);
 };
 
