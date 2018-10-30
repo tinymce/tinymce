@@ -57,7 +57,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           GuiSetup.mAddStyles(doc, [
             ':focus { outline: 2px solid green; }'
           ]),
-          Mouse.sClickOn(Body.body(), '[role="button"]'),
+          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
           UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
 
           FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),

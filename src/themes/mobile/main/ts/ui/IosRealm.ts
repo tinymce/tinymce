@@ -1,4 +1,4 @@
-import { Replacing, ComponentApi, Gui } from '@ephox/alloy';
+import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
 import IosWebapp, { MobileWebApp } from '../api/IosWebapp';
@@ -19,7 +19,7 @@ export interface MobileRealm {
   focusToolbar(): void;
   restoreToolbar(): void;
   updateMode(readOnly: boolean): void;
-  socket(): ComponentApi.AlloyComponent;
+  socket(): AlloyComponent;
   dropup(): Dropup.DropUp;
 }
 
@@ -34,7 +34,7 @@ export default function (scrollIntoView: () => void) {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket() as ComponentApi.AlloyComponent;
+  const socket = CommonRealm.makeSocket() as AlloyComponent;
 
   const dropup = Dropup.build(function () {
     webapp.run(function (w) {

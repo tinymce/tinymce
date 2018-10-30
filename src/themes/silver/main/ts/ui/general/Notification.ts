@@ -22,13 +22,14 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
-  text: () => string;
-  level: () => Option<'info' | 'warn' | 'error' | 'success'>;
-  icon: () => Option<string>;
-  onAction: () => Function;
-  progress: () => Boolean;
-  iconProvider: () => IconProvider;
-  translationProvider: () => (text: Untranslated) => TranslatedString;
+
+  text: string;
+  level: Option<'info' | 'warn' | 'error' | 'success'>;
+  icon: Option<string>;
+  onAction: Function;
+  progress: Boolean;
+  iconProvider: IconProvider;
+  translationProvider: (text: Untranslated) => TranslatedString;
 }
 
 export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec, NotificationSketchDetail>, NotificationSketchApis {
@@ -49,7 +50,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const memBannerText = Memento.record({
     dom: {
       tag: 'p',
-      innerHtml: detail.translationProvider()(detail.text())
+      innerHtml: detail.translationProvider(detail.text)
     },
     behaviours: Behaviour.derive([
       Replacing.config({ })
@@ -77,7 +78,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const memBannerProgress = Memento.record({
     dom: {
       tag: 'div',
-      classes: detail.progress() ? [ 'tox-progress-bar', 'tox-progress-indicator' ] : [ 'tox-progress-bar' ]
+      classes: detail.progress ? [ 'tox-progress-bar', 'tox-progress-indicator' ] : [ 'tox-progress-bar' ]
     },
     components: [
       {
@@ -131,21 +132,21 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
 
   const iconChoices = Arr.map(
     Arr.flatten([
-      detail.icon().toArray(),
-      detail.level().toArray(),
-      detail.level().bind((level) => Option.from(notificationIconMap[level])).toArray()
+      detail.icon.toArray(),
+      detail.level.toArray(),
+      detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
     ]),
     (icon) => `icon-${icon}`
   );
 
   return {
-    uid: detail.uid(),
+    uid: detail.uid,
     dom: {
       tag: 'div',
       attributes: {
         role: 'alert'
       },
-      classes: detail.level().map((level) => [ 'tox-notification', 'tox-notification--in', `tox-notification--${level}` ]).getOr(
+      classes: detail.level.map((level) => [ 'tox-notification', 'tox-notification--in', `tox-notification--${level}` ]).getOr(
         [ 'tox-notification', 'tox-notification--in' ]
       )
     },
@@ -153,7 +154,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         dom: {
           tag: 'div',
           classes: [ 'tox-notification__icon' ],
-          innerHtml: getFirstOr(iconChoices, detail.iconProvider(), () => {
+          innerHtml: getFirstOr(iconChoices, detail.iconProvider, () => {
             return getDefaultFirstOr(iconChoices, () => '');
           })
         }
@@ -171,7 +172,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         ])
       } as AlloySpec
     ]
-    .concat(detail.progress() ? [memBannerProgress.asSpec()] : [])
+    .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
     .concat(Button.sketch({
         dom: {
           tag: 'button',
@@ -181,12 +182,12 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
           dom: {
             tag: 'div',
             classes: ['tox-icon'],
-            innerHtml: getIcon('icon-close', detail.iconProvider())
+            innerHtml: getIcon('icon-close', detail.iconProvider)
           }
         }],
         // TODO: aria label this button!
         action: (comp) => {
-          detail.onAction()(comp);
+          detail.onAction(comp);
         }
       })
     ),

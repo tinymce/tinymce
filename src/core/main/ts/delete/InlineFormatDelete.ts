@@ -52,7 +52,7 @@ const deleteCaret = function (editor, forward) {
 
   return Arr.last(parentInlines).map(function (target) {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
-    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom())) {
+    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom()) && !CaretFormat.isEmptyCaretFormatElement(target)) {
       deleteLastPosition(forward, editor, target, parentInlines);
       return true;
     } else {

@@ -4,7 +4,6 @@ import {
   AlloySpec,
   Behaviour,
   Button,
-  ComponentApi,
   Container,
   DomFactory,
   ModalDialog,
@@ -14,6 +13,7 @@ import { Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
+import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 
 const pClose = (onClose) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
@@ -84,7 +84,7 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
 };
 
 export interface DialogFoo {
-  lazySink: () => Result<ComponentApi.AlloyComponent, any>;
+  lazySink: () => Result<AlloyComponent, any>;
   partSpecs: {
     title: AlloySpec,
     close: AlloySpec,

@@ -2,7 +2,6 @@ import {
   AddEventsBehaviour,
   AlloyEvents,
   Behaviour,
-  ComponentApi,
   Dropdown,
   Focusing,
   Keying,
@@ -12,6 +11,7 @@ import {
   Sketcher,
   SystemEvents,
   UiSketcher,
+  AlloyComponent,
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
@@ -25,24 +25,24 @@ import { renderMenuButton } from './Integration';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
-  onEscape: (comp: ComponentApi.AlloyComponent) => void;
-  onSetup: (comp: ComponentApi.AlloyComponent) => void;
-  getSink: () => Result<ComponentApi.AlloyComponent, Error>;
+  onEscape: (comp: AlloyComponent) => void;
+  onSetup: (comp: AlloyComponent) => void;
+  getSink: () => Result<AlloyComponent, Error>;
   providers: UiFactoryBackstageProviders;
 }
 
 export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  onEscape: () => (comp: ComponentApi.AlloyComponent) => void;
-  onSetup: () => (comp: ComponentApi.AlloyComponent) => void;
-  getSink: () => () => Result<ComponentApi.AlloyComponent, Error>;
-  providers: () => UiFactoryBackstageProviders;
+  uid: string;
+  dom: RawDomSchema;
+  onEscape: (comp: AlloyComponent) => void;
+  onSetup: (comp: AlloyComponent) => void;
+  getSink: () => Result<AlloyComponent, Error>;
+  providers: UiFactoryBackstageProviders;
 }
 
 export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec, SilverMenubarDetail> {
-  focus: (comp: ComponentApi.AlloyComponent) => void;
-  setMenus: (comp: ComponentApi.AlloyComponent, groups) => void;
+  focus: (comp: AlloyComponent) => void;
+  setMenus: (comp: AlloyComponent, groups) => void;
 }
 
 export interface MenubarItemSpec {
@@ -51,7 +51,7 @@ export interface MenubarItemSpec {
 }
 
 const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
-  const setMenus = (comp: ComponentApi.AlloyComponent, menus: MenubarItemSpec[]) => {
+  const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
       // FIX: this. Make it go through bridge.
       const buttonSpec = {
@@ -68,8 +68,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       return renderMenuButton(buttonSpec as any,
         MenuButtonClasses.Button,
         {
-          getSink: detail.getSink(),
-          providers: detail.providers()
+          getSink: detail.getSink,
+          providers: detail.providers
         },
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         'menuitem'
@@ -85,15 +85,15 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components: [ ],
 
     behaviours: Behaviour.derive([
       Replacing.config({ }),
       AddEventsBehaviour.config('menubar-events', [
         AlloyEvents.runOnAttached(function (component) {
-          detail.onSetup()(component);
+          detail.onSetup(component);
         }),
 
         AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
@@ -129,7 +129,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         mode: 'flow',
         selector: '.' + MenuButtonClasses.Button,
         onEscape: (comp) => {
-          detail.onEscape()(comp);
+          detail.onEscape(comp);
           return Option.some(true);
         }
       })

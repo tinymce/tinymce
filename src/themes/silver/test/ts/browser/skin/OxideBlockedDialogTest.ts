@@ -13,7 +13,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
       Pipeline.async({ }, Logger.ts(
         'Check structure of font format',
         [
-          Mouse.sClickOn(Body.body(), '[role="button"]'),
+          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
           UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
           Mouse.sClickOn(Body.body(), 'button:contains("Make Busy")'),
           Waiter.sTryUntil(

@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
     const tinyApis = TinyApis(editor);
 
     const dialogSelector = 'div.tox-dialog';
-    const toolbarButtonSelector = '[role="toolbar"] [role="button"][aria-label="Insert template"]';
+    const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
     const docBody = Element.fromDom(document.body);
 

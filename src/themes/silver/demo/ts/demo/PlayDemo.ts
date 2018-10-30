@@ -11,7 +11,7 @@ export default function () {
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
       'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove'
     ].join(' '),
-    content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
+    // content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks

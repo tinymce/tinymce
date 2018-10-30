@@ -3,7 +3,6 @@ import {
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
-  ComponentApi,
   Composing,
   Form as AlloyForm,
   Keying,
@@ -12,7 +11,8 @@ import {
   SketchSpec,
   Tabbar as AlloyTabbar,
   TabSection as AlloyTabSection,
-  Tabstopping
+  Tabstopping,
+  AlloyComponent
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
@@ -35,7 +35,7 @@ export type TabData = Record<string, any>;
 export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
 
-  const updateDataWithForm = (form: ComponentApi.AlloyComponent): void => {
+  const updateDataWithForm = (form: AlloyComponent): void => {
     const formData = Representing.getValue(form);
     const validData = toValidValues(formData).getOr({ });
     const currentData = storedValue.get();
@@ -43,7 +43,7 @@ export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBack
     storedValue.set(newData);
   };
 
-  const setDataOnForm = (form: ComponentApi.AlloyComponent) => {
+  const setDataOnForm = (form: AlloyComponent) => {
     const tabData = storedValue.get();
     Representing.setValue(form, tabData);
   };
@@ -164,12 +164,12 @@ export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBack
       Representing.config({
         store: {
           mode: 'manual',
-          getValue: (tsection: ComponentApi.AlloyComponent) => {
+          getValue: (tsection: AlloyComponent) => {
             // NOTE: Assumes synchronous updating of store.
             tsection.getSystem().broadcastOn([ SendDataToSectionChannel ], { });
             return storedValue.get();
           },
-          setValue: (tsection: ComponentApi.AlloyComponent, value: TabData) => {
+          setValue: (tsection: AlloyComponent, value: TabData) => {
             storedValue.set(value);
             tsection.getSystem().broadcastOn([ SendDataToViewChannel ], { });
           }

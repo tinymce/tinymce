@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
       };
 
       const sOpenStyleMenu = GeneralSteps.sequence([
-        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', '[role="button"]')
+        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
       ]);
 
       Pipeline.async({}, [

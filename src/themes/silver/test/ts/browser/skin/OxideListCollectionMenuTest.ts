@@ -33,7 +33,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
           GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
-          Mouse.sClickOn(Body.body(), '[role="button"]'),
+          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
           UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),

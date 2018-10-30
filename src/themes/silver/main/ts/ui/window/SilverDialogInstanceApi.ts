@@ -1,7 +1,6 @@
 import {
   AlloyComponent,
   AlloyTriggers,
-  ComponentApi,
   Composing,
   Disabling,
   Focusing,
@@ -17,7 +16,7 @@ import { Merger, Option } from '@ephox/katamari';
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 
-const getCompByName = (access: DialogAccess<any>, name: string): Option<ComponentApi.AlloyComponent> => {
+const getCompByName = (access: DialogAccess<any>, name: string): Option<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
   // This is just to avoid throwing errors if the dialog closes before this. We should take it out
