@@ -44,9 +44,8 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
 };
 
 const focusIn = (component: AlloyComponent, flowConfig: FlowConfig): void => {
-  flowConfig.getInitial(component).or(
-    // Use orThunk
-    SelectorFind.descendant(component.element(), flowConfig.selector)
+  flowConfig.getInitial(component).orThunk(
+    () => SelectorFind.descendant(component.element(), flowConfig.selector)
   ).each((first) => {
     flowConfig.focusManager.set(component, first);
   });
