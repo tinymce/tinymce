@@ -14,7 +14,7 @@ const getValue = (component, repConfig: RepresentingConfig, repState) => {
   return repState.get();
 };
 
-// TODO: Fix types
+// TODO: Introduce types. Complicated by repConfig's structure
 const onLoad = (component, repConfig: any, repState) => {
   repConfig.store.initialValue.each((initVal) => {
     if (repState.isNotSet()) { repState.set(initVal); }
