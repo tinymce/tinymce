@@ -7,7 +7,6 @@ import * as ResultAssertions from 'ephox/alloy/test/ResultAssertions';
 import TestStore from 'ephox/alloy/test/TestStore';
 
 UnitTest.test('ComponentEventsTest', () => {
-  // TODO: This needs to be restructured because events and behaviours have changed.
   const behaviour = Struct.immutable('name', 'handlers');
 
   const store = TestStore();

@@ -34,9 +34,6 @@ const SystemApi2 = Contracts.exactly([
   'triggerFocus',
   'triggerEvent',
   'triggerEscape',
-  // TODO: Implement later. See lab for details.
-  // 'openPopup',
-  // 'closePopup',
   'addToWorld',
   'removeFromWorld',
   'addToGui',
