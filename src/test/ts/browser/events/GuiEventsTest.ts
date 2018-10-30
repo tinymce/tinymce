@@ -257,7 +257,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestMouseOperation('mouseout', Mouse.cMouseOut),
     sTestMouseOperation('contextmenu', Mouse.cContextMenu),
 
-    // FIX: Add API support to agar
+    // TODO: Add API support to agar
     sTestChange,
     sTestTransitionEnd,
 
