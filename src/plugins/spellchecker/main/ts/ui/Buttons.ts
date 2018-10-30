@@ -49,9 +49,8 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
   };
 
   const buttonArgs = {
-    tooltip: 'Spell check',
+    tooltip: 'Spellcheck',
     onAction: startSpellchecking,
-    text: 'Spell check',
     icon: 'spell-check',
     onSetup : (buttonApi) => {
       const setButtonState = () => {
@@ -91,7 +90,7 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
     type: 'togglemenuitem',
-    text: 'Spell check',
+    text: 'Spellcheck',
     onSetup: (menuApi) => {
       menuApi.setActive(startedState.get());
       const setMenuItemCheck = () => {

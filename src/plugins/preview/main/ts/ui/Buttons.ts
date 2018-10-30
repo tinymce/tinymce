@@ -11,7 +11,7 @@
 const register = function (editor) {
   editor.ui.registry.addButton('preview', {
     icon: 'preview',
-    tooltip: 'Preview Text',
+    tooltip: 'Preview',
     onAction: () => editor.execCommand('mcePreview')
   });
 

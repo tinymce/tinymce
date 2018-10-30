@@ -177,7 +177,14 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ]
   });
 
-  const makeSlider = (onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX) => void, min: number, value: number, max: number): SketchSpec => {
+  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX) => void, min: number, value: number, max: number): SketchSpec => {
+    const labelPart = Slider.parts().label({
+      dom: {
+        tag: 'label',
+        innerHtml: providersBackstage.translate(label)
+      }
+    });
+
     const spectrum = Slider.parts().spectrum({
       dom: {
         tag: 'div',
@@ -213,6 +220,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         getInitialValue: Fun.constant({ x: Fun.constant(value) })
       },
       components: [
+        labelPart,
         spectrum,
         thumb
       ],
@@ -223,21 +231,21 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     });
   };
 
-  const makeVariableSlider = (transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
+  const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
       const valTransform = makeValueTransform(transform, value.x() / 100);
 
       emitTransform(slider, valTransform);
     };
-    return makeSlider(onChoose, min, value, max);
+    return makeSlider(label, onChoose, min, value, max);
   };
 
-  const createVariableFilterPanel = (transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
+  const createVariableFilterPanel = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
     return Container.sketch({
       dom: panelDom,
       components: [
         createBackButton(),
-        makeVariableSlider(transform, min, value, max),
+        makeVariableSlider(label, transform, min, value, max),
         createApplyButton()
       ]
     });
@@ -253,13 +261,13 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ]
   });
 
-  const BrightnessPanel = createVariableFilterPanel(ImageTransformations.brightness, -100, 0, 100);
-  const ContrastPanel = createVariableFilterPanel(ImageTransformations.contrast, -100, 0, 100);
-  const GammaPanel = createVariableFilterPanel(ImageTransformations.gamma, -100, 0, 100);
+  const BrightnessPanel = createVariableFilterPanel('Brightness', ImageTransformations.brightness, -100, 0, 100);
+  const ContrastPanel = createVariableFilterPanel('Contrast', ImageTransformations.contrast, -100, 0, 100);
+  const GammaPanel = createVariableFilterPanel('Gamma', ImageTransformations.gamma, -100, 0, 100);
 
   const makeColorTransform = (red: number, green: number, blue: number): ((ir: any) => any) => (ir: any): any => ImageTransformations.colorize(ir, red, green, blue);
 
-  const makeColorSlider = () => {
+  const makeColorSlider = (label: string) => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
       const redOpt = memRed.getOpt(slider);
       const blueOpt = memBlue.getOpt(slider);
@@ -277,19 +285,19 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       });
     };
 
-    return makeSlider(onChoose, 0, 100, 200);
+    return makeSlider(label, onChoose, 0, 100, 200);
   };
 
   const memRed = Memento.record(
-    makeColorSlider()
+    makeColorSlider('R')
   );
 
   const memGreen = Memento.record(
-    makeColorSlider()
+    makeColorSlider('G')
   );
 
   const memBlue = Memento.record(
-    makeColorSlider()
+    makeColorSlider('B')
   );
 
   // Colorize

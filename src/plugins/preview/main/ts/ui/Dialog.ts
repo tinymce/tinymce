@@ -38,9 +38,6 @@ export const open = (editor) => {
     ],
     initialData: {
       preview: content
-    },
-    onClose: () => {
-      console.log('Preview Demo Close');
     }
   });
 

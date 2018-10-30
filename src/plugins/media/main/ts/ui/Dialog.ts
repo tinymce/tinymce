@@ -167,7 +167,7 @@ const showDialog = function (editor) {
         {
           type: 'sizeinput',
           name: 'dimensions',
-          label: 'size',
+          label: 'Constrain proportions',
           constrain: true
         }
       ]

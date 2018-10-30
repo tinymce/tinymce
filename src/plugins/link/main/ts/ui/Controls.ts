@@ -81,6 +81,7 @@ const setupContextToolbars = function (editor: Editor) {
       {
         type: 'contextformtogglebutton',
         icon: 'link',
+        tooltip: 'link',
         primary: true,
         onSetup: (buttonApi) => {
           const node = editor.selection.getNode();
@@ -107,6 +108,7 @@ const setupContextToolbars = function (editor: Editor) {
       {
         type: 'contextformtogglebutton',
         icon: 'unlink',
+        tooltip: 'unlink',
         active: false,
         onSetup: () => () => { },
         // TODO: The original inlite action was quite complex. Are we missing something with this?

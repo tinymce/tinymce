@@ -120,7 +120,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
         '<div id="' + id + '-' + handle.name + '" class="' + prefix +
         'croprect-handle ' + prefix + 'croprect-handle-' + handle.name + '"' +
         'style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1"' +
-        ' aria-label="' + handle.label + '" aria-grabbed="false">'
+        ' aria-label="' + handle.label + '" aria-grabbed="false" title="' + handle.label + '">' // TODO: tooltips AP-213
       );
     });
 

@@ -14,7 +14,7 @@ import Settings from '../api/Settings';
 
 const displayErrorMessage = function (editor, message) {
   editor.notificationManager.open({
-    text: editor.translate(message),
+    text: message,
     type: 'error'
   });
 };

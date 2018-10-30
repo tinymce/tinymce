@@ -61,7 +61,8 @@ export default function (editor, extras, uiMothership) {
         progress: settings.progressBar === true ? true : false,
         icon: Option.from(settings.icon),
         onAction: close,
-        iconProvider: backstage.shared.providers.icons
+        iconProvider: backstage.shared.providers.icons,
+        translationProvider: backstage.shared.providers.translate
       })
     );
 
