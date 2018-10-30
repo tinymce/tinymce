@@ -5,9 +5,6 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 const ALL_CATEGORY = 'All';
 
-const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
-const all = Cell<Option<EmojiEntry[]>>(Option.none());
-
 export interface EmojiEntry {
   title: string;
   keywords: string[];
@@ -52,6 +49,8 @@ const translateCategory = (name) => Obj.has(categoryNameMap, name) ? categoryNam
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
+  const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
+  const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
   editor.on('init', () => {
     ScriptLoader.ScriptLoader.loadScript(databaseUrl, () => {

@@ -46,7 +46,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     columns: 'auto'
   };
 
-  const dialogApi = editor.windowManager.open({
+  const getInitialState = () => ({
     title: 'Emoticons',
     size: 'normal',
     body: {
@@ -83,11 +83,14 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     ]
   });
 
+  const dialogApi = editor.windowManager.open(getInitialState());
+
   dialogApi.focus(patternName);
 
   if (! database.hasLoaded()) {
     dialogApi.block('Loading emoticons...');
     database.waitForLoad().then(() => {
+      dialogApi.redial(getInitialState());
       updateFilter.throttle(dialogApi);
       dialogApi.focus(patternName);
       dialogApi.unblock();
