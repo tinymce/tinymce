@@ -1,4 +1,4 @@
-import { ComponentApi, MementoRecord, Representing } from '@ephox/alloy';
+import { MementoRecord, Representing, AlloyComponent } from '@ephox/alloy';
 import { RepresentingConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/behaviour/representing/RepresentingTypes';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
@@ -28,7 +28,7 @@ const memento = (mem: MementoRecord, rawProcessors) => {
   });
 };
 
-const withComp = <D>(optInitialValue: Option<D>, getter: (c: ComponentApi.AlloyComponent) => D, setter: (c: ComponentApi.AlloyComponent, v: D) => void) => {
+const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => {
   return Representing.config(
     Merger.deepMerge(
       {

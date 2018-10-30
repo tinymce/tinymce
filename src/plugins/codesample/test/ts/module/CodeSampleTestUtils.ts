@@ -3,7 +3,7 @@ import { Element, TextContent } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 
 const dialogSelector = 'div.tox-dialog';
-const toolbarButtonSelector = '[role="toolbar"] [role="button"][aria-label="Insert/Edit Code Sample"]';
+const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/Edit Code Sample"]';
 
 const sSetLanguage = (newLanguage) => {
   return Logger.t('Changing language to ' + newLanguage, Step.sync(() => {

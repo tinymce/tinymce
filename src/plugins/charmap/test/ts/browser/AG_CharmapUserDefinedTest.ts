@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (su
       Log.steps('TBA', 'Charmap: User defined charmap', [
         tinyApis.sFocus,
         tinyApis.sFocus,
-        tinyUi.sClickOnToolbar('click charmap', '[role="button"][aria-label="Special character"]'),
+        tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
         tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"]'),
         FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
         FocusTools.sSetActiveValue(doc, 'A'),

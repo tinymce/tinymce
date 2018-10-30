@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
 
     const docBody = Element.fromDom(document.body);
     const dialogSelector = 'div.tox-dialog';
-    const toolbarButtonSelector = '[role="toolbar"] [role="button"][aria-label="Insert template"]';
+    const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Template: Test basic template insertion', [

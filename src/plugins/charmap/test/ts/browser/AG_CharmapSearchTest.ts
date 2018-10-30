@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Open dialog, Search for "euro", Euro should be first option', [
         tinyApis.sFocus,
-        tinyUi.sClickOnToolbar('click charmap', '[role="button"][aria-label="Special character"]'),
+        tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),

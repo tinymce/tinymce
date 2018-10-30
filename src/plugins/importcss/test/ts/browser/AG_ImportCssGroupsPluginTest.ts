@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
       });
 
       const sOpenStyleMenu = GeneralSteps.sequence([
-        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', '[role="button"]')
+        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
       ]);
 
       const navigationSteps = MenuNavigationTestUtils.generateNavigation(doc, assertions.navigation);

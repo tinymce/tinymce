@@ -1,4 +1,4 @@
-import { Replacing, ComponentApi, Gui } from '@ephox/alloy';
+import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
 import AndroidWebapp from '../api/AndroidWebapp';
@@ -22,7 +22,7 @@ export default function (scrollIntoView: () => void) {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket() as ComponentApi.AlloyComponent;
+  const socket = CommonRealm.makeSocket() as AlloyComponent;
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 

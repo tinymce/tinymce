@@ -115,9 +115,10 @@ const cWaitForDialog = () => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.direct('editor', cTinyUI, 'tinyUi'),
-    NamedChain.direct('tinyUi', Chain.async((tinyUi, next, die) => {
+    // Hmm. We might need an API to handle the case where you need to pass logs through a subchain.
+    NamedChain.direct('tinyUi', Chain.on((tinyUi, next, die, logs) => {
       const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
-      Chain.pipeline([subchain], (value) => next(value), die);
+      Chain.pipeline([subchain], (value, newLogs) => next(Chain.wrap(value), newLogs), die, logs);
     }), '_'),
     NamedChain.outputInput
   ]),
@@ -146,8 +147,9 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
 );
 
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
-  Chain.async((value, next, die) => {
-    Chain.pipeline([Chain.inject(value)].concat(chains), () => next(value), die);
+  // TODO: Another API case.
+  Chain.on((value, next, die, logs) => {
+    Chain.pipeline([Chain.inject(value)].concat(chains), (_, newLogs) => next(Chain.wrap(value), newLogs), die, logs);
   }),
   Guard.addLogging('Chain operations')
 );

@@ -5,8 +5,8 @@ import {
   RawDomSchema,
   SketchSpec,
   Unselecting,
-  ComponentApi,
-  Tabstopping
+  Tabstopping,
+  AlloyComponent
 } from '@ephox/alloy';
 import { Future, Id, Option, Merger } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -22,7 +22,7 @@ export interface SwatchPanelButtonFoo {
   dom: RawDomSchema;
   components: AlloySpec[];
   fetch: (callback: Function) => void;
-  getHotspot?: (comp: ComponentApi.AlloyComponent) => Option<ComponentApi.AlloyComponent>;
+  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
   onItemAction: (value) => void;
   layouts?: Option<{
     onLtr: (elem: Element) => Layout.AnchorLayout[];
