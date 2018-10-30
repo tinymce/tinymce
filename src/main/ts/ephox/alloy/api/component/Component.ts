@@ -63,12 +63,6 @@ const build = (spec): AlloyComponent => {
   const systemApi = Cell(singleton);
 
   const info: CustomDefinition.CustomDetail = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
-
-  // FIX: this comment is outdated.
-
-  // The behaviour configuration is put into info.behaviours(). For everything else,
-  // we just need the list of static behaviours that this component cares about. The behaviour info
-  // to pass through will come from the info.behaviours() obj.
   const bBlob = CompBehaviours.generate(spec);
 
 
