@@ -15,6 +15,7 @@ import { UrlInputApi } from '../components/dialog/UrlInput';
 import { CustomEditorApi } from '../components/dialog/CustomEditor';
 import { ImageToolsApi } from '../components/dialog/ImageTools';
 import { CollectionApi } from '../components/dialog/Collection';
+import { LabelApi } from '../components/dialog/Label';
 
 // These are the types that are exposed though a public end user api
 
@@ -35,5 +36,6 @@ export {
   TextAreaApi,
   UrlInputApi,
   CustomEditorApi,
-  ImageToolsApi
+  ImageToolsApi,
+  LabelApi
 };

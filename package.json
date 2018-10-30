@@ -11,9 +11,9 @@
     "prepublishOnly": "tsc"
   },
   "dependencies": {
-    "@ephox/katamari": "latest",
     "@ephox/boulder": "latest",
-    "@ephox/dom-globals": "latest"
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
