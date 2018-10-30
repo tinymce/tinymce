@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   },
-  "version": "5.0.0-preview-3-build.14",
+  "version": "5.0.0-preview-3-build.15",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -37,7 +37,6 @@
     "@ephox/dom-globals": "latest",
     "@ephox/wrap-jsverify": "latest",
     "@ephox/imagetools": "latest",
-    "@ephox/wrap-jsverify": "latest",
     "@ephox/katamari": "latest",
     "@ephox/mcagar": "latest",
     "@ephox/oxide": "latest",
