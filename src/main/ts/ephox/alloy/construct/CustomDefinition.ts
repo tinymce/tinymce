@@ -39,7 +39,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
     FieldSchema.defaulted('events', {}),
     FieldSchema.defaulted('apis', Fun.constant({})),
 
-    // // Use mergeWith in the future when pre-built behaviours conflict
+    // Use mergeWith in the future when pre-built behaviours conflict
     FieldSchema.field(
       'eventOrder',
       'eventOrder',
@@ -55,11 +55,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
       ValueSchema.anyValue()
     ),
 
-    FieldSchema.option('domModification'),
-    // Fields.snapshot('originalSpec'),
-
-    // // Need to have this initially
-    // FieldSchema.defaulted('debug.sketcher', 'unknown')
+    FieldSchema.option('domModification')
   ]), spec);
 };
 
