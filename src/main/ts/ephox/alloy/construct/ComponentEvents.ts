@@ -88,38 +88,6 @@ const fuse = (tuples, eventOrder, eventName): Result<any, any> => {
 };
 
 const combineGroups = (byEventName, eventOrder) => {
-  // const success = { };
-  // const failed = [ ];
-
-  // Obj.each(byEventName, (tuples, eventName) => {
-  //   if (tuples.length === 1) {
-  //     success[eventName] = DescribedHandler.uncurried(
-  //       assemble(tuples[0].handler()),
-  //       'Purpose?'
-  //     )
-  //   } else {
-  //     const fused = fuse(tuples, eventOrder, eventName);
-  //     fused.fold<any>(
-  //       (err: any) => { failed.push(err) },
-  //       (val) => {
-  //         success[eventName] = DescribedHandler.uncurried(
-  //           assemble(tuples[0].handler()),
-  //           'Purpose?'
-  //         )
-  //       }
-  //     )
-  //   }
-  //   // const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
-  // });
-
-
-
-  // if (failed.length > 0) {
-  //   return Result.error(failed);
-  // } else {
-  //   return Result.value(success);
-  // }
-
   const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
     const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
     return combined.map((handler) => {
