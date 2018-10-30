@@ -49,6 +49,7 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
 
   const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemSpec[] => {
     const columns = Options.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
+
     return Arr.bind(matches, (match) => {
       const choices = match.items;
 
@@ -56,7 +57,7 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
         choices,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
-          getContext(nr, triggerChar, nr.startContainer.data, nr.startOffset, 0).fold(
+          getContext(nr, triggerChar, nr.startContainer.data, nr.startOffset).fold(
             () => console.error('Lost context. Cursor probably moved'),
             ({ rng }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
@@ -81,6 +82,7 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
         lookupInfo.lookupData.then((lookupData) => {
           // AP-246: Do not show the menu if combinedItems length is 0. Write a test also.
           const combinedItems = getCombinedItems(lookupInfo.triggerChar, lookupData);
+
           const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
           InlineView.showAt(
             autocompleter,
