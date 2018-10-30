@@ -3,30 +3,29 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { SimpleSpec } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
-const renderTh = (text: string) => ({
-  dom: {
-    tag: 'th',
-    innerHtml: text
-  }
-});
-const renderHeader = (header: string[]) => ({
-  dom: {
-    tag: 'thead'
-  },
-  components: [
-    {
-      dom: {
-        tag: 'tr'
-      },
-      components: Arr.map(header, renderTh)
-    }
-  ]
-});
-const renderTd = (text: string) => ({ dom: { tag: 'th', innerHtml: text } });
-const renderTr = (row: string[]) => ({ dom: { tag: 'tr' }, components: Arr.map(row, renderTd) });
-const renderRows = (rows: string[][]) => ({ dom: { tag: 'tbody' }, components: Arr.map(rows, renderTr) });
-
 export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+  const renderTh = (text: string) => ({
+    dom: {
+      tag: 'th',
+      innerHtml: providersBackstage.translate(text)
+    }
+  });
+  const renderHeader = (header: string[]) => ({
+    dom: {
+      tag: 'thead'
+    },
+    components: [
+      {
+        dom: {
+          tag: 'tr'
+        },
+        components: Arr.map(header, renderTh)
+      }
+    ]
+  });
+  const renderTd = (text: string) => ({ dom: { tag: 'td', innerHtml: providersBackstage.translate(text) } });
+  const renderTr = (row: string[]) => ({ dom: { tag: 'tr' }, components: Arr.map(row, renderTd) });
+  const renderRows = (rows: string[][]) => ({ dom: { tag: 'tbody' }, components: Arr.map(rows, renderTr) });
   return {
     dom: {
       tag: 'table',
@@ -34,7 +33,7 @@ export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFacto
     },
     components: [
       renderHeader(spec.header),
-      renderRows(spec.rows)
+      renderRows(spec.cells)
     ]
   };
 };
