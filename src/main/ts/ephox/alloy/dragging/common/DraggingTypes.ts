@@ -6,6 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
+import { Bounds } from '../../alien/Boxes';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
@@ -45,8 +46,7 @@ export interface SnapsConfig {
   leftAttr: string;
   topAttr: string;
   onSensor?: (component: AlloyComponent, extra: {}) => void;
-  // FIX ?
-  lazyViewport?: (component: AlloyComponent) => any;
+  lazyViewport?: (component: AlloyComponent) => Bounds;
 }
 
 export interface DraggingConfig {
@@ -57,11 +57,6 @@ export interface DraggingConfig {
   onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
 }
 
-// FieldSchema.strict('getSnapPoints'),
-// Fields.onHandler('onSensor'),
-// FieldSchema.strict('leftAttr'),
-// FieldSchema.strict('topAttr'),
-// FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
 export interface CommonDraggingConfigSpec {
   useFixed?: boolean;
   onDrop?: (comp: AlloyComponent, target: Element) => void;
@@ -73,7 +68,7 @@ export interface CommonDraggingConfigSpec {
     leftAttr: string;
     topAttr: string;
     onSensor?: (component: AlloyComponent, extra: {}) => void;
-    lazyViewport?: (component: AlloyComponent) => any;
+    lazyViewport?: (component: AlloyComponent) => Bounds;
   };
 }
 
