@@ -13,8 +13,8 @@ import { updateTinymceUrls } from '../loader/Urls';
 import { Step, Pipeline } from '@ephox/agar';
 import { registerPlugins, readPlugins } from '../loader/Plugins';
 
-type SuccessCallback = () => void;
-type FailureCallback = (err: Error | string) => void;
+type SuccessCallback = (v: any, logs?) => void;
+type FailureCallback = (err: Error | string, logs?) => void;
 type SetupCallback = (editor, SuccessCallback, FailureCallback) => void;
 type SetupCallbackStep = <T, U>(editor) => Step<T, U>;
 
@@ -37,15 +37,19 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
     Remove.remove(target);
   };
 
-  const onSuccess = () => {
+  // Agar v. ??? supports logging
+  const onSuccess = (v, logs) => {
     teardown();
-    success();
+    // We may want to continue the logs for multiple editor
+    // loads in the same test
+    success(v, logs);
   };
 
-  const onFailure = (err: Error | string) => {
+  // Agar v. ??? supports logging
+  const onFailure = (err: Error | string, logs) => {
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
-    failure(err);
+    failure(err, logs);
   };
 
   const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;

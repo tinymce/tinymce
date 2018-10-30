@@ -96,19 +96,19 @@ export default function (editor) {
   };
 
   var cAssertDialogContents = function (data) {
-    return Chain.on(function (element, next, die) {
+    return Chain.async(function (element, next, die) {
       getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
-        next(Chain.wrap(element));
+        next(element);
       });
     });
   };
 
   var cFillDialogWith = function (data) {
-    return Chain.on(function (element, next, die) {
+    return Chain.async(function (element, next, die) {
       getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
         win.fromJSON(Merger.merge(win.toJSON(), data));
-        next(Chain.wrap(element));
+        next(element);
       });
     });
   };
