@@ -1,5 +1,12 @@
-
-import { AutocompleterApi, Autocompleter, createAutocompleter, createAutocompleterItem, AutocompleterItemApi, AutocompleterItem, AutocompleterInstanceApi } from '../components/content/Autocompleter';
+import {
+  AutocompleterApi,
+  Autocompleter,
+  createAutocompleter,
+  createAutocompleterItem,
+  AutocompleterItemApi,
+  AutocompleterItem,
+  AutocompleterInstanceApi
+} from '../components/content/Autocompleter';
 
 export {
   AutocompleterApi,

@@ -39,4 +39,5 @@ registerDemoButtons();
 registerDemoMenuItems();
 registerDemoContextMenus();
 
+// tslint:disable-next-line:no-console
 console.log(getDemoRegistry().getAll());
