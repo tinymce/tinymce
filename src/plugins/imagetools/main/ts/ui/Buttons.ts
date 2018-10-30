@@ -42,11 +42,17 @@ const register = function (editor) {
     icon: 'edit-image',
     onAction: cmd('mceEditImage'),
     onSetup: (buttonApi) => {
-      editor.on('NodeChange', () => {
+      const setDisabled = () => {
         const element = Actions.getSelectedImage(editor);
         const disabled = !Actions.isEditableImage(editor, element);
         buttonApi.setDisabled(disabled);
-      });
+      };
+
+      editor.on('NodeChange', setDisabled);
+
+      return () => {
+        editor.off('NodeChange', setDisabled);
+      };
     }
   });
 
