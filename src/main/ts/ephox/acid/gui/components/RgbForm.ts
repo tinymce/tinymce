@@ -1,4 +1,4 @@
-import { ComponentApi, Sketcher, Form, FormField, Behaviour, Input, Invalidating, AlloyEvents, AlloyTriggers, Representing, AddEventsBehaviour, Tabstopping, UiSketcher, SketchSpec, Memento } from "@ephox/alloy";
+import { Sketcher, Form, FormField, Behaviour, Input, Invalidating, AlloyEvents, AlloyTriggers, Representing, AddEventsBehaviour, Tabstopping, UiSketcher, SketchSpec, Memento, AlloyComponent } from "@ephox/alloy";
 import { Option, Result, Future, Id, Cell, Arr, Fun, Merger } from "@ephox/katamari";
 
 import * as HexColour from '../../api/colour/HexColour';
@@ -22,7 +22,7 @@ export interface RgbFormSpec extends Sketcher.SingleSketchSpec {
 }
 
 export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec, RgbFormDetail> {
-  updateHex: (slider: ComponentApi.AlloyComponent, colour: Hex) => void;
+  updateHex: (slider: AlloyComponent, colour: Hex) => void;
 };
 
 const rgbFormFactory = (translate, getClass, onValidHexx, onInvalidHexx) => {
@@ -72,7 +72,7 @@ const rgbFormFactory = (translate, getClass, onValidHexx, onInvalidHexx) => {
     const pField = FormField.parts().field({
       data,
       factory: Input,
-      inputAttributes: { 
+      inputAttributes: {
         type: 'text'
       },
       inputClasses: [ getClass('textfield') ],
@@ -278,7 +278,7 @@ const rgbFormFactory = (translate, getClass, onValidHexx, onInvalidHexx) => {
         };
       }),
       {
-        apis: { 
+        apis: {
           updateHex (form, hex) {
             Representing.setValue(form, {
               hex: hex.value()

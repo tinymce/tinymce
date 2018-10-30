@@ -1,5 +1,5 @@
 import { Fun, Option } from '@ephox/katamari';
-import { Behaviour, Composing, Focusing, Slider, Tabstopping, SketchSpec, UiSketcher, Sketcher, ComponentApi, AlloyTriggers } from '@ephox/alloy';
+import { Behaviour, Composing, Focusing, Slider, Tabstopping, SketchSpec, UiSketcher, Sketcher, AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 
 import { Rgba } from '../../api/colour/ColourTypes';
 import * as RgbaColour from '../../api/colour/RgbaColour';
@@ -11,7 +11,7 @@ export interface SaturationBrightnessPaletteDetail extends Sketcher.SingleSketch
 export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSpec {
 }
 export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec, SaturationBrightnessPaletteDetail> {
-  setRgba: (slider: ComponentApi.AlloyComponent, colour: Rgba) => void;
+  setRgba: (slider: AlloyComponent, colour: Rgba) => void;
 };
 
 var paletteFactory = (translate, getClass) => {

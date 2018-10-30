@@ -15,7 +15,7 @@ import { FieldSchema } from '@ephox/boulder';
 
 const makeFactory = (translate, getClass) => {
   const factory = (detail) => {
-    const rgbForm = RgbForm.rgbFormFactory(translate, getClass, detail.onValidHex(), detail.onInvalidHex());
+    const rgbForm = RgbForm.rgbFormFactory(translate, getClass, detail.onValidHex, detail.onInvalidHex);
     const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
 
     const state = {
@@ -37,7 +37,7 @@ const makeFactory = (translate, getClass) => {
       })
     };
 
-    const updateFields = (anyInSystem, hex) => {   
+    const updateFields = (anyInSystem, hex) => {
       memRgb.getOpt(anyInSystem).each((form) => {
         rgbForm.updateHex(form, hex);
       });
@@ -72,14 +72,14 @@ const makeFactory = (translate, getClass) => {
     };
 
     return {
-      uid: detail.uid(),
-      dom: detail.dom(),
+      uid: detail.uid,
+      dom: detail.dom,
       components: [
         memPalette.asSpec(),
         HueSlider.sliderFactory(translate, getClass),
         memRgb.asSpec()
       ],
-      
+
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('colour-picker-events', [
           // AlloyEvents.run(ColourEvents.fieldsUpdate(), fieldsUpdates()),
@@ -100,7 +100,7 @@ const makeFactory = (translate, getClass) => {
 
   const ColourPicker = Sketcher.single({
     name: 'ColourPicker',
-    configFields: [ 
+    configFields: [
       FieldSchema.defaulted('onValidHex', Fun.noop),
       FieldSchema.defaulted('onInvalidHex', Fun.noop),
       FieldSchema.optionString('formChangeEvent')
