@@ -1,4 +1,4 @@
-import { SystemApi, AlloySystemApi } from './SystemApi';
+import { AlloySystemApi } from './SystemApi';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -12,7 +12,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     };
   };
 
-  return SystemApi({
+  return {
     debugInfo: Fun.constant('fake'),
     triggerEvent: fail('triggerEvent'),
     triggerFocus: fail('triggerFocus'),
@@ -28,7 +28,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     broadcastOn: fail('broadcastOn'),
     broadcastEvent: fail('broadcastEvent'),
     isConnected: Fun.constant(false)
-  });
+  };
 };
 
 const singleton = NoContextApi();

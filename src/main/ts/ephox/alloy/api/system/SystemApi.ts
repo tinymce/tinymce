@@ -26,30 +26,3 @@ export interface AlloySystemApi {
   triggerEvent: (eventName: string, target: Element, data: {}) => void;
   triggerFocus: (target: Element, originator: Element) => void;
 }
-
-export type ContractAlloySystem = (system: AlloySystemApi) => AlloySystemApi;
-
-const SystemApi2 = Contracts.exactly([
-  'debugInfo',
-  'triggerFocus',
-  'triggerEvent',
-  'triggerEscape',
-  'addToWorld',
-  'removeFromWorld',
-  'addToGui',
-  'removeFromGui',
-  'build',
-  'getByUid',
-  'getByDom',
-
-  'broadcast',
-  'broadcastOn',
-  'broadcastEvent',
-  'isConnected'
-]) as ContractAlloySystem;
-
-const SystemApi = (x) => x
-
-export {
-  SystemApi
-};
