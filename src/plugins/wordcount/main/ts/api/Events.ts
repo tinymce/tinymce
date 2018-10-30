@@ -8,9 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import { Editor } from 'tinymce/core/api/Editor';
+import { WordCount } from '../text/WordCount';
 
-const fireWordCountUpdate = (editor: Editor, wordCountText: string) => {
-  editor.fire('wordCountUpdate', { wordCountText });
+const fireWordCountUpdate = (editor: Editor, wordCount: WordCount) => {
+  editor.fire('wordCountUpdate', { wordCount });
 };
 
 export {

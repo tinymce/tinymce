@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec, NativeEvents, Representing } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
@@ -50,6 +50,8 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
+  const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]])) ]);
+
   const renderWordCount = (): SimpleSpec => {
     return {
       dom: {
@@ -59,10 +61,27 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components: [ ],
       behaviours: Behaviour.derive([
         Replacing.config({ }),
+        Representing.config({
+          store: {
+            mode: 'memory',
+            initialValue: {
+              mode: 'words',
+              count: { words: 0, characters: 0 }
+            }
+          }
+        }),
         AddEventsBehaviour.config('wordcount-events', [
+          AlloyEvents.run(NativeEvents.click(), (comp) => {
+            const currentVal = Representing.getValue(comp);
+            const newMode = currentVal.mode === 'words' ? 'characters' : 'words';
+            Representing.setValue(comp, { mode: newMode, count: currentVal.count });
+            replaceCountText(comp, currentVal.count, newMode);
+          }),
           AlloyEvents.runOnAttached((comp) => {
             editor.on('wordCountUpdate', (e) => {
-              Replacing.set(comp, [ GuiFactory.text(e.wordCountText) ]);
+              const { mode } = Representing.getValue(comp);
+              Representing.setValue(comp, { mode, count: e.wordCount });
+              replaceCountText(comp, e.wordCount, mode);
             });
           })
         ])

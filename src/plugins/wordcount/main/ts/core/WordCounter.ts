@@ -9,24 +9,21 @@
  */
 
 import Delay from 'tinymce/core/api/util/Delay';
-import I18n from 'tinymce/core/api/util/I18n';
+// import I18n from 'tinymce/core/api/util/I18n';
 import * as WordCount from '../text/WordCount';
 import * as Events from '../api/Events';
 import { Editor } from 'tinymce/core/api/Editor';
 
-const setup = (editor: Editor) => {
-  const wordsToText = (editor: Editor) => {
-    const wordCount = WordCount.getEditorWordcount(editor);
-    return I18n.translate(['{0} ' + (wordCount.words === 1 ? 'word' : 'words'), wordCount.words]);
-  };
+const updateCount = (editor: Editor) => {
+  const wordCount = WordCount.getEditorWordcount(editor);
+  Events.fireWordCountUpdate(editor, wordCount);
+};
 
-  const update = () => {
-    Events.fireWordCountUpdate(editor, wordsToText(editor));
-  };
-  const debouncedUpdate = Delay.debounce(update, 300);
+const setup = (editor: Editor) => {
+  const debouncedUpdate = Delay.debounce(() => updateCount(editor), 300);
 
   editor.on('init', () => {
-    update();
+    updateCount(editor);
     Delay.setEditorTimeout(editor, () => {
       editor.on('setcontent beforeaddundo undo redo keyup', debouncedUpdate);
     }, 0);
@@ -34,5 +31,6 @@ const setup = (editor: Editor) => {
 };
 
 export {
-  setup
+  setup,
+  updateCount
 };

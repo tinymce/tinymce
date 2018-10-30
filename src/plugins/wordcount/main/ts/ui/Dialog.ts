@@ -12,7 +12,7 @@ const open = (editor: Editor) => {
         {
           type: 'table',
           header: ['Count', 'Document', 'Selection'],
-          rows: [
+          cells: [
             [
               'Words',
               String(documentCount.words),

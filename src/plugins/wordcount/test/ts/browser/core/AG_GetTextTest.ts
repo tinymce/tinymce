@@ -24,6 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     const c = (html) => editor.dom.create('div', {}, html);
 
     Pipeline.async({}, [
+      sAssertGetText(c('<p></p>'), ''),
       sAssertGetText(c('<p>a b</p>'), 'a b'),
       sAssertGetText(c('<p>a&nbsp;b</p>'), 'a\u00a0b'),
       sAssertGetText(c('<p>a\uFEFFb</p>'), 'a\uFEFFb'),

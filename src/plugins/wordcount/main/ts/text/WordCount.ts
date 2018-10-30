@@ -11,7 +11,6 @@
 import { CharacterData, Node } from '@ephox/dom-globals';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
 import * as WordGetter from './WordGetter';
 
@@ -36,15 +35,17 @@ const getText = (node: Node, schema: Schema): string => {
   return txt;
 };
 
-const innerText = (node: Node, schema: Schema): string => {
-  return Env.ie ? getText(node, schema) : (node as any).innerText;
-};
-
 const getTextContent = (editor: Editor): string => {
-  return editor.removed ? '' : innerText(editor.getBody(), editor.schema);
+  return editor.removed ? '' : getText(editor.getBody(), editor.schema);
 };
 
-const getCount = (textContent: string) => {
+export interface WordCount {
+  words: number;
+  characters: number;
+  charactersNoSpace: number;
+}
+
+const getCount = (textContent: string): WordCount => {
   return {
     words: WordGetter.getWords(textContent).length,
     characters: textContent.length,
@@ -58,7 +59,6 @@ const getEditorWordcount = (editor: Editor) => {
 
 const getSelectionWordcount = (editor: Editor) => {
   const selectedText = getText(editor.selection.getRng().cloneContents(), editor.schema);
-  console.log(selectedText);
   return editor.selection.isCollapsed() ? getCount('') : getCount(selectedText);
 };
 
