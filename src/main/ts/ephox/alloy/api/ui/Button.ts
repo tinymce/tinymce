@@ -16,8 +16,8 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
   const tag = detail.dom.tag;
 
   const lookupAttr = (attr: string): Option<string> => {
-    return Objects.readOptFrom(detail.dom, 'attributes').bind((attrs) => {
-      return Objects.readOptFrom(attrs, attr);
+    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
+      return Objects.readOptFrom<string>(attrs, attr);
     });
   }
 

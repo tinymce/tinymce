@@ -37,14 +37,14 @@ const detectFromTag = (component: AlloyComponent): Option<string[]> => {
   const elem = component.element();
   const rawTag = Node.name(elem);
   const suffix = rawTag === 'input' && Attr.has(elem, 'type') ? ':' + Attr.get(elem, 'type') : '';
-  return Objects.readOptFrom(tagAttributes, rawTag + suffix);
+  return Objects.readOptFrom<string[]>(tagAttributes, rawTag + suffix);
 };
 
 const detectFromRole = (component: AlloyComponent): Option<string[]> => {
   const elem = component.element();
   if (! Attr.has(elem, 'role')) { return Option.none(); } else {
     const role = Attr.get(elem, 'role');
-    return Objects.readOptFrom(roleAttributes, role);
+    return Objects.readOptFrom<string[]>(roleAttributes, role);
   }
 };
 

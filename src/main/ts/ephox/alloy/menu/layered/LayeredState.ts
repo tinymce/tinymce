@@ -77,7 +77,7 @@ const init = (): LayeredState => {
   };
 
   const refresh = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom(paths.get(), itemValue) as Option<string[]>;
+    return Objects.readOptFrom<string[]>(paths.get(), itemValue);
   };
 
   const lookupMenu = (menuValue: string): Option<MenuPreparation> => {
