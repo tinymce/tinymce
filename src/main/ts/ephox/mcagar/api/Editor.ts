@@ -8,11 +8,10 @@ import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
+import { updateTinymceUrls } from '../loader/Urls';
+import { getTinymce } from '../loader/Globals';
 
-declare const tinymce: any;
-
-tinymce.baseURL = document.location.protocol + '//' + document.location.host + '/project/node_modules/tinymce';
-tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
+updateTinymceUrls('tinymce');
 
 var cFromElement = function (element, settings) {
   return Chain.async(function (_, next, die) {
@@ -21,16 +20,18 @@ var cFromElement = function (element, settings) {
     Attr.set(element, 'id', randomId);
     Insert.append(Element.fromDom(document.body), element);
 
-    tinymce.init(Merger.merge(settings, {
-      selector: '#' + randomId,
-      setup: function (editor) {
-        editor.on('SkinLoaded', function () {
-          setTimeout(function () {
-            next(editor);
-          }, 0);
-        });
-      }
-    }));
+    getTinymce().each((tinymce) => {
+      tinymce.init(Merger.merge(settings, {
+        selector: '#' + randomId,
+        setup: function (editor) {
+          editor.on('SkinLoaded', function () {
+            setTimeout(function () {
+              next(editor);
+            }, 0);
+          });
+        }
+      }));
+    });
   });
 };
 

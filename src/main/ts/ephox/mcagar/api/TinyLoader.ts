@@ -11,7 +11,7 @@ import { getTinymce } from '../loader/Globals';
 import * as TinyVersions from './TinyVersions';
 import { updateTinymceUrls } from '../loader/Urls';
 import { Step, Pipeline } from '@ephox/agar';
-import { registerPlugins, readPlugins } from '../loader/Plugins';
+import { registerPlugins, readPlugins, sRegisterPlugins } from '../loader/Plugins';
 
 type SuccessCallback = (v: any, logs?) => void;
 type FailureCallback = (err: Error | string, logs?) => void;
@@ -82,7 +82,7 @@ const setupVersion = (version: string, testPlugins: string[], callback: SetupCal
       registerPlugins(plugins);
       setup(callback, settings, next, die);
     })),
-    Step.sync(() => registerPlugins(plugins))
+    sRegisterPlugins(plugins)
   ], success, failure);
 };
 
