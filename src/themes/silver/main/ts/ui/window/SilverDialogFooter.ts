@@ -1,6 +1,5 @@
 import {
   Behaviour,
-  ComponentApi,
   Container,
   DomFactory,
   Memento,
@@ -8,6 +7,7 @@ import {
   ModalDialog,
   Reflecting,
   SketchSpec,
+  AlloyComponent,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
@@ -31,7 +31,7 @@ const makeButton = (button: Types.Dialog.DialogButton, providersBackstage: UiFac
   return renderFooterButton(button, button.type, providersBackstage);
 };
 
-const lookup = (compInSystem: ComponentApi.AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
+const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
   return Arr.find(footerButtons, (button) => {
     return button.name === buttonName;
   }).bind((memButton) => {
@@ -69,7 +69,7 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
     });
 
     const lookupByName = (
-      compInSystem: ComponentApi.AlloyComponent,
+      compInSystem: AlloyComponent,
       buttonName: string
     ) => lookup(compInSystem, footerButtons, buttonName);
 

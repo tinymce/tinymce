@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, Search for "rainbow", Rainbow should be first option', [
         tinyApis.sFocus,
-        tinyUi.sClickOnToolbar('click emoticons', '[role="button"]'),
+        tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),
