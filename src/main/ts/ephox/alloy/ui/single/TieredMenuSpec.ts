@@ -246,7 +246,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       component.getSystem().getByDom(target).each((item) => {
         const itemValue = getItemValue(item);
 
-        // FIX: I don't know if this is doing anything any more. Check.
+        // INVESTIGATE: I don't know if this is doing anything any more. Check.
         if (itemValue.indexOf('collapse-item') === 0) {
           collapseLeft(component, item);
         }
