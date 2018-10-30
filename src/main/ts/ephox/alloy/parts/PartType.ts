@@ -8,8 +8,8 @@ export type PartType = (p: PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
 export interface PartSpec<D extends CompositeSketchDetail> {
-  // FIX
-  defaults: (a, b, c) => Record<string, any>;
+  // TODO: Add type information where possible
+  defaults: (detail, partSpec, partValidated?) => Record<string, any>;
   factory: { sketch: (d, s?) => any };
   name: string;
   overrides: OverrideHandler<D>;
