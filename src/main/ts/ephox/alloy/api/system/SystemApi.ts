@@ -1,4 +1,4 @@
-import { Contracts, Result } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
 
 import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';

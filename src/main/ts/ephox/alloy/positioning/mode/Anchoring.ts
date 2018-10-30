@@ -1,4 +1,4 @@
-import { Contracts, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { SugarRange } from '../../alien/TypeDefinitions';
