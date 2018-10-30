@@ -121,7 +121,6 @@ const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: Elemen
 };
 
 const engage = (spec: ForeignGuiSpec) => {
-  // FIX
   const detail: ForeignGuiDetail = ValueSchema.asRawOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used
