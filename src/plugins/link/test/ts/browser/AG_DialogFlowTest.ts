@@ -41,7 +41,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
 
     const sSetInputFieldValue = (group: string, newValue: string) => Logger.t('Set input field value', Chain.asStep({ }, [
       TestLinkUi.cFindInDialog('label:contains("' + group + '") + input'),
-      UiControls.cSetValue(newValue)
+      UiControls.cSetValue(newValue),
+      TestLinkUi.cFireEvent('input')
     ]));
 
     const sAssertInputValue = (expected: string, group: string) => Logger.t('Assert input value', Chain.asStep({ }, [
@@ -51,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     ]));
 
     // FIX: Dupe
-    const sAssertUrlStruture = (expected: (s, str, arr) => any) => Logger.t('Assert url structure', Chain.asStep({ }, [
+    const sAssertUrlStructure = (expected: (s, str, arr) => any) => Logger.t('Assert url structure', Chain.asStep({ }, [
       TestLinkUi.cFindInDialog('label:contains("Url") + .tox-form__controls-h-stack input'),
       Chain.op((urlinput) => {
         Assertions.assertStructure(
@@ -106,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Keyboard.sKeydown(doc, Keys.down(), { }),
       UiFinder.sWaitForVisible('Waiting for dropdown', TinyDom.fromDom(document.body), '.tox-menu'),
       sChooseItem,
-      sAssertUrlStruture((s, str, _arr) => {
+      sAssertUrlStructure((s, str, _arr) => {
         return s.element('input', {
           value: str.startsWith('#h_')
         });
@@ -144,12 +145,18 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       )
     );
 
-    const testChangingValueManually = Log.stepsAsStep('TBA', 'Link: Change value manually', [
+    const testChangingUrlValueManually = Log.stepsAsStep('TBA', 'Link: Change urlinput value manually', [
         tinyApis.sSetContent('<h1>Something</h2>'),
         tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
         TestLinkUi.sOpenLinkDialog,
 
         FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
+        TestLinkUi.sAssertDialogContents(editor, {
+          href: 'http://www.tiny.cloud',
+          text: 'Something',
+          title: '',
+          target: ''
+        }),
         TestLinkUi.sClickOk,
         TestLinkUi.sAssertContentPresence(tinyApis, {
           a: 1
@@ -162,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       testChangingAnchorValue,
       testChangingUrlValueWithKeyboard,
       testChangingUrlValueWithMouse,
-      testChangingValueManually,
+      testChangingUrlValueManually,
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {

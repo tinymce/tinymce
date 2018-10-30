@@ -51,11 +51,11 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
       return fileType === 'file' ? joinMenuLists([
         history,
         filterByQuery(term, headerTargets(linkInfo)),
-        Arr.flatten([
+        filterByQuery(term, Arr.flatten([
           anchorTargetTop(linkInfo),
-          filterByQuery(term, anchorTargets(linkInfo)),
+          anchorTargets(linkInfo),
           anchorTargetBottom(linkInfo)
-        ]),
+        ]))
       ])
         : history;
     }
