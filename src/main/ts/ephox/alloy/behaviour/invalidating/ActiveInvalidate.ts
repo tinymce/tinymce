@@ -6,12 +6,12 @@ import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes
 import { EventFormat } from '../../events/SimulatedEvent';
 
 const events = (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.AlloyEventRecord => {
-  return invalidConfig.validator().map((validatorInfo) => {
+  return invalidConfig.validator.map((validatorInfo) => {
     return AlloyEvents.derive([
-      AlloyEvents.run(validatorInfo.onEvent(), (component) => {
+      AlloyEvents.run(validatorInfo.onEvent, (component) => {
         InvalidateApis.run(component, invalidConfig, invalidState).get(Fun.identity);
       })
-    ].concat(validatorInfo.validateOnLoad() ? [
+    ].concat(validatorInfo.validateOnLoad ? [
       AlloyEvents.runOnAttached((component) => {
         InvalidateApis.run(component, invalidConfig, invalidState).get(Fun.noop);
       })

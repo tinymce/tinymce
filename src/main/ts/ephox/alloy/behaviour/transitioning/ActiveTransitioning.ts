@@ -13,10 +13,10 @@ const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyE
       const raw = simulatedEvent.event().raw() as TransitionEvent;
       TransitionApis.getCurrentRoute(component, transConfig, transState).each((route) => {
         TransitionApis.findRoute(component, transConfig, transState, route).each((rInfo) => {
-          rInfo.transition().each((rTransition) => {
-            if (raw.propertyName === rTransition.property()) {
-              TransitionApis.jumpTo(component, transConfig, transState, route.destination());
-              transConfig.onTransition()(component, route);
+          rInfo.transition.each((rTransition) => {
+            if (raw.propertyName === rTransition.property) {
+              TransitionApis.jumpTo(component, transConfig, transState, route.destination);
+              transConfig.onTransition(component, route);
             }
           });
         });
@@ -24,7 +24,7 @@ const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyE
     }),
 
     AlloyEvents.runOnAttached((comp, se) => {
-      TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
+      TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState);
     })
   ]);
 };

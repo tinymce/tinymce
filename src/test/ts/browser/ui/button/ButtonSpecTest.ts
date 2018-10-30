@@ -46,8 +46,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
             ],
             attrs: {
               'type': str.is('button'),
-              'data-alloy-id': str.none(),
-              'role': str.is('button')
+              'data-alloy-id': str.none()
             },
             html: str.is('ButtonSpecTest.button')
           });

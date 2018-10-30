@@ -33,20 +33,20 @@ export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
-  invalidClass: () => string;
-  notify?: () => Option<{
+  invalidClass: string;
+  notify?: Option<{
     aria: string,
-    getContainer: () => (input: AlloyComponent) => Option<Element>;
-    onValid: () => (comp: AlloyComponent) => void;
-    validHtml: () => string;
-    onInvalid: () => (comp: AlloyComponent, err: string) => void;
-    onValidate: () => (comp: AlloyComponent) => void;
+    getContainer: (input: AlloyComponent) => Option<Element>;
+    onValid: (comp: AlloyComponent) => void;
+    validHtml: string;
+    onInvalid: (comp: AlloyComponent, err: string) => void;
+    onValidate: (comp: AlloyComponent) => void;
   }>;
-  onEvent?: () => string;
-  getRoot?: () => (comp: AlloyComponent) => Option<Element>;
-  validator: () => Option<{
-    validate: () => (input: AlloyComponent) => Future<Result<any, string>>;
-    onEvent?: () => string;
-    validateOnLoad?: () => boolean
+  onEvent?: string;
+  getRoot?: (comp: AlloyComponent) => Option<Element>;
+  validator: Option<{
+    validate: (input: AlloyComponent) => Future<Result<any, string>>;
+    onEvent?: string;
+    validateOnLoad?: boolean
   }>;
 }

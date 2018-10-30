@@ -7,11 +7,11 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface FormFieldDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  fieldBehaviours: () => SketchBehaviours;
-  prefix: () => string;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  fieldBehaviours: SketchBehaviours;
+  prefix: string;
 }
 
 export interface FormFieldSpec extends CompositeSketchSpec {

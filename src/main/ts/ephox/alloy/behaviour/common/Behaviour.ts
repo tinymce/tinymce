@@ -1,10 +1,10 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger, Obj, Option, Thunk } from '@ephox/katamari';
+import { Fun, Obj, Option, Thunk } from '@ephox/katamari';
 
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
 
 const executeEvent = (bConfig, bState, executor): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
@@ -74,53 +74,50 @@ const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state):
     return FunctionAnnotator.markAsExtraApi(extraF, extraName);
   });
 
-  const me = Merger.deepMerge(
-    wrappedExtra,
-    wrappedApis,
-    {
-      revoke: Fun.curry(revokeBehaviour, name),
-      config (spec) {
-        const prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
+  const me = {
+    ...wrappedExtra,
+    ...wrappedApis,
+    revoke: Fun.curry(revokeBehaviour, name),
+    config (spec) {
+      const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
 
-        return {
-          key: name,
-          value: {
-            config: prepared,
-            me,
-            configAsRaw: Thunk.cached(() => {
-              return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
-            }),
-            initialConfig: spec,
-            state
-          }
-        };
-      },
+      return {
+        key: name,
+        value: {
+          config: prepared,
+          me,
+          configAsRaw: Thunk.cached(() => {
+            return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
+          }),
+          initialConfig: spec,
+          state
+        }
+      };
+    },
 
-      schema () {
-        return schemaSchema;
-      },
+    schema () {
+      return schemaSchema;
+    },
 
-      exhibit (info, base) {
-        return getConfig(info).bind((behaviourInfo) => {
-          return Objects.readOptFrom(active, 'exhibit').map((exhibitor) => {
-            return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
-          });
-        }).getOr(DomModification.nu({ }));
-      },
+    exhibit (info, base) {
+      return getConfig(info).bind((behaviourInfo) => {
+        return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
+          return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
+        });
+      }).getOr(DomModification.nu({ }));
+    },
 
-      name () {
-        return name;
-      },
+    name () {
+      return name;
+    },
 
-      handlers (info) {
-        return getConfig(info).bind((behaviourInfo) => {
-          return Objects.readOptFrom(active, 'events').map((events) => {
-            return events(behaviourInfo.config, behaviourInfo.state);
-          });
-        }).getOr({ });
-      }
+    handlers (info) {
+      return getConfig(info).map((behaviourInfo) => {
+        const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
+        return getEvents(behaviourInfo.config, behaviourInfo.state);
+      }).getOr({ });
     }
-  );
+  };
 
   return me;
 };

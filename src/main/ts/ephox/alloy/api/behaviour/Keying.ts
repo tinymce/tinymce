@@ -29,7 +29,7 @@ const Keying = Behaviour.createModes({
   name: 'keying',
   active: {
     events (keyingConfig, keyingState) {
-      const handler = keyingConfig.handler();
+      const handler = keyingConfig.handler;
       return handler.toEvents(keyingConfig, keyingState);
     }
   },

@@ -1,35 +1,32 @@
-import { Merger } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as TabbarSchema from '../../ui/schema/TabbarSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { TabbarDetail, TabbarSketcher, TabbarSpec } from '../../ui/types/TabbarTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { TabbarSketcher, TabbarDetail, TabbarSpec } from '../../ui/types/TabbarTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {
-    'uid': detail.uid(),
-    'dom': Merger.deepMerge(
-      {
-        tag: 'div',
-        attributes: {
-          role: 'tablist'
-        }
-      },
-      detail.dom()
-    ),
+    'uid': detail.uid,
+    'dom': detail.dom,
     'components': components,
     'debug.sketcher': 'Tabbar',
 
-    'behaviours': Merger.deepMerge(
-      Behaviour.derive([
+    domModification: {
+      attributes: {
+        role: 'tablist'
+      }
+    },
+
+    'behaviours': SketchBehaviours.augment(
+      detail.tabbarBehaviours,
+      [
         Highlighting.config({
-          highlightClass: detail.markers().selectedClass(),
-          itemClass: detail.markers().tabClass(),
+          highlightClass: detail.markers.selectedClass,
+          itemClass: detail.markers.tabClass,
 
           // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
           // Consider a more seam-less way of combining highlighting and toggling
@@ -50,12 +47,10 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
               return tab.element();
             });
           },
-          selector: '.' + detail.markers().tabClass(),
+          selector: '.' + detail.markers.tabClass,
           executeOnMove: true
         })
-      ]),
-      // Add the permitted fields.
-      SketchBehaviours.get(detail.tabbarBehaviours())
+      ]
     )
   };
 };

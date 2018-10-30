@@ -71,8 +71,6 @@ import * as Channels from './messages/Channels';
 import * as Attachment from './system/Attachment';
 import * as ForeignGui from './system/ForeignGui';
 import * as Gui from './system/Gui';
-import { NoContextApi } from './system/NoContextApi';
-import * as SystemApi from './system/SystemApi';
 import { Button } from './ui/Button';
 import { Container } from './ui/Container';
 import { DataField } from './ui/DataField';
@@ -150,7 +148,6 @@ export {
   CompBehaviours,
   Composite,
   Component,
-  ComponentApi,
   ComponentUtil,
   DomFactory,
   GuiFactory,
@@ -169,8 +166,6 @@ export {
   Attachment,
   ForeignGui,
   Gui,
-  NoContextApi,
-  SystemApi,
   Button,
   Container,
   DataField,

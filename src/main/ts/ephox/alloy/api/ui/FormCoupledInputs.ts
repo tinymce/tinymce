@@ -13,12 +13,13 @@ import { SketchBehaviours } from '../component/SketchBehaviours';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.coupledFieldBehaviours,
+      [
         Composing.config({ find: Option.some }),
 
         Representing.config({
@@ -28,19 +29,18 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
 
               const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
               return {
-                [detail.field1Name()]: Representing.getValue(parts.field1()),
-                [detail.field2Name()]: Representing.getValue(parts.field2())
+                [detail.field1Name]: Representing.getValue(parts.field1()),
+                [detail.field2Name]: Representing.getValue(parts.field2())
               };
             },
             setValue(comp, value) {
               const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
-              if (Objects.hasKey(value, detail.field1Name())) { Representing.setValue(parts.field1(), value[detail.field1Name()]); }
-              if (Objects.hasKey(value, detail.field2Name())) { Representing.setValue(parts.field2(), value[detail.field2Name()]); }
+              if (Objects.hasKey(value, detail.field1Name)) { Representing.setValue(parts.field1(), value[detail.field1Name]); }
+              if (Objects.hasKey(value, detail.field2Name)) { Representing.setValue(parts.field2(), value[detail.field2Name]); }
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.coupledFieldBehaviours())
+      ]
     ),
     apis: {
       getField1: (component) => AlloyParts.getPart(component, detail, 'field1'),

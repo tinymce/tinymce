@@ -12,20 +12,20 @@ export interface SingleSketchSpec {
   uid?: string;
 }
 export interface SingleSketchDetail {
-  uid: () => string;
+  uid: string;
 }
 
 export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
-  name: () => string;
-  configFields: () => FieldProcessorAdt[];
+  name: string;
+  configFields: FieldProcessorAdt[];
   sketch: (spec: S) => SketchSpec;
   factory: UiSketcher.SingleSketchFactory<D, S>;
 }
 
 export interface CompositeSketchSpec { }
 export interface CompositeSketchDetail {
-  partUids: () => Record<string, string>;
-  components: () => AlloySpec[];
+  partUids: Record<string, string>;
+  components: AlloySpec[];
 }
 
 export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {
@@ -77,7 +77,7 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig) {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig): any {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
   const sketch = (spec) => {
@@ -89,17 +89,14 @@ const single = function <S extends SingleSketchSpec, D extends SingleSketchDetai
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
-  return Merger.deepMerge(
-    {
-      name: Fun.constant(config.name),
-      partFields: Fun.constant([ ]),
-      configFields: Fun.constant(config.configFields),
-
-      sketch
-    },
-    apis,
-    extraApis
-  ) as SingleSketch<S, D>;
+  return {
+    name: Fun.constant(config.name),
+    partFields: Fun.constant([ ]),
+    configFields: Fun.constant(config.configFields),
+    sketch,
+    ...apis,
+    ...extraApis
+   };
 };
 
 const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig: CompositeSketcherSpec) {
@@ -117,17 +114,15 @@ const composite = function <S extends CompositeSketchSpec, D extends CompositeSk
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
-  return Merger.deepMerge(
-    {
-      name: Fun.constant(config.name),
-      partFields: Fun.constant(config.partFields),
-      configFields: Fun.constant(config.configFields),
-      sketch,
-      parts: Fun.constant(parts)
-    },
-    apis,
-    extraApis
-  ) as CompositeSketch<S, D>;
+  return {
+    name: Fun.constant(config.name),
+    partFields: Fun.constant(config.partFields),
+    configFields: Fun.constant(config.configFields),
+    sketch,
+    parts: Fun.constant(parts),
+    ...apis,
+    ...extraApis
+   } as CompositeSketch<S, D>;
 };
 
 export {

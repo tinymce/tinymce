@@ -1,29 +1,56 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
-import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
-import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
-  const events = ButtonBase.events(detail.action());
+  const events = ButtonBase.events(detail.action);
 
-  const optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));
-  const optTag = Objects.readOptFrom(detail.dom(), 'tag');
+  const tag = detail.dom.tag;
+
+  const lookupAttr = (attr: string): Option<string> => {
+    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
+      return Objects.readOptFrom<string>(attrs, attr);
+    });
+  }
+
+  // Button tags should not have a default role of button, and only buttons should
+  // get a type of button.
+  const getModAttributes = () => {
+    if (tag === 'button') {
+      // Default to type button, unless specified otherwise
+      const type = lookupAttr('type').getOr('button')
+      // Only use a role if it is specified
+      const roleAttrs = lookupAttr('role').map(
+        (role: string) => ({ role } as Record<string, string>)
+      ).getOr({ })
+
+      return {
+        type,
+        ...roleAttrs
+      };
+    } else {
+      // We are not a button, so type is irrelevant (unless specified)
+      // Default role to button
+      const role =  lookupAttr('role').getOr('button');
+      return { role };
+    }
+  }
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
-    components: detail.components(),
+    uid: detail.uid,
+    dom: detail.dom,
+    components: detail.components,
     events,
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.buttonBehaviours, [
         Focusing.config({ }),
         Keying.config({
           mode: 'execution',
@@ -33,22 +60,12 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
           useSpace: true,
           useEnter: true
         })
-      ]),
-      SketchBehaviours.get(detail.buttonBehaviours())
+      ]
     ),
     domModification: {
-      attributes: Merger.deepMerge(
-        optType.fold(() => {
-          return optTag.is('button') ? { type: 'button' } : { };
-        }, (t) => {
-          return { };
-        }),
-        {
-          role: detail.role().getOr('button')
-        }
-      )
+      attributes: getModAttributes()
     },
-    eventOrder: detail.eventOrder()
+    eventOrder: detail.eventOrder
   };
 };
 

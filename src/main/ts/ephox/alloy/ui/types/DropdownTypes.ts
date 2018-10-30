@@ -12,32 +12,32 @@ import { AnchorLayout } from '../../positioning/layout/Layout';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
 
-  role: () => Option<string>;
-  eventOrder: () => Record<string, string[]>;
-  fetch: () => (comp: AlloyComponent) => Future<F>;
-  onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
+  role: Option<string>;
+  eventOrder: Record<string, string[]>;
+  fetch: (comp: AlloyComponent) => Future<F>;
+  onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink: () => Option<() => Result<AlloyComponent, Error>>;
+  lazySink: Option<() => Result<AlloyComponent, Error>>;
   // TODO test getHotspot
-  getHotspot: () => (comp: AlloyComponent) => Option<AlloyComponent>;
-  layouts: () => Option<{
+  getHotspot: (comp: AlloyComponent) => Option<AlloyComponent>;
+  layouts: Option<{
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
   }>;
-  matchWidth: () => boolean;
-  useMinWidth: () => boolean;
-  sandboxClasses: () => string[];
-  sandboxBehaviours: () => SketchBehaviours;
+  matchWidth: boolean;
+  useMinWidth: boolean;
+  sandboxClasses: string[];
+  sandboxBehaviours: SketchBehaviours;
 }
 
 export interface DropdownDetail extends CommonDropdownDetail<TieredData>, CompositeSketchDetail {
-  dropdownBehaviours: () => SketchBehaviours;
-  onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-  toggleClass: () => string;
+  dropdownBehaviours: SketchBehaviours;
+  onExecute: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  toggleClass: string;
 }
 
 export interface DropdownApis {

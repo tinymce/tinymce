@@ -18,15 +18,12 @@ export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends Co
 
 const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
-  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
-  return Merger.deepMerge(
-    factory(detail, specWithUid),
-    { 'debug.sketcher': Objects.wrap(owner, spec) }
-  );
+  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
+  return factory(detail, specWithUid);
 };
 
 const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
-  const specWithUid = supplyUid(spec);
+  const specWithUid = supplyUid<S>(spec);
 
   // Identify any information required for external parts
   const partSchemas = AlloyParts.schemas(partTypes);
@@ -34,7 +31,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Generate partUids for all parts (external and otherwise)
   const partUidsSchema = AlloyParts.defaultUidsSchema(partTypes);
 
-  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
+  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
 
   // Create (internals, externals) substitutions
   const subs = AlloyParts.substitutes(owner, detail, partTypes);
@@ -42,19 +39,14 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Work out the components by substituting internals
   const components = AlloyParts.components(owner, detail, subs.internals());
 
-  return Merger.deepMerge(
-    // Pass through the substituted components and the externals
-    factory(detail, components, specWithUid, subs.externals()),
-    { 'debug.sketcher': Objects.wrap(owner, spec) }
-  );
+  return factory(detail, components, specWithUid, subs.externals())
 };
 
-const supplyUid = function <S>(spec: S): S {
-  return Merger.deepMerge(
-    {
-      uid: Tagger.generate('uid')
-    }, spec
-  );
+const supplyUid = function <S>(spec: any): S {
+  return spec.hasOwnProperty('uid') ? spec : {
+    ...spec,
+    uid: Tagger.generate('uid')
+  };
 };
 
 export {

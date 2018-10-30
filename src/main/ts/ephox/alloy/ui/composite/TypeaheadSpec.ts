@@ -54,7 +54,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
      *
      * Regardless, this is a user initiated action. End previewing.
      */
-    detail.previewing().set(false);
+    detail.previewing.set(false);
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each((menu) => {
@@ -89,31 +89,29 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     return tdata;
   };
 
-  const behaviours = Behaviour.derive([
+  const behaviours = [
     Focusing.config({ }),
     Representing.config({
-      store: Merger.deepMerge(
-        {
-          mode: 'dataset',
-          getDataKey: (comp) => Value.get(comp.element()),
-          // This really needs to be configurable
-          getFallbackEntry: (itemString) => ({
-            value: itemString,
-            meta: { }
-          }),
-          setValue: (comp, data) => {
-            Value.set(comp.element(), detail.model().getDisplayText()(data));
-          }
+      store: {
+        mode: 'dataset',
+        getDataKey: (comp) => Value.get(comp.element()),
+        // This really needs to be configurable
+        getFallbackEntry: (itemString) => ({
+          value: itemString,
+          meta: { }
+        }),
+        setValue: (comp, data) => {
+          Value.set(comp.element(), detail.model.getDisplayText(data));
         },
-        detail.initialData().map((d) => {
+        ...detail.initialData.map((d) => {
           return Objects.wrap('initialValue', d);
         }).getOr({ })
-      )
+      }
     }),
     Streaming.config({
       stream: {
         mode: 'throttle',
-        delay: detail.responseTime(),
+        delay: detail.responseTime,
         stopEvent: false
       },
       onStream (component, simulatedEvent) {
@@ -122,18 +120,18 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const focusInInput = Focusing.isFocused(component);
         // You don't want it to change when something else has triggered the change.
         if (focusInInput) {
-          if (Value.get(component.element()).length >= detail.minChars()) {
+          if (Value.get(component.element()).length >= detail.minChars) {
 
             const previousValue = Composing.getCurrent(sandbox).bind((menu) => {
               return Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>;
             });
 
-            detail.previewing().set(true);
+            detail.previewing.set(true);
 
             const onOpenSync = (_sandbox) => {
               Composing.getCurrent(sandbox).each((menu) => {
                 previousValue.fold(() => {
-                  if (detail.model().selectsOver()) { Highlighting.highlightFirst(menu); }
+                  if (detail.model.selectsOver) { Highlighting.highlightFirst(menu); }
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;
@@ -179,7 +177,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const sandboxIsOpen = Sandboxing.isOpen(sandbox);
 
         // 'Previewing' means that items are shown but none has been actively selected by the user
-        if (sandboxIsOpen && !detail.previewing().get()) {
+        if (sandboxIsOpen && !detail.previewing.get()) {
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
           return Composing.getCurrent(sandbox).bind((menu) => {
@@ -191,7 +189,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         } else {
           const currentValue = Representing.getValue(comp) as TypeaheadData;
           AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-          detail.onExecute()(sandbox, comp, currentValue);
+          detail.onExecute(sandbox, comp, currentValue);
 
           // If we're open and previewing, close the sandbox after firing execute.
           if (sandboxIsOpen) {
@@ -203,7 +201,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     }),
 
     Toggling.config({
-      toggleClass: detail.markers().openClass(),
+      toggleClass: detail.markers.openClass,
       aria: {
         // TODO: Maybe this should just be expanded?
         mode: 'pressed',
@@ -229,14 +227,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
 
-        setValueFromItem(detail.model(), comp, se.event().item());
+        setValueFromItem(detail.model, comp, se.event().item());
         AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        detail.onItemExecute()(comp, sandbox, se.event().item(), Representing.getValue(comp));
+        detail.onItemExecute(comp, sandbox, se.event().item(), Representing.getValue(comp));
 
         Sandboxing.close(sandbox);
         setCursorAtEnd(comp);
       })
-    ].concat(detail.dismissOnBlur() ? [
+    ].concat(detail.dismissOnBlur ? [
       AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
         const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
         // Only close the sandbox if the focus isn't inside it!
@@ -245,18 +243,19 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         }
       })
     ] : [ ]))
-  ]);
+  ];
 
   return {
-    uid: detail.uid(),
+    uid: detail.uid,
     dom: InputBase.dom(detail),
-    behaviours: Merger.deepMerge(
-      focusBehaviours,
-      behaviours,
-      SketchBehaviours.get(detail.typeaheadBehaviours())
-    ),
-
-    eventOrder: detail.eventOrder()
+    behaviours: {
+      ...focusBehaviours,
+      ...SketchBehaviours.augment(
+        detail.typeaheadBehaviours,
+        behaviours
+      )
+    },
+    eventOrder: detail.eventOrder
   };
 };
 

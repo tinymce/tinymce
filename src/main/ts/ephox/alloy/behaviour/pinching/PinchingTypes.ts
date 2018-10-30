@@ -14,8 +14,8 @@ export interface PinchingBehaviour extends Behaviour.AlloyBehaviour<PinchingConf
 }
 
 export interface PinchingConfig extends Behaviour.BehaviourConfigDetail {
-  onPinch: () => (element: Element, changeX: number, changeY: number) => void;
-  onPunch: () => (element: Element, changeX: number, changeY: number) => void;
+  onPinch: (element: Element, changeX: number, changeY: number) => void;
+  onPunch: (element: Element, changeX: number, changeY: number) => void;
 }
 
 export interface PinchingConfigSpec extends Behaviour.BehaviourConfigSpec {

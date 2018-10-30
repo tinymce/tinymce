@@ -27,8 +27,8 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
   const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
   const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
-  const modelDetail = detail.model();
-  const model = modelDetail.manager();
+  const modelDetail = detail.model;
+  const model = modelDetail.manager;
 
   const refresh = (slider: AlloyComponent, thumb: AlloyComponent): void => {
     model.setPositionFromValue(slider, thumb, detail, {
@@ -41,11 +41,11 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
   };
 
   const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
-    modelDetail.value().set(newValue);
+    modelDetail.value.set(newValue);
 
     const thumb = getThumb(slider);
     refresh(slider, thumb);
-    detail.onChange()(slider, thumb, newValue);
+    detail.onChange(slider, thumb, newValue);
     return Option.some(true);
   };
 
@@ -59,74 +59,72 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
 
   const touchEvents = [
     AlloyEvents.run(NativeEvents.touchstart(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragStart()(slider, getThumb(slider));
+      detail.onDragStart(slider, getThumb(slider));
     }),
     AlloyEvents.run(NativeEvents.touchend(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragEnd()(slider, getThumb(slider));
+      detail.onDragEnd(slider, getThumb(slider));
     })
   ];
 
   const mouseEvents = [
     AlloyEvents.run(NativeEvents.mousedown(), (slider: AlloyComponent, simulatedEvent) => {
       simulatedEvent.stop();
-      detail.onDragStart()(slider, getThumb(slider));
-      detail.mouseIsDown().set(true);
+      detail.onDragStart(slider, getThumb(slider));
+      detail.mouseIsDown.set(true);
     }),
     AlloyEvents.run(NativeEvents.mouseup(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragEnd()(slider, getThumb(slider));
+      detail.onDragEnd(slider, getThumb(slider));
     })
   ];
 
   const uiEventsArr = isTouch ? touchEvents : mouseEvents;
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive(
-        Arr.flatten<any>([
-          !isTouch ? [
-            Keying.config({
-              mode: 'special',
-              focusIn (slider) {
-                return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+    behaviours: SketchBehaviours.augment(
+      detail.sliderBehaviours,
+      Arr.flatten<any>([
+        !isTouch ? [
+          Keying.config({
+            mode: 'special',
+            focusIn (slider) {
+              return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+            }
+          })
+        ] : [],
+        [
+          Representing.config({
+            store: {
+              mode: 'manual',
+              getValue (_) {
+                return modelDetail.value.get();
               }
-            })
-          ] : [],
-          [
-            Representing.config({
-              store: {
-                mode: 'manual',
-                getValue (_) {
-                  return modelDetail.value().get();
-                }
-              }
-            }),
+            }
+          }),
 
-            Receiving.config({
-              channels: {
-                'mouse.released': {
-                  onReceive: (slider, se) => {
-                    const wasDown = detail.mouseIsDown().get();
-                    detail.mouseIsDown().set(false);
+          Receiving.config({
+            channels: {
+              'mouse.released': {
+                onReceive: (slider, se) => {
+                  const wasDown = detail.mouseIsDown.get();
+                  detail.mouseIsDown.set(false);
 
-                    // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
-                    if (wasDown) {
-                      AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
-                        const value = modelDetail.value().get();
-                        detail.onChoose()(slider, thumb, value);
-                      });
-                    }
+                  // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
+                  if (wasDown) {
+                    AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
+                      const value = modelDetail.value.get();
+                      detail.onChoose(slider, thumb, value);
+                    });
                   }
                 }
               }
-            })
-          ]
-        ])
-      ),
-      SketchBehaviours.get(detail.sliderBehaviours())
+            }
+          })
+        ]
+      ])
     ),
 
     events: AlloyEvents.derive(
@@ -137,14 +135,14 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
         AlloyEvents.runOnAttached((slider, simulatedEvent) => {
           // Set the initial value
           const getInitial = modelDetail.getInitialValue();
-          modelDetail.value().set(getInitial());
+          modelDetail.value.set(getInitial);
           const thumb = getThumb(slider);
 
           refresh(slider, thumb);
 
           const spectrum = getSpectrum(slider);
           // Call onInit instead of onChange for the first value.
-          detail.onInit()(slider, thumb, spectrum, modelDetail.value().get());
+          detail.onInit(slider, thumb, spectrum, modelDetail.value.get());
         })
       ].concat(uiEventsArr)
     ),

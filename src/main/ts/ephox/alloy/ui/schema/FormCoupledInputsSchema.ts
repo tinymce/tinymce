@@ -42,7 +42,7 @@ const coupledPart = (selfName: string, otherName: string) => {
               getField(me, detail, otherName).each((other) => {
                 AlloyParts.getPart(me, detail, 'lock').each((lock) => {
                   // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
-                  if (Toggling.isOn(lock)) { detail.onLockedChange()(me, other, lock); }
+                  if (Toggling.isOn(lock)) { detail.onLockedChange(me, other, lock); }
                 });
               });
             })
@@ -67,8 +67,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({
-            selected: detail.locked(),
-            toggleClass: detail.markers().lockClass(),
+            selected: detail.locked,
+            toggleClass: detail.markers.lockClass,
             aria: {
               mode: 'pressed'
             }

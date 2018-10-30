@@ -34,28 +34,20 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   Toolbar.setGroups(overflow, [ ]);
 
   // Put all the groups inside the primary toolbar
-  const groups = detail.builtGroups().get();
+  const groups = detail.builtGroups.get();
 
-  const overflowGroupSpec = ToolbarGroup.sketch(
-    Merger.deepMerge(
-      externals['overflow-group'](),
-      {
-        items: [
-          Button.sketch(
-            Merger.deepMerge(
-              externals['overflow-button'](),
-              {
-                action (button) {
-                  // This used to look up the overflow again ... we may need to do that.
-                  Sliding.toggleGrow(ps.overflow());
-                }
-              }
-            )
-          )
-        ]
-      }
-    )
-  );
+  const overflowGroupSpec = ToolbarGroup.sketch({
+     ...externals['overflow-group'](),
+    items: [
+      Button.sketch({
+        ...externals['overflow-button'](),
+        action (button) {
+          // This used to look up the overflow again ... we may need to do that.
+          Sliding.toggleGrow(ps.overflow());
+        }
+      })
+    ]
+  });
   const overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 
   setStoredGroups(primary, groups.concat([ overflowGroup ]));
@@ -86,7 +78,7 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
 const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (detail, components, spec, externals) => {
   const doSetGroups = (toolbar, groups) => {
     const built = Arr.map(groups, toolbar.getSystem().build);
-    detail.builtGroups().set(built);
+    detail.builtGroups.set(built);
   };
 
   const setGroups = (toolbar, groups) => {
@@ -94,27 +86,25 @@ const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (d
     refresh(toolbar, detail, externals);
   };
 
-  return Merger.deepMerge(
-    {
-      dom: {
-        attributes: {
-          role: 'group'
-        }
+  return {
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
+    behaviours: SketchBehaviours.augment(
+      detail.splitToolbarBehaviours,
+      [ ]
+    ),
+    apis: {
+      setGroups,
+      refresh (toolbar) {
+        refresh(toolbar, detail, externals);
       }
     },
-    {
-      uid: detail.uid(),
-      dom: detail.dom(),
-      components,
-      behaviours: SketchBehaviours.get(detail.splitToolbarBehaviours()),
-      apis: {
-        setGroups,
-        refresh (toolbar) {
-          refresh(toolbar, detail, externals);
-        }
-      }
+
+    domModification: {
+      attributes: { role: 'group' }
     }
-  );
+  };
 };
 
 const SplitToolbar = Sketcher.composite({

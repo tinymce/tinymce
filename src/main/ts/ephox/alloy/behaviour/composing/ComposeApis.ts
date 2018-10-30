@@ -4,7 +4,7 @@ import { ComposingConfig } from '../../behaviour/composing/ComposingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
 
 const getCurrent = (component: AlloyComponent, composeConfig: ComposingConfig, composeState: Stateless): Option<AlloyComponent> => {
-  return composeConfig.find()(component);
+  return composeConfig.find(component);
 };
 
 export {

@@ -5,22 +5,22 @@ import * as Fields from '../../data/Fields';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import { nu as NuAnchor } from './Anchoring';
+import { nu as NuAnchor, HotspotAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component, anchorInfo, origin) => {
-  const hotspot = anchorInfo.hotspot();
+const placement = (component, anchorInfo: HotspotAnchor, origin) => {
+  const hotspot = anchorInfo.hotspot;
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
   const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     NuAnchor({
-      anchorBox: Fun.constant(anchorBox),
-      bubble: Fun.constant(Bubble.fallback()),
-      overrides: Fun.constant({ }),
-      layouts: Fun.constant(layouts),
-      placer: Option.none
+      anchorBox: anchorBox,
+      bubble: Bubble.fallback(),
+      overrides: { },
+      layouts: layouts,
+      placer: Option.none()
     })
   );
 };

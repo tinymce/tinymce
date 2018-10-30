@@ -5,17 +5,17 @@ import * as Fields from '../../data/Fields';
 import { NoState } from '../common/BehaviourState';
 
 const getValue = (component, repConfig, repState) => {
-  return repConfig.store().getValue()(component);
+  return repConfig.store.getValue(component);
 };
 
 const setValue = (component, repConfig, repState, data) => {
-  repConfig.store().setValue()(component, data);
-  repConfig.onSetValue()(component, data);
+  repConfig.store.setValue(component, data);
+  repConfig.onSetValue(component, data);
 };
 
 const onLoad = (component, repConfig, repState) => {
-  repConfig.store().initialValue().each((data) => {
-    repConfig.store().setValue()(component, data);
+  repConfig.store.initialValue.each((data) => {
+    repConfig.store.setValue(component, data);
   });
 };
 

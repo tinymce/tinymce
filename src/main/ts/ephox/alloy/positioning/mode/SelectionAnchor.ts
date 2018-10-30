@@ -25,7 +25,7 @@ const descendOnce = (element, offset) => {
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SugarRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
-  const getSelection = anchorInfo.getSelection().getOrThunk(() => {
+  const getSelection = anchorInfo.getSelection.getOrThunk(() => {
     return () => {
       return WindowSelection.getExact(win);
     };
@@ -39,7 +39,7 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<Su
 };
 
 const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
-  const win: Window = Traverse.defaultView(anchorInfo.root()).dom();
+  const win: Window = Traverse.defaultView(anchorInfo.root).dom();
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {

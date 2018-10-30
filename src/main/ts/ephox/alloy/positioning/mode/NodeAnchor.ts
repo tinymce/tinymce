@@ -15,10 +15,10 @@ import ContentAnchorCommon from './ContentAnchorCommon';
 const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
-  return anchorInfo.node().bind((target) => {
+  return anchorInfo.node.bind((target) => {
     const rect = target.dom().getBoundingClientRect();
     const nodeBox = ContentAnchorCommon.capRect(rect.left, rect.top, rect.width, rect.height);
-    const elem = anchorInfo.node().getOr(component.element());
+    const elem = anchorInfo.node.getOr(component.element());
     return ContentAnchorCommon.calcNewAnchor(nodeBox, rootPoint, anchorInfo, origin, elem);
   });
 };

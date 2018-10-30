@@ -1,5 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Merger, Option, Result } from '@ephox/katamari';
+import { Fun, Option, Result } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
@@ -8,16 +10,13 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as Fields from '../../data/Fields';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
-import { InlineViewDetail, InlineViewSketcher, InlineViewSpec, InlineMenuSpec } from '../../ui/types/InlineViewTypes';
-import * as Behaviour from '../behaviour/Behaviour';
+import { InlineMenuSpec, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
-import { Bounds } from 'ephox/alloy/alien/Boxes';
-import { Element } from '@ephox/sugar';
 
 const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
@@ -52,7 +51,7 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
   const isPartOfRelated = (container, queryElem) => {
-    const related = detail.getRelated()(container);
+    const related = detail.getRelated(container);
     return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
@@ -67,20 +66,20 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     showWithin(sandbox, anchor, thing, getBounds);
   };
   const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
-    const sink = detail.lazySink()().getOrDie();
+    const sink = detail.lazySink().getOrDie();
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, boxElement));
-    detail.onShow()(sandbox);
+    detail.onShow(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(detail.lazySink(), sandbox, anchor, menuSpec);
+    const thing = makeMenu(detail.lazySink, sandbox, anchor, menuSpec);
 
     Sandboxing.open(sandbox, thing);
-    detail.onShow()(sandbox);
+    detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
     Sandboxing.close(sandbox);
-    detail.onHide()(sandbox);
+    detail.onHide(sandbox);
   };
   const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
     return Sandboxing.getState(sandbox);
@@ -96,40 +95,34 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     isOpen: Sandboxing.isOpen
   };
 
-  return Merger.deepMerge(
-    {
-      uid: detail.uid(),
-      dom: detail.dom(),
-      behaviours: Merger.deepMerge(
-        Behaviour.derive([
-          Sandboxing.config({
-            isPartOf (container, data, queryElem) {
-              return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
-            },
-            getAttachPoint () {
-              return detail.lazySink()().getOrDie();
+  return {
+    uid: detail.uid,
+    dom: detail.dom,
+    behaviours: SketchBehaviours.augment(
+      detail.inlineBehaviours,
+      [
+        Sandboxing.config({
+          isPartOf (container, data, queryElem) {
+            return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
+          },
+          getAttachPoint () {
+            return detail.lazySink().getOrDie();
+          }
+        }),
+        Dismissal.receivingConfig({
+          isExtraPart: Fun.constant(false),
+          ...detail.fireDismissalEventInstead.map((fe) => ({
+            fireEventInstead: {
+              event: fe.event
             }
-          }),
-          Dismissal.receivingConfig(
-            Merger.deepMerge(
-              {
-                isExtraPart: Fun.constant(false),
-              },
-              detail.fireDismissalEventInstead().map((fe) => ({
-                fireEventInstead: {
-                  event: fe.event()
-                }
-              } as any)).getOr({ })
-            )
-          )
-        ]),
-        SketchBehaviours.get(detail.inlineBehaviours())
-      ),
-      eventOrder: detail.eventOrder(),
+          } as any)).getOr({ })
+        })
+      ]
+    ),
+    eventOrder: detail.eventOrder,
 
-      apis
-    }
-  );
+    apis
+  };
 };
 
 const InlineView = Sketcher.single({

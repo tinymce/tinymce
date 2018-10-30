@@ -18,7 +18,7 @@ const events = (toggleConfig: TogglingConfig, toggleState: Stateless): AlloyEven
 
   return AlloyEvents.derive(
     Arr.flatten([
-      toggleConfig.toggleOnExecute() ? [ execute ] : [ ],
+      toggleConfig.toggleOnExecute ? [ execute ] : [ ],
       [ load ]
     ])
   );

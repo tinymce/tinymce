@@ -14,7 +14,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
-import { SystemApi } from './SystemApi';
+import { AlloySystemApi } from './SystemApi';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -74,7 +74,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     },
   });
 
-  const systemApi = SystemApi({
+  const systemApi: AlloySystemApi = {
     // This is a real system
     debugInfo: Fun.constant('real'),
     triggerEvent (eventName: string, target: Element, data: any) {
@@ -127,7 +127,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
       broadcastEvent(eventName, event);
     },
     isConnected: Fun.constant(true)
-  });
+  };
 
   const addToWorld = (component) => {
     component.connect(systemApi);

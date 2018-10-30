@@ -8,17 +8,17 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
 
 export interface SplitToolbarDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  splitToolbarBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  splitToolbarBehaviours: SketchBehaviours;
 
-  builtGroups: () => Cell<AlloyComponent[]>;
-  markers: () => {
-    closedClass: () => string;
-    openClass: () => string;
-    shrinkingClass: () => string;
-    growingClass: () => string;
+  builtGroups: Cell<AlloyComponent[]>;
+  markers: {
+    closedClass: string;
+    openClass: string;
+    shrinkingClass: string;
+    growingClass: string;
   };
 }
 

@@ -9,19 +9,18 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  modalBehaviours: () => SketchBehaviours;
-  eventOrder: () => Record<string, string[]>;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  modalBehaviours: SketchBehaviours;
+  eventOrder: Record<string, string[]>;
 
-  // FIX: Keying.cyclic
-  onExecute: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  onEscape: () => (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  useTabstopAt: () => (elem: Element) => boolean;
+  onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  useTabstopAt: (elem: Element) => boolean;
 
-  lazySink: () => () => Result<AlloyComponent, Error>;
-  dragBlockClass: () => Option<string>;
+  lazySink: () => Result<AlloyComponent, Error>;
+  dragBlockClass: Option<string>;
 }
 
 export interface ModalDialogSpec extends CompositeSketchSpec {

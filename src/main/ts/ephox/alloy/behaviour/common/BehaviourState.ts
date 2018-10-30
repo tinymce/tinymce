@@ -1,5 +1,3 @@
-import { Contracts } from '@ephox/katamari';
-
 export interface BehaviourState {
   readState: () => any;
 }
@@ -23,7 +21,6 @@ export interface Stateless extends BehaviourState {
 }
 
 const nu = (spec): BehaviourState => {
-  Contracts.ensure([ 'readState' ])(spec);
   return spec;
 };
 

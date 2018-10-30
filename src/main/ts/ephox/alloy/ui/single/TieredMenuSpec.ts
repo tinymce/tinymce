@@ -1,9 +1,7 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Body, Class, Classes, SelectorFind } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
@@ -16,44 +14,65 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
+import { AlloySpec } from '../../api/Main';
 import { Menu } from '../../api/ui/Menu';
 import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec, TieredMenuApis } from '../../ui/types/TieredMenuTypes';
+import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+
+
+export type MenuPreparation = MenuPrepared | MenuNotBuilt;
+
+export interface MenuPrepared {
+  type: 'prepared';
+  menu: AlloyComponent;
+}
+
+export interface MenuNotBuilt {
+  type: 'notbuilt';
+  nbMenu: () => AlloySpec;
+}
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
-  const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {
+  const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
-      const data = Menu.sketch(
-        Merger.deepMerge(
-          spec,
-          {
-            value: name,
-            items: spec.items,
-            markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
 
-            // Fake focus.
-            fakeFocus: detail.fakeFocus(),
-            onHighlight: detail.onHighlight(),
+      const makeSketch = () => {
+        return Menu.sketch({
+          dom: spec.dom,
+          ...spec,
+          value: name,
+          items: spec.items,
+          markers: detail.markers,
 
-            focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
-          }
-        )
-      );
+          // Fake focus.
+          fakeFocus: detail.fakeFocus,
+          onHighlight: detail.onHighlight,
 
-      return container.getSystem().build(data);
+          focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
+        })
+      };
+
+      // Only build the primary at first. Build the others as needed.
+      return name === primaryName ? {
+        type: 'prepared',
+        menu: container.getSystem().build(makeSketch())
+      } as MenuPrepared : {
+        type: 'notbuilt',
+        nbMenu: makeSketch
+      } as MenuNotBuilt;
     });
   };
 
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
-    const componentMap = buildMenus(container, detail.data().menus());
+    const componentMap = buildMenus(container, detail.data.primary, detail.data.menus);
     const directory = toDirectory(container);
-    layeredState.setContents(detail.data().primary(), componentMap, detail.data().expansions(), directory);
+    layeredState.setContents(detail.data.primary, componentMap, detail.data.expansions, directory);
     return layeredState.getPrimary();
   };
 
@@ -62,7 +81,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   };
 
   const toDirectory = (container: AlloyComponent): Record<string, string[]> => {
-    return Obj.map(detail.data().menus(), (data, menuName) => {
+    return Obj.map(detail.data.menus, (data, menuName) => {
       return Arr.bind(data.items, (item) => {
         return item.type === 'separator' ? [ ] : [ item.data.value ];
       });
@@ -80,61 +99,86 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] => {
     return Options.cat(
-      Arr.map(menuValues, state.lookupMenu)
+      Arr.map(menuValues, (mv) => {
+        return state.lookupMenu(mv).bind((prep) => {
+          return prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
+        })
+      })
     );
   };
 
   const closeOthers = (container: AlloyComponent, state: LayeredState, path: string[]): void => {
     const others = getMenus(state, state.otherMenus(path));
     Arr.each(others, (o) => {
+
       // May not need to do the active menu thing.
-      Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
-      if (! detail.stayInDom()) { Replacing.remove(container, o); }
+      Classes.remove(o.element(), [ detail.markers.backgroundMenu ]);
+      if (! detail.stayInDom) { Replacing.remove(container, o); }
     });
   };
 
   const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => {
-    return Option.from(path[0]).bind(state.lookupMenu).map((activeMenu: AlloyComponent) => {
-      const rest = getMenus(state, path.slice(1));
-      Arr.each(rest, (r) => {
-        Class.add(r.element(), detail.markers().backgroundMenu());
+    return Option.from(path[0]).bind((latestMenuName) => {
+      return state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
+        if (menuPrep.type === 'notbuilt') return Option.none();
+        else {
+          const activeMenu = menuPrep.menu;
+          const rest = getMenus(state, path.slice(1));
+          Arr.each(rest, (r) => {
+            Class.add(r.element(), detail.markers.backgroundMenu);
+          });
+
+          if (! Body.inBody(activeMenu.element())) {
+            Replacing.append(container, GuiFactory.premade(activeMenu));
+          }
+
+          // Remove the background-menu class from the active menu
+          Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
+          setActiveMenu(container, activeMenu);
+          closeOthers(container, state, path);
+          return Option.some(activeMenu);
+        }
       });
-
-      if (! Body.inBody(activeMenu.element())) {
-        Replacing.append(container, GuiFactory.premade(activeMenu));
-      }
-
-      // Remove the background-menu class from the active menu
-      Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
-      setActiveMenu(container, activeMenu);
-      closeOthers(container, state, path);
-      return activeMenu;
     });
 
   };
 
   enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent };
 
+  const buildIfRequired = (container: AlloyComponent,menuName: string, menuPrep: MenuPreparation) => {
+    if (menuPrep.type === 'notbuilt') {
+      const menu = container.getSystem().build(menuPrep.nbMenu());
+      layeredState.setMenuBuilt(menuName, menu);
+      return menu;
+    } else {
+      return menuPrep.menu;
+    }
+  }
+
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
       // When expanding, always select the first.
-      return Option.from(path[0]).bind(layeredState.lookupMenu).bind((activeMenu) => {
-        // DUPE with above. Fix later.
-        if (! Body.inBody(activeMenu.element())) {
-          Replacing.append(container, GuiFactory.premade(activeMenu));
-        }
+      return Option.from(path[0]).bind((menuName) => {
+          return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
+          const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
-        // updateMenuPath is the code which changes the active menu. We don't always
-        // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
-        detail.onOpenSubmenu()(container, item, activeMenu);
-        if (decision === ExpandHighlightDecision.HighlightSubmenu) {
-          Highlighting.highlightFirst(activeMenu);
-          return updateMenuPath(container, layeredState, path);
-        } else {
-          Highlighting.dehighlightAll(activeMenu);
-          return Option.some(item);
-        }
+          // DUPE with above. Fix later.
+          if (! Body.inBody(activeMenu.element())) {
+            Replacing.append(container, GuiFactory.premade(activeMenu));
+          }
+
+          // updateMenuPath is the code which changes the active menu. We don't always
+          // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
+          detail.onOpenSubmenu(container, item, activeMenu);
+          if (decision === ExpandHighlightDecision.HighlightSubmenu) {
+            Highlighting.highlightFirst(activeMenu);
+            return updateMenuPath(container, layeredState, path);
+          } else {
+            Highlighting.dehighlightAll(activeMenu);
+            return Option.some(item);
+          }
+        });
       });
     });
   };
@@ -143,7 +187,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     const value = getItemValue(item);
     return layeredState.collapse(value).bind((path) => {
       return updateMenuPath(container, layeredState, path).map((activeMenu) => {
-        detail.onCollapseMenu()(container, item, activeMenu);
+        detail.onCollapseMenu(container, item, activeMenu);
         return activeMenu;
       });
     });
@@ -168,14 +212,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     return collapseLeft(container, item).orThunk(() => {
       // This should only fire when the user presses ESC ... not any other close.
-      return detail.onEscape()(container, item).map(() => container);
+      return detail.onEscape(container, item).map(() => container);
     });
   };
 
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => {
     return (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
-      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers().item()).bind((target) => {
+      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) => {
         return container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => {
           return f(container, item).map(() => true);
         });
@@ -202,14 +246,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       component.getSystem().getByDom(target).each((item) => {
         const itemValue = getItemValue(item);
 
-        // FIX: I don't know if this is doing anything any more. Check.
+        // INVESTIGATE: I don't know if this is doing anything any more. Check.
         if (itemValue.indexOf('collapse-item') === 0) {
           collapseLeft(component, item);
         }
 
         expandRight(component, item, ExpandHighlightDecision.HighlightSubmenu).fold(
           () => {
-            detail.onExecute()(component, item);
+            detail.onExecute(component, item);
           },
           () => { }
         );
@@ -220,23 +264,20 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     AlloyEvents.runOnAttached((container, simulatedEvent) => {
       setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
-
-        detail.onOpenMenu()(container, primary);
-        if (detail.highlightImmediately()) {
+        detail.onOpenMenu(container, primary);
+        if (detail.highlightImmediately) {
           setActiveMenu(container, primary);
         }
-
-
       });
     })
-  ].concat(detail.navigateOnHover() ? [
+  ].concat(detail.navigateOnHover ? [
     // Hide any irrelevant submenus and expand any submenus based
     // on hovered item
     AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
       const item = simulatedEvent.event().item();
       updateView(sandbox, item);
       expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
-      detail.onHover()(sandbox, item);
+      detail.onHover(sandbox, item);
     })
   ] : [ ]));
 
@@ -260,10 +301,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   }
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    uid: detail.uid,
+    dom: detail.dom,
+    markers: detail.markers,
+    behaviours: SketchBehaviours.augment(
+      detail.tmenuBehaviours,
+      [
         Keying.config({
           mode: 'special',
           onRight: keyOnItem(onRight),
@@ -277,8 +320,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
         }),
         // Highlighting is used for highlighting the active menu
         Highlighting.config({
-          highlightClass: detail.markers().selectedMenu(),
-          itemClass: detail.markers().menu()
+          highlightClass: detail.markers.selectedMenu,
+          itemClass: detail.markers.menu
         }),
         Composing.config({
           find (container) {
@@ -286,10 +329,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           }
         }),
         Replacing.config({ })
-      ]),
-      SketchBehaviours.get(detail.tmenuBehaviours())
+      ]
     ),
-    eventOrder: detail.eventOrder(),
+    eventOrder: detail.eventOrder,
     apis,
     events
   };

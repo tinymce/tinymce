@@ -26,11 +26,11 @@ export interface SandboxingConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
-  cloakVisibilityAttr: () => string;
-  getAttachPoint: () => () => AlloyComponent;
-  onOpen: () => (comp: AlloyComponent, thing: AlloyComponent) => void;
-  onClose: () => (sandbox: AlloyComponent, thing: AlloyComponent) => void;
-  isPartOf: () => (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
+  cloakVisibilityAttr: string;
+  getAttachPoint: () => AlloyComponent;
+  onOpen: (comp: AlloyComponent, thing: AlloyComponent) => void;
+  onClose: (sandbox: AlloyComponent, thing: AlloyComponent) => void;
+  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
 }
 
 export interface SandboxingState {

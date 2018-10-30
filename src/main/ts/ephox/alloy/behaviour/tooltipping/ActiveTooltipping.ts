@@ -27,10 +27,10 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
   const show = (comp) => {
     if (! state.isShowing()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
-      const sink = tooltipConfig.lazySink()(comp).getOrDie();
+      const sink = tooltipConfig.lazySink(comp).getOrDie();
       const popup = comp.getSystem().build({
-        dom: tooltipConfig.tooltipDom(),
-        components: tooltipConfig.tooltipComponents(),
+        dom: tooltipConfig.tooltipDom,
+        components: tooltipConfig.tooltipComponents,
         events: AlloyEvents.derive([
           AlloyEvents.run(NativeEvents.mouseover(), (_) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
@@ -73,13 +73,13 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     AlloyEvents.run(ShowTooltipEvent, (comp) => {
       state.resetTimer(() => {
         show(comp);
-      }, tooltipConfig.delay());
+      }, tooltipConfig.delay);
     }),
 
     AlloyEvents.run(HideTooltipEvent, (comp) => {
       state.resetTimer(() => {
         hide();
-      }, tooltipConfig.delay());
+      }, tooltipConfig.delay);
     }),
     AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
       AlloyTriggers.emit(comp, ShowTooltipEvent);

@@ -8,5 +8,5 @@ export interface TabstoppingConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface TabstoppingConfig extends Behaviour.BehaviourConfigDetail {
-  tabAttr: () => string;
+  tabAttr: string;
 }

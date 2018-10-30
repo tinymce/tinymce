@@ -2,10 +2,10 @@ import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
 // NB: Tsc requires ConfiguredBehaviour to be imported here.
-import { AlloyBehaviourRecord, ConfiguredBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloyBehaviourRecord, ConfiguredBehaviour, NamedConfiguredBehaviour, derive } from '../../api/behaviour/Behaviour';
 
 export interface SketchBehaviours {
-  dump: () => AlloyBehaviourRecord;
+  dump: AlloyBehaviourRecord;
 }
 
 const field = (name: string, forbidden: Array<{ name: () => string }>): FieldProcessorAdt => {
@@ -17,15 +17,25 @@ const field = (name: string, forbidden: Array<{ name: () => string }>): FieldPro
 };
 
 const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
-  return data.dump();
+  return data.dump;
 };
 
+const augment = (data: SketchBehaviours, original: NamedConfiguredBehaviour<any, any>[]): AlloyBehaviourRecord => {
+  return {
+    ...data.dump,
+    ...derive(original)
+  };
+};
+
+// Is this used?
 export const SketchBehaviours = {
   field,
+  augment,
   get
 };
 
 export {
   field,
-  get
+  get,
+  augment
 };

@@ -16,21 +16,20 @@ const chooseChannels = (channels, message) => {
 
 const events = (receiveConfig: ReceivingConfig/*, receiveState */) => {
   return AlloyEvents.derive([
-    // FIX: Recieving data.
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
-      const channelMap = receiveConfig.channels();
+      const channelMap = receiveConfig.channels;
       const channels = Obj.keys(channelMap);
 
       const targetChannels = chooseChannels(channels, message);
       Arr.each(targetChannels, (ch) => {
-        const channelInfo = channelMap[ch]();
-        const channelSchema = channelInfo.schema();
-        const data = ValueSchema.asStructOrDie(
+        const channelInfo = channelMap[ch];
+        const channelSchema = channelInfo.schema;
+        const data = ValueSchema.asRawOrDie(
           'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
-          // FIX: Recieving event ignores the whole simulated event part.
+          // NOTE: Recieving event ignores the whole simulated event part.
           channelSchema, message.data()
         );
-        channelInfo.onReceive()(component, data);
+        channelInfo.onReceive(component, data);
       });
     })
   ]);

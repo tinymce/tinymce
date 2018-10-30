@@ -74,7 +74,8 @@ const run = function <T extends EventFormat>(name: string, handler: EventRunHand
   };
 };
 
-// FIX: What is the extra here?
+// Extra can be used when your handler needs more context, and is declared in one spot
+// It's really just convenient partial application.
 const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any): AlloyEventKeyAndHandler<T> {
   return {
     key: name,
@@ -114,7 +115,7 @@ const redirectToUid = function <T extends EventFormat>(name, uid): AlloyEventKey
 };
 
 const redirectToPart = function <T extends EventFormat>(name, detail, partName): AlloyEventKeyAndHandler<T> {
-  const uid = detail.partUids()[partName];
+  const uid = detail.partUids[partName];
   return redirectToUid(name, uid);
 };
 

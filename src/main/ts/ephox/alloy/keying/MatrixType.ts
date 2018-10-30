@@ -31,36 +31,36 @@ const schema: FieldProcessorAdt[] = [
 ];
 
 const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig): void => {
-  const focused = matrixConfig.previousSelector()(component).orThunk(() => {
-    const selectors = matrixConfig.selectors();
-    return SelectorFind.descendant(component.element(), selectors.cell());
+  const focused = matrixConfig.previousSelector(component).orThunk(() => {
+    const selectors = matrixConfig.selectors;
+    return SelectorFind.descendant(component.element(), selectors.cell);
   });
 
   focused.each((cell) => {
-    matrixConfig.focusManager().set(component, cell);
+    matrixConfig.focusManager.set(component, cell);
   });
 };
 
 const execute: KeyRuleHandler<MatrixConfig, Stateless> = (component, simulatedEvent, matrixConfig) => {
   return Focus.search(component.element()).bind((focused) => {
-    return matrixConfig.execute()(component, simulatedEvent, focused);
+    return matrixConfig.execute(component, simulatedEvent, focused);
   });
 };
 
 const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Element[][] => {
   return Arr.map(rows, (row) => {
-    return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
+    return SelectorFilter.descendants(row, matrixConfig.selectors.cell);
   });
 };
 
 const doMove = (ifCycle, ifMove): DomMovement.ElementMover<MatrixConfig, Stateless> => {
   return (element, focused, matrixConfig) => {
-    const move = matrixConfig.cycles() ? ifCycle : ifMove;
-    return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind((inRow) => {
-      const cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors().cell());
+    const move = matrixConfig.cycles ? ifCycle : ifMove;
+    return SelectorFind.closest(focused, matrixConfig.selectors.row).bind((inRow) => {
+      const cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors.cell);
 
       return DomPinpoint.findIndex(cellsInRow, focused).bind((colIndex) => {
-        const allRows = SelectorFilter.descendants(element, matrixConfig.selectors().row());
+        const allRows = SelectorFilter.descendants(element, matrixConfig.selectors.row);
         return DomPinpoint.findIndex(allRows, inRow).bind((rowIndex) => {
           // Now, make the matrix.
           const matrix = toMatrix(allRows, matrixConfig);

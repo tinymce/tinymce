@@ -17,7 +17,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
   const findByValue = (chooser, value) => {
-    const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
+    const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
     const choiceComps = Arr.map(choices, (c) => {
       return chooser.getSystem().getByDom(c).getOrDie();
     });
@@ -28,15 +28,16 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.chooserBehaviours,
+      [
         Keying.config({
           mode: 'flow',
-          selector: '.' + detail.markers().choiceClass(),
+          selector: '.' + detail.markers.choiceClass,
           executeOnMove: true,
           getInitial (chooser) {
             return Highlighting.getHighlighted(chooser).map((choice) => {
@@ -53,8 +54,8 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         }),
 
         Highlighting.config({
-          itemClass: detail.markers().choiceClass(),
-          highlightClass: detail.markers().selectedClass(),
+          itemClass: detail.markers.choiceClass,
+          highlightClass: detail.markers.selectedClass,
           onHighlight (chooser, choice) {
             Attr.set(choice.element(), 'aria-checked', 'true');
           },
@@ -80,8 +81,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.chooserBehaviours())
+      ]
     ),
 
     events: AlloyEvents.derive([

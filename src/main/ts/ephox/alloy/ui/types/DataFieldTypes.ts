@@ -4,10 +4,10 @@ import { RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface DataFieldDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  dataBehaviours: () => SketchBehaviours;
-  getInitialValue: () => () => any;
+  uid: string;
+  dom: RawDomSchema;
+  dataBehaviours: SketchBehaviours;
+  getInitialValue: () => any;
 }
 
 export interface DataFieldSpec extends SingleSketchSpec {

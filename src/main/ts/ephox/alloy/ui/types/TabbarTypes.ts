@@ -6,16 +6,16 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TabbarDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  tabbarBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  tabbarBehaviours: SketchBehaviours;
 
-  markers: () => {
-    selectedClass: () => string;
-    tabClass: () => string;
+  markers: {
+    selectedClass: string;
+    tabClass: string;
   };
 
-  clickToDismiss: () => boolean;
+  clickToDismiss: boolean;
 }
 
 export interface TabButtonWithViewSpec extends TabButtonSpec {

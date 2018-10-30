@@ -32,7 +32,7 @@ const receiving = (rawSpec) => {
         ]),
         onReceive (sandbox, data) {
           if (Sandboxing.isOpen(sandbox)) {
-            const isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
+            const isPart = Sandboxing.isPartOf(sandbox, data.target) || spec.isExtraPart(sandbox, data.target);
             if (! isPart) {
               spec.fireEventInstead.fold(
                 () => Sandboxing.close(sandbox),

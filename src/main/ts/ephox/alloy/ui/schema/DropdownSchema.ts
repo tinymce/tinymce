@@ -39,7 +39,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'menu',
     defaults (detail: DropdownDetail) {
       return {
-        onExecute: detail.onExecute()
+        onExecute: detail.onExecute
       };
     }
   }),

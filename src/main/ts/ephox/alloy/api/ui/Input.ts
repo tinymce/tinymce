@@ -6,12 +6,12 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, spec): SketchSpec => {
   return {
-    uid: detail.uid(),
+    uid: detail.uid,
     dom: InputBase.dom(detail),
     // No children.
     components: [ ],
     behaviours: InputBase.behaviours(detail),
-    eventOrder: detail.eventOrder()
+    eventOrder: detail.eventOrder
   };
 };
 

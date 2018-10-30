@@ -24,9 +24,10 @@ const record = (spec: SimpleOrSketchSpec): MementoRecord => {
   };
 
   const asSpec = (): SimpleOrSketchSpec => {
-    return Merger.deepMerge(spec, {
+    return {
+      ...spec,
       uid
-    });
+    };
   };
 
   return {

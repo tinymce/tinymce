@@ -16,35 +16,39 @@ import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
   return {
-    dom: Merger.deepMerge(
-      detail.dom(),
-      {
-        attributes: {
-          role: detail.toggling().isSome() ? 'menuitemcheckbox' : 'menuitem'
-        }
+    dom: detail.dom,
+    domModification: {
+      // INVESTIGATE: If more efficient, destructure attributes out
+      ...detail.domModification,
+      attributes: {
+        role:  detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
+        ...detail.domModification.attributes
       }
-    ),
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
-        detail.toggling().fold(Toggling.revoke, (tConfig) => {
-          return Toggling.config(
-            Merger.deepMerge({
-              aria: {
-                mode: 'checked'
-              }
-            }, tConfig)
-          );
+    },
+
+    behaviours: SketchBehaviours.augment(
+      detail.itemBehaviours,
+      [
+        // Investigate, is the Toggling.revoke still necessary here?
+        detail.toggling.fold(Toggling.revoke, (tConfig: TogglingConfigSpec) => {
+          return Toggling.config({
+            aria: {
+              mode: 'checked'
+            },
+            ...tConfig
+          });
         }),
         Focusing.config({
-          ignore: detail.ignoreFocus(),
+          ignore: detail.ignoreFocus,
           // Rationale: because nothing is focusable, when you click
           // on the items to choose them, the focus jumps to the first
           // focusable outer container ... often the body. If we prevent
           // mouseDown ... that doesn't happen. But only tested on Chrome/FF.
-          stopMousedown: detail.ignoreFocus(),
+          stopMousedown: detail.ignoreFocus,
           onFocus (component) {
             ItemEvents.onFocus(component);
           }
@@ -55,7 +59,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: detail.data()
+            initialValue: detail.data
           }
         }),
 
@@ -70,15 +74,10 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
 
           AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
         ])
-      ]),
-      SketchBehaviours.get(detail.itemBehaviours()),
-
+      ]
     ),
-    components: detail.components(),
-
-    domModification: detail.domModification(),
-
-    eventOrder: detail.eventOrder()
+    components: detail.components,
+    eventOrder: detail.eventOrder
   };
 };
 

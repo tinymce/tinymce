@@ -6,16 +6,16 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { Option } from '@ephox/katamari';
 
 export interface FormCoupledInputsDetail extends CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  coupledFieldBehaviours: () => SketchBehaviours;
-  field1Name: () => string;
-  field2Name: () => string;
-  locked: () => boolean;
-  onLockedChange: () => (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
-  markers: () => {
-    lockClass: () => string;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  coupledFieldBehaviours: SketchBehaviours;
+  field1Name: string;
+  field2Name: string;
+  locked: boolean;
+  onLockedChange: (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
+  markers: {
+    lockClass: string;
   };
 }
 

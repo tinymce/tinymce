@@ -6,15 +6,14 @@ import { SingleSketch } from '../../api/ui/Sketcher';
 import { DomModificationSpec, DomModification } from '../../dom/DomModification';
 
 export interface ContainerDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  containerBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  containerBehaviours: SketchBehaviours;
   // DEPRECATE:
-  events: () => AlloyEventRecord;
-  // FIX: types
-  domModification: () => DomModification;
-  eventOrder: () => Record<string, string[]>;
+  events: AlloyEventRecord;
+  domModification: DomModification;
+  eventOrder: Record<string, string[]>;
 }
 
 export interface ContainerSpec {

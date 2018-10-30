@@ -25,12 +25,13 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    behaviours: SketchBehaviours.augment(
+      detail.expandableBehaviours,
+      [
         Representing.config({
           store: {
             mode: 'manual',
@@ -38,10 +39,7 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
               const parts = getParts(form);
               const minimalValues = Representing.getValue(parts.minimal());
               const extraValues = Representing.getValue(parts.extra());
-              return Merger.deepMerge(
-                minimalValues,
-                extraValues
-              );
+              return { ...minimalValues, ...extraValues };
             },
             setValue (form, values) {
               const parts = getParts(form);
@@ -51,8 +49,7 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
             }
           }
         })
-      ]),
-      SketchBehaviours.get(detail.expandableBehaviours())
+      ]
     ),
 
     apis: {

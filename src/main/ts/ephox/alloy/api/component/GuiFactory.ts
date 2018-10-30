@@ -1,15 +1,15 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
+import { Arr, Cell, Fun, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
-import { AlloyComponent, ComponentApi } from './ComponentApi';
-import { SimpleSpec, SimpleOrSketchSpec, AlloySpec, PremadeSpec } from '../../api/component/SpecTypes';
+import { AlloyComponent } from './ComponentApi';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Objects.readOr('components', [ ])(spec);
@@ -17,18 +17,19 @@ const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
 };
 
 const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
-  const spec: SimpleOrSketchSpec = CustomSpec.make(userSpec);
+  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(userSpec);
 
-  // Build the subcomponents
+  // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
 
-  const completeSpec: SimpleOrSketchSpec = Merger.deepMerge(
-    DefaultEvents,
-    spec,
-    Objects.wrap('components', components)
-  );
+  const completeSpec = {
+    ...spec,
+    events:  { ...DefaultEvents, ...specEvents },
+    components
+  };
 
   return Result.value(
+    // Note, this isn't a spec any more, because it has built children
     Component.build(completeSpec)
   );
 };
@@ -44,7 +45,7 @@ const text = (textContent: string): PremadeSpec => {
 // Rename.
 export interface ExternalElement { uid ?: string; element: Element; }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Option<string>, element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
@@ -61,30 +62,43 @@ const external = (spec: ExternalElement): PremadeSpec => {
     }));
   };
 
-  extSpec.uid().each((uid) => {
-    Tagger.writeOnly(extSpec.element(), uid);
+  extSpec.uid.each((uid) => {
+    Tagger.writeOnly(extSpec.element, uid);
   });
 
-  const me = ComponentApi({
+  const me: AlloyComponent = {
     getSystem: systemApi.get,
     config: Option.none,
     hasConfigured: Fun.constant(false),
     connect,
     disconnect,
-    element: Fun.constant(extSpec.element()),
+    element: Fun.constant(extSpec.element),
     spec: Fun.constant(spec),
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
     events: Fun.constant({ })
-  }) as AlloyComponent;
+  };
   return GuiTypes.premade(me);
 };
+
+const uids = (() => {
+  let counter = 0;
+
+  return (prefix) => {
+    counter++;
+    return prefix + '_' + counter;
+  };
+})();
 
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => {
   return GuiTypes.getPremade(spec).fold(() => {
-    const userSpecWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, spec);
+    // EFFICIENCY: Consider not merging here, and passing uid through separately
+    const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
+      uid: uids(''),
+      ...spec,
+    } as SimpleOrSketchSpec;
     return buildFromSpec(userSpecWithUid).getOrDie();
   }, (prebuilt) => {
     return prebuilt;

@@ -12,8 +12,8 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfig
 }
 
 export interface DisableConfig extends Behaviour.BehaviourConfigDetail {
-  disabled: () => boolean;
-  disableClass: () => Option<string>;
+  disabled: boolean;
+  disableClass: Option<string>;
 }
 
 export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {

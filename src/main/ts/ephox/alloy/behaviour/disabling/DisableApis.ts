@@ -12,7 +12,7 @@ const nativeDisabled = [
 ];
 
 const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
-  if (disableConfig.disabled()) { disable(component, disableConfig, disableState); }
+  if (disableConfig.disabled) { disable(component, disableConfig, disableState); }
 };
 
 const hasNative = (component: AlloyComponent): boolean => {
@@ -44,7 +44,7 @@ const ariaEnable = (component: AlloyComponent): void => {
 };
 
 const disable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
-  disableConfig.disableClass().each((disableClass) => {
+  disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element(), disableClass);
   });
   const f = hasNative(component) ? nativeDisable : ariaDisable;
@@ -52,7 +52,7 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, disabl
 };
 
 const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
-  disableConfig.disableClass().each((disableClass) => {
+  disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element(), disableClass);
   });
   const f = hasNative(component) ? nativeEnable : ariaEnable;

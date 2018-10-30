@@ -5,26 +5,26 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
-import { DomDefinitionDetail, nu as NuDefinition } from '../dom/DomDefinition';
+import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
 export interface CustomDetail {
-  dom: () => StructDomSchema;
+  dom: StructDomSchema;
   // By this stage, the components are built.
-  components: () => AlloyComponent[];
-  uid: () => string;
-  events: () => AlloyEventRecord;
-  apis: () => Record<string, Function>;
-  eventOrder: () => Record<string, string[]>;
-  domModification: () => Option<DomModification>;
-  originalSpec: () => SimpleOrSketchSpec;
-  'debug.sketcher': () => string;
+  components: AlloyComponent[];
+  uid: string;
+  events: AlloyEventRecord;
+  apis: Record<string, Function>;
+  eventOrder: Record<string, string[]>;
+  domModification: Option<DomModification>;
+  originalSpec: SimpleOrSketchSpec;
+  'debug.sketcher': string;
 }
 
 const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
-  return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
-    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
+  return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
+    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
       // Note, no children.
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -55,43 +55,32 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
       ValueSchema.anyValue()
     ),
 
-    FieldSchema.option('domModification'),
-    Fields.snapshot('originalSpec'),
-
-    // Need to have this initially
-    FieldSchema.defaulted('debug.sketcher', 'unknown')
+    FieldSchema.option('domModification')
   ]), spec);
 };
 
 const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
-  const base = {
-    uid: detail.uid(),
-    tag: detail.dom().tag(),
-    classes: detail.dom().classes(),
-    attributes: detail.dom().attributes(),
-    styles: detail.dom().styles(),
-    domChildren: Arr.map(detail.components(), (comp) => comp.element())
+  // EFFICIENCY: Consider not merging here.
+  return {
+    ...detail.dom,
+    uid: detail.uid,
+    domChildren: Arr.map(detail.components, (comp) => comp.element())
   };
-
-  return NuDefinition(Merger.deepMerge(base,
-    detail.dom().innerHtml().map((h) => Objects.wrap('innerHtml', h)).getOr({ }),
-    detail.dom().value().map((h) => Objects.wrap('value', h)).getOr({ })
-  ));
 };
 
 const toModification = (detail: CustomDetail): DomModification => {
-  return detail.domModification().fold(() => {
+  return detail.domModification.fold(() => {
     return NuModification({ });
   }, NuModification);
 };
 
 // Probably want to pass info to these at some point.
 const toApis = (info: CustomDetail): Record<string, Function> => {
-  return info.apis();
+  return info.apis;
 };
 
 const toEvents = (info: CustomDetail): AlloyEventRecord => {
-  return info.events();
+  return info.events;
 };
 
 export {

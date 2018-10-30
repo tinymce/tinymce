@@ -2,18 +2,21 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
 import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
+import { RepresentingConfig } from './RepresentingTypes';
 
-const setValue = (component, repConfig, repState, data) => {
+// TODO: Fix types
+const setValue = (component, repConfig: any, repState, data) => {
   repState.set(data);
-  repConfig.onSetValue()(component, data);
+  repConfig.onSetValue(component, data);
 };
 
-const getValue = (component, repConfig, repState) => {
+const getValue = (component, repConfig: RepresentingConfig, repState) => {
   return repState.get();
 };
 
-const onLoad = (component, repConfig, repState) => {
-  repConfig.store().initialValue().each((initVal) => {
+// TODO: Introduce types. Complicated by repConfig's structure
+const onLoad = (component, repConfig: any, repState) => {
+  repConfig.store.initialValue.each((initVal) => {
     if (repState.isNotSet()) { repState.set(initVal); }
   });
 };

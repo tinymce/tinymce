@@ -107,11 +107,11 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       // initially
       sCheckClosedState('Initial state', { store: [ ] }),
 
-      // // opening sandbox
+      // opening sandbox
       Logger.t('Opening sandbox', sOpenWith(firstOpening)),
       sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'onOpen' ] }),
 
-      // // opening sandbox again
+      // opening sandbox again
       Logger.t('Opening sandbox while it is already open', sOpenWith(secondOpening)),
       sCheckOpenState('Opening sandbox while it is already open', {
         data: 'second-opening',

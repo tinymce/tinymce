@@ -9,13 +9,13 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  splitDropdownBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  splitDropdownBehaviours: SketchBehaviours;
 
-  onExecute: () => (comp: AlloyComponent, button: AlloyComponent) => void;
-  onItemExecute: () => (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
+  onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
+  onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
 }
 
 export interface SplitDropdownSpec extends CompositeSketchSpec {

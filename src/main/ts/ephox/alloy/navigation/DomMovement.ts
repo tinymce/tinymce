@@ -30,12 +30,12 @@ const useV = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>): KeyRu
 };
 
 const use = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>, component, simulatedEvent, config: C, state?: S): Option<boolean> => {
-  const outcome = config.focusManager().get(component).bind((focused) => {
+  const outcome = config.focusManager.get(component).bind((focused) => {
     return move(component.element(), focused, config, state);
   });
 
   return outcome.map((newFocus) => {
-    config.focusManager().set(component, newFocus);
+    config.focusManager.set(component, newFocus);
     return true;
   });
 };

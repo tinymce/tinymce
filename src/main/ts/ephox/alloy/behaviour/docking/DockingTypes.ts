@@ -10,17 +10,17 @@ export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfig
 }
 
 export interface DockingContext {
-  fadeInClass: () => string;
-  fadeOutClass: () => string;
-  transitionClass: () => string;
-  lazyContext: () => (component: AlloyComponent) => Option<Element>;
+  fadeInClass: string;
+  fadeOutClass: string;
+  transitionClass: string;
+  lazyContext: (component: AlloyComponent) => Option<Element>;
 }
 
 export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
-  contextual: () => Option<DockingContext>;
-  lazyViewport: () => (component?: AlloyComponent) => Bounds;
-  leftAttr: () => string;
-  topAttr: () => string;
+  contextual: Option<DockingContext>;
+  lazyViewport: (component?: AlloyComponent) => Bounds;
+  leftAttr: string;
+  topAttr: string;
 }
 
 export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {

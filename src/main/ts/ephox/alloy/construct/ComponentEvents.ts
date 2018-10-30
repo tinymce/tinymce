@@ -39,7 +39,10 @@ const nameToHandlers = (behaviours, info) => {
 };
 
 const groupByEvents = (info, behaviours, base) => {
-  const behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
+  const behaviourEvents = {
+    ...base,
+    ...nameToHandlers(behaviours, info)
+  };
   // Now, with all of these events, we need to index by event name
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };
@@ -69,13 +72,18 @@ const missingOrderError = (eventName, tuples) => {
   ]);
 };
 
-const fuse = (tuples, eventOrder, eventName) => {
+const fuse = (tuples, eventOrder, eventName): Result<any, any> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
-  if (! order) { return missingOrderError(eventName, tuples); } else { return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map((sortedTuples) => {
-    const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
-    return EventHandler.fuse(handlers);
-  });
+  if (! order) {
+    return missingOrderError(eventName, tuples);
+  } else {
+    return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map(
+      (sortedTuples) => {
+        const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
+        return EventHandler.fuse(handlers);
+      }
+    );
   }
 };
 

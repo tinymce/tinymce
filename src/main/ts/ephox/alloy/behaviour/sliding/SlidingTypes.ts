@@ -18,19 +18,20 @@ export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfig
 }
 
 export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
-  expanded: () => boolean;
-  openClass: () => string;
-  closedClass: () => string;
-  dimension: () => {
-    property: () => string;
+  expanded: boolean;
+  openClass: string;
+  closedClass: string;
+  dimension: {
+    property: string;
+    getDimension: (elem: Element) => string;
   };
-  onGrown: () => (comp: AlloyComponent) => void;
-  onShrunk: () => (comp: AlloyComponent) => void;
-  shrinkingClass: () => string;
-  growingClass: () => string;
-  onStartGrow: () => (comp: AlloyComponent) => void;
-  onStartShrink: () => (comp: AlloyComponent) => void;
-  getAnimationRoot: () => Option<(comp: AlloyComponent) => Element>;
+  onGrown: (comp: AlloyComponent) => void;
+  onShrunk: (comp: AlloyComponent) => void;
+  shrinkingClass: string;
+  growingClass: string;
+  onStartGrow: (comp: AlloyComponent) => void;
+  onStartShrink: (comp: AlloyComponent) => void;
+  getAnimationRoot: Option<(comp: AlloyComponent) => Element>;
 
 }
 

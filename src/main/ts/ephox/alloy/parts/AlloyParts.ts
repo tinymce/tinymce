@@ -39,13 +39,14 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
   const r = { };
   Arr.each(parts, (part) => {
     PartType.asNamedPart(part).each((np) => {
-      const g: UnconfiguredPart = doGenerateOne(owner, np.pname());
-      r[np.name()] = (config) => {
-        const validated = ValueSchema.asRawOrDie('Part: ' + np.name() + ' in ' + owner, ValueSchema.objOf(np.schema()), config);
-        return Merger.deepMerge(g, {
+      const g: UnconfiguredPart = doGenerateOne(owner, np.pname);
+      r[np.name] = (config) => {
+        const validated = ValueSchema.asRawOrDie('Part: ' + np.name + ' in ' + owner, ValueSchema.objOf(np.schema), config);
+        return {
+          ...g,
           config,
           validated
-        }) as ConfiguredPart;
+        }
       };
     });
   });
@@ -80,8 +81,8 @@ const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] => {
       Option.some,
       Option.none,
       Option.none
-    ).map((data) => {
-      return FieldSchema.strictObjOf(data.name(), data.schema().concat([
+    ).map((data: PartType.PartSpec<any>) => {
+      return FieldSchema.strictObjOf(data.name, data.schema.concat([
         Fields.snapshot(PartType.original())
       ]));
     }).toArray();
@@ -97,11 +98,11 @@ const substitutes = (owner: string, detail: CompositeSketchDetail, parts: PartTy
 };
 
 const components = (owner: string, detail: CompositeSketchDetail, internals: Substition): AlloySpec[] => {
-  return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
+  return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components, internals);
 };
 
 const getPart = (component: AlloyComponent, detail: CompositeSketchDetail, partKey: string): Option<AlloyComponent> => {
-  const uid = detail.partUids()[partKey];
+  const uid = detail.partUids[partKey];
   return component.getSystem().getByUid(uid).toOption();
 };
 
@@ -111,7 +112,7 @@ const getPartOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, 
 
 const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } => {
   const r = { };
-  const uids = detail.partUids();
+  const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {
@@ -124,18 +125,18 @@ const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, part
 
 const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string | Error>> => {
   const system = component.getSystem();
-  return Obj.map(detail.partUids(), (pUid, k) => {
+  return Obj.map(detail.partUids, (pUid, k) => {
     return Fun.constant(system.getByUid(pUid));
   });
 };
 
 const getAllPartNames = (detail: CompositeSketchDetail) => {
-  return Obj.keys(detail.partUids());
+  return Obj.keys(detail.partUids);
 };
 
 const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r = { };
-  const uids = detail.partUids();
+  const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {

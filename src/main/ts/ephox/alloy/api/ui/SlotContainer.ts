@@ -117,13 +117,10 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   };
 
   return {
-    'debug.sketcher': {
-      SlotContainer: spec
-    },
-    'uid': detail.uid(),
-    'dom': detail.dom(),
+    'uid': detail.uid,
+    'dom': detail.dom,
     'components': components,
-    'behaviours': SketchBehaviours.get(detail.slotBehaviours()),
+    'behaviours': SketchBehaviours.get(detail.slotBehaviours),
     'apis': apis
   };
 };
@@ -139,12 +136,10 @@ const slotApis = Obj.map({
   showSlot: (apis, c, key) => apis.showSlot(c, key),
 }, GuiTypes.makeApi);
 
-const SlotContainer = Merger.deepMerge(
-  slotApis,
-  {
-    sketch
-  }
-) as SlotContainerSketcher;
+const SlotContainer = {
+  ...slotApis,
+  ...{ sketch }
+} as SlotContainerSketcher;
 
 export {
   SlotContainer

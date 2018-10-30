@@ -8,12 +8,13 @@ export type PartType = (p: PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
 export interface PartSpec<D extends CompositeSketchDetail> {
-  defaults: () => () => {};
-  factory: () => any;
-  name: () => string;
-  overrides: () => OverrideHandler<D>;
-  pname: () => string;
-  schema: () => FieldProcessorAdt[];
+  // TODO: Add type information where possible
+  defaults: (detail, partSpec, partValidated?) => Record<string, any>;
+  factory: { sketch: (d, s?) => any };
+  name: string;
+  overrides: OverrideHandler<D>;
+  pname: string;
+  schema: FieldProcessorAdt[];
 }
 
 export type OverrideHandler<D extends CompositeSketchDetail> = (detail: D, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
@@ -85,8 +86,8 @@ const asNamedPart = function <D extends CompositeSketchDetail>(part: PartTypeAdt
 };
 
 const name = (part: PartTypeAdt): string => {
-  const get = (data) => {
-    return data.name();
+  const get = (data: PartSpec<any>) => {
+    return data.name;
   };
   return part.fold(get, get, get, get);
 };
@@ -98,7 +99,7 @@ const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): 
 const convert = (adtConstructor, partSchema: Processor):
                   (p: PartialSpec) => PartTypeAdt => {
   return (spec) => {
-    const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);
+    const data = ValueSchema.asRawOrDie('Converting part type', partSchema, spec);
     return adtConstructor(data);
   };
 };

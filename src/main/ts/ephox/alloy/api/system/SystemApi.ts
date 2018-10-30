@@ -1,4 +1,4 @@
-import { Contracts, Result } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
 
 import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,31 +26,3 @@ export interface AlloySystemApi {
   triggerEvent: (eventName: string, target: Element, data: {}) => void;
   triggerFocus: (target: Element, originator: Element) => void;
 }
-
-export type ContractAlloySystem = (system: AlloySystemApi) => AlloySystemApi;
-
-const SystemApi = Contracts.exactly([
-  'debugInfo',
-  'triggerFocus',
-  'triggerEvent',
-  'triggerEscape',
-  // TODO: Implement later. See lab for details.
-  // 'openPopup',
-  // 'closePopup',
-  'addToWorld',
-  'removeFromWorld',
-  'addToGui',
-  'removeFromGui',
-  'build',
-  'getByUid',
-  'getByDom',
-
-  'broadcast',
-  'broadcastOn',
-  'broadcastEvent',
-  'isConnected'
-]) as ContractAlloySystem;
-
-export {
-  SystemApi
-};

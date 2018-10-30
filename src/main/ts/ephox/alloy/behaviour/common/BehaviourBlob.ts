@@ -1,10 +1,9 @@
-import { FieldPresence, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Obj, Option } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
 
-import { NoState, BehaviourStateInitialiser, BehaviourState } from '../../behaviour/common/BehaviourState';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { BehaviourState, BehaviourStateInitialiser, NoState } from '../../behaviour/common/BehaviourState';
 
 export interface BehaviourConfigAndState<C, S> {
   config: () => C;
@@ -16,7 +15,7 @@ export interface BehaviourData {
   data: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>;
 }
 
-const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
+const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
   /*
    * This takes a basic record of configured behaviours, defaults their state
    * and ensures that all the behaviours were valid. Will need to document
@@ -31,29 +30,25 @@ const generateFrom = (spec: SimpleOrSketchSpec, all: Array<AlloyBehaviour<any, a
     ]);
   });
 
-  type B = Record<string, () => Option<BehaviourConfigAndState<any, () => BehaviourStateInitialiser<any>>>>;
-  const validated = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold((errInfo) => {
+  type B = Record<string, Option<BehaviourConfigAndState<any, BehaviourStateInitialiser<any>>>>;
+  const validated = ValueSchema.asRaw(
+    'component.behaviours',
+    ValueSchema.objOf(schema),
+    spec.behaviours
+  ).fold((errInfo) => {
     throw new Error(
       ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
   }, (v: B) => v);
-/*
-
-taview: () => Option({
-  config: () => tabviewconfig
-  state: () => NoState (BehaviourStateInitialiser)
-})
-
-*/
 
   return {
     list: all as Array<AlloyBehaviour<any, any>>,
     data: Obj.map(validated, (optBlobThunk) => {
-      const optBlob = optBlobThunk();
+      const optBlob = optBlobThunk;
       const output = optBlob.map((blob) => ({
-        config: blob.config(),
-        state: blob.state().init(blob.config())
+        config: blob.config,
+        state: blob.state.init(blob.config)
       }));
       return () => output;
     })

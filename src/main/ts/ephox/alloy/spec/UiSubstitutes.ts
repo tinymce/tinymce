@@ -22,7 +22,7 @@ const isSubstitute = (uiType) => {
 const subPlaceholder = (owner, detail, compSpec, placeholders) => {
   if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
-  return Objects.readOptFrom(placeholders, compSpec.name).fold(() => {
+  return Objects.readOptFrom<{ replace: () => any}>(placeholders, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
       Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
     );
@@ -46,14 +46,15 @@ const substitute = (owner, detail, compSpec, placeholders) => {
   return base.fold(
     (req, valueThunk) => {
       const value = valueThunk(detail, compSpec.config, compSpec.validated);
-      const childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
+      const childSpecs = Objects.readOptFrom<any[]>(value, 'components').getOr([ ]);
       const substituted = Arr.bind(childSpecs, (c) => {
         return substitute(owner, detail, c, placeholders);
       });
       return [
-        Merger.deepMerge(value, {
+        {
+          ...value,
           components: substituted
-        })
+        }
       ];
     },
     (req, valuesThunk) => {
@@ -114,7 +115,7 @@ const substitutePlaces = (owner, detail, components, placeholders) => {
     if (p.used() === false && p.required()) {
       throw new Error(
         'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
-        Json.stringify(detail.components(), null, 2)
+        Json.stringify(detail.components, null, 2)
       );
     }
   });

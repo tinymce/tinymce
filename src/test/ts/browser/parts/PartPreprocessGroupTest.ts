@@ -6,7 +6,7 @@ import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 import * as PartSubstitutes from 'ephox/alloy/parts/PartSubstitutes';
 
-UnitTest.test('Browser Test: parts.PartPrecoessGroupTest', () => {
+UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
 
   const groupWithPreprocess = PartType.group({
     name: 'groupA',
@@ -20,9 +20,11 @@ UnitTest.test('Browser Test: parts.PartPrecoessGroupTest', () => {
     pname: 'groupB-pname'
   });
 
+  const placeholders = AlloyParts.generate('owner', [ groupWithPreprocess, group ]);
+
   const detail = {
-    partUids: () => ({ }),
-    components: () => [
+    partUids: { },
+    components: [
       {
         components: [
           placeholders.groupA({ })
@@ -40,12 +42,12 @@ UnitTest.test('Browser Test: parts.PartPrecoessGroupTest', () => {
         }
       })
     ],
-    groupA: () => [
+    groupA: [
       {
         components: [ 'groupA1', 'groupA2', 'groupA3', 'groupA4' ]
       }
     ],
-    groupB: () => [
+    groupB: [
       {
         components: [ 'groupB1' ]
       },
@@ -61,7 +63,6 @@ UnitTest.test('Browser Test: parts.PartPrecoessGroupTest', () => {
     ]
   } as any
 
-  const placeholders = AlloyParts.generate('owner', [ groupWithPreprocess, group ]);
 
   const subs = PartSubstitutes.subs('owner', detail, [ groupWithPreprocess, group ]);
 

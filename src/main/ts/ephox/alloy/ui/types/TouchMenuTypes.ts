@@ -10,31 +10,32 @@ import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
+import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  touchmenuBehaviours: () => SketchBehaviours;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  touchmenuBehaviours: SketchBehaviours;
 
-  onHoverOn: () => (comp: AlloyComponent) => void;
-  onHoverOff: () => (comp: AlloyComponent) => void;
-  toggleClass: () => string;
+  onHoverOn: (comp: AlloyComponent) => void;
+  onHoverOff: (comp: AlloyComponent) => void;
+  toggleClass: string;
 
-  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
-  onTap: () => (comp: AlloyComponent) => void;
+  onExecute: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
+  onTap: (comp: AlloyComponent) => void;
 
-  menuTransition: () => Option<{ property: string; transitionClass: string }>;
+  menuTransition: TransitionProperties['transition'];
 
-  onOpen: () => (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
-  onClosed: () => (sandbox: AlloyComponent, inline: AlloyComponent) => void;
-  eventOrder: () => Record<string, string[]>;
-  role: () => Option<string>;
+  onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
+  onClosed: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
+  eventOrder: Record<string, string[]>;
+  role: Option<string>;
 
-  getAnchor: () => (comp: AlloyComponent) => AnchorSpec;
-  lazySink: () => Option<() => Result<AlloyComponent, Error>>;
+  getAnchor: (comp: AlloyComponent) => AnchorSpec;
+  lazySink: Option<() => Result<AlloyComponent, Error>>;
 
-  fetch: () => (comp: AlloyComponent) => Future<ItemSpec[]>;
+  fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
 }
 
 export interface TouchMenuSpec extends CompositeSketchSpec {

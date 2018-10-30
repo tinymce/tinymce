@@ -13,7 +13,7 @@ const premade = (comp: AlloyComponent): PremadeSpec => {
 };
 
 const getPremade = (spec: AlloySpec): Option<AlloyComponent> => {
-  return Objects.readOptFrom(spec, premadeTag);
+  return Objects.readOptFrom<AlloyComponent>(spec, premadeTag);
 };
 
 const makeApi = (f) => {

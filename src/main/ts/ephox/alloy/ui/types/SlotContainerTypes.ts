@@ -8,10 +8,10 @@ import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketche
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
 export interface SlotContainerDetail extends CompositeSketchDetail  {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  slotBehaviours: () => SketchBehaviours;
-  eventOrder: () => Record<string, string[]>;
+  uid: string;
+  dom: RawDomSchema;
+  slotBehaviours: SketchBehaviours;
+  eventOrder: Record<string, string[]>;
 }
 
 export interface SlotContainerSpec extends CompositeSketchSpec {

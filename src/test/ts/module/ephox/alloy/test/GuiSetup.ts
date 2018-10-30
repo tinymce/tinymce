@@ -1,4 +1,4 @@
-import { Assertions, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TestStore from './TestStore';
@@ -23,11 +23,11 @@ const setup = (createComponent, f: (doc: Element, body: Element, gui: Gui.GuiSys
   Pipeline.async({}, f(doc, body, gui, component, store), () => {
     Attachment.detachSystem(gui);
     success();
-  }, (e) => {
+  }, (e, logs) => {
     // tslint:disable-next-line
-    console.error(e);
-    failure(e);
-  });
+    // console.error(e);
+    failure(e, logs);
+  }, TestLogs.init());
 };
 
 const mSetupKeyLogger = (body) => {

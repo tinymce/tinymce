@@ -66,7 +66,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const lookup = (eventType, target) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map((h: Function) => {
+    return Objects.readOptFrom<Record<string, (e) => void>>(domEvents, eventType).bind(Objects.readOpt<(e) => void>(targetId)).map((h: Function) => {
       return {
         descHandler: Fun.constant({
           cHandler: h,

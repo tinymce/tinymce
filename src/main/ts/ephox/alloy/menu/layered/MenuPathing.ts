@@ -19,8 +19,8 @@ const trace = (items: Record<string, string>, byItem, byMenu, finish): string[] 
   // Given a finishing submenu (which will be the value of expansions),
   // find the triggering item, find its menu, and repeat the process. If there
   // is no triggering item, we are done.
-  return Objects.readOptFrom(byMenu, finish).bind((triggerItem: string) => {
-    return Objects.readOptFrom(items, triggerItem).bind((triggerMenu: string) => {
+  return Objects.readOptFrom<string>(byMenu, finish).bind((triggerItem: string) => {
+    return Objects.readOptFrom<string>(items, triggerItem).bind((triggerMenu: string) => {
       const rest = trace(items, byItem, byMenu, triggerMenu);
       return Option.some([ triggerMenu ].concat(rest));
     });
@@ -44,7 +44,7 @@ const generate = (menus: MenuToItems, expansions: TriggerItemToMenu): ItemToMenu
   });
 
   return Obj.map(items, (menu: string) => {
-    return Objects.readOptFrom(menuPaths, menu).getOr([ menu ]);
+    return Objects.readOptFrom<string[]>(menuPaths, menu).getOr([ menu ]);
   });
 };
 

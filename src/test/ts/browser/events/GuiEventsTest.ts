@@ -1,66 +1,37 @@
-import { Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Keys, Logger } from '@ephox/agar';
+import {
+  Chain,
+  Cursors,
+  FocusTools,
+  GeneralSteps,
+  Keyboard,
+  Keys,
+  Logger,
+  Mouse,
+  Pipeline,
+  Step,
+  UiFinder,
+  Waiter,
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Attr, Css, Element, Insert, Node, Remove, Text, DomEvent } from '@ephox/sugar';
-import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
-import * as DomRender from 'ephox/alloy/dom/DomRender';
+import { document, window } from '@ephox/dom-globals';
+import { Attr, Css, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 import TestStore from 'ephox/alloy/test/TestStore';
-import { document, window } from '@ephox/dom-globals';
 import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const cleanup = Cleaner();
 
-  const page = DomRender.renderToDom(
-    DomDefinition.nu({
-      uid: 'test-uid-1',
-      tag: 'div',
-      classes: [ 'gui-events-test-container' ],
-      defChildren: [
-        {
-          uid: 'test-uid-1a',
-          tag: 'input',
-          classes: [ 'test-input' ]
-        },
-        {
-          uid: 'test-uid-a-editor',
-          tag: 'div',
-          attributes: {
-            contenteditable: 'true'
-          },
-          classes: [ 'test-contenteditable' ]
-        },
-        {
-          uid: 'test-uid-1b',
-          tag: 'div',
-          classes: [ 'test-inner-div' ],
-          defChildren: [
-            {
-              uid: 'test-uid-1b-a',
-              tag: 'span',
-              classes: [ 'focusable-span' ],
-              attributes: {
-                tabindex: '-1'
-              },
-              styles: {
-                width: '200px',
-                height: '200px',
-                border: '1px solid blue',
-                display: 'inline-block'
-              }
-            },
-            {
-              uid: 'test-uid-1b-b',
-              tag: 'button',
-              classes: [ 'test-button' ],
-              innerHtml: 'Button'
-            }
-          ]
-        }
-
-      ]
-    })
+  const page = Element.fromHtml(
+    `<div class="gui-events-test-container">
+      <input class="test-input" />
+      <div class="test-contenteditable"  contenteditable="true"></div>
+      <div class="test-inner-div">
+        <span class="focusable-span" tabindex="-1" style="width: 200px; height: 200px; border: 1px solid blue; display: inline-block;"></span>
+        <button class="test-button">Button</button>
+      </div>
+    </div>`
   );
 
   const doc = Element.fromDom(document);
@@ -286,7 +257,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestMouseOperation('mouseout', Mouse.cMouseOut),
     sTestMouseOperation('contextmenu', Mouse.cContextMenu),
 
-    // FIX: Add API support to agar
+    // TODO: Add API support to agar
     sTestChange,
     sTestTransitionEnd,
 

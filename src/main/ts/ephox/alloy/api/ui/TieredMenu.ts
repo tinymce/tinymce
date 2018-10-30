@@ -86,7 +86,7 @@ const tieredMenu = single({
     singleData,
     collapseItem
   }
-}) as TieredMenuSketcher;
+}) as Partial<TieredMenuSketcher>;
 
 export {
   tieredMenu,

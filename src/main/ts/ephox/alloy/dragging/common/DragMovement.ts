@@ -34,16 +34,16 @@ const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, 
   }, (snapInfo) => {
     const snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
     snapping.extra.each((extra) => {
-      snapInfo.onSensor()(component, extra);
+      snapInfo.onSensor(component, extra);
     });
     return snapping.coord;
   });
 };
 
 const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: SugarPosition): void => {
-  const target = dragConfig.getTarget()(component.element());
+  const target = dragConfig.getTarget(component.element());
 
-  if (dragConfig.repositionTarget()) {
+  if (dragConfig.repositionTarget) {
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
 
@@ -52,12 +52,12 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: Su
 
     const currentCoord = getCurrentCoord(target);
 
-    const newCoord = calcNewCoord(component, dragConfig.snaps(), currentCoord, scroll, origin, delta);
+    const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta);
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
     Css.setAll(target, styles);
   }
   // NOTE: On drag just goes with the original delta. It does not know about snapping.
-  dragConfig.onDrag()(component, target, delta);
+  dragConfig.onDrag(component, target, delta);
 };
 
 export {

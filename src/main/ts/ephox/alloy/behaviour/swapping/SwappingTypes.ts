@@ -12,8 +12,8 @@ export interface SwappingBehaviour extends Behaviour.AlloyBehaviour<SwappingConf
 }
 
 export interface SwappingConfig extends Behaviour.BehaviourConfigDetail {
-  alpha: () => string;
-  omega: () => string;
+  alpha: string;
+  omega: string;
 }
 
 export interface SwappingConfigSpec extends Behaviour.BehaviourConfigSpec {

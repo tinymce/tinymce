@@ -204,6 +204,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     };
 
     return [
+
       Logger.t(
         'Initial-Value: Checking that the thumb now overlaps the right and bottom edges at max',
         Waiter.sTryUntil(
@@ -218,6 +219,8 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
           1000
         )
       ),
+
+      // Step.wait(10000000),
 
       Step.sync(() => {
         Slider.resetToMin(component);
@@ -375,5 +378,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       Keyboard.sKeydown(doc, Keys.down(), {}),
       sAssertValue('Checking that the thumb is now one step further right', {x: 49, y: 70})
     ];
-  }, () => { success(); }, failure);
+  }, () => { success(); }, (err, logs) => {
+    failure(err, logs);
+  });
 });

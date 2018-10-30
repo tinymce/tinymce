@@ -60,7 +60,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
         );
       }
       const uids = Obj.map(spec.parts, (v, k) => {
-        return Objects.readOptFrom(v, 'uid').getOrThunk(() => {
+        return Objects.readOptFrom<string>(v, 'uid').getOrThunk(() => {
           return spec.uid + '-' + k;
         });
       });
@@ -82,7 +82,7 @@ const getPartUidsSchema = (label, spec): FieldProcessorAdt => {
         );
       }
       const uids = Obj.map(spec.parts, (v, k) => {
-        return Objects.readOptFrom(v, 'uid').getOrThunk(() => {
+        return Objects.readOptFrom<string>(v, 'uid').getOrThunk(() => {
           return spec.uid + '-' + k;
         });
       });
@@ -105,8 +105,9 @@ const base = (label, partSchemas, partUidsSchemas, spec) => {
   ]).concat(partUidsSchemas);
 };
 
-const asRawOrDie = (label, schema, spec, partSchemas, partUidsSchemas) => {
-  const baseS = base(label, partSchemas, spec, partUidsSchemas);
+const asRawOrDie = <D, S>(label, schema, spec: S, partSchemas, partUidsSchemas): D => {
+  // OBVIOUSLY NEVER USED RAW BEFORE !!!!!!!!!!!!!!!!!!!!!
+  const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
@@ -115,21 +116,9 @@ const asStructOrDie = function <D, S>(label: string, schema: AdtInterface[], spe
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const extend = (builder, original, nu) => {
-  // Merge all at the moment.
-  const newSpec = Merger.deepMerge(original, nu);
-  return builder(newSpec);
-};
-
-const addBehaviours = (original, behaviours) => {
-  return Merger.deepMerge(original, behaviours);
-};
 
 export {
   asRawOrDie,
   asStructOrDie,
-  addBehaviours,
-
-  getPartsSchema,
-  extend
+  getPartsSchema
 };

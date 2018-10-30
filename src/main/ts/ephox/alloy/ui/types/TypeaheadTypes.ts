@@ -11,32 +11,32 @@ import { InputDetail } from '../../ui/types/InputTypes';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 export interface TypeaheadModelDetail {
-  getDisplayText: () => (item: TypeaheadData) => string;
-  selectsOver: () => boolean;
-  populateFromBrowse: () => boolean;
+  getDisplayText: (item: TypeaheadData) => string;
+  selectsOver: boolean;
+  populateFromBrowse: boolean;
 }
 
 // TODO: CommonDropdownDetail has getHotspot. So all things extending it
 // need to have a schema setting for getHotspot
 export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
-  uid: () => string;
-  components: () => AlloySpec[ ];
-  minChars: () => number;
-  responseTime: () => number;
+  uid: string;
+  components: AlloySpec[ ];
+  minChars: number;
+  responseTime: number;
 
-  model: () => TypeaheadModelDetail;
+  model: TypeaheadModelDetail;
 
-  typeaheadBehaviours: () => SketchBehaviours;
-  onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-  onItemExecute: () => (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-  dismissOnBlur: () => boolean;
+  typeaheadBehaviours: SketchBehaviours;
+  onExecute: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  onItemExecute: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  dismissOnBlur: boolean;
 
-  initialData: () => Option<TypeaheadData>;
+  initialData: Option<TypeaheadData>;
 
-  markers: () => {
-    openClass: () => string;
+  markers: {
+    openClass: string;
   };
-  previewing: () => Cell<boolean>;
+  previewing: Cell<boolean>;
 }
 
 export interface TypeaheadData extends ItemDataTuple {

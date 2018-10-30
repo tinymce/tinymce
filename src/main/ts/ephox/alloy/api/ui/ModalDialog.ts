@@ -41,49 +41,44 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = (dialog) => {
-    const sink = detail.lazySink()().getOrDie();
+    const sink = detail.lazySink().getOrDie();
 
     const busyComp = Cell(Option.none());
 
     const externalBlocker = externals.blocker();
 
-    const blocker = sink.getSystem().build(
-      Merger.deepMerge(
-        externalBlocker,
-        {
-          components: externalBlocker.components.concat([
-            GuiFactory.premade(dialog)
-          ]),
-          behaviours: Behaviour.derive([
-            AddEventsBehaviour.config('dialog-blocker-events', [
-              AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
-                if (Attr.has(dialog.element(), 'aria-busy')) {
-                  Attr.remove(dialog.element(), 'aria-busy');
-                  busyComp.get().each((bc) => Replacing.remove(dialog, bc));
-                }
-              }),
+    const blocker = sink.getSystem().build({
+      ...externalBlocker,
+      components: externalBlocker.components.concat([
+        GuiFactory.premade(dialog)
+      ]),
+      behaviours: Behaviour.derive([
+        AddEventsBehaviour.config('dialog-blocker-events', [
+          AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
+            if (Attr.has(dialog.element(), 'aria-busy')) {
+              Attr.remove(dialog.element(), 'aria-busy');
+              busyComp.get().each((bc) => Replacing.remove(dialog, bc));
+            }
+          }),
 
-              AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
-                Attr.set(dialog.element(), 'aria-busy', 'true');
-                const getBusySpec = se.event().getBusySpec();
+          AlloyEvents.run<DialogBusyEvent>(dialogBusyEvent, (blocker, se) => {
+            Attr.set(dialog.element(), 'aria-busy', 'true');
+            const getBusySpec = se.event().getBusySpec();
 
-                busyComp.get().each((bc) => {
-                  Replacing.remove(dialog, bc);
-                });
-                const busySpec = getBusySpec(dialog, busyBehaviours);
-                const busy = blocker.getSystem().build(busySpec);
-                busyComp.set(Option.some(busy));
-                Replacing.append(dialog, GuiFactory.premade(busy));
-                if (busy.hasConfigured(Keying)) {
-                  Keying.focusIn(busy);
-                }
-              }),
-            ]),
-
-          ])
-        }
-      )
-    );
+            busyComp.get().each((bc) => {
+              Replacing.remove(dialog, bc);
+            });
+            const busySpec = getBusySpec(dialog, busyBehaviours);
+            const busy = blocker.getSystem().build(busySpec);
+            busyComp.set(Option.some(busy));
+            Replacing.append(dialog, GuiFactory.premade(busy));
+            if (busy.hasConfigured(Keying)) {
+              Keying.focusIn(busy);
+            }
+          }),
+        ])
+      ])
+    });
 
     Attachment.attach(sink, blocker);
     Keying.focusIn(dialog);
@@ -117,17 +112,13 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
-    ...detail.eventOrder(),
-    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder()['alloy.system.attached'] || [])
+    ...detail.eventOrder,
+    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {
-    uid: detail.uid(),
-    dom: Merger.deepMerge({
-      attributes: {
-        role: 'dialog'
-      }
-    }, detail.dom()),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
     apis: {
       show: showDialog,
@@ -138,22 +129,27 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
       setBusy
     },
     eventOrder,
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
+    domModification: {
+      attributes: {
+        role: 'dialog'
+      }
+    },
+    behaviours: SketchBehaviours.augment(
+      detail.modalBehaviours,
+      [
         Replacing.config({ }),
         Keying.config({
           mode: 'cyclic',
-          onEnter: detail.onExecute(),
-          onEscape: detail.onEscape(),
-          useTabstopAt: detail.useTabstopAt()
+          onEnter: detail.onExecute,
+          onEscape: detail.onEscape,
+          useTabstopAt: detail.useTabstopAt
         }),
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
             AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
           })
         ])
-      ]),
-      SketchBehaviours.get(detail.modalBehaviours())
+      ]
     )
   };
 };

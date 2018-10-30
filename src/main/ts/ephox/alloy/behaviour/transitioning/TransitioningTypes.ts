@@ -11,35 +11,40 @@ export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour<Transit
   jumpTo?: (comp: AlloyComponent, destination: string) => void;
   progressTo?: (comp: AlloyComponent, destination: string) => void;
   getState?: any;
-  createRoutes?: (route: TransitionRoute) => {};
-  createBistate?: (first: string, second: string, transitions: TransitionProperties) => { key: string, value: any};
-  createTristate?: (first: string, second: string, third: string, transitions: TransitionProperties) => { key: string, value: any};
+  createRoutes?: (route: TransitionRoute, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
+  createBistate?: (first: string, second: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
+  createTristate?: (first: string, second: string, third: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes']
 }
 
 export interface TransitioningConfig extends Behaviour.BehaviourConfigDetail {
-  destinationAttr: () => string;
-  stateAttr: () => string;
-  initialState: () => string;
-  routes: () => Record<string, any>;
-  onTransition: () => (comp: AlloyComponent, route: TransitionRoute) => void;
-  onFinish: () => (comp: AlloyComponent, destination: string) => void;
+  destinationAttr: string;
+  stateAttr: string;
+  initialState: string;
+  routes: Record<string, Record<string, TransitionProperties>>;
+  onTransition: (comp: AlloyComponent, route: TransitionRoute) => void;
+  onFinish: (comp: AlloyComponent, destination: string) => void;
 }
 
 export interface TransitioningConfigSpec extends Behaviour.BehaviourConfigSpec {
   destinationAttr?: string;
   stateAttr?: string;
   initialState: string;
-  routes: Record<string, any>;
+  routes: Record<string, Record<string, TransitionPropertiesSpec>>;
   onTransition?: (comp: AlloyComponent, route: TransitionRoute) => void;
   onFinish?: (comp: AlloyComponent, destination: string) => void;
 }
-export interface SpecifiedTransitionProperties {
-  transition: {
-    property: string,
-    transitionClass: string
-  };
+export interface TransitionProperties {
+  transition: Option<{
+    property: string;
+    transitionClass: string;
+  }>;
 }
 
-export type TransitionProperties = SpecifiedTransitionProperties | { };
+export interface TransitionPropertiesSpec {
+  transition?: {
+    property: string;
+    transitionClass: string;
+  }
+}
 
 export type TransitioningInitialState = 'before' | 'current' | 'after';

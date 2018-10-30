@@ -14,7 +14,7 @@ const schema = [
 ];
 
 const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulatedEvent, escapeConfig, escapeState) => {
-  return escapeConfig.onEscape()(component, simulatedEvent);
+  return escapeConfig.onEscape(component, simulatedEvent);
 };
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([

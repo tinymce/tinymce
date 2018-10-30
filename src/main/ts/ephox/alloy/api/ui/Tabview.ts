@@ -8,23 +8,18 @@ import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, spec) => {
   return {
-    uid: detail.uid(),
-    dom: Merger.deepMerge(
-      {
-        tag: 'div',
-        attributes: {
-          role: 'tabpanel'
-        }
-      },
-      detail.dom()
+    uid: detail.uid,
+    dom: detail.dom,
+    behaviours: SketchBehaviours.augment(
+      detail.tabviewBehaviours,
+      [
+        Replacing.config({ })
+      ]
     ),
 
-    behaviours: Merger.deepMerge(
-      Behaviour.derive([
-        Replacing.config({ })
-      ]),
-      SketchBehaviours.get(detail.tabviewBehaviours())
-    )
+    domModification: {
+      attributes: { role: 'tabpanel' }
+    }
   };
 };
 

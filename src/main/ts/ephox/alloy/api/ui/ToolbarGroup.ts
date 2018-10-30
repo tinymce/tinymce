@@ -8,32 +8,27 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from '../../ui/types/ToolbarGroupTypes';
 
 const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, spec, _externals) => {
-  return Merger.deepMerge(
-    {
-      dom: {
-        attributes: {
-          role: 'toolbar'
-        }
+  return {
+    'uid': detail.uid,
+    'dom': detail.dom,
+    'components': components,
+
+    'behaviours': SketchBehaviours.augment(
+      detail.tgroupBehaviours,
+      [
+        Keying.config({
+          mode: 'flow',
+          selector: detail.markers.itemSelector
+        })
+      ]
+    ),
+
+    domModification: {
+      attributes: {
+        role: 'toolbar'
       }
-    },
-    {
-      'uid': detail.uid(),
-      'dom': detail.dom(),
-      'components': components,
-
-      'behaviours': Merger.deepMerge(
-        Behaviour.derive([
-          Keying.config({
-            mode: 'flow',
-            selector: detail.markers().itemSelector()
-          })
-        ]),
-        SketchBehaviours.get(detail.tgroupBehaviours())
-      ),
-
-      'debug.sketcher': spec['debug.sketcher']
     }
-  );
+  };
 };
 
 const ToolbarGroup = Sketcher.composite({

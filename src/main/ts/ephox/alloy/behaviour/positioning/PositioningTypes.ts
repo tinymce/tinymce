@@ -20,6 +20,6 @@ export interface PositioningConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface PositioningConfig extends Behaviour.BehaviourConfigDetail {
-  useFixed: () => boolean;
-  getBounds: () => Option<() => Bounds>; // TODO: Strengthen types
+  useFixed: boolean;
+  getBounds: Option<() => Bounds>; // TODO: Strengthen types
 }

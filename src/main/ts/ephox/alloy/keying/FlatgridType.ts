@@ -29,42 +29,42 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector()).each((first: Element) => {
-    gridConfig.focusManager().set(component, first);
+  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: Element) => {
+    gridConfig.focusManager.set(component, first);
   });
 };
 
 const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<Element> => {
-  return gridConfig.focusManager().get(component).bind((elem) => {
-    return SelectorFind.closest(elem, gridConfig.selector());
+  return gridConfig.focusManager.get(component).bind((elem) => {
+    return SelectorFind.closest(elem, gridConfig.selector);
   });
 };
 
 const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, gridState: FlatgridState): Option<boolean> => {
   return findCurrent(component, gridConfig).bind((focused) => {
-    return gridConfig.execute()(component, simulatedEvent, focused);
+    return gridConfig.execute(component, simulatedEvent, focused);
   });
 };
 
 const doMove = (cycle): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => {
   return (element, focused, gridConfig, gridState) => {
-    return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind((identified) => {
+    return DomPinpoint.locateVisible(element, focused, gridConfig.selector).bind((identified) => {
       return cycle(
         identified.candidates(),
         identified.index(),
-        gridState.getNumRows().getOr(gridConfig.initSize().numRows()),
-        gridState.getNumColumns().getOr(gridConfig.initSize().numColumns())
+        gridState.getNumRows().getOr(gridConfig.initSize.numRows),
+        gridState.getNumColumns().getOr(gridConfig.initSize.numColumns)
       );
     });
   };
 };
 
 const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig, gridState) => {
-  return gridConfig.captureTab() ? Option.some(true) : Option.none();
+  return gridConfig.captureTab ? Option.some(true) : Option.none();
 };
 
 const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig, gridState) => {
-  return gridConfig.onEscape()(component, simulatedEvent);
+  return gridConfig.onEscape(component, simulatedEvent);
 };
 
 const moveLeft = doMove(WrapArrNavigation.cycleLeft);

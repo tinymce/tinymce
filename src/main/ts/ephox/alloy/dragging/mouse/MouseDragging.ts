@@ -56,7 +56,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
               'position': 'fixed',
               'z-index': '1000000000000000'
             },
-            classes: [ dragConfig.blockerClass() ]
+            classes: [ dragConfig.blockerClass ]
           },
           events: BlockerEvents.init(dragApi)
         })
@@ -64,11 +64,11 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
 
       const stop = () => {
         BlockerUtils.discard(blocker);
-        dragConfig.snaps().each((snapInfo) => {
+        dragConfig.snaps.each((snapInfo) => {
           Snappables.stopDrag(component, snapInfo);
         });
-        const target = dragConfig.getTarget()(component.element());
-        dragConfig.onDrop()(component, target);
+        const target = dragConfig.getTarget(component.element());
+        dragConfig.onDrop(component, target);
       };
 
       // If the user has moved something outside the area, and has not come back within

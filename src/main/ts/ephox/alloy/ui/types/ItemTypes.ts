@@ -29,14 +29,14 @@ export interface WidgetItemSpec {
 }
 
 export interface WidgetItemDetail extends ItemDetail, CompositeSketchDetail {
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[];
-  builder: () => <WidgetItemInfo>(buildInfo: WidgetItemInfo) => AlloySpec;
-  autofocus: () => boolean;
-  domModification: () => { };
-  widgetBehaviours: () => SketchBehaviours;
-  ignoreFocus: () => boolean;
-  data: () => ItemDataTuple;
+  dom: RawDomSchema;
+  components: AlloySpec[];
+  builder: <WidgetItemInfo>(buildInfo: WidgetItemInfo) => AlloySpec;
+  autofocus: boolean;
+  domModification: { };
+  widgetBehaviours: SketchBehaviours;
+  ignoreFocus: boolean;
+  data: ItemDataTuple;
 }
 
 export interface SeparatorItemSpec {
@@ -46,9 +46,9 @@ export interface SeparatorItemSpec {
 }
 
 export interface SeparatorItemDetail extends ItemDetail {
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[];
-  builder: () => <SeparatorItemInfo>(buildInfo: SeparatorItemInfo) => AlloySpec;
+  dom: RawDomSchema;
+  components: AlloySpec[];
+  builder: <SeparatorItemInfo>(buildInfo: SeparatorItemInfo) => AlloySpec;
 }
 
 export interface NormalItemSpec {
@@ -65,22 +65,22 @@ export interface NormalItemSpec {
 }
 
 export interface NormalItemDetail extends ItemDetail {
-  data: () => ItemDataTuple;
-  components: () => AlloySpec[];
-  dom: () => RawDomSchema;
-  // INVESTIGATE: () => this might not be right
-  toggling: () => Option<Partial<TogglingConfigSpec>>;
-  itemBehaviours: () => SketchBehaviours;
-  ignoreFocus?: () => boolean;
-  domModification: () => DomModification;
-  eventOrder: () => Record<string, string[]>;
-  builder: () => <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
+  data: ItemDataTuple;
+  components: AlloySpec[];
+  dom: RawDomSchema;
+  // INVESTIGATE: this might not be right
+  toggling: Option<Partial<TogglingConfigSpec>>;
+  itemBehaviours: SketchBehaviours;
+  ignoreFocus?: boolean;
+  domModification: DomModification;
+  eventOrder: Record<string, string[]>;
+  builder: <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
 }
 
 export interface ItemDetail {
-  builder: () => <B extends ItemDetail>(buildInfo: B) => AlloySpec;
+  builder: <B extends ItemDetail>(buildInfo: B) => AlloySpec;
 }
 
 export interface ItemBuilder<B extends ItemDetail> {
-  builder: () => (buildInfo: B) => AlloySpec;
+  builder:(buildInfo: B) => AlloySpec;
 }

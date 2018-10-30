@@ -10,13 +10,13 @@ import { DomModification, DomModificationSpec } from '../../dom/DomModification'
 export type ButtonAction = (comp: AlloyComponent) => void;
 
 export interface TabButtonDetail extends SingleSketchDetail {
-  uid: () => string;
-  dom: () => RawDomSchema;
-  components: () => AlloySpec[ ];
-  action: () => Option<ButtonAction>;
-  tabButtonBehaviours: () => SketchBehaviours;
-  domModification: () => DomModification;
-  value: () => string;
+  uid: string;
+  dom: RawDomSchema;
+  components: AlloySpec[ ];
+  action: Option<ButtonAction>;
+  tabButtonBehaviours: SketchBehaviours;
+  domModification: DomModification;
+  value: string;
 }
 
 export interface TabButtonSpec extends SingleSketchSpec {

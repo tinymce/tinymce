@@ -1,19 +1,9 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Result, Option } from '@ephox/katamari';
+import { Arr, Obj, Result } from '@ephox/katamari';
 import { Element, Node, Text, Traverse } from '@ephox/sugar';
+
 import { RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-
-const getAttrs = (elem) => {
-  const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
-  return Arr.foldl(attributes, (b, attr) => {
-    // Make class go through the class path. Do not list it as an attribute.
-    if (attr.name === 'class') { return b; } else { return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value)); }
-  }, {});
-};
-
-const getClasses = (elem) => {
-  return Array.prototype.slice.call(elem.dom().classList, 0);
-};
+import { getAttrs, getClasses } from './DomFactory';
 
 const readText = (elem) => {
   const text = Text.get(elem);

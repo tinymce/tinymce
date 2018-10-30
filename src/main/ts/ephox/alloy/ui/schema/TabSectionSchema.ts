@@ -28,7 +28,7 @@ const barPart = PartType.required({
   name: 'tabbar',
   defaults (detail: TabSectionDetail) {
     return {
-      tabs: detail.tabs()
+      tabs: detail.tabs
     };
   }
 });

@@ -58,7 +58,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         ]),
 
         domModification: {
-          classes: [ detail.markers().choiceClass() ]
+          classes: [ detail.markers.choiceClass ]
         },
         events: ButtonBase.events(Option.none())
       };
