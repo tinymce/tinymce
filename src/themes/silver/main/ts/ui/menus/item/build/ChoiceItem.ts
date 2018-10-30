@@ -11,9 +11,11 @@ import { Toggling, Disabling } from '@ephox/alloy';
 
 // TODO: Remove dupe between these
 const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+
   const structure = renderItemStructure({
     presets,
     textContent:  useText ? spec.text : Option.none(),
+    ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: Option.none(),
     checkMark: Option.none(),
@@ -47,6 +49,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
   const structure = renderItemStructure({
     presets,
     textContent:  useText ? spec.text : Option.none(),
+    ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: useText ? spec.shortcut : Option.none(),
     checkMark: Option.none(),

@@ -139,7 +139,7 @@ export default function () {
       ed.ui.registry.addContextToolbar('custom', {
         type: 'contexttoolbar',
         predicate: (node) => node.nodeName.toLowerCase() === 'h1',
-        items: [ 'help', 'link', 'preview' ],
+        items: 'help link preview',
         scope: 'node',
         position: 'selection'
       });

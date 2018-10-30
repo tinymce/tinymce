@@ -163,6 +163,38 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
     editor.on('BeforeSetContent', collector);
   });
 
+  suite.test('insertAtCaret - text content at a text node with a trailing nbsp character', function (editor) {
+    editor.setContent('<p>abc&nbsp;</p>');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 4);
+    InsertContent.insertAtCaret(editor, 'd');
+    LegacyUnit.equal(editor.getContent(), '<p>abc d</p>');
+  });
+
+  suite.test('insertAtCaret - html at a text node with a trailing nbsp character', function (editor) {
+    editor.setContent('<p>abc&nbsp;</p>');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 4);
+    InsertContent.insertAtCaret(editor, '<em>d</em>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <em>d</em></p>');
+  });
+
+  suite.test('insertAtCaret - text in the middle of a text node with nbsp characters', function (editor) {
+    editor.setContent('<p>a&nbsp;c</p>');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 2);
+    InsertContent.insertAtCaret(editor, 'b');
+    LegacyUnit.equal(editor.getContent(), '<p>a bc</p>');
+  });
+
+  suite.test('insertAtCaret - html in the middle of a text node with nbsp characters', function (editor) {
+    editor.setContent('<p>a&nbsp;c</p>');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 2);
+    InsertContent.insertAtCaret(editor, '<em>b</em>');
+    LegacyUnit.equal(editor.getContent(), '<p>a <em>b</em>c</p>');
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

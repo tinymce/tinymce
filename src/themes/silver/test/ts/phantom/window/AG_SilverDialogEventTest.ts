@@ -1,4 +1,4 @@
-import { Logger, Mouse, Pipeline, Step } from '@ephox/agar';
+import { Logger, Mouse, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
 import { Behaviour, GuiFactory, ModalDialog, Positioning } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { ValueSchema } from '@ephox/boulder';
@@ -7,6 +7,8 @@ import { Fun, Result } from '@ephox/katamari';
 
 import { renderDialog } from '../../../../main/ts/ui/window/SilverDialog';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
+import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
@@ -77,8 +79,12 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           },
           {
             shared: {
-              getSink: () => Result.value(sink)
-            }
+              getSink: () => Result.value(sink),
+              providers: {
+                icons: () => <Record<string, string>> {},
+                translate: I18n.translate
+              }
+            },
           }
         );
 
@@ -89,8 +95,12 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           Step.sync(() => {
             ModalDialog.show(dialog);
           }),
-          Step.wait(1000),
-
+          Waiter.sTryUntil(
+            'Waiting for blocker to disappear after clicking close',
+            UiFinder.sExists(Body.body(), '.tox-dialog-wrap'),
+            100,
+            1000
+          ),
           Mouse.sClickOn(sink.element(), selector),
           store.sAssertEq('Check event sequence', sequence),
           store.sClear

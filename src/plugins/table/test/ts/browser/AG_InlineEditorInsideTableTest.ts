@@ -1,4 +1,4 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log } from '@ephox/agar';
+import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import Plugin from 'tinymce/plugins/table/Plugin';

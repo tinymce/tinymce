@@ -7,6 +7,7 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Type, Obj } from '@ephox/katamari';
 
 import Tools from './Tools';
 
@@ -19,6 +20,22 @@ import Tools from './Tools';
 
 const data = {};
 let code = 'en';
+
+export interface RawString {
+  raw: string;
+}
+
+export type TokenisedString = string[];
+
+export type Untranslated = any;
+
+export type TranslatedString = string;
+
+export type TranslateIfNeeded = Untranslated | TranslatedString;
+
+const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
+
+const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
 
 export default {
   /**
@@ -54,6 +71,7 @@ export default {
 
   /**
    * Adds translations for a specific language code.
+   * Translation keys are set to be case insensitive.
    *
    * @method add
    * @param {String} code Language code like sv_SE.
@@ -67,7 +85,7 @@ export default {
     }
 
     for (const name in items) {
-      langData[name] = items[name];
+      langData[name.toLowerCase()] = items[name];
     }
 
     this.setCode(code);
@@ -85,9 +103,8 @@ export default {
    * @param {String/Object/Array} text Text to translate.
    * @return {String} String that got translated.
    */
-  translate (text) {
+  translate (text: Untranslated): TranslatedString {
     const langData = data[code] || {};
-
     /**
      * number - string
      * null, undefined and empty string - empty string
@@ -106,31 +123,46 @@ export default {
     };
 
     const isEmpty = function (text) {
-      return text === '' || text === null || Tools.is(text, 'undefined');
+      return text === '' || text === null || text === undefined;
     };
 
     const getLangData = function (text) {
       // make sure we work on a string and return a string
-      text = toString(text);
-      return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
+      const textstr = toString(text);
+      const lowercaseTextstr = textstr.toLowerCase();
+      return Tools.hasOwn(langData, lowercaseTextstr) ? toString(langData[lowercaseTextstr]) : textstr;
     };
 
+    const removeContext = function (str: string) {
+      return str.replace(/{context:\w+}$/, '');
+    };
+
+    const translated = (text): TranslatedString => {
+      // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
+      return text;
+    };
+
+    // empty strings
     if (isEmpty(text)) {
-      return '';
+      return translated('');
     }
 
-    if (Tools.is(text, 'object') && Tools.hasOwn(text, 'raw')) {
-      return toString(text.raw);
+    // Raw, already translated
+    if (isRaw(text)) {
+      return translated(toString(text.raw));
     }
 
-    if (Tools.is(text, 'array')) {
+    // Tokenised {translations}
+    if (isTokenised(text)) {
       const values = text.slice(1);
-      text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
+      const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
         return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
       });
+      return translated(removeContext(substitued));
     }
 
-    return getLangData(text).replace(/{context:\w+}$/, '');
+    // straight forward translation mapping
+    return translated(removeContext(getLangData(text)));
   },
 
   data

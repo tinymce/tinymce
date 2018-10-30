@@ -2,12 +2,17 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('Input component Test', (success, failure) => {
+
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -15,7 +20,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
           name: 'input',
           label: Option.some('LabelA'),
           validation: Option.none()
-        })
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -47,7 +52,10 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });

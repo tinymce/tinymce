@@ -18,11 +18,7 @@ export interface StringMap {
 type ClassList = Array<{title: string, value: string}>;
 type ColorPickerCallback = (editor: Editor, pickValue: (value: string) => void, value: string) => void;
 
-const defaultTableToolbar = [
-  'tableprops', 'tabledelete', '|', 'tableinsertrowbefore',
-  'tableinsertrowafter', 'tabledeleterow', '|', 'tableinsertcolbefore',
-  'tableinsertcolafter', 'tabledeletecol'
-];
+const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
 const defaultStyles = {
   'border-collapse': 'collapse',
@@ -49,6 +45,7 @@ const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_
 const getColorPickerCallback = (editor: Editor): ColorPickerCallback => editor.getParam('color_picker_callback');
 const isPercentagesForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === true;
 const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === false;
+const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
 
 const getCloneElements = (editor: Editor): Option<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
@@ -65,20 +62,6 @@ const getCloneElements = (editor: Editor): Option<string[]> => {
 const hasObjectResizing = (editor: Editor): boolean => {
   const objectResizing = editor.getParam('object_resizing', true);
   return objectResizing === 'table' || objectResizing;
-};
-
-const getToolbar = (editor: Editor): string[] => {
-  const toolbar = editor.getParam('table_toolbar', defaultTableToolbar);
-
-  if (toolbar === '' || toolbar === false) {
-    return [];
-  } else if (Type.isString(toolbar)) {
-    return toolbar.split(/[ ,]/);
-  } else if (Type.isArray(toolbar)) {
-    return toolbar;
-  } else {
-    return [];
-  }
 };
 
 export {

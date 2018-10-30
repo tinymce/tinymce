@@ -14,7 +14,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import Styles from '../actions/Styles';
-import { shouldStyleWithCss } from '../api/Settings';
+import { shouldStyleWithCss, getDefaultStyles, getDefaultAttributes } from '../api/Settings';
 
 /**
  * @class tinymce.table.ui.Helpers
@@ -148,9 +148,8 @@ export interface TableData {
   cellspacing: string;
   cellpadding: string;
   caption: string;
-  class: string;
+  class?: string;
   align: string;
-  type: string;
   border: string;
   cols?: string;
   rows?: string;
@@ -158,6 +157,68 @@ export interface TableData {
   bordercolor?: string;
   backgroundcolor?: string;
 }
+
+const extractDataFromSettings = (editor, hasAdvTableTab): TableData => {
+
+  const style = getDefaultStyles(editor);
+  const attrs = getDefaultAttributes(editor);
+
+  const extractAdvancedStyleData = (dom) => {
+    const rgbToHex = (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
+
+    const borderStyle = Obj.get(style, 'border-style').getOr('');
+    const borderColor = Obj.get(style, 'border-color').getOr('');
+    const bgColor = Obj.get(style, 'background-color').getOr('');
+
+    return {
+      borderstyle: borderStyle,
+      bordercolor: rgbToHex(borderColor),
+      backgroundcolor: rgbToHex(bgColor)
+    };
+  };
+
+  const defaultData: TableData = {
+    height: '',
+    width: '100%',
+    cellspacing: '',
+    cellpadding: '',
+    caption: 'unchecked',
+    class: '',
+    align: '',
+    border: ''
+  };
+
+  const getBorder = () => {
+    const borderWidth = style['border-width'];
+    if (shouldStyleWithCss(editor) && borderWidth) {
+      return { border: borderWidth };
+    }
+    return Obj.get(attrs, 'border').fold( () => ({}), (border) => ({ border }));
+  };
+
+  const dom = editor.dom;
+
+  const advStyle = (hasAdvTableTab ? extractAdvancedStyleData(dom) : {});
+
+  const getCellPaddingCellSpacing  = () => {
+    const spacing = Obj.get(style, 'border-spacing').or(Obj.get(attrs, 'cellspacing')).fold( () => ({}), (cellspacing) => ({ cellspacing }));
+    const padding = Obj.get(style, 'border-padding').or(Obj.get(attrs, 'cellpadding')).fold( () => ({}), (cellpadding) => ({ cellpadding }));
+    return {
+      ...spacing,
+      ...padding
+    };
+  };
+
+  const data = {
+    ...defaultData,
+    ...style,
+    ...attrs,
+    ...advStyle,
+    ...getBorder(),
+    ...getCellPaddingCellSpacing()
+  };
+  return data;
+};
 
 const extractDataFromTableElement = (editor: Editor, elm, hasAdvTableTab: boolean): TableData => {
   const getBorder = (dom, elm) => {
@@ -253,5 +314,6 @@ export default {
   getAdvancedTab,
   extractDataFromTableElement,
   extractDataFromRowElement,
-  extractDataFromCellElement
+  extractDataFromCellElement,
+  extractDataFromSettings
 };

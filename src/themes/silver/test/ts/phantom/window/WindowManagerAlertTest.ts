@@ -89,15 +89,29 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                         s.element('div', {
                           classes: [ arr.has('tox-dialog__footer') ],
                           children: [
-                            s.element('button', {
-                              html: str.is('Ok'),
-                              classes: [
-                                arr.has('tox-button'),
-                              ],
+                            s.element('div', {
+                              classes: [ arr.has('tox-dialog__footer-start') ],
                               attrs: {
-                                'type': str.is('button'),
-                                'data-alloy-tabstop': str.is('true')
+                                role: str.is('presentation')
+                              }
+                            }),
+                            s.element('div', {
+                              classes: [ arr.has('tox-dialog__footer-end') ],
+                              attrs: {
+                                role: str.is('presentation')
                               },
+                              children: [
+                                s.element('button', {
+                                  html: str.is('Ok'),
+                                  classes: [
+                                    arr.has('tox-button'),
+                                  ],
+                                  attrs: {
+                                    'type': str.is('button'),
+                                    'data-alloy-tabstop': str.is('true')
+                                  },
+                                })
+                              ]
                             })
                           ]
                         })

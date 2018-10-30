@@ -9,23 +9,23 @@
  */
 
 const getAutoResizeMinHeight = function (editor) {
-  return parseInt(editor.getParam('autoresize_min_height', editor.getElement().offsetHeight), 10);
+  return parseInt(editor.getParam('min_height', editor.getElement().offsetHeight, 'number'), 10);
 };
 
 const getAutoResizeMaxHeight = function (editor) {
-  return parseInt(editor.getParam('autoresize_max_height', 0), 10);
+  return parseInt(editor.getParam('max_height', 0, 'number'), 10);
 };
 
 const getAutoResizeOverflowPadding = function (editor) {
-  return editor.getParam('autoresize_overflow_padding', 1);
+  return editor.getParam('autoresize_overflow_padding', 1, 'number');
 };
 
 const getAutoResizeBottomMargin = function (editor) {
-  return editor.getParam('autoresize_bottom_margin', 50);
+  return editor.getParam('autoresize_bottom_margin', 50, 'number');
 };
 
 const shouldAutoResizeOnInit = function (editor) {
-  return editor.getParam('autoresize_on_init', true);
+  return editor.getParam('autoresize_on_init', true, 'boolean');
 };
 
 export default {

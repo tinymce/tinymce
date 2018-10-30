@@ -3,6 +3,7 @@ import { FormField as AlloyFormField, SketchSpec, RawDomSchema } from '@ephox/al
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
 import { Option } from '@ephox/katamari';
 import { FormFieldSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormFieldTypes';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 const renderFormFieldWith = (pLabel: Option<ConfiguredPart>, pField: ConfiguredPart, extraClasses: string[]): SketchSpec => {
   const spec = renderFormFieldSpecWith(pLabel, pField, extraClasses);
@@ -21,6 +22,11 @@ const renderFormFieldSpec = (pLabel: Option<ConfiguredPart>, pField: ConfiguredP
 };
 
 const renderFormFieldSpecWith = (pLabel: Option<ConfiguredPart>, pField: ConfiguredPart, extraClasses: string[]): FormFieldSpec => {
+  pLabel.each((l) => {
+    console.log(l.config.dom);
+    console.trace();
+  });
+
   return {
     dom: renderFormFieldDomWith(extraClasses),
     components: pLabel.toArray().concat([ pField ])
@@ -38,12 +44,12 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => {
   };
 };
 
-const renderLabel = (label: string): ConfiguredPart => {
+const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProviders): ConfiguredPart => {
   return AlloyFormField.parts().label({
     dom: {
       tag: 'label',
       classes: ['tox-label'],
-      innerHtml: label
+      innerHtml: providersBackstage.translate(label)
     }
   });
 };

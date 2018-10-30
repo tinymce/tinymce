@@ -1,12 +1,12 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
 import ElementPath from './ElementPath';
 import { ResizeTypes, resize } from '../sizing/Resize';
 
-const renderStatusbar = (editor) => {
-  const renderResizeHandlerIcon = (resizeType: ResizeTypes) => {
+const renderStatusbar = (editor): SimpleSpec => {
+  const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
     return {
       dom: {
         tag: 'div',
@@ -26,7 +26,7 @@ const renderStatusbar = (editor) => {
     };
   };
 
-  const renderBranding = () => {
+  const renderBranding = (): SimpleSpec => {
     const linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" role="presentation" tabindex="-1">tinymce</a>';
     const html = I18n.translate(['Powered by {0}', linkHtml]);
     return {
@@ -45,7 +45,7 @@ const renderStatusbar = (editor) => {
     };
   };
 
-  const renderWordCount = () => {
+  const renderWordCount = (): SimpleSpec => {
     return {
       dom: {
         tag: 'span',
@@ -66,7 +66,9 @@ const renderStatusbar = (editor) => {
   };
 
   const getResizeType = (editor): ResizeTypes => {
-    const resize = editor.getParam('resize', true);
+    // If autoresize is enabled, disable resize
+    const fallback = !Strings.contains(editor.settings.plugins, 'autoresize');
+    const resize = editor.getParam('resize', fallback);
     if (resize === false) {
       return ResizeTypes.None;
     } else if (resize === 'both') {
@@ -76,25 +78,52 @@ const renderStatusbar = (editor) => {
     }
   };
 
-  const getComponents = () => {
-    const comps = [];
+  const getTextComponents = (): SimpleSpec[] => {
+    const components: SimpleSpec[] = [];
 
-    comps.push(ElementPath.renderElementPath(editor, { }));
+    if (editor.getParam('elementpath', true, 'boolean')) {
+      components.push(ElementPath.renderElementPath(editor, { }));
+    }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {
-      comps.push(renderWordCount());
+      components.push(renderWordCount());
     }
 
     if (editor.getParam('branding', true, 'boolean')) {
-      comps.push(renderBranding());
+      components.push(renderBranding());
     }
+
+    if (components.length > 0) {
+      return [{
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-statusbar__text-container']
+        },
+        components,
+        behaviours: Behaviour.derive([
+          Keying.config({
+            mode: 'cyclic'
+          }),
+          AddEventsBehaviour.config('statusbar-events', [
+            AlloyEvents.runOnAttached((comp) => {
+              // NOTE: If statusbar ever gets re-rendered, we will need to free this.
+              editor.shortcuts.add('alt+F11', 'focus statusbar', () => Keying.focusIn(comp));
+            })
+          ])
+        ])
+      }];
+    }
+    return [];
+  };
+
+  const getComponents = (): SimpleSpec[] => {
+    const components: SimpleSpec[] = getTextComponents();
 
     const resizeType = getResizeType(editor);
     if (resizeType !== ResizeTypes.None) {
-      comps.push(renderResizeHandlerIcon(resizeType));
+      components.push(renderResizeHandlerIcon(resizeType));
     }
-
-    return comps;
+    return components;
   };
 
   return {
@@ -103,17 +132,6 @@ const renderStatusbar = (editor) => {
       classes: [ 'tox-statusbar' ],
     },
     components: getComponents(),
-    behaviours: Behaviour.derive([
-      Keying.config({
-        mode: 'cyclic'
-      }),
-      AddEventsBehaviour.config('statusbar-events', [
-        AlloyEvents.runOnAttached((comp) => {
-          // NOTE: If statusbar ever gets re-rendered, we will need to free this.
-          editor.shortcuts.add('alt+F11', 'focus statusbar', () => Keying.focusIn(comp));
-        })
-      ])
-    ])
   };
 };
 

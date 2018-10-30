@@ -24,7 +24,8 @@ const READING = Fun.constant('toReading'); /// 'hide the keyboard'
 const EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
 export const renderMobileTheme = function (editor) {
-  const renderUI = function (args) {
+  const renderUI = function () {
+    const targetNode = editor.getElement();
     const cssUrls = CssUrls.derive(editor);
 
     if (Settings.isSkinDisabled(editor) === false) {
@@ -40,7 +41,7 @@ export const renderMobileTheme = function (editor) {
 
     const wrapper = Element.fromTag('div');
     const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
-    const original = Element.fromDom(args.targetNode);
+    const original = Element.fromDom(targetNode);
     Insert.after(original, wrapper);
     Attachment.attachSystem(wrapper, realm.system());
 
@@ -49,7 +50,7 @@ export const renderMobileTheme = function (editor) {
         return realm.system().getByDom(focused).toOption();
       });
     };
-    const outerWindow = args.targetNode.ownerDocument.defaultView;
+    const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
       onChange () {
         const alloy = realm.system();

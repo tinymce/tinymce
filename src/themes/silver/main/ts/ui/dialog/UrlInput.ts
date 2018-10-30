@@ -63,13 +63,15 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
 };
 
 // TODO: Find a place for this.
-const renderInputButton = (eventName: string, className: string, iconName: string, providersBackstage: UiFactoryBackstageProviders) => {
+const renderInputButton = (label: Option<string>, eventName: string, className: string, iconName: string, providersBackstage: UiFactoryBackstageProviders) => {
   return AlloyButton.sketch({
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button, className ],
-      // TODO: Change the icon
-      innerHtml: Icons.get(iconName, providersBackstage.icons)
+      innerHtml: Icons.get(iconName, providersBackstage.icons),
+      attributes: {
+        title: providersBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
+      }
     },
     action: (component) => {
       AlloyTriggers.emit(component, eventName);
@@ -178,16 +180,22 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     }
   });
 
-  const pLabel = spec.label.map(renderLabel) as Option<AlloySpec>;
+  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage.providers)) as Option<AlloySpec>;
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, icon = name) => ({
-    dom: {
-      tag: 'span',
-      classes: ['tox-icon', 'tox-status-icon__' + name],
-      innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons)
-    }
-  });
+  const makeIcon = (name, icon = name, label = name) => {
+    // TODO: Aria this, most likley be an aria live because its dynamic
+    return ({
+      dom: {
+        tag: 'span',
+        classes: ['tox-icon', 'tox-status-icon__' + name],
+        innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons),
+        attributes: {
+          title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
+        }
+      }
+    });
+  };
 
   const memStatus = Memento.record({
     dom: {
@@ -195,7 +203,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       classes: ['tox-status']
     },
     components: [
-      makeIcon('checkmark'),
+      makeIcon('checkmark', 'checkmark',  'valid'),
       makeIcon('warning'),
       makeIcon('error', 'warning')
     ]
@@ -223,7 +231,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage.providers)).toArray()
+        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage.providers)).toArray()
       ])
     };
   };

@@ -88,7 +88,9 @@ const findSpace = function (start, remove, node, offset?) {
     pos = pos > pos2 ? pos : pos2;
 
     // Include the space on remove to avoid tag soup
-    if (pos !== -1 && !remove) {
+    // As long as we are either going to the right,
+    // - OR - going to the left and pos isn't already at the end of the string
+    if (pos !== -1 && !remove && (pos < offset || !start) && pos <= str.length) {
       pos++;
     }
   } else {
@@ -320,6 +322,7 @@ const expandRng = function (editor, rng, format, remove?) {
   }
 
   if (format[0].inline) {
+    // For "removeformat", we include trailing whitespace. For other formatting, we don't
     endContainer = remove ? endContainer : excludeTrailingWhitespace(endContainer, endOffset);
   }
 

@@ -21,6 +21,7 @@ import { SelectorFind, Selectors } from '@ephox/sugar';
 import * as Icons from '../../../../main/ts/ui/icons/Icons';
 import SilverMenubar from '../../../../main/ts/ui/menus/menubar/SilverMenubar';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
@@ -52,7 +53,8 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             onEscape: store.adder('Menubar.escape'),
             onSetup: store.adder('Menubar.setup'),
             providers: {
-              icons: () => <Record<string, string>> {}
+              icons: () => <Record<string, string>> {},
+              translate: I18n.translate
             },
             getSink: () => {
               return memSink.getOpt(container).fold(

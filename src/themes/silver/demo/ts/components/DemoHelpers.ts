@@ -1,11 +1,18 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
+import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { LinkInformation, UrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const setupDemo = () => {
+
+  const oldSink = document.querySelectorAll('.mce-silver-sink');
+  if (oldSink.length > 0) {
+    throw Error('old sinks found, a previous test did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
+  }
+
 // begin of demo helpers
   const sink = GuiFactory.build({
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
@@ -17,6 +24,7 @@ const setupDemo = () => {
   });
 
   const uiMothership = Gui.create();
+  Class.add(uiMothership.element(), 'tox');
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {
@@ -55,8 +63,10 @@ const setupDemo = () => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
-        icons: () => <Record<string, string>> {}
+        icons: () => <Record<string, string>> {},
+        translate: I18n.translate,
       },
+      interpreter: (x) => x,
       getSink: () => Result.value(sink),
       anchors: {
         toolbar: () => {

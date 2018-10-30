@@ -1,18 +1,29 @@
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  CustomEvent,
+  Disabling,
+  Representing,
+  SimpleSpec,
+  SimulatedEvent,
+} from '@ephox/alloy';
+import { Blob } from '@ephox/dom-globals';
+import { ResultConversions } from '@ephox/imagetools';
+import { Fun, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
+
 import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
-import { AlloyComponent, SimpleSpec, Behaviour, AddEventsBehaviour, AlloyEvents, AlloyTriggers, Representing, Disabling, SimulatedEvent, CustomEvent } from '@ephox/alloy';
+import * as EditPanel from './EditPanel';
 import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import * as SideBar from './SideBar';
-import * as EditPanel from './EditPanel';
 import * as ImageToolsState from './state/ImageToolsState';
 
-import { ResultConversions } from '@ephox/imagetools';
-import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Blob } from '@ephox/dom-globals';
-
-export const renderImageTools = (detail, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderImageTools = (detail, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const state = ImageToolsState.makeState(detail.currentState);
 
   const zoom = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
@@ -143,8 +154,8 @@ export const renderImageTools = (detail, providerBackstage: UiFactoryBackstagePr
   const transformApply = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => manipulateApply(anyInSystem, simulatedEvent.event().transform(), simulatedEvent.event().swap());
 
   const imagePanel = ImagePanel.renderImagePanel(detail.currentState.url);
-  const sideBar = SideBar.renderSideBar(providerBackstage);
-  const editPanel = EditPanel.renderEditPanel(imagePanel, providerBackstage);
+  const sideBar = SideBar.renderSideBar(providersBackstage);
+  const editPanel = EditPanel.renderEditPanel(imagePanel, providersBackstage);
 
   const swap = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {
     disableUndoRedo(anyInSystem);

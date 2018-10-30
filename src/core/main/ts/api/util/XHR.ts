@@ -66,7 +66,7 @@ const XHR: any = {
 
     XHR.fire('beforeInitialize', { settings });
 
-    xhr = new XMLHttpRequest();
+    xhr = XMLHttpRequest();
 
     if (xhr) {
       if (xhr.overrideMimeType) {

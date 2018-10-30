@@ -8,6 +8,9 @@ import * as FormatRegister from './utils/FormatRegister';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { BasicSelectDataset, AdvancedSelectDataset } from './SelectDatasets';
 import { AlloyComponent } from '@ephox/alloy';
+import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 export interface PreviewSpec {
   tag: string;
@@ -16,7 +19,7 @@ export interface PreviewSpec {
 
 export interface FormatItem {
   type: 'separator' | 'submenu' | 'formatter';
-  title?: string;
+  title?: TranslateIfNeeded;
   icon?: string;
   getStyleItems: () => FormatItem[];
   format: string;
@@ -43,17 +46,18 @@ export interface SelectData {
 // TODO: AP-226: Read this from hte appropriate setting
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
-const generateSelectItems = (editor, backstage, spec) => {
+const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): SingleMenuItemApi => {
+    const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return {
         type: 'separator',
-        text: rawItem.title
+        text: translatedText
       } as Menu.SeparatorMenuItemApi;
     } else if (rawItem.type === 'submenu') {
       return {
         type: 'menuitem',
-        text: rawItem.title,
+        text: translatedText,
         disabled,
         getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
       } as Menu.MenuItemApi;
@@ -62,7 +66,7 @@ const generateSelectItems = (editor, backstage, spec) => {
         () => {
           return {
             type: 'togglemenuitem',
-            text: rawItem.title,
+            text: translatedText,
             active: rawItem.isSelected(),
             disabled: false,
             onAction: spec.onAction(rawItem),
@@ -73,7 +77,7 @@ const generateSelectItems = (editor, backstage, spec) => {
             type: 'styleitem',
             item: {
               type: 'togglemenuitem',
-              text: rawItem.title,
+              text: translatedText,
               disabled: false,
               active: rawItem.isSelected(),
               onAction: spec.onAction(rawItem),
@@ -112,7 +116,7 @@ const generateSelectItems = (editor, backstage, spec) => {
   };
 };
 
-const createMenuItems = (editor, backstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -120,9 +124,8 @@ const createMenuItems = (editor, backstage, dataset: BasicSelectDataset | Advanc
   };
 };
 
-const createSelectButton = (editor, backstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
-
   return renderCommonDropdown(
     {
       text: Option.some(''),

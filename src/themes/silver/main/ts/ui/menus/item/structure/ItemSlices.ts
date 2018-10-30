@@ -3,6 +3,7 @@ import { get as getIcon, IconProvider } from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
 import Env from 'tinymce/core/api/Env';
 import { Arr, Obj } from '@ephox/katamari';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const renderIcon = (iconHtml: string): AlloySpec => ({
   dom: {
@@ -17,7 +18,7 @@ const renderText = (text: string): AlloySpec => ({
     tag: 'span',
     classes: [ ItemClasses.textClass ]
   },
-  components: [ GuiFactory.text(text) ]
+  components: [ GuiFactory.text(I18n.translate(text)) ]
 });
 
 // Converts shortcut format to Mac/PC variants

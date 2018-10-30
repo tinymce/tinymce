@@ -5,9 +5,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   AdvListPlugin();

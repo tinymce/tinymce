@@ -1,10 +1,12 @@
-import { Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
+import { Behaviour, DomFactory, Gui, GuiFactory, Positioning, AlloySpec, SimpleSpec } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
+import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
-import { getMinHeightSetting, getMinWidthSetting } from './api/Settings';
+import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -12,9 +14,51 @@ import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import OuterContainer from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
+import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
+import I18n from 'tinymce/core/api/util/I18n';
 
-const setup = (editor) => {
+export interface RenderInfo {
+  mothership: Gui.GuiSystem;
+  uiMothership: Gui.GuiSystem;
+  backstage: Backstage.UiFactoryBackstage;
+  renderUI: () => ModeRenderInfo;
+  getUi: () => ({ channels: UiChannels });
+}
+
+export interface ModeRenderInfo {
+  iframeContainer?;
+  editorContainer?;
+}
+
+export interface UiChannels {
+  broadcastAll: (message: message) => void;
+  broadcastOn: (channels: string[], message: message) => void;
+  register: () => void;
+}
+
+export interface RenderUiComponents {
+  mothership: Gui.GuiSystem;
+  uiMothership: Gui.GuiSystem;
+  outerContainer: AlloyComponent;
+}
+
+export interface RenderUiConfig {
+  menuItems: Record<string, any>;
+  buttons: Record<string, any>;
+  menus;
+  menubar;
+  toolbar;
+  sidebar: SidebarConfig[];
+}
+
+export interface RenderArgs {
+  targetNode: HTMLElement;
+  height: number;
+}
+
+const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.getParam('inline', false, 'boolean');
   const mode = isInline ? Inline : Iframe;
 
@@ -29,14 +73,15 @@ const setup = (editor) => {
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
-  const partMenubar = OuterContainer.parts().menubar({
+  const partMenubar: ConfiguredPart = OuterContainer.parts().menubar({
     dom: {
       tag: 'div',
       classes: [ 'tox-menubar' ]
     },
     getSink: lazySink,
     providers: {
-      icons: () => editor.ui.registry.getAll().icons
+      icons: () => editor.ui.registry.getAll().icons,
+      translate: I18n.translate
     },
     onEscape () {
       editor.focus();
@@ -44,7 +89,7 @@ const setup = (editor) => {
   });
 
   // TODO TINY-1659
-  const partToolbar = OuterContainer.parts().toolbar({
+  const partToolbar: ConfiguredPart = OuterContainer.parts().toolbar({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar' ]
@@ -55,14 +100,14 @@ const setup = (editor) => {
     }
   });
 
-  const partSocket = OuterContainer.parts().socket({
+  const partSocket: ConfiguredPart = OuterContainer.parts().socket({
     dom: {
       tag: 'div',
       classes: [ 'tox-edit-area' ]
     }
   });
 
-  const partSidebar = OuterContainer.parts().sidebar({
+  const partSidebar: ConfiguredPart = OuterContainer.parts().sidebar({
     dom: {
       tag: 'div',
       classes: ['tox-sidebar']
@@ -71,7 +116,7 @@ const setup = (editor) => {
 
   const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor)) : Option.none();
 
-  const socketSidebarContainer = {
+  const socketSidebarContainer: SimpleSpec = {
     dom: {
       tag: 'div',
       classes: ['tox-sidebar-wrap']
@@ -85,11 +130,26 @@ const setup = (editor) => {
   // False should stop the menubar and toolbar rendering altogether
   const hasToolbar = editor.getParam('toolbar', true, 'boolean') !== false;
   const hasMenubar = editor.getParam('menubar', true, 'boolean') !== false;
-  const editorComponents = Arr.flatten([
+
+  // We need the statusbar to be seperate to everything else so resizing works properly
+  const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
     hasToolbar ? [ partToolbar ] : [ ],
-    // Inline mode does not have a status bar, nor a socket/sidebar
-    isInline ? [ ] : [ socketSidebarContainer ],
+    // Inline mode does not have a socket/sidebar
+    isInline ? [ ] : [ socketSidebarContainer ]
+  ]);
+
+  const editorContainer = {
+    dom: {
+      tag: 'div',
+      classes: ['tox-editor-container']
+    },
+    components: editorComponents
+  };
+
+  const containerComponents = Arr.flatten<SimpleSpec>([
+    [editorContainer],
+    // Inline mode does not have a status bar
     isInline ? [ ] : statusbar.toArray()
   ]);
 
@@ -97,13 +157,13 @@ const setup = (editor) => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'],
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
         }
       },
-      components: editorComponents,
+      components: containerComponents,
       behaviours: Behaviour.derive(mode.getBehaviours(editor))
     })
   );
@@ -118,7 +178,7 @@ const setup = (editor) => {
 
   const uiMothership = Gui.takeover(sink);
 
-  const backstage = Backstage.init(outerContainer, sink, editor);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(outerContainer, sink, editor);
 
   Events.setup(editor, mothership, uiMothership);
 
@@ -132,12 +192,43 @@ const setup = (editor) => {
     return { channels };
   };
 
-  const renderUI = function (editor: Editor, targetNode) {
+  const setEditorSize = (elm) => {
+    // Set height and width if they were given, though height only applies to iframe mode
+    let width, height;
+    const settings = editor.settings;
+
+    const DOM = DOMUtils.DOM;
+
+    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
+    height = getHeightSetting(editor);
+    const minHeight = getMinHeightSetting(editor);
+    const minWidth = getMinWidthSetting(editor);
+
+    width = Utils.parseToInt(width).bind((w) => {
+      return minWidth.map((mw) => Math.max(w, mw));
+    }).getOr(width);
+
+    height = Utils.parseToInt(height).bind((h) => {
+      return minHeight.map((mh) => Math.max(h, mh));
+    }).getOr(height);
+
+    if (width) {
+      Css.set(outerContainer.element(), 'width', Utils.numToPx(width));
+    }
+
+    if (!editor.inline && height) {
+      Css.set(outerContainer.element(), 'height', Utils.numToPx(height));
+    }
+
+    return height;
+  };
+
+  const renderUI = function (): ModeRenderInfo {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars } = editor.ui.registry.getAll();
-    const rawUiConfig = {
+    const rawUiConfig: RenderUiConfig = {
       menuItems,
       buttons,
 
@@ -152,35 +243,12 @@ const setup = (editor) => {
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
 
-    // Set height and width if they were given, though height only applied to iframe mode
-    let width, height, re;
-    const settings = editor.settings;
     const elm = editor.getElement();
+    const height = setEditorSize(elm);
 
-    const DOM = DOMUtils.DOM;
-
-    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
-    height = settings.height || DOM.getStyle(elm, 'height') || Math.max(elm.offsetHeight, 300);
-    const minHeight = getMinHeightSetting(editor);
-    const minWidth = getMinWidthSetting(editor);
-    re = /^[0-9\.]+(|px)$/i;
-
-    if (re.test('' + width)) {
-      width = minWidth.map((mw) => Math.max(parseInt(width, 10), mw)).getOr(width) + 'px';
-    }
-
-    if (re.test('' + height)) {
-      height = minHeight.map((mh) => Math.max(parseInt(height, 10), mh)).getOr(height) + 'px';
-    }
-    if (width) {
-      Css.set(outerContainer.element(), 'width', width);
-    }
-    if (!editor.inline && height) {
-      Css.set(outerContainer.element(), 'height', height);
-    }
-
-    const uiComponents = {mothership, uiMothership, outerContainer};
-    return mode.render(editor, uiComponents, rawUiConfig, backstage, elm);
+    const uiComponents: RenderUiComponents = {mothership, uiMothership, outerContainer};
+    const args: RenderArgs = { targetNode: elm, height };
+    return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
   return {mothership, uiMothership, backstage, renderUI, getUi};

@@ -402,6 +402,26 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a X c</p>"');
   });
 
+  suite.test('mceInsertRawHTML - insert p at start', function (editor) {
+    editor.setContent('<p>abc</p>');
+    editor.execCommand('mceInsertRawHTML', false, '<p>Hello world!</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>Hello world!</p><p>abc</p>');
+  });
+
+  suite.test('mceInsertRawHTML - insert link inside p', function (editor) {
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 3);
+    editor.execCommand('mceInsertRawHTML', false, ' <a href="#">Hello world!</a>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <a href="#">Hello world!</a></p>');
+  });
+
+  suite.test('mceInsertRawHTML - insert char at char surrounded by spaces', function (editor) {
+    editor.setContent('<p>a b c</p>');
+    LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
+    editor.execCommand('mceInsertRawHTML', false, '<strong>X</strong>');
+    LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

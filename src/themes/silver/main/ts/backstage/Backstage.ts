@@ -10,12 +10,14 @@ import { IconProvider } from '../ui/icons/Icons';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 import { UiFactoryBackstageForColorInput, ColorInputBackstage } from './ColorInputBackstage';
+import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
+  translate: (any) => TranslatedString;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -27,7 +29,7 @@ export interface UiFactoryBackstageShared {
     toolbar: () => AnchorSpec,
     banner: () => AnchorSpec,
     cursor: () => AnchorSpec,
-    node: (elem: Element) => AnchorSpec
+    node: (elem: Option<Element>) => AnchorSpec
   };
   formInterpreter?: (parts: FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
@@ -44,7 +46,8 @@ const init = (container, sink, editor) => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
-        icons: () => editor.ui.registry.getAll().icons
+        icons: () => editor.ui.registry.getAll().icons,
+        translate: I18n.translate,
       },
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);
@@ -84,13 +87,11 @@ const init = (container, sink, editor) => {
             }
           };
         },
-        node: (element: Element) => {
+        node: (element: Option<Element>) => {
           return {
-            anchor: 'selection',
+            anchor: 'node',
             root: Element.fromDom(editor.getBody()),
-            getSelection: () => {
-              return Option.some(Selection.range(element, 0, element, 0));
-            }
+            node: element
           };
         }
       },

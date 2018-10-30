@@ -226,13 +226,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function () {
 
     schema = Schema();
     LegacyUnit.deepEqual(schema.getBlockElements(), {
-      SUMMARY: {}, DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
+      SUMMARY: {}, MAIN: {}, DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
       ISINDEX: {}, MENU: {}, NOSCRIPT: {}, FIELDSET: {}, FIGCAPTION: {}, DIR: {}, DD: {}, DT: {},
       DL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},
       TD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},
       PRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},
       H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},
-      details: {}, summary: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
+      details: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
       isindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},
       blockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},
       tbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},
@@ -290,11 +290,11 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function () {
 
     schema = Schema();
     LegacyUnit.deepEqual(schema.getTextBlockElements(), {
-      ADDRESS: {}, ARTICLE: {}, ASIDE: {}, BLOCKQUOTE: {}, CENTER: {}, DIR: {}, DIV: {},
+      ADDRESS: {}, MAIN: {}, ARTICLE: {}, ASIDE: {}, BLOCKQUOTE: {}, CENTER: {}, DIR: {}, DIV: {},
       FIELDSET: {}, FIGURE: {}, FOOTER: {}, FORM: {},
       H1: {}, H2: {}, H3: {}, H4: {}, H5: {}, H6: {}, HEADER: {}, HGROUP: {}, NAV: {},
       P: {}, PRE: {}, SECTION: {},
-      address: {}, article: {}, aside: {}, blockquote: {}, center: {}, dir: {}, div: {},
+      address: {}, main: {}, article: {}, aside: {}, blockquote: {}, center: {}, dir: {}, div: {},
       fieldset: {}, figure: {}, footer: {}, form: {},
       h1: {}, h2: {}, h3: {}, h4: {}, h5: {}, h6: {}, header: {}, hgroup: {}, nav: {},
       p: {}, pre: {}, section: {}

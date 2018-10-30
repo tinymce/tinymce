@@ -1,4 +1,4 @@
-import { Attachment, Docking } from '@ephox/alloy';
+import { Attachment, Docking, Focusing } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -8,8 +8,10 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
+import { UiFactoryBackstage } from '../backstage/Backstage';
 
-const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode) => {
+const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   loadInlineSkin(editor);
 
   const floatContainer = uiComponents.outerContainer;
@@ -58,7 +60,9 @@ const render = (editor: Editor, uiComponents, rawUiConfig, backstage, targetNode
   editor.on('activate focus', show);
   editor.on('deactivate blur hide', hide);
 
-  return { };
+  return {
+    editorContainer: uiComponents.outerContainer.element().dom()
+  };
 };
 
 const getBehaviours = (editor) => {
@@ -74,7 +78,8 @@ const getBehaviours = (editor) => {
         fadeOutClass: 'tox-toolbar-dock-fadeout',
         transitionClass: 'tox-toolbar-dock-transition'
       }
-    })
+    }),
+    Focusing.config({ })
   ];
 };
 

@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
     RawAssertions.assertEq('element does not have the expected style', expected, textareaElement.style.display);
   });
 
-  const cCreateEditor = Chain.on((_, next, die) => next(Chain.wrap(new Editor('editor', {}, EditorManager))));
+  const cCreateEditor = Chain.mapper(() => new Editor('editor', {}, EditorManager));
 
   const cRemoveEditor = Chain.op((editor: any) => editor.remove());
 

@@ -21,10 +21,11 @@ import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 
-const renderTextField = function (spec: TextFieldFoo) {
-  const pLabel = spec.label.map(renderLabel);
+const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFactoryBackstageProviders) {
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
     Keying.config({
@@ -111,7 +112,7 @@ export interface TextareaFoo extends BaseTextFieldFoo {
   flex: boolean;
 }
 
-const renderInput = (spec: InputFoo): SketchSpec => {
+const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: false,
@@ -119,10 +120,10 @@ const renderInput = (spec: InputFoo): SketchSpec => {
     flex: false,
     classname: 'tox-textfield',
     validation: Option.none()
-  });
+  }, providersBackstage);
 };
 
-const renderTextarea = (spec: TextareaFoo): SketchSpec => {
+const renderTextarea = (spec: TextareaFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: true,
@@ -130,7 +131,7 @@ const renderTextarea = (spec: TextareaFoo): SketchSpec => {
     flex: spec.flex,
     classname: 'tox-textarea',
     validation: Option.none(),
-  });
+  }, providersBackstage);
 };
 
 export {

@@ -56,9 +56,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-pop__dialog' ],
+        classes: ['tox-pop__dialog'],
       },
-      components: [ toolbarSpec ],
+      components: [toolbarSpec],
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic'
@@ -91,7 +91,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
       const allButtons = Merger.merge(buttons, scopes.formNavigators);
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items.join(' ') }, extras);
+      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras);
       return renderToolbar({
         uid: Id.generate('context-toolbar'),
         initGroups: Arr.map(initGroups, (g) => ({ items: g })),
@@ -112,36 +112,53 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
   });
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Element) => {
-    return Merger.deepMerge(
-      extras.backstage.shared.anchors.node(element),
-      {
-        bubble: Bubble.nu(10, 12, {
-          valignCentre: [ ],
-          alignCentre: [ ],
-          alignLeft: [ 'tox-pop--align-left' ],
-          alignRight: [ 'tox-pop--align-right' ],
-          right: [ 'tox-pop--right' ],
-          left: [ 'tox-pop--left' ],
-          bottom: [ 'tox-pop--bottom' ],
-          top: [ 'tox-pop--top' ]
-        }),
-        layouts: {
-          onLtr: () => position === 'line' ? [ Layout.east ] : [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ],
-          onRtl: () => position === 'line' ? [ Layout.west ] : [ Layout.north, Layout.south ]
-        },
-        overrides: {
-          maxHeightFunction: expandable()
-        }
-      }
+  const bubbleAlignments = {
+    valignCentre: [],
+    alignCentre: [],
+    alignLeft: ['tox-pop--align-left'],
+    alignRight: ['tox-pop--align-right'],
+    right: ['tox-pop--right'],
+    left: ['tox-pop--left'],
+    bottom: ['tox-pop--bottom'],
+    top: ['tox-pop--top']
+  };
+
+  const anchorOverrides = {
+    maxHeightFunction: expandable()
+  };
+
+  const lineAnchorSpec = {
+    bubble: Bubble.nu(12, 0, bubbleAlignments),
+    layouts: {
+      onLtr: () => [Layout.east],
+      onRtl: () => [Layout.west]
+    },
+    overrides: anchorOverrides
+  };
+
+  const anchorSpec = {
+    bubble: Bubble.nu(0, 12, bubbleAlignments),
+    layouts: {
+      onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest],
+      onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast]
+    },
+    overrides: anchorOverrides
+  };
+
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
+    const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
+    const anchor = Merger.deepMerge(
+      anchorage,
+      position === 'line' ? lineAnchorSpec : anchorSpec
     );
+    return anchor;
   };
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
     const toolbarSpec = buildToolbar(toolbarApi);
-    const startNode = editor.selection.getNode();
-    const anchor = getAnchor(toolbarApi.position, Element.fromDom(startNode));
+    const sElem = elem.map(Element.fromDom);
+    const anchor = getAnchor(toolbarApi.position, sElem);
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
     InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement());
@@ -176,7 +193,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-  editor.on('click keyup setContent ObjectResized nodeChange', (e) => {
+  editor.on('click keyup setContent ObjectResized nodeChange ResizeEditor', (e) => {
     // Fixing issue with chrome focus on img.
     resetTimer(
       Delay.setEditorTimeout(editor, launchContextToolbar, 0)

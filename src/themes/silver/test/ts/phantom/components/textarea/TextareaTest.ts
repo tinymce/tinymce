@@ -2,12 +2,17 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderTextarea } from '../../../../../main/ts/ui/dialog/TextField';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
+
+  const helpers = setupDemo();
+  const providers = helpers.extras.backstage.shared.providers;
+
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
@@ -16,7 +21,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
           flex: false,
           label: Option.some('LabelA'),
           validation: Option.none()
-        })
+        }, providers)
       );
     },
     (doc, body, gui, component, store) => {
@@ -48,7 +53,10 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component)
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });
