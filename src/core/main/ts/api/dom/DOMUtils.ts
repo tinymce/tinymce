@@ -241,8 +241,6 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
   let attrHooks;
   const addedStyles = {};
 
-  console.log(settings.contentCssCors);
-
   const win = window;
   const files = {};
   let counter = 0;
