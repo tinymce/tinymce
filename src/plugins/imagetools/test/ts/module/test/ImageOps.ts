@@ -92,6 +92,9 @@ export default function (editor) {
     return Chain.control(
       Chain.fromChains([
         UiFinder.cFindIn('button[aria-label="' + label + '"]'),
+        cWaitForState(function (el) {
+          return Attr.get(el, 'disabled') === undefined;
+        }),
         Mouse.cClick
       ]),
       Guard.addLogging('Wait for UI')
