@@ -12,7 +12,6 @@ export interface ContainerDetail {
   containerBehaviours: SketchBehaviours;
   // DEPRECATE:
   events: AlloyEventRecord;
-  // FIX: types
   domModification: DomModification;
   eventOrder: Record<string, string[]>;
 }
