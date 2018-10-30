@@ -85,7 +85,7 @@ const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: Dr
 
   // HERE
   return Options.findMap(snaps, (snap) => {
-    // FIX: Check these values.
+    // NOTE: These are structs because of the immutableBag in Dragging.ts
     const sensor = snap.sensor();
     const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
     return inRange ? Option.some(
