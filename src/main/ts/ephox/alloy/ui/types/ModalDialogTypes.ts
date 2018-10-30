@@ -15,7 +15,6 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   modalBehaviours: SketchBehaviours;
   eventOrder: Record<string, string[]>;
 
-  // FIX: Keying.cyclic
   onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   useTabstopAt: (elem: Element) => boolean;
