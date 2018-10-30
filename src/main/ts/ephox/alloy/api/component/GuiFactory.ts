@@ -9,7 +9,7 @@ import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
-import { AlloyComponent, ComponentApi } from './ComponentApi';
+import { AlloyComponent } from './ComponentApi';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Objects.readOr('components', [ ])(spec);
@@ -66,7 +66,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
     Tagger.writeOnly(extSpec.element, uid);
   });
 
-  const me = ComponentApi({
+  const me: AlloyComponent = {
     getSystem: systemApi.get,
     config: Option.none,
     hasConfigured: Fun.constant(false),
@@ -78,7 +78,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
     events: Fun.constant({ })
-  }) as AlloyComponent;
+  };
   return GuiTypes.premade(me);
 };
 

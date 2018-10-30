@@ -17,7 +17,7 @@ import { UncurriedHandler } from '../../events/EventRegistry';
 import { NoContextApi, singleton } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
-import { AlloyComponent, ComponentApi } from './ComponentApi';
+import { AlloyComponent } from './ComponentApi';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
@@ -124,7 +124,7 @@ const build = (spec): AlloyComponent => {
     }).getOr('not enabled');
   };
 
-  const me = ComponentApi({
+  const me: AlloyComponent = {
     getSystem: systemApi.get,
     config,
     hasConfigured,
@@ -137,7 +137,7 @@ const build = (spec): AlloyComponent => {
     syncComponents,
     components: subcomponents.get,
     events: Fun.constant(events)
-  });
+  };
 
   return me;
 };

@@ -148,7 +148,6 @@ export {
   CompBehaviours,
   Composite,
   Component,
-  ComponentApi,
   ComponentUtil,
   DomFactory,
   GuiFactory,

@@ -17,9 +17,3 @@ export interface AlloyComponent {
   components: () => AlloyComponent[];
   events: () => Record<string, UncurriedHandler>;
 }
-
-const ComponentApi: (spec) => AlloyComponent = (x) => x
-
-export {
-  ComponentApi
-};
