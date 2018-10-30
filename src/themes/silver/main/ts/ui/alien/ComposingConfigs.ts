@@ -1,4 +1,4 @@
-import { ComponentApi, Composing, MementoRecord } from '@ephox/alloy';
+import { Composing, MementoRecord, AlloyComponent } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
@@ -17,7 +17,7 @@ const memento = (mem: MementoRecord) => {
 
 const childAt = (index: number) => {
   return Composing.config({
-    find: (comp: ComponentApi.AlloyComponent) => {
+    find: (comp: AlloyComponent) => {
       return Traverse.child(comp.element(), index).bind((element) => {
         return comp.getSystem().getByDom(element).toOption();
       });

@@ -1,7 +1,6 @@
 import {
   AlloyComponent,
   AlloySpec,
-  ComponentApi,
   Composite,
   Keying,
   RawDomSchema,
@@ -33,7 +32,7 @@ export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterCont
 }
 
 interface OuterContainerApis {
-  getSocket: (comp: ComponentApi.AlloyComponent) => Option<AlloyComponent>;
+  getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
   setSidebar: (comp: AlloyComponent, panelConfigs: SidebarConfig[]) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;

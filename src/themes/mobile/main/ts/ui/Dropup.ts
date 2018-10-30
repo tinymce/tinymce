@@ -1,4 +1,4 @@
-import { Behaviour, Container, GuiFactory, Replacing, Sliding, ComponentApi } from '@ephox/alloy';
+import { Behaviour, Container, GuiFactory, Replacing, Sliding, AlloyComponent } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 import Receivers from '../channels/Receivers';
@@ -9,7 +9,7 @@ import { window } from '@ephox/dom-globals';
 export interface DropUp {
   appear: (menu: any, update: any, component: any) => void;
   disappear: (onReadyToShrink: any) => void;
-  component: () => ComponentApi.AlloyComponent;
+  component: () => AlloyComponent;
   element: () => SugarElement;
 }
 
@@ -49,7 +49,7 @@ const build = function (refresh, scrollIntoView): DropUp {
         })
       ])
     })
-  ) as ComponentApi.AlloyComponent;
+  ) as AlloyComponent;
 
   const appear = function (menu, update, component) {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {

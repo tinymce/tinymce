@@ -77,6 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     ], next, die, initLogs);
   });
 
-  Pipeline.async({}, [Log.step('TBA', 'Table: Table outside of inline editor should not become resizable',
-    step)], () => success(), failure);
+  Pipeline.async({}, [
+    Log.step('TBA', 'Table: Table outside of inline editor should not become resizable', step)
+  ], () => success(), failure, TestLogs.init());
   });

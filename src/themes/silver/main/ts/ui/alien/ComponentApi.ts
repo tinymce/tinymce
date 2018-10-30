@@ -1,11 +1,12 @@
 import { Merger, Fun } from '@ephox/katamari';
-import { ComponentApi, Toggling, Disabling, Representing, Replacing } from '@ephox/alloy';
+import { Toggling, Disabling, Representing, Replacing } from '@ephox/alloy';
+import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.
 
 // TODO: we will need to move these derivatives back into their Component
 
-const deriveToggling = (spec, component: ComponentApi.AlloyComponent) => {
+const deriveToggling = (spec, component: AlloyComponent) => {
   if (spec.toggle && component.hasConfigured(Toggling)) {
     return spec.toggle().bind((toggle) => {
       if (toggle === true) {
@@ -19,7 +20,7 @@ const deriveToggling = (spec, component: ComponentApi.AlloyComponent) => {
   }
 };
 
-const deriveRepresenting = (spec, component: ComponentApi.AlloyComponent) => {
+const deriveRepresenting = (spec, component: AlloyComponent) => {
   if (component.hasConfigured(Representing)) {
     const item = Representing.getValue(component);
     return {
@@ -29,7 +30,7 @@ const deriveRepresenting = (spec, component: ComponentApi.AlloyComponent) => {
   }
 };
 
-const deriveReplacing = (spec, component: ComponentApi.AlloyComponent) => {
+const deriveReplacing = (spec, component: AlloyComponent) => {
   if (component.hasConfigured(Representing)) {
     /* TODO type this
 
@@ -47,7 +48,7 @@ const deriveReplacing = (spec, component: ComponentApi.AlloyComponent) => {
   }
 };
 
-const component = (spec, component: ComponentApi.AlloyComponent) => {
+const component = (spec, component: AlloyComponent) => {
   // TODO: TS narrowing this method can return many type interfaces depending on the original config
   const togglingConf = deriveToggling(spec, component);
   const representingConf = deriveRepresenting(spec, component);

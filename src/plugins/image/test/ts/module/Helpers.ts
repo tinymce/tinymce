@@ -147,14 +147,9 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
 );
 
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
-<<<<<<< HEAD
   // TODO: Another API case.
   Chain.on((value, next, die, logs) => {
     Chain.pipeline([Chain.inject(value)].concat(chains), (_, newLogs) => next(Chain.wrap(value), newLogs), die, logs);
-=======
-  Chain.async((value, next, die) => {
-    Chain.pipeline([Chain.inject(value)].concat(chains), () => next(value), die);
->>>>>>> origin/5.x
   }),
   Guard.addLogging('Chain operations')
 );
