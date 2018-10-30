@@ -3,13 +3,10 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { FocusManager } from '../../api/focus/FocusManagers';
-import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { MenuConfigSpec, FlatgridConfig, FlatgridConfigSpec, MatrixConfigSpec } from '../../keying/KeyingModeTypes';
+import { CustomEvent } from '../../events/SimulatedEvent';
+import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
 import { ItemSpec } from '../../ui/types/ItemTypes';
-import { KeyingConfigSpec } from '../../api/behaviour/Keying';
-
-// FIX: Do this (Fix KeyingConfig here)
 
 export interface MenuGridMovementSpec {
   mode: 'grid';
