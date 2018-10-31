@@ -328,6 +328,7 @@ const isBeforeSpace = Fun.curry(isChar, true, isWhiteSpace);
 const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
 
 const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
 
 export {
   isForwards,
@@ -346,5 +347,6 @@ export {
   normalizeRange,
   getRelativeCefElm,
   getNormalizedRangeEndPoint,
-  getElementFromPosition
+  getElementFromPosition,
+  getElementFromPrevPosition
 };

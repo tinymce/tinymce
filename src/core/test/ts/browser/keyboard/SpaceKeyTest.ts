@@ -250,6 +250,22 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyTest', (success, failu
           tinyActions.sContentKeystroke(Keys.space(), {}),
           tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
           tinyApis.sAssertContent('<p><br />&nbsp;</p>')
+        ])),
+        Logger.t('Press space after br in beginning of text node', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetRawContent('<p>a<br />b</p>'),
+          tinyApis.sSetCursor([0, 2], 0),
+          tinyActions.sContentKeystroke(Keys.space(), {}),
+          tinyApis.sAssertSelection([0, 2], 1, [0, 2], 1),
+          tinyApis.sAssertContent('<p>a<br />&nbsp;b</p>')
+        ])),
+        Logger.t('Press space before br in beginning of text node', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetRawContent('<p><br />b</p>'),
+          tinyApis.sSetCursor([0], 0),
+          tinyActions.sContentKeystroke(Keys.space(), {}),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1),
+          tinyApis.sAssertContent('<p>&nbsp;<br />b</p>')
         ]))
       ])),
       Logger.t('Space key at node indexes', GeneralSteps.sequence([

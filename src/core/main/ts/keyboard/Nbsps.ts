@@ -18,9 +18,9 @@ import * as ElementType from '../dom/ElementType';
 import { isBeforeSpace, isAfterSpace, getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
 import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
-import { isAtBr } from '../caret/CaretBr';
 import { Text } from '@ephox/dom-globals';
 import { isNbsp, isContent } from '../text/CharType';
+import { isAfterBr, isBeforeBr } from 'tinymce/core/caret/CaretBr';
 
 const nbsp = '\u00a0';
 
@@ -55,7 +55,7 @@ const isInPre = (pos: CaretPosition) => {
     .exists((elm) => isPreValue(Css.get(elm, 'white-space')));
 };
 
-const isAtLineBoundary = (root: Element, pos: CaretPosition) => isAtStartOfBlock(root, pos) || isAtEndOfBlock(root, pos) || isAtBr(root, pos);
+const isAtLineBoundary = (root: Element, pos: CaretPosition) => isAtStartOfBlock(root, pos) || isAtEndOfBlock(root, pos) || isAfterBr(root, pos) || isBeforeBr(root, pos);
 
 const needsToHaveNbsp = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
@@ -69,7 +69,7 @@ const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isAtBr(root, pos) || hasSpaceBefore(root, pos);
+    return isAtStartOfBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
   }
 };
 
@@ -77,7 +77,7 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, pos) || isAtBr(root, pos) || hasSpaceAfter(root, pos);
+    return isAtEndOfBlock(root, pos) || isBeforeBr(root, pos) || hasSpaceAfter(root, pos);
   }
 };
 

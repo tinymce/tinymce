@@ -10,21 +10,29 @@
 
 import { Element } from '@ephox/sugar';
 import { CaretPosition } from './CaretPosition';
-import { getElementFromPosition } from './CaretUtils';
+import { getElementFromPosition, getElementFromPrevPosition } from './CaretUtils';
 import * as ElementType from '../dom/ElementType';
 import { Arr } from '@ephox/katamari';
 import Parents from '../dom/Parents';
 import CaretFinder from './CaretFinder';
 
-const isBeforeBr = (pos: CaretPosition) => getElementFromPosition(pos).exists(ElementType.isBr);
+const isBr = (pos: CaretPosition) => getElementFromPosition(pos).exists(ElementType.isBr);
 
-const isAtBr = (root: Element, pos: CaretPosition) => {
+const findBr = (forward: boolean, root: Element, pos: CaretPosition) => {
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
   const scope = Arr.head(parentBlocks).getOr(root);
-  return isBeforeBr(pos) || CaretFinder.nextPosition(scope.dom(), pos).exists(isBeforeBr);
+  return CaretFinder.fromPosition(forward, scope.dom(), pos).exists(isBr);
+};
+
+const isBeforeBr = (root: Element, pos: CaretPosition) => {
+  return getElementFromPosition(pos).exists(ElementType.isBr) || findBr(true, root, pos);
+};
+
+const isAfterBr = (root: Element, pos: CaretPosition) => {
+  return getElementFromPrevPosition(pos).exists(ElementType.isBr) || findBr(false, root, pos);
 };
 
 export {
   isBeforeBr,
-  isAtBr
+  isAfterBr
 };

@@ -50,6 +50,22 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
             sFireInsert(editor),
             tinyApis.sAssertSelection([0, 2], 2, [0, 2], 2),
             tinyApis.sAssertContent('<p>a<em>b&nbsp;</em> c</p>')
+          ])),
+          Logger.t('Insert at beginning of text node with leading nbsp after a br', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p>a<br />&nbsp;b</p>'),
+            tinyApis.sSetCursor([0, 2], 0),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 2], 0, [0, 2], 0),
+            tinyApis.sAssertContent('<p>a<br />&nbsp;b</p>')
+          ])),
+          Logger.t('Insert at beginning of text node with leading nbsp within inline element followed by br', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p>a<br /><em>&nbsp;b</em></p>'),
+            tinyApis.sSetCursor([0, 2, 0], 0),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 2, 0], 0, [0, 2, 0], 0),
+            tinyApis.sAssertContent('<p>a<br /><em>&nbsp;b</em></p>')
           ]))
         ])),
 
