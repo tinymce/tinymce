@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec, NativeEvents, Representing } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, Keying, Tabstopping, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
@@ -6,6 +6,7 @@ import ElementPath from './ElementPath';
 import { ResizeTypes, resize } from '../sizing/Resize';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
@@ -50,45 +51,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]])) ]);
-
-  const renderWordCount = (): SimpleSpec => {
-    return {
-      dom: {
-        tag: 'span',
-        classes: [ 'tox-statusbar__wordcount' ]
-      },
-      components: [ ],
-      behaviours: Behaviour.derive([
-        Replacing.config({ }),
-        Representing.config({
-          store: {
-            mode: 'memory',
-            initialValue: {
-              mode: 'words',
-              count: { words: 0, characters: 0 }
-            }
-          }
-        }),
-        AddEventsBehaviour.config('wordcount-events', [
-          AlloyEvents.run(NativeEvents.click(), (comp) => {
-            const currentVal = Representing.getValue(comp);
-            const newMode = currentVal.mode === 'words' ? 'characters' : 'words';
-            Representing.setValue(comp, { mode: newMode, count: currentVal.count });
-            replaceCountText(comp, currentVal.count, newMode);
-          }),
-          AlloyEvents.runOnAttached((comp) => {
-            editor.on('wordCountUpdate', (e) => {
-              const { mode } = Representing.getValue(comp);
-              Representing.setValue(comp, { mode, count: e.wordCount });
-              replaceCountText(comp, e.wordCount, mode);
-            });
-          })
-        ])
-      ])
-    };
-  };
-
   const getResizeType = (editor): ResizeTypes => {
     // If autoresize is enabled, disable resize
     const fallback = !Strings.contains(editor.settings.plugins, 'autoresize');
@@ -110,7 +72,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {
-      components.push(renderWordCount());
+      components.push(renderWordCount(editor, providersBackstage));
     }
 
     if (editor.getParam('branding', true, 'boolean')) {

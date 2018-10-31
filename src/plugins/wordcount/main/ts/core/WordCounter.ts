@@ -9,7 +9,6 @@
  */
 
 import Delay from 'tinymce/core/api/util/Delay';
-// import I18n from 'tinymce/core/api/util/I18n';
 import * as WordCount from '../text/WordCount';
 import * as Events from '../api/Events';
 import { Editor } from 'tinymce/core/api/Editor';

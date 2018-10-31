@@ -14,7 +14,7 @@ import Arr from '../alien/Arr';
 const SETS = UnicodeData.SETS;
 const OTHER = UnicodeData.characterIndices.OTHER;
 
-const getType = (char: string) => {
+const getType = (char: string): number => {
   let j, set, type = OTHER;
   const setsLength = SETS.length;
   for (j = 0; j < setsLength; ++j) {
@@ -28,9 +28,9 @@ const getType = (char: string) => {
   return type;
 };
 
-const memoize = (func) => {
-  const cache = {};
-  return (char) => {
+const memoize = <T extends string | number, U>(func: (v: T) => U) => {
+  const cache = {} as Record<T, U>;
+  return (char: T): U => {
     if (cache[char]) {
       return cache[char];
     } else {
