@@ -1,4 +1,13 @@
 Version 5.0.0-preview-4 (TBD)
+    Fixed empty toolbar groups appearing through invalid configuration of the `toolbar` property #AP-450
+    Fixed text not being retained when updating links through the link dialog #AP-293
+    Added translation capability back to the editor's UI #AP-282
+    Fixed edit image context menu, context toolbar and toolbar items being incorrectly enabled when selecting invalid images #AP-323
+    Fixed emoji type ahead being shown when typing URLs #AP-366
+    Fixed toolbar configuration properties incorrectly expecting string arrays instead of strings #AP-342
+    Changed the editor resize handle so that it should be disabled when the autoresize plugin is turned on #AP-424
+    Fixed the block formatting toolbar item not showing a "Formatting" title when there is no selection #AP-321
+    Fixed clicking disabled toolbar buttons hiding the toolbar in inline mode #AP-380
     Fixed `EditorResize` event not being fired upon editor resize #AP-327
     Fixed tables losing styles when updating through the dialog #AP-368
     Fixed context toolbar positioning to be more consistent near the edges of the editor #AP-318
