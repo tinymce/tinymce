@@ -1,8 +1,8 @@
-import { TestLogs } from '../api/TestLogs';
+import { TestLogs, addLogEntry } from '../api/TestLogs';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
-import { GuardFn } from './Guard';
+import { GuardFn, addLogging } from './Guard';
 
 export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
 
@@ -47,7 +47,14 @@ const async = function <T>(f: (next: () => void, die: (err) => void) => void): S
 const debugging = sync<any>(GeneralActions.debug);
 
 const log = function <T>(message: string): Step<T, T> {
-  return sync<T>(GeneralActions.log(message));
+  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+    GeneralActions.log(message);
+    next(value, addLogEntry(logs, message));
+  });
+};
+
+const label = function <T,U>(label: string, chain: Step<T, U>) {
+  return control(chain, addLogging(label));
 };
 
 const wait = function <T>(amount: number): Step<T, T> {
@@ -67,6 +74,7 @@ export const Step = {
   async,
   debugging,
   log,
+  label,
   wait,
   fail,
   pass,

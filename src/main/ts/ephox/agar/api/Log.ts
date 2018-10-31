@@ -1,70 +1,40 @@
 import { Arr } from '@ephox/katamari';
 
-import * as ErrorTypes from '../alien/ErrorTypes';
-import { DieFn, NextFn } from '../pipe/Pipe';
-import { Chain, Wrap } from './Chain';
-import { GeneralSteps } from './Main';
+import { Chain } from './Chain';
+import { sequence } from './GeneralSteps';
 import { Step } from './Step';
-import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
 
 const generateLogMsg = (testId: string, description: string) => {
   // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA:> <description of the test>'
   return `TestCase-${testId}: ${description}`;
 };
 
-const enrichErrorMsg = (label, err) => {
-  return ErrorTypes.enrichWith(label, err);
-};
-
-const enrichDie = (label, f) => {
-  return (value, next, die: DieFn, logs: TestLogs) => {
-    const updatedLogs = pushLogLevel(addLogEntry(logs, label));
-    const dieWith: DieFn = (err, newLogs) => die(enrichErrorMsg(label, err), popLogLevel(newLogs));
-    try {
-      return f(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
-    } catch (err) {
-      dieWith(err, updatedLogs);
-    }
-  };
-};
-
 const step = <T, U>(testId: string, description: string, f: Step<T, U>): Step<T, U> => {
-  const label = generateLogMsg(testId, description);
-  return enrichDie(label, f);
+  return Step.label(generateLogMsg(testId, description), f);
 };
 
-const steps = <T, U>(testId: string, description: string, fs: Step<T, U>[]): Step<T, U>[] => {
-  if (fs.length === 0) return fs;
-  return Arr.map(fs, (f: Step<T, U>, i: number) => {
-    return step(testId, description + ' (' + i + ')', f);
-  });
+const steps = (testId: string, description: string, fs: Step<any, any>[]): Step<any, any>[] => {
+  return Arr.map(fs, (f, i) => step(testId, description + ' (' + i + ')', f));
 };
 
-const stepsAsStep = <T, U>(testId: string, description: string, fs: Step<T, U>[]): Step<T, U> => {
-  return GeneralSteps.sequence(steps(testId, description, fs));
+const stepsAsStep = (testId: string, description: string, fs: Step<any, any>[]): Step<any, any> => {
+  return sequence(steps(testId, description, fs));
 };
 
 const chain = <T, U>(testId: string, description: string, c: Chain<T, U>): Chain<T, U>  => {
-  const label = generateLogMsg(testId, description);
-  const switchDie = (f: (value: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => void): Chain<T, U> => {
-    return { runChain: enrichDie(label, f) };
-  };
-  return switchDie(c.runChain);
+  return Chain.label(generateLogMsg(testId, description), c);
 };
 
-const chains = <T, U>(testId: string, description: string, fs: Chain<T, U>[]): Chain<T, U>[] => {
-  if (fs.length === 0) return fs;
-  return Arr.map(fs, (f: Chain<T, U>, i: number) => {
-    return chain(testId, description + ' (' + i + ')', f);
-  });
+const chains = (testId: string, description: string, cs: Chain<any, any>[]): Chain<any, any>[] => {
+  return Arr.map(cs, (c, i) => chain(testId, description + ' (' + i + ')', c));
 };
 
-const chainsAsChain = <T, U>(testId: string, description: string, fs: Chain<T, U>[]): Chain<T, U> => {
-  return Chain.fromChains(chains(testId, description, fs));
+const chainsAsChain = (testId: string, description: string, cs: Chain<any, any>[]): Chain<any, any> => {
+  return Chain.fromChains(chains(testId, description, cs));
 };
 
-const chainsAsStep = <T>(testId: string, description: string, fs: Chain<any,any>[]): Step<T,T> => {
-  return Chain.asStep({} as T, chains(testId, description, fs));
+const chainsAsStep = (testId: string, description: string, cs: Chain<any,any>[]): Step<any,any> => {
+  return Chain.asStep({}, chains(testId, description, cs));
 };
 
 export {
