@@ -16,4 +16,7 @@ UnitTest.test('browser.tinymce.core.api.SettingsTest', function () {
   Assertions.assertEq('Should be specified class for ida', 'a', Settings.getBodyClass(new Editor('ida', { body_class: 'ida=a,idb=b' }, EditorManager)));
   Assertions.assertEq('Should be specified class for idb', 'b', Settings.getBodyClass(new Editor('idb', { body_class: 'ida=a,idb=b' }, EditorManager)));
   Assertions.assertEq('Should be default class for idc', '', Settings.getBodyClass(new Editor('idc', { body_class: 'ida=a,idb=b' }, EditorManager)));
+
+  Assertions.assertEq('Should default content_css_cors to false', false, Settings.shouldUseContentCssCors(new Editor('id', {}, EditorManager)));
+  Assertions.assertEq('Should return true if content_css_cors is set', true, Settings.shouldUseContentCssCors(new Editor('id', { content_css_cors: true }, EditorManager)));
 });

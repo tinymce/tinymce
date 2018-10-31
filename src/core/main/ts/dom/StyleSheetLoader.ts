@@ -25,12 +25,16 @@ export interface StyleSheetLoader {
   loadAll: (urls: string[], success: Function, failure: Function) => void;
 }
 
-export function StyleSheetLoader(document, settings?): StyleSheetLoader {
+export interface StyleSheetLoaderSettings {
+  maxLoadTime: number;
+  contentCssCors: boolean;
+}
+
+export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
 
-  settings = settings || {};
   maxLoadTime = settings.maxLoadTime || 5000;
 
   const appendToHead = function (node) {
@@ -170,8 +174,11 @@ export function StyleSheetLoader(document, settings?): StyleSheetLoader {
     link.id = 'u' + (idCount++);
     link.async = false;
     link.defer = false;
-    link.crossOrigin = 'anonymous';
     startTime = new Date().getTime();
+
+    if (settings.contentCssCors) {
+      link.crossOrigin = 'anonymous';
+    }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
     if ('onload' in link && !isOldWebKit()) {
