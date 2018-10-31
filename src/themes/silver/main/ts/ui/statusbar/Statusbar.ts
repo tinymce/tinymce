@@ -101,14 +101,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
           classes: [ 'tox-statusbar__text-container']
         },
         components,
-        behaviours: Behaviour.derive([
-          AddEventsBehaviour.config('statusbar-events', [
-            AlloyEvents.runOnAttached((comp) => {
-              // NOTE: If statusbar ever gets re-rendered, we will need to free this.
-              editor.shortcuts.add('alt+F11', 'focus statusbar', () => Keying.focusIn(comp));
-            })
-          ])
-        ])
       }];
     }
     return [];
