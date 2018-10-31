@@ -109,9 +109,9 @@ const bespokeButtons = {
 const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
   const toolbar = registry.toolbar === false ? '' :
     (registry.toolbar === undefined || registry.toolbar === true) ? defaultToolbar : registry.toolbar;
-  const groups = toolbar.split('|');
-  const toolbarGroups = Arr.map(groups, (g) => g.trim().split(' '));
-  return Arr.map(toolbarGroups, (group) => {
+  const groupsStrings = toolbar.split('|');
+  const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
+  const groups = Arr.map(toolbarGroups, (group) => {
     return Arr.bind(group, (toolbarItem) => {
       return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(registry.buttons, toolbarItem.toLowerCase()).fold(
         () => {
@@ -127,6 +127,10 @@ const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
         }
       ).toArray();
     });
+  });
+
+  return Arr.filter(groups, (group) => {
+    return group.length > 0;
   });
 };
 
