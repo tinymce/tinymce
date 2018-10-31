@@ -1,3 +1,9 @@
+Version 4.8.5 (2018-10-30)
+    Added a content_css_cors setting to the editor that adds the crossorigin="anonymous" attribute to link tags added by the StyleSheetLoader. #TINY-1909
+    Fixed a bug where trying to remove formatting with a collapsed selection range would throw an exception. #GH-4636
+    Fixed a bug in the image plugin that caused updating figures to split contenteditable elements. #GH-4563
+    Fixed a bug that was causing incorrect viewport calculations for fixed position UI elements. #TINY-1897
+    Fixed a bug where inline formatting would cause the delete key to do nothing. #TINY-1900
 Version 4.8.4 (2018-10-23)
     Added support for the HTML5 `main` element. #TINY-1877
     Changed the keyboard shortcut to move focus to contextual toolbars to Ctrl+F9. #TINY-1812
