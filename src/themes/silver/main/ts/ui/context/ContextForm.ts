@@ -25,7 +25,7 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
       attributes: {
         for: inputId
       },
-      innerHtml: label
+      innerHtml: providersBackstage.translate(label)
     }
   }));
 

@@ -31,7 +31,7 @@ export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) 
 
 const make = function (render: NoFormRenderer): FormPartRenderer {
   return (parts, spec, backstage) => {
-    return Objects.readOptFrom(spec, 'name').fold(
+    return Objects.readOptFrom<string>(spec, 'name').fold(
       () => render(spec, backstage),
       (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
     );
@@ -56,7 +56,7 @@ const factories: Record<string, FormPartRenderer> = {
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
   listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
-  label: make(renderUiLabel),
+  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),

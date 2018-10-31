@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Add a new word to dictionary', [
       api.sFocus,
       api.sSetContent('<p>hello world</p>'),
-      ui.sClickOnToolbar('click spellcheck button', 'button[title="Spell check"]'),
+      ui.sClickOnToolbar('click spellcheck button', 'button[title="Spellcheck"]'),
       api.sSetCursor([ 0, 0, 0 ], 0),
       Chain.asStep(Element.fromDom(editor.getBody()), [
         UiFinder.cFindIn('span:contains("hello")'),

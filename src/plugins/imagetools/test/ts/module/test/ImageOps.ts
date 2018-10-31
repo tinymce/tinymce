@@ -81,7 +81,7 @@ export default function (editor) {
   const cClickButton = function (text) {
     return Chain.control(
       Chain.fromChains([
-        cWaitForUi('wait for ' + text + ' button', 'button[role="button"]:contains(' + text + '):not([disabled="disabled"])'),
+        cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + '):not([disabled="disabled"])'),
         Mouse.cClick
       ]),
       Guard.addLogging('Wait for UI')
@@ -91,7 +91,10 @@ export default function (editor) {
   const cClickToolbarButton = function (label) {
     return Chain.control(
       Chain.fromChains([
-        UiFinder.cFindIn('button[aria-label="' + label + '"][role="button"]'),
+        UiFinder.cFindIn('button[aria-label="' + label + '"]'),
+        cWaitForState(function (el) {
+          return Attr.get(el, 'disabled') === undefined;
+        }),
         Mouse.cClick
       ]),
       Guard.addLogging('Wait for UI')

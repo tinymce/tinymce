@@ -72,7 +72,7 @@ const open = function (editor, currentIndexState) {
   };
 
   editor.windowManager.open({
-    title: 'Search and Replace',
+    title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
@@ -99,7 +99,7 @@ const open = function (editor, currentIndexState) {
             {
               type: 'checkbox',
               name: 'wholewords',
-              label: 'Find whole words only'
+              label: 'Whole words'
             }
           ]
         }

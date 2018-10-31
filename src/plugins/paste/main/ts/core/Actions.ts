@@ -19,7 +19,7 @@ const shouldInformUserAboutPlainText = function (editor: Editor, userIsInformedS
 
 const displayNotification = function (editor: Editor, message: string) {
   editor.notificationManager.open({
-    text: editor.translate(message),
+    text: message,
     type: 'info'
   });
 };

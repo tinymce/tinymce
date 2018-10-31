@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Step } from '@ephox/agar';
-import { ComponentApi, GuiFactory } from '@ephox/alloy';
+import { GuiFactory, AlloyComponent } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
@@ -78,7 +78,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
         }
       );
     },
-    (doc, body, gui, component: ComponentApi.AlloyComponent, store) => {
+    (doc, body, gui, component: AlloyComponent, store) => {
       const getButton = (selector: string) => {
         return component.getSystem().getByDom(
           SelectorFind.descendant(component.element(), selector).getOrDie(
@@ -87,13 +87,13 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
         ).getOrDie();
       };
 
-      const sAssertButtonDisabledState = (label: string, expected: boolean, button: ComponentApi.AlloyComponent) => {
+      const sAssertButtonDisabledState = (label: string, expected: boolean, button: AlloyComponent) => {
         return Step.sync(() => {
           Assertions.assertEq('Checking if disabled attr is present: ' + label, expected, Attr.has(button.element(), 'disabled'));
         });
       };
 
-      const sAssertButtonActiveState = (label: string, expected: boolean, button: ComponentApi.AlloyComponent) => {
+      const sAssertButtonActiveState = (label: string, expected: boolean, button: AlloyComponent) => {
         return Step.sync(() => {
           Assertions.assertEq(label, expected, Class.has(button.element(), 'tox-tbtn--enabled'));
         });

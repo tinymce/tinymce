@@ -5,7 +5,6 @@ import {
   AlloyTriggers,
   Behaviour,
   Button as AlloyButton,
-  ComponentApi,
   Disabling,
   Focusing,
   Keying,
@@ -266,7 +265,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       classes: [ ToolbarButtonClasses.SplitButton ]
     },
 
-    onExecute (button: ComponentApi.AlloyComponent) {
+    onExecute (button: AlloyComponent) {
       spec.onAction(getApi(button));
     },
 

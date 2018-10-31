@@ -8,7 +8,7 @@ import {
   Toggling,
   Toolbar,
   ToolbarGroup,
-  ComponentApi
+  AlloyComponent
 } from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -76,7 +76,7 @@ export default function () {
         shell: true
       }
     )
-  ) as ComponentApi.AlloyComponent;
+  ) as AlloyComponent;
 
   const wrapper = GuiFactory.build(
     Container.sketch({
@@ -93,7 +93,7 @@ export default function () {
         })
       ])
     })
-  ) as ComponentApi.AlloyComponent;
+  ) as AlloyComponent;
 
   const resetGroups = function () {
     Toolbar.setGroups(toolbar, initGroups.get());

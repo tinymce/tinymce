@@ -1,7 +1,6 @@
 import {
   AlloyComponent,
   AlloySpec,
-  ComponentApi,
   Composite,
   Keying,
   RawDomSchema,
@@ -25,15 +24,15 @@ export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
 }
 
 export interface OuterContainerSketchDetail extends Sketcher.CompositeSketchDetail {
-  dom: () => RawDomSchema;
-  uid: () => string;
-  behaviours: () => Record<string, ConfiguredBehaviour<any, any>>;
+  dom: RawDomSchema;
+  uid: string;
+  behaviours: Record<string, ConfiguredBehaviour<any, any>>;
 }
 export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec, OuterContainerSketchDetail>, OuterContainerApis {
 }
 
 interface OuterContainerApis {
-  getSocket: (comp: ComponentApi.AlloyComponent) => Option<AlloyComponent>;
+  getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
   setSidebar: (comp: AlloyComponent, panelConfigs: SidebarConfig[]) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
@@ -91,11 +90,11 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
   };
 
   return {
-    uid: detail.uid(),
-    dom: detail.dom(),
+    uid: detail.uid,
+    dom: detail.dom,
     components,
     apis,
-    behaviours: detail.behaviours()
+    behaviours: detail.behaviours
   };
 };
 

@@ -1,22 +1,19 @@
 import { Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import { Types } from '@ephox/bridge';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-export interface RenderUiLabel<I> {
-  label: string;
-  items: I[];
-}
-
-export const renderUiLabel = (spec: RenderUiLabel<SimpleSpec>): SimpleSpec => {
+export const renderUiLabel = (spec: Types.Label.Label, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
   return {
     dom: {
       tag: 'label',
-      innerHtml: spec.label,
+      innerHtml: backstageShared.providers.translate(spec.label),
       classes: [ 'tox-label' ]
     },
-    components: spec.items,
+    components: Arr.map(spec.items, backstageShared.interpreter),
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({ }),

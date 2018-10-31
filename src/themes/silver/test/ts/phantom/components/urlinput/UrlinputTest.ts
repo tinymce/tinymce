@@ -1,5 +1,5 @@
-import { Assertions, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, ApproxStructure, Chain } from '@ephox/agar';
-import { Behaviour, Focusing, GuiFactory, Memento, Positioning, Representing } from '@ephox/alloy';
+import { Assertions, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, ApproxStructure, Chain, UiControls } from '@ephox/agar';
+import { AlloyTriggers, Behaviour, Focusing, GuiFactory, Memento, NativeEvents, Positioning, Representing } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Future, Option, Result } from '@ephox/katamari';
 import { SelectorFind, Value } from '@ephox/sugar';
@@ -59,6 +59,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     url: '#header',
                     level: 0,
                     attach: store.adder('header1.attach')
+                  },
+                  {
+                    type: 'header' as LinkTargetType,
+                    title: 'Header2',
+                    url: '#h_2abefd32',
+                    level: 0,
+                    attach: store.adder('header2.attach')
                   }
                 ],
                 anchorTop: Option.some('#anchor-top'),
@@ -122,6 +129,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                           s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header1') })
                         ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item')],
+                        children: [
+                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                          s.element('span', { html: str.is('Header2') })
+                        ]
                       })
                     ]
                   }),
@@ -132,6 +146,56 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                         children: [
                           s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('&lt;top&gt;') })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              });
+            })
+          )
+        ]),
+
+        UiControls.sSetValue(input.element(), 'He'),
+        Step.sync(() => {
+          AlloyTriggers.emit(input, NativeEvents.input());
+        }),
+        Waiter.sTryUntil(
+          'Waiting for the menu to update',
+          Chain.asStep(component.element(), [
+            UiFinder.cFindAllIn('.tox-collection__item'),
+            Chain.op((menuItems) => {
+              if (menuItems.length > 2) {
+                throw Error('Menu hasn\'t been updated yet');
+              }
+            })
+          ]),
+          100,
+          3000
+        ),
+        Chain.asStep(component.element(), [
+          UiFinder.cFindIn('[role="menu"]'),
+          Assertions.cAssertStructure(
+            'Checking the menu shows items that match the input string',
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('div', {
+                classes: [ arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__group') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item')],
+                        children: [
+                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                          s.element('span', { html: str.is('Header1') })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item')],
+                        children: [
+                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                          s.element('span', { html: str.is('Header2') })
                         ]
                       })
                     ]

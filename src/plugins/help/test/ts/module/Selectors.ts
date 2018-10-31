@@ -1,5 +1,5 @@
 export default {
   dialog: '[role="dialog"]',
-  toolbarHelpButton: '.tox-toolbar [role="button"]',
+  toolbarHelpButton: '.tox-toolbar button',
   pluginsTab: '[role="tab"]:contains(Plugins)'
 };

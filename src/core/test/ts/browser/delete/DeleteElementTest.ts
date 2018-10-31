@@ -163,6 +163,41 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () 
         sDeleteElementPath(editor, false, [0, 1]),
         tinyApis.sAssertContent('<p>ab</p>'),
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+      ])),
+      Logger.t('Delete inline element adjacent text nodes forwards', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a <strong>b</strong> c</p>'),
+        tinyApis.sSetCursor([0, 0], 2),
+        sDeleteElementPath(editor, true, [0, 1]),
+        tinyApis.sAssertContent('<p>a &nbsp;c</p>'),
+        tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2)
+      ])),
+      Logger.t('Delete inline element adjacent text nodes backwards', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a&nbsp; <strong>b</strong> &nbsp;c</p>'),
+        tinyApis.sSetCursor([0, 2], 0),
+        sDeleteElementPath(editor, false, [0, 1]),
+        tinyApis.sAssertContent('<p>a &nbsp; &nbsp;c</p>'),
+        tinyApis.sAssertSelection([0, 0], 3, [0, 0], 3)
+      ])),
+      Logger.t('Delete inline element adjacent text nodes, single space', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a <strong>b</strong>c</p>'),
+        tinyApis.sSetCursor([0, 1], 0),
+        sDeleteElementPath(editor, false, [0, 1]),
+        tinyApis.sAssertContent('<p>a c</p>'),
+        tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2)
+      ])),
+      Logger.t('Delete inline element leading only text nodes', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a <strong>b</strong></p>'),
+        tinyApis.sSetCursor([0, 1], 0),
+        sDeleteElementPath(editor, false, [0, 1]),
+        tinyApis.sAssertContent('<p>a&nbsp;</p>'),
+        tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2)
+      ])),
+      Logger.t('Delete inline element trailing only text nodes', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><strong>a</strong> b</p>'),
+        tinyApis.sSetCursor([0, 1], 0),
+        sDeleteElementPath(editor, false, [0, 0]),
+        tinyApis.sAssertContent('<p>&nbsp;b</p>'),
+        tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
       ]))
     ], onSuccess, onFailure);
   }, {

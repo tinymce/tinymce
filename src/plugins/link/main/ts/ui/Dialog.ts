@@ -22,8 +22,6 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
     title: data.title ? data.title : undefined,
   };
 
-  console.log('resultData', resultData, text.getOr('<none>'));
-
   const attachState = {
     href: data.url.value,
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
@@ -43,10 +41,7 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
     delete resultData.text;
   }
 
-  console.log('result data', resultData);
-
   DialogConfirms.preprocess(editor, assumeExternalTargets, resultData).get((pData) => {
-    console.log('preprocessed', pData);
     insertLink(pData);
   });
 

@@ -19,6 +19,7 @@ import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getDefaultAttributes, getDefaultStyles } from '../api/Settings';
 import Helpers from './Helpers';
+import { Types } from '@ephox/bridge';
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) => {
@@ -175,7 +176,14 @@ const open = (editor, isNew?) => {
     }
   }
 
-  const rowColCountItems = !isNew ? [] : [
+  interface DialogItems {
+      type: string;
+      name?: string;
+      label: string;
+      items?: Array<DialogItems | Types.SelectBox.InternalSelectBoxItem>;
+    }
+
+  const rowColCountItems: DialogItems[] = !isNew ? [] : [
     {
       type: 'input',
       name: 'cols',
@@ -188,7 +196,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const alwaysItems = [
+  const alwaysItems: DialogItems[] = [
     {
       type: 'input',
       name: 'width',
@@ -201,7 +209,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const appearanceItems = hasAppearanceOptions(editor) ? [
+  const appearanceItems: DialogItems[] = hasAppearanceOptions(editor) ? [
     {
       type: 'input',
       name: 'cellspacing',
@@ -218,13 +226,19 @@ const open = (editor, isNew?) => {
       label: 'Border width'
     },
     {
-      type: 'checkbox',
-      name: 'caption',
-      label: 'Caption'
+      type: 'label',
+      label: 'Caption',
+      items: [
+        {
+          type: 'checkbox',
+          name: 'caption',
+          label: 'Show caption'
+        }
+      ]
     }
   ] : [];
 
-  const alignmentItem = [
+  const alignmentItem: DialogItems[] = [
     {
       type: 'selectbox',
       name: 'align',
@@ -238,7 +252,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const classListItem = hasClasses ? [
+  const classListItem: DialogItems[] = hasClasses ? [
     {
       type: 'selectbox',
       name: 'class',

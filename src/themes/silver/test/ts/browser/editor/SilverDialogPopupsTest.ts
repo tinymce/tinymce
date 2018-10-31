@@ -109,12 +109,13 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
               items: [
                 {
                   name: 'url1',
-                  type: 'urlinput'
+                  type: 'urlinput',
+                  filetype: 'file'
                 }
               ]
             },
             initialData: {
-              url1: { value: 'Dog' }
+              url1: { value: '' }
             },
             buttons: [ ]
           })

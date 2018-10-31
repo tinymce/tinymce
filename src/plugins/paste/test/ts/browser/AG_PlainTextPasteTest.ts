@@ -51,31 +51,31 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
   const cClearEditor = function () {
     return Chain.control(
       Chain.async(function (editor: any, next, die) {
-      editor.setContent('');
-      next(editor);
-    }),
-    Guard.addLogging('Clear editor')
-  );
+        editor.setContent('');
+        next(editor);
+      }),
+      Guard.addLogging('Clear editor')
+    );
   };
 
   const cFireFakePasteEvent = function (data) {
     return Chain.control(
       Chain.async(function (editor: any, next, die) {
-      editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
-      next(editor);
-    }),
-    Guard.addLogging(`Fire fake paste event ${data}`)
-  );
+        editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
+        next(editor);
+      }),
+      Guard.addLogging(`Fire fake paste event ${data}`)
+    );
   };
 
   const cAssertEditorContent = function (label, expected) {
     return Chain.control(
       Chain.async(function (editor: any, next, die) {
-      Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
-      next(editor);
-    }),
-    Guard.addLogging(`Assert editor content ${expected}`)
-  );
+        Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
+        next(editor);
+      }),
+      Guard.addLogging(`Assert editor content ${expected}`)
+    );
   };
 
   const cAssertClipboardPaste = function (expected, data) {

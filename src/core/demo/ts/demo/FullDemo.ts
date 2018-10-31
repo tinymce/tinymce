@@ -34,7 +34,6 @@ export default function () {
   };
 
   const settings = {
-    // language: 'es',
     skin_url: '../../../../js/tinymce/skins/oxide',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
     visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
@@ -106,7 +105,7 @@ export default function () {
     },
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
       'codesample help noneditable print'
     ],

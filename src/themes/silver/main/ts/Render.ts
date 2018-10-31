@@ -61,6 +61,7 @@ export interface RenderArgs {
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.getParam('inline', false, 'boolean');
   const mode = isInline ? Inline : Iframe;
+  let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
   const sink = GuiFactory.build({
     dom: DomFactory.fromHtml('<div class="tox tox-silver-sink tox-tinymce-aux"></div>'),
@@ -70,6 +71,12 @@ const setup = (editor: Editor): RenderInfo => {
       })
     ])
   });
+
+  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getToolbar(container);
+  }).getOrDie('Could not find a toolbar element');
+
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyToolbar);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
@@ -114,7 +121,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor)) : Option.none();
+  const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
@@ -173,6 +180,8 @@ const setup = (editor: Editor): RenderInfo => {
     } as OuterContainerSketchSpec)
   );
 
+  lazyOuterContainer = Option.some(outerContainer);
+
   editor.shortcuts.add('alt+F9', 'focus menubar', function () {
     OuterContainer.focusMenubar(outerContainer);
   });
@@ -185,8 +194,6 @@ const setup = (editor: Editor): RenderInfo => {
   );
 
   const uiMothership = Gui.takeover(sink);
-
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(outerContainer, sink, editor);
 
   Events.setup(editor, mothership, uiMothership);
 

@@ -20,7 +20,7 @@ const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
 
 const classForPreset = (presets: Types.PresetTypes): string => {
-  return Objects.readOptFrom(presetClasses, presets).getOr(navClass);
+  return Objects.readOptFrom<string>(presetClasses, presets).getOr(navClass);
 };
 
 export {

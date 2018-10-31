@@ -85,10 +85,13 @@ const makeOpen = (editor, imageUploadTimerState) => () => {
 
   let win;
 
-  Actions.findSelectedBlob(editor).then((blob) => {
-    const state = createState(blob);
-    win = editor.windowManager.open(getLoadedSpec(state));
-  });
+  const img = Actions.getSelectedImage(editor);
+  if (Actions.isEditableImage(editor, img)) {
+    Actions.findSelectedBlob(editor).then((blob) => {
+      const state = createState(blob);
+      win = editor.windowManager.open(getLoadedSpec(state));
+    });
+  }
 };
 
 export default {

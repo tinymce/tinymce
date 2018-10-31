@@ -54,7 +54,7 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
         'TBA',
         'Check structure of table picker',
         [
-          Mouse.sClickOn(Body.body(), '[role="button"]'),
+          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
           UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),

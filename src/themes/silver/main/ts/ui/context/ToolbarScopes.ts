@@ -44,14 +44,14 @@ const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Too
   };
 
   const registerToolbar = (key: string, toolbarApi: Toolbar.ContextToolbarApi) => {
-    const contextToolbar = Toolbar.createContextToolbar(toolbarApi).getOrDie();
-    if (toolbarApi.scope === 'editor') {
-      inEditorScope.push(contextToolbar);
-    } else {
-      inNodeScope.push(contextToolbar);
-    }
-
-    lookupTable[key] = contextToolbar;
+    Toolbar.createContextToolbar(toolbarApi).each((contextToolbar) => {
+      if (toolbarApi.scope === 'editor') {
+        inEditorScope.push(contextToolbar);
+      } else {
+        inNodeScope.push(contextToolbar);
+      }
+      lookupTable[key] = contextToolbar;
+    });
   };
 
   const keys = Obj.keys(contextToolbars);

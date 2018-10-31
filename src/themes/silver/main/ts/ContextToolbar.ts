@@ -105,7 +105,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
-    Objects.readOptFrom(scopes.lookupTable, e.toolbarKey).each((ctx) => {
+    Objects.readOptFrom<Toolbar.ContextToolbar | Toolbar.ContextForm>(scopes.lookupTable, e.toolbarKey).each((ctx) => {
       launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);

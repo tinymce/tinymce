@@ -122,13 +122,13 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
             {
               dom: {
                 tag: 'p',
-                innerHtml: 'Drop Image Here'
+                innerHtml: providersBackstage.translate('Drop an image here')
               }
             },
             Button.sketch({
               dom: {
                 tag: 'button',
-                innerHtml: 'Browse',
+                innerHtml: providersBackstage.translate('Browse for an image'),
                 styles: {
                   position: 'relative'
                 },

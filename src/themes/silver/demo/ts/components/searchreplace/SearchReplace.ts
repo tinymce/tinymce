@@ -2,9 +2,6 @@ import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
 
-const helpers = setupDemo();
-const winMgr = WindowManager.setup(helpers.extras);
-
 export const SearchReplaceDialogSpec = {
   title: 'Find and replace',
   body: {
@@ -96,6 +93,8 @@ export const SearchReplaceDialogSpec = {
   }
 };
 export const open = () => {
+  const helpers = setupDemo();
+  const winMgr = WindowManager.setup(helpers.extras);
   // The end user will use this as config
   winMgr.open(SearchReplaceDialogSpec, {}, () => {});
 };

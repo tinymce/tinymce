@@ -1,6 +1,6 @@
 
 New Translations
-<new translation> [<previous translation>]
+<new translation> [<previous translation>] Plugin
 -----------------------------------------------------
 Spell check               [Spellcheck]
 Fonts                     [Font Family]
@@ -10,16 +10,37 @@ Error                     <new>
 Warn                      <new>
 Valid                     <new>
 
+Search                     <new> Charmap
+All                        <new> Charmap
+Finance                    <new> Charmap
+Signs                      <new> Charmap
+Quotations                 <new> Charmap
+Mathematical               <new> Charmap
+Extended Latin             <new> Charmap
+Symbols                    <new> Charmap
+Arrows                     <new> Charmap
+User Defined               <new> Charmap
 
+Loading emoticons...      <new> Emoticons
+Could not load emoticons  <new> Emoticons
+Symbols                   <new> Emoticons
+People                    <new> Emoticons
+Animals and Nature        <new> Emoticons
+Food and Drink            <new> Emoticons
+Activity                  <new> Emoticons
+Travel and Places         <new> Emoticons
+Objects                   <new> Emoticons
+Flags                     <new> Emoticons
 
+Show caption               [Caption] Insert image/media
 
+Error: Form submit field collision.   <new> Save
+Error: No form element found.         <new> Save
 
+Border width            <new> Table (better description than just 'border')
+Border style            <new> Table (better description than just 'style')
 
-
-
-
-
-
+Update                  <new> TOC
 
 
 No longer Used
@@ -40,3 +61,10 @@ Ok (es)
 Media (es)
 General (es)
 URL (es)
+
+
+
+skipped Items, circle back
+-----------------------------------------------------
+Spellcheck -> unable to run demo
+Inlite -> very broken atm

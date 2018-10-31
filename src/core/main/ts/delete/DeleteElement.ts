@@ -8,14 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun, Option, Options } from '@ephox/katamari';
+import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
+import { Node } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as MergeText from './MergeText';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
-import { Node } from '@ephox/dom-globals';
+import { Editor } from '../api/Editor';
 
 const needsReposition = function (pos, elm) {
   const container = pos.container();
@@ -126,37 +128,37 @@ const paddEmptyBlock = function (elm) {
   }
 };
 
-// When deleting an element between two text nodes IE 11 doesn't automatically merge the adjacent text nodes
-const deleteNormalized = function (elm, afterDeletePosOpt) {
-  return Options.liftN([Traverse.prevSibling(elm), Traverse.nextSibling(elm), afterDeletePosOpt], function (prev, next, afterDeletePos) {
-    let offset;
-    const prevNode = prev.dom();
-    const nextNode = next.dom();
+const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
+  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom()));
+  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom()));
 
-    if (NodeType.isText(prevNode) && NodeType.isText(nextNode)) {
-      offset = prevNode.data.length;
-      prevNode.appendData(nextNode.data);
-      Remove.remove(next);
-      Remove.remove(elm);
-      if (afterDeletePos.container() === nextNode) {
-        return CaretPosition(prevNode, offset);
-      } else {
-        return afterDeletePos;
-      }
-    } else {
-      Remove.remove(elm);
-      return afterDeletePos;
+  // Delete the element
+  Remove.remove(elm);
+
+  // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
+  // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
+  return Options.liftN([ prevTextOpt, nextTextOpt, afterDeletePosOpt ], (prev, next, pos) => {
+    const prevNode = prev.dom(), nextNode = next.dom();
+    const offset = prevNode.data.length;
+    MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
+    // Update the cursor position if required
+    return pos.container() === nextNode ? CaretPosition(prevNode, offset) : pos;
+  }).orThunk(() => {
+    if (normalizeWhitespace) {
+      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom(), elm.dom().length));
+      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom(), 0));
     }
-  }).orThunk(function () {
-    Remove.remove(elm);
     return afterDeletePosOpt;
   });
 };
 
-const deleteElement = function (editor, forward: boolean, elm) {
+const isInlineElement = (editor: Editor, element: Element): boolean =>
+  Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
+
+const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret: boolean = true) => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
+  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));
 
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
@@ -164,10 +166,14 @@ const deleteElement = function (editor, forward: boolean, elm) {
   } else {
     parentBlock.bind(paddEmptyBlock).fold(
       function () {
-        setSelection(editor, forward, normalizedAfterDeletePos);
+        if (moveCaret) {
+          setSelection(editor, forward, normalizedAfterDeletePos);
+        }
       },
       function (paddPos) {
-        setSelection(editor, forward, Option.some(paddPos));
+        if (moveCaret) {
+          setSelection(editor, forward, Option.some(paddPos));
+        }
       }
     );
   }
