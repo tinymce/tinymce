@@ -2,7 +2,6 @@ import { UnitTest } from '@ephox/bedrock';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { sAssertVersion } from '../../module/AssertVersion';
 import { Pipeline, GeneralSteps, Assertions } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
 
 declare const tinymce;
 
