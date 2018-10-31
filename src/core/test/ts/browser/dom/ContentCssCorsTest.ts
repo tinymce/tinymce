@@ -1,4 +1,4 @@
-import Theme from 'tinymce/themes/modern/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Editor as McEditor } from '@ephox/mcagar';
