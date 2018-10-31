@@ -118,6 +118,10 @@ const getImagesUploadHandler = (editor: Editor): UploadHandler => {
   return editor.getParam('images_upload_handler', null, 'function');
 };
 
+const shouldUseContentCssCors = (editor: Editor): boolean => {
+  return editor.getParam('content_css_cors', false, 'boolean');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -141,5 +145,6 @@ export default {
   getImageUploadUrl,
   getImageUploadBasePath,
   getImagesUploadCredentials,
-  getImagesUploadHandler
+  getImagesUploadHandler,
+  shouldUseContentCssCors
 };
