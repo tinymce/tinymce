@@ -32,6 +32,7 @@ import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
 import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
+import { renderCheckbox } from '../../../main/ts/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
@@ -101,22 +102,19 @@ export default () => {
     label: 'A label wraps components in a group',
     type: 'label',
     items: [
-      {
-        type: 'checkbox',
+      renderCheckbox({
         label: 'check box item 1',
         name: 'one'
-      },
-      {
-        type: 'checkbox',
+      }, sharedBackstage.providers) as any,
+      renderCheckbox({
         label: 'check box item 2',
         name: 'two'
-      },
-      {
-        type: 'input',
-        label: Option.some('exampleInput'),
+      }, sharedBackstage.providers) as any,
+      renderInput({
+        label: Option.some('Sample input'),
         name: 'exampleinputfieldname',
-        colspan: Option.none()
-      }
+        validation: Option.none()
+      }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
 
@@ -124,34 +122,32 @@ export default () => {
     label: 'A label wraps a grid compontent',
     type: 'label',
     items: [
-      {
+      renderGrid({
         type: 'grid',
         columns: 2,
-        items: [,
-          {
-            type: 'button',
+        items: [
+          renderButton({
             name: 'gridspecbutton',
             text: 'Click Me!',
             primary: false
-          },
-          {
-            type: 'checkbox',
+          }, () => {
+            console.log('clicked on the button in the grid wrapped by a label');
+          }, sharedBackstage.providers) as any,
+          renderCheckbox({
             label: 'check box item 1',
             name: 'one'
-          },
-          {
-            type: 'checkbox',
+          }, sharedBackstage.providers) as any,
+          renderCheckbox({
             label: 'check box item 2',
             name: 'two'
-          },
-          {
-            type: 'input',
-            label: Option.some('exampleInput'),
+          }, sharedBackstage.providers) as any,
+          renderInput({
+            label: Option.some('Sample input'),
             name: 'exampleinputfieldname',
-            colspan: Option.none()
-          }
+            validation: Option.none()
+          }, sharedBackstage.providers) as any
         ]
-      }
+      }, sharedBackstage) as any
     ]
   }, sharedBackstage);
 
