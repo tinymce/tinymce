@@ -174,7 +174,7 @@ const setup = (editor: Editor): RenderInfo => {
       behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
         Keying.config({
           mode: 'cyclic',
-          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__group, .tox-sidebar__slider, .tox-statusbar__path'
+          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__group, .tox-sidebar--sliding-open, .tox-statusbar__path'
         })
       ]))
     } as OuterContainerSketchSpec)
