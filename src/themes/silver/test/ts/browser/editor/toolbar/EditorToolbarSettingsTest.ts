@@ -21,7 +21,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('tox-toolbar') ],
-        children: Arr.map([ 1, 2, 3, 4, 5, 6], (_) =>
+        children: Arr.map([ 1, 2, 3, 4, 5], (_) => // Technically meant to be 6 groups by default but the link and image plugins aren't loaded here so whatever
           s.element('div', { classes: [ arr.has('tox-toolbar__group') ] }))
       });
     })
@@ -76,6 +76,41 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
             return s.element('div', {
               classes: [ arr.has('tox-toolbar') ],
               children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar__group') ],
+                  children: [
+                    s.element('button', { }),
+                    s.element('button', { })
+                  ]
+                })
+              ]
+            });
+          })
+        ), Id.generate('')),
+        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.bundle(Result.value)
+      ])
+    ]),
+
+    Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic | stufffffed | strikethrough underline" should create "bold italic | strikethrough underline" toolbar', [
+      NamedChain.asChain([
+        NamedChain.writeValue('body', Body.body()),
+        NamedChain.write('editor', cCreateEditorWithToolbar('bold italic | stufffffed | strikethrough underline')),
+        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+        NamedChain.direct('toolbar', Assertions.cAssertStructure(
+          'Checking toolbar should have just bold and italic',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              classes: [ arr.has('tox-toolbar') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar__group') ],
+                  children: [
+                    s.element('button', { }),
+                    s.element('button', { })
+                  ]
+                }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
                   children: [
