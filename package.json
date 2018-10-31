@@ -27,9 +27,9 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "devDependencies": {
-    "@ephox/alloy": "latest",
     "@ephox/acid": "latest",
     "@ephox/agar": "latest",
+    "@ephox/alloy": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/boulder": "latest",
     "@ephox/bridge": "latest",
@@ -61,12 +61,12 @@
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "^4.0.0",
     "moxie-zip": "~0.0.3",
-    "tslint": "^5.9.1",
+    "rimraf": "^2.6.2",
     "ts-loader": "^4.4.2",
+    "tslint": "^5.9.1",
     "typescript": "^2.6.2",
     "webpack": "^4.8.3",
     "webpack-dev-server": "3.1.5",
-    "webpack-livereload-plugin": "^2.1.1",
-    "rimraf": "^2.6.2"
+    "webpack-livereload-plugin": "^2.1.1"
   }
 }

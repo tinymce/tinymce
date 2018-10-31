@@ -1,4 +1,4 @@
-import { ImageDialogInfo } from './DialogTypes';
+import { ImageDialogInfo, ListItem } from './DialogTypes';
 import { Arr } from '@ephox/katamari';
 
 const makeItems = function (info: ImageDialogInfo) {
@@ -28,17 +28,30 @@ const makeItems = function (info: ImageDialogInfo) {
     name: 'dimensions',
     type: 'sizeinput'
   };
+
+  interface DialogItems {
+    type: string;
+    name?: string;
+    label: string;
+    items?: Array<DialogItems | ListItem>;
+  }
   // TODO: the original listbox supported styled items but bridge does not seem to support this
-  const classList = info.classList.map((items) => ({
+  const classList = info.classList.map((items): DialogItems  => ({
     name: 'classes',
     type: 'selectbox',
     label: 'Class',
     items
   }));
-  const caption = {
-    name: 'caption',
-    type: 'checkbox',
-    label: 'Show caption'
+  const caption: DialogItems = {
+    type: 'label',
+    label: 'Caption',
+    items: [
+      {
+        type: 'checkbox',
+        name: 'caption',
+        label: 'Show caption'
+      }
+    ]
   };
 
   return Arr.flatten<any>([

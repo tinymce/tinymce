@@ -32,7 +32,6 @@ import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
 import { renderUiLabel } from '../../../main/ts/ui/general/UiLabel';
 import { setupDemo } from './DemoHelpers';
 import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
-import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
@@ -100,55 +99,61 @@ export default () => {
 
   const labelSpec = renderUiLabel({
     label: 'A label wraps components in a group',
+    type: 'label',
     items: [
-      renderCheckbox({
+      {
+        type: 'checkbox',
         label: 'check box item 1',
         name: 'one'
-      }, sharedBackstage.providers),
-      renderCheckbox({
+      },
+      {
+        type: 'checkbox',
         label: 'check box item 2',
         name: 'two'
-      }, sharedBackstage.providers),
-      renderInput({
+      },
+      {
+        type: 'input',
         label: Option.some('exampleInput'),
         name: 'exampleinputfieldname',
-        validation: Option.none()
-      }, sharedBackstage.providers)
+        colspan: Option.none()
+      }
     ]
-  });
+  }, sharedBackstage);
 
   const labelGridSpec = renderUiLabel({
     label: 'A label wraps a grid compontent',
+    type: 'label',
     items: [
-      renderGrid({
+      {
         type: 'grid',
         columns: 2,
-        items: [
-          AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
-          renderButton({
+        items: [,
+          {
+            type: 'button',
             name: 'gridspecbutton',
             text: 'Click Me!',
             primary: false
-          }, () => {
-            console.log('clicked on the button in the grid');
-          }, sharedBackstage.providers) as any,
-          renderCheckbox({
+          },
+          {
+            type: 'checkbox',
             label: 'check box item 1',
             name: 'one'
-          }, sharedBackstage.providers),
-          renderCheckbox({
+          },
+          {
+            type: 'checkbox',
             label: 'check box item 2',
             name: 'two'
-          }, sharedBackstage.providers),
-          renderInput({
+          },
+          {
+            type: 'input',
             label: Option.some('exampleInput'),
             name: 'exampleinputfieldname',
-            validation: Option.none()
-          }, sharedBackstage.providers)
+            colspan: Option.none()
+          }
         ]
-      }, sharedBackstage)
+      }
     ]
-  });
+  }, sharedBackstage);
 
   const listboxSpec = renderListbox({
     name: 'listbox1',
