@@ -1,6 +1,8 @@
 import { console } from '@ephox/dom-globals';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
+/* tslint:disable:no-console */
+
 export const registerDemoContextMenus = () => {
   getDemoRegistry().addContextMenu('regular', {
     update: () => ['bold', 'italic', '|', 'table']
@@ -11,7 +13,6 @@ export const registerDemoContextMenus = () => {
       icon: 'code',
       text: 'Code',
       onAction: (api) => {
-        // tslint:disable-next-line:no-console
         console.log('open source code dialog');
       }
     }]
@@ -22,12 +23,10 @@ export const registerDemoContextMenus = () => {
       icon: 'code',
       text: 'Code',
       onAction: (api) => {
-        // tslint:disable-next-line:no-console
         console.log('open source code dialog');
       }
     }]
   });
-
 
   getDemoRegistry().addContextMenu('spelling', {
     update: () => [

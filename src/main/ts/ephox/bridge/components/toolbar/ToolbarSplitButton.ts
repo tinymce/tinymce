@@ -66,4 +66,5 @@ export const splitButtonSchema = ValueSchema.objOf([
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 
-export const createSplitButton = (spec: any): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);
+export const createSplitButton = (spec: any): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);
