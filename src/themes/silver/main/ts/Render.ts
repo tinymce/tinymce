@@ -1,4 +1,4 @@
-import { Behaviour, DomFactory, Gui, GuiFactory, Positioning, AlloySpec, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, DomFactory, Gui, GuiFactory, Positioning, AlloySpec, SimpleSpec, Keying, Tabstopping } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
 import { HTMLElement } from '@ephox/dom-globals';
@@ -12,7 +12,7 @@ import ContextToolbar from './ContextToolbar';
 import Events from './Events';
 import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
-import OuterContainer from './ui/general/OuterContainer';
+import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
@@ -144,7 +144,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: ['tox-editor-container']
     },
-    components: editorComponents
+    components: editorComponents,
   };
 
   const containerComponents = Arr.flatten<SimpleSpec>([
@@ -164,10 +164,18 @@ const setup = (editor: Editor): RenderInfo => {
         }
       },
       components: containerComponents,
-      behaviours: Behaviour.derive(mode.getBehaviours(editor))
-    })
+      behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
+        Keying.config({
+          mode: 'cyclic',
+          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__group, .tox-sidebar__slider, .tox-statusbar__path'
+        })
+      ]))
+    } as OuterContainerSketchSpec)
   );
 
+  editor.shortcuts.add('alt+F9', 'focus menubar', function () {
+    OuterContainer.focusMenubar(outerContainer);
+  });
   editor.shortcuts.add('alt+F10', 'focus toolbar', function () {
     OuterContainer.focusToolbar(outerContainer);
   });

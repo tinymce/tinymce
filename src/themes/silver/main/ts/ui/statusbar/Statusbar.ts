@@ -38,10 +38,6 @@ const renderStatusbar = (editor): SimpleSpec => {
         },
         innerHtml: html
       },
-      behaviours: Behaviour.derive([
-        Tabstopping.config({ }),
-        Focusing.config({ })
-      ])
     };
   };
 
@@ -101,9 +97,6 @@ const renderStatusbar = (editor): SimpleSpec => {
         },
         components,
         behaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'cyclic'
-          }),
           AddEventsBehaviour.config('statusbar-events', [
             AlloyEvents.runOnAttached((comp) => {
               // NOTE: If statusbar ever gets re-rendered, we will need to free this.

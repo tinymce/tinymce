@@ -12,6 +12,7 @@ import {
   Sketcher,
   SystemEvents,
   UiSketcher,
+  Tabstopping,
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
@@ -132,7 +133,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           detail.onEscape()(comp);
           return Option.some(true);
         }
-      })
+      }),
+      Tabstopping.config({ })
     ]),
     apis,
     domModification: {
