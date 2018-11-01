@@ -92,6 +92,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const behaviours = [
     Focusing.config({ }),
     Representing.config({
+      onSetValue: detail.onSetValue,
       store: {
         mode: 'dataset',
         getDataKey: (comp) => Value.get(comp.element()),

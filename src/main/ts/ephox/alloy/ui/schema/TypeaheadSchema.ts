@@ -35,6 +35,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     FieldSchema.defaulted('populateFromBrowse', true)
   ]),
 
+  Fields.onHandler('onSetValue'),
   Fields.onKeyboardHandler('onExecute'),
   Fields.onHandler('onItemExecute'),
   FieldSchema.defaulted('inputClasses', [ ]),
