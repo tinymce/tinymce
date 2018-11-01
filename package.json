@@ -33,9 +33,9 @@
     "@ephox/sand": "latest",
     "@ephox/sugar": "latest",
     "@ephox/wrap-jsverify": "latest",
-    "awesome-typescript-loader": "^3.4.1",
+    "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1"
+    "typescript": "^3.1.5"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

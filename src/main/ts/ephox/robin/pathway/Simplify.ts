@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 
 var eq = function (universe, e1) {
-  return Fun.curry(universe.eq, e1);
+  return Fun.curry<any, [any], boolean>(universe.eq, e1);
 };
 
 var isDuplicate = function (universe, rest, item) {
