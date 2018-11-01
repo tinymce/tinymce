@@ -1,28 +1,27 @@
-import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Option, Result } from '@ephox/katamari';
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
-import * as Fields from '../data/Fields';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
-export interface CustomDetail {
+export interface CustomDetail<A> {
   dom: StructDomSchema;
   // By this stage, the components are built.
   components: AlloyComponent[];
   uid: string;
   events: AlloyEventRecord;
-  apis: Record<string, Function>;
+  apis: A;
   eventOrder: Record<string, string[]>;
   domModification: Option<DomModification>;
   originalSpec: SimpleOrSketchSpec;
   'debug.sketcher': string;
 }
 
-const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
+const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail<any>, any> => {
   return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
       // Note, no children.
@@ -37,7 +36,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
     FieldSchema.strict('uid'),
 
     FieldSchema.defaulted('events', {}),
-    FieldSchema.defaulted('apis', Fun.constant({})),
+    FieldSchema.defaulted('apis', { }),
 
     // Use mergeWith in the future when pre-built behaviours conflict
     FieldSchema.field(
@@ -59,7 +58,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail, any> => {
   ]), spec);
 };
 
-const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
+const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail => {
   // EFFICIENCY: Consider not merging here.
   return {
     ...detail.dom,
@@ -68,18 +67,17 @@ const toDefinition = (detail: CustomDetail): DomDefinitionDetail => {
   };
 };
 
-const toModification = (detail: CustomDetail): DomModification => {
+const toModification = (detail: CustomDetail<any>): DomModification => {
   return detail.domModification.fold(() => {
     return NuModification({ });
   }, NuModification);
 };
 
-// Probably want to pass info to these at some point.
-const toApis = (info: CustomDetail): Record<string, Function> => {
+const toApis = <A>(info: CustomDetail<A>): A => {
   return info.apis;
 };
 
-const toEvents = (info: CustomDetail): AlloyEventRecord => {
+const toEvents = (info: CustomDetail<any>): AlloyEventRecord => {
   return info.events;
 };
 

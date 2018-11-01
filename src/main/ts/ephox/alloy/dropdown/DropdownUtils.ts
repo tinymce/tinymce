@@ -115,7 +115,7 @@ const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWi
 
 interface SinkDetail {
   uid: string;
-  lazySink: Option<() => Result<AlloyComponent, any>>;
+  lazySink: Option<(comp: AlloyComponent) => Result<AlloyComponent, any>>;
 }
 
 const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail) => {
@@ -130,7 +130,9 @@ const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail) => {
           'No internal sink is specified, nor could an external sink be found'
         ))
       );
-    }, Fun.identity);
+    },  (lazySinkFn) => {
+      return () => lazySinkFn(anyInSystem);
+    });
   });
 };
 

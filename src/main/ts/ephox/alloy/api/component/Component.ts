@@ -22,7 +22,7 @@ import { AlloyComponent } from './ComponentApi';
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
 const getDomDefinition = (
-  info: CustomDefinition.CustomDetail,
+  info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
@@ -45,7 +45,7 @@ const getDomDefinition = (
 };
 
 const getEvents = (
-  info: CustomDefinition.CustomDetail,
+  info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
@@ -62,7 +62,7 @@ const build = (spec): AlloyComponent => {
 
   const systemApi = Cell(singleton);
 
-  const info: CustomDefinition.CustomDetail = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
 
@@ -117,6 +117,10 @@ const build = (spec): AlloyComponent => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 
+  const runApi = <A, O>(f: (apis: A) => O) => {
+    return f(info.apis);
+  };
+
   // TYPIFY
   const readState = (behaviourName: string): Option<any> => {
     return bData[behaviourName]().map((b) => {
@@ -130,6 +134,7 @@ const build = (spec): AlloyComponent => {
     hasConfigured,
     spec: Fun.constant(spec),
     readState,
+    runApi,
 
     connect,
     disconnect,

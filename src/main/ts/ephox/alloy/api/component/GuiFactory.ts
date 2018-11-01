@@ -72,6 +72,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
     hasConfigured: Fun.constant(false),
     connect,
     disconnect,
+    runApi: Fun.noop as any,
     element: Fun.constant(extSpec.element),
     spec: Fun.constant(spec),
     readState: Fun.constant('No state'),

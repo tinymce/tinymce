@@ -12,6 +12,7 @@ export interface AlloyComponent {
   readState: (behaviourName: string) => any;
   connect: (newApi) => void;
   disconnect: () => void;
+  runApi: <A, O>(f: (apis: A) => O) => O
   element: () => Element;
   syncComponents: () => void;
   components: () => AlloyComponent[];

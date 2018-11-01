@@ -21,7 +21,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   fetch: (comp: AlloyComponent) => Future<F>;
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink: Option<() => Result<AlloyComponent, Error>>;
+  lazySink: Option<(comp: AlloyComponent) => Result<AlloyComponent, Error>>;
   // TODO test getHotspot
   getHotspot: (comp: AlloyComponent) => Option<AlloyComponent>;
   layouts: Option<{
@@ -65,7 +65,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   }>;
 
   toggleClass: string;
-  lazySink?: any;
+  lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
   parts: {
     menu: Partial<TieredMenuSpec>;
   };

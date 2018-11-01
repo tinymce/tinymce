@@ -33,7 +33,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   role: Option<string>;
 
   getAnchor: (comp: AlloyComponent) => AnchorSpec;
-  lazySink: Option<() => Result<AlloyComponent, Error>>;
+  lazySink: Option<(comp: AlloyComponent) => Result<AlloyComponent, Error>>;
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
 }
@@ -60,7 +60,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
   role?: string;
 
-  lazySink?: () => Result<AlloyComponent, Error>;
+  lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
   matchWidth?: boolean;
