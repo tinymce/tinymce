@@ -1,11 +1,13 @@
-import { Behaviour, DomFactory, Gui, GuiFactory, Positioning, AlloySpec, SimpleSpec, Keying, Tabstopping } from '@ephox/alloy';
+import { AlloySpec, Behaviour, DomFactory, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
+import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
@@ -16,8 +18,6 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;

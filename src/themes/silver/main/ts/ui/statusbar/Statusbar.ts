@@ -1,11 +1,11 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, GuiFactory, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
-import I18n from '../../../../../../core/main/ts/api/util/I18n';
-import { getDefaultOr } from '../icons/Icons';
-import ElementPath from './ElementPath';
-import { ResizeTypes, resize } from '../sizing/Resize';
 import { Editor } from 'tinymce/core/api/Editor';
+import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { getDefaultOr } from '../icons/Icons';
+import { resize, ResizeTypes } from '../sizing/Resize';
+import ElementPath from './ElementPath';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
@@ -125,6 +125,4 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   };
 };
 
-export {
-  renderStatusbar
-};
+export { renderStatusbar };
