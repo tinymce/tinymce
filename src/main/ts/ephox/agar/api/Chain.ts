@@ -130,8 +130,8 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
   });
 };
 
-const asStep = function <T>(initial: T, chains: Chain<any, any>[]) {
-  return Step.raw<any,T>((initValue, next, die, logs) => {
+const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
+  return Step.raw<T,T>((initValue, next, die, logs) => {
     const cs = Arr.map(chains, extract);
 
     Pipeline.async(
