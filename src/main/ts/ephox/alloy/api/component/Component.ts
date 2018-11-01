@@ -112,8 +112,8 @@ const build = (spec): AlloyComponent => {
     return Type.isFunction(bData[behaviour.name()]);
   };
 
-  const runApi = <A, O>(f: (apis: A) => O) => {
-    return f(info.apis);
+  const getApis = <A>(): A => {
+    return info.apis;
   };
 
   // TYPIFY
@@ -129,7 +129,7 @@ const build = (spec): AlloyComponent => {
     hasConfigured,
     spec: Fun.constant(spec),
     readState,
-    runApi,
+    getApis,
 
     connect,
     disconnect,

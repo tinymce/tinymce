@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 # [4.1.0] - 2018-11-01
 ### Added
- - A new runApi method for running individual APIs on components
+ - A new getApis() method for running individual APIs on components
 
 ### Changed
  - The lazySink function for all dropdown types now takes a component as an argument
