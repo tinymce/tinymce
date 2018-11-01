@@ -1,14 +1,11 @@
 import 'tinymce/themes/silver/Theme';
 
 import { Assertions, Chain, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import * as UnitTest from '@ephox/bedrock/lib/api/UnitTest';
-import TinyLoader from '@ephox/mcagar/lib/main/ts/ephox/mcagar/api/TinyLoader';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
-import TinyApis from '@ephox/mcagar/lib/main/ts/ephox/mcagar/api/TinyApis';
-import TinyUi from '@ephox/mcagar/lib/main/ts/ephox/mcagar/api/TinyUi';
-import * as Body from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/Body';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', (success, failure) => {
   EmoticonsPlugin();
@@ -51,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
 
   Pipeline.async({},
     Log.steps('TBA', 'Emoticon: Loading databases from different urls', [
-      sTestEditorWithSettings([ 'All', 'People' ], '/project/src/plugins/emoticons/test/json/test-emojis.js'),
-      sTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/src/plugins/emoticons/test/json/test-emojis-alt.js')
+      sTestEditorWithSettings([ 'All', 'People' ], '/project/src/plugins/emoticons/test/js/test-emojis.js'),
+      sTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/src/plugins/emoticons/test/js/test-emojis-alt.js')
     ]), success, failure);
 });

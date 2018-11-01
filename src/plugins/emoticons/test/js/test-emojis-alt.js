@@ -1,5 +1,5 @@
 // NOTE: Source: npm package: emojilib, file:emojis.json
-window.mce_emoticons_plugin_database = {
+window.tinymce.emoticons_plugin_database = {
   "red_car": {
     "keywords": ["red", "transportation", "vehicle"],
     "char": "🚗",

@@ -312,9 +312,9 @@ module.exports = function (grunt) {
           {
             flatten: true,
             expand: true,
-            cwd: 'src/plugins/emoticons/main/json',
+            cwd: 'src/plugins/emoticons/main/js',
             src: '*.js',
-            dest: 'js/tinymce/plugins/emoticons/json'
+            dest: 'js/tinymce/plugins/emoticons/js'
           }
         ]
       },

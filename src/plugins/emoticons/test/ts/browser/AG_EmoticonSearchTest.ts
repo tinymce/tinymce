@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
     toolbar: 'emoticons',
     theme: 'silver',
     skin_url: '/project/js/tinymce/skins/oxide',
-    emoticons_database_url: '/project/src/plugins/emoticons/main/json/emojis.js'
+    emoticons_database_url: '/project/src/plugins/emoticons/main/js/emojis.js'
   }, success, failure);
 });
