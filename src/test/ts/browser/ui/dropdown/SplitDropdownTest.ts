@@ -83,16 +83,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         ],
 
         lazySink: (c: AlloyComponent) => {
-          Assertions.assertStructure(
-            'Lazy sink should get passed the split button',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('span', {
-                classes: [ arr.has('test-split-dropdownss') ]
-              });
-            }),
-            c.element()
-          );
-
+          TestDropdownMenu.assertLazySinkArgs('span', 'test-split-dropdown', c);
           // Only gets here is the above assertion passes.
           return Result.value(sink.get(c))
         },

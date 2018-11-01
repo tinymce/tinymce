@@ -29,6 +29,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
 
             minChars: 2,
             uid: 'test-type',
+            inputClasses: [ 'test-typeahead' ],
             markers: {
               // TODO: Test this
               openClass: 'test-typeahead-open'
@@ -56,7 +57,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               });
             },
 
-            lazySink () { return Result.value(sink); },
+            lazySink (c) {
+              TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
+              return Result.value(sink);
+            },
 
             parts: {
               menu: TestDropdownMenu.part(store)

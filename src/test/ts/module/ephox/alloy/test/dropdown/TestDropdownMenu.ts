@@ -1,4 +1,4 @@
-import { Step, Waiter } from '@ephox/agar';
+import { Step, Waiter, Assertions, ApproxStructure } from '@ephox/agar';
 import { Fun, Merger } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -7,6 +7,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+import { AlloyComponent } from '../../../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
 
 const renderMenu = (spec): Partial<MenuSpec> => {
   return {
@@ -94,6 +95,18 @@ const mWaitForNewMenu = (component) => {
   });
 };
 
+const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent) => {
+  Assertions.assertStructure(
+    'Lazy sink should get passed the split button',
+    ApproxStructure.build((s, str, arr) => {
+      return s.element(expectedTag, {
+        classes: [ arr.has(expectedClass) ]
+      });
+    }),
+    comp.element()
+  );
+}
+
 const itemMarkers = {
   item: 'item',
   selectedItem: 'selected-item',
@@ -105,6 +118,7 @@ const itemMarkers = {
 const markers = () => itemMarkers;
 
 export {
+  assertLazySinkArgs,
   renderItem,
   renderMenu,
   part,

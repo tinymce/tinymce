@@ -118,7 +118,8 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
         components: [ ],
 
-        lazySink () {
+        lazySink (c) {
+          TestDropdownMenu.assertLazySinkArgs('div', 'dropdown-button', c);
           return Result.value(sink.get(c));
         },
 

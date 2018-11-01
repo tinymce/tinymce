@@ -35,7 +35,8 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
     const c = GuiFactory.build(
       Dropdown.sketch({
         dom: {
-          tag: 'button'
+          tag: 'button',
+          classes: [ 'test-dropdown' ]
         },
 
         components: [
@@ -53,7 +54,8 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           ])
         ]),
 
-        lazySink () {
+        lazySink (c) {
+          TestDropdownMenu.assertLazySinkArgs('button', 'test-dropdown', c);
           return Result.value(memSink.get(c));
         },
 
