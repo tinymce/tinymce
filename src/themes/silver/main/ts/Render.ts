@@ -64,7 +64,13 @@ const setup = (editor: Editor): RenderInfo => {
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
   const sink = GuiFactory.build({
-    dom: DomFactory.fromHtml('<div class="tox tox-silver-sink tox-tinymce-aux"></div>'),
+    dom: {
+      tag: 'div',
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'],
+      attributes: {
+        dir: 'rtl'
+      }
+    },
     behaviours: Behaviour.derive([
       Positioning.config({
         useFixed: false // this allows menus to scroll with the outer page, we don't want position: fixed
@@ -168,6 +174,9 @@ const setup = (editor: Editor): RenderInfo => {
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
+        },
+        attributes: {
+          dir: 'rtl'
         }
       },
       components: containerComponents,

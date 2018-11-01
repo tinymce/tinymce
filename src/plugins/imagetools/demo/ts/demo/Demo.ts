@@ -62,6 +62,7 @@ tinymce.init({
       progress(100);
     }, 1000);
   },
+  rtl_ui: true
 });
 
 function send() {
