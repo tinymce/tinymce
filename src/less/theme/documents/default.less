@@ -2,18 +2,39 @@
 // Default document styles
 //
 
-@document-background-color: #fff;
+@content-background: @color-white;
+@content-background-size: cover;
+
+@document-background-color: @color-white;
+@document-box-shadow: none;
+@document-border-radius: 0;
 @document-font-size: @font-size-md;
 @document-text-color: @text-color;
 @document-font-stack: @font-stack-base;
 @document-line-height: @line-height-base;
+@document-max-width: 100%;
+@document-selection-color: fade(@color-tint, 10%);
+@document-margin-x: 0;
+@document-margin-y: 0;
+@document-padding: 0 @pad-md;
+
+html {
+  background: @content-background;
+  background-size: @content-background-size;
+  display: block;
+}
 
 body {
   background: @document-background-color;
+  border-radius: @document-border-radius;
+  box-shadow: @document-box-shadow;
   color: @document-text-color;
   font-family: @document-font-stack;
   font-size: @document-font-size;
   line-height: @document-line-height;
+  margin: @document-margin-y @document-margin-x;
+  max-width: @document-max-width;
+  padding: @document-padding;
   scrollbar-3dlight-color: #f0f0ee;
   scrollbar-arrow-color: #676662;
   scrollbar-base-color: #f0f0ee;
@@ -23,3 +44,65 @@ body {
   scrollbar-shadow-color: #f0f0ee;
   scrollbar-track-color: #f5f5f5;
 }
+
+table {
+  border-collapse: collapse;
+  border-color: @border-color;
+  width: 100%;
+}
+
+table th,
+table td {
+  border: 1px solid @border-color;
+  padding: 0.4rem;
+}
+
+td[data-mce-selected],
+th[data-mce-selected] {
+  background-color: @document-selection-color !important;
+
+  &::selection {
+    background: none;
+  }
+
+  * {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+}
+
+blockquote {
+  border-left: 2px solid @border-color;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
+
+code {
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  padding: 0.1rem 0.2rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid @border-color;
+}
+
+img::selection {
+  background: none;
+}
+
+// TODO: Remove this from default styles?
+.mce-content-body img[data-mce-selected] {
+  outline: none;
+}
+
+// TODO: Remove this from default styles?
+.mce-content-body hr[data-mce-selected] {
+  //
+}
+
+
+
+
+
