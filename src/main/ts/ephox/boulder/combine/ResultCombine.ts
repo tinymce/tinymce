@@ -11,7 +11,7 @@ const mergeValues = (values: Record<string, any>[], base: Record<string, any>):S
 };
 
 const mergeErrors = function <E>(errors: E[][]): SimpleResult<E[], any> {
-  return Fun.compose(SimpleResult.serror, Arr.flatten)(errors);
+  return Fun.compose<any, any, any>(SimpleResult.serror, Arr.flatten)(errors);
 };
 
 
