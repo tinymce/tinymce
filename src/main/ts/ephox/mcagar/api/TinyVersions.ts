@@ -3,6 +3,7 @@ import { SelectorFilter, Element, Attr, Insert, Body, Remove, DomEvent } from '@
 import { Strings, Arr } from '@ephox/katamari';
 import { getTinymce, deleteTinymceGlobals } from '../loader/Globals';
 import { updateTinymceUrls } from '../loader/Urls';
+import { readAllPlugins, sRegisterPlugins } from '../loader/Plugins';
 
 const loadScript = (url: string, success: () => void, failure: (err: Error) => void) => {
   const script = Element.fromTag('script');
@@ -66,10 +67,13 @@ const sLoad = (version: string) => {
 };
 
 const sWithVersion = (version: string, step: Step<any, any>) => {
+  const plugins = readAllPlugins();
+
   return GeneralSteps.sequence([
     sLoad(version),
     step,
-    sLoad('latest')
+    sLoad('latest'),
+    sRegisterPlugins(plugins)
   ]);
 };
 

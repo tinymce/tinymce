@@ -1,5 +1,6 @@
 import { Option, Obj, Arr } from "@ephox/katamari";
 import { getTinymce } from "./Globals";
+import { Step } from "@ephox/agar";
 
 export interface PluginDetails {
   name: string;
@@ -32,8 +33,11 @@ const registerPlugins = (plugins: PluginDetails[]) => {
   });
 };
 
+const sRegisterPlugins = (plugins: PluginDetails[]) => Step.sync(() => registerPlugins(plugins));
+
 export {
   readAllPlugins,
   readPlugins,
-  registerPlugins
+  registerPlugins,
+  sRegisterPlugins
 };
