@@ -17,8 +17,6 @@ import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
-import Settings from 'tinymce/core/api/Settings';
-import I18n from 'tinymce/core/api/util/I18n';
 
 const DOM = DOMUtils.DOM;
 
@@ -149,9 +147,6 @@ const renderThemeUi = function (editor) {
 const init = function (editor) {
   const settings = editor.settings;
   let boxInfo;
-
-  // The user might have bundled multiple language packs so we need to switch the active code to the user specified language
-  I18n.setCode(Settings.getLanguageCode(editor));
 
   editor.fire('ScriptsLoaded');
 
