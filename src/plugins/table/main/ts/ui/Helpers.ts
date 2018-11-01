@@ -293,7 +293,7 @@ export interface CellData {
 
 const extractDataFromCellElement = (editor: Editor, elm: HTMLElement, hasAdvancedCellTab: boolean): CellData => {
   const dom = editor.dom;
-  const data: CellData = {
+  const data: any = {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
