@@ -29,7 +29,7 @@ gulp.task('lint', function() {
 // Build CSS
 //
 gulp.task('less', function() {
-  return gulp.src('./src/less/*.less')
+  return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
       plugins: [autoprefix, exportLessVariablesToJson]
     }).on('error', function(err) {
@@ -37,7 +37,7 @@ gulp.task('less', function() {
       browserSync.notify(err.message, 5000); // Display error in the browser
       this.emit('end'); // Prevent gulp from catching the error and exiting the watch process
     }))
-    .pipe(gulp.dest('./build'))
+    .pipe(gulp.dest('./build/skins/'))
     .pipe(browserSync.stream());
 });
 

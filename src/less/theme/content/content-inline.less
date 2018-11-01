@@ -1,0 +1,33 @@
+//
+// Inline content
+//
+
+.mce-content-body {
+  //
+}
+
+//
+// Should these be located in `components/toolbar/toolbar.less`?
+//
+.tox-toolbar-dock-fadeout {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.tox-toolbar-dock-fadein {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tox-toolbar-dock-transition {
+  transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+
+  // Set all transition delays to 0s, overriding visibility to apply immediately
+  // and thus allowing the opacity to fade in
+  //
+  // transition-delay: 0s;
+}
+
+.tox-toolbar-dock-transition.tox-toolbar-dock-fadein {
+  transition-delay: 0s;
+}
