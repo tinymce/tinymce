@@ -17,6 +17,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onShow: (component: AlloyComponent) => void;
   onHide: (component: AlloyComponent) => void;
   getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
+  // NOTE: This does not get passed a component
   lazySink: () =>  Result<AlloyComponent, Error>;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Option<{
@@ -29,6 +30,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   inlineBehaviours?: AlloyBehaviourRecord;
+  // NOTE: This does not get passed a component
   lazySink: () => Result<AlloyComponent, Error>;
   onShow?: (component: AlloyComponent) => void;
   onHide?: (component: AlloyComponent) => void;

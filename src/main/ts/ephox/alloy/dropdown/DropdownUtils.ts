@@ -120,12 +120,10 @@ interface SinkDetail {
 
 const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail) => {
   return anyInSystem.getSystem().getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).map((internalSink) => {
-    return Fun.constant(
-      Result.value(internalSink)
-    );
+    return () => Result.value(internalSink);
   }).getOrThunk(() => {
     return sinkDetail.lazySink.fold(() => {
-      return Fun.constant(
+      return () => (
         Result.error(new Error(
           'No internal sink is specified, nor could an external sink be found'
         ))

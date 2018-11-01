@@ -19,6 +19,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   useTabstopAt: (elem: Element) => boolean;
 
+  // NOTE: This does not get passed a component
   lazySink: () => Result<AlloyComponent, Error>;
   dragBlockClass: Option<string>;
 }
