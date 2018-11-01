@@ -15,6 +15,7 @@ import EnterKey from './EnterKey';
 import SpaceKey from './SpaceKey';
 import CaretContainerInput from 'tinymce/core/caret/CaretContainerInput';
 import { Editor } from 'tinymce/core/api/Editor';
+import * as InputKeys from './InputKeys';
 
 const setup = function (editor: Editor) {
   const caret = BoundarySelection.setupSelectedState(editor);
@@ -24,6 +25,7 @@ const setup = function (editor: Editor) {
   DeleteBackspaceKeys.setup(editor, caret);
   EnterKey.setup(editor);
   SpaceKey.setup(editor);
+  InputKeys.setup(editor);
 };
 
 export default {

@@ -3,14 +3,12 @@ import { Arr } from '@ephox/katamari';
 
 const sSetContentAndPressKey = function (key) {
   return function (tinyApis, tinyActions, content) {
-    const padding = key === Keys.space() ? '\u00a0' : '';
-    const extraOffset = padding === '' ? 0 : 1;
     return GeneralSteps.sequence([
-      tinyApis.sSetContent('<p>' + content + padding + '</p>'),
+      tinyApis.sSetContent('<p>' + content + '</p>'),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
         [0, 0],
-        content.length + extraOffset
+        content.length
       ),
       tinyActions.sContentKeystroke(key, {})
     ]);
