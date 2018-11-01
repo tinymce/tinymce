@@ -7,7 +7,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { AlloyComponent } from '../../../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const renderMenu = (spec): Partial<MenuSpec> => {
   return {

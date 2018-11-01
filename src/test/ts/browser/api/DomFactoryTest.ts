@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-import * as DomFactory from '../../../../main/ts/ephox/alloy/api/component/DomFactory';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 
 UnitTest.test('DomFactoryTest', () => {
   Assertions.assertEq('Basic DomFactory.simple', {

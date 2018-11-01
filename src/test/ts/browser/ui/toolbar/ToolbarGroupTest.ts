@@ -10,7 +10,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-import { AlloyComponent } from '../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
   const mungeItem = (itemSpec) => {

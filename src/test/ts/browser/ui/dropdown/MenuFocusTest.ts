@@ -1,18 +1,16 @@
-import { Chain, FocusTools, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
+import { Chain, FocusTools, GeneralSteps, Logger, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
-import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-
-import * as FocusManagers from '../../../../../main/ts/ephox/alloy/api/focus/FocusManagers';
-import { NormalItemSpec, WidgetItemSpec } from '../../../../../main/ts/ephox/alloy/ui/types/ItemTypes';
+import { NormalItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
