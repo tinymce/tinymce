@@ -146,7 +146,7 @@ const renderSidebar = (spec) => {
         ],
         behaviours: Behaviour.derive([
           Tabstopping.config({ }),
-          Focusing.config({ }),
+          Focusing.config({ }), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
           Sliding.config({
             dimension: {
               property: 'width'

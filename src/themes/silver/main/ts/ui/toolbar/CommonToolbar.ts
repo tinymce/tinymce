@@ -58,7 +58,7 @@ const renderToolbar = (foo: ToolbarFoo) => {
     toolbarBehaviours: Behaviour.derive([
       Keying.config({
         // Tabs between groups
-        mode: 'flow',
+        mode: 'acyclic',
         onEscape: foo.onEscape,
         selector: '.tox-toolbar__group'
       }),
