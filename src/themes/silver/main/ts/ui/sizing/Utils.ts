@@ -1,7 +1,7 @@
 import { Option, Type } from '@ephox/katamari';
 
 const parseToInt = (val) => {
-  // if size is a number or '_pt', will return the number
+  // if size is a number or '_px', will return the number
   const re = /^[0-9\.]+(|px)$/i;
   if (re.test('' + val)) {
     return Option.some(parseInt(val, 10));
