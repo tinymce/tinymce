@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, Keying, Tabstopping, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
-import I18n from '../../../../../../core/main/ts/api/util/I18n';
+import I18n from 'tinymce/core/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
 import ElementPath from './ElementPath';
 import { ResizeTypes, resize } from '../sizing/Resize';

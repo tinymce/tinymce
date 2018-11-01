@@ -9,6 +9,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const getCreationDateClasses = function (editor) {
   return editor.getParam('template_cdate_classes', 'cdate');
@@ -34,12 +35,12 @@ const getTemplates = function (editorSettings) {
   return editorSettings.templates;
 };
 
-const getCdateFormat = function (editor) {
-  return editor.getParam('template_cdate_format', editor.getLang('template.cdate_format'));
+const getCdateFormat = (editor: Editor) => {
+  return editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
 };
 
-const getMdateFormat = function (editor) {
-  return editor.getParam('template_mdate_format', editor.getLang('template.mdate_format'));
+const getMdateFormat = (editor: Editor) => {
+  return editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
 };
 
 const getDialogWidth = function (editor) {

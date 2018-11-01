@@ -4,10 +4,9 @@ import { AddOnManager } from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import { UnitTest } from '@ephox/bedrock';
+import I18n from 'tinymce/core/api/util/I18n';
 
-UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   let languagePackUrl;
 
@@ -51,9 +50,9 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function () {
     }
   };
 
-  const getLanguagePackUrl = function (language, languages?) {
+  const getLanguagePackUrl = function (code, languages?) {
     languagePackUrl = null;
-    AddOnManager.language = language;
+    I18n.setCode(code);
     PluginManager.requireLangPack('plugin', languages);
     return languagePackUrl;
   };
@@ -70,8 +69,6 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function () {
     LegacyUnit.equal(getLanguagePackUrl('sv', 'en,sv,us'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv', 'en,us,sv'), '/root/langs/sv.js');
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'en,us'), null);
-    LegacyUnit.strictEqual(getLanguagePackUrl(null, 'en,us'), null);
-    LegacyUnit.strictEqual(getLanguagePackUrl(null), null);
 
     AddOnManager.languageLoad = false;
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'sv'), null);
