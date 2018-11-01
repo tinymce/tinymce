@@ -69,6 +69,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
               innerHtml: 'Touch button'
             }
           },
+          // TODO: Test lazy sink
           TouchMenu.parts().sink({ })
         ],
 
