@@ -1,0 +1,134 @@
+//
+// Objects
+//
+
+@document-selection-color: fade(#feca57, 10%);
+@object-block-selected-color: #feca57;
+@object-block-selected-outline-width: 1.5px;
+
+.mce-content-body {
+
+  // Selection outline on certain editable objects
+  img[data-mce-selected],
+  table[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  hr[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+    outline-offset: 1px;
+  }
+
+  // Selection outline on non editable elements
+  *[contentEditable=false] *[contentEditable=true]:focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false] *[contentEditable=true]:hover {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false][data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  &.mce-content-readonly {
+    *[contentEditable=true]:focus, *[contentEditable=true]:hover {
+      outline: none;
+    }
+  }
+
+  // TODO: What's this?
+  *[data-mce-selected="inline-boundary"] {
+    background: @content-boundary-bg;
+  }
+
+  // Anchor object
+  .mce-item-anchor {
+    cursor: default;
+    display: inline-block;
+    -webkit-user-select: all;
+    -webkit-user-modify: read-only;
+    -moz-user-select: all;
+    -moz-user-modify: read-only;
+    user-select: all;
+    width: 8px !important;
+    height: 12px !important;
+    padding: 0 2px;
+    background: transparent url("data:image/svg+xml;charset=utf8,%3Csvg width='8' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L8 0 8 12 4.09117821 9 0 12z'/%3E%3C/svg%3E") no-repeat center;
+  }
+
+  .mce-item-anchor[data-mce-selected] {
+    outline-offset: 1px;
+  }
+
+  // Fixes TINY-1618
+  //  Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+  //  tables, making it impossible to enter spaces into small table cells
+  table {
+    -webkit-nbsp-mode: normal;
+  }
+
+  // Selection of whole table cells
+  td[data-mce-selected],
+  th[data-mce-selected] {
+    background-color: @document-selection-color !important;
+
+    &::selection {
+      //Prevent selection to be visible
+      background: none;
+    }
+
+    * {
+      //Prevent selection to be visible
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+  }
+}
+
+// Table border resizing handles
+.ephox-snooker-resizer-bar {
+  background-color: @object-block-selected-color;
+  opacity: .0;
+}
+
+.ephox-snooker-resizer-cols {
+  cursor: col-resize;
+}
+
+.ephox-snooker-resizer-rows {
+  cursor: row-resize;
+}
+
+.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
+  opacity: .2;
+}
+
+// Figure alignment
+figure.align-left {
+  float: left;
+}
+
+figure.align-right {
+  float: right;
+}
+
+figure.image.align-center {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Table of contents
+.mce-toc {
+  //
+}
+
+.mce-toc h2 {
+  //
+}
+
+.mce-toc li {
+  //
+}

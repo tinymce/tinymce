@@ -56,48 +56,6 @@
   background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
 }
 
-figure.align-left {
-  float: left;
-}
-
-figure.align-right {
-  float: right;
-}
-
-figure.image.align-center {
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-figure.image {
-  display: inline-block;
-  border: 1px solid gray;
-  margin: 0 2px 0 1px;
-  background: #f5f2f0;
-}
-
-figure.image img {
-  margin: 8px 8px 0 8px;
-}
-
-figure.image figcaption {
-  margin: 6px 8px 6px 8px;
-  text-align: center;
-}
-
-.mce-toc {
-  border: 1px solid gray;
-}
-
-.mce-toc h2 {
-  margin: 4px;
-}
-
-.mce-toc li {
-  list-style-type: none;
-}
-
 .mce-pagebreak {
   cursor: default;
   display: block;
@@ -113,20 +71,6 @@ figure.image figcaption {
   .mce-pagebreak {
     border: 0px;
   }
-}
-
-.mce-item-anchor {
-  cursor: default;
-  display: inline-block;
-  -webkit-user-select: all;
-  -webkit-user-modify: read-only;
-  -moz-user-select: all;
-  -moz-user-modify: read-only;
-  user-select: all;
-  width: 9px !important;
-  height: 9px !important;
-  border: 1px dotted #3A3A3A;
-  background: #D5D5D5 url(img/anchor.gif) no-repeat center;
 }
 
 .mce-nbsp, .mce-shy {
@@ -165,61 +109,5 @@ figure.image figcaption {
   outline: 1px dotted #333;
 }
 
-.mce-content-body {
-  *[contentEditable=false] *[contentEditable=true]:focus {
-    outline: 2px solid @content-block-focus;
-  }
 
-  *[contentEditable=false] *[contentEditable=true]:hover {
-    outline: 2px solid @content-block-hover;
-  }
-
-  *[contentEditable=false][data-mce-selected] {
-    outline: 2px solid @content-block-selected;
-  }
-
-  &.mce-content-readonly {
-    *[contentEditable=true]:focus, *[contentEditable=true]:hover {
-      outline: none;
-    }
-  }
-
-  *[data-mce-selected="inline-boundary"] {
-    background: @content-boundary-bg;
-  }
-
-  .mce-item-anchor[data-mce-selected] {
-    background: #D5D5D5 url(img/anchor.gif) no-repeat center;
-  }
-
-  hr {
-    cursor: default;
-  }
-
-  /* Fixes TINY-1618
-     Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
-     tables, making it impossible to enter spaces into small table cells
-  */
-  table {
-    -webkit-nbsp-mode: normal;
-  }
-}
-
-/* Table Resizing */
-.ephox-snooker-resizer-bar {
-  background-color: @content-selection-bg;
-  opacity: 0.0;
-}
-
-.ephox-snooker-resizer-cols {
-  cursor: col-resize;
-}
-
-.ephox-snooker-resizer-rows {
-  cursor: row-resize;
-}
-
-.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
-  opacity: 0.2;
-}
 /* stylelint-enable */

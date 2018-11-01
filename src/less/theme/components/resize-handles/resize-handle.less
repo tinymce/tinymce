@@ -2,40 +2,41 @@
 // Resize handle
 //
 
-@resize-handle-color: @color-tint;
-@resize-handle-size: 12px;
+@resize-handle-color: #feca57;
+@resize-handle-size: 10px;
 
 .mce-content-body div.mce-resizehandle {
   @offset: -@resize-handle-size / 3;
-  background-color: transparent;
+  background-color: @resize-handle-color;
   border-color: @resize-handle-color;
   border-style: solid;
+  border-width: 1px;
   box-sizing: border-box;
   height: @resize-handle-size;
   position: absolute;
   width: @resize-handle-size;
 
   &:hover {
-    background-color: transparent;
+    background-color: @resize-handle-color;
   }
 
   &:nth-of-type(1) {
-    border-width: 2px 0 0 2px;
+    //border-width: 2px 0 0 2px;
     cursor: nwse-resize;
   }
 
   &:nth-of-type(2) {
-    border-width: 2px 2px 0 0;
+    //border-width: 2px 2px 0 0;
     cursor: nesw-resize;
   }
 
   &:nth-of-type(3) {
-    border-width: 0 2px 2px 0;
+    //border-width: 0 2px 2px 0;
     cursor: nwse-resize;
   }
 
   &:nth-of-type(4) {
-    border-width: 0 0 2px 2px;
+    // border-width: 0 0 2px 2px;
     cursor: nesw-resize;
   }
 }

@@ -13,10 +13,13 @@
 @document-font-stack: @font-stack-base;
 @document-line-height: @line-height-base;
 @document-max-width: 100%;
-@document-selection-color: fade(@color-tint, 10%);
 @document-margin-x: 0;
 @document-margin-y: 0;
 @document-padding: 0 @pad-md;
+
+@document-image-caption-font-size: @font-size-sm;
+@document-image-caption-font-color: @text-color-muted;
+@document-table-caption-font-size: @font-size-lg;
 
 html {
   background: @content-background;
@@ -51,24 +54,15 @@ table {
   width: 100%;
 }
 
+table caption {
+  font-size: @document-table-caption-font-size;
+  margin-bottom: .25rem;
+}
+
 table th,
 table td {
   border: 1px solid @border-color;
   padding: 0.4rem;
-}
-
-td[data-mce-selected],
-th[data-mce-selected] {
-  background-color: @document-selection-color !important;
-
-  &::selection {
-    background: none;
-  }
-
-  * {
-    -webkit-touch-callout: none;
-    user-select: none;
-  }
 }
 
 blockquote {
@@ -86,23 +80,28 @@ code {
 hr {
   border: 0;
   border-top: 1px solid @border-color;
+  cursor: default;
+  margin: .5rem 0;
 }
 
 img::selection {
   background: none;
 }
 
-// TODO: Remove this from default styles?
-.mce-content-body img[data-mce-selected] {
-  outline: none;
+figure.image {
+  display: inline-block;
+  margin: 1rem 0;
 }
 
-// TODO: Remove this from default styles?
-.mce-content-body hr[data-mce-selected] {
-  //
+figure.image img {
+  margin: 0;
 }
 
-
-
+figure.image figcaption {
+  margin: .5rem;
+  font-size: @document-image-caption-font-size;
+  color: @document-image-caption-font-color;
+  text-align: center;
+}
 
 
