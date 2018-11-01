@@ -30,6 +30,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import * as MultiClickSelection from 'tinymce/core/selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import { document, window } from '@ephox/dom-globals';
+import Settings from '../api/Settings';
 
 declare const escape: any;
 
@@ -221,6 +222,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     root_element: editor.inline ? editor.getBody() : null,
     collect: () => editor.inline,
     schema: editor.schema,
+    contentCssCors: Settings.shouldUseContentCssCors(editor),
     onSetAttrib (e) {
       editor.fire('SetAttrib', e);
     }
