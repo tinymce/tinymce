@@ -9,32 +9,27 @@
  */
 
 import Delay from 'tinymce/core/api/util/Delay';
-import I18n from 'tinymce/core/api/util/I18n';
-import WordCount from '../text/WordCount';
-import Events from '../api/Events';
+import * as WordCount from '../text/WordCount';
+import * as Events from '../api/Events';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const setup = function (editor) {
-  const wordsToText = function (editor) {
-    const wordCount = WordCount.getCount(editor);
-    return I18n.translate(['{0} ' + (wordCount === 1 ? 'word' : 'words'), wordCount]);
-  };
+const updateCount = (editor: Editor) => {
+  const wordCount = WordCount.getEditorWordcount(editor);
+  Events.fireWordCountUpdate(editor, wordCount);
+};
 
-  const update = function () {
-    Events.fireWordCountUpdate(editor, wordsToText(editor));
-  };
+const setup = (editor: Editor) => {
+  const debouncedUpdate = Delay.debounce(() => updateCount(editor), 300);
 
-  editor.on('init', function () {
-    update();
-
-    const debouncedUpdate = Delay.debounce(update, 300);
-
-    Delay.setEditorTimeout(editor, function () {
-
+  editor.on('init', () => {
+    updateCount(editor);
+    Delay.setEditorTimeout(editor, () => {
       editor.on('setcontent beforeaddundo undo redo keyup', debouncedUpdate);
     }, 0);
   });
 };
 
-export default {
-  setup
+export {
+  setup,
+  updateCount
 };
