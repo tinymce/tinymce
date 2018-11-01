@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.1.0] - 2018-11-01
+### Added
+- Typeahead specification now may have an onSetValue handler
+
 # [4.0.0] - 2018-10-30
 ### Changed
 - All sketcher configs are no longer wrapped in functions
