@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step, Chain, UiFinder, Keyboard, Keys, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell, Arr } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import { Element, Body } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
@@ -14,7 +14,8 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
   const store = Cell([ ]);
 
-  const sUiContainerTest = (editor, container) => Logger.ts('Check basic container structure and actions', [
+  const sUiContainerTest = (editor, container, tinyApis) => Logger.ts('Check basic container structure and actions', [
+    tinyApis.sFocus,
     Assertions.sAssertStructure(
       'Container structure',
       ApproxStructure.build((s, str, arr) => {
@@ -276,8 +277,10 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       const uiContainer = Element.fromDom(editor.getContainer());
       const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
 
+      const tinyApis = TinyApis(editor);
+
       Pipeline.async({ }, Arr.flatten([
-        sUiContainerTest(editor, uiContainer),
+        sUiContainerTest(editor, uiContainer, tinyApis),
         sContentAreaContainerTest(contentAreaContainer)
       ]), onSuccess, onFailure);
     },
