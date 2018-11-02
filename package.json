@@ -1,6 +1,6 @@
 {
   "name": "@ephox/oxide",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "TinyMCE 5 Oxide skin",
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts/atomic/",
