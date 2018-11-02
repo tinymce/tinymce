@@ -1,11 +1,8 @@
-import { Pipeline, Step } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
+import { Assertions, Chain, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import ActionChains from 'ephox/mcagar/api/ActionChains';
 import Editor from 'ephox/mcagar/api/Editor';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyVersions } from '../../../../main/ts/ephox/mcagar/api/Main';
-import { cAssertEditorVersion } from '../../module/AssertVersion';
+import { TinyVersions } from 'ephox/mcagar/api/Main';
 
 UnitTest.asynctest('ActionChainsTest', (success, failure) =>  {
   let count;

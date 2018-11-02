@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import Editor from 'ephox/mcagar/api/Editor';
 import UiChains from 'ephox/mcagar/api/UiChains';
-import { TinyVersions } from '../../../../main/ts/ephox/mcagar/api/Main';
+import { TinyVersions } from 'ephox/mcagar/api/Main';
 import { cAssertEditorVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('UiChainsTest', (success, failure) => {

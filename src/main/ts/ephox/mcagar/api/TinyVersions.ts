@@ -1,9 +1,9 @@
-import { Step, GeneralSteps } from '@ephox/agar';
-import { SelectorFilter, Element, Attr, Insert, Body, Remove, DomEvent } from '@ephox/sugar';
-import { Strings, Arr } from '@ephox/katamari';
-import { getTinymce, deleteTinymceGlobals } from '../loader/Globals';
-import { updateTinymceUrls } from '../loader/Urls';
+import { GeneralSteps, Step } from '@ephox/agar';
+import { Arr, Strings } from '@ephox/katamari';
+import { Attr, Body, DomEvent, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import { deleteTinymceGlobals, getTinymce } from '../loader/Globals';
 import { readAllPlugins, sRegisterPlugins } from '../loader/Plugins';
+import { updateTinymceUrls } from '../loader/Urls';
 
 const loadScript = (url: string, success: () => void, failure: (err: Error) => void) => {
   const script = Element.fromTag('script');

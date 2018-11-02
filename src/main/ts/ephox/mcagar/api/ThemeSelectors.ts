@@ -26,6 +26,5 @@ const getThemeSelectors = (): ThemeSelectors => {
 }
 
 export {
-  ThemeSelectors,
   getThemeSelectors
 }

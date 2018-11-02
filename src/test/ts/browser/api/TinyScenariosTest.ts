@@ -1,15 +1,11 @@
-import { Arbitraries, GeneralSteps } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Arbitraries, Assertions, GeneralSteps, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
+import { PlatformDetection } from '@ephox/sand';
+import { Node } from '@ephox/sugar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
-import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
-import { PlatformDetection } from '@ephox/sand';
-import { console } from '@ephox/dom-globals';
-import { TinyVersions } from '../../../../main/ts/ephox/mcagar/api/Main';
 import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('TinyScenariosTest', (success, failure) => {

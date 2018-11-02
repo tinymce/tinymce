@@ -1,11 +1,9 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { document, console } from '@ephox/dom-globals';
-import { Fun, Merger, Result, Arr } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
+import { Arr, Fun, Merger, Result } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
-import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { getThemeSelectors } from './ThemeSelectors';
 import { isSilver } from './TinyVersions';
-
-const selectors = (): ThemeSelectors => getThemeSelectors()
 
 var dialogRoot = Element.fromDom(document.body);
 
@@ -22,14 +20,14 @@ var cDialogRoot = Chain.inject(dialogRoot);
 var cGetToolbarRoot = Chain.fromChains([
   cToolstripRoot,
   Chain.binder((container: Element) => {
-    return UiFinder.findIn(container, selectors().toolBarSelector);
+    return UiFinder.findIn(container, getThemeSelectors().toolBarSelector);
   })
 ]);
 
 var cGetMenuRoot = Chain.fromChains([
   cToolstripRoot,
   Chain.binder((container: Element) => {
-    return UiFinder.findIn(container, selectors().menuBarSelector);
+    return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
   })
 ]);
 
@@ -157,7 +155,7 @@ var cClickPopupButton = function (btnType: string, selector?: string) {
 
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
-    NamedChain.direct('popup', Chain.binder((container) => UiFinder.findIn(container, selectors()[btnType])), 'button'),
+    NamedChain.direct('popup', Chain.binder((container) => UiFinder.findIn(container, getThemeSelectors()[btnType])), 'button'),
     NamedChain.direct('button', Mouse.cClick, '_'),
     NamedChain.outputInput
   ]);

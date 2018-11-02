@@ -1,5 +1,5 @@
 import { RawAssertions, Step, Chain } from "@ephox/agar";
-import { getTinymce } from "../../../main/ts/ephox/mcagar/loader/Globals";
+import { getTinymce } from "ephox/mcagar/loader/Globals";
 
 const assertTinymceVersion = (tinymce, expectedMajor: number, expectedMinor: number) => {
   const major = parseInt(tinymce.majorVersion, 10);

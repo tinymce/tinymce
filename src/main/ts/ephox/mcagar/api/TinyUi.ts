@@ -2,11 +2,9 @@ import { Assertions, Chain, Mouse, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Merger } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
-import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
+import { getThemeSelectors } from './ThemeSelectors';
 
 export default function (editor) {
-  const selectors = (): ThemeSelectors => getThemeSelectors();
-
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
   var editorRoot = Element.fromDom(editor.getBody());
@@ -15,13 +13,13 @@ export default function (editor) {
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
     Chain.binder((container: Element) => {
-      return UiFinder.findIn(container, selectors().toolBarSelector);
+      return UiFinder.findIn(container, getThemeSelectors().toolBarSelector);
     })
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
     Chain.binder((container: Element) => {
-      return UiFinder.findIn(container, selectors().menuBarSelector);
+      return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
     })
   ]);
 
@@ -127,7 +125,7 @@ export default function (editor) {
   var cSubmitDialog = function () {
     return Chain.fromChains([
       Chain.binder((container: Element) => {
-        return UiFinder.findIn(container, selectors().dialogSubmitSelector);
+        return UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector);
       }),
       Mouse.cClick
     ]);

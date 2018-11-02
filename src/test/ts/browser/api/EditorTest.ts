@@ -1,11 +1,9 @@
-import { Pipeline } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
+import { Assertions, Chain, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import Editor from 'ephox/mcagar/api/Editor';
-import { UnitTest } from '@ephox/bedrock';
 import { TinyVersions } from 'ephox/mcagar/api/Main';
-import { sAssertVersion, cAssertEditorVersion } from '../../module/AssertVersion';
+import { cAssertEditorVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('SelectionTest', (success, failure) => {
   var cAssertEditorExists = Chain.op(function (editor) {
