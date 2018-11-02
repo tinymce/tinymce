@@ -1,4 +1,4 @@
-import { isModern } from "../versions/Versioning";
+import { isModern } from "./TinyVersions";
 
 interface ThemeSelectors {
   toolBarSelector: string;

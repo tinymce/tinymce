@@ -77,7 +77,23 @@ const sWithVersion = (version: string, step: Step<any, any>) => {
   ]);
 };
 
+const getMajorVersion = () => {
+  const tinymce = getTinymce().getOrDie('Failed to get global tinymce');
+  return parseInt(tinymce.majorVersion, 10);
+};
+
+const isModern = () => {
+  return getMajorVersion() < 5;
+}
+
+const isSilver = () => {
+  return getMajorVersion() >= 5;
+}
+
 export {
+  isModern,
+  isSilver,
+
   sWithVersion,
   sLoad,
   sUnload

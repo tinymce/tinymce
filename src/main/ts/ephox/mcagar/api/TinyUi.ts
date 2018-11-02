@@ -14,11 +14,15 @@ export default function (editor) {
   var cDialogRoot = Chain.inject(dialogRoot);
 
   var cGetToolbarRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(selectors().toolBarSelector)
+    Chain.binder((container: Element) => {
+      return UiFinder.findIn(container, selectors().toolBarSelector);
+    })
   ]);
 
   var cGetMenuRoot = Chain.fromChainsWith(toolstripRoot, [
-    UiFinder.cFindIn(selectors().menuBarSelector)
+    Chain.binder((container: Element) => {
+      return UiFinder.findIn(container, selectors().menuBarSelector);
+    })
   ]);
 
   var cEditorRoot = Chain.inject(editorRoot);
@@ -122,7 +126,9 @@ export default function (editor) {
 
   var cSubmitDialog = function () {
     return Chain.fromChains([
-      UiFinder.cFindIn(selectors().dialogSubmitSelector),
+      Chain.binder((container: Element) => {
+        return UiFinder.findIn(container, selectors().dialogSubmitSelector);
+      }),
       Mouse.cClick
     ]);
   };

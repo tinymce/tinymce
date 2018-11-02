@@ -23,6 +23,16 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
       Editor.cCreateInline,
       cAssertEditorVersion(4, 5),
       Editor.cRemove
+    ])),
+    TinyVersions.sWithVersion('4.8.x', Chain.asStep({}, [
+      Editor.cCreateInline,
+      cAssertEditorVersion(4, 8),
+      Editor.cRemove
+    ])),
+    TinyVersions.sWithVersion('5.0.x', Chain.asStep({}, [
+      Editor.cCreateInline,
+      cAssertEditorVersion(5, 0),
+      Editor.cRemove
     ]))
   ], () => {
     success();

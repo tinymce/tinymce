@@ -1,40 +1,42 @@
-import { Chain, Guard, Pipeline } from '@ephox/agar';
+import { Chain, Guard, Pipeline, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import Editor from 'ephox/mcagar/api/Editor';
 import UiChains from 'ephox/mcagar/api/UiChains';
+import { TinyVersions } from '../../../../main/ts/ephox/mcagar/api/Main';
+import { cAssertEditorVersion } from '../../module/AssertVersion';
 
-UnitTest.asynctest('UiChainsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UiChainsTest', (success, failure) => {
+  const sTestStep = (major, minor, ariaLabel, url) => Chain.asStep({}, Log.chains('', 'Test UiChains', [
+    Editor.cFromSettings({
+      plugins: 'link',
+      toolbar: 'undo redo | bold | link unlink'
+    }),
+    cAssertEditorVersion(major, minor),
+    ApiChains.cSetContent('<p>some text</p>'),
+    ApiChains.cSetSelection([0, 0], 0, [0, 0], 4),
+    UiChains.cClickOnToolbar("click Bold button", '[aria-label="Bold"]'),
+    ApiChains.cAssertContent('<p><strong>some</strong> text</p>'),
+    UiChains.cClickOnToolbar("click Link button", '[aria-label="' + ariaLabel + '"]'),
+    UiChains.cFillActiveDialog({
+      title: "Example URL",
+      target: '_blank',
+      ...url
+    }),
+    // selector is optional, if not specified current active popup will be processed
+    UiChains.cSubmitDialog(),
+    Chain.control(
+      // dialog takes a few ms to close - wait for it
+      ApiChains.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener"><strong>some</strong></a> text</p>'),
+      Guard.tryUntil('Link was not inserted', 10, 1000)
+    ),
+    Editor.cRemove
+  ]));
 
   Pipeline.async({}, [
-    Chain.asStep({}, [
-      Editor.cFromSettings({
-        plugins: 'link',
-        toolbar: 'undo redo | bold | link unlink'
-      }),
-      ApiChains.cSetContent('<p>some text</p>'),
-      ApiChains.cSetSelection([0, 0], 0, [0, 0], 4),
-      UiChains.cClickOnToolbar("click Bold button", '[role="button"][aria-label="Bold"]'),
-      ApiChains.cAssertContent('<p><strong>some</strong> text</p>'),
-
-      UiChains.cClickOnToolbar("click Link button", '[role="button"][aria-label="Link"]'),
-      UiChains.cFillActiveDialog({
-        url: { value: 'http://example.com' },
-        title: "Example URL",
-        target: '_blank'
-      }),
-      // selector is optional, if not specified current active popup will be processed
-      UiChains.cSubmitDialog(),
-      Chain.control(
-        // dialog takes a few ms to close - wait for it
-        ApiChains.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener"><strong>some</strong></a> text</p>'),
-        Guard.tryUntil('Link was not inserted', 10, 1000)
-      ),
-      Editor.cRemove
-    ])
-  ], function () {
+    TinyVersions.sWithVersion('4.8.x', sTestStep(4, 8, 'Insert/edit link', { href: 'http://example.com' })),
+    TinyVersions.sWithVersion('5.0.x', sTestStep(5, 0, 'Link', { url: { value: 'http://example.com' } }))
+  ],  () => {
     success();
   }, failure);
 });

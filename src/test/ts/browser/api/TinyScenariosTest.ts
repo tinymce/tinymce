@@ -9,10 +9,13 @@ import { Node } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 import { console } from '@ephox/dom-globals';
+import { TinyVersions } from '../../../../main/ts/ephox/mcagar/api/Main';
 
 UnitTest.asynctest('TinyScenariosTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
+
+  // Note: currently only runs on one version of TinyMCE. Seems to hang when run using TinyLoader.sSetupVersion.
 
   const platform = PlatformDetection.detect();
   if (platform.browser.isFirefox()) {
@@ -56,7 +59,7 @@ UnitTest.asynctest('TinyScenariosTest', function() {
             }
           }
         }
-      })
+      }),
     ], onSuccess, onFailure);
 
   }, { }, success, failure);

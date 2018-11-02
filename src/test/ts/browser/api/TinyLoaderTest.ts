@@ -47,7 +47,7 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
 
   Pipeline.async({}, [
     sTestVersion('4.8.x', modernSetup),
-    sTestVersion('5.x', silverSetup)
+    sTestVersion('5.0.x', silverSetup)
   ], () => success(), failure);
 });
 

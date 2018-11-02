@@ -1,11 +1,11 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
+import { document, console } from '@ephox/dom-globals';
 import { Fun, Merger, Result, Arr } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
 import { getThemeSelectors, ThemeSelectors } from './ThemeSelectors';
-import { isSilver } from '../versions/Versioning';
+import { isSilver } from './TinyVersions';
 
-const selectors = (): ThemeSelectors => getThemeSelectors();
+const selectors = (): ThemeSelectors => getThemeSelectors()
 
 var dialogRoot = Element.fromDom(document.body);
 
@@ -21,16 +21,20 @@ var cDialogRoot = Chain.inject(dialogRoot);
 
 var cGetToolbarRoot = Chain.fromChains([
   cToolstripRoot,
-  UiFinder.cFindIn(selectors().toolBarSelector)
+  Chain.binder((container: Element) => {
+    return UiFinder.findIn(container, selectors().toolBarSelector);
+  })
 ]);
 
 var cGetMenuRoot = Chain.fromChains([
   cToolstripRoot,
-  UiFinder.cFindIn(selectors().menuBarSelector)
+  Chain.binder((container: Element) => {
+    return UiFinder.findIn(container, selectors().menuBarSelector);
+  })
 ]);
 
-const getDialogData = (dialog) => isSilver() ? dialog.getData() : dialog.toJSON();
-const setDialogData = (dialog, data) => isSilver() ? dialog.setData(data) : dialog.fromJSON(data);
+const getDialogData = (dialog) => isSilver() ? dialog.getData() : dialog.toJSON()
+const setDialogData = (dialog, data) => isSilver() ? dialog.setData(data) : dialog.fromJSON(data)
 
 var cClickOnWithin = function (label: string, selector: string, cContext) {
     return NamedChain.asChain([
@@ -91,22 +95,24 @@ var cTriggerContextMenu = function (label: string, target, menu) {
   ]);
 };
 
-var cSilverDialogByPopup = Chain.binder(function (input: any) {
+var silverDialogByPopup = (input: any) => {
   var wins = input.editor.windowManager.getWindows();
-  // TODO: t5 dialogs don't have ids, so just grabbing the first one. FIX!
+  // Note: t5 dialogs don't have ids, so just grabbing the first one.
   return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
-});
+};
 
-var cModernDialogByPopup = Chain.binder(function (input: any) {
+var modernDialogByPopup = (input: any) => {
   var wins = input.editor.windowManager.getWindows();
   var popupId = input.popupNode.dom().id;
   var dialogs =  Arr.filter(wins, function (dialog) {
     return popupId === dialog._id;
   });
   return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
-});
+};
 
-var cDialogByPopup = isSilver() ? cSilverDialogByPopup : cModernDialogByPopup;
+var cDialogByPopup = Chain.binder((input: any) => {
+  return isSilver() ? silverDialogByPopup(input) : modernDialogByPopup(input);
+});
 
 var cWaitForDialog = function (selector: string) {
   return NamedChain.asChain([
@@ -146,23 +152,23 @@ var cFillActiveDialog = function (data) {
   return cFillDialog('[role="dialog"]', data);
 };
 
-var cClickPopupButton = function (btnSelector: string, selector?: string) {
+var cClickPopupButton = function (btnType: string, selector?: string) {
   var popupSelector = selector ? selector : '[role="dialog"]';
 
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
-    NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
+    NamedChain.direct('popup', Chain.binder((container) => UiFinder.findIn(container, selectors()[btnType])), 'button'),
     NamedChain.direct('button', Mouse.cClick, '_'),
     NamedChain.outputInput
   ]);
 };
 
-var cCloseDialog = function (selector: string) {
-  return cClickPopupButton(selectors().dialogCloseSelector, selector);
+var cCloseDialog = (selector: string) => {
+  return cClickPopupButton('dialogCloseSelector', selector);
 };
 
-var cSubmitDialog = function (selector?: string) {
-  return cClickPopupButton(selectors().dialogSubmitSelector, selector);
+var cSubmitDialog = (selector?: string) => {
+  return cClickPopupButton('dialogSubmitSelector', selector);
 };
 
 export default {
