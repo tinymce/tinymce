@@ -170,8 +170,6 @@ const setup = (editor: Editor): RenderInfo => {
     isInline ? [ ] : statusbar.toArray()
   ]);
 
-  
-
   const outerContainer = GuiFactory.build(
     OuterContainer.sketch({
       dom: {
