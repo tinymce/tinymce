@@ -24,9 +24,9 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         tinyApis.sAssertContent('<p>**&nbsp;</p>')
       ]),
       Log.stepsAsStep('TBA', 'TextPattern: Italic format on single word using space', [
-        tinyApis.sSetContent('<p>*a&nbsp; *\u00a0</p>'),
+        tinyApis.sSetContent('<p>*a&nbsp; *</p>'),
         tinyApis.sFocus,
-        tinyApis.sSetCursor([0, 0], 6),
+        tinyApis.sSetCursor([0, 0], 5),
         tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([

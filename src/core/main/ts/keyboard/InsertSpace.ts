@@ -1,60 +1,67 @@
 /**
- * InsertSpace.js
+ * InsertSpace.ts
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
-import BoundaryLocation from './BoundaryLocation';
+import { Editor } from '../api/Editor';
+import { Element } from '@ephox/sugar';
+import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
 import InlineUtils from './InlineUtils';
+import BoundaryLocation from './BoundaryLocation';
+import { needsToHaveNbsp } from './Nbsps';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
 
-const isValidInsertPoint = function (location, caretPosition) {
-  return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
+const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> => {
+  return needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 };
 
-const insertNbspAtPosition = function (editor, caretPosition) {
-  const container = caretPosition.container();
-  const offset = caretPosition.offset();
-
-  container.insertData(offset, '\u00a0');
-  editor.selection.setCursorLocation(container, offset + 1);
+const locationToCaretPosition = (root: Element) => (location) => {
+  return location.fold(
+    (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
+    (element) => CaretFinder.firstPositionIn(element),
+    (element) => CaretFinder.lastPositionIn(element),
+    (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
+  );
 };
 
-const insertAtLocation = function (editor, caretPosition, location) {
-  if (isValidInsertPoint(location, caretPosition)) {
-    insertNbspAtPosition(editor, caretPosition);
-    return true;
+const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (checkPos: CaretPosition) => {
+  return needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
+};
+
+const setSelection = (editor: Editor) => (pos: CaretPosition) => {
+  editor.selection.setRng(pos.toRange());
+  editor.nodeChanged();
+  return true;
+};
+
+const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
+  const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+  const root = Element.fromDom(editor.getBody());
+
+  if (editor.selection.isCollapsed()) {
+    const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+    const caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
+
+    return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
+      .bind(locationToCaretPosition(root))
+      .bind(insertInlineBoundarySpaceOrNbsp(root, pos))
+      .fold(
+        () => insertSpaceOrNbspAtPosition(root, pos).map(setSelection(editor)).getOr(false),
+        setSelection(editor)
+      );
   } else {
     return false;
   }
 };
 
-const insertAtCaret = function (editor) {
-  const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  const caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
-  const boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
-  return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
-};
-
-const isAtStartOrEnd = function (location) {
-  return location.fold(
-    Fun.constant(false), // Before
-    Fun.constant(true),  // Start
-    Fun.constant(true),  // End
-    Fun.constant(false)  // After
-  );
-};
-
-const insertAtSelection = function (editor) {
-  return editor.selection.isCollapsed() ? insertAtCaret(editor) : false;
-};
-
-export default {
-  insertAtSelection
+export {
+  insertSpaceOrNbspAtPosition,
+  insertSpaceOrNbspAtSelection
 };

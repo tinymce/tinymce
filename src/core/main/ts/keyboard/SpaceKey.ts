@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import InsertSpace from './InsertSpace';
+import * as InsertSpace from './InsertSpace';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -17,7 +17,7 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 
 const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
   MatchKeys.execute([
-    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
+    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
   ], evt).each(function (_) {
     evt.preventDefault();
   });
