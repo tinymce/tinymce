@@ -63,8 +63,18 @@ const setup = (editor: Editor): RenderInfo => {
   const mode = isInline ? Inline : Iframe;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
+  const dirAttributes = I18n.isRtl() ? {
+    attributes: {
+      dir: 'rtl'
+    }
+  } : {};
+
   const sink = GuiFactory.build({
-    dom: DomFactory.fromHtml('<div class="tox tox-silver-sink tox-tinymce-aux"></div>'),
+    dom: {
+      tag: 'div',
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'],
+      ...dirAttributes
+    },
     behaviours: Behaviour.derive([
       Positioning.config({
         useFixed: false // this allows menus to scroll with the outer page, we don't want position: fixed
@@ -168,7 +178,8 @@ const setup = (editor: Editor): RenderInfo => {
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
-        }
+        },
+        ...dirAttributes
       },
       components: containerComponents,
       behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
