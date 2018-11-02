@@ -102,7 +102,9 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
 
     getHotspot: (comp) => memUrlBox.getOpt(comp),
     onSetValue: (comp, newValue) => {
-      Invalidating.run(comp).get(Fun.noop);
+      if (comp.hasConfigured(Invalidating)) {
+        Invalidating.run(comp).get(Fun.noop);
+      }
     },
 
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
