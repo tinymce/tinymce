@@ -9,10 +9,29 @@
  */
 
 import { Merger } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 declare let tinymce: any;
 
 export default function () {
+
+  const makeSidebar = (ed, name: string, background: string, width: number) => {
+    ed.addSidebar(name, {
+      icon: 'comment',
+      tooltip: 'Tooltip for ' + name,
+      onrender: (api) => {
+        console.log('onrender ' + name);
+        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        api.element().appendChild(box.dom());
+      },
+      onshow: (api) => {
+        console.log('onshow ' + name);
+      },
+      onhide: (api) => {
+        console.log('onhide ' + name);
+      },
+    });
+  };
 
   const settings = {
     skin_url: '../../../../js/tinymce/skins/oxide',
@@ -81,6 +100,9 @@ export default function () {
         'autosave lists'
       ]
     },
+    setup (ed) {
+      makeSidebar(ed, 'sidebar1', 'green', 200);
+    },
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
@@ -90,7 +112,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'align fontsizeselect fontselect formatselect styleselect insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl'
   };
 

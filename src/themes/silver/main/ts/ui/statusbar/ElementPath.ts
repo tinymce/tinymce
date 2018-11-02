@@ -102,6 +102,9 @@ const renderElementPath = (editor, settings) => {
       Replacing.config({ }),
       AddEventsBehaviour.config('elementPathEvents', [
         AlloyEvents.runOnAttached((comp, e) => {
+          // NOTE: If statusbar ever gets re-rendered, we will need to free this.
+          editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () => Keying.focusIn(comp));
+
           editor.on('nodeChange', (e) => {
             const newPath = updatePath(e.parents);
             if (newPath.length > 0) {

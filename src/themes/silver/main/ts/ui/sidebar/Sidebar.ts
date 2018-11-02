@@ -9,6 +9,8 @@ import {
   Replacing,
   Sliding,
   SystemEvents,
+  Tabstopping,
+  Focusing,
 } from '@ephox/alloy';
 import { SlotContainer } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/ui/SlotContainer';
 import { SlotContainerParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SlotContainerTypes';
@@ -143,6 +145,8 @@ const renderSidebar = (spec) => {
           // this will be replaced on setSidebar
         ],
         behaviours: Behaviour.derive([
+          Tabstopping.config({ }),
+          Focusing.config({ }), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
           Sliding.config({
             dimension: {
               property: 'width'

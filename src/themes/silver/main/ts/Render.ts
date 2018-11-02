@@ -1,23 +1,23 @@
-import { Behaviour, DomFactory, Gui, GuiFactory, Positioning, AlloySpec, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, Behaviour, DomFactory, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
+import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
 import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
-import OuterContainer from './ui/general/OuterContainer';
+import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -151,7 +151,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: ['tox-editor-container']
     },
-    components: editorComponents
+    components: editorComponents,
   };
 
   const containerComponents = Arr.flatten<SimpleSpec>([
@@ -171,12 +171,20 @@ const setup = (editor: Editor): RenderInfo => {
         }
       },
       components: containerComponents,
-      behaviours: Behaviour.derive(mode.getBehaviours(editor))
-    })
+      behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
+        Keying.config({
+          mode: 'cyclic',
+          selector: '.tox-menubar, .tox-toolbar, .tox-sidebar--sliding-open, .tox-statusbar__path'
+        })
+      ]))
+    } as OuterContainerSketchSpec)
   );
 
   lazyOuterContainer = Option.some(outerContainer);
 
+  editor.shortcuts.add('alt+F9', 'focus menubar', function () {
+    OuterContainer.focusMenubar(outerContainer);
+  });
   editor.shortcuts.add('alt+F10', 'focus toolbar', function () {
     OuterContainer.focusToolbar(outerContainer);
   });

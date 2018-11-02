@@ -12,13 +12,10 @@ import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '
 import { UiFactoryBackstage } from '../backstage/Backstage';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
-  loadInlineSkin(editor);
-
-  const floatContainer = uiComponents.outerContainer;
+  let floatContainer;
   const DOM = DOMUtils.DOM;
 
-  Attachment.attachSystem(Body.body(), uiComponents.mothership);
-  Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
+  loadInlineSkin(editor);
 
   const setPosition = function () {
     Css.setAll(floatContainer.element(), {
@@ -27,20 +24,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
     });
   };
-
-  editor.on('init', () => {
-    OuterContainer.setToolbar(
-      uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage})
-    );
-
-    OuterContainer.setMenubar(
-      uiComponents.outerContainer,
-      identifyMenus(editor, rawUiConfig, backstage)
-    );
-
-    setPosition();
-  });
 
   const show = function () {
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
@@ -56,9 +39,39 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     }
   };
 
-  editor.on('ResizeWindow', setPosition);
-  editor.on('activate focus', show);
-  editor.on('deactivate blur hide', hide);
+  const render = () => {
+    if (floatContainer) {
+      show();
+      return;
+    }
+
+    floatContainer = uiComponents.outerContainer;
+
+    Attachment.attachSystem(Body.body(), uiComponents.mothership);
+    Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
+
+    OuterContainer.setToolbar(
+      uiComponents.outerContainer,
+      identifyButtons(editor, rawUiConfig, {backstage})
+    );
+
+    OuterContainer.setMenubar(
+      uiComponents.outerContainer,
+      identifyMenus(editor, rawUiConfig, backstage)
+    );
+
+    setPosition();
+    show();
+
+    editor.on('nodeChange ResizeWindow', setPosition);
+    editor.on('activate', show);
+    editor.on('deactivate', hide);
+
+    editor.nodeChanged();
+  };
+
+  editor.on('focus', render);
+  editor.on('blur hide', hide);
 
   return {
     editorContainer: uiComponents.outerContainer.element().dom()

@@ -18,7 +18,7 @@ import {
   AlloyComponent
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, FutureResult, Id, Option, Result } from '@ephox/katamari';
+import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
 import { Class, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -101,6 +101,11 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     },
 
     getHotspot: (comp) => memUrlBox.getOpt(comp),
+    onSetValue: (comp, newValue) => {
+      if (comp.hasConfigured(Invalidating)) {
+        Invalidating.run(comp).get(Fun.noop);
+      }
+    },
 
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
@@ -126,7 +131,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
                   completer((validation.status === 'invalid' ? Result.error : Result.value)(validation.message));
                 });
               });
-            }
+            },
+            validateOnLoad: false
           }
         })
       ).toArray(),
