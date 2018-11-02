@@ -104,6 +104,7 @@ import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
 import {
   AnchorSpec,
+  NodeAnchorSpec,
   MakeshiftAnchorSpec,
   SelectionAnchorSpec,
   HotspotAnchorSpec,
@@ -231,6 +232,7 @@ export {
   // types
   TieredMenuTypes,
   AnchorSpec,
+  NodeAnchorSpec,
   MakeshiftAnchorSpec,
   SelectionAnchorSpec,
   HotspotAnchorSpec,
