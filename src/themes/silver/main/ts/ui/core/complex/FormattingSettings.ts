@@ -1,10 +1,11 @@
 import { Objects } from '@ephox/boulder';
-import { Editor } from 'tinymce/core/api/Editor';
 import { Arr, Option } from '@ephox/katamari';
-import { Node } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
+import { BlockFormat, InlineFormat, SelectorFormat } from 'tinymce/core/api/fmt/Format';
 
 // somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
-export type AllowedFormat = Separator | FormatReference | BlockFormat | InlineFormat | SelectorFormat | NestedFormatting;
+type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;
+export type AllowedFormat = Separator | FormatReference | StyleFormat | NestedFormatting;
 
 export interface Separator {
   title: string;
@@ -16,48 +17,19 @@ export interface FormatReference {
   icon?: string;
 }
 
-// Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
-interface Format {
-  title: string;
-  icon?: string;
-  classes?: string;
-  styles?: Record<string, string>;
-  attributes?: Record<string, string>;
-  remove?: 'none' | 'empty' | 'all';
-  preview?: string | boolean;
-  ceFalseOverride?: boolean;
-  collapsed?: boolean;
-  deep?: boolean;
-  exact?: boolean;
-  expand?: boolean;
-  links?: boolean;
-  split?: boolean;
-  toggle?: boolean;
-  wrapper?: boolean;
-  onmatch?: (node: Node, fmt: Format, itemName: string) => boolean;
-  onformat?: (node: Node, fmt: Format, vars?: object) => void;
-}
-
-export interface BlockFormat extends Format {
-  block: string;
-}
-
-export interface InlineFormat extends Format {
-  inline: string;
-  clear_child_styles?: boolean;
-  remove_similar?: boolean;
-}
-
-export interface SelectorFormat extends Format {
-  selector: string;
-  defaultBlock?: string;
-  inherit?: boolean;
-}
-
 export interface NestedFormatting {
   title: string;
-  items: Array<FormatReference | BlockFormat | InlineFormat | SelectorFormat>;
+  items: Array<FormatReference | StyleFormat>;
 }
+
+interface CommonStyleFormat {
+  title: string;
+  icon?: string;
+}
+
+export interface BlockStyleFormat extends BlockFormat, CommonStyleFormat {}
+export interface InlineStyleFormat extends InlineFormat, CommonStyleFormat {}
+export interface SelectorStyleFormat extends SelectorFormat, CommonStyleFormat {}
 
 export const defaultStyleFormats: AllowedFormat[] = [
   {
@@ -110,20 +82,20 @@ const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => {
   return Object.prototype.hasOwnProperty.call(format, 'items');
 };
 
-const isBlockFormat = (format: AllowedFormat): format is BlockFormat => {
+const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => {
   return Object.prototype.hasOwnProperty.call(format, 'block');
 };
 
-const isInlineFormat = (format: AllowedFormat): format is InlineFormat => {
+const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => {
   return Object.prototype.hasOwnProperty.call(format, 'inline');
 };
 
-const isSelectorFormat = (format: AllowedFormat): format is SelectorFormat => {
+const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => {
   return Object.prototype.hasOwnProperty.call(format, 'selector');
 };
 
 interface CustomFormatMapping {
-  customFormats: { name: string, format: Format }[];
+  customFormats: { name: string, format: StyleFormat }[];
   formats: (Separator | FormatReference | NestedFormatting)[];
 }
 
