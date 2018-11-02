@@ -42,6 +42,7 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
   ]);
 
   Pipeline.async({}, [
+    TinyVersions.sWithVersion('4.5.x', sTestStep(4, 5)),
     TinyVersions.sWithVersion('4.8.x', sTestStep(4, 8)),
     TinyVersions.sWithVersion('5.0.x', sTestStep(5, 0))
   ], function () {

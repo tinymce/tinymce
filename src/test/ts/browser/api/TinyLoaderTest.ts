@@ -2,6 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
+import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   var clickedOn = false;
@@ -27,11 +28,12 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
     });
   };
 
-  var sTestVersion = (version: string, setup) => {
+  var sTestVersion = (version: string, major, minor, setup) => {
     return TinyLoader.sSetupVersion(version, [], (editor) => {
       var ui = TinyUi(editor);
       clickedOn = false;
       return GeneralSteps.sequence([
+        sAssertVersion(major, minor),
         sAssertState(false, 'Expected clickedOn to be false, because'),
         Logger.t(
           'Trying to click on custom button.\nNote, if the button could not be found, it is likely that the setup function has not triggered\n',
@@ -46,8 +48,9 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   };
 
   Pipeline.async({}, [
-    sTestVersion('4.8.x', modernSetup),
-    sTestVersion('5.0.x', silverSetup)
+    sTestVersion('4.5.x', 4, 5, modernSetup),
+    sTestVersion('4.8.x', 4, 8, modernSetup),
+    sTestVersion('5.0.x', 5, 0, silverSetup)
   ], () => success(), failure);
 });
 

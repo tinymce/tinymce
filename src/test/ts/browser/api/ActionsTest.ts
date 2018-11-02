@@ -39,7 +39,6 @@ UnitTest.asynctest('ActionChainsTest', (success, failure) =>  {
 
   const sTestStep = (major, minor) => Chain.asStep({}, [
     Editor.cCreate,
-    cAssertEditorVersion(major, minor),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
       code: 88,
@@ -68,6 +67,8 @@ UnitTest.asynctest('ActionChainsTest', (success, failure) =>  {
   ]);
 
   Pipeline.async({}, [
+    sResetCount,
+    TinyVersions.sWithVersion('4.5.x', sTestStep(4, 5)),
     sResetCount,
     TinyVersions.sWithVersion('4.8.x', sTestStep(4, 8)),
     sResetCount,

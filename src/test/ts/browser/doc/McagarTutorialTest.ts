@@ -4,6 +4,7 @@ import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
 import { UnitTest } from '@ephox/bedrock';
+import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
   var handler = (ed) => () => {
@@ -35,12 +36,13 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
     });
   };
 
-  var sTestVersion = (version: string, setup) => {
+  var sTestVersion = (version: string, major, minor, setup) => {
     return TinyLoader.sSetupVersion(version, [], (editor) => {
       var ui = TinyUi(editor);
       var apis = TinyApis(editor);
 
       return GeneralSteps.sequence([
+        sAssertVersion(major, minor),
         ui.sClickOnToolbar('Clicking on button', 'button:contains("tutorial")'),
         apis.sAssertContent('<p>tutorial content</p>'),
         Step.wait(400),
@@ -62,8 +64,9 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
   };
 
   Pipeline.async({}, [
-    sTestVersion('4.8.x', modernSetup),
-    sTestVersion('5.0.x', silverSetup)
+    sTestVersion('4.5.x', 4, 5, modernSetup),
+    sTestVersion('4.8.x', 4, 8, modernSetup),
+    sTestVersion('5.0.x', 5, 0, silverSetup)
   ], () => success(), failure);
 });
 
