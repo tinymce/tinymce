@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import UnicodeData from './UnicodeData';
+import * as UnicodeData from './UnicodeData';
 
 const ci = UnicodeData.characterIndices;
-const isWordBoundary = function (map, index) {
+const isWordBoundary = (map: number[], index: number) => {
   let prevType;
   const type = map[index];
   const nextType = map[index + 1];
@@ -117,6 +117,6 @@ const isWordBoundary = function (map, index) {
   return true;
 };
 
-export default {
+export {
   isWordBoundary
 };

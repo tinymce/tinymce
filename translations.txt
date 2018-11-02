@@ -32,6 +32,9 @@ Travel and Places         <new> Emoticons
 Objects                   <new> Emoticons
 Flags                     <new> Emoticons
 
+Characters                <new> WordCount
+Characters (no spaces)    <new> WordCount
+
 Show caption               [Caption] Insert image/media
 
 Error: Form submit field collision.   <new> Save

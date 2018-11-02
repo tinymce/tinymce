@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   },
-  "version": "5.0.0-preview-3-build.18",
+  "version": "5.0.0-preview-3-build.19",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -64,7 +64,7 @@
     "rimraf": "^2.6.2",
     "ts-loader": "^4.4.2",
     "tslint": "^5.9.1",
-    "typescript": "^2.6.2",
+    "typescript": "^3.1.5",
     "webpack": "^4.8.3",
     "webpack-dev-server": "3.1.5",
     "webpack-livereload-plugin": "^2.1.1"

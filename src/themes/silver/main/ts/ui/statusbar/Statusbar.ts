@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, GuiFactory, Keying, Replacing, Tabstopping, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, Keying, Tabstopping, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { getDefaultOr } from '../icons/Icons';
@@ -6,6 +6,7 @@ import ElementPath from './ElementPath';
 import { ResizeTypes, resize } from '../sizing/Resize';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
@@ -50,26 +51,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const renderWordCount = (): SimpleSpec => {
-    return {
-      dom: {
-        tag: 'span',
-        classes: [ 'tox-statusbar__wordcount' ]
-      },
-      components: [ ],
-      behaviours: Behaviour.derive([
-        Replacing.config({ }),
-        AddEventsBehaviour.config('wordcount-events', [
-          AlloyEvents.runOnAttached((comp) => {
-            editor.on('wordCountUpdate', (e) => {
-              Replacing.set(comp, [ GuiFactory.text(e.wordCountText) ]);
-            });
-          })
-        ])
-      ])
-    };
-  };
-
   const getResizeType = (editor): ResizeTypes => {
     // If autoresize is enabled, disable resize
     const fallback = !Strings.contains(editor.settings.plugins, 'autoresize');
@@ -91,7 +72,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {
-      components.push(renderWordCount());
+      components.push(renderWordCount(editor, providersBackstage));
     }
 
     if (editor.getParam('branding', true, 'boolean')) {

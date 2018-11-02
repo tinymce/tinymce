@@ -59,7 +59,10 @@ const getInitialData = (settings: LinkDialogInfo): LinkDialogData => ({
     value: settings.anchor.url.getOr(''),
     meta: {
       attach: () => { },
-      text: settings.anchor.text.getOr(''),
+      text: settings.anchor.url.fold(
+        () => '',
+        () => settings.anchor.text.getOr('')
+      ),
       original: {
         value: settings.anchor.url.getOr(''),
       }

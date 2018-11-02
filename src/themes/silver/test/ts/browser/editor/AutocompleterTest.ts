@@ -185,7 +185,6 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           });
         },
         choice: GeneralSteps.sequence([
-          Keyboard.sKeydown(eDoc, Keys.down(), { }),
           Keyboard.sKeydown(eDoc, Keys.enter(), { })
         ]),
         assertion: tinyApis.sAssertContent('<p>test=two</p>')
