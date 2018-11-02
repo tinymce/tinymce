@@ -107,4 +107,3 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 };
 
 export { renderStatusbar };
-
