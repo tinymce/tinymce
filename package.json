@@ -11,9 +11,9 @@
     "@ephox/katamari": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/sand": "latest",
-    "awesome-typescript-loader": "^3.4.1",
+    "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2"
+    "typescript": "^3.1.6"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
