@@ -108,8 +108,7 @@ const identifyMenus = (editor, registry: MenuRegistry, backstage: UiFactoryBacks
     return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor, backstage);
   });
 
-  const filteredMenus = Arr.filter(menus, (menu) => menu.getItems().length > 0);
-  return editor.rtl ? Arr.reverse(filteredMenus) : filteredMenus;
+  return Arr.filter(menus, (menu) => menu.getItems().length > 0);
 };
 
 export { identifyMenus };

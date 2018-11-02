@@ -112,7 +112,7 @@ const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
   const groupsStrings = toolbar.split('|');
   const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
   const groups = Arr.map(toolbarGroups, (group) => {
-    const items = Arr.bind(group, (toolbarItem) => {
+    return Arr.bind(group, (toolbarItem) => {
       return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(registry.buttons, toolbarItem.toLowerCase()).fold(
         () => {
           return Objects.readOptFrom<(spec: AddButtonSettings, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
@@ -127,7 +127,6 @@ const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
         }
       ).toArray();
     });
-    return editor.rtl ? Arr.reverse(items) : items;
   });
 
   return Arr.filter(groups, (group) => {
