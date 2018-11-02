@@ -1,4 +1,4 @@
-import { AlloySpec, Behaviour, DomFactory, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
