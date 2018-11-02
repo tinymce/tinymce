@@ -5,9 +5,6 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 const ALL_CATEGORY = 'All';
 
-const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
-const all = Cell<Option<EmojiEntry[]>>(Option.none());
-
 export interface EmojiEntry {
   title: string;
   keywords: string[];
@@ -28,7 +25,7 @@ const categoryNameMap = {
 };
 
 // Do we have a better way of doing this in tinymce?
-const GLOBAL_NAME = 'mce_emoticons_plugin_database';
+const GLOBAL_NAME = 'emoticons_plugin_database';
 
 export interface EmojiDatabase {
   listCategory: (category: string) => EmojiEntry[];
@@ -39,9 +36,9 @@ export interface EmojiDatabase {
 }
 
 const extractGlobal = (url: string): Result<Record<string, any>, any> => {
-  if (Global[GLOBAL_NAME]) {
-    const result = Result.value(Global[GLOBAL_NAME]);
-    delete Global[GLOBAL_NAME];
+  if (Global.tinymce[GLOBAL_NAME]) {
+    const result = Result.value(Global.tinymce[GLOBAL_NAME]);
+    delete Global.tinymce[GLOBAL_NAME];
     return result;
   } else {
     return Result.error(`Url ${url} did not contain the expected format for emoticons`);
@@ -52,6 +49,8 @@ const translateCategory = (name) => Obj.has(categoryNameMap, name) ? categoryNam
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
+  const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
+  const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
   editor.on('init', () => {
     ScriptLoader.ScriptLoader.loadScript(databaseUrl, () => {
