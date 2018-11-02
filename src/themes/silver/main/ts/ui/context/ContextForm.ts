@@ -78,7 +78,8 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
         items: commands.asSpecs() as AlloySpec[]
       }
     ],
-    onEscape: Option.none
+    onEscape: Option.none,
+    cyclicKeying: true
   });
 };
 

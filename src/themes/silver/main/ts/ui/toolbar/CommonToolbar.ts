@@ -14,6 +14,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 export interface ToolbarFoo {
   uid: string;
+  cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroupFoo[];
 }
@@ -45,6 +46,8 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
 };
 
 const renderToolbar = (foo: ToolbarFoo) => {
+  const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
+
   return AlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
@@ -58,7 +61,7 @@ const renderToolbar = (foo: ToolbarFoo) => {
     toolbarBehaviours: Behaviour.derive([
       Keying.config({
         // Tabs between groups
-        mode: 'acyclic',
+        mode: modeName,
         onEscape: foo.onEscape,
         selector: '.tox-toolbar__group'
       }),
