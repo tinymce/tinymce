@@ -61,8 +61,7 @@ tinymce.init({
       success(data.id() + '.png');
       progress(100);
     }, 1000);
-  },
-  rtl_ui: true
+  }
 });
 
 function send() {

@@ -63,13 +63,17 @@ const setup = (editor: Editor): RenderInfo => {
   const mode = isInline ? Inline : Iframe;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
+  const dirAttributes = I18n.isRtl() ? {
+    attributes: {
+      dir: 'rtl'
+    }
+  } : {};
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'],
-      attributes: {
-        dir: 'rtl'
-      }
+      ...dirAttributes
     },
     behaviours: Behaviour.derive([
       Positioning.config({
@@ -166,6 +170,8 @@ const setup = (editor: Editor): RenderInfo => {
     isInline ? [ ] : statusbar.toArray()
   ]);
 
+  
+
   const outerContainer = GuiFactory.build(
     OuterContainer.sketch({
       dom: {
@@ -175,9 +181,7 @@ const setup = (editor: Editor): RenderInfo => {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
         },
-        attributes: {
-          dir: 'rtl'
-        }
+        ...dirAttributes
       },
       components: containerComponents,
       behaviours: Behaviour.derive(mode.getBehaviours(editor))
