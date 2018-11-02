@@ -6,26 +6,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.1.0] - 2018-11-01
+# [4.2.0] - 2018-11-02
 ### Added
  - A new getApis() method for running individual APIs on components
 
 ### Changed
  - The lazySink function for all dropdown types now takes a component as an argument
 
+# [4.1.0] - 2018-11-01
+### Added
+ - Typeahead specification now may have an onSetValue handler
+
 # [4.0.0] - 2018-10-30
 ### Changed
-- All sketcher configs are no longer wrapped in functions
-- Only non-button HTML tags get a role of button
-- TieredMenu submenus are built on-demand and then cached
+ - All sketcher configs are no longer wrapped in functions
+ - Only non-button HTML tags get a role of button
+ - TieredMenu submenus are built on-demand and then cached
 
 # [3.52.0] - 2018-10-25
 ### Added
-- Label part for sliders
+ - Label part for sliders
 
 # [3.51.0] - 2018-10-25
 ### Changed
-- Window scroll events are not automatically detected by the mothership
+ - Window scroll events are not automatically detected by the mothership
 
 ## [3.50.0] - 2018-10-22
 ### Added
