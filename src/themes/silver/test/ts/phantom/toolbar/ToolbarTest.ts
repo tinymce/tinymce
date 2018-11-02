@@ -28,6 +28,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
         renderToolbar({
           uid: 'test-toolbar-uid',
           onEscape: store.adderH('onEscape'),
+          cyclicKeying: true,
           initGroups: [
             {
               items: Arr.map([ 'one', 'two', 'three' ], makeButton)

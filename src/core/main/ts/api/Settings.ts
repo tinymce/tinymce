@@ -122,6 +122,14 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
+const getLanguageCode = (editor: Editor) => {
+  return editor.getParam('language', 'en', 'string');
+};
+
+const getLanguageUrl = (editor: Editor) => {
+  return editor.getParam('language_url', '', 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -146,5 +154,7 @@ export default {
   getImageUploadBasePath,
   getImagesUploadCredentials,
   getImagesUploadHandler,
-  shouldUseContentCssCors
+  shouldUseContentCssCors,
+  getLanguageCode,
+  getLanguageUrl
 };

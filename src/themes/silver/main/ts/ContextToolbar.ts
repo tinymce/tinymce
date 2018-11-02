@@ -95,7 +95,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       return renderToolbar({
         uid: Id.generate('context-toolbar'),
         initGroups: Arr.map(initGroups, (g) => ({ items: g })),
-        onEscape: Option.none
+        onEscape: Option.none,
+        cyclicKeying: true
       });
     })() : (() => {
       return ContextForm.renderContextForm(ctx, extras.backstage.shared.providers);

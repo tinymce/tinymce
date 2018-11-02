@@ -21,6 +21,9 @@ import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
 import { window } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
+import Settings from 'tinymce/core/api/Settings';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const DOM = DOMUtils.DOM;
 
@@ -28,15 +31,16 @@ const hasSkipLoadPrefix = function (name) {
   return name.charAt(0) === '-';
 };
 
-const loadLanguage = function (scriptLoader, editor) {
-  const settings = editor.settings;
+const loadLanguage = (scriptLoader, editor: Editor) => {
+  const languageCode = Settings.getLanguageCode(editor);
+  const languageUrl = Settings.getLanguageUrl(editor);
 
-  if (settings.language && settings.language !== 'en' && !settings.language_url) {
-    settings.language_url = editor.editorManager.baseURL + '/langs/' + settings.language + '.js';
-  }
-
-  if (settings.language_url && !editor.editorManager.i18n.data[settings.language]) {
-    scriptLoader.add(settings.language_url);
+  if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
+    if (languageUrl !== '') {
+      scriptLoader.add(languageUrl);
+    } else {
+      scriptLoader.add(editor.editorManager.baseURL + '/langs/' + languageCode + '.js');
+    }
   }
 };
 
@@ -135,6 +139,9 @@ const loadScripts = function (editor, suffix) {
 
 const render = function (editor) {
   const settings = editor.settings, id = editor.id;
+
+  // The user might have bundled multiple language packs so we need to switch the active code to the user specified language
+  I18n.setCode(Settings.getLanguageCode(editor));
 
   const readyHandler = function () {
     DOM.unbind(window, 'ready', readyHandler);

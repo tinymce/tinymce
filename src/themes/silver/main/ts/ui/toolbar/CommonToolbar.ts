@@ -8,11 +8,13 @@ import {
   Tabstopping,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
+  Focusing,
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 
 export interface ToolbarFoo {
   uid: string;
+  cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroupFoo[];
 }
@@ -32,16 +34,20 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
     ],
     items: foo.items,
     markers: {
-      itemSelector: '.tox-tbtn, .tox-split-button, .tox-toolbar-nav-js'
+      // nav within a group breaks if disabled buttons are first in their group so skip them
+      itemSelector: '.tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     },
 
     tgroupBehaviours: Behaviour.derive([
-      Tabstopping.config({ })
+      Tabstopping.config({ }),
+      Focusing.config({ })
     ])
   });
 };
 
 const renderToolbar = (foo: ToolbarFoo) => {
+  const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
+
   return AlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
@@ -55,10 +61,10 @@ const renderToolbar = (foo: ToolbarFoo) => {
     toolbarBehaviours: Behaviour.derive([
       Keying.config({
         // Tabs between groups
-        mode: 'cyclic',
-        onEscape: foo.onEscape
+        mode: modeName,
+        onEscape: foo.onEscape,
+        selector: '.tox-toolbar__group'
       }),
-
       AddEventsBehaviour.config('toolbar-events', [
         AlloyEvents.runOnAttached(function (component) {
           const groups = Arr.map(foo.initGroups, renderToolbarGroup);

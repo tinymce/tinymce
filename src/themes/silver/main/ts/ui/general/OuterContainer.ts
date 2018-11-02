@@ -116,6 +116,7 @@ const partToolbar = Composite.partType.optional({
           spec.onEscape();
           return Option.some(true);
         },
+        cyclicKeying: false,
         initGroups: []
       });
     }

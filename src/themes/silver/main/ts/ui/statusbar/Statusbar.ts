@@ -1,11 +1,11 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Dragging, Focusing, Keying, Tabstopping, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Dragging, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
-import I18n from '../../../../../../core/main/ts/api/util/I18n';
-import { getDefaultOr } from '../icons/Icons';
-import ElementPath from './ElementPath';
-import { ResizeTypes, resize } from '../sizing/Resize';
+import I18n from 'tinymce/core/api/util/I18n';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { getDefaultOr } from '../icons/Icons';
+import { resize, ResizeTypes } from '../sizing/Resize';
+import ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
@@ -44,10 +44,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         },
         innerHtml: html
       },
-      behaviours: Behaviour.derive([
-        Tabstopping.config({ }),
-        Focusing.config({ })
-      ])
     };
   };
 
@@ -86,17 +82,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
           classes: [ 'tox-statusbar__text-container']
         },
         components,
-        behaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'cyclic'
-          }),
-          AddEventsBehaviour.config('statusbar-events', [
-            AlloyEvents.runOnAttached((comp) => {
-              // NOTE: If statusbar ever gets re-rendered, we will need to free this.
-              editor.shortcuts.add('alt+F11', 'focus statusbar', () => Keying.focusIn(comp));
-            })
-          ])
-        ])
       }];
     }
     return [];
@@ -121,6 +106,4 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   };
 };
 
-export {
-  renderStatusbar
-};
+export { renderStatusbar };

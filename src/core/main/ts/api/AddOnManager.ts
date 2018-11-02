@@ -12,6 +12,7 @@ import { Arr } from '@ephox/katamari';
 import ScriptLoader from './dom/ScriptLoader';
 import Tools from './util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 
 /**
  * This class handles the loading of themes/plugins or other add-ons and their language packs.
@@ -124,7 +125,7 @@ export function AddOnManager(): AddOnManager {
   };
 
   const requireLangPack = (name: string, languages: string) => {
-    let language = AddOnManager.language;
+    let language = I18n.getCode();
 
     if (language && AddOnManager.languageLoad !== false) {
       if (languages) {
