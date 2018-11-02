@@ -6,7 +6,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { ItemResponse } from '../item/MenuItems';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
-import { getPointAnchor, getSelectionAnchor } from './Coords';
+import { getPointAnchor, getSelectionAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 
@@ -106,7 +106,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // IE: button = 2 & target = body
     // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
     const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
-    const anchorSpec = isTriggeredByKeyboardEvent ? getSelectionAnchor(editor) : getPointAnchor(editor, e);
+    const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
     const registry = editor.ui.registry.getAll();
     const menuConfig = Settings.getContextMenu(editor);
