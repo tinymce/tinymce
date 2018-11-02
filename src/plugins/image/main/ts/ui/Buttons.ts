@@ -15,18 +15,20 @@ import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
 import { Editor } from 'tinymce/core/api/Editor';
 
+const getRootElement = (elm: Element): Element => {
+  return Traverse.parent(elm).filter((parentElm: Element) => SugarNode.name(parentElm) === 'figure').getOr(elm);
+};
+
 const register = (editor: Editor) => {
   const makeContextMenuItem = (node: Node): Menu.ContextMenuItem => {
     return {
       text: 'Image',
       icon: 'image',
       onAction: () => {
-        // Ensure the image is selected before opening the image edit dialog
+        // Ensure the figure/image is selected before opening the image edit dialog
         // as some browsers don't do this when right clicking
-        Traverse.parent(Element.fromDom(node)).filter((elm: Element) => SugarNode.name(elm) === 'figure').fold(
-          () => editor.selection.select(node),
-          (elm: Element) => editor.selection.select(elm.dom())
-        );
+        const rootElm = getRootElement(Element.fromDom(node));
+        editor.selection.select(rootElm.dom());
         // Open the dialog now that the image is selected
         Dialog(editor).open();
       }
