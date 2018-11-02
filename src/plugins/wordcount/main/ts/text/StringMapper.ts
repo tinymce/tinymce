@@ -8,13 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import UnicodeData from './UnicodeData';
+import * as UnicodeData from './UnicodeData';
 import Arr from '../alien/Arr';
 
 const SETS = UnicodeData.SETS;
 const OTHER = UnicodeData.characterIndices.OTHER;
 
-const getType = function (char) {
+const getType = (char: string): number => {
   let j, set, type = OTHER;
   const setsLength = SETS.length;
   for (j = 0; j < setsLength; ++j) {
@@ -28,9 +28,9 @@ const getType = function (char) {
   return type;
 };
 
-const memoize = function (func) {
-  const cache = {};
-  return function (char) {
+const memoize = <T extends string | number, U>(func: (v: T) => U) => {
+  const cache = {} as Record<T, U>;
+  return (char: T): U => {
     if (cache[char]) {
       return cache[char];
     } else {
@@ -41,11 +41,11 @@ const memoize = function (func) {
   };
 };
 
-const classify = function (string) {
+const classify = (str: string) => {
   const memoized = memoize(getType);
-  return Arr.map(string.split(''), memoized);
+  return Arr.map(str.split(''), memoized);
 };
 
-export default {
+export {
   classify
 };

@@ -7,11 +7,13 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Editor } from 'tinymce/core/api/Editor';
+import { WordCount } from '../text/WordCount';
 
-const fireWordCountUpdate = (editor, text) => {
-  editor.fire('wordCountUpdate', {wordCountText: text});
+const fireWordCountUpdate = (editor: Editor, wordCount: WordCount) => {
+  editor.fire('wordCountUpdate', { wordCount });
 };
 
-export default {
+export {
   fireWordCountUpdate
 };
