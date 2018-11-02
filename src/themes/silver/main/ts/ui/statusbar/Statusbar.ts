@@ -1,7 +1,7 @@
 import { Behaviour, Dragging, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
+import I18n from 'tinymce/core/api/util/I18n';
 import { Editor } from 'tinymce/core/api/Editor';
-import I18n from '../../../../../../core/main/ts/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { getDefaultOr } from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';

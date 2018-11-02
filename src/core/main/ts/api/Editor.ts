@@ -32,6 +32,7 @@ import Shortcuts from './Shortcuts';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import Sidebar from '../ui/Sidebar';
+import I18n from 'tinymce/core/api/util/I18n';
 
 /**
  * Include the base event class documentation.
@@ -108,7 +109,6 @@ export interface Editor {
   quirks: any;
   readonly: boolean;
   removed: boolean;
-  rtl: boolean;
   schema: Schema;
   selection: Selection;
   serializer: any;
@@ -153,7 +153,6 @@ export interface Editor {
   getContentAreaContainer(): HTMLElement;
   getDoc(): Document;
   getElement(): HTMLElement;
-  getLang(name: string, defaultVal): any;
   getParam<K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
   getParam<T>(name: string, defaultVal: T, type: string): T;
   getParam(name: string, defaultVal?: any, type?: string): any;
@@ -279,7 +278,6 @@ export const Editor = function (id, settings, editorManager) {
   settings = getEditorSettings(self, id, documentBaseUrl, editorManager.defaultSettings, settings);
   self.settings = settings;
 
-  AddOnManager.language = settings.language || 'en';
   AddOnManager.languageLoad = settings.language_load;
   AddOnManager.baseURL = editorManager.baseURL;
 
@@ -489,29 +487,7 @@ Editor.prototype = {
    * @return {String} Translated string.
    */
   translate (text) {
-    if (text && Tools.is(text, 'string')) {
-      const lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
-
-      text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
-        return i18n.data[lang + '.' + b] || '{#' + b + '}';
-      });
-    }
-
-    return this.editorManager.translate(text);
-  },
-
-  /**
-   * Returns a language pack item by name/key.
-   *
-   * @method getLang
-   * @param {String} name Name/key to get from the language pack.
-   * @param {String} defaultVal Optional default value to retrieve.
-   */
-  getLang (name, defaultVal) {
-    return (
-      this.editorManager.i18n.data[(this.settings.language || 'en') + '.' + name] ||
-      (defaultVal !== undefined ? defaultVal : '{#' + name + '}')
-    );
+    return I18n.translate(text);
   },
 
   /**

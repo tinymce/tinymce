@@ -1,10 +1,9 @@
 import { LegacyUnit } from '@ephox/mcagar';
-import { Pipeline } from '@ephox/agar';
+import { Pipeline, RawAssertions } from '@ephox/agar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
-
   const suite = LegacyUnit.createSuite();
 
   suite.test('Translate strings', function () {
@@ -18,6 +17,8 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
       'value:{0}{1}{context:something}': 'value translation:{0}{1} with context',
       'empty string': ''
     });
+
+    I18n.setCode('code');
 
     LegacyUnit.equal(translate('text'), 'text translation');
     LegacyUnit.equal(translate('untranslated text'), 'untranslated text');
@@ -63,44 +64,30 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
 
     // When any translation string is the same as a key, a wrong translation will be made in nested translation calls.
     LegacyUnit.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
+
+    I18n.setCode('en');
   });
 
   suite.test('Switch language', function () {
-    for (const key in I18n.data) {
-      delete I18n.data[key];
-    }
-
     I18n.add('code1', {
       text: 'translation1'
     });
 
-    LegacyUnit.equal(I18n.getCode(), 'code1');
-    LegacyUnit.strictEqual(I18n.rtl, false);
-    LegacyUnit.deepEqual(I18n.data, {
-      code1: {
-        text: 'translation1'
-      }
-    });
+    RawAssertions.assertEq('Should not have switched language code', 'en', I18n.getCode());
+    RawAssertions.assertEq('Should not be in in rtl mode', false, I18n.isRtl());
+    RawAssertions.assertEq('Should not get code1 translation', 'text', I18n.translate('text'));
 
     I18n.add('code2', {
       _dir: 'rtl',
       text: 'translation2'
     });
 
-    LegacyUnit.equal(I18n.getCode(), 'code2');
-    LegacyUnit.strictEqual(I18n.rtl, true);
-    LegacyUnit.deepEqual(I18n.data, {
-      code1: {
-        text: 'translation1'
-      },
+    I18n.setCode('code2');
+    RawAssertions.assertEq('Should have switched language code', 'code2', I18n.getCode());
+    RawAssertions.assertEq('Should be in in rtl mode', true, I18n.isRtl());
+    RawAssertions.assertEq('Should be get code2 translation', 'translation2', I18n.translate('text'));
 
-      code2: {
-        _dir: 'rtl',
-        text: 'translation2'
-      }
-    });
-
-    I18n.rtl = false;
+    I18n.setCode('en');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

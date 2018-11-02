@@ -1,29 +1,19 @@
-import { Pipeline } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import { Pipeline, Step, RawAssertions } from '@ephox/agar';
+import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Factory from 'tinymce/core/api/ui/Factory';
 import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
-
+UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', (success, failure) => {
   Theme();
 
-  const teardown = function () {
-    I18n.rtl = false;
-    I18n.setCode('en');
-    Factory.get('Control').rtl = false;
-  };
+  const sAssertRtl = (label: string, rtl: boolean) => Step.sync(() => {
+    RawAssertions.assertEq(label, rtl, I18n.isRtl());
+  });
 
-  suite.test('UI rendered in RTL mode', function () {
-    LegacyUnit.equal(EditorManager.activeEditor.getContainer().className.indexOf('mce-rtl') !== -1, true, 'Should have a mce-rtl class');
-    LegacyUnit.equal(EditorManager.activeEditor.rtl, true, 'Should have the rtl property set');
+  const sSetLangCode = (code: string) => Step.sync(() => {
+    I18n.setCode(code);
   });
 
   EditorManager.addI18n('ar', {
@@ -31,15 +21,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {
     _dir: 'rtl'
   });
 
-  // Prevents the arabic language pack from being loaded
-  EditorManager.overrideDefaults({
-    base_url: '/project/tinymce'
-  });
-  ScriptLoader.ScriptLoader.markDone('http://' + document.location.host + '/project/tinymce/langs/ar.js');
+  I18n.setCode('en');
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), function () {
-      teardown();
+    Pipeline.async({}, [
+      sAssertRtl('Should be in rtl mode after creating an editor in arabic', true),
+      sSetLangCode('en'),
+      sAssertRtl('Should not be in rtl mode when switching back to english', false),
+      sSetLangCode('ar'),
+      sAssertRtl('Should be in rtl mode after switching back to arabic', true),
+      sSetLangCode('en')
+    ], function () {
       onSuccess();
     }, onFailure);
   }, {

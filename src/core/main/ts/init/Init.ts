@@ -146,12 +146,7 @@ const renderThemeUi = function (editor) {
 
 const init = function (editor) {
   const settings = editor.settings;
-  const elm = editor.getElement();
   let boxInfo;
-
-  editor.rtl = settings.rtl_ui || editor.editorManager.i18n.rtl;
-  editor.editorManager.i18n.setCode(settings.language);
-  settings.aria_label = settings.aria_label || DOM.getAttrib(elm, 'aria-label', editor.getLang('aria.rich_text_area'));
 
   editor.fire('ScriptsLoaded');
 
