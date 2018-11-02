@@ -109,7 +109,6 @@ export interface Editor {
   quirks: any;
   readonly: boolean;
   removed: boolean;
-  rtl: boolean;
   schema: Schema;
   selection: Selection;
   serializer: any;
