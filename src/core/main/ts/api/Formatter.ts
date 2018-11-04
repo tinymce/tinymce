@@ -52,6 +52,15 @@ export default function (editor) {
     get: formats.get,
 
     /**
+     * Returns true or false if a format is registered for the specified name.
+     *
+     * @method has
+     * @param {String} name Format name to check if a format exists.
+     * @return {boolean} True/False if a format for the specified name exists.
+     */
+    has: formats.has,
+
+    /**
      * Registers a specific format by name.
      *
      * @method register

@@ -1,6 +1,7 @@
 import { Option, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import { AllowedFormat } from '../ui/core/complex/StyleFormatTypes';
 
 const getSkinUrl = function (editor: Editor): string {
   const settings = editor.settings;
@@ -30,4 +31,17 @@ const getMinHeightSetting = (editor): Option<number> => Option.from(editor.setti
 const getMaxWidthSetting = (editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
 const getMaxHeightSetting = (editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
 
-export { getSkinUrl, isSkinDisabled, getHeightSetting, getMinWidthSetting, getMinHeightSetting, getMaxWidthSetting, getMaxHeightSetting };
+const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.from(editor.getParam('style_formats')).filter(Type.isArray);
+const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
+
+export {
+  getSkinUrl,
+  isSkinDisabled,
+  getHeightSetting,
+  getMinWidthSetting,
+  getMinHeightSetting,
+  getMaxWidthSetting,
+  getMaxHeightSetting,
+  getUserStyleFormats,
+  isMergeStyleFormats
+};

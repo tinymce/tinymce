@@ -8,14 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Obj } from '@ephox/katamari';
 import DefaultFormats from './DefaultFormats';
+import { Format } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 
 export default function (editor) {
-  const formats = {};
+  const formats: Record<string, Format> = {};
 
-  const get = function (name: string) {
+  const get = (name: string) => {
     return name ? formats[name] : formats;
+  };
+
+  const has = (name: string) => {
+    return Obj.has(formats, name);
   };
 
   const register = function (name, format?) {
@@ -75,6 +81,7 @@ export default function (editor) {
 
   return {
     get,
+    has,
     register,
     unregister
   };

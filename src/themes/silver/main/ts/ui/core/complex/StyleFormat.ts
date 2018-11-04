@@ -1,35 +1,7 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-import { BlockFormat, InlineFormat, SelectorFormat } from 'tinymce/core/api/fmt/Format';
-
-// somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
-type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;
-export type AllowedFormat = Separator | FormatReference | StyleFormat | NestedFormatting;
-
-export interface Separator {
-  title: string;
-}
-
-export interface FormatReference {
-  title: string;
-  format: string;
-  icon?: string;
-}
-
-export interface NestedFormatting {
-  title: string;
-  items: Array<FormatReference | StyleFormat>;
-}
-
-interface CommonStyleFormat {
-  title: string;
-  icon?: string;
-}
-
-export interface BlockStyleFormat extends BlockFormat, CommonStyleFormat {}
-export interface InlineStyleFormat extends InlineFormat, CommonStyleFormat {}
-export interface SelectorStyleFormat extends SelectorFormat, CommonStyleFormat {}
+import { getUserStyleFormats, isMergeStyleFormats } from '../../../api/Settings';
+import { AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat } from './StyleFormatTypes';
 
 export const defaultStyleFormats: AllowedFormat[] = [
   {
@@ -73,10 +45,6 @@ export const defaultStyleFormats: AllowedFormat[] = [
     ]
   }
 ];
-
-export const getUserFormats = (editor: Editor): Option<AllowedFormat[]> => Objects.readOptFrom(editor.settings, 'style_formats');
-
-export const isMergeFormats = (editor: Editor): Option<boolean> => Objects.readOptFrom(editor.settings, 'style_formats_merge');
 
 const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => {
   return Object.prototype.hasOwnProperty.call(format, 'items');
@@ -127,7 +95,7 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (S
   const registerFormats = (customFormats: {name: string, format: AllowedFormat}[]) => {
     Arr.each(customFormats, (fmt) => {
       // Only register the custom format with the editor, if it's not already registered
-      if (editor.formatter.get(fmt.name) === undefined) {
+      if (!editor.formatter.has(fmt.name)) {
         editor.formatter.register(fmt.name, fmt.format);
       }
     });
@@ -146,13 +114,10 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (S
 };
 
 export const getStyleFormats = (editor: Editor): (Separator | FormatReference | NestedFormatting)[] => {
-  return getUserFormats(editor).map((userFormats) => {
+  return getUserStyleFormats(editor).map((userFormats) => {
     // Ensure that any custom formats specified by the user are registered with the editor
     const registeredUserFormats = registerCustomFormats(editor, userFormats);
     // Merge the default formats with the custom formats if required
-    return isMergeFormats(editor).fold(
-      () => registeredUserFormats,
-      (mergeFormats) => mergeFormats ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats
-    );
+    return isMergeStyleFormats(editor) ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats;
   }).getOr(defaultStyleFormats);
 };
