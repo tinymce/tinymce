@@ -1,7 +1,8 @@
-import { MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { NodeAnchorSpec, MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Option } from '@ephox/katamari';
 
 const nu = function (x, y): MakeshiftAnchorSpec {
   return {
@@ -45,5 +46,13 @@ export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec
   return {
     anchor: 'selection',
     root: Element.fromDom(editor.selection.getNode())
+  };
+};
+
+export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => {
+  return {
+    anchor: 'node',
+    node: Option.some(Element.fromDom(editor.selection.getNode())),
+    root: Element.fromDom(editor.getBody())
   };
 };

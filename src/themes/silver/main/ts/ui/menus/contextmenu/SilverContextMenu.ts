@@ -6,7 +6,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { ItemResponse } from '../item/MenuItems';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
-import { getPointAnchor } from './Coords';
+import { getPointAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 
@@ -99,13 +99,20 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     if (isNativeOverrideKeyEvent(editor, e)) {
       return;
     }
-    // TODO: Support keyboard shortcut to open the context menu, use selection anchor spec in that case
-    // const selectionAnchorSpec = getSelectionAnchor(editor);
-    const mouseAnchorSpec = getPointAnchor(editor, e);
+
+    // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
+    // Chrome: button = 0 & target = the selection range node
+    // Firefox: button = 0 & target = body
+    // IE: button = 2 & target = body
+    // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
+    const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
+    const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
     const registry = editor.ui.registry.getAll();
     const menuConfig = Settings.getContextMenu(editor);
-    const selectedElement = editor.selection.getStart(true);
+
+    // Use the event target element for mouse clicks, otherwise fallback to the current selection
+    const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
 
     const items = generateContextMenu(registry.contextMenus, registry.menuItems, menuConfig, selectedElement);
 
@@ -113,7 +120,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       e.preventDefault();
 
       // show the context menu, with items set to close on click
-      InlineView.showMenuAt(contextmenu, mouseAnchorSpec, {
+      InlineView.showMenuAt(contextmenu, anchorSpec, {
         menu: {
           markers: MenuParts.markers('normal')
         },
