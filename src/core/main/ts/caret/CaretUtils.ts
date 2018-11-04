@@ -1,8 +1,8 @@
 /**
- * CaretUtils.js
+ * CaretUtils.ts
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -17,7 +17,9 @@ import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
 import { HDirection } from 'tinymce/core/caret/CaretWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
-import { Node, Range } from '@ephox/dom-globals';
+import { Node, Range, Text } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
+import { isWhiteSpace } from '../text/CharType';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -315,6 +317,19 @@ const isAfterContentEditableFalse = curry(isNextToContentEditableFalse, -1) as (
 const isBeforeTable = curry(isNextToTable, 0) as (caretPosition: CaretPosition) => boolean;
 const isAfterTable = curry(isNextToTable, -1) as (caretPosition: CaretPosition) => boolean;
 
+const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
+  return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
+    const delta = forward ? 0 : -1;
+    return predicate(text.data.charAt(pos.offset() + delta));
+  });
+};
+
+const isBeforeSpace = Fun.curry(isChar, true, isWhiteSpace);
+const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
+
+const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
+const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
+
 export {
   isForwards,
   isBackwards,
@@ -327,7 +342,11 @@ export {
   isAfterContentEditableFalse,
   isBeforeTable,
   isAfterTable,
+  isBeforeSpace,
+  isAfterSpace,
   normalizeRange,
   getRelativeCefElm,
-  getNormalizedRangeEndPoint
+  getNormalizedRangeEndPoint,
+  getElementFromPosition,
+  getElementFromPrevPosition
 };

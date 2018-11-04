@@ -1,12 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import BlockBoundary from 'tinymce/core/delete/BlockBoundary';
+import BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () {
+UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const viewBlock = ViewBlock();
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () 
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
-      return BlockBoundary.read(viewBlock.get(), forward, rng);
+      return BlockMergeBoundary.read(viewBlock.get(), forward, rng);
     });
   };
 
