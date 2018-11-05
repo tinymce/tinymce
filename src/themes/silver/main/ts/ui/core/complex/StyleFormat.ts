@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { getUserStyleFormats, isMergeStyleFormats } from '../../../api/Settings';
 import { AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat } from './StyleFormatTypes';
@@ -46,20 +46,21 @@ export const defaultStyleFormats: AllowedFormat[] = [
   }
 ];
 
+// Note: Need to cast format below to Record, as Obj.has uses "K keyof T", which doesn't work with aliases
 const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => {
-  return Object.prototype.hasOwnProperty.call(format, 'items');
+  return Obj.has(format as Record<string, any>, 'items');
 };
 
 const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => {
-  return Object.prototype.hasOwnProperty.call(format, 'block');
+  return Obj.has(format as Record<string, any>, 'block');
 };
 
 const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => {
-  return Object.prototype.hasOwnProperty.call(format, 'inline');
+  return Obj.has(format as Record<string, any>, 'inline');
 };
 
 const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => {
-  return Object.prototype.hasOwnProperty.call(format, 'selector');
+  return Obj.has(format as Record<string, any>, 'selector');
 };
 
 interface CustomFormatMapping {
