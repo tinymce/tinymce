@@ -1,4 +1,10 @@
 Version 5.0.0-preview-4 (TBD)
+    Fixed styling issues with dialogs and menus in IE 11 #AP-456
+    Fixed custom style formats not honoring custom formats #AP-393
+    Fixed context menu not appearing when clicking an image with a caption #AP-382
+    Fixed directionality of UI when using an RTL language #AP-423
+    Fixed page responsiveness with multiple inline editors #AP-430
+    Added the ability to keyboard navigate through menus, toolbars, sidebar and the status bar sequentially #AP-381
     Fixed empty toolbar groups appearing through invalid configuration of the `toolbar` property #AP-450
     Fixed text not being retained when updating links through the link dialog #AP-293
     Added translation capability back to the editor's UI #AP-282
