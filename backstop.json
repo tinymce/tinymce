@@ -12,7 +12,7 @@
   "scenarios": [
     {
       "label": "demo page",
-      "url": "/build/tinymce/index.html",
+      "url": "./build/tinymce/index.html",
       "hideSelectors": [],
       "removeSelectors": [],
       "selectors": [
@@ -25,11 +25,11 @@
 
   ],
   "paths": {
-    "bitmaps_reference": "backstop_data/bitmaps_reference",
-    "bitmaps_test": "scratch/bitmaps_test",
-    "engine_scripts": "backstop_data/engine_scripts",
-    "html_report": "scratch/html_report",
-    "ci_report": "backstop_data/ci_report"
+    "bitmaps_reference": "./backstop_data/bitmaps_reference",
+    "bitmaps_test": "./scratch/bitmaps_test",
+    "engine_scripts": "./backstop_data/engine_scripts",
+    "html_report": "./scratch/html_report",
+    "ci_report": "./backstop_data/ci_report"
   },
   "report": ["browser"],
   "engine": "puppeteer",

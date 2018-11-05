@@ -139,7 +139,7 @@ gulp.task('getInternal',
 
 const backstopConfig = require('./backstop.json');
 
-gulp.task('backstop', () => backstop('test', { config: { ...backstopConfig, report: [] }, docker: true }))
+gulp.task('backstop', () => backstop('test', { config: { ...backstopConfig, report: [], docker: true }}))
 
 //
 // clean tmp
