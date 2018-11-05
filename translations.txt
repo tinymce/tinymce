@@ -45,6 +45,29 @@ Border style            <new> Table (better description than just 'style')
 
 Update                  <new> TOC
 
+TURQUOISE OR AQUA                 <new> Color Swatch
+BOLD GREEN OR GREEN               <new> Color Swatch
+BLUE                              <new> Color Swatch
+PURPLE                            <new> Color Swatch
+NAVY BLUE                         <new> Color Swatch
+DARK TURQUOISE OR DARK AQUA       <new> Color Swatch
+DARK GREEN                        <new> Color Swatch
+MEDIUM BLUE                       <new> Color Swatch
+MEDIUM PURPLE                     <new> Color Swatch
+MIDNIGHT BLUE OR DARK NAVY BLUE   <new> Color Swatch
+YELLOW                            <new> Color Swatch
+ORANGE                            <new> Color Swatch
+RED                               <new> Color Swatch
+LIGHT GRAY                        <new> Color Swatch
+GRAY                              <new> Color Swatch
+DARK YELLOW                       <new> Color Swatch
+DARK ORANGE                       <new> Color Swatch
+DARK RED                          <new> Color Swatch
+MEDIUM GRAY                       <new> Color Swatch
+DARK GRAY                         <new> Color Swatch
+BLACK                             <new> Color Swatch
+WHITE                             <new> Color Swatch
+
 
 No longer Used
 -----------------------------------------------------

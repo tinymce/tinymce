@@ -44,8 +44,8 @@ const defaultColors = [
   { type: choiceItem, text: 'MEDIUM GRAY', value: '#BDC3C7' },
   { type: choiceItem, text: 'DARK GRAY', value: '#7E8C8D' },
 
-  { type: choiceItem, text: 'Black', value: '#000000' },
-  { type: choiceItem, text: 'Black', value: '#ffffff' }
+  { type: choiceItem, text: 'BLACK', value: '#000000' },
+  { type: choiceItem, text: 'WHITE', value: '#ffffff' }
 ];
 
 const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
