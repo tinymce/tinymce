@@ -22,19 +22,13 @@ const getSelectedLink = function (editor) {
   return getLink(editor, editor.selection.getStart());
 };
 
-const getHref = function (elm) {
-  // Returns the real href value not the resolved a.href value
-  const href = elm.getAttribute('data-mce-href');
-  return href ? href : elm.getAttribute('href');
-};
-
 const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
 const gotoLink = function (editor, a) {
   if (a) {
-    const href = getHref(a);
+    const href = Utils.getHref(a);
     if (/^#/.test(href)) {
       const targetEl = editor.$(href);
       if (targetEl.length) {
