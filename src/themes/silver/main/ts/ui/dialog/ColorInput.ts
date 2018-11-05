@@ -83,7 +83,8 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
           }
         }
       })
-    ])
+    ]),
+    selectOnFocus: false
   });
 
   const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));

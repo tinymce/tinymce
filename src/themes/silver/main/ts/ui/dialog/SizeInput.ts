@@ -53,7 +53,8 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
             AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
           })
         ])
-      ])
+      ]),
+      selectOnFocus: false
     });
 
     const pAriaDescriptor = AlloyFormField.parts()['aria-descriptor']({

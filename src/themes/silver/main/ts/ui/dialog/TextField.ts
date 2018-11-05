@@ -75,6 +75,7 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
         validatingBehaviours
       ])
     ),
+    selectOnFocus: false,
     factory: AlloyInput
   });
 
