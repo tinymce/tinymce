@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.2.0] - 2018-11-02
-### Added
- - A new getApis() method for running individual APIs on components
-
+# [4.3.0] - 2018-11-05
 ### Changed
  - The lazySink function now takes a component as an argument
+ - A new getApis() method for running individual APIs on components
+
+# [4.2.0] - 2018-11-02
+### Added
+ - Exposed NodeAnchorSpec type
 
 # [4.1.0] - 2018-11-01
 ### Added
