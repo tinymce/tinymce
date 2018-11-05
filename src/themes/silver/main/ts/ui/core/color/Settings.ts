@@ -1,5 +1,5 @@
 const getColorCols = (editor, defaultCols: number): number => {
-  return editor.getParam('color_cols', defaultCols);
+  return editor.getParam('color_cols', defaultCols, 'number');
 };
 
 const hasCustomColors = (editor): boolean => {
