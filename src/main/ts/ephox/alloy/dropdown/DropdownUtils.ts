@@ -18,6 +18,7 @@ import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Representing } from '../api/behaviour/Representing';
+import { LazySink } from '../api/component/CommonTypes';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
@@ -39,7 +40,7 @@ const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
 const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: HotspotAnchorSpec, component, sandbox, externals, highlightOnOpen: HighlightOnOpen) => {
   const futureData = fetch(detail, mapFetch, component);
 
-  const lazySink = getSink(component, detail);
+  const getLazySink = getSink(component, detail);
 
   // TODO: Make this potentially a single menu also
   return futureData.map((data) => {
@@ -52,13 +53,13 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Tiere
       highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
       onOpenMenu (tmenu, menu) {
-        const sink = lazySink().getOrDie();
+        const sink = getLazySink().getOrDie();
         Positioning.position(sink, anchor, menu);
         Sandboxing.decloak(sandbox);
       },
 
       onOpenSubmenu (tmenu, item, submenu) {
-        const sink = lazySink().getOrDie();
+        const sink = getLazySink().getOrDie();
         Positioning.position(sink, {
           anchor: 'submenu',
           item
@@ -115,10 +116,10 @@ const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWi
 
 interface SinkDetail {
   uid: string;
-  lazySink: Option<(comp: AlloyComponent) => Result<AlloyComponent, any>>;
+  lazySink: Option<LazySink>;
 }
 
-const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail) => {
+const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => ReturnType<LazySink> => {
   return anyInSystem.getSystem().getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).map((internalSink) => {
     return () => Result.value(internalSink);
   }).getOrThunk(() => {

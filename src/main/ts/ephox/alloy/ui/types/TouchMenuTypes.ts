@@ -11,6 +11,7 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
+import { LazySink } from '../../api/component/CommonTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
   uid: string;
@@ -33,7 +34,7 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   role: Option<string>;
 
   getAnchor: (comp: AlloyComponent) => AnchorSpec;
-  lazySink: Option<(comp: AlloyComponent) => Result<AlloyComponent, Error>>;
+  lazySink: Option<LazySink>;
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
 }
@@ -60,7 +61,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
   role?: string;
 
-  lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
+  lazySink?: LazySink,
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
   matchWidth?: boolean;

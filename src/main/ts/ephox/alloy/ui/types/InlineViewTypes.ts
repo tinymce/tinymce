@@ -8,6 +8,7 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 import { Element } from '@ephox/sugar';
+import { LazySink } from '../../api/component/CommonTypes';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: string;
@@ -17,8 +18,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onShow: (component: AlloyComponent) => void;
   onHide: (component: AlloyComponent) => void;
   getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
-  // NOTE: This does not get passed a component
-  lazySink: () =>  Result<AlloyComponent, Error>;
+  lazySink: LazySink;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Option<{
     event: string
@@ -30,8 +30,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   inlineBehaviours?: AlloyBehaviourRecord;
-  // NOTE: This does not get passed a component
-  lazySink: () => Result<AlloyComponent, Error>;
+  lazySink: LazySink;
   onShow?: (component: AlloyComponent) => void;
   onHide?: (component: AlloyComponent) => void;
   getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;

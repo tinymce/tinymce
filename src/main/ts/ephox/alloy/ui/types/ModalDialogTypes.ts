@@ -7,6 +7,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { LazySink } from '../../api/component/CommonTypes';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
@@ -19,8 +20,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   useTabstopAt: (elem: Element) => boolean;
 
-  // NOTE: This does not get passed a component
-  lazySink: () => Result<AlloyComponent, Error>;
+  lazySink: LazySink;
   dragBlockClass: Option<string>;
 }
 
@@ -31,7 +31,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   modalBehaviours?: AlloyBehaviourRecord;
   eventOrder?: Record<string, string[]>;
 
-  lazySink?: () => Result<AlloyComponent, Error>;
+  lazySink?: LazySink;
   useTabstopAt?: (comp: Element) => boolean;
   onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;

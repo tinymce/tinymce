@@ -17,8 +17,9 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
+import { LazySink } from '../component/CommonTypes';
 
-const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   return tieredMenu.sketch({
     dom: {
       tag: 'div'
@@ -35,11 +36,11 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
       return Option.some(true);
     },
 
-    onOpenMenu(notmysandbox, menu) {
+    onOpenMenu(tmenu, menu) {
       Positioning.position(lazySink().getOrDie(), anchor, menu);
     },
 
-    onOpenSubmenu(notmysandbox, item, submenu) {
+    onOpenSubmenu(tmenu, item, submenu) {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -50,8 +51,8 @@ const makeMenu = (lazySink: () => Result<AlloyComponent, Error>, menuSandbox: Al
 };
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
-  const isPartOfRelated = (container, queryElem) => {
-    const related = detail.getRelated(container);
+  const isPartOfRelated = (sandbox, queryElem) => {
+    const related = detail.getRelated(sandbox);
     return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
@@ -66,13 +67,13 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
     showWithin(sandbox, anchor, thing, getBounds);
   };
   const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
-    const sink = detail.lazySink().getOrDie();
+    const sink = detail.lazySink(sandbox).getOrDie();
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, boxElement));
     detail.onShow(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(detail.lazySink, sandbox, anchor, menuSpec);
+    const thing = makeMenu(() => detail.lazySink(sandbox), sandbox, anchor, menuSpec);
 
     Sandboxing.open(sandbox, thing);
     detail.onShow(sandbox);
@@ -102,11 +103,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
       detail.inlineBehaviours,
       [
         Sandboxing.config({
-          isPartOf (container, data, queryElem) {
-            return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
+          isPartOf (sandbox, data, queryElem) {
+            return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(sandbox, queryElem);
           },
-          getAttachPoint () {
-            return detail.lazySink().getOrDie();
+          getAttachPoint (sandbox) {
+            return detail.lazySink(sandbox).getOrDie();
           }
         }),
         Dismissal.receivingConfig({
