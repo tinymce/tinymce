@@ -18,7 +18,6 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import { isValidValue } from '../../../../../node_modules/@ephox/sugar/lib/main/ts/ephox/sugar/api/properties/Css';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -245,7 +244,7 @@ const setup = (editor: Editor): RenderInfo => {
 
     if (!editor.inline) {
       const pxHeight = Utils.numToPx(height);
-      if (isValidValue('div', 'height', pxHeight)) {
+      if (Css.isValidValue('div', 'height', pxHeight)) {
         Css.set(outerContainer.element(), 'height', pxHeight);
       } else {
         Css.set(outerContainer.element(), 'height', '200px');
