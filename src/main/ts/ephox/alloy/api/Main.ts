@@ -113,6 +113,7 @@ import {
 
 import * as Layout from '../positioning/layout/Layout';
 import * as Bubble from '../positioning/layout/Bubble';
+import { LazySink } from './component/CommonTypes';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -228,6 +229,7 @@ export {
   // layout
   Layout,
   Bubble,
+  LazySink,
 
   // types
   TieredMenuTypes,

@@ -9,6 +9,7 @@ import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 import { Element } from '@ephox/sugar';
 import { AnchorLayout } from '../../positioning/layout/Layout';
+import { LazySink } from '../../api/component/CommonTypes';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
@@ -21,7 +22,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   fetch: (comp: AlloyComponent) => Future<F>;
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
-  lazySink: Option<() => Result<AlloyComponent, Error>>;
+  lazySink: Option<LazySink>;
   // TODO test getHotspot
   getHotspot: (comp: AlloyComponent) => Option<AlloyComponent>;
   layouts: Option<{
@@ -65,7 +66,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   }>;
 
   toggleClass: string;
-  lazySink?: any;
+  lazySink?: LazySink;
   parts: {
     menu: Partial<TieredMenuSpec>;
   };

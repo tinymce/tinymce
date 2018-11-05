@@ -21,6 +21,7 @@ import * as DemoRenders from './forms/DemoRenders';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 import { document, console } from '@ephox/dom-globals';
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 
 // tslint:disable:no-console
 
@@ -32,7 +33,7 @@ export default (): void => {
 
   const sink = DemoSink.make();
 
-  const lazySink = () => {
+  const lazySink: LazySink = (_) => {
     return Result.value(sink);
   };
 
@@ -81,7 +82,7 @@ export default (): void => {
     },
 
     onOpenSubmenu (sandbox, item, submenu) {
-      const sink = lazySink().getOrDie();
+      const sink = lazySink(sandbox).getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
         item

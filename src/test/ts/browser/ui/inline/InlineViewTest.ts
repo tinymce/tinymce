@@ -11,7 +11,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
-import { Html, Css } from '@ephox/sugar';
+import { Html, Css, Compare } from '@ephox/sugar';
 
 UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
@@ -26,7 +26,8 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink () {
+        lazySink (comp) {
+          Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element(), comp.element()));
           return Result.value(component);
         },
 

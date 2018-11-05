@@ -18,19 +18,19 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
 }
 
 export interface SandboxingConfigSpec extends Behaviour.BehaviourConfigSpec {
-  getAttachPoint: () => AlloyComponent;
-  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
-  onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
-  onClose?: (component: AlloyComponent, menu: AlloyComponent) => void;
+  getAttachPoint: (sandbox: AlloyComponent) => AlloyComponent;
+  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
+  onOpen?: (sandbox: AlloyComponent, menu: AlloyComponent) => void;
+  onClose?: (sandbox: AlloyComponent, menu: AlloyComponent) => void;
   cloakVisibilityAttr?: string;
 }
 
 export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
   cloakVisibilityAttr: string;
-  getAttachPoint: () => AlloyComponent;
-  onOpen: (comp: AlloyComponent, thing: AlloyComponent) => void;
+  getAttachPoint: (sandbox: AlloyComponent) => AlloyComponent;
+  onOpen: (sandbox: AlloyComponent, thing: AlloyComponent) => void;
   onClose: (sandbox: AlloyComponent, thing: AlloyComponent) => void;
-  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
+  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
 }
 
 export interface SandboxingState {

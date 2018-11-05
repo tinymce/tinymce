@@ -25,7 +25,7 @@ import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { SelectorFind } from '@ephox/sugar';
-import { Replacing } from '../../../../main/ts/ephox/alloy/api/behaviour/Replacing';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 
 UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 

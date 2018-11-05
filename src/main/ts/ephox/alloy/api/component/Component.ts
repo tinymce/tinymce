@@ -22,7 +22,7 @@ import { AlloyComponent } from './ComponentApi';
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
 const getDomDefinition = (
-  info: CustomDefinition.CustomDetail,
+  info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
@@ -45,7 +45,7 @@ const getDomDefinition = (
 };
 
 const getEvents = (
-  info: CustomDefinition.CustomDetail,
+  info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
   bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
@@ -62,7 +62,7 @@ const build = (spec): AlloyComponent => {
 
   const systemApi = Cell(singleton);
 
-  const info: CustomDefinition.CustomDetail = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
 
@@ -100,12 +100,7 @@ const build = (spec): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = <D>(behaviour: AlloyBehaviour<any, D> | string): D | any => {
-    if (behaviour === GuiTypes.apiConfig()) {
-      return info.apis;
-    } else if (Type.isString(behaviour)) {
-      throw new Error('Invalid input: only API constant is allowed');
-    }
+  const config = <D>(behaviour: AlloyBehaviour<any, D>): D | any => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
@@ -115,6 +110,10 @@ const build = (spec): AlloyComponent => {
 
   const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => {
     return Type.isFunction(bData[behaviour.name()]);
+  };
+
+  const getApis = <A>(): A => {
+    return info.apis;
   };
 
   // TYPIFY
@@ -130,6 +129,7 @@ const build = (spec): AlloyComponent => {
     hasConfigured,
     spec: Fun.constant(spec),
     readState,
+    getApis,
 
     connect,
     disconnect,

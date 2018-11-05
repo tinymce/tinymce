@@ -15,7 +15,7 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
     Attachment.detachChildren(sandbox);
   });
 
-  const point = sConfig.getAttachPoint();
+  const point = sConfig.getAttachPoint(sandbox);
   Attachment.attach(point, sandbox);
 
   // Must be after the sandbox is in the system
@@ -82,7 +82,7 @@ const restore = (sandbox, cssKey, attr) => {
 };
 
 const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
-  const sink = sConfig.getAttachPoint();
+  const sink = sConfig.getAttachPoint(sandbox);
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
   Css.set(sandbox.element(), 'position', Positioning.getMode(sink));

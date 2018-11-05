@@ -22,6 +22,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
           GuiFactory.premade(sink),
           Typeahead.sketch({
             uid: 'test-type',
+            inputClasses: [ 'test-typeahead' ],
             minChars: 2,
 
             initialData: {
@@ -55,7 +56,10 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
               });
             },
 
-            lazySink () { return Result.value(sink); },
+            lazySink (c) {
+              TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
+              return Result.value(sink);
+            },
 
             parts: {
               menu: TestDropdownMenu.part(store)

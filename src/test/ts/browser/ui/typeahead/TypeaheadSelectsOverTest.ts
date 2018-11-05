@@ -57,7 +57,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink () { return Result.value(sink); },
+            lazySink (c) {
+              TestDropdownMenu.assertLazySinkArgs('input', 'with-selectover', c);
+              return Result.value(sink);
+            },
             parts: {
               menu: TestDropdownMenu.part(store)
             }
@@ -78,7 +81,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink () { return Result.value(sink); },
+            lazySink (c) {
+              TestDropdownMenu.assertLazySinkArgs('input', 'without-selectover', c);
+              return Result.value(sink);
+            },
             parts: {
               menu: TestDropdownMenu.part(store)
             }

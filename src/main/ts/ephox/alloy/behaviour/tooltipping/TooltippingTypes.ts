@@ -3,14 +3,14 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result, Option } from '@ephox/katamari';
 import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import { LazySink } from '../../api/component/CommonTypes';
 
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive(comp: AlloyComponent): void;
 }
 
 export interface TooltippingConfig extends BehaviourConfigDetail {
-  // Make consistent with other lazy sinks.
-  lazySink: (comp: AlloyComponent) => Result<AlloyComponent, any>;
+  lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents: AlloySpec[];
   exclusive: boolean;
@@ -18,8 +18,7 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
 }
 
 export interface TooltippingConfigSpec extends BehaviourConfigSpec {
-  // Make consistent with other lazy sinks.
-  lazySink: (comp: AlloyComponent) => Result<AlloyComponent, any>;
+  lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents?: AlloySpec[];
   exclusive?: boolean;

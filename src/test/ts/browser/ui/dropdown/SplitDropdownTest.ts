@@ -13,6 +13,7 @@ import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
@@ -81,8 +82,10 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           })
         ],
 
-        lazySink () {
-          return Result.value(sink.get(c));
+        lazySink: (c: AlloyComponent) => {
+          TestDropdownMenu.assertLazySinkArgs('span', 'test-split-dropdown', c);
+          // Only gets here is the above assertion passes.
+          return Result.value(sink.get(c))
         },
 
         parts: {

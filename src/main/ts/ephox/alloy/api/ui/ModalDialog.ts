@@ -41,7 +41,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
 
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = (dialog) => {
-    const sink = detail.lazySink().getOrDie();
+    const sink = detail.lazySink(dialog).getOrDie();
 
     const busyComp = Cell(Option.none());
 

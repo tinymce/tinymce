@@ -1,9 +1,8 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { subs } from 'ephox/alloy/parts/PartSubstitutes';
-
-import { PartType } from '../../../../main/ts/ephox/alloy/api/Main';
 import { Fun, Obj } from '@ephox/katamari';
+import { subs } from 'ephox/alloy/parts/PartSubstitutes';
+import * as PartType from 'ephox/alloy/parts/PartType';
 
 UnitTest.test('PartSubstitutesTest', () => {
   // TODO: Make this test more exhaustive. This is really just a sanity
