@@ -4,7 +4,7 @@ import { JSON } from '@ephox/sand';
 import { CouplingConfigSpec, CouplingConfig } from './CouplingTypes';
 import { BehaviourState, nuState, BehaviourStateInitialiser } from '../common/BehaviourState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/Main';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
 const init = (spec: CouplingConfigSpec) => {
   const coupled = { };
