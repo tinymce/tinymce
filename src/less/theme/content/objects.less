@@ -102,7 +102,7 @@
 }
 
 .ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
-  opacity: .2;
+  opacity: .4;
 }
 
 // Figure alignment
@@ -151,19 +151,22 @@ figure.image.align-center {
   }
 }
 
-// Spell checking markers
+// Spell checking marker
 .mce-spellchecker-word {
-  //border-bottom: 2px solid rgba(208, 2, 27, 0.5);
-  cursor: default;
-
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ff0000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
-  background-position: 0 100%;
-  background-size: auto 4px;
+  //background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ff0000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#ff0000' fill='none' stroke-linecap='round' stroke-opacity='.5' d='M0 3L2 1 4 3'/%3E%3C/svg%3E");
+  background-position: 0 calc(~"100% + 1px");
+  background-size: auto 6px;
   background-repeat: repeat-x;
-  text-decoration: none;
+  cursor: default;
+  height: 2rem;
 }
 
+// Grammar checking marker
 .mce-spellchecker-grammar {
-  border-bottom: 2px solid #008000;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#008800' fill='none' stroke-linecap='round' d='M0 3L2 1 4 3'/%3E%3C/svg%3E");
+  background-position: 0 calc(~"100% + 1px");
+  background-size: auto 6px;
+  background-repeat: repeat-x;
   cursor: default;
 }
