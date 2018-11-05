@@ -20,7 +20,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('styles', { }),
   FieldSchema.defaulted('eventOrder', { }),
   SketchBehaviours.field('inputBehaviours', [ Representing, Focusing ]),
-  FieldSchema.defaulted('selectOnFocus', false)
+  FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
 const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
