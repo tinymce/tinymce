@@ -4,6 +4,7 @@ import { Attr, Body, DomEvent, Element, Insert, Remove, SelectorFilter } from '@
 import { deleteTinymceGlobals, getTinymce } from '../loader/Globals';
 import { readAllPlugins, sRegisterPlugins } from '../loader/Plugins';
 import { updateTinymceUrls } from '../loader/Urls';
+import { console } from '@ephox/dom-globals';
 
 const loadScript = (url: string, success: () => void, failure: (err: Error) => void) => {
   const script = Element.fromTag('script');
@@ -77,22 +78,16 @@ const sWithVersion = (version: string, step: Step<any, any>) => {
   ]);
 };
 
-const getMajorVersion = () => {
-  const tinymce = getTinymce().getOrDie('Failed to get global tinymce');
-  return parseInt(tinymce.majorVersion, 10);
-};
-
-const isModern = () => {
-  return getMajorVersion() < 5;
-}
-
 const isSilver = () => {
-  return getMajorVersion() >= 5;
+  const tinymce = getTinymce().getOrDie('Failed to get global tinymce');
+  return tinymce.activeEditor.hasOwnProperty('ui');
 }
+
+const isModern = () => !isSilver();
 
 export {
-  isModern,
   isSilver,
+  isModern,
 
   sWithVersion,
   sLoad,
