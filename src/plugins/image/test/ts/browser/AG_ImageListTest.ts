@@ -14,9 +14,7 @@ ImagePlugin();
 
 TinyLoader.setup(function (editor, onSuccess, onFailure) {
   const tinyApis = TinyApis(editor);
-  const tinyUi = TinyUi(editor, {
-    toolBarSelector: '.tox-toolbar'
-  });
+  const tinyUi = TinyUi(editor);
 
   Pipeline.async({}, [
     Log.stepsAsStep('TBA', 'Image: click image list, check that source changes, change source and check that image list changes', [

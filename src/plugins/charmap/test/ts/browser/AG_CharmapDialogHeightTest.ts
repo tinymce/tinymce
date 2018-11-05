@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const doc = Element.fromDom(document);
 
     Pipeline.async({},

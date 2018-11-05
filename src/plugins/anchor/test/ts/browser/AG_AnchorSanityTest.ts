@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({},

@@ -13,9 +13,7 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function (success, failure) {
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
     Pipeline.async({},

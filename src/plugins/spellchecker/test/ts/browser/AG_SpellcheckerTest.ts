@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const ui = TinyUi(editor);
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: default settings', [
       sTestDefaultLanguage(editor),
       ui.sWaitForUi('my button', '.tox-split-button'),

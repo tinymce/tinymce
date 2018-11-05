@@ -16,9 +16,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar'
-    });
+    const tinyUi = TinyUi(editor);
 
     const sClickAndAssertEvents = function (tooltip, expected: EventLog[]) {
       return GeneralSteps.sequence([
