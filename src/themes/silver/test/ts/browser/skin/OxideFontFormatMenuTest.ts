@@ -141,6 +141,52 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                               classes: [ arr.has('tox-collection__item-caret') ]
                             })
                           ]
+                        }),
+                        s.element('div', {
+                          classes: [ arr.has('tox-collection__item') ],
+                          children: [
+                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', {
+                              classes: [ arr.has('tox-collection__item-label') ],
+                              children: [
+                                s.element('span', {
+                                  html: str.is('Red text'),
+                                  styles: {
+                                    color: str.is('rgb(255, 0, 0)')
+                                  }
+                                })
+                              ]
+                            })
+                          ]
+                        }),
+                        s.element('div', {
+                          classes: [ arr.has('tox-collection__item') ],
+                          children: [
+                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', {
+                              classes: [ arr.has('tox-collection__item-label') ],
+                              children: [
+                                s.element('p', {
+                                  html: str.is('Red paragraph'),
+                                  styles: {
+                                    color: str.is('rgb(255, 0, 0)')
+                                  }
+                                })
+                              ]
+                            })
+                          ]
+                        }),
+                        s.element('div', {
+                          classes: [ arr.has('tox-collection__item') ],
+                          children: [
+                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', {
+                              classes: [ arr.has('tox-collection__item-label') ],
+                              children: [
+                                s.element('div', { html: str.is('Table row 1') })
+                              ]
+                            })
+                          ]
                         })
                       ]
                     })
@@ -175,9 +221,12 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
         {
           title: 'Others',
           items: [
-            { title: 'Other1', format: 'bold' },
+            { title: 'Other1', format: 'bold' }
           ]
-        }
+        },
+        { title: 'Red text', inline: 'span', styles: { color: 'rgb(255, 0, 0)' } },
+        { title: 'Red paragraph', block: 'p', styles: { color: 'rgb(255, 0, 0)' } },
+        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ],
       skin_url: '/project/js/tinymce/skins/oxide',
       setup: (ed) => {

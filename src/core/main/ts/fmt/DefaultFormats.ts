@@ -9,6 +9,7 @@
  */
 
 import Tools from '../api/util/Tools';
+import { Format } from 'tinymce/core/api/fmt/Format';
 
 const get = function (dom) {
   const formats = {
@@ -155,7 +156,7 @@ const get = function (dom) {
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
     fontsize_class: { inline: 'span', attributes: { class: '%value' } },
-    blockquote: { block: 'blockquote', wrapper: 1, remove: 'all' },
+    blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
     code: { inline: 'code' },
@@ -185,7 +186,7 @@ const get = function (dom) {
       { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true },
       { selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true }
     ]
-  };
+  } as Record<string, Format | Format[]>;
 
   Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), function (name) {
     formats[name] = { block: name, remove: 'all' };
