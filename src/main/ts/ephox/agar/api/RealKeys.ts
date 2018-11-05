@@ -4,8 +4,14 @@ import { MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Step } from './Main';
 
-interface KeyPressAdt extends Adt {
+interface KeyPressAdt {
   fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
+  match: <T>(branches: {
+    combo: (modifiers: Modifiers, letters: string) => T;
+    text: (s: string) => T;
+    backspace: () => T;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const adt: {

@@ -4,12 +4,18 @@ import { Element } from '@ephox/sugar';
 import * as SizzleFind from '../alien/SizzleFind';
 import * as Truncate from '../alien/Truncate';
 
-interface TargetAdt extends Adt {
+interface TargetAdt {
   fold: <T> (
     self: (element: Element, selector: string) => T,
     children: (element: Element, selector: string) => T,
     descendants: (element: Element, selector: string) => T
   ) => T;
+  match: <T>(branches: {
+    self: (element: Element, selector: string) => T;
+    children: (element: Element, selector: string) => T;
+    descendants: (element: Element, selector: string) => T;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const targets: {
