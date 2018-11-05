@@ -19,7 +19,7 @@ UnitTest.asynctest('tinymce.lists.browser.ToggleListWithEmptyLiTest', (success, 
         tinyApis.sSetContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>'),
         tinyApis.sSetSelection([0, 0, 0], 0, [0, 3, 0], 1),
         tinyUi.sClickOnToolbar('click list', 'div[aria-label="Bullet list"] > button'),
-        tinyApis.sAssertContent('<p>a</p><p>&nbsp;</p><p>b</p>')
+        tinyApis.sAssertContent('<p>a</p><p>&nbsp;</p><p>&nbsp;</p><p>b</p>')
       ])),
     ], onSuccess, onFailure);
   }, {
