@@ -12,6 +12,7 @@ import { Arr, Cell, Fun, Option } from '@ephox/katamari';
 import { Attr, Compare, Element, Replication, Traverse } from '@ephox/sugar';
 import { getListType, isList, ListType } from './ListType';
 import { Entry } from './Entry';
+import { hasLastChildList } from './Util';
 
 type Parser = (depth: number, itemSelection: Option<ItemTuple>, selectionState: Cell<boolean>, el: Element) => Entry[];
 
@@ -27,8 +28,7 @@ export interface EntrySet {
 
 const getItemContent = (li: Element): Element[] => {
   const childNodes = Traverse.children(li);
-  const hasSublist = Arr.last(childNodes).map(isList).getOr(false);
-  const contentLength = childNodes.length + (hasSublist ? -1 : 0);
+  const contentLength = childNodes.length + (hasLastChildList(li) ? -1 : 0);
   return Arr.map(childNodes.slice(0, contentLength), Replication.deep);
 };
 
@@ -44,19 +44,24 @@ const createEntry = (li: Element, depth: number, isSelected: boolean): Entry => 
   };
 };
 
+enum ItemRange {
+  Start = 'Start',
+  End = 'End'
+}
+
 const parseItem: Parser = (depth: number, itemSelection: Option<ItemTuple>, selectionState: Cell<boolean>, item: Element): Entry[] => {
   const curriedParseList = Fun.curry(parseList, depth, itemSelection, selectionState);
 
-  const updateSelectionState = (section: 'start' | 'end') => itemSelection.each((selection) => {
-    if (Compare.eq(selection[section], item)) {
-      selectionState.set(section === 'start');
+  const updateSelectionState = (itemRange: ItemRange) => itemSelection.each((selection) => {
+    if (Compare.eq(itemRange === ItemRange.Start ? selection.start : selection.end, item)) {
+      selectionState.set(itemRange === ItemRange.Start);
     }
   });
 
   return Traverse.firstChild(item).filter(isList).fold(() => {
-    updateSelectionState('start');
+    updateSelectionState(ItemRange.Start);
     const fromCurrentItem: Entry = createEntry(item, depth, selectionState.get());
-    updateSelectionState('end');
+    updateSelectionState(ItemRange.End);
     const fromChildList: Entry[] = Traverse.lastChild(item).filter(isList).map(curriedParseList).getOr([]);
 
     return [ fromCurrentItem, ...fromChildList ];

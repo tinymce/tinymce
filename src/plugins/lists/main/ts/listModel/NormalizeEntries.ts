@@ -20,6 +20,7 @@ const assimilateEntry = (adherent: Entry, source: Entry) => {
 const normalizeShallow = (outline: Array<Option<Entry>>, entry: Entry): Array<Option<Entry>> => {
   const matchingEntryDepth = entry.depth - 1;
   outline[matchingEntryDepth].each((matchingEntry) => assimilateEntry(entry, matchingEntry));
+
   const newOutline = outline.slice(0, matchingEntryDepth);
   newOutline.push(Option.some(entry));
   return newOutline;

@@ -81,7 +81,7 @@ const getSelectedLists = (editor: Editor): Node[] => {
   const firstList = findLastParentListNode(editor, editor.selection.getStart());
   const subsequentLists = Arr.filter(editor.selection.getSelectedBlocks(), NodeType.isOlUlNode);
 
-  return [ ...firstList.toArray(), ...subsequentLists ];
+  return firstList.toArray().concat(subsequentLists);
 };
 
 const getSelectedListRoots = (editor: Editor): Node[] => {

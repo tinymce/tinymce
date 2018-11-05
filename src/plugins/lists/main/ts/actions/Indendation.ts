@@ -1,5 +1,5 @@
 /**
- * ListIndentation.js
+ * Indentation.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
@@ -11,7 +11,6 @@
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Fragment, Replication, Traverse } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
-import { isList } from '../listModel/ListType';
 import Range from '../core/Range';
 import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
@@ -20,6 +19,7 @@ import { listsIndentation, Composer } from '../listModel/ListsIndendation';
 import { IndentValue } from '../listModel/Indentation';
 import { Entry } from '../listModel/Entry';
 import { ItemTuple } from '../listModel/ParseLists';
+import { hasFirstChildList } from '../listModel/Util';
 
 const getOutdentComposer = (editor: Editor): Composer => (entries: Entry[]): Element[] => {
   return Arr.map(entries, (entry) => {
@@ -28,16 +28,12 @@ const getOutdentComposer = (editor: Editor): Composer => (entries: Entry[]): Ele
   });
 };
 
-const hasContent = (li: Element) => {
-  return Traverse.firstChild(li).map(isList).getOr(false);
-};
-
 const getItemSelection = (editor: Editor): Option<ItemTuple> => {
   const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
 
   return Options.liftN([
-    Arr.find(selectedListItems, Fun.not(hasContent)),
-    Arr.find(Arr.reverse(selectedListItems), Fun.not(hasContent))
+    Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
+    Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList))
   ], (start, end) => ({ start, end }));
 };
 
@@ -56,7 +52,11 @@ const indentDlItem = (item: Element): void => {
 };
 
 const dlIndentation = (editor: Editor, indentation: IndentValue, dlItems: Element[]) => {
-  Arr.each(dlItems, indentation === IndentValue.Indent ? indentDlItem : Fun.curry(outdentDlItem, editor));
+  if (indentation === IndentValue.Indent) {
+    Arr.each(dlItems, indentDlItem);
+  } else {
+    Arr.each(dlItems, (item) => outdentDlItem(editor, item));
+  }
 };
 
 const selectionIndentation = (editor: Editor, indentation: IndentValue) => {

@@ -10,8 +10,14 @@
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import NodeType from './NodeType';
+import { Range, Node } from '@ephox/dom-globals';
 
-const getNormalizedPoint = function (container, offset) {
+interface Point {
+  container: Node;
+  offset: number;
+}
+
+const getNormalizedPoint = (container: Node, offset: number): Point => {
   if (NodeType.isTextNode(container)) {
     return { container, offset };
   }
@@ -37,7 +43,7 @@ const getNormalizedPoint = function (container, offset) {
   return { container, offset };
 };
 
-const normalizeRange = function (rng) {
+const normalizeRange = (rng: Range): Range => {
   const outRng = rng.cloneRange();
 
   const rangeStart = getNormalizedPoint(rng.startContainer, rng.startOffset);

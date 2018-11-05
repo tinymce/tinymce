@@ -28,7 +28,7 @@ UnitTest.test('ListModelTest', () => {
   const composeParseProperty = Jsc.forall(arbitraryEntries, (inputEntries: Entry[]) => {
     normalizeEntries(inputEntries);
     const outputEntries = composeParse(inputEntries);
-    return isForAll(inputEntries, outputEntries, isEqualEntry) || errorMessage(inputEntries, outputEntries);
+    return isEqualEntries(inputEntries, outputEntries) || errorMessage(inputEntries, outputEntries);
   });
 
   const composeParse = (entries: Entry[]): Entry[] => {
@@ -39,21 +39,21 @@ UnitTest.test('ListModelTest', () => {
       .getOr([]);
   };
 
-  const isEqualEntry = (a: Entry, b: Entry): boolean => {
-    return stringifyEntry(a) === stringifyEntry(b);
+  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => {
+    return stringifyEntries(a) === stringifyEntries(b);
   };
 
-  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]) => {
+  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => {
     return `\nPretty print counterexample:\n` +
-    `input: [${entriesToString(inputEntries)}\n]\n` +
-    `output: [${entriesToString(outputEntries)}\n]`;
+    `input: [${stringifyEntries(inputEntries)}\n]\n` +
+    `output: [${stringifyEntries(outputEntries)}\n]`;
   };
 
-  const entriesToString = (entries: Entry[]) => {
+  const stringifyEntries = (entries: Entry[]): string => {
     return Arr.map(entries, stringifyEntry).join(',');
   };
 
-  const stringifyEntry = (entry: Entry) => {
+  const stringifyEntry = (entry: Entry): string => {
     return `\n  {
       depth: ${entry.depth}
       content: ${entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'}
@@ -62,10 +62,6 @@ UnitTest.test('ListModelTest', () => {
       listAttributes: ${JSON.stringify(entry.listAttributes)}
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
-  };
-
-  const isForAll = (a: any[], b: any[], cmp: (x: any, y: any) => boolean): boolean => {
-    return a.length === b.length && Arr.forall(a, (_a, i) => cmp(_a, b[i]));
   };
 
   const serializeElements = (elms: Element[]): string => {
