@@ -4,10 +4,10 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
-import { GuardFn } from './Guard';
+import { GuardFn, addLogging } from './Guard';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
-import { TestLogs } from './TestLogs';
+import { TestLogs, addLogEntry } from './TestLogs';
 
 export interface Wrap<T> {
   chain: T;
@@ -151,7 +151,14 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
 const debugging = op(GeneralActions.debug);
 
 const log = function <T>(message: string) {
-  return op<T>(GeneralActions.log(message));
+  return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
+    GeneralActions.log(message);
+    next(wrap(input), addLogEntry(logs, message));
+  });
+};
+
+const label = function <T,U>(label: string, chain: Chain<T, U>) {
+  return control(chain, addLogging(label));
 };
 
 const wait = function <T>(amount: number) {
@@ -207,6 +214,7 @@ export const Chain = {
   wait,
   debugging,
   log,
+  label,
 
   pipeline
 };

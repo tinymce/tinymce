@@ -42,10 +42,6 @@ const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
   });
 };
 
-const suite = function () {
-  // TMP, WIP
-};
-
 const spec = function (msg) {
   // TMP, WIP
   console.log(msg);
@@ -55,6 +51,5 @@ export {
   t,
   ts,
   sync,
-  suite,
   spec
 };
