@@ -12,6 +12,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
+import Settings from '../api/Settings';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
@@ -73,7 +74,7 @@ const setupContextToolbars = function (editor: Editor) {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => !!Utils.getAnchorElement(editor, node),
+    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor.settings),
     initValue: () => {
       return Utils.getAnchorElement(editor) || '';
     },
