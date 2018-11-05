@@ -12,7 +12,7 @@ import {
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
-import { Attr, Class } from '@ephox/sugar';
+import { Attr, Class, Compare } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -118,7 +118,8 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ],
 
         dragBlockClass: 'drag-blocker',
-        lazySink () {
+        lazySink (comp) {
+          Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element(), dialog.element()));
           return Result.value(sink);
         },
 
