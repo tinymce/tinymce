@@ -36,15 +36,14 @@ import { renderCheckbox } from '../../../main/ts/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
-const helpers = setupDemo();
-
-const sharedBackstage: UiFactoryBackstageShared = {
-  getSink: helpers.extras.backstage.shared.getSink,
-  providers: helpers.extras.backstage.shared.providers,
-  interpreter: (x) => x
-};
-
 export default () => {
+  const helpers = setupDemo();
+
+  const sharedBackstage: UiFactoryBackstageShared = {
+    getSink: helpers.extras.backstage.shared.getSink,
+    providers: helpers.extras.backstage.shared.providers,
+    interpreter: (x) => x
+  };
 
   const autocompleteSpec = renderAutocomplete({
     name: 'alpha',
