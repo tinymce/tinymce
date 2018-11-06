@@ -124,7 +124,7 @@ const cWaitForDialog = () => Chain.control(
 const cSubmitDialog = () => Chain.control(
   NamedChain.asChain([
     NamedChain.writeValue('body', Body.body()),
-    NamedChain.read('body', Mouse.cClickOn('.tox-button:contains("Ok")')),
+    NamedChain.read('body', Mouse.cClickOn('.tox-button:contains("Save")')),
     NamedChain.outputInput
   ]),
   Guard.addLogging('Submit dialog')

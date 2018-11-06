@@ -97,7 +97,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                               },
                               children: [
                                 s.element('button', {
-                                  html: str.is('Yes'),
+                                  html: str.is('No'),
                                   classes: [
                                     arr.has('tox-button'),
                                   ],
@@ -107,7 +107,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                                   },
                                 }),
                                 s.element('button', {
-                                  html: str.is('No'),
+                                  html: str.is('Yes'),
                                   classes: [
                                     arr.has('tox-button'),
                                   ],

@@ -9,6 +9,7 @@ Border width              <new>
 Error                     <new>
 Warn                      <new>
 Valid                     <new>
+OK                        [Ok]
 
 Search                     <new> Charmap
 All                        <new> Charmap
