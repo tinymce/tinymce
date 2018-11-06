@@ -54,6 +54,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
           })
         ])
       ]),
+      inputAttributes: { placeholder: subspec.placeholderText },
       selectOnFocus: false
     });
 
@@ -72,11 +73,11 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
   };
 
   const pField1 = AlloyFormCoupledInputs.parts().field1(
-    renderDimensionField({ label: 'Width', isField1: true })
+    renderDimensionField({ label: 'Width', isField1: true, placeholderText: 'Width' })
   );
 
   const pField2 = AlloyFormCoupledInputs.parts().field2(
-    renderDimensionField({ label: 'Height', isField1: false })
+    renderDimensionField({ label: 'Height', isField1: false, placeholderText: 'Height' })
   );
 
   const pLock = AlloyFormCoupledInputs.parts().lock({

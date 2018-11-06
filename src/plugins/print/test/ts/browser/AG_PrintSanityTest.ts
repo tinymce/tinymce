@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, fa
   PrintPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [ Log.step('TBA', 'Print: Assert print button exists',
       tinyUi.sWaitForUi('check print button exists', 'button[aria-label="Print"]')

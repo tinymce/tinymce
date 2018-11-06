@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const sWaitForMenu = () => {
         return Waiter.sTryUntil(
         `Waiting for menu to appear`,

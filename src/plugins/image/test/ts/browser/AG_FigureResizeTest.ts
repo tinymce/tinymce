@@ -1,6 +1,6 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { ApiChains, Editor, TinyDom, ThemeUiChains } from '@ephox/mcagar';
+import { ApiChains, Editor, TinyDom, UiChains } from '@ephox/mcagar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -41,12 +41,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
     );
   };
 
-  const SilverUiChains = ThemeUiChains({
-    toolBarSelector: '.tox-toolbar',
-    dialogSubmitSelector: '.tox-button:contains("Ok")',
-    dialogCloseSelector: '.tox-button:contains("Cancel")'
-  });
-
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Image: resizing image in figure', [
       Editor.cFromSettings({
@@ -59,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         skin_url: '/project/js/tinymce/skins/oxide/',
         content_css: '/project/js/tinymce/skins/oxide/content.min.css'
       }),
-      SilverUiChains.cClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
+      UiChains.cClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
 
       Chain.control(
         cFillActiveDialog({
@@ -74,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         }),
         Guard.tryUntil('Waiting for fill active dialog', 100, 5000)
       ),
-      SilverUiChains.cSubmitDialog(),
+      UiChains.cSubmitDialog(),
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cGetBody, 'editorBody'),

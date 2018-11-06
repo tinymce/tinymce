@@ -120,5 +120,5 @@ node("primary") {
   stage ("Type check") {
     sh 'grunt shell:tsc tslint'
   }
-  runBuild(runTests, "5.x", "prerelease")
+  runBuild(runTests, "5.x", "prerelease", "echo \"Nothing extra\"", false)
 }

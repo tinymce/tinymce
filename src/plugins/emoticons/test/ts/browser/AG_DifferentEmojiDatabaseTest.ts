@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
   const sTestEditorWithSettings = (categories, databaseUrl) => Step.async((onStepSuccess, onStepFailure) => {
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
-      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
           tinyApis.sFocus,

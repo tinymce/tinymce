@@ -26,7 +26,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
         state.set(e.command);
       });
 
-      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, browser.isIE() ? [] : [
