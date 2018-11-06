@@ -19,40 +19,30 @@ const validDefaultOrDie = function (value, predicate) {
   throw new Error('Default value doesn\'t match requested type.');
 };
 
-const splitNoEmpty = function (str: string, delim: RegExp) {
-  return str.split(delim).filter(function (item) {
-    return item.length > 0;
-  });
-};
+const items = function (value, defaultValue) {
 
-const itemsToArray = function (value, defaultValue) {
-  const stringToItemsArray = function (value) {
-    return typeof value === 'string' ? splitNoEmpty(value, /[ ,]/) : value;
-  };
-
-  const boolToItemsArray = function (value: boolean, defaultValue) {
-    return value === false ? [] : defaultValue;
-  };
-
-  if (Type.isArray(value)) {
-    return value;
-  } else if (Type.isString(value)) {
-    return stringToItemsArray(value);
-  } else if (Type.isBoolean(value)) {
-    return boolToItemsArray(value, defaultValue);
+  if (Type.isArray(value) || Type.isObject(value)) {
+    throw new Error('expected a string but found: ' + value);
   }
 
-  return defaultValue;
+  if (Type.isUndefined(value)) {
+    return defaultValue;
+  }
+
+  if (Type.isBoolean(value)) {
+    return value === false ? '' : defaultValue;
+  }
+  return value;
 };
 
 const getToolbarItemsOr = function (predicate) {
   return function (editor: Editor, name: string, defaultValue) {
     const value = name in editor.settings ? editor.settings[name] : defaultValue;
     validDefaultOrDie(defaultValue, predicate);
-    return itemsToArray(value, defaultValue);
+    return items(value, defaultValue);
   };
 };
 
 export default {
-  getToolbarItemsOr: getToolbarItemsOr(Type.isArray)
+  getToolbarItemsOr: getToolbarItemsOr(Type.isString)
 };

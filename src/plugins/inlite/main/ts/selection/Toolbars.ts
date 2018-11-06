@@ -6,7 +6,7 @@ const addToEditor = (editor) => {
     predicate: (node) => {
       return !editor.selection.isCollapsed();
     },
-    items: Settings.getTextSelectionToolbarItems(editor),
+    items:  Settings.getTextSelectionToolbarItems(editor),
     position: 'selection'
   });
 };

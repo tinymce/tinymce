@@ -2,6 +2,7 @@ import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import InlineDemo from './InlineDemo';
+import InliteDemo from './InliteDemo';
 import FullDemo from './FullDemo';
 import TinyMceDemo from './TinyMceDemo';
 import UiContainerDemo from './UiContainerDemo';
@@ -19,5 +20,6 @@ window.demos = {
   TinyMceDemo,
   UiContainerDemo,
   AnnotationsDemo,
-  SourceDumpDemo
+  SourceDumpDemo,
+  InliteDemo
 };
