@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Element } from '@ephox/dom-globals';
+import { HTMLAnchorElement } from '@ephox/dom-globals';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 
-const getHref = (elm: Element) => {
+const getHref = (elm: HTMLAnchorElement): string => {
   // Returns the real href value not the resolved a.href value
   const href = elm.getAttribute('data-mce-href');
   return href ? href : elm.getAttribute('href');
