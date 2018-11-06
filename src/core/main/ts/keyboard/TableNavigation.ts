@@ -11,10 +11,9 @@
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../keyboard/CefUtils';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Fun } from '@ephox/katamari';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from 'tinymce/core/caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
-import Fun from 'tinymce/core/util/Fun';
 import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import { Editor } from 'tinymce/core/api/Editor';
 import NodeType from 'tinymce/core/dom/NodeType';
