@@ -7,12 +7,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  // NOTE: Have not changed this one. Still using the old theme. Not implemented yet.
-
+UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', (success, failure) => {
   Theme();
   LinkPlugin();
 
