@@ -1,4 +1,5 @@
 Version 5.0.0-preview-4 (TBD)
+    Added width and height placeholder text to image and media dialog dimensions input #AP-296
     Fixed styling issues with dialogs and menus in IE 11 #AP-456
     Fixed custom style format control not honoring custom formats #AP-393
     Fixed context menu not appearing when clicking an image with a caption #AP-382
