@@ -201,7 +201,7 @@ const showDialog = function (editor) {
         name: 'source2',
         type: 'input',
         filetype: 'media',
-        label: 'Alternative source'
+        label: 'Alternative image URL'
       }
     );
   }
@@ -211,7 +211,7 @@ const showDialog = function (editor) {
       name: 'poster',
       type: 'input',
       filetype: 'image',
-      label: 'Poster'
+      label: 'Media poster (Image URL)'
     });
   }
 
