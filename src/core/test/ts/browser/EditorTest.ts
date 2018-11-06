@@ -392,7 +392,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
   });
 
   suite.test('translate', function (editor) {
-    EditorManager.addI18n('en_US', {
+    EditorManager.addI18n('en', {
       'input i18n': 'output i18n',
       'value:{0}{1}': 'value translation:{0}{1}'
     });
