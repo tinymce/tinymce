@@ -103,7 +103,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
             {
               type: 'alertbanner',
               level: 'error',
-              icon: '',
+              icon: 'warning',
               text: '<p>Could not load emoticons</p>'
             }
           ]
