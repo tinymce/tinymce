@@ -11,40 +11,43 @@ Warn                      <new>
 Valid                     <new>
 OK                        [Ok]
 
-Search                     <new> Charmap
-All                        <new> Charmap
-Currency                   <new> Charmap
-Text                       <new> Charmap
-Quotations                 <new> Charmap
-Mathematical               <new> Charmap
-Extended Latin             <new> Charmap
-Symbols                    <new> Charmap
-Arrows                     <new> Charmap
-User Defined               <new> Charmap
+Search                    <new>         Charmap
+All                       <new>         Charmap
+Currency                  <new>         Charmap
+Text                      <new>         Charmap
+Quotations                <new>         Charmap
+Mathematical              <new>         Charmap
+Extended Latin            <new>         Charmap
+Symbols                   <new>         Charmap
+Arrows                    <new>         Charmap
+User Defined              <new>         Charmap
 
-Loading emoticons...      <new> Emoticons
-Could not load emoticons  <new> Emoticons
-Symbols                   <new> Emoticons
-People                    <new> Emoticons
-Animals and Nature        <new> Emoticons
-Food and Drink            <new> Emoticons
-Activity                  <new> Emoticons
-Travel and Places         <new> Emoticons
-Objects                   <new> Emoticons
-Flags                     <new> Emoticons
+Loading emoticons...      <new>         Emoticons
+Could not load emoticons  <new>         Emoticons
+Symbols                   <new>         Emoticons
+People                    <new>         Emoticons
+Animals and Nature        <new>         Emoticons
+Food and Drink            <new>         Emoticons
+Activity                  <new>         Emoticons
+Travel and Places         <new>         Emoticons
+Objects                   <new>         Emoticons
+Flags                     <new>         Emoticons
 
-Characters                <new> WordCount
-Characters (no spaces)    <new> WordCount
+Find whole words only     [Whole words] Searchreplace
+Previous                  [Prev]        Searchreplace
 
-Show caption               [Caption] Insert image/media
+Characters                <new>         WordCount
+Characters (no spaces)    <new>         WordCount
+
+Show caption              [Caption]     Insert image/media
 
 Error: Form submit field collision.   <new> Save
 Error: No form element found.         <new> Save
 
-Border width            <new> Table (better description than just 'border')
-Border style            <new> Table (better description than just 'style')
+Border width              <new>         Table (better description than just 'border')
+Border style              <new>         Table (better description than just 'style')
 
-Update                  <new> TOC
+Update                    <new>         TOC
 
 
 No longer Used

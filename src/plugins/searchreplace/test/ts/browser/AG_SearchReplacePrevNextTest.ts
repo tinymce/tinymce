@@ -33,18 +33,18 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
             UiFinder.cFindIn('button:contains("Next")'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled"]:contains("Prev")'),
+          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled"]:contains("Previous")'),
           Chain.fromChains([
             UiFinder.cFindIn('button:contains("Next")'),
             Mouse.cClick
           ]),
           UiFinder.cWaitFor('wait for next button to be disabled', 'button[disabled="disabled"]:contains("Next")'),
           Chain.fromChains([
-            UiFinder.cFindIn('button:contains("Prev")'),
+            UiFinder.cFindIn('button:contains("Previous")'),
             Mouse.cClick,
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]:contains("Prev")'),
+          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]:contains("Previous")'),
           UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]:contains("Next")')
         ])
       ])
