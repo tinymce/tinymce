@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
 
     // FIX: Dupe
     const sAssertUrlStructure = (expected: (s, str, arr) => any) => Logger.t('Assert url structure', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("Url") + .tox-form__controls-h-stack input'),
+      TestLinkUi.cFindInDialog('label:contains("URL") + .tox-form__controls-h-stack input'),
       Chain.op((urlinput) => {
         Assertions.assertStructure(
           'Checking content of url input',

@@ -84,7 +84,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
       name: 'url',
       type: 'urlinput',
       filetype: 'file',
-      label: 'Url'
+      label: 'URL'
     }
   ];
 
@@ -109,7 +109,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
   const catalogs = settings.catalogs;
 
   return {
-    title: 'Insert link',
+    title: 'Insert Link',
     size: 'normal',
     body: {
       type: 'panel',
@@ -120,7 +120,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
         Options.cat([
           catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
           catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
-          catalogs.targets.map(ListOptions.createUi('target', 'Target')),
+          catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
           catalogs.link.map(ListOptions.createUi('link', 'Link list')),
           catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
         ])

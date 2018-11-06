@@ -7,7 +7,7 @@ export default {
         name: 'url',
         type: 'urlinput',
         filetype: 'file',
-        label: 'Url'
+        label: 'URL'
       },
       {
         name: 'text',

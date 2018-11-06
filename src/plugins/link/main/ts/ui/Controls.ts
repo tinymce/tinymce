@@ -17,7 +17,7 @@ import Settings from '../api/Settings';
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
-    tooltip: 'Link',
+    tooltip: 'Insert/edit link',
     onAction: Actions.openDialog(editor),
     onSetup: Actions.toggleActiveState(editor)
   });

@@ -38,6 +38,10 @@ Flags                     <new>         Emoticons
 
 Metadata and Document Properties [Document Properties] Fullpage
 
+URL                       [Url]         Link
+Open link in...           [Target]      Link
+Current window            [None]        Link
+
 Alternative image URL     [Alternative source] Media
 Media poster (Image URL)  [Poster]             Media
 
