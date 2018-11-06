@@ -13,8 +13,8 @@ OK                        [Ok]
 
 Search                     <new> Charmap
 All                        <new> Charmap
-Finance                    <new> Charmap
-Signs                      <new> Charmap
+Currency                   <new> Charmap
+Text                       <new> Charmap
 Quotations                 <new> Charmap
 Mathematical               <new> Charmap
 Extended Latin             <new> Charmap
