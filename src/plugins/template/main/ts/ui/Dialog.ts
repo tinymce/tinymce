@@ -104,11 +104,13 @@ const open = (editor, templateList) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {
+        api.block('Loading...');
         getTemplateContent(t).then((previewHtml) => {
           const previewContent = getPreviewContent(editor, previewHtml);
           api.setData({
             preview: previewContent
           });
+          api.unblock();
         });
       });
     }
