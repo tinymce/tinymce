@@ -33,6 +33,8 @@ Travel and Places         <new>         Emoticons
 Objects                   <new>         Emoticons
 Flags                     <new>         Emoticons
 
+Metadata and Document Properties [Document Properties] Fullpage
+
 Find whole words only     [Whole words] Searchreplace
 Previous                  [Prev]        Searchreplace
 

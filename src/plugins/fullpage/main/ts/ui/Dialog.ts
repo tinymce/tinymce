@@ -27,7 +27,7 @@ const open = function (editor, headState) {
   const initialData = Merger.merge(defaultData, data);
 
   editor.windowManager.open({
-    title: 'Document Properties',
+    title: 'Metadata and Document Properties',
     size: 'normal',
     body: {
       type: 'panel',
