@@ -24,6 +24,7 @@ const sTestVersion = (loadVersion: string, expectedMajor: number, expectedMinor:
 UnitTest.asynctest('TinyLoaderVersionTest', (success, failure) => {
   Pipeline.async({}, [
     sTestVersion('4.5.x', 4, 5),
-    sTestVersion('4.8.x', 4, 8)
+    sTestVersion('4.8.x', 4, 8),
+    sTestVersion('5.0.x', 5, 0)
   ], () => success(), failure);
 });

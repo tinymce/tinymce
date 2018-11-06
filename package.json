@@ -30,7 +30,8 @@
     "typescript": "^3.1.5",
     "webpack": "^3.10.0",
     "tinymce-4.5.x": "npm:tinymce@4.5.x",
-    "tinymce-4.8.x": "npm:tinymce@4.8.x"
+    "tinymce-4.8.x": "npm:tinymce@4.8.x",
+    "tinymce-5.0.x": "npm:@ephox/tinymce@5.0.x"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

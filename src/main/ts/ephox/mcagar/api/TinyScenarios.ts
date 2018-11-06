@@ -5,11 +5,9 @@ import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-
-
 export default function (editor) {
 
-  // We can't just generate a scenario because normalisation is going to cause issues 
+  // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
   var genScenario = function (genContent, selectionExclusions) {
     return genContent.flatMap(function (structure) {

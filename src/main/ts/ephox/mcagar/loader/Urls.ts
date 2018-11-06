@@ -1,4 +1,5 @@
 import { getTinymce } from './Globals';
+import { document } from '@ephox/dom-globals';
 
 const updateTinymceUrls = (packageName) => {
   getTinymce().each((tinymce) => {
