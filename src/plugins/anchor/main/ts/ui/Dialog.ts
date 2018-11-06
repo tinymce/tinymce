@@ -34,7 +34,8 @@ const open = function (editor) {
         {
           name: 'id',
           type: 'input',
-          label: 'Id'
+          label: 'ID',
+          placeholder: 'example'
         }
       ]
     },

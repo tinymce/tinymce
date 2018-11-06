@@ -11,6 +11,9 @@ Warn                      <new>
 Valid                     <new>
 OK                        [Ok]
 
+ID                        [Id]          Anchor
+example                   <new>         Anchor
+
 Search                    <new>         Charmap
 All                       <new>         Charmap
 Currency                  <new>         Charmap
