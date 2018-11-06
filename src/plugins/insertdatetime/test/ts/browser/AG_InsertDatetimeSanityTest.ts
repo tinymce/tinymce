@@ -11,7 +11,7 @@ UnitTest.asynctest(
     InsertDatetimePlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({},

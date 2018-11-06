@@ -36,9 +36,7 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
     Pipeline.async({},

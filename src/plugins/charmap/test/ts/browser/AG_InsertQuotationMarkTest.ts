@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (s
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Open dialog, click on the All tab and click on Quotation Mark and then assert Quotation Mark is inserted', [

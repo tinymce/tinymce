@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'VisualChars: Set content, click visual chars button and assert span char is present in whitespaces, click the button again and assert no span is present in the whitespace', [

@@ -14,9 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
   const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
     TinyLoader.setup((editor, onSuccess, onFailure) => {
 
-      const tinyUi = TinyUi(editor, {
-        toolBarSelector: '.tox-toolbar'
-      });
+      const tinyUi = TinyUi(editor);
 
       const sAssertMenu = (label: string, expected) => {
         return Chain.asStep(Body.body(), [

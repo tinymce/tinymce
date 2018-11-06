@@ -10,7 +10,7 @@ UnitTest.asynctest('tinymce.lists.browser.ToggleListWithEmptyLiTest', (success, 
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Lists: toggle bullet list on list with two empty LIs', [

@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStyles
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Lists: remove margin from p when applying list on it, but leave other styles', [

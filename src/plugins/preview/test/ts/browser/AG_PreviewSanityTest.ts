@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
 
     const sOpenDialog = () => {
       return GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [

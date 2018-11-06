@@ -102,11 +102,7 @@ const cSizeInputForLabel = (labelText: string) => Chain.control(
 
 const cTinyUI = Chain.control(
   Chain.binder(
-    (editor: Editor) => Result.value(TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-      dialogSubmitSelector: '.tox-button:contains("Ok")',
-      dialogCloseSelector: '.tox-button:contains("Cancel")'
-    }))
+    (editor: Editor) => Result.value(TinyUi(editor))
   ),
   Guard.addLogging('Bind UI elements to selectors')
 );

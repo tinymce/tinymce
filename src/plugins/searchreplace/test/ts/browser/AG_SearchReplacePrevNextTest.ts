@@ -12,7 +12,7 @@ SearchreplacePlugin();
 
 TinyLoader.setup(function (editor, onSuccess, onFailure) {
   const tinyApis = TinyApis(editor);
-  const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+  const tinyUi = TinyUi(editor);
 
   Pipeline.async({},
     Log.steps('TBA', 'SearchReplace: Test Prev and Next buttons become enabled and disabled at right places when multiple matches exist', [

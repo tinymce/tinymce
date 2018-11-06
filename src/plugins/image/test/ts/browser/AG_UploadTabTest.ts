@@ -17,9 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar'
-    });
+    const ui = TinyUi(editor);
 
     const cPopupToDialog = function (selector) {
       return Chain.control(
