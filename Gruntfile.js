@@ -701,6 +701,15 @@ module.exports = function (grunt) {
         ],
         customRoutes: 'src/core/test/json/routes.json'
       },
+      atomic: {
+        config: 'tsconfig.json',
+        projectdir: '.',
+        stopOnFailure: true,
+        testfiles: [
+          'src/**/test/ts/atomic/**/*Test.ts',
+        ],
+        customRoutes: 'src/core/test/json/routes.json'
+      },
       apollo: {
         config: 'tsconfig.json',
         testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/plugins/*/test/ts/browser/**/AG_*Test.ts'],
