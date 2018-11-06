@@ -21,7 +21,7 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure)
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
-    const ui = TinyUi(editor, {menuBarSelector: '.tox-menubar'});
+    const ui = TinyUi(editor);
 
     // Cut doesn't seem to work in webdriver mode on ie, firefox is producing moveto not supported, edge fails if it's not observed
     Pipeline.async({}, (platform.browser.isIE() || platform.browser.isFirefox() || platform.browser.isEdge()) ? [] :

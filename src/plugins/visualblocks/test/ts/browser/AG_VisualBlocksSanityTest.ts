@@ -12,7 +12,7 @@ UnitTest.asynctest(
     VisualBlocksPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, Log.steps('TBA', 'VisualBlocks: Assert visual blocks are not present, click on the visual blocks button and assert they are present, click on the button again and assert they are not present', [

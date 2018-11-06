@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
-    const ui = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Add a new word to dictionary', [
       api.sFocus,
