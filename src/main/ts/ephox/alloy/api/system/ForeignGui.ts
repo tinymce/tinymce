@@ -10,7 +10,6 @@ import * as Gui from './Gui';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
-import { ForeignGui } from '../Main';
 import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
 import { AlloyEventRecord } from '../events/AlloyEvents';
 

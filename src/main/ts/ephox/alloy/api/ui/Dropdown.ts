@@ -19,7 +19,7 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SystemEvents, AddEventsBehaviour } from '../Main';
+import * as SystemEvents from '../events/SystemEvents';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {

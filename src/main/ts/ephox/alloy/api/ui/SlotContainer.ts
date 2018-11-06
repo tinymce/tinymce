@@ -12,7 +12,8 @@ import {
 } from '../../ui/types/SlotContainerTypes';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloyTriggers, SystemEvents } from '../Main';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as SystemEvents from '../events/SystemEvents';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 
