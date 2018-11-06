@@ -12,9 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Media: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', [

@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
   NonbreakingPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'NonBreaking: Click on the nbsp button and assert nonbreaking space is inserted', [

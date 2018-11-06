@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.HrSanitytest', (success, 
   HrPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'HorizontalRule: Click on the horizontal rule toolbar button and assert hr is added to the editor', [
