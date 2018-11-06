@@ -12,7 +12,6 @@ import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../keyboard/CefUtils';
 import { Arr, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from 'tinymce/core/caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
 import Fun from 'tinymce/core/util/Fun';
@@ -22,9 +21,7 @@ import NodeType from 'tinymce/core/dom/NodeType';
 import Settings from 'tinymce/core/api/Settings';
 import { Element as SugarElement, Attr, Insert } from '@ephox/sugar';
 import { HTMLElement, Range, Element } from '@ephox/dom-globals';
-
-const browser = PlatformDetection.detect().browser;
-const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
+import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 
 const moveToRange = (editor: Editor, rng: Range) => {
   editor.selection.setRng(rng);
