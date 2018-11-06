@@ -54,7 +54,8 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
           })
         ])
       ]),
-      inputAttributes: { placeholder: subspec.placeholderText }
+      inputAttributes: { placeholder: subspec.placeholderText },
+      selectOnFocus: false
     });
 
     const pAriaDescriptor = AlloyFormField.parts()['aria-descriptor']({
