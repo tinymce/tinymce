@@ -25,6 +25,7 @@ const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: ['Ctrl + Alt + 7'], action: 'Paragraph' },
   { shortcuts: ['Ctrl + Alt + 8'], action: 'Div' },
   { shortcuts: ['Ctrl + Alt + 9'], action: 'Address' },
+  { shortcuts: ['Alt + 0'], action: 'Open help dialog' },
   { shortcuts: ['Alt + F9'], action: 'Focus to menubar' },
   { shortcuts: ['Alt + F10'], action: 'Focus to toolbar' },
   { shortcuts: ['Alt + F11'], action: 'Focus to element path' },
