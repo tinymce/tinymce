@@ -39,7 +39,7 @@ const setupMenuItems = function (editor: Editor) {
 
   editor.ui.registry.addMenuItem('link', {
     icon: 'link',
-    text: 'Link',
+    text: 'Link...',
     shortcut: 'Meta+K',
     onAction: Actions.openDialog(editor)
   });

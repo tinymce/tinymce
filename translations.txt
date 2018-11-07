@@ -10,54 +10,68 @@ Error                     <new>
 Warn                      <new>
 Valid                     <new>
 
-example                   <new>         Anchor
+example                   <new>                 Anchor
+Anchor...                 [Anchor]              Anchor
 
-Search                    <new>         Charmap
-All                       <new>         Charmap
-Currency                  <new>         Charmap
-Text                      <new>         Charmap
-Quotations                <new>         Charmap
-Mathematical              <new>         Charmap
-Extended Latin            <new>         Charmap
-Symbols                   <new>         Charmap
-Arrows                    <new>         Charmap
-User Defined              <new>         Charmap
+Special characters...     [Special Characters]  Charmap
+Search                    <new>                 Charmap
+All                       <new>                 Charmap
+Currency                  <new>                 Charmap
+Text                      <new>                 Charmap
+Quotations                <new>                 Charmap
+Mathematical              <new>                 Charmap
+Extended Latin            <new>                 Charmap
+Symbols                   <new>                 Charmap
+Arrows                    <new>                 Charmap
+User Defined              <new>                 Charmap
 
-Loading emoticons...      <new>         Emoticons
-Could not load emoticons  <new>         Emoticons
-Symbols                   <new>         Emoticons
-People                    <new>         Emoticons
-Animals and Nature        <new>         Emoticons
-Food and Drink            <new>         Emoticons
-Activity                  <new>         Emoticons
-Travel and Places         <new>         Emoticons
-Objects                   <new>         Emoticons
-Flags                     <new>         Emoticons
+Code sample...            [Code sample]         Codesample
+
+Emoticons...              [Emoticons]           Emoticons
+Loading emoticons...      <new>                 Emoticons
+Could not load emoticons  <new>                 Emoticons
+Symbols                   <new>                 Emoticons
+People                    <new>                 Emoticons
+Animals and Nature        <new>                 Emoticons
+Food and Drink            <new>                 Emoticons
+Activity                  <new>                 Emoticons
+Travel and Places         <new>                 Emoticons
+Objects                   <new>                 Emoticons
+Flags                     <new>                 Emoticons
 
 Metadata and Document Properties [Document Properties] Fullpage
 
-Insert/Edit Link          [Insert Link] Link
-Open link in...           [Target]      Link
-Current window            [None]        Link
+Image...                  [Image]               Image
 
-Alternative image URL     [Alternative source] Media
-Media poster (Image URL)  [Poster]             Media
+Link...                   [Link]                Link
+Insert/Edit Link          [Insert Link]         Link
+Open link in...           [Target]              Link
+Current window            [None]                Link
 
-Find whole words only     [Whole words] Searchreplace
-Previous                  [Prev]        Searchreplace
+Media...                  [Media]               Media
+Alternative image URL     [Alternative source]  Media
+Media poster (Image URL)  [Poster]              Media
 
-Characters                <new>         WordCount
-Characters (no spaces)    <new>         WordCount
+Print...                  [Print]               Print
 
-Show caption              [Caption]     Insert image/media
+Find and replace...       [Find and replace]    Searchreplace
+Find whole words only     [Whole words]         Searchreplace
+Previous                  [Prev]                Searchreplace
 
-Error: Form submit field collision.   <new> Save
-Error: No form element found.         <new> Save
+Insert template...        [Insert template]     Template
 
-Border width              <new>         Table (better description than just 'border')
-Border style              <new>         Table (better description than just 'style')
+Characters                <new>                 WordCount
+Characters (no spaces)    <new>                 WordCount
 
-Update                    <new>         TOC
+Show caption              [Caption]             Insert image/media
+
+Error: Form submit field collision.   <new>     Save
+Error: No form element found.         <new>     Save
+
+Border width              <new>                 Table (better description than just 'border')
+Border style              <new>                 Table (better description than just 'style')
+
+Update                    <new>                 TOC
 
 
 No longer Used

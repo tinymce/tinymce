@@ -18,7 +18,7 @@ const register = function (editor) {
   });
 
   editor.ui.registry.addMenuItem('codesample', {
-    text: 'Code sample',
+    text: 'Code sample...',
     icon: 'code-sample',
     onAction: () => Dialog.open(editor)
   });
