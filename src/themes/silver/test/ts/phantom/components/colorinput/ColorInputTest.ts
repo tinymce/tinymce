@@ -193,7 +193,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
           FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
           Keyboard.sKeydown(doc, Keys.enter(), { }),
           FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input'),
-          sAssertFocusedValue('After pressing <enter> in hex', '#1abc9c'),
+          sAssertFocusedValue('After pressing <enter> in hex', '#18BC9B'),
           UiFinder.sNotExists(component.element(), '.tox-swatches')
         ]),
 
