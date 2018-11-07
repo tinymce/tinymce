@@ -9,9 +9,7 @@ Border width              <new>
 Error                     <new>
 Warn                      <new>
 Valid                     <new>
-OK                        [Ok]
 
-ID                        [Id]          Anchor
 example                   <new>         Anchor
 
 Search                    <new>         Charmap
@@ -38,7 +36,7 @@ Flags                     <new>         Emoticons
 
 Metadata and Document Properties [Document Properties] Fullpage
 
-URL                       [Url]         Link
+Insert/Edit Link          [Insert Link] Link
 Open link in...           [Target]      Link
 Current window            [None]        Link
 

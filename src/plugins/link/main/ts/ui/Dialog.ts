@@ -109,7 +109,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
   const catalogs = settings.catalogs;
 
   return {
-    title: 'Insert Link',
+    title: 'Insert/Edit Link',
     size: 'normal',
     body: {
       type: 'panel',

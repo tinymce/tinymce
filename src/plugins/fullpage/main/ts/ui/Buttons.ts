@@ -11,7 +11,7 @@
 const register = function (editor) {
   editor.ui.registry.addButton('fullpage', {
     // TODO: This should be title or text, with no icon?
-    tooltip: 'Metadata and Document Properties',
+    tooltip: 'Metadata and document properties',
     icon: 'new-document',
     onAction: () => {
       editor.execCommand('mceFullPageProperties');
@@ -19,7 +19,7 @@ const register = function (editor) {
   });
 
   editor.ui.registry.addMenuItem('fullpage', {
-    text: 'Metadata and Document Properties',
+    text: 'Metadata and document properties',
     icon: 'new-document',
     onAction: () => {
       editor.execCommand('mceFullPageProperties');

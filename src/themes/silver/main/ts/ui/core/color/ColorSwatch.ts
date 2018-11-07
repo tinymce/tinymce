@@ -263,7 +263,7 @@ const register = (editor) => {
   }
   registerCommands(editor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
 export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols };
