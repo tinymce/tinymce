@@ -17,41 +17,6 @@ const getCurrentColor = function (editor, format) {
   return color;
 };
 
-const choiceItem: 'choiceitem' = 'choiceitem';
-
-const defaultColors = [
-  { type: choiceItem, text: 'TURQUOISE OR AQUA', value: '#18BC9B' },
-  { type: choiceItem, text: 'BOLD GREEN OR GREEN', value: '#2FCC71' },
-  { type: choiceItem, text: 'BLUE', value: '#3598DB' },
-  { type: choiceItem, text: 'PURPLE', value: '#9B59B6' },
-  { type: choiceItem, text: 'NAVY BLUE', value: '#34495E' },
-
-  { type: choiceItem, text: 'DARK TURQUOISE OR DARK AQUA', value: '#18A085' },
-  { type: choiceItem, text: 'DARK GREEN', value: '#27AE60' },
-  { type: choiceItem, text: 'MEDIUM BLUE', value: '#2880B9' },
-  { type: choiceItem, text: 'MEDIUM PURPLE', value: '#8E44AD' },
-  { type: choiceItem, text: 'MIDNIGHT BLUE OR DARK NAVY BLUE', value: '#2B3E50' },
-
-  { type: choiceItem, text: 'YELLOW', value: '#F1C40F' },
-  { type: choiceItem, text: 'ORANGE', value: '#E67E23' },
-  { type: choiceItem, text: 'RED', value: '#E74C3C' },
-  { type: choiceItem, text: 'LIGHT GRAY', value: '#ECF0F1' },
-  { type: choiceItem, text: 'GRAY', value: '#95A5A6' },
-
-  { type: choiceItem, text: 'DARK YELLOW', value: '#F29D12' },
-  { type: choiceItem, text: 'DARK ORANGE', value: '#D35400' },
-  { type: choiceItem, text: 'DARK RED', value: '#E74C3C' },
-  { type: choiceItem, text: 'MEDIUM GRAY', value: '#BDC3C7' },
-  { type: choiceItem, text: 'DARK GRAY', value: '#7E8C8D' },
-
-  { type: choiceItem, text: 'BLACK', value: '#000000' },
-  { type: choiceItem, text: 'WHITE', value: '#ffffff' }
-];
-
-const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
-);
-
 const applyFormat = function (editor, format, value) {
   editor.undoManager.transact(function () {
     editor.focus();
@@ -78,27 +43,12 @@ const registerCommands = (editor) => {
   });
 };
 
-const mapColors = function (colorMap) {
-  let i;
-  const colors = [];
-
-  for (i = 0; i < colorMap.length; i += 2) {
-    colors.push({
-      text: colorMap[i + 1],
-      value: '#' + colorMap[i],
-      type: 'choiceitem'
-    });
-  }
-
-  return colors;
-};
-
 const calcCols = (colors) => {
   return Math.ceil(Math.sqrt(colors));
 };
 
 const getColorCols = function (editor) {
-  const colors = currentColors.get();
+  const colors = Settings.getCurrentColors();
   const defaultCols = calcCols(colors.length);
   return Settings.getColorCols(editor, defaultCols);
 };
@@ -133,11 +83,11 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   ] : [remove];
 };
 
-const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
+const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void, getter, setter) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((color) => {
-      addColor(color);
+      Settings.addColor(color, getter, setter);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
     }, '#000000');
@@ -150,23 +100,13 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
   }
 };
 
-const getFetch = (hasCustom: boolean) => (callback) => {
+const getFetch = (hasCustom: boolean, getter) => (callback) => {
   callback(
-    currentColors.get().concat(getAdditionalColors(hasCustom))
+    getter().concat(getAdditionalColors(hasCustom))
   );
 };
 
-const addColor = (color) => {
-  currentColors.set(currentColors.get().concat([
-    {
-      type: 'choiceitem',
-      text: color,
-      value: color
-    }
-  ]));
-};
-
-const registerTextColorButton = (editor, name: string, format: string, tooltip: string) => {
+const registerTextColorButton = (editor, name: string, format: string, tooltip: string, getter, setter, fetcher) => {
   editor.ui.registry.addSplitButton(name, (() => {
     const lastColour = Cell(null);
     return {
@@ -176,11 +116,11 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: getFetch(Settings.hasCustomColors(editor)), // TODO: Setting for this, maybe 'custom_colors'?
+      fetch: fetcher,
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
-          applyColour(editor, format, splitButtonApi, lastColour.get(), () => { });
+          applyColour(editor, format, splitButtonApi, lastColour.get(), () => { }, getter, setter);
         }
       },
       onItemAction: (splitButtonApi, value) => {
@@ -193,7 +133,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
 
           lastColour.set(newColour);
           setIconFillAndStroke(name === 'forecolor' ? 'color' : 'Rectangle', newColour);
-        });
+        }, getter, setter);
       }
     } as Toolbar.ToolbarSplitButtonApi;
   })());
@@ -257,13 +197,11 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  const unmapped = Settings.getColorMap(editor);
-  if (unmapped !== undefined) {
-    currentColors.set(mapColors(unmapped));
-  }
+  const hasCustom = Settings.hasCustomColors(editor);
+  Settings.register(editor);
   registerCommands(editor);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
+  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color', Settings.getCurrentForeColors, Settings.setCurrentForeColors, getFetch(hasCustom, Settings.getCurrentForeColors));
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color', Settings.getCurrentBackColors, Settings.setCurrentBackColors, getFetch(hasCustom, Settings.getCurrentBackColors));
 };
 
-export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols };
+export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols};
