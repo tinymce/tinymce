@@ -24,6 +24,7 @@ import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 import { renderLabel } from '../alien/FieldLabeller';
 import ColorSwatch from '../core/color/ColorSwatch';
+import Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
 
 const colorInputChangeEvent = Id.generate('color-change');
@@ -101,7 +102,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         if (value === 'custom') {
           colorInputBackstage.colorPicker((value) => {
             emitSwatchChange(colorBit, value);
-            ColorSwatch.addColor(value);
+            Settings.addColor(value, Settings.getCurrentColors, Settings.setCurrentColors);
           }, '#ffffff');
         } else if (value === 'remove') {
           emitSwatchChange(colorBit, '');
@@ -122,7 +123,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         onLtr: () => [ Layout.southwest ]
       }),
       components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors()),
+      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors(), Settings.getCurrentColors),
       onItemAction
     }, sharedBackstage)
   );

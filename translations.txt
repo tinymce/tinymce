@@ -73,6 +73,29 @@ Border style              <new>                 Table (better description than j
 
 Update                    <new>                 TOC
 
+Turquoise                 <new>                 Color Swatch
+Green                     <new>                 Color Swatch
+Blue                      <new>                 Color Swatch
+Purple                    <new>                 Color Swatch
+Navy Blue                 <new>                 Color Swatch
+Dark Turquoise            <new>                 Color Swatch
+Dark Green                <new>                 Color Swatch
+Medium Blue               <new>                 Color Swatch
+Medium Purple             <new>                 Color Swatch
+Midnight Blue             <new>                 Color Swatch
+Yellow                    <new>                 Color Swatch
+Orange                    <new>                 Color Swatch
+Red                       <new>                 Color Swatch
+Light Gray                <new>                 Color Swatch
+Gray                      <new>                 Color Swatch
+Dark Yellow               <new>                 Color Swatch
+Dark Orange               <new>                 Color Swatch
+Dark Red                  <new>                 Color Swatch
+Medium Gray               <new>                 Color Swatch
+Dark Gray                 <new>                 Color Swatch
+Black                     <new>                 Color Swatch
+White                     <new>                 Color Swatch
+
 
 No longer Used
 -----------------------------------------------------

@@ -54,7 +54,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
           })
         ])
       ]),
-      inputAttributes: { placeholder: subspec.placeholderText },
+      inputAttributes: { placeholder: providersBackstage.translate(subspec.placeholderText) },
       selectOnFocus: false
     });
 

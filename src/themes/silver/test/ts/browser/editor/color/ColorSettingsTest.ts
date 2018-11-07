@@ -3,11 +3,12 @@ import { TinyLoader } from '@ephox/mcagar';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
+import Settings from '../../../../../main/ts/ui/core/color/Settings';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   const sAssertColors = function (input, expected) {
     return Logger.t(`Assert colors ${expected}`, Step.sync(function () {
-      const colors = ColorSwatch.mapColors(input);
+      const colors = Settings.mapColors(input);
       RawAssertions.assertEq('should be same', expected, colors);
     }));
   };
