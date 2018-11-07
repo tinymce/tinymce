@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Time from '../core/Time';
+import * as Time from '../core/Time';
 import { document } from '@ephox/dom-globals';
 
-const shouldAskBeforeUnload = function (editor) {
+const shouldAskBeforeUnload = (editor) => {
   return editor.getParam('autosave_ask_before_unload', true);
 };
 
-const getAutoSavePrefix = function (editor) {
+const getAutoSavePrefix = (editor) => {
   let prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
 
   prefix = prefix.replace(/\{path\}/g, document.location.pathname);
@@ -26,19 +26,19 @@ const getAutoSavePrefix = function (editor) {
   return prefix;
 };
 
-const shouldRestoreWhenEmpty = function (editor) {
+const shouldRestoreWhenEmpty = (editor) => {
   return editor.getParam('autosave_restore_when_empty', false);
 };
 
-const getAutoSaveInterval = function (editor) {
+const getAutoSaveInterval = (editor) => {
   return Time.parse(editor.settings.autosave_interval, '30s');
 };
 
-const getAutoSaveRetention = function (editor) {
+const getAutoSaveRetention = (editor) => {
   return Time.parse(editor.settings.autosave_retention, '20m');
 };
 
-export default {
+export {
   shouldAskBeforeUnload,
   getAutoSavePrefix,
   shouldRestoreWhenEmpty,

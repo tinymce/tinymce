@@ -8,19 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const fireRestoreDraft = function (editor) {
+const fireRestoreDraft = (editor) => {
   return editor.fire('RestoreDraft');
 };
 
-const fireStoreDraft = function (editor) {
+const fireStoreDraft = (editor) => {
   return editor.fire('StoreDraft');
 };
 
-const fireRemoveDraft = function (editor) {
+const fireRemoveDraft = (editor) => {
   return editor.fire('RemoveDraft');
 };
 
-export default {
+export {
   fireRestoreDraft,
   fireStoreDraft,
   fireRemoveDraft

@@ -8,15 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Storage from '../core/Storage';
+import * as Storage from '../core/Storage';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const postRender = function (editor, started) {
-  return function (e) {
+const postRender = (editor: Editor, started: Cell<boolean>) => {
+  return (e) => {
     const ctrl = e.control;
 
     ctrl.disabled(!Storage.hasDraft(editor));
 
-    editor.on('StoreDraft RestoreDraft RemoveDraft', function () {
+    editor.on('StoreDraft RestoreDraft RemoveDraft', () => {
       ctrl.disabled(!Storage.hasDraft(editor));
     });
 
@@ -27,7 +29,7 @@ const postRender = function (editor, started) {
   };
 };
 
-const register = function (editor, started) {
+const register = (editor: Editor, started: Cell<boolean>) => {
   editor.addButton('restoredraft', {
     title: 'Restore last draft',
     onclick () {
@@ -46,6 +48,6 @@ const register = function (editor, started) {
   });
 };
 
-export default {
+export {
   register
 };
