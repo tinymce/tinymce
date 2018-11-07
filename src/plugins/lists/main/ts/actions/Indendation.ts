@@ -8,34 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import { Compare, Element, Fragment, Replication, Traverse } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { Compare, Element, Replication, Traverse } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import Range from '../core/Range';
 import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
-import TextBlock from '../core/TextBlock';
-import { listsIndentation, Composer } from '../listModel/ListsIndendation';
 import { IndentValue } from '../listModel/Indentation';
-import { Entry } from '../listModel/Entry';
-import { ItemTuple } from '../listModel/ParseLists';
-import { hasFirstChildList } from '../listModel/Util';
-
-const getOutdentComposer = (editor: Editor): Composer => (entries: Entry[]): Element[] => {
-  return Arr.map(entries, (entry) => {
-    const content = Fragment.fromElements(entry.content);
-    return Element.fromDom(TextBlock.createNewTextBlock(editor, content.dom()));
-  });
-};
-
-const getItemSelection = (editor: Editor): Option<ItemTuple> => {
-  const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
-
-  return Options.liftN([
-    Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
-    Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList))
-  ], (start, end) => ({ start, end }));
-};
+import { listsIndentation } from '../listModel/ListsIndendation';
 
 const outdentDlItem = (editor: Editor, item: Element): void => {
   if (Compare.is(item, 'DD')) {
@@ -69,10 +49,9 @@ const selectionIndentation = (editor: Editor, indentation: IndentValue) => {
     dlIndentation(editor, indentation, dlItems);
 
     listsIndentation(
+      editor,
       lists,
-      indentation,
-      getItemSelection(editor),
-      getOutdentComposer(editor)
+      indentation
     );
 
     editor.selection.moveToBookmark(bookmark);
@@ -93,8 +72,4 @@ const flattenListSelection = (editor: Editor) => {
   selectionIndentation(editor, IndentValue.Flatten);
 };
 
-export {
-  indentListSelection,
-  outdentListSelection,
-  flattenListSelection
-};
+export { indentListSelection, outdentListSelection, flattenListSelection };

@@ -26,6 +26,11 @@ export interface EntrySet {
   sourceList: Element;
 }
 
+const enum ItemRange {
+  Start = 'Start',
+  End = 'End'
+}
+
 const getItemContent = (li: Element): Element[] => {
   const childNodes = Traverse.children(li);
   const contentLength = childNodes.length + (hasLastChildList(li) ? -1 : 0);
@@ -43,11 +48,6 @@ const createEntry = (li: Element, depth: number, isSelected: boolean): Entry => 
     itemAttributes: Attr.clone(li)
   };
 };
-
-enum ItemRange {
-  Start = 'Start',
-  End = 'End'
-}
 
 const parseItem: Parser = (depth: number, itemSelection: Option<ItemTuple>, selectionState: Cell<boolean>, item: Element): Entry[] => {
   const curriedParseList = Fun.curry(parseList, depth, itemSelection, selectionState);
