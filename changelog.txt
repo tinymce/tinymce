@@ -23,6 +23,7 @@ Version 5.0.0-preview-4 (TBD)
     Fixed table of contents plugin now works with v5 toolbar APIs correctly #AP-347
     Fixed the `link_context_toolbar` configuration not disabling the context toolbar #AP-458
     Fixed the link context toolbar showing incorrect relative links #AP-435
+    Fixed the editor not displaying as fullscreen when toggled #TINY-2237
 Version 5.0.0-preview-3 (2018-10-18)
     Changed editor layout to use modern CSS properties over manually calculating dimensions #AP-324
     Changed `autoresize_min_height` and `autoresize_max_height` configurations to `min_height` and `max_height` #AP-324

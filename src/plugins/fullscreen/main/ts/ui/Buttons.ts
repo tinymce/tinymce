@@ -7,28 +7,29 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const makeSetupHandler = (editor) => (api) => {
-  api.setActive(false);
+const makeSetupHandler = (editor: Editor, fullscreenState: Cell<object>) => (api) => {
+  api.setActive(fullscreenState.get() !== null);
   const editorEventCallback = (e) => api.setActive(e.state);
   editor.on('FullscreenStateChanged', editorEventCallback);
   return () => editor.off('FullscreenStateChanged', editorEventCallback);
 };
 
-const register = function (editor) {
+const register = (editor: Editor, fullscreenState: Cell<object>) => {
   editor.ui.registry.addToggleMenuItem('fullscreen', {
     text: 'Fullscreen',
-    shortcut: 'Ctrl+Shift+F',
-    selectable: true,
+    shortcut: 'Meta+Shift+F',
     onAction: () => editor.execCommand('mceFullScreen'),
-    onSetup: makeSetupHandler(editor)
+    onSetup: makeSetupHandler(editor, fullscreenState)
   });
 
   editor.ui.registry.addToggleButton('fullscreen', {
     tooltip: 'Fullscreen',
     icon: 'fullscreen',
     onAction: () => editor.execCommand('mceFullScreen'),
-    onSetup: makeSetupHandler(editor)
+    onSetup: makeSetupHandler(editor, fullscreenState)
   });
 };
 
