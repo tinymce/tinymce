@@ -192,16 +192,19 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', function () {
 
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
-      '<li>a</li>' +
+      '<li>a' +
       '<ul>' +
       '<li>b</li>' +
       '</ul>' +
+      '</li>' +
       '</ol>' +
       '<p>c</p>' +
       '<ol>' +
+      '<li style="list-style-type: none;">' +
       '<ul>' +
       '<li>d</li>' +
       '</ul>' +
+      '</li>' +
       '<li>e</li>' +
       '</ol>'
     );

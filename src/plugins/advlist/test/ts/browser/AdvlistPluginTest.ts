@@ -150,7 +150,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function (
     inputSelection: ['li:nth-child(1)', 0],
     command: 'ApplyOrderedListStyle',
     listType: false,
-    expectedContent: '<p>a</p><ul><li>b</li></ul>',
+    expectedContent: '<p>a</p><ul><li style="list-style-type: none;"><ul><li>b</li></ul></li></ul>',
     expectedSelection: ['p:nth-child(1)', 0]
   });
 
@@ -159,7 +159,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function (
     inputSelection: ['li:nth-child(1)', 0],
     command: 'ApplyUnorderedListStyle',
     listType: false,
-    expectedContent: '<p>a</p><ol><li>b</li></ol>',
+    expectedContent: '<p>a</p><ol><li style="list-style-type: none;"><ol><li>b</li></ol></li></ol>',
     expectedSelection: ['p:nth-child(1)', 0]
   });
 

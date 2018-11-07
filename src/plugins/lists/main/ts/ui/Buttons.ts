@@ -10,7 +10,6 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from '../core/NodeType';
-import Selection from '../core/Selection';
 
 const findIndex = function (list, predicate) {
   for (let index = 0; index < list.length; index++) {
@@ -31,18 +30,6 @@ const listState = function (editor, listName) {
       const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
       const lists = Tools.grep(parents, NodeType.isListNode);
       ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
-    });
-  };
-};
-
-const indentPostRender = function (editor) {
-  return function (e) {
-    const ctrl = e.control;
-
-    editor.on('nodechange', function () {
-      const listItemBlocks = Selection.getSelectedListItems(editor);
-      const disable = listItemBlocks.length > 0 && NodeType.isFirstChild(listItemBlocks[0]);
-      ctrl.disabled(disable);
     });
   };
 };
@@ -72,8 +59,7 @@ const register = function (editor) {
   editor.addButton('indent', {
     icon: 'indent',
     title: 'Increase indent',
-    cmd: 'Indent',
-    onPostRender: indentPostRender(editor)
+    cmd: 'Indent'
   });
 };
 

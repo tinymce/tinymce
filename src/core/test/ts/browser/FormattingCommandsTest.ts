@@ -363,20 +363,20 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
-    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 40px;">test 123</p>');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
     editor.execCommand('Indent');
-    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 60px;">test 123</p>');
+    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 80px;">test 123</p>');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
     editor.execCommand('Indent');
     editor.execCommand('Outdent');
-    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+    LegacyUnit.equal(editor.getContent(), '<p style="padding-left: 40px;">test 123</p>');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
@@ -388,20 +388,20 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
-    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 40px;"><tbody><tr><td>test</td></tr></tbody></table>');
 
     editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
     editor.execCommand('Indent');
-    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 60px;"><tbody><tr><td>test</td></tr></tbody></table>');
+    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 80px;"><tbody><tr><td>test</td></tr></tbody></table>');
 
     editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
     editor.execCommand('Indent');
     editor.execCommand('Outdent');
-    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+    LegacyUnit.equal(editor.getContent(), '<table style="margin-left: 40px;"><tbody><tr><td>test</td></tr></tbody></table>');
 
     editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
     editor.execCommand('SelectAll');
