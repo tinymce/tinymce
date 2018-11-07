@@ -17,7 +17,7 @@ export interface MenuRegistry {
   menus: Record<string, any>;
 }
 
-const defaultMenubar = 'file edit view insert format tools table';
+const defaultMenubar = 'file edit view insert format tools table help';
 
 const defaultMenus = {
   file: { title: 'File', items: 'newdocument restoredraft | preview | print' },
