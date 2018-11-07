@@ -34,13 +34,13 @@ const defaultColors = [
 ];
 
 const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  []
+  defaultColors
 );
 const currentForeColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  []
+  defaultColors
 );
 const currentBackColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  []
+  defaultColors
 );
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
@@ -71,34 +71,37 @@ const getColorMap = (editor: Editor): string[] => {
 };
 
 const getForeColorMap = (editor: Editor): string[] => {
-  return editor.getParam('forecolor_map');
+  return editor.getParam('forecolor_map', getColorMap(editor));
 };
 
 const getBackColorMap = (editor: Editor): string[] => {
-  return editor.getParam('backcolor_map');
+  return editor.getParam('backcolor_map', getColorMap(editor));
 };
 
-const getColors = (editor: Editor, getter: (editor: Editor) => string[]): Menu.ChoiceMenuItemApi[] => {
+const setColorsFromMap = (editor: Editor, getter: (editor: Editor) => string[], setter: (colors) => void): void => {
   const unmapped = getter(editor);
-  return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
+  if (unmapped !== undefined) {
+    const mapped = mapColors(unmapped);
+    setter(mapped);
+  }
 };
 
-const getForeColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
-  return getColors(editor, getForeColorMap);
+const setColors = (editor: Editor): void => {
+  setColorsFromMap(editor, getColorMap, setCurrentColors);
 };
 
-const getBackColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
-  return getColors(editor, getBackColorMap);
+const setForeColors = (editor: Editor): void => {
+  setColorsFromMap(editor, getForeColorMap, setCurrentForeColors);
 };
 
-const getOtherColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
-  return getColors(editor, getColorMap);
+const setBackColors = (editor: Editor): void => {
+  setColorsFromMap(editor, getBackColorMap, setCurrentBackColors);
 };
 
-const register = (editor: Editor) => {
-  currentColors.set(getOtherColors(editor));
-  currentForeColors.set(getForeColors(editor));
-  currentBackColors.set(getBackColors(editor));
+const register = (editor: Editor): void => {
+  setColors(editor);
+  setForeColors(editor);
+  setBackColors(editor);
 };
 
 const getCurrentColors = () => {
@@ -136,6 +139,7 @@ const addColor = (color, getter, setter) => {
 };
 
 export default {
+  mapColors,
   getColorCols,
   hasCustomColors,
   getColorMap,
