@@ -13,43 +13,51 @@ const nu = function <T, U, V>(f: GuardFn<T, U, V>) {
 
 const tryUntilNot = function <T, U>(label: string, interval: number, amount: number) {
   return nu<T, U, T>(function (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
-    const repeat = function (n: number) {
+    const repeat = function (startTime: number) {
       f(value, function (v, newLogs) {
-        if (n <= 0) die(new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label), newLogs);
-        else {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= amount) {
+          die(
+            new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label), 
+            addLogEntry(newLogs, 'WaitErr: ' + label + ' = Failed (after ' + amount + 'ms)')
+          );
+        } else {
           setTimeout(function () {
-            repeat(n - interval);
+            repeat(startTime);
           }, interval);
         }
       }, function (err, newLogs) {
-        // Note, this one is fairly experimental. Because errors cause die as well, this is probably not always the best
-        // option. What we do is check to see if it is an error prototype
+        // Note, this one is fairly experimental. 
+        // Because errors cause die as well, this is not always the best option.
+        // What we do is check to see if it is an error prototype.
         if (Error.prototype.isPrototypeOf(err)) die(err, newLogs);
-        else next(value, newLogs);
+        else next(value, addLogEntry(newLogs, 'WaitErr: ' + label + ' = SUCCESS!'));
       }, logs);
     };
-    repeat(amount);
+    repeat(Date.now());
   });
 };
 
 const tryUntil = function <T, U>(label: string, interval: number, amount: number) {
   return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
-    const repeat = function (n: number) {
+    const repeat = function (startTime: number) {
       f(value, (v, newLogs) => {
         next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'))
       }, function (err, newLogs) {
-        if (n <= 0) die(
-          ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err),
-          addLogEntry(newLogs, 'Waited for ' + amount + 'ms for something to be successful. ')
-        );
-        else {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= amount) {
+          die(
+            ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err),
+            addLogEntry(newLogs, 'Wait: ' + label + ' = FAILED (after ' + amount + 'ms)')
+          );
+        } else {
           setTimeout(function () {
-            repeat(n - interval);
+            repeat(startTime);
           }, interval);
         }
       }, logs);
     };
-    repeat(amount);
+    repeat(Date.now());
   });
 };
 
