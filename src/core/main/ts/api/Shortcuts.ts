@@ -10,6 +10,7 @@
 
 import Tools from './util/Tools';
 import Env from './Env';
+import { Arr, Obj } from '@ephox/katamari';
 
 /**
  * Contains logic for handling keyboard shortcuts.
@@ -216,3 +217,27 @@ export default function (editor) {
     return false;
   };
 }
+
+// Converts shortcut format to Mac/PC variants
+export const convertShortcutText = (source: string) => {
+  const mac = {
+    alt: '&#x2325;',
+    ctrl: '&#x2318;',
+    shift: '&#x21E7;',
+    meta: '&#x2318;'
+  };
+  const other = {
+    meta: 'Ctrl'
+  };
+  const replace: Record<string, string> = Env.mac ? mac : other;
+
+  const shortcut = source.split('+');
+
+  const updated = Arr.map(shortcut, (segment: string) => {
+    // search lowercase, but if not found use the original
+    const search = segment.toLowerCase().trim();
+    return Obj.has(replace, search) ? replace[search] : segment;
+  });
+
+  return updated.join('+');
+};

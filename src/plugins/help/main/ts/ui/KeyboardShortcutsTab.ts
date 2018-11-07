@@ -10,21 +10,24 @@
 
 import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
+import { convertShortcutText } from '../../../../../core/main/ts/api/Shortcuts';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 
 export interface ShortcutActionPairType {
-  shortcut: string;
+  shortcuts: string[];
   action: string;
 }
 
 const tab = () => {
   const makeAriaLabel = (shortcut: ShortcutActionPairType) => {
-    return 'aria-label="Action: ' + shortcut.action + ', Shortcut: ' + shortcut.shortcut.replace(/Ctrl/g, 'Control') + '"';
+    const shortcutText = Arr.map(shortcut.shortcuts, (s) => s.replace(/Ctrl/g, 'Control')).join(' or ');
+    return 'aria-label="Action: ' + shortcut.action + ', Shortcut: ' + shortcutText + '"';
   };
   const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut: ShortcutActionPairType) {
+    const shortcutText = Arr.map(shortcut.shortcuts, convertShortcutText).join(' or ');
     return '<tr data-mce-tabstop="1" tabindex="-1" ' + makeAriaLabel(shortcut) + '>' +
               '<td>' + I18n.translate(shortcut.action) + '</td>' +
-              '<td>' + shortcut.shortcut + '</td>' +
+              '<td>' + shortcutText + '</td>' +
             '</tr>';
   }).join('');
 
