@@ -152,7 +152,7 @@ const debugging = op(GeneralActions.debug);
 
 const log = function <T>(message: string) {
   return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
-    GeneralActions.log(message);
+    console.log(message);
     next(wrap(input), addLogEntry(logs, message));
   });
 };

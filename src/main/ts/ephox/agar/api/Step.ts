@@ -1,8 +1,10 @@
-import { TestLogs, addLogEntry } from '../api/TestLogs';
+import { console } from '@ephox/dom-globals';
+
+import { addLogEntry, TestLogs } from '../api/TestLogs';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
-import { GuardFn, addLogging } from './Guard';
+import { addLogging, GuardFn } from './Guard';
 
 export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
 
@@ -48,7 +50,7 @@ const debugging = sync<any>(GeneralActions.debug);
 
 const log = function <T>(message: string): Step<T, T> {
   return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
-    GeneralActions.log(message);
+    console.log(message);
     next(value, addLogEntry(logs, message));
   });
 };
