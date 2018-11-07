@@ -1,3 +1,9 @@
+Version 4.7.0
+
+Date 2018-11-07
+
+* changed Guard.tryUntil and Guard.tryUntilNot to measure full elapsed time
+
 Version 4.6.0
 
 Date 2018-11-05
