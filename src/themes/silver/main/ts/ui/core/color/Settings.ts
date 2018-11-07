@@ -104,31 +104,31 @@ const register = (editor: Editor): void => {
   setBackColors(editor);
 };
 
-const getCurrentColors = () => {
+const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
   return currentColors.get();
 };
 
-const getCurrentForeColors = () => {
+const getCurrentForeColors = (): Menu.ChoiceMenuItemApi[] => {
   return currentForeColors.get();
 };
 
-const getCurrentBackColors = () => {
+const getCurrentBackColors = (): Menu.ChoiceMenuItemApi[] => {
   return currentBackColors.get();
 };
 
-const setCurrentColors = (colors) => {
+const setCurrentColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
   currentColors.set(colors);
 };
 
-const setCurrentForeColors = (colors) => {
+const setCurrentForeColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
   currentForeColors.set(colors);
 };
 
-const setCurrentBackColors = (colors) => {
+const setCurrentBackColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
   currentBackColors.set(colors);
 };
 
-const addColor = (color, getter, setter) => {
+const addColor = (color: string, getter: () => Menu.ChoiceMenuItemApi[], setter: (colors: Menu.ChoiceMenuItemApi[]) => void) => {
   setter(getter().concat([
     {
       type: 'choiceitem',
