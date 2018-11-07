@@ -100,7 +100,5 @@ export default {
   getSelectedListItems,
   getClosestListRootElm,
   getSelectedDlItems,
-  getSelectedLists,
-  getUniqueListRoots,
   getSelectedListRoots
 };
