@@ -14,7 +14,6 @@ UnitTest.test('DialogChanges', () => {
 
         Logger.sync(label, () => {
           const result = method(mockEditor);
-          console.log(mockEditor, result, expected);
           RawAssertions.assertEq(label, result, expected);
         });
       };
