@@ -7,6 +7,7 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+
 import { Cell } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 
