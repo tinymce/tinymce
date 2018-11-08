@@ -39,16 +39,16 @@ const makeOpen = (editor, imageUploadTimerState) => () => {
       },
       buttons: [
         {
+          type: 'cancel',
+          name: 'cancel',
+          text: 'Cancel'
+        },
+        {
           type: 'submit',
           name: 'save',
           text: 'Save',
           primary: true,
           disabled: true
-        },
-        {
-          type: 'cancel',
-          name: 'cancel',
-          text: 'Cancel'
         }
       ],
       onSubmit: (api, _details) => {

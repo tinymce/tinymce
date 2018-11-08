@@ -174,15 +174,15 @@ const colorPickerDialog = (editor) => (callback, value) => {
     },
     buttons: [
       {
-        type: 'submit',
-        name: 'ok',
-        text: 'Ok',
-        primary: true
-      },
-      {
         type: 'cancel',
         name: 'cancel',
         text: 'Cancel',
+      },
+      {
+        type: 'submit',
+        name: 'save',
+        text: 'Save',
+        primary: true
       }
     ],
     initialData: {
@@ -201,7 +201,7 @@ const register = (editor) => {
   Settings.register(editor);
   registerCommands(editor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color', Settings.getCurrentForeColors, Settings.setCurrentForeColors, getFetch(hasCustom, Settings.getCurrentForeColors));
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color', Settings.getCurrentBackColors, Settings.setCurrentBackColors, getFetch(hasCustom, Settings.getCurrentBackColors));
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', Settings.getCurrentBackColors, Settings.setCurrentBackColors, getFetch(hasCustom, Settings.getCurrentBackColors));
 };
 
 export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols};

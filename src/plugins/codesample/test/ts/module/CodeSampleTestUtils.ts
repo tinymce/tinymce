@@ -3,7 +3,7 @@ import { Element, TextContent } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 
 const dialogSelector = 'div.tox-dialog';
-const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/Edit Code Sample"]';
+const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
 
 const sSetLanguage = (newLanguage) => {
   return Logger.t('Changing language to ' + newLanguage, Step.sync(() => {
@@ -71,9 +71,9 @@ const sOpenDialogAndAssertInitial = (editor, docBody, language, content) => {
 };
 
 const sSubmitDialog = (docBody) => {
-  return GeneralSteps.sequence(Logger.ts('Focus on the dialog and click on the Ok button to close the dialog', [
+  return GeneralSteps.sequence(Logger.ts('Focus on the dialog and click on the Save button to close the dialog', [
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-    Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+    Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
     Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
   ]));
 };

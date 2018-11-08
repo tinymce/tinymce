@@ -52,10 +52,10 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
   const sSetHexBlack = sSetHex('000000');
 
-  const sSubmitDialog = GeneralSteps.sequence(Logger.ts('Click Ok and close dialog', [
+  const sSubmitDialog = GeneralSteps.sequence(Logger.ts('Click Save and close dialog', [
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-    Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Ok")[disabled]'), 100, 1000),
-    Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+    Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]'), 100, 1000),
+    Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
     Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
   ]));
 
@@ -67,13 +67,13 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, click Ok and assert color is white', [
+      Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, click Save and assert color is white', [
         sOpenDialog(editor, docBody),
         sSubmitDialog,
         sAssertColorWhite
       ]),
 
-      Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, pick a color, click Ok and assert color changes to picked color', [
+      Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, pick a color, click Save and assert color changes to picked color', [
         sOpenDialog(editor, docBody),
         sSetHexBlack,
         sSubmitDialog,

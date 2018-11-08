@@ -50,8 +50,8 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
     field5: 'input[type="checkbox"]',
     field6: 'label:contains("nested1") + input',
     field7: 'label:contains("nested2") + input',
-    field8: 'button:contains("cancel")',
-    field9: 'button:contains("ok")'
+    field8: 'button:contains("Cancel")',
+    field9: 'button:contains("Save")'
 
   };
 
@@ -139,11 +139,11 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
           },
           {
             type: 'cancel',
-            text: 'cancel'
+            text: 'Cancel'
           },
           {
             type: 'submit',
-            text: 'ok'
+            text: 'Save'
           }
         ],
         initialData: {

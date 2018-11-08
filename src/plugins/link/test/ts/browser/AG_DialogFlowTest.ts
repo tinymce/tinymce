@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
 
     // FIX: Dupe
     const sAssertUrlStructure = (expected: (s, str, arr) => any) => Logger.t('Assert url structure', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("Url") + .tox-form__controls-h-stack input'),
+      TestLinkUi.cFindInDialog('label:contains("URL") + .tox-form__controls-h-stack input'),
       Chain.op((urlinput) => {
         Assertions.assertStructure(
           'Checking content of url input',
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         target: ''
       }),
 
-      TestLinkUi.sClickOk,
+      TestLinkUi.sClickSave,
       TestLinkUi.sAssertContentPresence(tinyApis, {
         'a[href]': 1,
         'a[href="#anchor2"]:contains("Other text")': 1
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         'h1[id]': 0,
         'h2[id]': 1
       }),
-      TestLinkUi.sClickOk,
+      TestLinkUi.sClickSave,
       TestLinkUi.sAssertContentPresence(tinyApis, {
         'h1[id]': 1
       }),
@@ -157,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
           title: '',
           target: ''
         }),
-        TestLinkUi.sClickOk,
+        TestLinkUi.sClickSave,
         TestLinkUi.sAssertContentPresence(tinyApis, {
           a: 1
         })

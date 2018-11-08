@@ -81,7 +81,7 @@ const sInsertLink = function (url: string) {
   return Logger.t('Insert link', GeneralSteps.sequence([
     sOpenLinkDialog,
     FocusTools.sSetActiveValue(doc, url),
-    sClickOk
+    sClickSave
   ]));
 };
 
@@ -108,8 +108,8 @@ const sWaitForConfirmClose = Logger.t('Wait to confirm close', Waiter.sTryUntil(
   1000
 ));
 
-const sClickOk = Logger.t('Click Ok', GeneralSteps.sequence([
-  sClickOnDialog('click ok button', 'button:contains("Ok")'),
+const sClickSave = Logger.t('Click Save', GeneralSteps.sequence([
+  sClickOnDialog('click save button', 'button:contains("Save")'),
   sWaitForDialogClose
 ]));
 
@@ -166,7 +166,7 @@ export const TestLinkUi = {
   cFindInDialog,
   sAssertDialogContents,
   sWaitForUi,
-  sClickOk,
+  sClickSave,
   sClickCancel,
   sClickConfirmYes,
   sClickConfirmNo,
