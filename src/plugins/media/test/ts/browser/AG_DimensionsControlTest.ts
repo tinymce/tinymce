@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
           ]
         )
       ]),
-      ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+      ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
       Waiter.sTryUntil(
         'Wait for dialog to close',
         UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),

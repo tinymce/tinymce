@@ -16,7 +16,7 @@ export const setup = (extras) => {
     const memFooterClose = Memento.record(
       renderFooterButton({
         name: 'close-alert',
-        text: 'Ok',
+        text: 'OK',
         primary: true
       }, 'cancel', sharedBackstage.providers)
     );

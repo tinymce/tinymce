@@ -10,63 +10,91 @@ Error                     <new>
 Warn                      <new>
 Valid                     <new>
 
-Search                     <new> Charmap
-All                        <new> Charmap
-Finance                    <new> Charmap
-Signs                      <new> Charmap
-Quotations                 <new> Charmap
-Mathematical               <new> Charmap
-Extended Latin             <new> Charmap
-Symbols                    <new> Charmap
-Arrows                     <new> Charmap
-User Defined               <new> Charmap
+example                   <new>                 Anchor
+Anchor...                 [Anchor]              Anchor
 
-Loading emoticons...      <new> Emoticons
-Could not load emoticons  <new> Emoticons
-Symbols                   <new> Emoticons
-People                    <new> Emoticons
-Animals and Nature        <new> Emoticons
-Food and Drink            <new> Emoticons
-Activity                  <new> Emoticons
-Travel and Places         <new> Emoticons
-Objects                   <new> Emoticons
-Flags                     <new> Emoticons
+Special characters...     [Special Characters]  Charmap
+Search                    <new>                 Charmap
+All                       <new>                 Charmap
+Currency                  <new>                 Charmap
+Text                      <new>                 Charmap
+Quotations                <new>                 Charmap
+Mathematical              <new>                 Charmap
+Extended Latin            <new>                 Charmap
+Symbols                   <new>                 Charmap
+Arrows                    <new>                 Charmap
+User Defined              <new>                 Charmap
 
-Characters                <new> WordCount
-Characters (no spaces)    <new> WordCount
+Code sample...            [Code sample]         Codesample
 
-Show caption               [Caption] Insert image/media
+Emoticons...              [Emoticons]           Emoticons
+Loading emoticons...      <new>                 Emoticons
+Could not load emoticons  <new>                 Emoticons
+Symbols                   <new>                 Emoticons
+People                    <new>                 Emoticons
+Animals and Nature        <new>                 Emoticons
+Food and Drink            <new>                 Emoticons
+Activity                  <new>                 Emoticons
+Travel and Places         <new>                 Emoticons
+Objects                   <new>                 Emoticons
+Flags                     <new>                 Emoticons
 
-Error: Form submit field collision.   <new> Save
-Error: No form element found.         <new> Save
+Metadata and Document Properties [Document Properties] Fullpage
 
-Border width            <new> Table (better description than just 'border')
-Border style            <new> Table (better description than just 'style')
+Image...                  [Image]               Image
 
-Update                  <new> TOC
+Link...                   [Link]                Link
+Insert/Edit Link          [Insert Link]         Link
+Open link in...           [Target]              Link
+Current window            [None]                Link
 
-Turquoise                         <new> Color Swatch
-Green                             <new> Color Swatch
-Blue                              <new> Color Swatch
-Purple                            <new> Color Swatch
-Navy Blue                         <new> Color Swatch
-Dark Turquoise                    <new> Color Swatch
-Dark Green                        <new> Color Swatch
-Medium Blue                       <new> Color Swatch
-Medium Purple                     <new> Color Swatch
-Midnight Blue                     <new> Color Swatch
-Yellow                            <new> Color Swatch
-Orange                            <new> Color Swatch
-Red                               <new> Color Swatch
-Light Gray                        <new> Color Swatch
-Gray                              <new> Color Swatch
-Dark Yellow                       <new> Color Swatch
-Dark Orange                       <new> Color Swatch
-Dark Red                          <new> Color Swatch
-Medium Gray                       <new> Color Swatch
-Dark Gray                         <new> Color Swatch
-Black                             <new> Color Swatch
-White                             <new> Color Swatch
+Media...                  [Media]               Media
+Alternative image URL     [Alternative source]  Media
+Media poster (Image URL)  [Poster]              Media
+
+Print...                  [Print]               Print
+
+Find and replace...       [Find and replace]    Searchreplace
+Find whole words only     [Whole words]         Searchreplace
+Previous                  [Prev]                Searchreplace
+
+Insert template...        [Insert template]     Template
+
+Characters                <new>                 WordCount
+Characters (no spaces)    <new>                 WordCount
+
+Show caption              [Caption]             Insert image/media
+
+Error: Form submit field collision.   <new>     Save
+Error: No form element found.         <new>     Save
+
+Border width              <new>                 Table (better description than just 'border')
+Border style              <new>                 Table (better description than just 'style')
+
+Update                    <new>                 TOC
+
+Turquoise                 <new>                 Color Swatch
+Green                     <new>                 Color Swatch
+Blue                      <new>                 Color Swatch
+Purple                    <new>                 Color Swatch
+Navy Blue                 <new>                 Color Swatch
+Dark Turquoise            <new>                 Color Swatch
+Dark Green                <new>                 Color Swatch
+Medium Blue               <new>                 Color Swatch
+Medium Purple             <new>                 Color Swatch
+Midnight Blue             <new>                 Color Swatch
+Yellow                    <new>                 Color Swatch
+Orange                    <new>                 Color Swatch
+Red                       <new>                 Color Swatch
+Light Gray                <new>                 Color Swatch
+Gray                      <new>                 Color Swatch
+Dark Yellow               <new>                 Color Swatch
+Dark Orange               <new>                 Color Swatch
+Dark Red                  <new>                 Color Swatch
+Medium Gray               <new>                 Color Swatch
+Dark Gray                 <new>                 Color Swatch
+Black                     <new>                 Color Swatch
+White                     <new>                 Color Swatch
 
 
 No longer Used

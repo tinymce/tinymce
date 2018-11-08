@@ -44,7 +44,7 @@ const register = (editor: Editor) => {
 
   editor.ui.registry.addMenuItem('image', {
     icon: 'image',
-    text: 'Image',
+    text: 'Image...',
     onAction: Dialog(editor).open
   });
 

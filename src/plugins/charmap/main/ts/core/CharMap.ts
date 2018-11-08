@@ -28,14 +28,14 @@ const getDefaultCharMap = function () {
     //     ['34', 'quotation mark']
     //   ]
     // },
-    { name: 'Finance',
+    { name: 'Currency',
       characters: [
       ['162', 'cent sign'],
       ['8364', 'euro sign'],
       ['163', 'pound sign'],
       ['165', 'yen sign']]
     },
-    { name: 'Signs',
+    { name: 'Text',
       characters: [
         ['169', 'copyright sign'],
         ['174', 'registered sign'],

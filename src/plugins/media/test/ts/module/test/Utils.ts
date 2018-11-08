@@ -8,7 +8,7 @@ const selectors = {
   width: '.tox-form__controls-h-stack span:contains(Width) + input.tox-textfield',
   height: '.tox-form__controls-h-stack span:contains(Height) + input.tox-textfield',
   embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',
-  okayButton: 'button.tox-button:contains(Ok)',
+  saveButton: 'button.tox-button:contains(Save)',
   xClose: 'button[aria-label=Close]',
   lockIcon: 'button.tox-lock',
   embedButton: 'div.tox-tab:contains(Embed)'
@@ -226,7 +226,7 @@ const sAssertEditorContent = function (apis, editor, expected) {
 };
 
 const sSubmitDialog = function (ui) {
-  return Logger.t('Submit dialog', ui.sClickOnUi('Click submit button', selectors.okayButton));
+  return Logger.t('Submit dialog', ui.sClickOnUi('Click submit button', selectors.saveButton));
 };
 
 const sSubmitAndReopen = function (ui) {

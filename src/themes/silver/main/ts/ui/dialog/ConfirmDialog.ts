@@ -40,8 +40,8 @@ export const setup = (extras: ConfirmDialogSetup) => {
           }),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
-            memFooterYes.asSpec(),
-            footerNo
+            footerNo,
+            memFooterYes.asSpec()
           ]))
         },
         onCancel: () => closeDialog(confirmDialog, false),

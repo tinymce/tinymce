@@ -58,7 +58,7 @@ export const SearchReplaceDialogSpec = {
     {
       type: 'custom',
       name: 'prev',
-      text: 'Prev',
+      text: 'Previous',
       align: 'end'
     },
     {

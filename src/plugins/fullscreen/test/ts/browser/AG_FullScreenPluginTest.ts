@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
         cAssertEditorAndLastEvent('After fullscreen command', true),
         cAssertFullscreenClass('After fullscreen command', true),
         Chain.op(() => editor.execCommand('mceLink', true)),
-        cWaitForDialog('Insert link'),
+        cWaitForDialog('Insert/Edit Link'),
         cCloseOnlyWindow,
         cAssertFullscreenClass('After window is closed', true),
         Chain.op(() => editor.execCommand('mceFullScreen')),

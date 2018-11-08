@@ -102,7 +102,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                               },
                               children: [
                                 s.element('button', {
-                                  html: str.is('Ok'),
+                                  html: str.is('OK'),
                                   classes: [
                                     arr.has('tox-button'),
                                   ],
@@ -193,7 +193,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
 
   const sShouldFocusOnCloseButton = GeneralSteps.sequence([
     sCreateAlert('initial focus should be on Close', Fun.noop),
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(Ok)'),
+    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
     sTeardown
   ]);
 
@@ -202,7 +202,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     GeneralSteps.sequence([
       store.sClear,
       sCreateAlert('Showing an alert', Fun.noop),
-      Mouse.sClickOn(Body.body(), '.tox-button:contains("Ok")'),
+      Mouse.sClickOn(Body.body(), '.tox-button:contains("OK")'),
       UiFinder.sNotExists(Body.body(), '[role="dialog"]'),
       store.sAssertEq('closeWindow should have fired', [ 'alert.closeWindow' ])
     ])

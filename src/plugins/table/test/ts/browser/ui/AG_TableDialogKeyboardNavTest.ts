@@ -57,9 +57,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-selectfield select'),
       sPressTabKey,
-      sAssertFocusOnItem('Ok', '.tox-button:contains("Ok")'),
-      sPressTabKey,
       sAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")'),
+      sPressTabKey,
+      sAssertFocusOnItem('Save', '.tox-button:contains("Save")'),
       sPressTabKey,
       sAssertFocusOnItem('General Tab', '.tox-dialog__body-nav-item:contains("General")'),
 
@@ -79,9 +79,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Background colorpicker', '.tox-form div:nth-child(3) span'),
       sPressTabKey,
-      sAssertFocusOnItem('Ok', '.tox-button:contains("Ok")'),
-      sPressTabKey,
       sAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")'),
+      sPressTabKey,
+      sAssertFocusOnItem('Save', '.tox-button:contains("Save")'),
       sPressTabKey,
       sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
     ]), onSuccess, onFailure);

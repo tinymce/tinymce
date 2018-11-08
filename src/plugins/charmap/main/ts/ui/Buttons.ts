@@ -17,7 +17,7 @@ const register = function (editor) {
 
   editor.ui.registry.addMenuItem('charmap', {
     icon: 'insert-character',
-    text: 'Special character',
+    text: 'Special character...',
     onAction: () => editor.execCommand('mceShowCharmap'),
   });
 };
