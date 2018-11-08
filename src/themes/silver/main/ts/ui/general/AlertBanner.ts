@@ -21,13 +21,7 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
       },
       classes: [ 'tox-notification', 'tox-notification--in', `tox-notification--${spec.level}` ]
     },
-    components: [{
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__icon' ],
-          innerHtml: Icons.get(`icon-${spec.icon}`, providersBackstage.icons)
-        }
-      },
+    components: [
       {
         dom: {
           tag: 'div',
@@ -39,8 +33,11 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
       Button.sketch({
         dom: {
           tag: 'button',
-          classes: ['tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
-          innerHtml: Icons.get('icon-close', providersBackstage.icons),
+          classes: ['tox-notification__icon-right', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
+          innerHtml: Icons.get(`icon-${spec.icon}`, providersBackstage.icons),
+          attributes: {
+            title: providersBackstage.translate(spec.actionLabel)
+          }
         },
         // TODO: aria label this button!
         action: (comp) => {
