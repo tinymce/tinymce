@@ -18,12 +18,12 @@ const SilverThemeSelectors: ThemeSelectors = {
   toolBarSelector:'.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogCloseSelector: '.tox-button:contains("Cancel")',
-  dialogSubmitSelector: '.tox-button:contains("Ok")'
+  dialogSubmitSelector: '.tox-button:contains("Save")'
 };
 
 const getThemeSelectors = (): ThemeSelectors => {
   return isModern() ? ModernThemeSelectors : SilverThemeSelectors;
-}
+};
 
 export {
   getThemeSelectors
