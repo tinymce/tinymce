@@ -1,3 +1,5 @@
+@fullscreen-z-index: 1000;
+
 .tox-fullscreen {
   border: 0;
   height: 100%;
@@ -11,5 +13,13 @@
 
   .tox-statusbar__resize-handle {
     display: none;
+  }
+
+  .tox.tox-tinymce {
+    z-index: @fullscreen-z-index;
+  }
+
+  .tox.tox-tinymce-aux {
+    z-index: @fullscreen-z-index + 1;
   }
 }
