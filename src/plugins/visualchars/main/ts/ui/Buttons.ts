@@ -8,27 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const toggleActiveState = (editor) => (api) => {
-  api.setActive(false);
+import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
+
+const toggleActiveState = (editor: Editor, enabledStated: Cell<boolean>) => (api) => {
+  api.setActive(enabledStated.get());
   const editorEventCallback = (e) => api.setActive(e.state);
   editor.on('VisualChars', editorEventCallback);
   return () => editor.off('VisualChars', editorEventCallback);
 };
 
-const register = function (editor) {
+const register = (editor: Editor, toggleState: Cell<boolean>) => {
   editor.ui.registry.addToggleButton('visualchars', {
     tooltip: 'Show invisible characters',
     icon: 'paragraph',
     onAction: () => editor.execCommand('mceVisualChars'),
-    onSetup: toggleActiveState(editor)
+    onSetup: toggleActiveState(editor, toggleState)
   });
 
   editor.ui.registry.addToggleMenuItem('visualchars', {
     text: 'Show invisible characters',
-    icon: 'paragraph',
     onAction: () => editor.execCommand('mceVisualChars'),
-    onSetup: toggleActiveState(editor),
-    selectable: true
+    onSetup: toggleActiveState(editor, toggleState)
   });
 };
 

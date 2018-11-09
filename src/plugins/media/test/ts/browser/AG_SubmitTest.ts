@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function (success, failure) {
     return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
-      ui.sClickOnUi('click ok button', Utils.selectors.okayButton),
+      ui.sClickOnUi('click save button', Utils.selectors.saveButton),
       Utils.sAssertEditorContent(apis, editor, expected)
     ]));
   };

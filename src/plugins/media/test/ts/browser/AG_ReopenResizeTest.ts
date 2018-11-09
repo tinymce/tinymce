@@ -36,11 +36,11 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
         Utils.sOpenDialog(ui),
         Utils.sPasteSourceValue(ui, 'a'),
         Utils.sAssertWidthValue(ui, '300'),
-        ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+        ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
         sWaitForResizeHandles(editor),
         Utils.sOpenDialog(ui),
         Utils.sChangeWidthValue(ui, '500'),
-        ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+        ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
         sWaitForResizeHandles(editor),
         Waiter.sTryUntil(
           'Try assert content',

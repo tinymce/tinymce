@@ -21,12 +21,11 @@ const register = function (editor, currentIndexState) {
     text: 'Find and replace',
     shortcut: 'Meta+F',
     onAction: showDialog(editor, currentIndexState),
-    separator: 'before',
     icon: 'search'
   });
 
   editor.ui.registry.addButton('searchreplace', {
-    tooltip: 'Find and replace',
+    tooltip: 'Find and replace...',
     onAction: showDialog(editor, currentIndexState),
     icon: 'search'
   });

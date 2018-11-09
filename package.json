@@ -46,6 +46,7 @@
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest",
     "@ephox/swag": "latest",
+    "@ephox/wrap-jsverify": "latest",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",

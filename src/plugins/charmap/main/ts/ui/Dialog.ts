@@ -74,8 +74,8 @@ const open = function (editor, charMap) {
     buttons: [
       {
         type: 'cancel',
-        name: 'cancel',
-        text: 'Cancel'
+        name: 'close',
+        text: 'Close'
       }
     ],
     initialData: {

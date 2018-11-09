@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
           // This is now case sensitive
           backgroundcolor: 'red'
         }),
-        TableTestUtils.sClickDialogButton('Clicking OK', true),
+        TableTestUtils.sClickDialogButton('Clicking Save', true),
         tinyApis.sAssertContent(
           '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: red;">a</td><td style="background-color: red;">b</td></tr></tbody></table>'
         )

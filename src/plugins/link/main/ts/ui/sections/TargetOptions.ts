@@ -8,7 +8,7 @@ import { ListItem } from '../DialogTypes';
 // Do we really want to support that?
 
 const fallbacks = [
-  { text: 'None', value: '' },
+  { text: 'Current window', value: '' },
   { text: 'New window', value: '_blank' }
 ];
 
