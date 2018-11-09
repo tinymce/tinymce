@@ -83,11 +83,11 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   ] : [remove];
 };
 
-const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void, getter, setter) {
+const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((color) => {
-      Settings.addColor(color, getter, setter);
+      Settings.addColor(color);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
     }, '#000000');
@@ -100,13 +100,13 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
   }
 };
 
-const getFetch = (hasCustom: boolean, getter) => (callback) => {
+const getFetch = (hasCustom: boolean) => (callback) => {
   callback(
-    getter().concat(getAdditionalColors(hasCustom))
+    Settings.getCurrentColors().concat(getAdditionalColors(hasCustom))
   );
 };
 
-const registerTextColorButton = (editor, name: string, format: string, tooltip: string, getter, setter, fetcher) => {
+const registerTextColorButton = (editor, name: string, format: string, tooltip: string) => {
   editor.ui.registry.addSplitButton(name, (() => {
     const lastColour = Cell(null);
     return {
@@ -116,11 +116,11 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: fetcher,
+      fetch: getFetch(Settings.hasCustomColors(editor)),
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
-          applyColour(editor, format, splitButtonApi, lastColour.get(), () => { }, getter, setter);
+          applyColour(editor, format, splitButtonApi, lastColour.get(), () => { });
         }
       },
       onItemAction: (splitButtonApi, value) => {
@@ -133,7 +133,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
 
           lastColour.set(newColour);
           setIconFillAndStroke(name === 'forecolor' ? 'color' : 'Rectangle', newColour);
-        }, getter, setter);
+        });
       }
     } as Toolbar.ToolbarSplitButtonApi;
   })());
@@ -197,11 +197,10 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  const hasCustom = Settings.hasCustomColors(editor);
   Settings.register(editor);
   registerCommands(editor);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color', Settings.getCurrentForeColors, Settings.setCurrentForeColors, getFetch(hasCustom, Settings.getCurrentForeColors));
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', Settings.getCurrentBackColors, Settings.setCurrentBackColors, getFetch(hasCustom, Settings.getCurrentBackColors));
+  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
 export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols};
