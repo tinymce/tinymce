@@ -63,10 +63,10 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
         tinyApis.sFocus,
         tinyApis.sSetContent('hello test'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-        tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background color"] + .tox-split-button__chevron'),
+        tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#1abc9c"]'),
-        tinyUi.sClickOnToolbar('click backcolor again', 'button[aria-label="Background color"] + .tox-split-button__chevron'),
+        tinyUi.sClickOnToolbar('click backcolor again', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click a nice purple color', 'div[data-mce-color="#3498db"]'),
         tinyApis.sAssertContentStructure(backcolorStruct)
