@@ -83,11 +83,11 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
           },
           {
             type: 'cancel',
-            text: 'cancel'
+            text: 'Cancel'
           },
           {
             type: 'submit',
-            text: 'ok'
+            text: 'Save'
           }
         ],
         initialData: {

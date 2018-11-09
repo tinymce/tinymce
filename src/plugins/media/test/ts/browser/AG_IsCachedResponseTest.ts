@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
                 Utils.cSetSourceInput(tinyUi, 'XXX')
               ]),
               Chain.fromChains([
-                UiFinder.cFindIn(Utils.selectors.okayButton),
+                UiFinder.cFindIn(Utils.selectors.saveButton),
                 Mouse.cClick
               ])
             ]

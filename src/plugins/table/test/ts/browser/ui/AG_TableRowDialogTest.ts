@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           align: 'right',
           type: 'thead'
         }),
-        TableTestUtils.sClickDialogButton('clicking ok', true),
+        TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
       ]);
     };
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           align: '',
           type: 'thead'
         }),
-        TableTestUtils.sClickDialogButton('clicking ok', true),
+        TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
       ]);
     };
@@ -112,7 +112,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           borderstyle: 'dotted',
           backgroundcolor: '#ff0000'
         }),
-        TableTestUtils.sClickDialogButton('clicking ok', true),
+        TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(
           '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +
@@ -140,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           bordercolor: '',
           borderstyle: '',
         }),
-        TableTestUtils.sClickDialogButton('clicking ok', true),
+        TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(
           '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +
@@ -205,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         TableTestUtils.sOpenTableDialog,
         TableTestUtils.sAssertDialogContents(editor, initialData),
         TableTestUtils.sSetDialogContents(editor, newData),
-        TableTestUtils.sClickDialogButton('clicking ok', true),
+        TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(newHtml),
       ]);
     };

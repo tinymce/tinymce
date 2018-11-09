@@ -27,8 +27,8 @@ const register = function (editor) {
 
     return {
       type: 'listbox',
-      text: 'Font Sizes',
-      tooltip: 'Font Sizes',
+      text: 'Font sizes',
+      tooltip: 'Font sizes',
       values: items,
       fixedWidth: true,
       onPostRender () {
@@ -96,8 +96,8 @@ const register = function (editor) {
 
     return {
       type: 'listbox',
-      text: 'Font Family',
-      tooltip: 'Font Family',
+      text: 'Font family',
+      tooltip: 'Font family',
       values: items,
       fixedWidth: true,
       onPostRender () {

@@ -29,7 +29,7 @@ const opener = function (editor, pluginUrl) {
         buttons: [
           {
             type: 'cancel',
-            name: 'cancel',
+            name: 'close',
             text: 'Close',
             primary: true
           }

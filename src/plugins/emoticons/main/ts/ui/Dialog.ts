@@ -78,7 +78,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     buttons: [
       {
         type: 'cancel',
-        text: 'Cancel'
+        text: 'Close'
       }
     ]
   });
@@ -103,7 +103,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
             {
               type: 'alertbanner',
               level: 'error',
-              icon: '',
+              icon: 'warning',
               text: '<p>Could not load emoticons</p>'
             }
           ]
@@ -111,7 +111,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
         buttons: [
           {
             type: 'cancel',
-            text: 'Cancel'
+            text: 'Close'
           }
         ],
         initialData: { }

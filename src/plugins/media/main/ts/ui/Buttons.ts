@@ -23,8 +23,7 @@ const register = function (editor) {
 
   editor.ui.registry.addMenuItem('media', {
     icon: 'embed',
-    text: 'Media',
-    prependToContext: true,
+    text: 'Media...',
     onAction: () => {
       editor.execCommand('mceMedia');
     }
