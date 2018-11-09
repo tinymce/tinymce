@@ -4,6 +4,7 @@
     "target": "es5",
     "noUnusedLocals": true,
     "module": "es2015",
+    "importHelpers": true,
     "lib": ["es2015"],
     "declaration": true,
     "sourceMap": true,

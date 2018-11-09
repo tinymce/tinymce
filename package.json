@@ -46,7 +46,6 @@
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest",
     "@ephox/swag": "latest",
-    "@ephox/wrap-jsverify": "latest",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",
@@ -68,5 +67,8 @@
     "webpack": "^4.8.3",
     "webpack-dev-server": "3.1.5",
     "webpack-livereload-plugin": "^2.1.1"
+  },
+  "dependencies": {
+    "tslib": "^1.9.3"
   }
 }
