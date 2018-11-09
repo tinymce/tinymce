@@ -195,6 +195,10 @@ define("tinymce/ui/Control", [
 			var elm = self.getEl(), width, height, minWidth, minHeight, autoResize;
 			var startMinWidth, startMinHeight, initialSize;
 
+			if (typeof elm == 'undefined') {
+				return null;
+			}
+
 			// Measure the current element
 			borderBox = self.borderBox = self.borderBox || BoxUtils.measureBox(elm, 'border');
 			self.paddingBox = self.paddingBox || BoxUtils.measureBox(elm, 'padding');
@@ -705,7 +709,7 @@ define("tinymce/ui/Control", [
 
 			self._aria[name] = value;
 
-			if (self.state.get('rendered')) {
+			if (self.state.get('rendered') && (typeof elm != 'undefined' && elm != null)) {
 				elm.setAttribute(name == 'role' ? name : 'aria-' + name, value);
 			}
 

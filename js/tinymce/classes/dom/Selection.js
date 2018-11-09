@@ -492,14 +492,22 @@ define("tinymce/dom/Selection", [
 				}
 			}
 
-			if (!self.win) {
-				return null;
-			}
+			try {
+				if (!self.win) {
+					return null;
+				}
 
-			doc = self.win.document;
+				doc = self.win.document;
 
-			if (typeof doc === 'undefined' || doc === null) {
-				return null;
+				if (typeof doc === 'undefined' || doc === null) {
+					return null;
+				}
+			} catch (e) {
+				if (window.navigator.userAgent.indexOf("Edge") > -1) {
+					return null;
+				} else {
+					throw e;
+				}
 			}
 
 			// Use last rng passed from FocusManager if it's available this enables

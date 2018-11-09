@@ -460,8 +460,13 @@ define("tinymce/ui/Container", [
 			if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
 				self._layout.recalc(self);
 				rect = self.layoutRect();
-				self._lastRect = {x: rect.x, y: rect.y, w: rect.w, h: rect.h};
-				return true;
+
+				if (rect != null) {
+					self._lastRect = {x: rect.x, y: rect.y, w: rect.w, h: rect.h};
+					return true;
+				} else {
+					return false;
+				}
 			}
 		},
 

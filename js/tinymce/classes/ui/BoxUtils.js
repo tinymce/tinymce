@@ -66,6 +66,10 @@ define("tinymce/ui/BoxUtils", [
 		},
 
 		measureBox: function(elm, prefix) {
+			if (typeof elm == 'undefined') {
+				return null;
+			}
+
 			function getStyle(name) {
 				var defaultView = document.defaultView;
 

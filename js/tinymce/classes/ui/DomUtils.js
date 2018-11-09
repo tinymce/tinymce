@@ -55,6 +55,10 @@ define("tinymce/ui/DomUtils", [
 		},
 
 		getSize: function(elm) {
+			if (typeof elm == 'undefined') {
+				return null;
+			}
+
 			var width, height;
 
 			if (elm.getBoundingClientRect) {

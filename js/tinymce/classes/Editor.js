@@ -756,6 +756,10 @@ define("tinymce/Editor", [
 		initContentBody: function(skipWrite) {
 			var self = this, settings = self.settings, targetElm = self.getElement(), doc = self.getDoc(), body, contentCssText;
 
+			if (typeof doc == 'undefined') {
+				return null;
+			}
+
 			// Restore visibility on target element
 			if (!settings.inline) {
 				self.getElement().style.visibility = self.orgVisibility;
@@ -2119,6 +2123,10 @@ define("tinymce/Editor", [
 		 */
 		remove: function() {
 			var self = this;
+
+			if (self.getBody() == null) {
+				return null;
+			}
 
 			if (!self.removed) {
 				self.save();

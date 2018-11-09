@@ -179,6 +179,10 @@ define("tinymce/EditorObservable", [
 		unbindAllNativeEvents: function() {
 			var self = this, name;
 
+			if (self.getBody() == null) {
+				return null;
+			}
+
 			if (self.delegates) {
 				for (name in self.delegates) {
 					self.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);

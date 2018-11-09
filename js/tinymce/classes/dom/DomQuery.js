@@ -525,6 +525,10 @@ define("tinymce/dom/DomQuery", [
 						return hook.get(elm);
 					}
 
+					if (typeof elm == 'undefined') {
+						return null;
+					}
+
 					if (elm.ownerDocument.defaultView) {
 						try {
 							return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
