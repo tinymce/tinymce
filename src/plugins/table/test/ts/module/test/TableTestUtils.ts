@@ -50,8 +50,8 @@ const sAssertApproxElementStructure = (editor, selector, expected) => {
   }));
 };
 
-const sClickDialogButton = (label: string, isOk: boolean) => Logger.t('Close dialog and wait to confirm dialog goes away', GeneralSteps.sequence([
-  Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"].tox-dialog button:contains("' + (isOk ? 'Ok' : 'Cancel') + '")'),
+const sClickDialogButton = (label: string, isSave: boolean) => Logger.t('Close dialog and wait to confirm dialog goes away', GeneralSteps.sequence([
+  Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"].tox-dialog button:contains("' + (isSave ? 'Save' : 'Cancel') + '")'),
   Waiter.sTryUntil(
     'Waiting for confirm dialog to go away',
     UiFinder.sNotExists(TinyDom.fromDom(document.body), '.tox-confirm-dialog'),

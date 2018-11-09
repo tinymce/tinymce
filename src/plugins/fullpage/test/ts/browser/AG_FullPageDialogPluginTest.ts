@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                     classes: [ arr.has('tox-dialog__header') ],
                     children: [
                       s.element('div', {
-                        html: str.is('Document Properties')
+                        html: str.is('Metadata and Document Properties')
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-dialog__draghandle') ],
@@ -218,7 +218,9 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         FocusTools.sIsOnSelector('last', doc, selectors.encodingInput),
 
         Keyboard.sKeydown(doc, Keys.tab(), { }),
-        FocusTools.sIsOnSelector('The ok button should be focused', doc, 'button'),
+        FocusTools.sIsOnSelector('The cancel button should be focused', doc, 'button:contains("Cancel")'),
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        FocusTools.sIsOnSelector('The save button should be focused', doc, 'button:contains("Save")'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         UiFinder.sNotExists(Body.body(), 'div.tox-dialog'),
 

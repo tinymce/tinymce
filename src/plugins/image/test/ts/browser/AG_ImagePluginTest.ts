@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         ]),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ]),
         api.sAssertContent(expectedContent)
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         ]),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ]),
         api.sAssertContent(expectedContent)
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         sAssertDataInApi(name, expectedData),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ])
       ]);

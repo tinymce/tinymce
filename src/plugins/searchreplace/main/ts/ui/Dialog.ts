@@ -99,7 +99,7 @@ const open = function (editor, currentIndexState) {
             {
               type: 'checkbox',
               name: 'wholewords',
-              label: 'Whole words'
+              label: 'Find whole words only'
             }
           ]
         }
@@ -130,7 +130,7 @@ const open = function (editor, currentIndexState) {
       {
         type: 'custom',
         name: 'prev',
-        text: 'Prev',
+        text: 'Previous',
         align: 'end',
         disabled: true,
       },

@@ -22,7 +22,7 @@ const register = function (editor: Editor, database: EmojiDatabase): void {
   });
 
   editor.ui.registry.addMenuItem('emoticons', {
-    text: 'Emoticons',
+    text: 'Emoticons...',
     icon: 'emoji',
     onAction
   });

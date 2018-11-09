@@ -126,10 +126,11 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
-      '<li>b</li>' +
+      '<li>b' +
       '<ol>' +
       '<li>c</li>' +
       '</ol>' +
+      '</li>' +
       '</ol>'
     );
 
@@ -154,14 +155,16 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
 
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
-      '<li>a</li>' +
+      '<li>a' +
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
-      '<li>c</li>' +
+      '</li>' +
+      '<li>c' +
       '<ol>' +
       '<li>d</li>' +
       '</ol>' +
+      '</li>' +
       '</ol>'
     );
 
@@ -246,10 +249,11 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
 
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
-      '<li>a</li>' +
+      '<li>a' +
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
+      '</li>' +
       '<li>c</li>' +
       '</ol>'
     );
@@ -349,6 +353,28 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
       '<li><p>a</p></li>' +
       '<li><p>b</p></li>' +
       '<li><p>c</p></li>' +
+      '</ul>'
+    );
+  });
+
+  suite.test('Outdent nested ul in ol', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol>' +
+        '<li style="list-style-type: none;">' +
+          '<ul>' +
+            '<li>a</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul', 0);
+    LegacyUnit.execCommand(editor, 'Outdent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+        '<li>a</li>' +
       '</ul>'
     );
   });

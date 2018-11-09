@@ -44,7 +44,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
           buttons: [
             {
               type: 'cancel',
-              text: 'cancel'
+              text: 'Close'
             }
           ],
           initialData: {

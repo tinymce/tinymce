@@ -6,9 +6,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -203,6 +201,16 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
         cSetHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>'),
         cReadAction(false, [1], 0),
         cAssertRemoveElementAction([1])
+      ])),
+      Logger.t('Should be removeElement since caret positioned before BR', Chain.asStep(viewBlock, [
+        cSetHtml('<p><span contenteditable="false">A</span>\ufeff<br /><span contenteditable="false">B</span></p>'),
+        cReadAction(true, [0], 1),
+        cAssertRemoveElementAction([0, 2])
+      ])),
+      Logger.t('Should be removeElement since caret positioned after BR', Chain.asStep(viewBlock, [
+        cSetHtml('<p><span contenteditable="false">A</span><br />\ufeff<span contenteditable="false">B</span></p>'),
+        cReadAction(false, [0], 3),
+        cAssertRemoveElementAction([0, 1])
       ]))
     ])),
 

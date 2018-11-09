@@ -31,7 +31,7 @@ export default function () {
   tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
-    toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames),
+    toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames).join(' '),
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks

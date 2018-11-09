@@ -11,6 +11,9 @@
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from './NodeType';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Node } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
 
 const getParentList = function (editor) {
   const selectionStart = editor.selection.getStart(true);
@@ -58,6 +61,10 @@ const getSelectedListItems = function (editor) {
   });
 };
 
+const getSelectedDlItems = (editor: Editor): Node[] => {
+  return Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
+};
+
 const getClosestListRootElm = function (editor, elm) {
   const parentTableCell = editor.dom.getParents(elm, 'TD,TH');
   const root = parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
@@ -65,9 +72,33 @@ const getClosestListRootElm = function (editor, elm) {
   return root;
 };
 
+const findLastParentListNode = (editor: Editor, elm: Node): Option<Node> => {
+  const parentLists = editor.dom.getParents(elm, 'ol,ul', getClosestListRootElm(editor, elm));
+  return Arr.last(parentLists);
+};
+
+const getSelectedLists = (editor: Editor): Node[] => {
+  const firstList = findLastParentListNode(editor, editor.selection.getStart());
+  const subsequentLists = Arr.filter(editor.selection.getSelectedBlocks(), NodeType.isOlUlNode);
+
+  return firstList.toArray().concat(subsequentLists);
+};
+
+const getSelectedListRoots = (editor: Editor): Node[] => {
+  const selectedLists = getSelectedLists(editor);
+  return getUniqueListRoots(editor, selectedLists);
+};
+
+const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
+  const listRoots = Arr.map(lists, (list) => findLastParentListNode(editor, list).getOr(list));
+  return DomQuery.unique(listRoots);
+};
+
 export default {
   getParentList,
   getSelectedSubLists,
   getSelectedListItems,
-  getClosestListRootElm
+  getClosestListRootElm,
+  getSelectedDlItems,
+  getSelectedListRoots
 };

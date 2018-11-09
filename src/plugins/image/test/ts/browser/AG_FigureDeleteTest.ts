@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
         ]),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
         ]),
         tinyApis.sAssertContent('')
       ]),
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
         ]),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Find dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")'),
+          Mouse.cClickOn('button:contains("Save")'),
         ]),
         tinyApis.sAssertContentPresence({ img: 1, figure: 0, figcaption: 0 })
       ])

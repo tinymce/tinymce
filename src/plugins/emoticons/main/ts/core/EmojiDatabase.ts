@@ -41,7 +41,7 @@ const extractGlobal = (url: string): Result<Record<string, any>, any> => {
     delete Global.tinymce[GLOBAL_NAME];
     return result;
   } else {
-    return Result.error(`Url ${url} did not contain the expected format for emoticons`);
+    return Result.error(`URL ${url} did not contain the expected format for emoticons`);
   }
 };
 

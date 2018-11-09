@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
 
     const sWaitForAndSubmitDialog = Chain.asStep(editor, [
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-      Mouse.cClickOn('.tox-button:contains("Ok")')
+      Mouse.cClickOn('.tox-button:contains("Save")')
     ]);
 
     Pipeline.async({}, [

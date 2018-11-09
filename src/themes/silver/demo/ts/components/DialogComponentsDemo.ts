@@ -36,15 +36,14 @@ import { renderCheckbox } from '../../../main/ts/ui/general/Checkbox';
 
 // tslint:disable:no-console
 
-const helpers = setupDemo();
-
-const sharedBackstage: UiFactoryBackstageShared = {
-  getSink: helpers.extras.backstage.shared.getSink,
-  providers: helpers.extras.backstage.shared.providers,
-  interpreter: (x) => x
-};
-
 export default () => {
+  const helpers = setupDemo();
+
+  const sharedBackstage: UiFactoryBackstageShared = {
+    getSink: helpers.extras.backstage.shared.getSink,
+    providers: helpers.extras.backstage.shared.providers,
+    interpreter: (x) => x
+  };
 
   const autocompleteSpec = renderAutocomplete({
     name: 'alpha',
@@ -75,6 +74,7 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
+    placeholder: Option.none(),
     validation: Option.some({
       validator: (s) => s === 'bad' ? 'Bad' : true
     })
@@ -83,6 +83,7 @@ export default () => {
   const textareaSpec = renderTextarea({
     name: 'textarea',
     label: Option.some('Gamma'),
+    placeholder: Option.none(),
     flex: true,
     validation: Option.some({
       validator: (s) => s === 'so bad' ? 'So bad' : true
@@ -112,6 +113,7 @@ export default () => {
       }, sharedBackstage.providers) as any,
       renderInput({
         label: Option.some('Sample input'),
+        placeholder: Option.none(),
         name: 'exampleinputfieldname',
         validation: Option.none()
       }, sharedBackstage.providers) as any
@@ -143,6 +145,7 @@ export default () => {
           }, sharedBackstage.providers) as any,
           renderInput({
             label: Option.some('Sample input'),
+            placeholder: Option.none(),
             name: 'exampleinputfieldname',
             validation: Option.none()
           }, sharedBackstage.providers) as any

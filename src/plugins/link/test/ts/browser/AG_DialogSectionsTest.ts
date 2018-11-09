@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       sCheckSections([
         {
           setting: { key: 'target_list', value },
-          selector: 'label:contains("Target")',
+          selector: 'label:contains("Open link in...")',
           exists
         }
       ])

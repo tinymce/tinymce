@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
           Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
             [
               Chain.fromChains([
-                UiFinder.cFindIn('div > label:contains("Url") + div > input'),
+                UiFinder.cFindIn('div > label:contains("URL") + div > input'),
                 UiControls.cSetValue('http://www.test.com/'),
                 cFakeEvent('keyup')
               ]),
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
           Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
             [
               Chain.fromChains([
-                UiFinder.cFindIn('div > label:contains("Url") + div > input'),
+                UiFinder.cFindIn('div > label:contains("URL") + div > input'),
                 UiControls.cSetValue('http://www.test.com/'),
                 cFakeEvent('paste')
               ]),

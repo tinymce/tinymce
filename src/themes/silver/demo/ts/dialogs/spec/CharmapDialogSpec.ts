@@ -13,8 +13,8 @@ export default {
   buttons: [
     {
       type: 'cancel',
-      name: 'cancel',
-      text: 'Cancel'
+      name: 'close',
+      text: 'Close'
     }
   ],
   initialData: {
