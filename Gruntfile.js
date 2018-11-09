@@ -91,7 +91,11 @@ module.exports = function (grunt) {
                   'tinymce/core': 'lib/globals/tinymce/core'
                 }, [
                   [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
-                ])
+                ]),
+                mappers: [
+                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
+                  swag.mappers.invalidDir('./lib/core/main/ts')
+                ]
               }),
               swag.remapImports()
             ]
@@ -115,7 +119,11 @@ module.exports = function (grunt) {
                   'tinymce/ui': 'lib/ui/main/ts'
                 }, [
                   [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
-                ])
+                ]),
+                mappers: [
+                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
+                  swag.mappers.invalidDir('./lib/core/main/ts')
+                ]
               }),
               swag.remapImports()
             ]
