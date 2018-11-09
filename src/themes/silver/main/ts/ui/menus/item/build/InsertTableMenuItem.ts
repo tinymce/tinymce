@@ -27,7 +27,7 @@ const makeCell = (row, col, labelId) => {
       AddEventsBehaviour.config('insert-table-picker-cell', [
         AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus),
         AlloyEvents.run(SystemEvents.execute(), emitExecute),
-        AlloyEvents.run(NativeEvents.click(), emitExecute)
+        AlloyEvents.run(SystemEvents.tapOrClick(), emitExecute)
       ]),
       Toggling.config({
         toggleClass: 'tox-insert-table-picker__selected',
