@@ -16,6 +16,9 @@
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
+  "dependencies": {
+    "tslib": "^1.9.3"
+  },
   "devDependencies": {
     "@ephox/bedrock": "latest",
     "@ephox/wrap-jsverify": "latest",
