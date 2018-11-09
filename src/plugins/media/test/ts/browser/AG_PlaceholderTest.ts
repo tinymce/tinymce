@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
     return Logger.t(`Test placeholder ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
-      ui.sClickOnUi('click checkbox', Utils.selectors.okayButton),
+      ui.sClickOnUi('click checkbox', Utils.selectors.saveButton),
       Utils.sAssertEditorContent(apis, editor, expected),
       Waiter.sTryUntil('Wait for structure check',
         apis.sAssertContentStructure(struct),
@@ -103,9 +103,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 
     Pipeline.async({},

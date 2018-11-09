@@ -7,7 +7,7 @@ export default {
         name: 'url',
         type: 'urlinput',
         filetype: 'file',
-        label: 'Url'
+        label: 'URL'
       },
       {
         name: 'text',
@@ -38,15 +38,15 @@ export default {
   },
   buttons: [
     {
-      type: 'submit',
-      name: 'ok',
-      text: 'Ok',
-      primary: true
-    },
-    {
       type: 'cancel',
       name: 'cancel',
       text: 'Cancel'
+    },
+    {
+      type: 'submit',
+      name: 'save',
+      text: 'Save',
+      primary: true
     }
   ],
   initialData: {

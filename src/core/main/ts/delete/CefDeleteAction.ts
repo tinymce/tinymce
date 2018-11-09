@@ -18,6 +18,7 @@ import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
 import * as ElementType from 'tinymce/core/dom/ElementType';
 import { Node, Range } from '@ephox/dom-globals';
+import { findPreviousBr, findNextBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 
 const isCompoundElement = (node: Node) => ElementType.isTableCell(Element.fromDom(node)) || ElementType.isListItem(Element.fromDom(node));
 
@@ -115,14 +116,19 @@ const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosit
   }
 };
 
-const read = (root: Node, forward: boolean, rng: Range) => {
+const read = (root: Node, forward: boolean, rng: Range): Option<any> => {
   const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, root, rng);
   const from = CaretPosition.fromRangeStart(normalizedRange);
+  const rootElement = Element.fromDom(root);
 
   if (forward === false && CaretUtils.isAfterContentEditableFalse(from)) {
     return Option.some(DeleteAction.remove(from.getNode(true)));
   } else if (forward && CaretUtils.isBeforeContentEditableFalse(from)) {
     return Option.some(DeleteAction.remove(from.getNode()));
+  } else if (forward === false && CaretUtils.isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from)) {
+    return findPreviousBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode()));
+  } else if (forward && CaretUtils.isAfterContentEditableFalse(from) && isBeforeBr(rootElement, from)) {
+    return findNextBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode()));
   } else {
     return getContentEditableAction(root, forward, from);
   }

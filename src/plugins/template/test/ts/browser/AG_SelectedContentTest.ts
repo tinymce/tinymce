@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="selcontent">This will be replaced</h1>' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<h1 class="selcontent">Text</h1>')
       ]),
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="customSelected">This will be replaced/h1>' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<h1 class="customSelected">Text</h1>')
       ])

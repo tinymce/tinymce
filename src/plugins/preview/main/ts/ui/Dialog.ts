@@ -31,7 +31,7 @@ export const open = (editor) => {
     buttons: [
       {
         type: 'cancel',
-        name: 'cancel',
+        name: 'close',
         text: 'Close',
         primary: true
       }

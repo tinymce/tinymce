@@ -13,7 +13,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failur
           'Dialog closes without error using cancel button',
           [
             tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),
-            tinyUi.sClickOnUi('click on Cancel button', 'div[role="dialog"] .tox-button--secondary')
+            tinyUi.sClickOnUi('click on Close button', 'div[role="dialog"] .tox-button--secondary')
           ]
         ), onSuccess, onFailure);
     },
@@ -31,8 +31,8 @@ UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failur
             buttons: [
               {
                 type: 'cancel',
-                name: 'cancel',
-                text: 'Cancel'
+                name: 'close',
+                text: 'Close'
               }
             ],
           });

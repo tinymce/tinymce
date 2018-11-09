@@ -24,6 +24,7 @@ import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 import { renderLabel } from '../alien/FieldLabeller';
 import ColorSwatch from '../core/color/ColorSwatch';
+import Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
 
 const colorInputChangeEvent = Id.generate('color-change');
@@ -83,7 +84,8 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
           }
         }
       })
-    ])
+    ]),
+    selectOnFocus: false
   });
 
   const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
@@ -100,7 +102,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         if (value === 'custom') {
           colorInputBackstage.colorPicker((value) => {
             emitSwatchChange(colorBit, value);
-            ColorSwatch.addColor(value);
+            Settings.addColor(value);
           }, '#ffffff');
         } else if (value === 'remove') {
           emitSwatchChange(colorBit, '');

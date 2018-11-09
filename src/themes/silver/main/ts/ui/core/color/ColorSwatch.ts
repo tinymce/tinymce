@@ -17,41 +17,6 @@ const getCurrentColor = function (editor, format) {
   return color;
 };
 
-const choiceItem: 'choiceitem' = 'choiceitem';
-
-const defaultColors = [
-  { type: choiceItem, text: 'Black', value: '#1abc9c' },
-  { type: choiceItem, text: 'Black', value: '#2ecc71' },
-  { type: choiceItem, text: 'Black', value: '#3498db' },
-  { type: choiceItem, text: 'Black', value: '#9b59b6' },
-  { type: choiceItem, text: 'Black', value: '#34495e' },
-
-  { type: choiceItem, text: 'Black', value: '#16a085' },
-  { type: choiceItem, text: 'Black', value: '#27ae60' },
-  { type: choiceItem, text: 'Black', value: '#2980b9' },
-  { type: choiceItem, text: 'Black', value: '#8e44ad' },
-  { type: choiceItem, text: 'Black', value: '#2c3e50' },
-
-  { type: choiceItem, text: 'Black', value: '#f1c40f' },
-  { type: choiceItem, text: 'Black', value: '#e67e22' },
-  { type: choiceItem, text: 'Black', value: '#e74c3c' },
-  { type: choiceItem, text: 'Black', value: '#ecf0f1' },
-  { type: choiceItem, text: 'Black', value: '#95a5a6' },
-
-  { type: choiceItem, text: 'Black', value: '#f39c12' },
-  { type: choiceItem, text: 'Black', value: '#d35400' },
-  { type: choiceItem, text: 'Black', value: '#c0392b' },
-  { type: choiceItem, text: 'Black', value: '#bdc3c7' },
-  { type: choiceItem, text: 'Black', value: '#7f8c8d' },
-
-  { type: choiceItem, text: 'Black', value: '#000000' },
-  { type: choiceItem, text: 'Black', value: '#ffffff' }
-];
-
-const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
-);
-
 const applyFormat = function (editor, format, value) {
   editor.undoManager.transact(function () {
     editor.focus();
@@ -78,27 +43,12 @@ const registerCommands = (editor) => {
   });
 };
 
-const mapColors = function (colorMap) {
-  let i;
-  const colors = [];
-
-  for (i = 0; i < colorMap.length; i += 2) {
-    colors.push({
-      text: colorMap[i + 1],
-      value: '#' + colorMap[i],
-      type: 'choiceitem'
-    });
-  }
-
-  return colors;
-};
-
 const calcCols = (colors) => {
   return Math.ceil(Math.sqrt(colors));
 };
 
 const getColorCols = function (editor) {
-  const colors = currentColors.get();
+  const colors = Settings.getCurrentColors();
   const defaultCols = calcCols(colors.length);
   return Settings.getColorCols(editor, defaultCols);
 };
@@ -137,7 +87,7 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((color) => {
-      addColor(color);
+      Settings.addColor(color);
       editor.execCommand('mceApplyTextcolor', format, color);
       onChoice(color);
     }, '#000000');
@@ -152,18 +102,8 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
 
 const getFetch = (hasCustom: boolean) => (callback) => {
   callback(
-    currentColors.get().concat(getAdditionalColors(hasCustom))
+    Settings.getCurrentColors().concat(getAdditionalColors(hasCustom))
   );
-};
-
-const addColor = (color) => {
-  currentColors.set(currentColors.get().concat([
-    {
-      type: 'choiceitem',
-      text: color,
-      value: color
-    }
-  ]));
 };
 
 const registerTextColorButton = (editor, name: string, format: string, tooltip: string) => {
@@ -176,7 +116,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: getFetch(Settings.hasCustomColors(editor)), // TODO: Setting for this, maybe 'custom_colors'?
+      fetch: getFetch(Settings.hasCustomColors(editor)),
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
@@ -234,15 +174,15 @@ const colorPickerDialog = (editor) => (callback, value) => {
     },
     buttons: [
       {
-        type: 'submit',
-        name: 'ok',
-        text: 'Ok',
-        primary: true
-      },
-      {
         type: 'cancel',
         name: 'cancel',
         text: 'Cancel',
+      },
+      {
+        type: 'submit',
+        name: 'save',
+        text: 'Save',
+        primary: true
       }
     ],
     initialData: {
@@ -257,13 +197,10 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  const unmapped = Settings.getColorMap(editor);
-  if (unmapped !== undefined) {
-    currentColors.set(mapColors(unmapped));
-  }
+  Settings.register(editor);
   registerCommands(editor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background Color');
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
-export default { register, addColor, getFetch, colorPickerDialog, getCurrentColor, mapColors, getColorCols, calcCols };
+export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols};

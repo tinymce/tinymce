@@ -18,9 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
     TinyLoader.setup((editor, onSuccess, onFailure) => {
       const doc = Element.fromDom(document);
 
-      const tinyUi = TinyUi(editor, {
-        toolBarSelector: '.tox-toolbar'
-      });
+      const tinyUi = TinyUi(editor);
 
       const sOpenStyleMenu = GeneralSteps.sequence([
         tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')

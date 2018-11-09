@@ -19,6 +19,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         renderInput({
           name: 'input',
           label: Option.some('LabelA'),
+          placeholder: Option.none(),
           validation: Option.none()
         }, providers)
       );

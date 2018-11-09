@@ -26,7 +26,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
         state.set(e.command);
       });
 
-      const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+      const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, browser.isIE() ? [] : [
@@ -49,12 +49,12 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
           tinyApis.sFocus,
           tinyApis.sSetContent('hello test'),
           tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
+          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background color"] + .tox-split-button__chevron'),
           tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
           tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#1abc9c"]'),
           sAssertState('mceApplyTextcolor'),
           tinyApis.sSetSelection([0, 0, 0], 0, [0, 0, 0], 5),
-          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background Color"] + .tox-split-button__chevron'),
+          tinyUi.sClickOnToolbar('click backcolor', 'button[aria-label="Background color"] + .tox-split-button__chevron'),
           tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
           tinyUi.sClickOnUi('click remove color', '.tox-swatch--remove'),
           sAssertState('mceRemoveTextcolor'),

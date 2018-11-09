@@ -242,8 +242,13 @@ const setup = (editor: Editor): RenderInfo => {
       Css.set(outerContainer.element(), 'width', Utils.numToPx(width));
     }
 
-    if (!editor.inline && height) {
-      Css.set(outerContainer.element(), 'height', Utils.numToPx(height));
+    if (!editor.inline) {
+      const pxHeight = Utils.numToPx(height);
+      if (Css.isValidValue('div', 'height', pxHeight)) {
+        Css.set(outerContainer.element(), 'height', pxHeight);
+      } else {
+        Css.set(outerContainer.element(), 'height', '200px');
+      }
     }
 
     return height;

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, fail
   SavePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

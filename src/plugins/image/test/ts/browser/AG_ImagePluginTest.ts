@@ -14,9 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar'
-    });
+    const ui = TinyUi(editor);
 
     const getFrontmostWindow = function () {
       return editor.windowManager.windows[editor.windowManager.windows.length - 1];
@@ -61,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         ]),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ]),
         api.sAssertContent(expectedContent)
@@ -84,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         ]),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ]),
         api.sAssertContent(expectedContent)
@@ -112,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         sAssertDataInApi(name, expectedData),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
 
         ])
       ]);
