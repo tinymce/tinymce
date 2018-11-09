@@ -16,6 +16,7 @@ let plugins = [
 ];
 
 let themes = [
+  'mobile',
   // 'modern', 'mobile', 'inlite', 'silver'
   'silver'
 ];
@@ -283,6 +284,17 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/fonts',
+            src: [
+              '**',
+              '!*.json',
+              '!*.md'
+            ],
+            dest: 'js/tinymce/skins/oxide/fonts'
+          },
+          {
+            expand: true,
+            flatten: true,
+            cwd: 'src/themes/mobile/main/fonts',
             src: [
               '**',
               '!*.json',

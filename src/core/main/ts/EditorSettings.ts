@@ -26,7 +26,7 @@ const sectionResult = Struct.immutable('sections', 'settings');
 const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
 const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = {  };
+const defaultMobileSettings = { theme: 'mobile' };
 
 const normalizePlugins = function (plugins) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
