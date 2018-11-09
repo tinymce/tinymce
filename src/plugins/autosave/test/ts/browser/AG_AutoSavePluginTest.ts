@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
     editor.undoManager.add();
     editor.plugins.autosave.storeDraft();
 
-    window.location.hash = 'test';
+    window.location.hash = 'test' + Math.random().toString(36).substring(7);
 
     LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
 
