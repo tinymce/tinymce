@@ -253,7 +253,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
       'border-color: red; border-style: dashed; background-color: blue;" scope="row">a</th><td>b</td></tr></tbody></table>';
 
-      return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and ok does', [
+      return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and save does', [
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),

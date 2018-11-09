@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', (suc
   PageBreakPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyUi = TinyUi(editor, {toolBarSelector: '.tox-toolbar'});
+    const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'PageBreak: Click on the pagebreak toolbar button and assert pagebreak is inserted', [

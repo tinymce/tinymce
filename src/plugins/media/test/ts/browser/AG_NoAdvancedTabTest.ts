@@ -1,6 +1,6 @@
 import { Chain, Pipeline, UiFinder, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor, ThemeUiChains } from '@ephox/mcagar';
+import { Editor, UiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -10,10 +10,6 @@ import Utils from '../module/test/Utils';
 UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, failure) => {
   Plugin();
   Theme();
-
-  const uiChains = ThemeUiChains({
-    toolBarSelector: '.tox-toolbar',
-  });
 
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Media: if alt source and poster set to false, do not show advance tab', [
@@ -28,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
         }),
         [
           Chain.fromChains([
-            uiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
+            UiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
             Chain.inject(Body.body()),
             UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
             Utils.cNotExists('div.tox-tab:contains(Advanced)')
@@ -47,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
         }),
         [
           Chain.fromChains([
-            uiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
+            UiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
             Chain.inject(Body.body()),
             UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
             Utils.cExists('div.tox-tab:contains(Advanced)')

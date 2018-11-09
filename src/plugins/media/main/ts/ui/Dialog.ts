@@ -201,7 +201,7 @@ const showDialog = function (editor) {
         name: 'source2',
         type: 'input',
         filetype: 'media',
-        label: 'Alternative source'
+        label: 'Alternative image URL'
       }
     );
   }
@@ -211,7 +211,7 @@ const showDialog = function (editor) {
       name: 'poster',
       type: 'input',
       filetype: 'image',
-      label: 'Poster'
+      label: 'Media poster (Image URL)'
     });
   }
 
@@ -239,15 +239,15 @@ const showDialog = function (editor) {
     },
     buttons: [
       {
-        type: 'submit',
-        name: 'ok',
-        text: 'Ok',
-        primary: true
-      },
-      {
         type: 'cancel',
         name: 'cancel',
         text: 'Cancel'
+      },
+      {
+        type: 'submit',
+        name: 'save',
+        text: 'Save',
+        primary: true
       }
     ],
     onSubmit (api) {

@@ -28,7 +28,7 @@ const isToc = (editor) => {
 const register = (editor) => {
   editor.ui.registry.addButton('toc', {
     icon: 'toc',
-    tooltip: 'Table of Contents',
+    tooltip: 'Table of contents',
     onAction: () => editor.execCommand('mceInsertToc'),
     onSetup: toggleState(editor)
   });
@@ -41,7 +41,7 @@ const register = (editor) => {
 
   editor.ui.registry.addMenuItem('toc', {
     icon: 'toc',
-    text: 'Table of Contents',
+    text: 'Table of contents',
     onAction: () => editor.execCommand('mceInsertToc'),
     onSetup: toggleState(editor)
   });

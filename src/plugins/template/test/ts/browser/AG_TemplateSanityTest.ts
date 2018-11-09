@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<strong>c</strong>' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<p><strong>c</strong></p>'),
       ]),
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         tinyApis.sSetSetting('template_replace_values', { name: 'Tester', email: 'test@test.com' }),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<p>Tester test@test.com</p>'),
       ]),
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
             return iframeDoc.body.firstChild !== null;
           })
         ]),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<p><em>this is external</em></p>'),
       ]),

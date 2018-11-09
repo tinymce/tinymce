@@ -29,20 +29,18 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Media: Open dialog, set source value, assert width, close dialog. Reopen dialog, change width, close dialog and assert resize handles are present', [
         Utils.sOpenDialog(ui),
         Utils.sPasteSourceValue(ui, 'a'),
         Utils.sAssertWidthValue(ui, '300'),
-        ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+        ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
         sWaitForResizeHandles(editor),
         Utils.sOpenDialog(ui),
         Utils.sChangeWidthValue(ui, '500'),
-        ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+        ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
         sWaitForResizeHandles(editor),
         Waiter.sTryUntil(
           'Try assert content',

@@ -34,9 +34,9 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
     };
 
     const sSubmitDialog = (docBody) => {
-      return GeneralSteps.sequence(Logger.ts('Clicking on the Ok button to close dialog', [
+      return GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
         FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Ok)'),
+        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
       ]));
     };

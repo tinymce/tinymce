@@ -13,9 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar'
-    });
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -30,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
         ]),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")')
+          Mouse.cClickOn('button:contains("Save")')
         ]),
         tinyApis.sAssertContent('')
       ]),
@@ -46,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
         ]),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Find dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Ok")'),
+          Mouse.cClickOn('button:contains("Save")'),
         ]),
         tinyApis.sAssertContentPresence({ img: 1, figure: 0, figcaption: 0 })
       ])

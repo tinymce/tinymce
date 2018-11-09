@@ -31,8 +31,8 @@ UnitTest.asynctest('Editor (Silver) Configuration Close test', (success, failure
             buttons: [
               {
                 type: 'cancel',
-                name: 'cancel',
-                text: 'Cancel'
+                name: 'close',
+                text: 'Close'
               }
             ],
           });

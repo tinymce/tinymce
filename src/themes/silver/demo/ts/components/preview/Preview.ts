@@ -25,7 +25,7 @@ export default () => {
         {
           type: 'cancel',
           name: 'cancel',
-          text: 'Cancel'
+          text: 'Close'
         }
       ],
       initialData: {

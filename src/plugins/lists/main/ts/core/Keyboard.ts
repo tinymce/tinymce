@@ -9,10 +9,9 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
-import Indent from '../actions/Indent';
-import Outdent from '../actions/Outdent';
 import Settings from '../api/Settings';
 import Delete from './Delete';
+import { outdentListSelection, indentListSelection } from '../actions/Indendation';
 
 const setupTabKey = function (editor) {
   editor.on('keydown', function (e) {
@@ -21,14 +20,11 @@ const setupTabKey = function (editor) {
       return;
     }
 
-    if (editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD')) {
-      e.preventDefault();
-
-      if (e.shiftKey) {
-        Outdent.outdentSelection(editor);
-      } else {
-        Indent.indentSelection(editor);
-      }
+    e.preventDefault();
+    if (e.shiftKey) {
+      outdentListSelection(editor);
+    } else {
+      indentListSelection(editor);
     }
   });
 };

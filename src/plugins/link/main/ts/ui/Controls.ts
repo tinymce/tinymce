@@ -12,11 +12,12 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
+import Settings from '../api/Settings';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
-    tooltip: 'Link',
+    tooltip: 'Insert/edit link',
     onAction: Actions.openDialog(editor),
     onSetup: Actions.toggleActiveState(editor)
   });
@@ -38,7 +39,7 @@ const setupMenuItems = function (editor: Editor) {
 
   editor.ui.registry.addMenuItem('link', {
     icon: 'link',
-    text: 'Link',
+    text: 'Link...',
     shortcut: 'Meta+K',
     onAction: Actions.openDialog(editor)
   });
@@ -73,15 +74,16 @@ const setupContextToolbars = function (editor: Editor) {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => !!Utils.getAnchorElement(editor, node),
+    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor.settings),
     initValue: () => {
-      return Utils.getAnchorElement(editor) || '';
+      const elm = Utils.getAnchorElement(editor);
+      return !!elm ? Utils.getHref(elm) : '';
     },
     commands: [
       {
         type: 'contextformtogglebutton',
         icon: 'link',
-        tooltip: 'link',
+        tooltip: 'Link',
         primary: true,
         onSetup: (buttonApi) => {
           const node = editor.selection.getNode();
@@ -108,7 +110,7 @@ const setupContextToolbars = function (editor: Editor) {
       {
         type: 'contextformtogglebutton',
         icon: 'unlink',
-        tooltip: 'unlink',
+        tooltip: 'Remove link',
         active: false,
         onSetup: () => () => { },
         // TODO: The original inlite action was quite complex. Are we missing something with this?

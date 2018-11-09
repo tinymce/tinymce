@@ -13,9 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor, {
-      toolBarSelector: '.tox-toolbar',
-    });
+    const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Media: Open dialog, assert dimensions fields are not present while media_dimensions is false. Close dialog and assert dialog is not present', [
       Utils.sOpenDialog(ui),
@@ -29,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
           ]
         )
       ]),
-      ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+      ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
       Waiter.sTryUntil(
         'Wait for dialog to close',
         UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),

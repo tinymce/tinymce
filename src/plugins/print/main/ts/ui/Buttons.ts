@@ -16,7 +16,7 @@ const register = function (editor) {
   });
 
   editor.ui.registry.addMenuItem('print', {
-    text: 'Print',
+    text: 'Print...',
     icon: 'print',
     onAction: () => editor.execCommand('mcePrint')
   });
