@@ -35,7 +35,7 @@ UnitTest.asynctest('UiChainsTest', (success, failure) => {
 
   Pipeline.async({}, [
     TinyVersions.sWithVersion('4.8.x', sTestStep(4, 8, 'Insert/edit link', { href: 'http://example.com' })),
-    TinyVersions.sWithVersion('5.0.x', sTestStep(5, 0, 'Link', { url: { value: 'http://example.com' } }))
+    TinyVersions.sWithVersion('5.0.x', sTestStep(5, 0, 'Insert/edit link', { url: { value: 'http://example.com' } }))
   ],  () => {
     success();
   }, failure);
