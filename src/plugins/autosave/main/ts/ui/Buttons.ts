@@ -8,16 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Storage from '../core/Storage';
+import * as Storage from '../core/Storage';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const makeSetupHandler = (editor, started) => (api) => {
+const makeSetupHandler = (editor: Editor, started: Cell<boolean>) => (api) => {
   api.setDisabled(!Storage.hasDraft(editor));
   const editorEventCallback = () => api.setDisabled(!Storage.hasDraft(editor));
   editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
   return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
 };
 
-const register = function (editor, started) {
+const register = (editor: Editor, started: Cell<boolean>) => {
   // TODO: This was moved from makeSetupHandler as it would only be called when the menu item was rendered?
   //       Is it safe to start this process when the plugin is registered?
   Storage.startStoreDraft(editor, started);
@@ -43,6 +45,6 @@ const register = function (editor, started) {
   });
 };
 
-export default {
+export {
   register
 };

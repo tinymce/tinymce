@@ -17,6 +17,7 @@ import NodeType from './NodeType';
 import NormalizeLists from './NormalizeLists';
 import Range from './Range';
 import Selection from './Selection';
+import { flattenListSelection } from '../actions/Indendation';
 
 const findNextCaretContainer = function (editor, rng, isForward, root) {
   let node = rng.startContainer;
@@ -171,7 +172,7 @@ const backspaceDeleteFromListToListCaret = function (editor, isForward) {
       return true;
     } else if (!otherLi) {
       if (!isForward) {
-        ToggleList.removeList(editor);
+        flattenListSelection(editor);
         return true;
       }
     }
