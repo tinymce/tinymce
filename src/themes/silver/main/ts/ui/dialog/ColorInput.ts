@@ -102,7 +102,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         if (value === 'custom') {
           colorInputBackstage.colorPicker((value) => {
             emitSwatchChange(colorBit, value);
-            Settings.addColor(value, Settings.getCurrentColors, Settings.setCurrentColors);
+            Settings.addColor(value);
           }, '#ffffff');
         } else if (value === 'remove') {
           emitSwatchChange(colorBit, '');
@@ -123,7 +123,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         onLtr: () => [ Layout.southwest ]
       }),
       components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors(), Settings.getCurrentColors),
+      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors()),
       onItemAction
     }, sharedBackstage)
   );

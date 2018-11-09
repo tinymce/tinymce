@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
           Assertions.assertEq('Should be none for existing bool setting', true, EditorSettings.getString(fakeEditor, 'boolTrue').isNone());
         })),
 
-        Logger.t('Mobile override (has been disabled)', Step.sync(function () {
+        Logger.t('Mobile override', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
             {},
             'id',
@@ -231,7 +231,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists' },
+            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile'  },
             EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
           );
         })),
