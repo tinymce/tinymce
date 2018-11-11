@@ -11,8 +11,8 @@
   .tox-well {
     border: @well-border-width solid @well-border-color;
     border-radius: @well-border-radius;
+    flex: 1;
     padding: @well-padding;
-    width: 100%;
 
     > *:first-child {
       margin-top: 0;
@@ -27,6 +27,11 @@
     }
   }
 
+  .tox-well--no-padding {
+    padding: 0;
+  }
+
+  // Remove this class
   .mce-codemirror {
     border: @well-border-width solid @well-border-color;
     border-radius: @well-border-radius;
