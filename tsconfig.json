@@ -3,6 +3,7 @@
     "moduleResolution": "node",
     "target": "es5",
     "module": "es2015",
+    "importHelpers": true,
     "lib": ["es2015", "dom"],
     "declaration": true,
     "sourceMap": true,
