@@ -30,7 +30,8 @@
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
-    "@ephox/sugar": "latest"
+    "@ephox/sugar": "latest",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@ephox/agar": "latest",
