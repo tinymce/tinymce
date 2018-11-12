@@ -1,4 +1,5 @@
-Version 5.0.0-preview-4 (TBD)
+Version 5.0.0-preview-5 (TBD)
+Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211
     Fixed contents of the input field being selected on focus instead of just recieving an outline highlight #AP-464
