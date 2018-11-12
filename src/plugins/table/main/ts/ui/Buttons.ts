@@ -8,31 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
 import { getToolbar } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Node } from '@ephox/dom-globals';
 
-const each = Tools.each;
-
 const addButtons = (editor: Editor) => {
-  const menuItems = [];
-  each('inserttable tableprops deletetable | cell row column'.split(' '), (name) => {
-    if (name === '|') {
-      menuItems.push({ text: '-' });
-    } else {
-      menuItems.push(editor.menuItems[name]);
-    }
+  editor.ui.registry.addMenuButton('table', {
+    tooltip: 'Table',
+    icon: 'table',
+    fetch: (callback) => callback('inserttable tableprops deletetable | cell row column')
   });
-
-  // TODO: tricky menubutton type of buttons
-  // editor.ui.registry.addButton('table', {
-  //   text: 'Table',
-  //   icon: 'table',
-  //   onAction: () => {
-  //   // open the menu thingy
-  //   }
-  // });
 
   const cmd = (command) => () => editor.execCommand(command);
 
@@ -136,9 +121,7 @@ const addButtons = (editor: Editor) => {
 
 const addToolbars = (editor: Editor) => {
   const isTable = (table: Node) => {
-    const selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
-
-    return selectorMatched;
+    return editor.dom.is(table, 'table') && editor.getBody().contains(table);
   };
 
   const toolbar = getToolbar(editor);
