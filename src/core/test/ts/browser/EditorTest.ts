@@ -372,7 +372,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
 
     editor.setMode('readonly');
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // TODO FIXME DISABLED-TEST AP-471
+    // TODO FIXME DISABLED-TEST AP-471 TINY-2287
     // Disable reason:
     // 1. editor.theme.panel has been removed in Tiny 5
     // 2. Buttons are not getting set to disabled when in readonly mode
@@ -384,7 +384,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     editor.setMode('design');
     editor.dom.fire(editor.getBody(), 'click');
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // TODO FIXME DISABLED-TEST AP-471
+    // TODO FIXME DISABLED-TEST AP-471 TINY-2287
     // Disable reason: see above
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // LegacyUnit.equal(editor.theme.panel.find('button:last')[2].disabled(), false);
