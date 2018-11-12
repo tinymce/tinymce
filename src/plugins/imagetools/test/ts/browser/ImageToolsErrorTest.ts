@@ -1,15 +1,11 @@
-import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Step, Log } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
-
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-
-import ImageUtils from '../module/test/ImageUtils';
-import { document } from '@ephox/dom-globals';
-
 import 'tinymce/themes/silver/Theme';
+import ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 
