@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { Editor } from 'tinymce/core/api/Editor';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function () {
+UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
