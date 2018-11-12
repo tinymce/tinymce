@@ -14,6 +14,7 @@ import Bookmarks from './bookmark/Bookmarks';
 import NodeType from './dom/NodeType';
 import Parents from './dom/Parents';
 import EditorFocus from './focus/EditorFocus';
+import Settings from './api/Settings';
 
 /**
  * Makes sure that everything gets wrapped in paragraphs.
@@ -57,7 +58,7 @@ const shouldRemoveTextNode = (blockElements, node) => {
 };
 
 const addRootBlocks = function (editor) {
-  const settings = editor.settings, dom = editor.dom, selection = editor.selection;
+  const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema, blockElements = schema.getBlockElements();
   let node = selection.getStart();
   const rootNode = editor.getBody();
@@ -66,8 +67,7 @@ const addRootBlocks = function (editor) {
   let tempNode, wrapped, restoreSelection;
   let rootNodeName, forcedRootBlock;
 
-  forcedRootBlock = settings.forced_root_block;
-
+  forcedRootBlock = Settings.getForcedRootBlock(editor);
   if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
     return;
   }
@@ -121,7 +121,7 @@ const addRootBlocks = function (editor) {
 };
 
 const setup = function (editor) {
-  if (editor.settings.forced_root_block) {
+  if (Settings.getForcedRootBlock(editor)) {
     editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
   }
 };

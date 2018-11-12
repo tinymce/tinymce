@@ -60,7 +60,7 @@ const getForcedRootBlock = (editor: Editor): string => {
   }
 
   const block = editor.getParam('forced_root_block', 'p');
-  return block === false ? '' : block;
+  return block === false ? '' : block === true ? 'p' : block;
 };
 
 const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> => {

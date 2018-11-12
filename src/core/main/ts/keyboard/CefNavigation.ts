@@ -21,6 +21,7 @@ import * as RangeNodes from '../selection/RangeNodes';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
 import { Range, Element } from '@ephox/dom-globals';
+import Settings from '../api/Settings';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const getSelectedNode = RangeNodes.getSelectedNode;
@@ -146,7 +147,7 @@ const moveToCeFalseVertically = function (direction: LineWalker.VDirection, edit
 };
 
 const createTextBlock = (editor): Element => {
-  const textBlock = editor.dom.create(editor.settings.forced_root_block);
+  const textBlock = editor.dom.create(Settings.getForcedRootBlock(editor));
 
   if (!Env.ie || Env.ie >= 11) {
     textBlock.innerHTML = '<br data-mce-bogus="1">';
