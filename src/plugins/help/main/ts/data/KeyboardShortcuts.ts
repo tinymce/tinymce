@@ -8,37 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import { ShortcutActionPairType } from '../ui/KeyboardShortcutsTab';
-import Env from '../../../../../core/main/ts/api/Env';
-
-const meta = Env.mac ? '\u2318' : 'Ctrl';
-const access = Env.mac ? 'Ctrl + Alt' : 'Shift + Alt';
 
 const shortcuts: ShortcutActionPairType[] = [
-  { shortcut: meta + ' + B', action: 'Bold' },
-  { shortcut: meta + ' + I', action: 'Italic' },
-  { shortcut: meta + ' + U', action: 'Underline' },
-  { shortcut: meta + ' + A', action: 'Select all' },
-  { shortcut: meta + ' + Y or ' + meta + ' + Shift + Z', action: 'Redo' },
-  { shortcut: meta + ' + Z', action: 'Undo' },
-  { shortcut: access + ' + 1', action: 'Header 1' },
-  { shortcut: access + ' + 2', action: 'Header 2' },
-  { shortcut: access + ' + 3', action: 'Header 3' },
-  { shortcut: access + ' + 4', action: 'Header 4' },
-  { shortcut: access + ' + 5', action: 'Header 5' },
-  { shortcut: access + ' + 6', action: 'Header 6' },
-  { shortcut: access + ' + 7', action: 'Paragraph' },
-  { shortcut: access + ' + 8', action: 'Div' },
-  { shortcut: access + ' + 9', action: 'Address' },
-  { shortcut: 'Alt + F9', action: 'Focus to menubar' },
-  { shortcut: 'Alt + F10', action: 'Focus to toolbar' },
-  { shortcut: 'Alt + F11', action: 'Focus to element path' },
-  {
-    shortcut: 'Ctrl + F9',
-    action: 'Focus to contextual toolbar'
-  },
-  { shortcut: meta + ' + K', action: 'Insert link (if link plugin activated)' },
-  { shortcut: meta + ' + S', action: 'Save (if save plugin activated)' },
-  { shortcut: meta + ' + F', action: 'Find (if searchreplace plugin activated)' }
+  { shortcuts: ['Ctrl + B'], action: 'Bold' },
+  { shortcuts: ['Ctrl + I'], action: 'Italic' },
+  { shortcuts: ['Ctrl + U'], action: 'Underline' },
+  { shortcuts: ['Ctrl + A'], action: 'Select all' },
+  { shortcuts: ['Ctrl + Y', 'Ctrl + Shift + Z'], action: 'Redo' },
+  { shortcuts: ['Ctrl + Z'], action: 'Undo' },
+  { shortcuts: ['Ctrl + Alt + 1'], action: 'Header 1' },
+  { shortcuts: ['Ctrl + Alt + 2'], action: 'Header 2' },
+  { shortcuts: ['Ctrl + Alt + 3'], action: 'Header 3' },
+  { shortcuts: ['Ctrl + Alt + 4'], action: 'Header 4' },
+  { shortcuts: ['Ctrl + Alt + 5'], action: 'Header 5' },
+  { shortcuts: ['Ctrl + Alt + 6'], action: 'Header 6' },
+  { shortcuts: ['Ctrl + Alt + 7'], action: 'Paragraph' },
+  { shortcuts: ['Ctrl + Alt + 8'], action: 'Div' },
+  { shortcuts: ['Ctrl + Alt + 9'], action: 'Address' },
+  { shortcuts: ['Alt + 0'], action: 'Open help dialog' },
+  { shortcuts: ['Alt + F9'], action: 'Focus to menubar' },
+  { shortcuts: ['Alt + F10'], action: 'Focus to toolbar' },
+  { shortcuts: ['Alt + F11'], action: 'Focus to element path' },
+  { shortcuts: ['Ctrl + F9'], action: 'Focus to contextual toolbar' },
+  { shortcuts: ['Ctrl + K'], action: 'Insert link (if link plugin activated)' },
+  { shortcuts: ['Ctrl + S'], action: 'Save (if save plugin activated)' },
+  { shortcuts: ['Ctrl + F'], action: 'Find (if searchreplace plugin activated)' },
+  { shortcuts: ['Ctrl + Shift + F'], action: 'Switch to or from fullscreen mode' }
 ];
 
 export default {
