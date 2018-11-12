@@ -7,7 +7,8 @@
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/sand": "latest",
-    "@ephox/sugar": "latest"
+    "@ephox/sugar": "latest",
+    "tslib": "^1.9.3"
   },
   "files": [
     "lib/main",
