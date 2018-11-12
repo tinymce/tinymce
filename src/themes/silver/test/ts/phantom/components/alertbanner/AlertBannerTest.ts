@@ -4,7 +4,6 @@ import { UnitTest } from '@ephox/bedrock';
 
 import { renderAlertBanner } from '../../../../../main/ts/ui/general/AlertBanner';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
-import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
