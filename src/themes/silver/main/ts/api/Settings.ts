@@ -34,6 +34,8 @@ const getMaxHeightSetting = (editor): Option<number> => Option.from(editor.getPa
 const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.from(editor.getParam('style_formats')).filter(Type.isArray);
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 
+const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
+
 export {
   getSkinUrl,
   isSkinDisabled,
@@ -43,5 +45,6 @@ export {
   getMaxWidthSetting,
   getMaxHeightSetting,
   getUserStyleFormats,
-  isMergeStyleFormats
+  isMergeStyleFormats,
+  getRemovedMenuItems
 };
