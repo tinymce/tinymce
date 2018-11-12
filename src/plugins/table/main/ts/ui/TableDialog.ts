@@ -304,15 +304,15 @@ const open = (editor, isNew?) => {
     onSubmit: Fun.curry(onSubmitTableForm, editor, tableElm),
     buttons: [
       {
-        type: 'submit',
-        name: 'ok',
-        text: 'Ok',
-        primary: true
-      },
-      {
         type: 'cancel',
         name: 'cancel',
         text: 'Cancel',
+      },
+      {
+        type: 'submit',
+        name: 'save',
+        text: 'Save',
+        primary: true
       }
     ],
     initialData: data

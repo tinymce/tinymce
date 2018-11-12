@@ -36,12 +36,6 @@ const defaultColors = [
 const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
   defaultColors
 );
-const currentForeColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
-);
-const currentBackColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
-);
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   let i;
@@ -70,14 +64,6 @@ const getColorMap = (editor: Editor): string[] => {
   return editor.getParam('color_map');
 };
 
-const getForeColorMap = (editor: Editor): string[] => {
-  return editor.getParam('forecolor_map', getColorMap(editor));
-};
-
-const getBackColorMap = (editor: Editor): string[] => {
-  return editor.getParam('backcolor_map', getColorMap(editor));
-};
-
 const setColorsFromMap = (editor: Editor, getter: (editor: Editor) => string[], setter: (colors) => void): void => {
   const unmapped = getter(editor);
   if (unmapped !== undefined) {
@@ -90,46 +76,20 @@ const setColors = (editor: Editor): void => {
   setColorsFromMap(editor, getColorMap, setCurrentColors);
 };
 
-const setForeColors = (editor: Editor): void => {
-  setColorsFromMap(editor, getForeColorMap, setCurrentForeColors);
-};
-
-const setBackColors = (editor: Editor): void => {
-  setColorsFromMap(editor, getBackColorMap, setCurrentBackColors);
-};
-
 const register = (editor: Editor): void => {
   setColors(editor);
-  setForeColors(editor);
-  setBackColors(editor);
 };
 
 const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
   return currentColors.get();
 };
 
-const getCurrentForeColors = (): Menu.ChoiceMenuItemApi[] => {
-  return currentForeColors.get();
-};
-
-const getCurrentBackColors = (): Menu.ChoiceMenuItemApi[] => {
-  return currentBackColors.get();
-};
-
 const setCurrentColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
   currentColors.set(colors);
 };
 
-const setCurrentForeColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
-  currentForeColors.set(colors);
-};
-
-const setCurrentBackColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
-  currentBackColors.set(colors);
-};
-
-const addColor = (color: string, getter: () => Menu.ChoiceMenuItemApi[], setter: (colors: Menu.ChoiceMenuItemApi[]) => void) => {
-  setter(getter().concat([
+const addColor = (color: string) => {
+  setCurrentColors(getCurrentColors().concat([
     {
       type: 'choiceitem',
       text: color,
@@ -145,10 +105,6 @@ export default {
   getColorMap,
   register,
   getCurrentColors,
-  getCurrentForeColors,
-  getCurrentBackColors,
   setCurrentColors,
-  setCurrentForeColors,
-  setCurrentBackColors,
   addColor
 };

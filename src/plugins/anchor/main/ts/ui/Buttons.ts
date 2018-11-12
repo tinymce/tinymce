@@ -18,7 +18,7 @@ const register = function (editor) {
 
   editor.ui.registry.addMenuItem('anchor', {
     icon: 'bookmark',
-    text: 'Anchor',
+    text: 'Anchor...',
     onAction: () => editor.execCommand('mceAnchor')
   });
 };

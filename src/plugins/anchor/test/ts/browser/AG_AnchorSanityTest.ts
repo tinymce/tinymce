@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
         tinyUi.sClickOnToolbar('click anchor button', 'button[aria-label="Anchor"]'),
         tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog  input'),
         sType('abc'),
-        tinyUi.sClickOnUi('click on OK btn', 'div.tox-dialog__footer button.tox-button:not(.tox-button--secondary)'),
+        tinyUi.sClickOnUi('click on Save btn', 'div.tox-dialog__footer button.tox-button:not(.tox-button--secondary)'),
         Waiter.sTryUntil('wait for anchor',
           tinyApis.sAssertContentPresence(
             { 'a.mce-item-anchor': 1 }

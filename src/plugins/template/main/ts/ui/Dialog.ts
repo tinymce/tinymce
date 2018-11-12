@@ -104,11 +104,13 @@ const open = (editor, templateList) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {
+        api.block('Loading...');
         getTemplateContent(t).then((previewHtml) => {
           const previewContent = getPreviewContent(editor, previewHtml);
           api.setData({
             preview: previewContent
           });
+          api.unblock();
         });
       });
     }
@@ -156,15 +158,15 @@ const open = (editor, templateList) => {
       initialData,
       buttons: [
         {
-          type: 'submit',
-          name: 'ok',
-          text: 'Ok',
-          primary: true
-        },
-        {
           type: 'cancel',
           name: 'cancel',
           text: 'Cancel',
+        },
+        {
+          type: 'submit',
+          name: 'save',
+          text: 'Save',
+          primary: true
         }
       ],
       onSubmit: onSubmit(templates),

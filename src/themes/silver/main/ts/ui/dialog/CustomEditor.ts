@@ -27,7 +27,7 @@ export const renderCustomEditor = (spec: CustomEditorFoo): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-custom-editor' ]
+      classes: [ 'tox-well', 'tox-well--no-padding' ]
     },
     behaviours: Behaviour.derive([
       AddEventsBehaviour.config('editor-foo-events', [

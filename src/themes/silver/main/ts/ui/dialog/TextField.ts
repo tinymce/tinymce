@@ -67,7 +67,10 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
 
   const pField = AlloyFormField.parts().field({
     tag: spec.multiline === true ? 'textarea' : 'input',
-    inputAttributes: {},
+    inputAttributes: spec.placeholder.fold(
+      () => {},
+      (placeholder) => ({ placeholder: providersBackstage.translate(placeholder) })
+    ),
     inputClasses: [spec.classname],
     inputBehaviours: Behaviour.derive(
       Arr.flatten<NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>([
@@ -96,6 +99,7 @@ export interface TextFieldFoo extends BaseTextFieldFoo {
 export interface BaseTextFieldFoo {
   name: string;
   label: Option<string>;
+  placeholder: Option<string>;
   validation: Option<{
     validator: Validator;
     validateOnLoad?: boolean
@@ -118,6 +122,7 @@ const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProvi
     name: spec.name,
     multiline: false,
     label: spec.label,
+    placeholder: spec.placeholder,
     flex: false,
     classname: 'tox-textfield',
     validation: Option.none()
@@ -129,6 +134,7 @@ const renderTextarea = (spec: TextareaFoo, providersBackstage: UiFactoryBackstag
     name: spec.name,
     multiline: true,
     label: spec.label,
+    placeholder: spec.placeholder,
     flex: spec.flex,
     classname: 'tox-textarea',
     validation: Option.none(),

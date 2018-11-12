@@ -29,7 +29,7 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
                 UiControls.cSetValue('abc')
               ]),
               Chain.fromChains([
-                UiFinder.cFindIn('button:contains("Ok")'),
+                UiFinder.cFindIn('button:contains("Save")'),
                 Mouse.cClick
               ])
             ]

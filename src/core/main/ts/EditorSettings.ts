@@ -25,8 +25,9 @@ export interface ParamTypeMap {
 const sectionResult = Struct.immutable('sections', 'settings');
 const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
+const isPhone = detection.deviceType.isiPhone();
 const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = {  };
+const defaultMobileSettings = isPhone ? { theme: 'mobile' } : { };
 
 const normalizePlugins = function (plugins) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -81,7 +82,7 @@ const getDefaultSettings = function (id, documentBaseUrl, editor) {
     forced_root_block: 'p',
     hidden_input: true,
     render_ui: true,
-    indentation: '30px',
+    indentation: '40px',
     inline_styles: true,
     convert_fonts_to_spans: true,
     indent: 'simple',

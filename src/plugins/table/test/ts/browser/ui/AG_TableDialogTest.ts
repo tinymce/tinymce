@@ -272,7 +272,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         backgroundcolor: '#0000ff'
       };
 
-      return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and ok does', [
+      return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and save does', [
         tinyApis.sSetSetting('table_class_list', [
           {title: 'None', value: ''},
           {title: 'Dog', value: 'dog'},

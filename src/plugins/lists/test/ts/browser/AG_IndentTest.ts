@@ -24,7 +24,11 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
 
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol>' +
       '<li>a</li>' +
+      '</ol>' +
+      '</li>' +
       '</ol>'
     );
 
@@ -186,9 +190,13 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
 
     LegacyUnit.equal(editor.getContent(),
       '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol>' +
       '<li>a' +
       '<ol>' +
       '<li>b</li>' +
+      '</ol>' +
+      '</li>' +
       '</ol>' +
       '</li>' +
       '</ol>'
@@ -338,6 +346,36 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
         '</li>' +
         '<li><p>c</p></li>' +
       '</ul>'
+    );
+  });
+
+  suite.test('Indent already indented last li, ul in ol', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol>' +
+        '<li>a' +
+          '<ul>' +
+            '<li>b</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul li', 0);
+    LegacyUnit.execCommand(editor, 'Indent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ol>' +
+        '<li>a' +
+          '<ul>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>b</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ol>'
     );
   });
 
