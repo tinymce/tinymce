@@ -1,1 +1,5 @@
-No external production dependencies as of 2017-09-19
+Dependency: 
+  name: tslib
+  version: 1.9.3
+  repository: https://github.com/Microsoft/tslib
+  licenses: Apache-2.0
