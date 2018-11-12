@@ -1,10 +1,14 @@
-const gulpSvgroup = require('@ephox/svgroup/gulp-svgroup');
-const svgroup = require('@ephox/svgroup');
+var verifyComposition = require('@ephox/oxide-icons-tools/oxide-verify-composition');
+var svgo = require('@ephox/oxide-icons-tools/oxide-svgo');
+var eventStream = require('event-stream');
+var ts = require('gulp-typescript');
 var inject = require('gulp-inject');
-var merge = require('merge-stream');
+var rename = require("gulp-rename");
 var clean = require('gulp-clean');
-var svgo = require('gulp-svgo');
+var cat = require('gulp-cat');
+var path = require('path');
 var gulp = require('gulp');
+
 
 gulp.task('clean', function () {
   return gulp.src(['./dist', './scratch'], {
@@ -14,75 +18,64 @@ gulp.task('clean', function () {
   .pipe(clean());
 });
 
-gulp.task('icons', () => {
-  const minifiedIcons = gulp.src('src/svg/**/*.svg')
-  .pipe(svgo({
-    floatPrecision: 1,
-    plugins: [{
-      removeTitle: true
-    }, {
-      cleanupIDs: false
-    }, {
-      removeAttrs:{
-        attrs: 'fill'
-      }
-    }, {
-      removeXMLNS: true
-    }]
-  }));
+gulp.task('minify', function () {
+  return gulp.src('src/svg/**/*.svg')
+  .pipe(svgo())
+  .pipe(gulp.dest('scratch/minifiedSvgs'));
+});
 
-  const iconsJs = minifiedIcons.pipe(gulpSvgroup({
-    producer: svgroup.providerProducer,
-    options: {
-      filename: 'IconsRaw',
-      normalizeKeys: false,
-      quoteType: 'single',
-      quoteKeys: true,
-    }
-  }))
-  .pipe(gulp.dest('scratch'));
+gulp.task('verifyComposition', function () {
+  return gulp.src('src/svg/**/*.svg')
+  .pipe(verifyComposition())
+  .pipe(cat());
+});
 
-  const iconsPreview = minifiedIcons.pipe(gulpSvgroup({
-    producer: svgroup.previewProducer,
-    options: {
-      filename: 'Icons.html',
-      title: `Tiny Oxide Theme Icons`,
-    }
-  }))
+gulp.task('IconsHtml', function () {
+  return gulp.src('./src/templates/Icons.html')
+  .pipe(svgHtmlInjector())
   .pipe(gulp.dest('dist/html'));
-
-  return merge(iconsJs, iconsPreview);
 });
 
-gulp.task('copy', () => {
-  return gulp.src('./src/main/Main.ts')
-  .pipe(gulp.dest('dist/ts'));
-})
-
-gulp.task('inject', () => {
-  return gulp.src('./src/templates/Icons.ts')
-  .pipe(inject(gulp.src(['./scratch/IconsRaw']), {
-    starttag: '/* start-icon-inject */',
-    endtag: '/* end-icon-inject */',
-    removeTags: true,
-    transform: (path, file) => {
-      return file.contents.toString()
-    }
-  }))
-  .pipe(gulp.dest('dist/ts'));
-});
-
-gulp.task('injectTinymce', () => {
+gulp.task('TinymceIcons', function () {
   return gulp.src('./src/templates/TinymceIcons.js')
-  .pipe(inject(gulp.src(['./scratch/IconsRaw']), {
-    starttag: '/* start-icon-inject */',
-    endtag: '/* end-icon-inject */',
-    removeTags: true,
-    transform: (path, file) => {
-      return file.contents.toString()
-    }
-  }))
+  .pipe(svgJsInjector())
   .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('default', gulp.series('clean', 'icons', 'inject', 'injectTinymce', 'copy'));
+gulp.task('IconsTs', function () {
+  var populated = gulp.src('./src/templates/Icons.ts').pipe(svgJsInjector());
+  return eventStream.merge(
+    populated.pipe(ts({ module: 'commonjs' })).pipe(rename('IconsCjs.js')),
+    populated.pipe(ts({ module: 'es2015', "declaration": true }))
+  ).pipe(gulp.dest('dist/js'));
+});
+
+function svgJsInjector () {
+  return inject(gulp.src(['./scratch/minifiedSvgs/*.svg']), {
+    starttag: '/* start-icon-inject */',
+    endtag: '/* end-icon-inject */',
+    removeTags: true,
+    transform: function (filepath, file) {
+      var name = path.parse(file.basename).name;
+      var content = file.contents.toString();
+      return `  '${name}': '${content}',\n`;
+    }
+  });
+}
+
+function svgHtmlInjector () {
+  return inject(gulp.src(['./scratch/minifiedSvgs/*.svg']), {
+    starttag: '<!-- start-icon-inject -->',
+    endtag: '<!-- end-icon-inject -->',
+    removeTags: true,
+    transform: function (filepath, file) {
+      var name = path.parse(file.basename).name;
+      var content = file.contents.toString();
+      return `  <article title="${name}">\n    ${content}\n  </article>\n\n`;
+    }
+  });
+}
+
+gulp.task('inject', gulp.parallel(['IconsHtml', 'IconsTs', 'TinymceIcons']));
+
+gulp.task('default', gulp.series('clean', 'minify', 'verifyComposition', 'inject'));

@@ -1,1 +1,3 @@
-export const getAll = () => (/* start-icon-inject *//* end-icon-inject */);
+export const getAll = () => ({
+/* start-icon-inject *//* end-icon-inject */
+});
