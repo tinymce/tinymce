@@ -67,5 +67,8 @@
     "webpack": "^4.8.3",
     "webpack-dev-server": "3.1.5",
     "webpack-livereload-plugin": "^2.1.1"
+  },
+  "dependencies": {
+    "tslib": "^1.9.3"
   }
 }
