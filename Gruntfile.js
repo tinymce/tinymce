@@ -58,6 +58,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -84,6 +85,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -111,6 +113,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
