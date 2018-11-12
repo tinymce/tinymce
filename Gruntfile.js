@@ -16,6 +16,7 @@ let plugins = [
 ];
 
 let themes = [
+  'mobile',
   // 'modern', 'mobile', 'inlite', 'silver'
   'silver'
 ];
@@ -90,7 +91,11 @@ module.exports = function (grunt) {
                   'tinymce/core': 'lib/globals/tinymce/core'
                 }, [
                   [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
-                ])
+                ]),
+                mappers: [
+                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
+                  swag.mappers.invalidDir('./lib/core/main/ts')
+                ]
               }),
               swag.remapImports()
             ]
@@ -114,7 +119,11 @@ module.exports = function (grunt) {
                   'tinymce/ui': 'lib/ui/main/ts'
                 }, [
                   [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
-                ])
+                ]),
+                mappers: [
+                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
+                  swag.mappers.invalidDir('./lib/core/main/ts')
+                ]
               }),
               swag.remapImports()
             ]
@@ -283,6 +292,17 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/fonts',
+            src: [
+              '**',
+              '!*.json',
+              '!*.md'
+            ],
+            dest: 'js/tinymce/skins/oxide/fonts'
+          },
+          {
+            expand: true,
+            flatten: true,
+            cwd: 'src/themes/mobile/main/fonts',
             src: [
               '**',
               '!*.json',

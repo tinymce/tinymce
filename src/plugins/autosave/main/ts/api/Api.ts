@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Storage from '../core/Storage';
-
-// Inlined the curry function since adding Fun without tree shaking to every plugin would produce a lot of bloat
-const curry = function (f, editor) {
-  return function () {
-    const args = Array.prototype.slice.call(arguments);
-    return f.apply(null, [editor].concat(args));
-  };
-};
+import * as Storage from '../core/Storage';
+import { Fun } from '@ephox/katamari';
 
 const get = function (editor) {
   return {
-    hasDraft: curry(Storage.hasDraft, editor),
-    storeDraft: curry(Storage.storeDraft, editor),
-    restoreDraft: curry(Storage.restoreDraft, editor),
-    removeDraft: curry(Storage.removeDraft, editor),
-    isEmpty: curry(Storage.isEmpty, editor)
+    hasDraft: Fun.curry(Storage.hasDraft, editor),
+    storeDraft: Fun.curry(Storage.storeDraft, editor),
+    restoreDraft: Fun.curry(Storage.restoreDraft, editor),
+    removeDraft: Fun.curry(Storage.removeDraft, editor),
+    isEmpty: Fun.curry(Storage.isEmpty, editor)
   };
 };
 
-export default {
+export {
   get
 };

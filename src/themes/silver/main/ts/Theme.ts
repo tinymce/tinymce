@@ -1,24 +1,15 @@
 import { Debugging } from '@ephox/alloy';
 import { Fun, Id, Merger, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { Editor } from 'tinymce/core/api/Editor';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 
-import { renderMobileTheme } from '../../../mobile/main/ts/Theme';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import Render, { RenderInfo } from './Render';
 import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
-import { Editor } from 'tinymce/core/api/Editor';
 
 ThemeManager.add('silver', (editor: Editor) => {
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch();
-
-  if (isTouch && !editor.getParam('inline', false, 'boolean')) {
-    return renderMobileTheme(editor);
-  }
-
   const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
 
   FormatControls.setup(editor);

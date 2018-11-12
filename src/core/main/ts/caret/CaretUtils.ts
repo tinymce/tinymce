@@ -8,13 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Fun from '../util/Fun';
 import TreeWalker from '../api/dom/TreeWalker';
 import NodeType from '../dom/NodeType';
 import * as CaretContainer from './CaretContainer';
 import * as CaretCandidate from './CaretCandidate';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { Option } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import { HDirection } from 'tinymce/core/caret/CaretWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 import { Node, Range, Text } from '@ephox/dom-globals';
@@ -26,7 +25,6 @@ const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
-const curry = Fun.curry;
 const isElement = NodeType.isElement;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isForwards = (direction: HDirection) => direction > 0;
@@ -179,13 +177,13 @@ const lean = (left: boolean, root: Node, node: Node): Node => {
   return null;
 };
 
-const before = curry(beforeAfter, true) as (node: Node) => Range;
-const after = curry(beforeAfter, false) as (node: Node) => Range;
+const before = Fun.curry(beforeAfter, true) as (node: Node) => Range;
+const after = Fun.curry(beforeAfter, false) as (node: Node) => Range;
 
 const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   let node, container, offset, location;
-  const leanLeft = curry(lean, true, root);
-  const leanRight = curry(lean, false, root);
+  const leanLeft = Fun.curry(lean, true, root);
+  const leanRight = Fun.curry(lean, false, root);
 
   container = range.startContainer;
   offset = range.startOffset;
@@ -312,10 +310,10 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-const isBeforeContentEditableFalse = curry(isNextToContentEditableFalse, 0) as (caretPosition: CaretPosition) => boolean;
-const isAfterContentEditableFalse = curry(isNextToContentEditableFalse, -1) as (caretPosition: CaretPosition) => boolean;
-const isBeforeTable = curry(isNextToTable, 0) as (caretPosition: CaretPosition) => boolean;
-const isAfterTable = curry(isNextToTable, -1) as (caretPosition: CaretPosition) => boolean;
+const isBeforeContentEditableFalse = Fun.curry(isNextToContentEditableFalse, 0);
+const isAfterContentEditableFalse = Fun.curry(isNextToContentEditableFalse, -1);
+const isBeforeTable = Fun.curry(isNextToTable, 0);
+const isAfterTable = Fun.curry(isNextToTable, -1);
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
   return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
