@@ -256,10 +256,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     body.dir = settings.directionality;
   }
 
-  if (settings.nowrap) {
-    body.style.whiteSpace = 'nowrap';
-  }
-
   if (settings.protect) {
     editor.on('BeforeSetContent', function (e) {
       Tools.each(settings.protect, function (pattern) {
