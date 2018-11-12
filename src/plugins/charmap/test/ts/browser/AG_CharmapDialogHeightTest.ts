@@ -8,7 +8,7 @@ import { Body, Element, Css, Traverse } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import { Result } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success, failure) => {
   CharmapPlugin();
 
   // Move into shared library
