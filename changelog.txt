@@ -1,5 +1,6 @@
 Version 5.0.0-preview-5 (TBD)
     Added error handling for when forced_root_block config option is set to true #TINY-2261
+    Added functionality for the removed_menuitems config option #TINY-2184
 Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211
