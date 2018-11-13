@@ -160,7 +160,7 @@ const colorPickerDialog = (editor) => (callback, value) => {
 
   const submit = getOnSubmit(callback);
   editor.windowManager.open({
-    title: 'Color',
+    title: 'Color Picker',
     size: 'normal',
     body: {
       type: 'panel',
