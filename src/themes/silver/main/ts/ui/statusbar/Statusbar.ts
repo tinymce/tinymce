@@ -39,9 +39,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       dom: {
         tag: 'span',
         classes: [ 'tox-statusbar__branding' ],
-        styles: {
-          float: 'right'
-        },
         innerHtml: html
       },
     };
