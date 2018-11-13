@@ -2,12 +2,12 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 
-import { ItemResponse } from '../MenuItems';
 import { renderStyleStructure } from '../structure/StyleStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import { Merger } from '@ephox/katamari';
 import * as ItemClasses from '../ItemClasses';
 import { renderCheckmark, renderIcon } from '../structure/ItemSlices';
+import ItemResponse from '../ItemResponse';
 
 const renderStyleItem = (spec: Menu.ToggleMenuItem | Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
   const checkMark = spec.type === 'togglemenuitem' && spec.active ? renderCheckmark(providersBackstage.icons) : renderIcon('');

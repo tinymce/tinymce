@@ -32,10 +32,10 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
-import { ItemResponse } from '../../menus/item/MenuItems';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/SingleMenu';
+import ItemResponse from '../../menus/item/ItemResponse';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>;
