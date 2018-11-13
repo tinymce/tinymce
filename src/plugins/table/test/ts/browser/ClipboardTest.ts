@@ -38,6 +38,25 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function () {
     LegacyUnit.setSelection(editor, end, 0);
   };
 
+  suite.test('selection.getContent with format equal to text', function (editor) {
+    editor.focus();
+    editor.setContent(
+      '<table>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td>a</td>' +
+      '<td>b</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    selectRangeXY(editor, 'table tr td:nth-child(1)', 'table tr td:nth-child(2)');
+
+    LegacyUnit.equal(
+      editor.selection.getContent({ format: 'text' }), 'ab');
+  });
+
   suite.test('mceTablePasteRowBefore command', function (editor) {
     editor.focus();
     editor.setContent(
