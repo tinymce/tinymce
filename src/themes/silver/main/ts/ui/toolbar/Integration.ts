@@ -16,6 +16,7 @@ import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { renderMenuButton } from '../menus/menubar/Integration';
+import Tools from '../../../../../../core/main/ts/api/util/Tools';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -106,9 +107,23 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
+const createToolbar = (toolbarConfig) => {
+  const toolbar = () => {
+    if (toolbarConfig.toolbar === false) {
+      return '';
+    } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
+      return defaultToolbar;
+    } else {
+      return toolbarConfig.toolbar;
+    }
+  };
+
+  const toolbarArray = Tools.isArray(toolbar()) ? toolbar() :  [ toolbar() ];
+  return toolbarArray.join(' | ');
+};
+
 const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
-  const toolbar = registry.toolbar === false ? '' :
-    (registry.toolbar === undefined || registry.toolbar === true) ? defaultToolbar : registry.toolbar;
+  const toolbar = createToolbar(registry);
   const groupsStrings = toolbar.split('|');
   const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
   const groups = Arr.map(toolbarGroups, (group) => {
