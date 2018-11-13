@@ -1,7 +1,5 @@
 import { BodyComponentApi, BodyComponent } from './BodyComponent';
-import { Result } from '@ephox/katamari';
-import { ValueSchema, FieldSchema, FieldPresence } from '@ephox/boulder';
-import { itemSchema } from './ItemSchema';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
 export interface LabelApi {
   type: 'label';
@@ -15,24 +13,10 @@ export interface Label {
   items: BodyComponent[];
 }
 
-export const labelFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('label'),
-  FieldSchema.field(
-    'items',
-    'items',
-    FieldPresence.strict(),
-    ValueSchema.arrOf(ValueSchema.valueOf((v) => {
-      return ValueSchema.asRaw('Checking item of label', itemSchema, v).fold(
-        (sErr) => Result.error(ValueSchema.formatError(sErr)),
-        (passValue) => Result.value(passValue)
-      );
-    }))
-  )
-];
-
-export const labelSchema = ValueSchema.objOf(labelFields);
-
-export const createLabel = (spec: LabelApi): Result<Label, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Label>('label', labelSchema, spec);
+export const createLabelFields = (itemsField: FieldProcessorAdt) => {
+  return [
+    FieldSchema.strictString('type'),
+    FieldSchema.strictString('label'),
+    itemsField
+  ];
 };

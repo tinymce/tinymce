@@ -1,11 +1,11 @@
-import { ValueSchema } from '@ephox/boulder';
+import { ValueSchema, FieldPresence, FieldSchema } from '@ephox/boulder';
 import { alertBannerFields } from './AlertBanner';
 import { buttonFields } from './Button';
 import { checkboxFields } from './Checkbox';
 import { colorInputFields } from './ColorInput';
 import { colorPickerFields } from './ColorPicker';
 import { dropZoneFields } from './Dropzone';
-import { gridFields } from './Grid';
+import { createGridFields } from './Grid';
 import { iframeFields } from './Iframe';
 import { inputFields } from './Input';
 import { selectBoxFields } from './SelectBox';
@@ -16,8 +16,23 @@ import { customEditorFields } from './CustomEditor';
 import { htmlPanelFields } from './HtmlPanel';
 import { imageToolsFields } from './ImageTools';
 import { collectionFields } from './Collection';
-import { labelFields } from './Label';
+import { createLabelFields } from './Label';
 import { tableFields } from './Table';
+import { Result } from '@ephox/katamari';
+
+const createItemsField = (name: string) => {
+  return FieldSchema.field(
+    'items',
+    'items',
+    FieldPresence.strict(),
+    ValueSchema.arrOf(ValueSchema.valueOf((v) => {
+      return ValueSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
+        (sErr) => Result.error(ValueSchema.formatError(sErr)),
+        (passValue) => Result.value(passValue)
+      );
+    }))
+  );
+};
 
 export const itemSchema = ValueSchema.choose('type', {
   alertbanner: alertBannerFields,
@@ -26,7 +41,7 @@ export const itemSchema = ValueSchema.choose('type', {
   colorinput: colorInputFields,
   colorpicker: colorPickerFields,
   dropzone: dropZoneFields,
-  grid: gridFields,
+  grid: createGridFields(createItemsField('grid')),
   iframe: iframeFields,
   input: inputFields,
   selectbox: selectBoxFields,
@@ -37,6 +52,6 @@ export const itemSchema = ValueSchema.choose('type', {
   htmlpanel: htmlPanelFields,
   imagetools: imageToolsFields,
   collection: collectionFields,
-  label: labelFields,
+  label: createLabelFields(createItemsField('label')),
   table: tableFields
 });
