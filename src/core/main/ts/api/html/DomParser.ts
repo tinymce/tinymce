@@ -294,6 +294,16 @@ export default function (settings?, schema = Schema()) {
     let isInWhiteSpacePreservedElement;
     let node: Node;
 
+    const getRootBlockName = (name) => {
+      if (name === false) {
+        return '';
+      } else if (name === true) {
+        return 'p';
+      } else {
+        return name;
+      }
+    };
+
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
@@ -302,7 +312,7 @@ export default function (settings?, schema = Schema()) {
     const children = schema.children;
     const validate = settings.validate;
     const forcedRootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
-    const rootBlockName = forcedRootBlockName === false ? '' : forcedRootBlockName === true ? 'p' : forcedRootBlockName;
+    const rootBlockName =  getRootBlockName(forcedRootBlockName);
     const whiteSpaceElements = schema.getWhiteSpaceElements();
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;

@@ -65,9 +65,9 @@ const addRootBlocks = function (editor) {
   let rng;
   let startContainer, startOffset, endContainer, endOffset, rootBlockNode;
   let tempNode, wrapped, restoreSelection;
-  let rootNodeName, forcedRootBlock;
+  let rootNodeName;
 
-  forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const forcedRootBlock = Settings.getForcedRootBlock(editor);
   if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
     return;
   }
