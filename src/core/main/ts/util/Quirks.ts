@@ -18,6 +18,7 @@ import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import { Selection } from '../api/dom/Selection';
 import { Range, document } from '@ephox/dom-globals';
+import Settings from '../api/Settings';
 
 declare const escape: any;
 declare const unescape: any;
@@ -517,7 +518,7 @@ export default function (editor) {
   const setDefaultBlockType = function () {
     if (settings.forced_root_block) {
       editor.on('init', function () {
-        setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
+        setEditorCommandState('DefaultParagraphSeparator', Settings.getForcedRootBlock(editor));
       });
     }
   };
