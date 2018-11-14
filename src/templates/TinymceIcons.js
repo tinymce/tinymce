@@ -1,3 +1,5 @@
 tinymce.IconManager.add('default', {
-  icons: /* start-icon-inject *//* end-icon-inject */
+  icons: {
+/* start-icon-inject *//* end-icon-inject */
+  }
 });
