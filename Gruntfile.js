@@ -200,29 +200,39 @@ module.exports = function (grunt) {
       start: { }
     },
 
-    less: {
+    cssmin: {
       desktop: {
         options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true,
-          yuicompress: true,
-          sourceMap: true,
-          sourceMapRootpath: '.',
-          optimization: 2
+          sourceMap: true
         },
         files: {
-          'js/tinymce/skins/oxide/skin.min.css': 'node_modules/@ephox/oxide/build/skin-default.css',
+          'js/tinymce/skins/oxide/skin.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/skin.css',
+          'js/tinymce/skins/oxide-dark/skin.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/skin.css'
         }
       },
+      content: {
+        files: {
+          'js/tinymce/skins/oxide/content.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/content.css',
+          'js/tinymce/skins/oxide-dark/content.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/content.css'
+        }
+      },
+      'content-inline': {
+        files: {
+          'js/tinymce/skins/oxide/content.inline.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/content.inline.css',
+          'js/tinymce/skins/oxide-dark/content.inline.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/content.inline.css'
+        }
+      },
+    },
+
+    less: {
       mobile: {
         options: {
           plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
-          compress: true,
-          yuicompress: true,
-          sourceMap: true,
-          sourceMapRootpath: '.',
-          optimization: 2
+            compress: true,
+            yuicompress: true,
+            sourceMap: true,
+            sourceMapRootpath: '.',
+            optimization: 2
         },
         files: {
           'js/tinymce/skins/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
@@ -231,33 +241,13 @@ module.exports = function (grunt) {
       'content-mobile': {
         options: {
           cleancss: true,
-          strictImports: true,
-          compress: true
+            strictImports: true,
+            compress: true
         },
         files: {
           'js/tinymce/skins/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
         }
-      },
-      content: {
-        options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true
-        },
-        files: {
-          'js/tinymce/skins/oxide/content.min.css': 'src/skins/oxide/main/less/desktop/Content.less'
-        }
-      },
-      'content-inline': {
-        options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true
-        },
-        files: {
-          'js/tinymce/skins/oxide/content.inline.min.css': 'src/skins/oxide/main/less/desktop/Content.Inline.less'
-        }
-      },
+      }
     },
 
     copy: {
@@ -862,6 +852,7 @@ module.exports = function (grunt) {
     'rollup',
     'uglify',
     'less',
+    'cssmin',
     'copy',
     'build-headers',
     'clean:release',
@@ -875,8 +866,11 @@ module.exports = function (grunt) {
     'globals',
     'rollup',
     'less',
+    'cssmin',
     'copy'
   ]);
+
+  grunt.registerTask('skins', ['less', 'cssmin']);
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
