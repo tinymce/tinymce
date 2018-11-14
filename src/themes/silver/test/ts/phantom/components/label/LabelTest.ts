@@ -22,12 +22,6 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
                 tag: 'label',
                 classes: ['tox-checkbox']
               }
-            } as any,
-            {
-              dom: {
-                tag: 'div',
-                classes: ['tox-form__group']
-              }
             } as any
           ]
         }, sharedBackstage)
@@ -39,15 +33,16 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
         Assertions.sAssertStructure(
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
-            return s.element('label', {
-              classes: [ arr.has('tox-label') ],
+            return s.element('div', {
+              classes: [ arr.has('tox-form__group') ],
               children: [
-                s.text(str.is('Group of Options')),
+                s.element('label', {
+                  children: [
+                    s.text(str.is('Group of Options')),
+                  ]
+                }),
                 s.element('label', {
                   classes: [ arr.has('tox-checkbox') ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-form__group') ]
                 })
               ]
             });
