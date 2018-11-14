@@ -21,8 +21,6 @@ let themes = [
   'silver'
 ];
 
-const swagFlag = () => {};
-
 module.exports = function (grunt) {
   var packageData = grunt.file.readJSON('package.json');
   var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
@@ -60,7 +58,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
-            onwarn: swagFlag,
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -87,7 +85,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
-            onwarn: swagFlag,
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -115,7 +113,7 @@ module.exports = function (grunt) {
             format: 'iife',
             banner: '(function () {',
             footer: '})();',
-            onwarn: swagFlag,
+            onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
