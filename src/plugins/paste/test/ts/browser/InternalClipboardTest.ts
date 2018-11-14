@@ -4,7 +4,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import Utils from 'tinymce/plugins/paste/core/Utils';
-import Plugin from 'tinymce/plugins/paste/Plugin';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
 import MockDataTransfer from '../module/test/MockDataTransfer';
@@ -14,7 +15,8 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
   const failure = arguments[arguments.length - 1];
   let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
 
-  Plugin();
+  PastePlugin();
+  TablePlugin();
   Theme();
 
   const sResetProcessEvents = Step.sync(function () {
@@ -96,6 +98,29 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
         sAssertClipboardData('', ''),
         tinyApis.sAssertContent('<p>abc</p>'),
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+      ])),
+
+      Logger.t('Copy collapsed selection with table selection', GeneralSteps.sequence([
+        sCopy(editor, tinyApis,
+          '<table data-mce-selected="1">' +
+            '<tbody>' +
+              '<tr>' +
+                '<td data-mce-first-selected="1" data-mce-selected="1">a</td>' +
+                '<td data-mce-last-selected="1" data-mce-selected="1">b</td>' +
+              '</tr>' +
+            '</tbody>' +
+          '</table>',
+        [0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0),
+        sAssertClipboardData(
+          '<table>\n' +
+            '<tbody>\n' +
+              '<tr>\n' +
+                '<td>a</td>\n' +
+                '<td>b</td>\n' +
+              '</tr>\n' +
+            '</tbody>\n' +
+          '</table>', 'ab'),
+        tinyApis.sAssertSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0)
       ]))
     ]));
   };
@@ -200,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
       sTestPaste(editor, tinyApis)
     ], onSuccess, onFailure);
   }, {
-    plugins: 'paste',
+    plugins: 'paste table',
     init_instance_callback (editor) {
       editor.on('PastePreProcess', function (evt) {
         lastPreProcessEvent = evt;
