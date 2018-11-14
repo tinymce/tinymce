@@ -200,30 +200,6 @@ module.exports = function (grunt) {
       start: { }
     },
 
-    cssmin: {
-      desktop: {
-        options: {
-          sourceMap: true
-        },
-        files: {
-          'js/tinymce/skins/oxide/skin.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/skin.css',
-          'js/tinymce/skins/oxide-dark/skin.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/skin.css'
-        }
-      },
-      content: {
-        files: {
-          'js/tinymce/skins/oxide/content.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/content.css',
-          'js/tinymce/skins/oxide-dark/content.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/content.css'
-        }
-      },
-      'content-inline': {
-        files: {
-          'js/tinymce/skins/oxide/content.inline.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-default/content.inline.css',
-          'js/tinymce/skins/oxide-dark/content.inline.min.css': 'node_modules/@ephox/oxide/build/skins/oxide-dark/content.inline.css'
-        }
-      },
-    },
-
     less: {
       mobile: {
         options: {
@@ -309,6 +285,24 @@ module.exports = function (grunt) {
             cwd: 'src/skins/oxide/main/img',
             src: '**',
             dest: 'js/tinymce/skins/oxide/img'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
+            src: [
+              '*.min.css',
+              '*.min.css.map'
+            ],
+            dest: 'js/tinymce/skins/oxide'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-dark',
+            src: [
+              '*.min.css',
+              '*.min.css.map'
+            ],
+            dest: 'js/tinymce/skins/oxide-dark'
           }
         ]
       },
@@ -852,7 +846,6 @@ module.exports = function (grunt) {
     'rollup',
     'uglify',
     'less',
-    'cssmin',
     'copy',
     'build-headers',
     'clean:release',
@@ -866,11 +859,8 @@ module.exports = function (grunt) {
     'globals',
     'rollup',
     'less',
-    'cssmin',
     'copy'
   ]);
-
-  grunt.registerTask('skins', ['less', 'cssmin']);
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
