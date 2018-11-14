@@ -1,3 +1,4 @@
+var path = require('path');
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var less = require('gulp-less');
@@ -48,11 +49,11 @@ gulp.task('less', function() {
 // Minify CSS
 //
 gulp.task('minify-css', function() {
-  return gulp.src('./build/skins/*/*.css')
+  return gulp.src('./build/skins/oxide*/*.css')
     .pipe(sourcemaps.init())
     .pipe(cleanCSS())
     .pipe(rename({ extname: '.min.css' }))
-    .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: './' }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'));
 });
 
