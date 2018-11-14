@@ -95,9 +95,7 @@ const getData = (editor: Editor): SelectionContentData => (
 );
 
 const isTableSelection = (editor: Editor): boolean => {
-  const dom = editor.dom;
-  const cell = dom.getParent(editor.selection.getStart(), 'td', editor.getBody());
-  return cell && parseInt(dom.getAttrib(cell, 'data-mce-selected', '0'), 10) === 1;
+  return !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
 };
 
 const cut = (editor: Editor) => (evt: ClipboardEvent) => {
