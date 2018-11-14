@@ -7,7 +7,7 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-import { Merger } from '@ephox/katamari';
+import { Merger, Obj } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import Settings from '../api/Settings';
@@ -23,9 +23,9 @@ const unwrap = (data) => Merger.merge(data, {
 });
 
 const wrap = (data) => Merger.merge(data, {
-  source1: { value: data.source1 || '' },
-  source2: { value: data.source2 || '' },
-  poster: { value: data.poster || '' }
+  source1: { value: Obj.get(data, 'source1').getOr('') },
+  source2: { value: Obj.get(data, 'source2').getOr('') },
+  poster: { value: Obj.get(data, 'poster').getOr('') }
 });
 
 const handleError = function (editor) {
