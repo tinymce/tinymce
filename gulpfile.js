@@ -50,6 +50,12 @@ gulp.task('IconsTs', function () {
   ).pipe(gulp.dest('dist/js'));
 });
 
+gulp.task('Main', function () {
+  return gulp.src('./src/templates/Main.ts')
+    .pipe(ts({ module: 'es2015', "declaration": true }))
+    .pipe(gulp.dest('dist/js'));
+});
+
 function svgJsInjector () {
   return inject(gulp.src(['./scratch/minifiedSvgs/*.svg']), {
     starttag: '/* start-icon-inject */',
@@ -78,4 +84,4 @@ function svgHtmlInjector () {
 
 gulp.task('inject', gulp.parallel(['IconsHtml', 'IconsTs', 'TinymceIcons']));
 
-gulp.task('default', gulp.series('clean', 'minify', 'verifyComposition', 'inject'));
+gulp.task('default', gulp.series('clean', 'minify', 'verifyComposition', 'Main', 'inject'));

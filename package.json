@@ -2,7 +2,7 @@
   "name": "@ephox/oxide-icons-default",
   "version": "1.0.6",
   "description": "Default icons for TinyMCE Oxide Theme",
-  "main": "dist/js/Icons.js",
+  "main": "dist/js/Main.js",
   "scripts": {
     "build": "gulp",
     "start": "gulp",
