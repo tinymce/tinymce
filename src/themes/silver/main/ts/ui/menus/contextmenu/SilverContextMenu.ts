@@ -3,12 +3,12 @@ import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
 import { Arr, Fun, Result, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-import { ItemResponse } from '../item/MenuItems';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
 import { getPointAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import ItemResponse from '../item/ItemResponse';
 
 const separator: Menu.SeparatorMenuItemApi = {
   type: 'separator'

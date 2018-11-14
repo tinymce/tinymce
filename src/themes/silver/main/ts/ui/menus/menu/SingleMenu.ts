@@ -12,6 +12,7 @@ import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { components as menuComponents, dom as menuDom, markers as getMenuMarkers } from './MenuParts';
 import { forSwatch, forCollection, forToolbar } from './MenuStructures';
+import ItemResponse from '../item/ItemResponse';
 
 export type ItemChoiceActionHandler = (value: string) => void;
 
@@ -35,7 +36,7 @@ export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.ToggleMenuIt
 const hasIcon = (item) => item.icon !== undefined;
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: MenuItems.ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
@@ -136,7 +137,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
   };
 };
 
-export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: MenuItems.ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
   return Options.cat(
     Arr.map(items, (item) => {
       if (item.type === 'choiceitem') {
@@ -151,7 +152,7 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
   );
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: MenuItems.ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
@@ -164,14 +165,14 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterItemAp
   );
 };
 
-export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: MenuItems.ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
   const hasIcons = menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: MenuItems.ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
   const hasIcons = menuHasIcons(items);
   const alloyItems = Options.cat<ItemSpec>(
     Arr.map(items, (item) => {
