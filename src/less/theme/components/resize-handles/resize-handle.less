@@ -7,6 +7,7 @@
 
 .mce-content-body div.mce-resizehandle {
   @offset: -@resize-handle-size / 3;
+
   background-color: @resize-handle-color;
   border-color: @resize-handle-color;
   border-style: solid;
@@ -23,8 +24,8 @@
   &:nth-of-type(1) {
     //border-width: 2px 0 0 2px;
     cursor: nwse-resize;
-    transform: translateX(-4px) translateY(-4px);
     display: none;
+    transform: translateX(-4px) translateY(-4px);
   }
 
   &:nth-of-type(2) {

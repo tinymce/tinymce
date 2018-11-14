@@ -37,7 +37,7 @@
     "stylelint-order": "^0.8.1"
   },
   "files": [
-    "build/*.css",
+    "build/skins/oxide*/*.css",
     "README.md",
     "LICENSE.txt"
   ]

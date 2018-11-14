@@ -26,9 +26,10 @@ html {
   background: @content-background;
   background-size: @content-background-size;
   display: block;
-  padding: @content-padding
+  padding: @content-padding;
 }
 
+/* stylelint-disable property-no-unknown */
 body {
   background: @document-background-color;
   border-radius: @document-border-radius;
@@ -64,7 +65,7 @@ table caption {
 table th,
 table td {
   border: 1px solid @border-color;
-  padding: 0.4rem;
+  padding: .4rem;
 }
 
 blockquote {
@@ -76,7 +77,7 @@ blockquote {
 code {
   background-color: #e8e8e8;
   border-radius: 3px;
-  padding: 0.1rem 0.2rem;
+  padding: .1rem .2rem;
 }
 
 hr {
@@ -100,10 +101,8 @@ figure.image img {
 }
 
 figure.image figcaption {
-  margin: .5rem;
-  font-size: @document-image-caption-font-size;
   color: @document-image-caption-font-color;
+  font-size: @document-image-caption-font-size;
+  margin: .5rem;
   text-align: center;
 }
-
-
