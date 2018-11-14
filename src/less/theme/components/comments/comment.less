@@ -10,26 +10,21 @@
 @comment-font-style: normal;
 @comment-font-weight: @font-weight-normal;
 @comment-line-height: @line-height-base;
-@comment-padding: @pad-sm;
-@comment-spacing-y: @pad-sm;
+@comment-padding: @pad-sm @pad-sm @pad-md @pad-sm;
 @comment-text-color: @text-color;
 @comment-text-transform: initial;
 
 .tox {
-  .tox-comment {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: @pad-md;
-  }
-
-  // A wrapper around a one or more comments
-  .tox-comment__list {
+  .tox-comment-thread {
     //
+
+    > *:not(:first-child) {
+      margin-top: @pad-sm;
+    }
   }
 
   // An individual comment
-  .tox-comment__item {
+  .tox-comment {
     background: @comment-background-color;
     border: @comment-border;
     border-radius: @comment-border-radius;
@@ -37,9 +32,15 @@
     padding: @comment-padding;
   }
 
-  // Set spacing between comments
-  .tox-comment__item + .tox-comment__item {
-    margin-top: @comment-spacing-y;
+  .tox-comment__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tox-comment__timestamp {
+    font-size: @font-size-xs;
+    color: @text-color-muted;
   }
 
   .tox-comment__body {
@@ -56,15 +57,19 @@
     margin: 0;
   }
 
-  // Write new comments block
+  // Write new comment block
   .tox-comment__reply {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     > *:first-child {
       margin-bottom: @pad-sm;
       width: 100%;
+    }
+
+    > *:last-child {
+      margin-left: @pad-sm;
     }
   }
 }
