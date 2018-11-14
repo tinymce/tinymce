@@ -16,6 +16,18 @@ import Service from '../core/Service';
 import Size from '../core/Size';
 import UpdateHtml from '../core/UpdateHtml';
 
+const unwrap = (data) => Merger.merge(data, {
+  source1: data.source1.value,
+  source2: data.source2.value,
+  poster: data.poster.value
+});
+
+const wrap = (data) => Merger.merge(data, {
+  source1: { value: data.source1 || '' },
+  source2: { value: data.source2 || '' },
+  poster: { value: data.poster || '' }
+});
+
 const handleError = function (editor) {
   return function (error) {
     const errorMessage = error && error.msg ?
@@ -67,7 +79,7 @@ const addEmbedHtml = function (win, editor) {
       }
     };
 
-    win.setData(nuData);
+    win.setData(wrap(nuData));
   };
 };
 
@@ -125,10 +137,11 @@ const showDialog = function (editor) {
     }
   };
 
-  const initialData = Merger.merge(defaultData, initialHtmlData);
+  const initialData = wrap(Merger.merge(defaultData, initialHtmlData));
 
   const getSourceData = (api) => {
-    const data = api.getData();
+    const data = unwrap(api.getData());
+
     return Settings.hasDimensions(editor) ? Merger.merge(data, {
       width: data.dimensions.width,
       height: data.dimensions.height
@@ -143,7 +156,7 @@ const showDialog = function (editor) {
   };
 
   const handleEmbed = (api) => {
-    const data = api.getData();
+    const data = unwrap(api.getData());
 
     const dataFromEmbed = snippetToData(editor, data.embed);
     dataFromEmbed.dimensions = {
@@ -151,7 +164,7 @@ const showDialog = function (editor) {
       height: dataFromEmbed.height ? dataFromEmbed.height : data.dimensions.height
     };
 
-    api.setData(dataFromEmbed);
+    api.setData(wrap(dataFromEmbed));
   };
 
   const generalTab = Settings.hasDimensions(editor) ?
@@ -160,7 +173,7 @@ const showDialog = function (editor) {
       items: [
         {
           name: 'source1',
-          type: 'input',
+          type: 'urlinput',
           filetype: 'media',
           label: 'Source'
         },
@@ -176,7 +189,7 @@ const showDialog = function (editor) {
       items: [
         {
           name: 'source1',
-          type: 'input',
+          type: 'urlinput',
           filetype: 'media',
           label: 'Source'
         },
@@ -199,7 +212,7 @@ const showDialog = function (editor) {
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
         name: 'source2',
-        type: 'input',
+        type: 'urlinput',
         filetype: 'media',
         label: 'Alternative image URL'
       }
@@ -209,7 +222,7 @@ const showDialog = function (editor) {
   if (Settings.hasPoster(editor)) {
     advancedFormItems.push({
       name: 'poster',
-      type: 'input',
+      type: 'urlinput',
       filetype: 'image',
       label: 'Media poster (Image URL)'
     });

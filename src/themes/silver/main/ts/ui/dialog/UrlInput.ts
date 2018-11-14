@@ -149,6 +149,10 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
             AlloyEvents.run(NativeEvents.change(), (comp) => {
               AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
               updateHistory(comp);
+            }),
+            AlloyEvents.run(NativeEvents.paste(), (comp) => {
+              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+              updateHistory(comp);
             })
           ]
         ]))

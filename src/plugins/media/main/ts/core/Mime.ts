@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const guess = function (url) {
+const guess = function (url: string) {
   const mimes = {
     mp3: 'audio/mpeg',
     wav: 'audio/wav',

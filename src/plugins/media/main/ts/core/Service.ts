@@ -10,10 +10,11 @@
 
 import Promise from 'tinymce/core/api/util/Promise';
 import Settings from '../api/Settings';
-import DataToHtml from './DataToHtml';
+import DataToHtml, { MediaDialogData, DataToHtmlCallback } from './DataToHtml';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const cache = {};
-const embedPromise = function (data, dataToHtml, handler) {
+const embedPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCallback, handler) {
   return new Promise<{url: string, html: string}>(function (res, rej) {
     const wrappedResolve = function (response) {
       if (response.html) {
@@ -32,19 +33,19 @@ const embedPromise = function (data, dataToHtml, handler) {
   });
 };
 
-const defaultPromise = function (data, dataToHtml) {
+const defaultPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCallback) {
   return new Promise<{url: string, html: string}>(function (res) {
     res({ html: dataToHtml(data), url: data.source1 });
   });
 };
 
-const loadedData = function (editor) {
-  return function (data) {
+const loadedData = function (editor: Editor) {
+  return function (data: MediaDialogData) {
     return DataToHtml.dataToHtml(editor, data);
   };
 };
 
-const getEmbedHtml = function (editor, data) {
+const getEmbedHtml = function (editor: Editor, data: MediaDialogData) {
   const embedHandler = Settings.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
