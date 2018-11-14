@@ -12,6 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
   const failure = arguments[arguments.length - 1];
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
+  const isiPhone = detection.deviceType.isiPhone();
 
   Theme();
 
@@ -231,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile'  },
+            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', ...(isiPhone ? { theme: 'mobile' } : { } )  },
             EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
           );
         })),
