@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
-import { renderUiLabel } from 'tinymce/themes/silver/ui/general/UiLabel';
+import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 
@@ -13,7 +13,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
-        renderUiLabel({
+        renderLabel({
           type: 'label',
           label: 'Group of Options',
           items: [
