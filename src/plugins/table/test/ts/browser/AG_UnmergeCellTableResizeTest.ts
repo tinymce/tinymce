@@ -1,4 +1,4 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder, Log, Keyboard, Keys, TestLogs } from '@ephox/agar';
+import { Assertions, Chain, Guard, NamedChain, UiFinder, Log, Keyboard, Keys, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
@@ -261,13 +261,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
       [
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
-        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
         Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
-        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
         Chain.label('Merge table cells', NamedChain.read('editor', TableTestUtils.cMergeCells(data.select))),
         Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
         Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
-        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
         Chain.label('Split table cells', NamedChain.read('editor', TableTestUtils.cSplitCells)),
         Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
         NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
