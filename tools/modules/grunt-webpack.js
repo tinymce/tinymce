@@ -1,11 +1,11 @@
-// @ts-check
-
 let { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 let LiveReloadPlugin = require('webpack-livereload-plugin');
 let path = require('path');
 let fs = require('fs');
 
 let liveReloadPlugin = new LiveReloadPlugin();
+
+const packageData = require("../../package.json");
 
 let create = (entries, tsConfig, outDir, filename) => {
   return {
@@ -34,6 +34,26 @@ let create = (entries, tsConfig, outDir, filename) => {
         {
           test: /\.ts$/,
           use: [
+            {
+              loader: 'string-replace-loader',
+              options: {
+                test: /EditorManager.ts/,
+                multiple: [
+                  {
+                    search: '@@majorVersion@@',
+                    replace: packageData.version.split('.')[0],
+                  },
+                  {
+                    search: '@@minorVersion@@',
+                    replace: packageData.version.split('.').slice(1).join('.'),
+                  },
+                  {
+                    search: '@@releaseDate@@',
+                    replace: packageData.date,
+                  }
+                ]
+              }
+            },
             {
               loader: 'ts-loader',
               options: {
