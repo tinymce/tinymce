@@ -21,7 +21,7 @@ import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';
 import { renderListbox } from './Listbox';
-import { renderUiLabel } from './UiLabel';
+import { renderLabel } from '../dialog/Label';
 import { renderCollection } from '../dialog/Collection';
 import { renderTable } from '../dialog/Table';
 
@@ -57,7 +57,7 @@ const factories: Record<string, FormPartRenderer> = {
   // textbutton: make(Buttons.text().sketch),
   // iconbutton: make(Buttons.icon().sketch),
   listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
-  label: make((spec, backstage) => renderUiLabel(spec, backstage.shared)),
+  label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
   autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
   button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
