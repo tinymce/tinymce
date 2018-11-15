@@ -241,69 +241,67 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
   };
 
   const cUnmergeCellsMeasureTableWidth = (label, data) => {
-    return NamedChain.asChain(
-      Log.chains('TBA', 'Merge and unmerge cells, measure table widths', [
+    return Log.chain('TBA', 'Merge and unmerge cells, measure table widths', NamedChain.asChain(
+       [
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cInsertTable(label, data.html), 'element'),
-        NamedChain.read('element', Mouse.cTrueClick),
-        NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0)),
-        NamedChain.write('widthBefore', TableTestUtils.cGetWidth),
-        NamedChain.read('element', Mouse.cTrueClick),
-        NamedChain.read('editor', TableTestUtils.cMergeCells(data.select)),
-        NamedChain.read('editor', TableTestUtils.cSplitCells),
-        NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
+        Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
+        Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
+        Chain.label('Store width before merge', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
+        Chain.label('Merge table cells', NamedChain.read('editor', TableTestUtils.cMergeCells(data.select))),
+        Chain.label('Split table cells', NamedChain.read('editor', TableTestUtils.cSplitCells)),
+        Chain.label('Store width after merge/unmerge', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
         NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
         NamedChain.output('widths')
-      ])
-    );
+      ]
+    ));
   };
 
   const cMergeResizeUnmergeMeasureWidth = (label, data) => {
-    return NamedChain.asChain(
-      Log.chains('TBA', 'Merge cells and resize table, unmerge cells and measure table widths', [
+    return Log.chain('TBA', 'Merge cells and resize table, unmerge cells and measure table widths', NamedChain.asChain(
+      [
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cInsertTable(label, data.html), 'element'),
-        NamedChain.read('element', Mouse.cTrueClick),
-        NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0)),
-        NamedChain.read('element', Mouse.cTrueClick),
-        NamedChain.read('editor', TableTestUtils.cMergeCells(data.select)),
-        NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0)),
-        NamedChain.write('widthBefore', TableTestUtils.cGetWidth),
-        NamedChain.read('element', Mouse.cTrueClick),
-        NamedChain.read('editor', TableTestUtils.cSplitCells),
-        NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
+        Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
+        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
+        Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
+        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
+        Chain.label('Merge table cells', NamedChain.read('editor', TableTestUtils.cMergeCells(data.select))),
+        Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
+        Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
+        // Chain.label('Click on table', NamedChain.read('element', Mouse.cTrueClick)),
+        Chain.label('Split table cells', NamedChain.read('editor', TableTestUtils.cSplitCells)),
+        Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
         NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
         NamedChain.output('widths')
-      ])
-    );
+      ]
+    ));
   };
 
-  const cAssertWidths = Chain.control(
+  const cAssertWidths = Chain.label(
+    'Assert widths before and after unmerge are equal',
     Chain.op((input: any) => {
       Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
-    }),
-    Guard.addLogging('Assert widths before and after unmerge are equal')
+    })
   );
 
   const cAssertWidth = (label, data) => {
-    return Chain.control(
+    return Chain.label(
+      `Assert width of table ${label}`,
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cUnmergeCellsMeasureTableWidth(label, data), 'widths'),
         NamedChain.read('widths', cAssertWidths)
-      ]),
-      Guard.addLogging(`Assert width of table ${label}`)
+      ])
     );
   };
 
   const cMergeResizeSplitAssertWidth = (label, data) => {
-    return Chain.control(
+    return Chain.label(
+      `Assert width of table ${label}`,
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cMergeResizeUnmergeMeasureWidth(label, data), 'widths'),
         NamedChain.read('widths', cAssertWidths)
-      ]),
-      Guard.addLogging(`Assert width of table ${label}`)
+      ])
     );
   };
 
