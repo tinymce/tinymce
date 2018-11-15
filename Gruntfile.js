@@ -201,28 +201,14 @@ module.exports = function (grunt) {
     },
 
     less: {
-      desktop: {
-        options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true,
-          yuicompress: true,
-          sourceMap: true,
-          sourceMapRootpath: '.',
-          optimization: 2
-        },
-        files: {
-          'js/tinymce/skins/oxide/skin.min.css': 'node_modules/@ephox/oxide/build/skin-default.css',
-        }
-      },
       mobile: {
         options: {
           plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
-          compress: true,
-          yuicompress: true,
-          sourceMap: true,
-          sourceMapRootpath: '.',
-          optimization: 2
+            compress: true,
+            yuicompress: true,
+            sourceMap: true,
+            sourceMapRootpath: '.',
+            optimization: 2
         },
         files: {
           'js/tinymce/skins/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
@@ -231,33 +217,13 @@ module.exports = function (grunt) {
       'content-mobile': {
         options: {
           cleancss: true,
-          strictImports: true,
-          compress: true
+            strictImports: true,
+            compress: true
         },
         files: {
           'js/tinymce/skins/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
         }
-      },
-      content: {
-        options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true
-        },
-        files: {
-          'js/tinymce/skins/oxide/content.min.css': 'src/skins/oxide/main/less/desktop/Content.less'
-        }
-      },
-      'content-inline': {
-        options: {
-          cleancss: true,
-          strictImports: true,
-          compress: true
-        },
-        files: {
-          'js/tinymce/skins/oxide/content.inline.min.css': 'src/skins/oxide/main/less/desktop/Content.Inline.less'
-        }
-      },
+      }
     },
 
     copy: {
@@ -294,17 +260,6 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            cwd: 'src/skins/oxide/main/fonts',
-            src: [
-              '**',
-              '!*.json',
-              '!*.md'
-            ],
-            dest: 'js/tinymce/skins/oxide/fonts'
-          },
-          {
-            expand: true,
-            flatten: true,
             cwd: 'src/themes/mobile/main/fonts',
             src: [
               '**',
@@ -319,6 +274,31 @@ module.exports = function (grunt) {
             cwd: 'src/skins/oxide/main/img',
             src: '**',
             dest: 'js/tinymce/skins/oxide/img'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
+            src: [
+              '*.min.css',
+              '*.min.css.map'
+            ],
+            dest: 'js/tinymce/skins/oxide'
+          },
+          {
+            expand: true,
+            flatten: true,
+            cwd: 'src/skins/oxide/main/img',
+            src: '**',
+            dest: 'js/tinymce/skins/oxide-dark/img'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-dark',
+            src: [
+              '*.min.css',
+              '*.min.css.map'
+            ],
+            dest: 'js/tinymce/skins/oxide-dark'
           }
         ]
       },

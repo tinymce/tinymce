@@ -1,7 +1,7 @@
 import { AlloyEvents, AlloyTriggers, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { GetApiType, runWithApi } from '../../controls/Controls';
-import { ItemResponse } from './MenuItems';
+import ItemResponse from './ItemResponse';
 
 export type GeneralMenuItemInstanceApi = Menu.MenuItemInstanceApi | Menu.ToggleMenuItemInstanceApi | Menu.ChoiceMenuItemInstanceApi;
 export type GeneralMenuItem = Menu.MenuItem | Menu.ToggleMenuItem | Menu.ChoiceMenuItem;

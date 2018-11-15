@@ -5,8 +5,6 @@ import { renderSeparatorItem } from './build/SeparatorItem';
 import { renderStyleItem } from './build/StyleMenuItem';
 import { renderToggleMenuItem } from './build/ToggleMenuItem';
 
-export enum ItemResponse { CLOSE_ON_EXECUTE, BUBBLE_TO_SANDBOX }
-
 const choice = renderChoiceItem;
 const autocomplete = renderAutocompleteItem;
 const separator = renderSeparatorItem;

@@ -13,10 +13,10 @@ import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
 import { createTieredDataFrom, createPartialChoiceMenu } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
-import { ItemResponse } from 'tinymce/themes/silver/ui/menus/item/MenuItems';
 import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
 import { Element } from '@ephox/sugar';
 import * as Layout from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/Layout';
+import ItemResponse from '../menus/item/ItemResponse';
 
 export interface SwatchPanelButtonFoo {
   dom: RawDomSchema;

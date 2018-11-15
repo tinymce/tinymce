@@ -1,7 +1,6 @@
 import { Menu } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import { ItemResponse } from '../../menus/item/MenuItems';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { SingleMenuItemApi } from '../../menus/menu/SingleMenu';
 import * as FormatRegister from './utils/FormatRegister';
@@ -11,6 +10,7 @@ import { AlloyComponent } from '@ephox/alloy';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import ItemResponse from '../../menus/item/ItemResponse';
 
 export interface PreviewSpec {
   tag: string;

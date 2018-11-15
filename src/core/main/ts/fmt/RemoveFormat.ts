@@ -23,6 +23,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import SplitRange from 'tinymce/core/selection/SplitRange';
 import { Node } from '@ephox/dom-globals';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import Settings from '../api/Settings';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -141,7 +142,7 @@ const find = function (dom, node, next, inc?) {
 const removeNode = function (ed, node, format) {
   const parentNode = node.parentNode;
   let rootBlockElm;
-  const dom = ed.dom, forcedRootBlock = ed.settings.forced_root_block;
+  const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
 
   if (format.block) {
     if (!forcedRootBlock) {

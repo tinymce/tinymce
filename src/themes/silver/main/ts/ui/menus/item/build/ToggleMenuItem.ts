@@ -5,10 +5,10 @@ import { Menu } from '@ephox/bridge';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as ItemClasses from '../ItemClasses';
-import { ItemResponse } from '../MenuItems';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { renderCheckmark } from '../structure/ItemSlices';
+import ItemResponse from '../ItemResponse';
 
 const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
