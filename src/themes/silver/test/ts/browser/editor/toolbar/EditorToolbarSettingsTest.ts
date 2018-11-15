@@ -268,6 +268,68 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       ])
     ]),
 
+    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: false and toolbar2: "bold italic" should create "bold italic" toolbar and ignore toolbar', [
+      NamedChain.asChain([
+        NamedChain.writeValue('body', Body.body()),
+        NamedChain.write('editor', cCreateEditorWithToolbar(false, false, 'bold italic')),
+        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+        NamedChain.direct('toolbar', Assertions.cAssertStructure(
+          'Checking toolbar should have just bold and italic',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              classes: [ arr.has('tox-toolbar') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar__group') ],
+                  children: [
+                    s.element('button', { }),
+                    s.element('button', { })
+                  ]
+                })
+              ]
+            });
+          })
+        ), Id.generate('')),
+        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.bundle(Result.value)
+      ])
+    ]),
+
+    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: empty array and toolbar1: "bold italic" and toolbar2: "strikethrough" should create "bold italic | strikethrough" toolbar and ignore toolbar', [
+      NamedChain.asChain([
+        NamedChain.writeValue('body', Body.body()),
+        NamedChain.write('editor', cCreateEditorWithToolbar([], 'bold italic', 'strikethrough')),
+        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+        NamedChain.direct('toolbar', Assertions.cAssertStructure(
+          'Checking toolbar should have just bold and italic',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              classes: [ arr.has('tox-toolbar') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar__group') ],
+                  children: [
+                    s.element('button', { }),
+                    s.element('button', { })
+                  ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar__group') ],
+                  children: [
+                    s.element('button', { })
+                  ]
+                })
+              ]
+            });
+          })
+        ), Id.generate('')),
+        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.bundle(Result.value)
+      ])
+    ]),
+
     Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: false and toolbar2: "bold italic underline" should create "bold italic underline toolbar and ignore toolbar1', [
       NamedChain.asChain([
         NamedChain.writeValue('body', Body.body()),

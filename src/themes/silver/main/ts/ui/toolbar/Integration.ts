@@ -1,7 +1,7 @@
 import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { Objects, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Option, Result, Type } from '@ephox/katamari';
 import { AddButtonSettings } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 import {
@@ -16,7 +16,6 @@ import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { renderMenuButton } from '../menus/menubar/Integration';
-import Tools from '../../../../../../core/main/ts/api/util/Tools';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -118,7 +117,7 @@ const createToolbar = (toolbarConfig) => {
     }
   };
 
-  const toolbarArray = Tools.isArray(toolbar()) ? toolbar() :  [ toolbar() ];
+  const toolbarArray = Type.isArray(toolbar()) ? toolbar() :  [ toolbar() ];
   return toolbarArray.join(' | ');
 };
 

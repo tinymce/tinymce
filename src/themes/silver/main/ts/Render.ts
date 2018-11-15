@@ -8,7 +8,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -18,7 +18,6 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import Tools from '../../../../core/main/ts/api/util/Tools';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -145,18 +144,9 @@ const setup = (editor: Editor): RenderInfo => {
     ]
   };
 
-  const getToolbar = () => {
-    const toolbarConfig = editor.getParam('toolbar');
-    if (Tools.isArray(toolbarConfig)) {
-      return toolbarConfig.length > 0;
-    } else {
-      return editor.getParam('toolbar', true, 'boolean') !== false;
-    }
-  };
-
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = getToolbar();
-  const hasMenubar = editor.getParam('menubar', true, 'boolean') !== false;
+  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome;
+  const hasMenubar = isMenubarEnabled(editor);
 
   // We need the statusbar to be seperate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
@@ -264,16 +254,6 @@ const setup = (editor: Editor): RenderInfo => {
     return height;
   };
 
-  // Convert toolbar<n> into toolbars array
-  const multipleToolbars = () => {
-    const settings = editor.settings;
-    const keys = Obj.keys(settings);
-    const toolbarKeys = Arr.filter(keys, (key) => /^toolbar([1-9])$/.test(key));
-    const toolbars = Arr.map(toolbarKeys, (key) => editor.getParam(key, false, 'string'));
-    const toolbarArray = Arr.filter(toolbars, (toolbar) => typeof toolbar === 'string');
-    return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
-  };
-
   const renderUI = function (): ModeRenderInfo {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
 
@@ -286,7 +266,7 @@ const setup = (editor: Editor): RenderInfo => {
       // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
       menubar: editor.settings.menubar,
-      toolbar: multipleToolbars().getOr(editor.getParam('toolbar', true)),
+      toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
       sidebar: editor.sidebars ? editor.sidebars : []
