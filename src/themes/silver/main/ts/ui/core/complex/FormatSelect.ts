@@ -63,7 +63,9 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     getPreviewFor,
     onAction,
     nodeChangeHandler,
-    dataset
+    dataset,
+    shouldHide: false,
+    isInvalid: (item) => !editor.formatter.canApply(item.format)
   };
 };
 
