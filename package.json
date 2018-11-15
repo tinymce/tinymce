@@ -24,10 +24,13 @@
     "event-stream": "^3.3.4",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^3.10.0",
     "gulp-concat": "^2.6.1",
     "gulp-file-include": "^2.0.1",
     "gulp-less": "^3.5.0",
+    "gulp-rename": "^1.4.0",
     "gulp-shell": "^0.6.5",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^7.0.0",
     "gulp-typescript": "^5.0.0-alpha.2",
     "less-plugin-autoprefix": "^1.5.1",
@@ -37,7 +40,8 @@
     "stylelint-order": "^0.8.1"
   },
   "files": [
-    "build/*.css",
+    "build/skins/oxide*/*.css",
+    "build/skins/oxide*/*.css.map",
     "README.md",
     "LICENSE.txt"
   ]
