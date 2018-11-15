@@ -4,19 +4,29 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Element } from '@ephox/sugar';
+import { Element, Attr } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 const cFakeEvent = function (name) {
-  return Chain.op(function (elm: Element) {
-    DOMUtils.DOM.fire(elm.dom(), name);
-  });
+  return Chain.label('Fake event',
+    Chain.op(function (elm: Element) {
+      const evt = document.createEvent('HTMLEvents');
+      evt.initEvent(name, true, true);
+      elm.dom().dispatchEvent(evt);
+    })
+  );
 };
 
 const cCloseDialog = Chain.fromChains([
   UiFinder.cFindIn('button:contains("Cancel")'),
   Mouse.cClick
 ]);
+
+const cFindByLabelFor = (labelText: string) => Chain.binder((outer: Element) => {
+  return UiFinder.findIn(outer, 'label:contains("' + labelText + '")').bind((labelEle) => {
+    return UiFinder.findIn(outer, '#' + Attr.get(labelEle, 'for'));
+  });
+});
 
 UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failure) => {
   Theme();
@@ -27,38 +37,17 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
 
     Pipeline.async({}, [
       Logger.t('insert url by typing', GeneralSteps.sequence([
-        tinyUi.sClickOnToolbar('click on link button', 'div[aria-label="Insert/edit link"] > button'),
+        tinyUi.sClickOnToolbar('click on link button', 'button[aria-label="Insert/edit link"]'),
         Chain.asStep({}, [
           Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
             [
               Chain.fromChains([
-                UiFinder.cFindIn('div > label:contains("URL") + div > input'),
+                cFindByLabelFor('URL'),
                 UiControls.cSetValue('http://www.test.com/'),
-                cFakeEvent('keyup')
+                cFakeEvent('input')
               ]),
               Chain.fromChains([
-                UiFinder.cFindIn('label:contains("Text to display") + input'),
-                UiControls.cGetValue,
-                Assertions.cAssertEq('should be the same url', 'http://www.test.com/')
-              ]),
-              cCloseDialog
-            ]
-          )
-        ])
-
-      ])),
-      Logger.t('insert url by pasting', GeneralSteps.sequence([
-        tinyUi.sClickOnToolbar('click on link button', 'div[aria-label="Insert/edit link"] > button'),
-        Chain.asStep({}, [
-          Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-            [
-              Chain.fromChains([
-                UiFinder.cFindIn('div > label:contains("URL") + div > input'),
-                UiControls.cSetValue('http://www.test.com/'),
-                cFakeEvent('paste')
-              ]),
-              Chain.fromChains([
-                UiFinder.cFindIn('label:contains("Text to display") + input'),
+                cFindByLabelFor('Text to display'),
                 UiControls.cGetValue,
                 Assertions.cAssertEq('should be the same url', 'http://www.test.com/')
               ]),
