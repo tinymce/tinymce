@@ -220,30 +220,27 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = (elm) => {
     // Set height and width if they were given, though height only applies to iframe mode
-    let width, height;
-    const settings = editor.settings;
-
     const DOM = DOMUtils.DOM;
 
-    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
-    height = getHeightSetting(editor);
-    const minHeight = getMinHeightSetting(editor);
+    const baseWidth = editor.getParam('width', DOM.getStyle(elm, 'width'));
+    const baseHeight = getHeightSetting(editor);
     const minWidth = getMinWidthSetting(editor);
+    const minHeight = getMinHeightSetting(editor);
 
-    width = Utils.parseToInt(width).bind((w) => {
-      return minWidth.map((mw) => Math.max(w, mw));
-    }).getOr(width);
+    const parsedWidth = Utils.parseToInt(baseWidth).bind((w) => {
+      return Utils.numToPx(minWidth.map((mw) => Math.max(w, mw)));
+    }).getOr(Utils.numToPx(baseWidth));
 
-    height = Utils.parseToInt(height).bind((h) => {
+    const parsedHeight = Utils.parseToInt(baseHeight).bind((h) => {
       return minHeight.map((mh) => Math.max(h, mh));
-    }).getOr(height);
+    }).getOr(baseHeight);
 
-    if (width) {
-      Css.set(outerContainer.element(), 'width', Utils.numToPx(width));
+    if (typeof parsedWidth === 'string') {
+      Css.set(outerContainer.element(), 'width', parsedWidth);
     }
 
     if (!editor.inline) {
-      const pxHeight = Utils.numToPx(height);
+      const pxHeight = Utils.numToPx(parsedHeight);
       if (Css.isValidValue('div', 'height', pxHeight)) {
         Css.set(outerContainer.element(), 'height', pxHeight);
       } else {
@@ -251,7 +248,7 @@ const setup = (editor: Editor): RenderInfo => {
       }
     }
 
-    return height;
+    return parsedHeight;
   };
 
   const renderUI = function (): ModeRenderInfo {
