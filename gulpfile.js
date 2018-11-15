@@ -51,7 +51,7 @@ gulp.task('less', function() {
 gulp.task('minify-css', function() {
   return gulp.src('./build/skins/oxide*/*.css')
     .pipe(sourcemaps.init())
-    .pipe(cleanCSS())
+    .pipe(cleanCSS({ rebase: false }))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'));
