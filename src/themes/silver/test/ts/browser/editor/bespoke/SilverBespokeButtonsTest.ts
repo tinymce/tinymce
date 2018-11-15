@@ -325,7 +325,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     {
       theme: 'silver',
       toolbar: 'align fontselect fontsizeselect formatselect styleselect',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/oxide',
+      content_css: 'project/src/themes/silver/test/css/content.css'
     },
     () => {
       success();
