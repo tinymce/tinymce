@@ -55,7 +55,9 @@ const getSpec = (editor): SelectSpec => {
     isSelectedFor,
     getPreviewFor,
     onAction,
-    nodeChangeHandler
+    nodeChangeHandler,
+    shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
+    isInvalid: (item) => !editor.formatter.canApply(item.format)
   } as SelectSpec;
 };
 
