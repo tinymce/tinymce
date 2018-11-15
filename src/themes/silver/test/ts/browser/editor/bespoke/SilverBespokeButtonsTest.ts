@@ -168,7 +168,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFontSizeSelect = Log.stepsAsStep('TBA', 'Checking fontsize ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('FontSelect', '14px'), // This might be fragile.
+        sOpenMenu('FontSelect', '12pt'), // This might be fragile.
         sAssertFocusOnItem('8pt'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         UiFinder.sNotExists(Body.body(), '[role="menu"]'),
@@ -182,8 +182,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
         sCheckItemsAtLocation(
           'Second paragraph with no set font size',
-          range(7, () => false),
-          '14px',
+          range(2, () => false).concat([ true ]).concat(range(4, () => false)),
+          '12pt',
           [ 1, 0 ], 'Se'.length
         ),
 
@@ -325,7 +325,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     {
       theme: 'silver',
       toolbar: 'align fontselect fontsizeselect formatselect styleselect',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/oxide',
+      content_css: 'project/src/themes/silver/test/css/content.css'
     },
     () => {
       success();
