@@ -85,12 +85,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
       const changedHeight = state.get().h + change.dh;
       const changedWidth = state.get().w + change.dw;
 
-      Assertions.assertEq('height has changed as expected', true, looseEqual(changedHeight, height, 2));
-      Assertions.assertEq('width has changed as expected', true, looseEqual(changedWidth, width, 2));
+      Assertions.assertEq('height has changed as expected', true, looseEqual(changedHeight, height, 3));
+      Assertions.assertEq('width has changed as expected', true, looseEqual(changedWidth, width, 3));
     }));
   };
 
-  const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 90px;" border="1">' +
+  const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
                     '<tbody>' +
                       '<tr>' +
                         '<td style="width: 180px;">a</td>' +
