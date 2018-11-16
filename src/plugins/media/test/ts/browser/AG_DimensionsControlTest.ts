@@ -5,7 +5,7 @@ import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import Utils, { selectors } from '../module/test/Utils';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function (success, failure) {
@@ -21,9 +21,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
         Chain.fromParent(
           ui.cWaitForPopup('wait for popup', 'div.tox-dialog'),
           [
-            Utils.cExists('label:contains(Source) + input.tox-textfield'),
-            Utils.cNotExists('.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield'),
-            Utils.cNotExists('.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield')
+            Utils.cExists(selectors.source),
+            Utils.cNotExists(selectors.width),
+            Utils.cNotExists(selectors.height)
           ]
         )
       ]),
