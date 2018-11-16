@@ -8,7 +8,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -145,8 +145,8 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = editor.getParam('toolbar', true, 'boolean') !== false;
-  const hasMenubar = editor.getParam('menubar', true, 'boolean') !== false;
+  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
+  const hasMenubar = isMenubarEnabled(editor);
 
   // We need the statusbar to be seperate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
@@ -266,7 +266,7 @@ const setup = (editor: Editor): RenderInfo => {
       // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
       menubar: editor.settings.menubar,
-      toolbar: editor.settings.toolbar,
+      toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
       sidebar: editor.sidebars ? editor.sidebars : []

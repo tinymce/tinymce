@@ -1,4 +1,4 @@
-import { Option, Type } from '@ephox/katamari';
+import { Option, Type, Obj, Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from '../ui/core/complex/StyleFormatTypes';
@@ -35,6 +35,25 @@ const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
+const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
+
+const isToolbarEnabled = (editor: Editor) => {
+  const toolbarConfig = editor.getParam('toolbar');
+  if (Type.isArray(toolbarConfig)) {
+    return toolbarConfig.length > 0;
+  } else {
+    return editor.getParam('toolbar', true, 'boolean') !== false;
+  }
+};
+
+// Convert toolbar<n> into toolbars array
+const getMultipleToolbarsSetting = (editor: Editor) => {
+  const keys = Obj.keys(editor.settings);
+  const toolbarKeys = Arr.filter(keys, (key) => /^toolbar([1-9])$/.test(key));
+  const toolbars = Arr.map(toolbarKeys, (key) => editor.getParam(key, false, 'string'));
+  const toolbarArray = Arr.filter(toolbars, (toolbar) => typeof toolbar === 'string');
+  return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
+};
 
 export {
   getSkinUrl,
@@ -46,5 +65,8 @@ export {
   getMaxHeightSetting,
   getUserStyleFormats,
   isMergeStyleFormats,
-  getRemovedMenuItems
+  getRemovedMenuItems,
+  isMenubarEnabled,
+  isToolbarEnabled,
+  getMultipleToolbarsSetting
 };
