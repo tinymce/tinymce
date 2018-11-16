@@ -26,8 +26,12 @@ const extractSelected = function (cells) {
   });
 };
 
-const serializeElement = function (editor: Editor, elm) {
-  return editor.selection.serializer.serialize(elm.dom(), {});
+const serializeElements = (editor: Editor, elements: Element[]): string => {
+  return Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
+};
+
+const getTextContent = (elements: Element[]): string => {
+  return Arr.map(elements, (element) => element.dom().innerText).join('');
 };
 
 const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
@@ -35,9 +39,7 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
     const multiCellContext = function (cells) {
       e.preventDefault();
       extractSelected(cells).each(function (elements) {
-        e.content = Arr.map(elements, function (elm) {
-          return serializeElement(editor, elm);
-        }).join('');
+        e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);
       });
     };
 
