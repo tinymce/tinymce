@@ -1,5 +1,5 @@
 import {
-    ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step
+  ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -168,17 +168,16 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
             editor.plugins.textpattern.getPatterns(),
           [
             {
-              format: 'h1',
-              start: '#'
+              format: 'h3',
+              start: '###'
             },
             {
               format: 'h2',
               start: '##'
             },
-
             {
-              format: 'h3',
-              start: '###'
+              format: 'h1',
+              start: '#'
             }
           ]
           );

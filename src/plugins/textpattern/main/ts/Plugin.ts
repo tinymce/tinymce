@@ -11,11 +11,11 @@
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
-import Settings from './api/Settings';
+import * as Settings from './api/Settings';
 import Keyboard from './core/Keyboard';
 
-PluginManager.add('textpattern', function (editor) {
-  const patternsState = Cell(Settings.getPatterns(editor.settings));
+PluginManager.add('textpattern', (editor) => {
+  const patternsState = Cell(Settings.getPatternSet(editor.settings));
 
   Keyboard.setup(editor, patternsState);
 

@@ -8,13 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const get = function (patternsState) {
-  const setPatterns = function (newPatterns) {
-    patternsState.set(newPatterns);
+import { Cell } from '@ephox/katamari';
+import { PatternSet, createPatternSet, Pattern } from './Pattern';
+
+const get = (patternsState: Cell<PatternSet>) => {
+  const setPatterns = (newPatterns: Pattern[]) => {
+    patternsState.set(createPatternSet(newPatterns));
   };
 
-  const getPatterns = function () {
-    return patternsState.get();
+  const getPatterns = () => {
+    return [
+      ...patternsState.get().inlinePatterns,
+      ...patternsState.get().blockPatterns,
+      ...patternsState.get().replacementPatterns
+    ];
   };
 
   return {
