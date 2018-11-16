@@ -1,3 +1,4 @@
+import { BarApi } from '../components/dialog/Bar';
 import { ButtonApi } from '../components/dialog/Button';
 import { CheckboxApi } from '../components/dialog/Checkbox';
 import { ColorInputApi } from '../components/dialog/ColorInput';
@@ -19,6 +20,7 @@ import { LabelApi } from '../components/dialog/Label';
 // These are the types that are exposed though a public end user api
 
 export {
+  BarApi,
   ButtonApi,
   CheckboxApi,
   CollectionApi,

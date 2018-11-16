@@ -1,3 +1,4 @@
+import * as Bar from '../components/dialog/Bar';
 import * as Button from '../components/dialog/Button';
 import * as Checkbox from '../components/dialog/Checkbox';
 import * as Collection from '../components/dialog/Collection';
@@ -22,6 +23,7 @@ import { DialogButton } from '../components/dialog/Dialog';
 // These are the types that are to be used internally in implementations
 
 export {
+  Bar,
   Button,
   Checkbox,
   ColorInput,
