@@ -191,6 +191,9 @@ const bindOnReady = function (win, callback, eventUtils) {
 
   // Gets called when the DOM is ready
   const readyHandler = function () {
+    removeEvent(win, 'DOMContentLoaded', readyHandler);
+    removeEvent(win, 'load', readyHandler);
+
     if (!eventUtils.domLoaded) {
       eventUtils.domLoaded = true;
       callback(event);
