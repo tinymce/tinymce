@@ -145,7 +145,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome;
+  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
   const hasMenubar = isMenubarEnabled(editor);
 
   // We need the statusbar to be seperate to everything else so resizing works properly
