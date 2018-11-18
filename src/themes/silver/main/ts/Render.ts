@@ -8,7 +8,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -152,8 +152,8 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = editor.getParam('toolbar', true, 'boolean') !== false;
-  const hasMenubar = editor.getParam('menubar', true, 'boolean') !== false;
+  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
+  const hasMenubar = isMenubarEnabled(editor);
 
   // We need the statusbar to be seperate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
@@ -230,30 +230,27 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = (elm) => {
     // Set height and width if they were given, though height only applies to iframe mode
-    let width, height;
-    const settings = editor.settings;
-
     const DOM = DOMUtils.DOM;
 
-    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
-    height = getHeightSetting(editor);
-    const minHeight = getMinHeightSetting(editor);
+    const baseWidth = editor.getParam('width', DOM.getStyle(elm, 'width'));
+    const baseHeight = getHeightSetting(editor);
     const minWidth = getMinWidthSetting(editor);
+    const minHeight = getMinHeightSetting(editor);
 
-    width = Utils.parseToInt(width).bind((w) => {
-      return minWidth.map((mw) => Math.max(w, mw));
-    }).getOr(width);
+    const parsedWidth = Utils.parseToInt(baseWidth).bind((w) => {
+      return Utils.numToPx(minWidth.map((mw) => Math.max(w, mw)));
+    }).getOr(Utils.numToPx(baseWidth));
 
-    height = Utils.parseToInt(height).bind((h) => {
+    const parsedHeight = Utils.parseToInt(baseHeight).bind((h) => {
       return minHeight.map((mh) => Math.max(h, mh));
-    }).getOr(height);
+    }).getOr(baseHeight);
 
-    if (width) {
-      Css.set(outerContainer.element(), 'width', Utils.numToPx(width));
+    if (typeof parsedWidth === 'string') {
+      Css.set(outerContainer.element(), 'width', parsedWidth);
     }
 
     if (!editor.inline) {
-      const pxHeight = Utils.numToPx(height);
+      const pxHeight = Utils.numToPx(parsedHeight);
       if (Css.isValidValue('div', 'height', pxHeight)) {
         Css.set(outerContainer.element(), 'height', pxHeight);
       } else {
@@ -261,7 +258,7 @@ const setup = (editor: Editor): RenderInfo => {
       }
     }
 
-    return height;
+    return parsedHeight;
   };
 
   const renderUI = function (): ModeRenderInfo {
@@ -276,7 +273,7 @@ const setup = (editor: Editor): RenderInfo => {
       // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
       menubar: editor.settings.menubar,
-      toolbar: editor.settings.toolbar,
+      toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
       sidebar: editor.sidebars ? editor.sidebars : []
