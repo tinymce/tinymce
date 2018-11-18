@@ -43,7 +43,7 @@ export interface UiFactoryBackstage {
   colorinput?: UiFactoryBackstageForColorInput;
 }
 
-const init = (sink: AlloyComponent, editor: Editor, lazyToolbar: () => AlloyComponent): UiFactoryBackstage => {
+const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -58,7 +58,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyToolbar: () => AlloyComp
           return {
             anchor: 'hotspot',
             // TODO AP-174 (below)
-            hotspot: lazyToolbar(),
+            hotspot: lazyAnchorbar(),
             layouts: {
               onRtl: () => [ Layout.southeast ],
               onLtr: () => [ Layout.southwest ]
@@ -69,7 +69,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyToolbar: () => AlloyComp
           return {
             anchor: 'hotspot',
             // TODO AP-174 (below)
-            hotspot: lazyToolbar(),
+            hotspot: lazyAnchorbar(),
             layouts: {
               onRtl: () => [ Layout.south ],
               onLtr: () => [ Layout.south ]
