@@ -1,7 +1,7 @@
 import { AlloyComponent, GuiFactory, InlineView } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
-import { Arr, Fun, Result, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
@@ -23,7 +23,14 @@ const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi 
         type: 'menuitem',
         text: item.text,
         icon: item.icon,
-        getSubmenuItems: () => Arr.map(item.getSubmenuItems(), makeContextItem)
+        getSubmenuItems: () => {
+          const items = item.getSubmenuItems();
+          if (Type.isString(items)) {
+            return items;
+          } else {
+            return Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
+          }
+        }
       };
     default:
       // case 'item', or anything else really
@@ -37,48 +44,29 @@ const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi 
   }
 };
 
-type Section = string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
-
 function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, menuItems: Record<string, Menu.MenuItemApi | Menu.ToggleMenuItemApi>, menuConfig: string[], selectedElement: Element) {
-  const flattenedItems = Arr.bind(menuConfig, (name) => {
+  const items = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
-    if (contextMenus.hasOwnProperty(name)) {
+    if (Obj.has(contextMenus, name)) {
       const items = contextMenus[name].update(selectedElement);
       // TODO: Should we add a ValueSchema check here?
-      if (items.length > 0) {
+      if (Type.isString(items)) {
+        return acc.concat(items.split(' ')).concat(separator);
+      } else if (items.length > 0) {
         const allItems = Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
-
-        const separatorArray: Section[] = ['|'];
-        return separatorArray.concat(allItems).concat(separatorArray);
-      } else {
-        return [];
-      }
-    } else {
-      return [name];
-    }
-  });
-
-  const items = Arr.foldl<Section, Array<Menu.MenuItemApi | Menu.ToggleMenuItemApi | Menu.SeparatorMenuItemApi>>(flattenedItems, (acc, item) => {
-    if (Type.isString(item)) {
-      if (menuItems.hasOwnProperty(item)) {
-        return acc.concat([menuItems[item]]);
-      } else if (item === '|' && acc.length > 0 && acc[acc.length - 1].type !== 'separator') {
-        // separator (when one isn't already at the end)
-        return acc.concat([separator]);
+        return acc.concat(allItems).concat(separator);
       } else {
         return acc;
       }
+    } else if (Obj.has(menuItems, name)) {
+      return acc.concat([menuItems[name], separator]);
     } else {
-      // an already converted item
-      return acc.concat([item]);
+      return acc;
     }
   }, []);
 
-  if (items.length > 0 && items[items.length - 1].type === 'separator') {
-    items.pop();
-  }
-
-  return items;
+  // Strip off the trailing separator
+  return items.length > 0 ? items.slice(0, -1) : [];
 }
 
 const isNativeOverrideKeyEvent = function (editor, e) {

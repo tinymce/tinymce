@@ -1,6 +1,5 @@
 import { assert, UnitTest} from '@ephox/bedrock';
 import { Menu } from '@ephox/bridge';
-import I18n from 'tinymce/core/api/util/I18n';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
 UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
@@ -9,12 +8,8 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
       type: 'menuitem',
       text: name,
       value: `${name}-value`,
-      ... submenus ? { getSubmenuItems: () => submenus } : {}
+      ...submenus ? { getSubmenuItems: () => submenus } : {}
     };
-  };
-
-  const expandAndAssertEq = (items: string | Menu.MenuItemApi[], expected) => {
-    assert.eq(expected, MenuConversion.expand(items, providersBackstage));
   };
 
   const separator: Menu.SeparatorMenuItemApi = {
@@ -29,50 +24,54 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   const nestedMenu = buildMenuItem('nested-menu-1', [ submenu1, separator, submenu2 ]);
   const nestedMenuWithReferences = buildMenuItem('nested-menu-2', 'submenu-1 | submenu-2');
 
-  const providersBackstage = {
-    icons: () => <Record<string, string>> {},
-    menuItems: () => <Record<string, any>> {
-      'menu-1': menu1,
-      'menu-2': menu2,
-      'submenu-1': submenu1,
-      'submenu-2': submenu2
-    },
-    translate: I18n.translate
+  const menuItems = {
+    'menu-1': menu1,
+    'menu-2': menu2,
+    'submenu-1': submenu1,
+    'submenu-2': submenu2
+  };
+
+  const expandAndAssertEq = (items: string | Array<string | Menu.MenuItemApi>, expected) => {
+    assert.eq(expected, MenuConversion.expand(items, menuItems));
   };
 
   // Menu reference
   expandAndAssertEq('menu-1 | menu-2', {
     items: [ menu1, separator, menu2 ],
-      menus: { },
-      expansions: {  }
-    },
-  );
+    menus: { },
+    expansions: { }
+  });
+
+  // Menu reference array
+  expandAndAssertEq([ 'menu-1', '|', 'menu-2'], {
+    items: [ menu1, separator, menu2 ],
+    menus: { },
+    expansions: { }
+  });
 
   // Menu with submenus
   expandAndAssertEq([ nestedMenu ], {
-      items: [ nestedMenu ],
-      menus: {
-        'nested-menu-1-value': [ submenu1, separator, submenu2 ],
-        'submenu-2-value': [ submenu2a ]
-      },
-      expansions: {
-        'nested-menu-1-value': 'nested-menu-1-value',
-        'submenu-2-value': 'submenu-2-value'
-      }
+    items: [ nestedMenu ],
+    menus: {
+      'nested-menu-1-value': [ submenu1, separator, submenu2 ],
+      'submenu-2-value': [ submenu2a ]
+    },
+    expansions: {
+      'nested-menu-1-value': 'nested-menu-1-value',
+      'submenu-2-value': 'submenu-2-value'
     }
-  );
+  });
 
   // Menu with submenu references
   expandAndAssertEq([ nestedMenuWithReferences ], {
-      items: [ nestedMenuWithReferences ],
-      menus: {
-        'nested-menu-2-value': [ submenu1, separator, submenu2 ],
-        'submenu-2-value': [ submenu2a ]
-      },
-      expansions: {
-        'nested-menu-2-value': 'nested-menu-2-value',
-        'submenu-2-value': 'submenu-2-value'
-      }
+    items: [ nestedMenuWithReferences ],
+    menus: {
+      'nested-menu-2-value': [ submenu1, separator, submenu2 ],
+      'submenu-2-value': [ submenu2a ]
+    },
+    expansions: {
+      'nested-menu-2-value': 'nested-menu-2-value',
+      'submenu-2-value': 'submenu-2-value'
     }
-  );
+  });
 });
