@@ -11,8 +11,10 @@
 import Delay from 'tinymce/core/api/util/Delay';
 import VK from 'tinymce/core/api/util/VK';
 import KeyHandler from './KeyHandler';
+import { PatternSet } from '../api/Pattern';
+import { Cell } from '@ephox/katamari';
 
-const setup = function (editor, patternsState) {
+const setup = function (editor, patternsState: Cell<PatternSet>) {
   const charCodes = [',', '.', ';', ':', '!', '?'];
   const keyCodes = [32];
 
