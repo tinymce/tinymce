@@ -9,6 +9,10 @@ const isMenuItemsReference = (items: string | SingleMenuItemApi[]): items is str
   return typeof items === 'string';
 };
 
+const isSeparator = (item: SingleMenuItemApi): item is Menu.SeparatorMenuItemApi => {
+  return item.type === 'separator';
+};
+
 const unwrapReference = (items: string, providersBackstage: UiFactoryBackstageProviders): SingleMenuItemApi[] => {
   return Arr.bind(items.split(' '), (itemName) => {
     if (itemName === '|') {
@@ -62,13 +66,22 @@ const getFromItem = (item: SingleMenuItemApi, providersBackstage: UiFactoryBacks
   };
 };
 
+const generateValueIfRequired = (item: SingleMenuItemApi): SingleMenuItemApi => {
+  // Separators don't have a value, so just return the item
+  if (isSeparator(item)) {
+    return item;
+  } else {
+    // Use the value already in item if it has one.
+    const itemValue = Objects.readOptFrom(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
+    return Merger.deepMerge({ value: itemValue }, item);
+  }
+};
+
 // Takes items, and consolidates them into its return value
 const expand = (items: string | SingleMenuItemApi[], providersBackstage: UiFactoryBackstageProviders) => {
   const realItems = isMenuItemsReference(items) ? unwrapReference(items, providersBackstage) : items;
   return Arr.foldr(realItems, (acc, item) => {
-    // Use the value already in item if it has one.
-    const itemValue = Objects.readOptFrom(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
-    const itemWithValue = Merger.deepMerge({ value: itemValue }, item);
+    const itemWithValue = generateValueIfRequired(item);
     const newData = getFromItem(itemWithValue, providersBackstage);
     return {
       menus: Merger.deepMerge(acc.menus, newData.menus),

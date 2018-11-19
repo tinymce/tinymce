@@ -8,7 +8,7 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
     return {
       type: 'menuitem',
       text: name,
-      value: `${name}-item`,
+      value: `${name}-value`,
       ... submenus ? { getSubmenuItems: () => submenus } : {}
     };
   };
@@ -27,7 +27,7 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   const submenu2a = buildMenuItem('submenu-2a');
   const submenu2 = buildMenuItem('submenu-2', [ submenu2a ]);
   const nestedMenu = buildMenuItem('nested-menu-1', [ submenu1, separator, submenu2 ]);
-  const nestedMenuWithReferences = buildMenuItem('nested-menu-1', 'submenu-item-1 | submenu-item-2');
+  const nestedMenuWithReferences = buildMenuItem('nested-menu-2', 'submenu-1 | submenu-2');
 
   const providersBackstage = {
     icons: () => <Record<string, string>> {},
@@ -52,26 +52,26 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   expandAndAssertEq([ nestedMenu ], {
       items: [ nestedMenu ],
       menus: {
-        'menu-item-2': [ submenu1, separator, submenu2 ],
-        'submenu-item-2': [ submenu2a ]
+        'nested-menu-1-value': [ submenu1, separator, submenu2 ],
+        'submenu-2-value': [ submenu2a ]
       },
       expansions: {
-        'menu-item-2': 'menu-item-2',
-        'submenu-item-2': 'submenu-item-2'
+        'nested-menu-1-value': 'nested-menu-1-value',
+        'submenu-2-value': 'submenu-2-value'
       }
     }
   );
 
   // Menu with submenu references
   expandAndAssertEq([ nestedMenuWithReferences ], {
-      items: [ nestedMenu ],
+      items: [ nestedMenuWithReferences ],
       menus: {
-        'menu-item-2': [ submenu1, separator, submenu2 ],
-        'submenu-item-2': [ submenu2a ]
+        'nested-menu-2-value': [ submenu1, separator, submenu2 ],
+        'submenu-2-value': [ submenu2a ]
       },
       expansions: {
-        'menu-item-2': 'menu-item-2',
-        'submenu-item-2': 'submenu-item-2'
+        'nested-menu-2-value': 'nested-menu-2-value',
+        'submenu-2-value': 'submenu-2-value'
       }
     }
   );
