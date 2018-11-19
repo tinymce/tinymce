@@ -42,14 +42,14 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const text = itemText.getOr('');
+    const title = itemText.map((text) => ` title="${text}"`).getOr('');
 
     if (itemValue === colorPickerCommand) {
-      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn" title="${text}">${icon}</button>`);
+      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn"${title}>${icon}</button>`);
     } else if (itemValue === removeColorCommand) {
-      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove" title="${text}">${icon}</div>`);
+      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove"${title}>${icon}</div>`);
     } else {
-      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}" title="${text}"></div>`);
+      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"${title}></div>`);
     }
   };
 
