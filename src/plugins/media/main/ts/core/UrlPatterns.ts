@@ -12,7 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 export interface UrlPattern {
   regex: RegExp;
-  type: string;
+  type: 'iframe';
   w: number;
   h: number;
   url: string;

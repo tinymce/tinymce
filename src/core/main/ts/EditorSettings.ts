@@ -25,7 +25,7 @@ export interface ParamTypeMap {
 const sectionResult = Struct.immutable('sections', 'settings');
 const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
-const isPhone = detection.deviceType.isiPhone();
+const isPhone = detection.deviceType.isPhone();
 const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
 const defaultMobileSettings = isPhone ? { theme: 'mobile' } : { };
 

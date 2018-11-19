@@ -3,8 +3,8 @@ import { Event, HTMLElement, document } from '@ephox/dom-globals';
 import { Element, Focus } from '@ephox/sugar';
 import { Type } from '@ephox/katamari';
 
-const selectors = {
-  source: 'label:contains(Source) + input.tox-textfield',
+export const selectors = {
+  source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
   width: '.tox-form__controls-h-stack span:contains(Width) + input.tox-textfield',
   height: '.tox-form__controls-h-stack span:contains(Height) + input.tox-textfield',
   embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',

@@ -3,9 +3,9 @@ import { TieredData, TieredMenu } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Id, Merger, Obj } from '@ephox/katamari';
 
-import { ItemResponse } from '../item/MenuItems';
 import { expand } from './MenuConversion';
 import { createPartialMenu, SingleMenuItemApi } from './SingleMenu';
+import ItemResponse from '../item/ItemResponse';
 
 // TODO: Consider moving the expansion part to alloy?
 const build = (items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): TieredData => {

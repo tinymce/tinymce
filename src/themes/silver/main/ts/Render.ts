@@ -1,4 +1,4 @@
-import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
@@ -8,7 +8,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -82,11 +82,18 @@ const setup = (editor: Editor): RenderInfo => {
     ])
   });
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getToolbar(container);
+  const memAnchorBar = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-anchorbar']
+    }
+  });
+
+  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
+    return memAnchorBar.getOpt(container);
   }).getOrDie('Could not find a toolbar element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyToolbar);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
@@ -145,13 +152,16 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = editor.getParam('toolbar', true, 'boolean') !== false;
-  const hasMenubar = editor.getParam('menubar', true, 'boolean') !== false;
+  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
+  const hasMenubar = isMenubarEnabled(editor);
 
   // We need the statusbar to be seperate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
     hasToolbar ? [ partToolbar ] : [ ],
+    [
+      memAnchorBar.asSpec()
+    ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ]
   ]);
@@ -220,30 +230,27 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = (elm) => {
     // Set height and width if they were given, though height only applies to iframe mode
-    let width, height;
-    const settings = editor.settings;
-
     const DOM = DOMUtils.DOM;
 
-    width = settings.width || DOM.getStyle(elm, 'width') || '100%';
-    height = getHeightSetting(editor);
-    const minHeight = getMinHeightSetting(editor);
+    const baseWidth = editor.getParam('width', DOM.getStyle(elm, 'width'));
+    const baseHeight = getHeightSetting(editor);
     const minWidth = getMinWidthSetting(editor);
+    const minHeight = getMinHeightSetting(editor);
 
-    width = Utils.parseToInt(width).bind((w) => {
-      return minWidth.map((mw) => Math.max(w, mw));
-    }).getOr(width);
+    const parsedWidth = Utils.parseToInt(baseWidth).bind((w) => {
+      return Utils.numToPx(minWidth.map((mw) => Math.max(w, mw)));
+    }).getOr(Utils.numToPx(baseWidth));
 
-    height = Utils.parseToInt(height).bind((h) => {
+    const parsedHeight = Utils.parseToInt(baseHeight).bind((h) => {
       return minHeight.map((mh) => Math.max(h, mh));
-    }).getOr(height);
+    }).getOr(baseHeight);
 
-    if (width) {
-      Css.set(outerContainer.element(), 'width', Utils.numToPx(width));
+    if (typeof parsedWidth === 'string') {
+      Css.set(outerContainer.element(), 'width', parsedWidth);
     }
 
     if (!editor.inline) {
-      const pxHeight = Utils.numToPx(height);
+      const pxHeight = Utils.numToPx(parsedHeight);
       if (Css.isValidValue('div', 'height', pxHeight)) {
         Css.set(outerContainer.element(), 'height', pxHeight);
       } else {
@@ -251,7 +258,7 @@ const setup = (editor: Editor): RenderInfo => {
       }
     }
 
-    return height;
+    return parsedHeight;
   };
 
   const renderUI = function (): ModeRenderInfo {
@@ -266,7 +273,7 @@ const setup = (editor: Editor): RenderInfo => {
       // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
       menubar: editor.settings.menubar,
-      toolbar: editor.settings.toolbar,
+      toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
       sidebar: editor.sidebars ? editor.sidebars : []

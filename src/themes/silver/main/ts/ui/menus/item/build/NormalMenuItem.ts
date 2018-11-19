@@ -4,10 +4,10 @@ import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemType
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 
-import { ItemResponse } from '../MenuItems';
 import { renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
+import ItemResponse from '../ItemResponse';
 
 // Note, this does not create a valid SketchSpec.
 const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {

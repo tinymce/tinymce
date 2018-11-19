@@ -1,7 +1,6 @@
 import { Menu } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import { ItemResponse } from '../../menus/item/MenuItems';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { SingleMenuItemApi } from '../../menus/menu/SingleMenu';
 import * as FormatRegister from './utils/FormatRegister';
@@ -11,6 +10,7 @@ import { AlloyComponent } from '@ephox/alloy';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import ItemResponse from '../../menus/item/ItemResponse';
 
 export interface PreviewSpec {
   tag: string;
@@ -36,6 +36,11 @@ export interface SelectSpec {
   onAction: (item) => (api) => void;
   // This is used for setting up the handler to change the menu text
   nodeChangeHandler: Option<(comp: AlloyComponent) => (e) => void>;
+  // This is true if items should be hidden if they are not an applicable
+  // format to the current selection
+  shouldHide: boolean;
+  // This determines if an item is applicable
+  isInvalid: (item: FormatItem) => boolean;
 }
 
 export interface SelectData {
@@ -68,7 +73,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
             type: 'togglemenuitem',
             text: translatedText,
             active: rawItem.isSelected(),
-            disabled: false,
+            disabled,
             onAction: spec.onAction(rawItem),
           } as SingleMenuItemApi;
         },
@@ -78,7 +83,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
             item: {
               type: 'togglemenuitem',
               text: translatedText,
-              disabled: false,
+              disabled,
               active: rawItem.isSelected(),
               onAction: spec.onAction(rawItem),
               meta: preview as any
@@ -90,7 +95,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   };
 
   const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): SingleMenuItemApi[] => {
-    const invalid = item.type === 'formatter' && !editor.formatter.canApply(item.format);
+    const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
@@ -101,7 +106,8 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   };
 
   const validateItems = (preItems) => {
-    return Arr.bind(preItems, (item) => validate(item, IrrelevantStyleItemResponse.Disable));
+    const response = spec.shouldHide ? IrrelevantStyleItemResponse.Hide : IrrelevantStyleItemResponse.Disable;
+    return Arr.bind(preItems, (item) => validate(item, response));
   };
 
   const getFetch = (backstage, getStyleItems) => (callback) => {

@@ -4,7 +4,6 @@ import { UnitTest } from '@ephox/bedrock';
 
 import { renderAlertBanner } from '../../../../../main/ts/ui/general/AlertBanner';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
-import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
@@ -43,22 +42,14 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
               ],
               children: [
                 s.element('div', {
-                  classes: [ arr.has('tox-notification__icon') ],
-                  html: str.is('icon-provided-for-help')
-                }),
-
-                s.element('div', {
                   classes: [ arr.has('tox-notification__body') ],
                   html: str.is('I am a banner')
                 }),
 
                 s.element('button', {
-                  classes: Arr.map(
-                    [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
-                    arr.has
-                  ),
-                  html: str.is('icon-provided-for-close')
-                })
+                  classes: [ arr.has('tox-notification__right-icon') ],
+                  html: str.is('icon-provided-for-help')
+                }),
               ]
             });
           }),
