@@ -1,9 +1,9 @@
 import { ValueSchema, FieldSchema, Processor } from '@ephox/boulder';
 import { Result, Option, Fun } from '@ephox/katamari';
-import { MenuItemApi, SeparatorMenuItemApi, FancyMenuItemApi } from '../../api/Menu';
+import { FancyMenuItemApi, MenuItemApi, SeparatorMenuItemApi, ToggleMenuItemApi } from '../../api/Menu';
 
-export type ToolbarMenuButtonItemTypes = MenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi;
-export type SuccessCallback = (menu: ToolbarMenuButtonItemTypes[]) => void;
+export type ToolbarMenuButtonItemTypes = MenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi;
+export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
 export interface ToolbarMenuButtonApi {

@@ -7,7 +7,7 @@ import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItem
 export interface MenuItemApi extends CommonMenuItemApi {
   type?: 'menuitem';
   icon?: string;
-  getSubmenuItems?: () => Array<MenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi>;
+  getSubmenuItems?: () => string | Array<MenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi>;
   onSetup?: (api: MenuItemInstanceApi) => (api: MenuItemInstanceApi) => void;
   onAction?: (api: MenuItemInstanceApi) => void;
 }
