@@ -14,6 +14,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Size from './Size';
 import { Element } from '@ephox/dom-globals';
+import { MediaDialogData } from './DataToHtml';
 
 const DOM = DOMUtils.DOM;
 
@@ -59,7 +60,7 @@ const normalizeHtml = function (html) {
   return writer.getContent();
 };
 
-const updateHtmlSax = function (html, data, updateAll?) {
+const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?) {
   const writer = Writer();
   let sourceCount = 0;
   let hasImage;
@@ -190,7 +191,7 @@ const isEphoxEmbed = function (html) {
   return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
 };
 
-const updateEphoxEmbed = function (html, data) {
+const updateEphoxEmbed = function (html, data: Partial<MediaDialogData>) {
   const fragment = DOM.createFragment(html);
   const div = fragment.firstChild as Element;
 
@@ -200,7 +201,7 @@ const updateEphoxEmbed = function (html, data) {
   return normalizeHtml(div.outerHTML);
 };
 
-const updateHtml = function (html, data, updateAll?) {
+const updateHtml = function (html: string, data: Partial<MediaDialogData>, updateAll?: boolean) {
   return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 

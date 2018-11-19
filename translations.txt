@@ -24,6 +24,41 @@ Extended Latin            <new>                 Charmap
 Symbols                   <new>                 Charmap
 Arrows                    <new>                 Charmap
 User Defined              <new>                 Charmap
+dollar sign               <new>                 Charmap
+currency sign             <new>                 Charmap
+euro-currency sign        <new>                 Charmap
+colon sign                <new>                 Charmap
+cruzeiro sign             <new>                 Charmap
+french franc sign         <new>                 Charmap
+lira sign                 <new>                 Charmap
+mill sign                 <new>                 Charmap
+naira sign                <new>                 Charmap
+peseta sign               <new>                 Charmap
+rupee sign                <new>                 Charmap
+won sign                  <new>                 Charmap
+new sheqel sign           <new>                 Charmap
+dong sign                 <new>                 Charmap
+kip sign                  <new>                 Charmap
+tugrik sign               <new>                 Charmap
+drachma sign              <new>                 Charmap
+german penny symbol       <new>                 Charmap
+peso sign                 <new>                 Charmap
+guarani sign              <new>                 Charmap
+austral sign              <new>                 Charmap
+hryvnia sign              <new>                 Charmap
+cedi sign                 <new>                 Charmap
+livre tournois sign       <new>                 Charmap
+spesmilo sign             <new>                 Charmap
+tenge sign                <new>                 Charmap
+indian rupee sign         <new>                 Charmap
+turkish lira sign         <new>                 Charmap
+nordic mark sign          <new>                 Charmap
+manat sign                <new>                 Charmap
+ruble sign                <new>                 Charmap
+yen character             <new>                 Charmap
+yuan character            <new>                 Charmap
+yuan character, in hong kong and taiwan <new>   Charmap
+yen/yuan character variant one          <new>   Charmap
 
 Code sample...            [Code sample]         Codesample
 

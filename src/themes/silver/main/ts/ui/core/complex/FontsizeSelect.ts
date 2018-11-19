@@ -72,7 +72,9 @@ const getSpec = (editor) => {
     getPreviewFor,
     onAction,
     nodeChangeHandler,
-    dataset
+    dataset,
+    shouldHide: false,
+    isInvalid: () => false
   };
 };
 

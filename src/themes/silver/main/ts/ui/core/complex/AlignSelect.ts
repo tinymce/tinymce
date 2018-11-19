@@ -53,7 +53,9 @@ const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
     isSelectedFor,
     getPreviewFor,
     onAction,
-    nodeChangeHandler
+    nodeChangeHandler,
+    shouldHide: false,
+    isInvalid: (item) => !editor.formatter.canApply(item.format)
   });
 };
 

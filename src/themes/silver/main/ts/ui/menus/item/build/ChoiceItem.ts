@@ -3,11 +3,11 @@ import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemType
 import { InlineContent, Menu, Types } from '@ephox/bridge';
 import { Option, Merger } from '@ephox/katamari';
 
-import { ItemResponse } from '../MenuItems';
 import * as ItemClasses from '../ItemClasses';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import { Toggling, Disabling } from '@ephox/alloy';
+import ItemResponse from '../ItemResponse';
 
 // TODO: Remove dupe between these
 const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {

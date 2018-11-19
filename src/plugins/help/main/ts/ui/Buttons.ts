@@ -19,6 +19,7 @@ const register = function (editor, pluginUrl) {
   editor.ui.registry.addMenuItem('help', {
     text: 'Help',
     icon: 'help',
+    shortcut: 'Alt+0',
     onAction: Dialog.opener(editor, pluginUrl)
   });
 };

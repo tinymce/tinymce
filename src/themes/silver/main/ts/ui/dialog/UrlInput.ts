@@ -26,7 +26,6 @@ import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
-import { ItemResponse } from '../menus/item/MenuItems';
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
@@ -39,6 +38,7 @@ import {
   historyTargets,
   joinMenuLists,
 } from '../urlinput/Completions';
+import ItemResponse from '../menus/item/ItemResponse';
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
@@ -147,6 +147,10 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
           ] : [ ],
           [
             AlloyEvents.run(NativeEvents.change(), (comp) => {
+              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+              updateHistory(comp);
+            }),
+            AlloyEvents.run(NativeEvents.paste(), (comp) => {
               AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
               updateHistory(comp);
             })

@@ -15,8 +15,8 @@ import { Arr, Cell, Fun, Merger, Option } from '@ephox/katamari';
 import { DisablingConfigs } from '../../../alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../../controls/Controls';
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
-import { ItemResponse } from '../MenuItems';
 import { ItemStructure } from '../structure/ItemStructure';
+import ItemResponse from '../ItemResponse';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
 Arr.bind(xs, (o) => o.toArray());

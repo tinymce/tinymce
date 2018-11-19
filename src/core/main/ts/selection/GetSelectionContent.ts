@@ -8,19 +8,37 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import EventProcessRanges from './EventProcessRanges';
 import FragmentReader from './FragmentReader';
 import MultiRange from './MultiRange';
 import Zwsp from '../text/Zwsp';
+import { Editor } from '../api/Editor';
 
-const getContent = function (editor, args) {
+const getTextContent = (editor: Editor): string => {
+  return Option.from(editor.selection.getRng()).map((r) => Zwsp.trim(r.toString())).getOr('');
+};
+
+const getHtmlContent = (editor: Editor, args: any): string => {
   const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');
   const sel = editor.selection.getSel();
   let fragment;
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  args = args || {};
+  if (rng.cloneContents) {
+    fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+    if (fragment) {
+      tmpElm.appendChild(fragment);
+    }
+  } else {
+    tmpElm.innerHTML = rng.toString();
+  }
+
+  return editor.selection.serializer.serialize(tmpElm, args);
+};
+
+const getContent = (editor: Editor, args: any = {}): string => {
   args.get = true;
   args.format = args.format || 'html';
   args.selection = true;
@@ -32,35 +50,19 @@ const getContent = function (editor, args) {
   }
 
   if (args.format === 'text') {
-    return editor.selection.isCollapsed() ? '' : Zwsp.trim(rng.text || (sel.toString ? sel.toString() : ''));
-  }
-
-  if (rng.cloneContents) {
-    fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
-    if (fragment) {
-      tmpElm.appendChild(fragment);
-    }
-  } else if (rng.item !== undefined || rng.htmlText !== undefined) {
-    // IE will produce invalid markup if elements are present that
-    // it doesn't understand like custom elements or HTML5 elements.
-    // Adding a BR in front of the contents and then remoiving it seems to fix it though.
-    tmpElm.innerHTML = '<br>' + (rng.item ? rng.item(0).outerHTML : rng.htmlText);
-    tmpElm.removeChild(tmpElm.firstChild);
+    return getTextContent(editor);
   } else {
-    tmpElm.innerHTML = rng.toString();
+    args.getInner = true;
+    const content = getHtmlContent(editor, args);
+
+    if (args.format === 'tree') {
+      return content;
+    } else {
+      args.content = editor.selection.isCollapsed() ? '' : content;
+      editor.fire('GetContent', args);
+      return args.content;
+    }
   }
-
-  args.getInner = true;
-
-  const content = editor.selection.serializer.serialize(tmpElm, args);
-  if (args.format === 'tree') {
-    return content;
-  }
-
-  args.content = editor.selection.isCollapsed() ? '' : content;
-  editor.fire('GetContent', args);
-
-  return args.content;
 };
 
 export default {
