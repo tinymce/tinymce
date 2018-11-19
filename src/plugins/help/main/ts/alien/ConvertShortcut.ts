@@ -5,7 +5,7 @@ import Env from 'tinymce/core/api/Env';
 const convertText = (source: string) => {
   const mac = {
     alt: '&#x2325;',
-    ctrl: '&#x2318;',
+    ctrl: 'Ctrl',
     shift: '&#x21E7;',
     meta: '&#x2318;'
   };
