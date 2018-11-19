@@ -17,7 +17,6 @@ const setupTabKey = function (editor) {
       return;
     }
 
-    e.preventDefault();
     if (e.shiftKey) {
       outdentListSelection(editor);
     } else {
