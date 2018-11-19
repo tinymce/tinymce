@@ -1,3 +1,4 @@
+import { BarApi, Bar } from './Bar';
 import { ButtonApi, Button } from './Button';
 import { CheckboxApi, Checkbox } from './Checkbox';
 import { TextAreaApi, TextArea } from './Textarea';
@@ -17,7 +18,8 @@ import { LabelApi, Label } from './Label';
 import { TableApi, Table } from './Table';
 
 export type BodyComponentApi
-  = ButtonApi
+  = BarApi
+  | ButtonApi
   | CheckboxApi
   | TextAreaApi
   | InputApi
@@ -36,7 +38,8 @@ export type BodyComponentApi
   | TableApi;
 
 export type BodyComponent
-  = Button
+  = Bar
+  | Button
   | Checkbox
   | TextArea
   | Input

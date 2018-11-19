@@ -1,5 +1,6 @@
 import { ValueSchema, FieldPresence, FieldSchema } from '@ephox/boulder';
 import { alertBannerFields } from './AlertBanner';
+import { createBarFields } from './Bar';
 import { buttonFields } from './Button';
 import { checkboxFields } from './Checkbox';
 import { colorInputFields } from './ColorInput';
@@ -36,6 +37,7 @@ const createItemsField = (name: string) => {
 
 export const itemSchema = ValueSchema.choose('type', {
   alertbanner: alertBannerFields,
+  bar: createBarFields(createItemsField('bar')),
   button: buttonFields,
   checkbox: checkboxFields,
   colorinput: colorInputFields,
