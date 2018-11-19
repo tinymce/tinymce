@@ -6,6 +6,7 @@ import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner'
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderAutocomplete } from '../dialog/Autocomplete';
+import { renderBar } from '../dialog/Bar';
 import { renderColorInput } from '../dialog/ColorInput';
 import { renderColorPicker } from '../dialog/ColorPicker';
 import { renderCustomEditor } from '../dialog/CustomEditor';
@@ -49,6 +50,7 @@ const makeIframe = (render: NoFormRenderer): FormPartRenderer => {
 };
 
 const factories: Record<string, FormPartRenderer> = {
+  bar: make((spec, backstage) => renderBar(spec, backstage.shared)),
   collection: make((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
   alloy: make(Fun.identity),
   alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
