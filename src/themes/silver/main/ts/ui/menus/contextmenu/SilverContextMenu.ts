@@ -39,7 +39,7 @@ const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi 
 
 type Section = string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
 
-function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, menuItems: Record<string, Menu.MenuItemApi>, menuConfig: string[], selectedElement: Element) {
+function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, menuItems: Record<string, Menu.MenuItemApi | Menu.ToggleMenuItemApi>, menuConfig: string[], selectedElement: Element) {
   const flattenedItems = Arr.bind(menuConfig, (name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
     if (contextMenus.hasOwnProperty(name)) {
@@ -58,7 +58,7 @@ function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, 
     }
   });
 
-  const items = Arr.foldl<Section, Array<Menu.MenuItemApi | Menu.SeparatorMenuItemApi>>(flattenedItems, (acc, item) => {
+  const items = Arr.foldl<Section, Array<Menu.MenuItemApi | Menu.ToggleMenuItemApi | Menu.SeparatorMenuItemApi>>(flattenedItems, (acc, item) => {
     if (Type.isString(item)) {
       if (menuItems.hasOwnProperty(item)) {
         return acc.concat([menuItems[item]]);

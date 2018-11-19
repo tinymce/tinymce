@@ -8,9 +8,9 @@ import { createPartialMenu, SingleMenuItemApi } from './SingleMenu';
 import ItemResponse from '../item/ItemResponse';
 
 // TODO: Consider moving the expansion part to alloy?
-const build = (items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): TieredData => {
+const build = (items: string | SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): TieredData => {
   const primary = Id.generate('primary-menu');
-  const data = expand(items);
+  const data = expand(items, providersBackstage);
   const mainMenu = createPartialMenu(primary, data.items, itemResponse, providersBackstage);
   const submenus = Obj.map(data.menus, (menuItems, menuName) => createPartialMenu(menuName, menuItems, itemResponse, providersBackstage));
   const menus = Merger.deepMerge(submenus, Objects.wrap(primary, mainMenu));

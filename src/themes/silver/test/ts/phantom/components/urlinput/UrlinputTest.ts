@@ -46,6 +46,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
               },
               providers: {
                 icons: () => <Record<string, string>> {},
+                menuItems: () => <Record<string, any>> {},
                 translate: I18n.translate,
               }
             }, {

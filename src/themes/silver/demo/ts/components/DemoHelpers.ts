@@ -64,6 +64,7 @@ const setupDemo = () => {
     shared: {
       providers: {
         icons: () => <Record<string, string>> {},
+        menuItems: () => <Record<string, any>> {},
         translate: I18n.translate,
       },
       interpreter: (x) => x,
