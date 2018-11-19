@@ -33,7 +33,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   };
 
   const renderBranding = (): SimpleSpec => {
-    const linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" role="presentation" tabindex="-1">tinymce</a>';
+    const linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" role="presentation" tabindex="-1">Tiny</a>';
     const html = I18n.translate(['Powered by {0}', linkHtml]);
     return {
       dom: {
