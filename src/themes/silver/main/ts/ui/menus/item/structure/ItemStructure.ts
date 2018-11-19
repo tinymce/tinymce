@@ -35,20 +35,21 @@ interface NormalItemSpec {
   ariaLabel: Option<string>;
 }
 
-const renderColorStructure = (itemValue: string, iconSvg: Option<string>): ItemStructure => {
+const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>): ItemStructure => {
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
+    const text = itemText.getOr('');
 
     if (itemValue === colorPickerCommand) {
-      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn">${icon}</button>`);
+      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn" title="${text}">${icon}</button>`);
     } else if (itemValue === removeColorCommand) {
-      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove">${icon}</div>`);
+      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove" title="${text}">${icon}</div>`);
     } else {
-      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"></div>`);
+      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}" title="${text}"></div>`);
     }
   };
 
@@ -94,7 +95,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   // Convert the icon to a SVG string, if we have one
   const icon = info.iconContent.map((iconName) => Icons.getOr('icon-' + iconName, providersBackstage.icons, Fun.constant(iconName)));
   if (info.presets === 'color') {
-    return renderColorStructure(info.value, icon);
+    return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
     return renderNormalItemStructure(info, icon);
   }
