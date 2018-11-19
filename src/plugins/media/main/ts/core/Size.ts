@@ -17,7 +17,7 @@ const addPx = function (value) {
 };
 
 const getSize = function (name) {
-  return function (elm) {
+  return function (elm): string {
     return elm ? trimPx(elm.style[name]) : '';
   };
 };

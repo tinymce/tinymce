@@ -1,7 +1,7 @@
 import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { Objects, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Option, Result, Type } from '@ephox/katamari';
 import { AddButtonSettings } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 import {
@@ -106,9 +106,23 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
+const createToolbar = (toolbarConfig) => {
+  const toolbar = () => {
+    if (toolbarConfig.toolbar === false) {
+      return '';
+    } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
+      return defaultToolbar;
+    } else {
+      return toolbarConfig.toolbar;
+    }
+  };
+
+  const toolbarArray = Type.isArray(toolbar()) ? toolbar() :  [ toolbar() ];
+  return toolbarArray.join(' | ');
+};
+
 const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
-  const toolbar = registry.toolbar === false ? '' :
-    (registry.toolbar === undefined || registry.toolbar === true) ? defaultToolbar : registry.toolbar;
+  const toolbar = createToolbar(registry);
   const groupsStrings = toolbar.split('|');
   const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
   const groups = Arr.map(toolbarGroups, (group) => {
