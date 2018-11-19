@@ -1,4 +1,4 @@
-import { createMenuItem, MenuItem, MenuItemApi, MenuItemInstanceApi } from '../components/menu/MenuItem';
+import { createMenuItem, MenuItemContents, MenuItem, MenuItemApi, MenuItemInstanceApi } from '../components/menu/MenuItem';
 import { createToggleMenuItem, ToggleMenuItem, ToggleMenuItemApi, ToggleMenuItemInstanceApi } from '../components/menu/ToggleMenuItem';
 import { createChoiceMenuItem, ChoiceMenuItem, ChoiceMenuItemApi, ChoiceMenuItemInstanceApi } from '../components/menu/ChoiceMenuItem';
 import { createSeparatorMenuItem, SeparatorMenuItem, SeparatorMenuItemApi } from '../components/menu/SeparatorMenuItem';
@@ -8,6 +8,7 @@ import { ContextMenuContents, ContextMenuApi, ContextMenuItem, ContextSubMenu } 
 export {
   createMenuItem,
   MenuItem,
+  MenuItemContents,
   MenuItemApi,
   MenuItemInstanceApi,
 

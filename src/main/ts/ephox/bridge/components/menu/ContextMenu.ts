@@ -12,11 +12,11 @@ export interface ContextSubMenu {
   type: 'submenu';
   text: string;
   icon?: string;
-  getSubmenuItems: () => Array<ContextMenuContents>;
+  getSubmenuItems: () => string | Array<ContextMenuContents>;
 }
 
 export type ContextMenuContents = string | ContextMenuItem | SeparatorMenuItemApi | ContextSubMenu;
 
 export interface ContextMenuApi {
-  update: (element: Element) => Array<ContextMenuContents>;
+  update: (element: Element) => string | Array<ContextMenuContents>;
 }
