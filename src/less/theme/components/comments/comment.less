@@ -71,8 +71,8 @@
     content: "";
     display: block;
     height: 40px;
-    position: relative;
     margin-top: -40px;
+    position: relative;
     width: 100%;
   }
 
@@ -104,39 +104,38 @@
     }
   }
 
+  .tox-comment--overlay {
+    background: #fff;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 5;
+    opacity: 0.9;
+    position: absolute;
+    text-align: center;
+  }
 
-.tox-comment--overlay {
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-  z-index: 5;
-  opacity: 0.9;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  position: absolute;
-  text-align: center;
-}
+  .tox-comment--overlaytext {
+    @comment-font-size: @font-size-lg;
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 10;
+  }
 
-.tox-comment--overlaytext {
-  position: absolute;
-  z-index: 10;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  display:flex;
-  align-items: center;
-  padding: 1em;
-  flex-direction: column;
-  text-align: center;
-  //align-items: center;
-  @comment-font-size: @font-size-lg;
+  .tox-comment--buttonspacing {
+    padding: @pad-md;
+  }
 }
-.tox-comment--buttonspacing{
-  padding: @pad-med;
-}
-
-} //End of tox
+//End of tox
