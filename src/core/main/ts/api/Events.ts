@@ -15,6 +15,8 @@ const firePostProcess = (editor: Editor, args) => editor.fire('PostProcess', arg
 
 const fireRemove = (editor: Editor) => editor.fire('remove');
 
+const fireDetach = (editor: Editor) => editor.fire('detach');
+
 const fireSwitchMode = (editor: Editor, mode: EditorMode) => editor.fire('SwitchMode', { mode });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
@@ -29,6 +31,7 @@ export default {
   firePreProcess,
   firePostProcess,
   fireRemove,
+  fireDetach,
   fireSwitchMode,
   fireObjectResizeStart,
   fireObjectResized
