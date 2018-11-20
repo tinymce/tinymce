@@ -48,7 +48,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       });
     });
 
-    editor.on('remove', () => {
+    editor.on('destroyAlloyMothership', () => {
       onScroll.unbind();
     });
   });
