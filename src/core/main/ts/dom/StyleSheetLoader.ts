@@ -52,6 +52,16 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
+    const resolve = (status: number) => {
+      state.status = status;
+      state.passed = [];
+      state.failed = [];
+
+      link.onload = null;
+      link.onerror = null;
+      link = null;
+    };
+
     const passed = function () {
       const callbacks = state.passed;
       let i = callbacks.length;
@@ -60,9 +70,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
         callbacks[i]();
       }
 
-      state.status = 2;
-      state.passed = [];
-      state.failed = [];
+      resolve(2);
     };
 
     const failed = function () {
@@ -73,9 +81,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
         callbacks[i]();
       }
 
-      state.status = 3;
-      state.passed = [];
-      state.failed = [];
+      resolve(3);
     };
 
     // Sniffs for older WebKit versions that have the link.onload but a broken one

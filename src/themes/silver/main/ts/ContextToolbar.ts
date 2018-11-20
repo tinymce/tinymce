@@ -30,8 +30,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   editor.on('init', () => {
     const scroller = editor.getBody().ownerDocument.defaultView;
-    // FIX: Unbind AND make a lot nicer.
-    DomEvent.bind(Element.fromDom(scroller), 'scroll', () => {
+
+    // FIX: make a lot nicer.
+    const onScroll = DomEvent.bind(Element.fromDom(scroller), 'scroll', () => {
       lastAnchor.get().each((anchor) => {
         const elem = lastElement.get().getOr(editor.selection.getNode());
         const nodeBounds = elem.getBoundingClientRect();
@@ -45,6 +46,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           Positioning.positionWithin(sink, anchor, contextbar, getBoxElement());
         }
       });
+    });
+
+    editor.on('remove', () => {
+      onScroll.unbind();
     });
   });
 
