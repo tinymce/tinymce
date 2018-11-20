@@ -1,0 +1,25 @@
+//
+// Control wrap
+//
+
+@control-wrap-padding-for-icon: @pad-xl;
+
+.tox {
+  .tox-control-wrap {
+    flex: 1;
+    position: relative;
+
+    // Add padding to textfield.
+    .tox-textfield {
+      padding-right: @control-wrap-padding-for-icon;
+    }
+
+    // Position status component
+    .tox-status {
+      position: absolute;
+      right: @pad-xs;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

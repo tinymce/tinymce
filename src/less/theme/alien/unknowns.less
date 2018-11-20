@@ -58,57 +58,6 @@
     color: inherit !important;
   }
 
-  // How is this used? //FD
-  .tox-input-wrap {
-    align-items: center;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: @background-color;
-    border-color: @border-color;
-    border-radius: @control-border-radius;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: none;
-    box-sizing: border-box;
-    color: @text-color;
-    display: flex;
-    flex-grow: 1;
-    margin: 0;
-    outline: none;
-    padding: 0;
-  }
-
-  // * This overrides the default focus border but I don't dare to remove this now /fd 2018-10-01
-  // * Class used as a wrapper for input fields to place a accessory icon on the right side within a textfield.
-  //   See dialog-2.html for example //fd 2018-10-02
-  .tox-input-wrap .tox-textfield {
-    border: none;
-  }
-
-  .tox-input-wrap:not(.tox-status-valid) .tox-status-icon__checkmark,
-  .tox-input-wrap:not(.tox-status-unknown) .tox-status-icon__warning,
-  .tox-input-wrap:not(.tox-status-invalid) .tox-status-icon__error {
-    display: none;
-  }
-
-  // Statuses is used as accessory icons within .tox-input-wrap
-  .tox-status {
-    transform: scale(.8);
-  }
-
-  .tox-status-icon__checkmark svg {
-    fill: green;
-  }
-
-  .tox-status-icon__warning svg {
-    fill: orange;
-  }
-
-  .tox-status-icon__error svg {
-    fill: red;
-  }
-
   // Fredrik will redo this as a component later. Please keep this declarations here until then /FD
   .tox-lock.tox-locked .tox-lock-icon__unlock,
   .tox-lock:not(.tox-locked) .tox-lock-icon__lock {

@@ -1,0 +1,30 @@
+//
+// Status
+//
+
+@status-error-color: red;
+
+.tox {
+  // Statuses is used as accessory icons within .tox-control-wrap
+  .tox-status {
+    //
+
+    svg {
+      display: block;
+    }
+  }
+
+  // TODO: Is this used?
+  .tox-status__icon-checkmark svg {
+    fill: green;
+  }
+
+  // TODO: Is this used?
+  .tox-status__icon-warning svg {
+    fill: orange;
+  }
+
+  .tox-status__icon-error svg {
+    fill: @status-error-color;
+  }
+}
