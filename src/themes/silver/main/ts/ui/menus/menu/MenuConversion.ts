@@ -20,7 +20,9 @@ const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: M
   // Unwrap any string based menu item references
   const realItems = Arr.foldl(items, (acc, item) => {
     if (isMenuItemReference(item)) {
-      if (item === '|') {
+      if (item === '') {
+        return acc;
+      } else if (item === '|') {
         // Ignore the separator if it's at the start or a duplicate
         return acc.length > 0 && !isSeparator(acc[acc.length - 1]) ? acc.concat([separator]) : acc;
       } else if (Obj.has(menuItems, item.toLowerCase())) {

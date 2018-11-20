@@ -10,6 +10,10 @@ import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
+type MenuItem =  string | Menu.MenuItemApi | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
+
+const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
+
 const separator: Menu.SeparatorMenuItemApi = {
   type: 'separator'
 };
@@ -44,30 +48,47 @@ const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi 
   }
 };
 
-function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, menuItems: Record<string, Menu.MenuItemApi | Menu.ToggleMenuItemApi>, menuConfig: string[], selectedElement: Element) {
+const addContextMenuGroup = (xs: Array<MenuItem>, groupItems: Array<MenuItem>) => {
+  // Skip if there are no items
+  if (groupItems.length === 0) {
+    return xs;
+  }
+
+  // Only add a separator at the beginning if the last item isn't a separator
+  const lastMenuItem = Arr.last(xs).filter((item) => !isSeparator(item));
+  const before = lastMenuItem.fold(
+    () => [],
+    (_) => [ separator ]
+  );
+  return xs.concat(before).concat(groupItems).concat([ separator ]);
+};
+
+const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: Element) => {
   const items = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
     if (Obj.has(contextMenus, name)) {
       const items = contextMenus[name].update(selectedElement);
-      // TODO: Should we add a ValueSchema check here?
       if (Type.isString(items)) {
-        return acc.concat(items.split(' ')).concat(separator);
+        return addContextMenuGroup(acc, items.split(' '));
       } else if (items.length > 0) {
+        // TODO: Should we add a ValueSchema check here?
         const allItems = Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
-        return acc.concat(allItems).concat(separator);
+        return addContextMenuGroup(acc, allItems);
       } else {
         return acc;
       }
-    } else if (Obj.has(menuItems, name)) {
-      return acc.concat([menuItems[name], separator]);
     } else {
-      return acc;
+      return acc.concat([name]);
     }
   }, []);
 
-  // Strip off the trailing separator
-  return items.length > 0 ? items.slice(0, -1) : [];
-}
+  // Strip off any trailing separator
+  if (items.length > 0 && isSeparator(items[items.length - 1])) {
+    items.pop();
+  }
+
+  return items;
+};
 
 const isNativeOverrideKeyEvent = function (editor, e) {
   return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
@@ -102,7 +123,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // Use the event target element for mouse clicks, otherwise fallback to the current selection
     const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
 
-    const items = generateContextMenu(registry.contextMenus, registry.menuItems, menuConfig, selectedElement);
+    const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
     if (items.length > 0) {
       e.preventDefault();
