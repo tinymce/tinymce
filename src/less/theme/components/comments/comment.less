@@ -34,6 +34,7 @@
     border-radius: @comment-border-radius;
     box-shadow: @comment-box-shadow;
     padding: @comment-padding;
+    position: relative;
   }
 
   .tox-comment__header {
@@ -105,21 +106,37 @@
 
 
 .tox-comment--overlay {
-  z-index: 2;
-  opacity: 0.2;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  z-index: 5;
+  opacity: 0.9;
   background: #fff;
-  width: 200px;
-  height: 200px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: absolute;
+  text-align: center;
 }
 
 .tox-comment--overlaytext {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
+  z-index: 10;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  align-items: center;
+  padding: 1em;
+  flex-direction: column;
+  text-align: center;
+  //align-items: center;
+  @comment-font-size: @font-size-lg;
 }
+.tox-comment--buttonspacing{
+  padding: @pad-med;
 }
+
+} //End of tox
