@@ -2,7 +2,11 @@
 // Tiny Comment
 //
 
-@comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@comment-background-color: contrast(
+  @background-color,
+  @background-color,
+  lighten(@background-color, 5%)
+);
 @comment-border-radius: @panel-border-radius;
 @comment-border: 1px solid @border-color;
 @comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%); //TODO: Same as menu. Make a common helper variable?
@@ -33,14 +37,14 @@
   }
 
   .tox-comment__header {
-    display: flex;
     align-items: center;
+    display: flex;
     justify-content: space-between;
   }
 
   .tox-comment__timestamp {
-    font-size: @font-size-xs;
     color: @text-color-muted;
+    font-size: @font-size-xs;
   }
 
   .tox-comment__body {
@@ -57,9 +61,13 @@
     margin: 0;
   }
 
-  .tox-comment--gradient::after{
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 100%);
-    content: '';
+  .tox-comment--gradient::after {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0,
+      #fff 100%
+    );
+    content: "";
     display: block;
     height: 40px;
     position: relative;
@@ -94,12 +102,12 @@
       margin-left: @pad-sm;
     }
   }
-}
+
 
 .tox-comment--overlay {
   z-index: 2;
-  opacity:0.2;
-  background:#ffffff;
+  opacity: 0.2;
+  background: #fff;
   width: 200px;
   height: 200px;
   display: flex;
@@ -113,5 +121,5 @@
   width: 100%;
   height: 100%;
   z-index: 3;
-  margin-bottom: 200px;
+}
 }
