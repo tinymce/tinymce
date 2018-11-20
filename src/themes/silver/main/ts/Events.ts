@@ -63,17 +63,18 @@ const setup = (editor, mothership, uiMothership) => {
     editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
 
-    editor.fire('destroyAlloyMothership');
-    Attachment.detachSystem(mothership);
-    Attachment.detachSystem(uiMothership);
-    mothership.destroy();
-    uiMothership.destroy();
-
     onMousedown.unbind();
     onTouchstart.unbind();
     onMouseup.unbind();
 
     onWindowScroll.unbind();
+  });
+
+  editor.on('detach', () => {
+    Attachment.detachSystem(mothership);
+    Attachment.detachSystem(uiMothership);
+    mothership.destroy();
+    uiMothership.destroy();
   });
 };
 
