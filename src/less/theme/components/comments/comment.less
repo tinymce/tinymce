@@ -94,8 +94,6 @@
       margin-left: @pad-sm;
     }
   }
-
-
 }
 
 .tox-comment--overlay {
@@ -104,10 +102,16 @@
   background:#ffffff;
   width: 200px;
   height: 200px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: absolute;
 }
 
 .tox-comment--overlaytext {
   position: absolute;
+  width: 100%;
+  height: 100%;
   z-index: 3;
-  margin-top: -100px;
+  margin-bottom: 200px;
 }
