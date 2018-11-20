@@ -34,7 +34,7 @@ const defaultColors = [
 ];
 
 const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
+  []
 );
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
@@ -64,20 +64,9 @@ const getColorMap = (editor: Editor): string[] => {
   return editor.getParam('color_map');
 };
 
-const setColorsFromMap = (editor: Editor, getter: (editor: Editor) => string[], setter: (colors) => void): void => {
-  const unmapped = getter(editor);
-  if (unmapped !== undefined) {
-    const mapped = mapColors(unmapped);
-    setter(mapped);
-  }
-};
-
-const setColors = (editor: Editor): void => {
-  setColorsFromMap(editor, getColorMap, setCurrentColors);
-};
-
-const register = (editor: Editor): void => {
-  setColors(editor);
+const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
+  const unmapped = getColorMap(editor);
+  return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
 const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
@@ -103,7 +92,7 @@ export default {
   getColorCols,
   hasCustomColors,
   getColorMap,
-  register,
+  getColors,
   getCurrentColors,
   setCurrentColors,
   addColor
