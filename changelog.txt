@@ -1,4 +1,5 @@
 Version 5.0.0-preview-5 (TBD)
+    Added tabstopping to HtmlPanel #TINY-2687
     Added support for toolbar<n> and toolbar array config options to be squashed into a single toolbar and not create multiple toolbars #TINY-2195
     Added error handling for when forced_root_block config option is set to true #TINY-2261
     Added functionality for the removed_menuitems config option #TINY-2184
