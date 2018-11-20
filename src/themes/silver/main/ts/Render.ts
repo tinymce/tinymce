@@ -1,4 +1,4 @@
-import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
 import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
@@ -82,11 +82,18 @@ const setup = (editor: Editor): RenderInfo => {
     ])
   });
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getToolbar(container);
+  const memAnchorBar = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-anchorbar']
+    }
+  });
+
+  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
+    return memAnchorBar.getOpt(container);
   }).getOrDie('Could not find a toolbar element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyToolbar);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
@@ -152,6 +159,9 @@ const setup = (editor: Editor): RenderInfo => {
   const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
     hasToolbar ? [ partToolbar ] : [ ],
+    [
+      memAnchorBar.asSpec()
+    ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ]
   ]);

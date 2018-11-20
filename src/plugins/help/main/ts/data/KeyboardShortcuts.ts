@@ -10,12 +10,12 @@
 import { ShortcutActionPairType } from '../ui/KeyboardShortcutsTab';
 
 const shortcuts: ShortcutActionPairType[] = [
-  { shortcuts: ['Ctrl + B'], action: 'Bold' },
-  { shortcuts: ['Ctrl + I'], action: 'Italic' },
-  { shortcuts: ['Ctrl + U'], action: 'Underline' },
-  { shortcuts: ['Ctrl + A'], action: 'Select all' },
-  { shortcuts: ['Ctrl + Y', 'Ctrl + Shift + Z'], action: 'Redo' },
-  { shortcuts: ['Ctrl + Z'], action: 'Undo' },
+  { shortcuts: ['Meta + B'], action: 'Bold' },
+  { shortcuts: ['Meta + I'], action: 'Italic' },
+  { shortcuts: ['Meta + U'], action: 'Underline' },
+  { shortcuts: ['Meta + A'], action: 'Select all' },
+  { shortcuts: ['Meta + Y', 'Meta + Shift + Z'], action: 'Redo' },
+  { shortcuts: ['Meta + Z'], action: 'Undo' },
   { shortcuts: ['Ctrl + Alt + 1'], action: 'Header 1' },
   { shortcuts: ['Ctrl + Alt + 2'], action: 'Header 2' },
   { shortcuts: ['Ctrl + Alt + 3'], action: 'Header 3' },
@@ -30,10 +30,10 @@ const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: ['Alt + F10'], action: 'Focus to toolbar' },
   { shortcuts: ['Alt + F11'], action: 'Focus to element path' },
   { shortcuts: ['Ctrl + F9'], action: 'Focus to contextual toolbar' },
-  { shortcuts: ['Ctrl + K'], action: 'Insert link (if link plugin activated)' },
-  { shortcuts: ['Ctrl + S'], action: 'Save (if save plugin activated)' },
-  { shortcuts: ['Ctrl + F'], action: 'Find (if searchreplace plugin activated)' },
-  { shortcuts: ['Ctrl + Shift + F'], action: 'Switch to or from fullscreen mode' }
+  { shortcuts: ['Meta + K'], action: 'Insert link (if link plugin activated)' },
+  { shortcuts: ['Meta + S'], action: 'Save (if save plugin activated)' },
+  { shortcuts: ['Meta + F'], action: 'Find (if searchreplace plugin activated)' },
+  { shortcuts: ['Meta + Shift + F'], action: 'Switch to or from fullscreen mode' }
 ];
 
 export default {
