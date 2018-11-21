@@ -53,6 +53,7 @@ const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, sl
   Css.reflow(component.element());
 
   const root = getAnimationRoot(component, slideConfig);
+  Class.remove(root, slideConfig.growingClass);
   Class.add(root, slideConfig.shrinkingClass); // enable transitions
   setShrunk(component, slideConfig);
   slideConfig.onStartShrink(component);
@@ -74,6 +75,7 @@ const doStartGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slid
 
   // Start the growing animation styles
   const root = getAnimationRoot(component, slideConfig);
+  Class.remove(root, slideConfig.shrinkingClass);
   Class.add(root, slideConfig.growingClass);
 
   setGrown(component, slideConfig);

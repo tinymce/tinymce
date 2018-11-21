@@ -66,12 +66,12 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
   }, (doc, body, gui, component, store) => {
 
-    const sIsGrowing = Step.sync(() => {
+    const sIsNotGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
     });
 
-    const sIsShrinking = Step.sync(() => {
-      Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
+    const sIsNotShrinking = Step.sync(() => {
+      Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
     });
 
     const sGrowingSteps = (label) => {
@@ -99,7 +99,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
           Waiter.sTryUntil(
             'Waiting for animation to stop (growing)',
-            sIsGrowing,
+            sIsNotGrowing,
             100,
             4000
           ),
@@ -139,7 +139,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
           Waiter.sTryUntil(
             label + '\nWaiting for animation to stop (shrinking)',
-            sIsShrinking,
+            sIsNotShrinking,
             100,
             4000
           ),

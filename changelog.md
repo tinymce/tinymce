@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.3.4] - 2018-11-21
+### Changed
+ - alloy UIDs are random (again) to prevent issues with nested motherships loaded with different scripts
+
+### Fixed
+ - Sliding shrinking and growing classes were not being removed when toggling mid-animation
+
 # [4.3.0] - 2018-11-05
 ###
  - Exposed a new LazySink type
