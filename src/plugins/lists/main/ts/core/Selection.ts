@@ -14,6 +14,7 @@ import NodeType from './NodeType';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 const getParentList = function (editor) {
   const selectionStart = editor.selection.getStart(true);
@@ -94,7 +95,14 @@ const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
   return DomQuery.unique(listRoots);
 };
 
+const isList = (editor: Editor): boolean => {
+  const dlItems = Arr.map(getSelectedDlItems(editor), Element.fromDom);
+  const lists = Arr.map(getSelectedListRoots(editor), Element.fromDom);
+  return dlItems.length > 0 || lists.length > 0;
+};
+
 export default {
+  isList,
   getParentList,
   getSelectedSubLists,
   getSelectedListItems,

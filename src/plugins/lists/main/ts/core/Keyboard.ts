@@ -12,6 +12,7 @@ import VK from 'tinymce/core/api/util/VK';
 import Settings from '../api/Settings';
 import Delete from './Delete';
 import { outdentListSelection, indentListSelection } from '../actions/Indendation';
+import Selection from './Selection';
 
 const setupTabKey = function (editor) {
   editor.on('keydown', function (e) {
@@ -20,10 +21,15 @@ const setupTabKey = function (editor) {
       return;
     }
 
-    if (e.shiftKey) {
-      outdentListSelection(editor);
-    } else {
-      indentListSelection(editor);
+    if (Selection.isList(editor)) {
+      e.preventDefault();
+      editor.undoManager.transact(() => {
+        if (e.shiftKey) {
+          outdentListSelection(editor);
+        } else {
+          indentListSelection(editor);
+        }
+      });
     }
   });
 };
