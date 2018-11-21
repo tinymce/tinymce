@@ -12,7 +12,7 @@ const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemSpec => {
     type: 'separator',
     dom: {
       tag: 'div',
-      classes: [ ItemClasses.separatorClass, ItemClasses.groupHeadingClass, ItemClasses.selectableClass ],
+      classes: [ ItemClasses.selectableClass, ItemClasses.groupHeadingClass ],
       ...innerHtml
     },
     components: [ ]
