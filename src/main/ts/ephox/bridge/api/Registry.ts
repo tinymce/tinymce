@@ -4,6 +4,7 @@ import { ToolbarSplitButtonApi } from '../components/toolbar/ToolbarSplitButton'
 import { ToolbarButtonApi } from '../components/toolbar/ToolbarButton';
 import { ToolbarMenuButtonApi } from '../components/toolbar/ToolbarMenuButton';
 import { MenuItemApi } from '../components/menu/MenuItem';
+import { NestedMenuItemApi } from '../components/menu/NestedMenuItem';
 import { ToggleMenuItemApi } from '../components/menu/ToggleMenuItem';
 import { ContextMenuApi } from '../components/menu/ContextMenu';
 import { ContextToolbarApi, ContextFormApi } from '../components/toolbar/ContextToolbar';
@@ -18,6 +19,7 @@ export interface Registry {
   addMenuButton: (name: string, spec: ToolbarMenuButtonApi) => void;
   addSplitButton: (name: string, spec: ToolbarSplitButtonApi) => void;
   addMenuItem: (name: string, spec: MenuItemApi) => void;
+  addNestedMenuItem: (name: string, spec: NestedMenuItemApi) => void;
   addToggleMenuItem: (name: string, spec: ToggleMenuItemApi) => void;
   addContextMenu: (name: string, spec: ContextMenuApi) => void;
   addContextToolbar: (name: string, spec: ContextToolbarApi) => void;
@@ -27,7 +29,7 @@ export interface Registry {
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
-    menuItems: Record<string, MenuItemApi | ToggleMenuItemApi>;
+    menuItems: Record<string, MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi>;
     popups: Record<string, AutocompleterApi>;
     contextMenus: Record<string, ContextMenuApi>;
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
@@ -51,6 +53,7 @@ export const create = (): Registry => {
     addMenuButton: add(buttons, 'menubutton'),
     addSplitButton: add(buttons, 'splitbutton'),
     addMenuItem: add(menuItems, 'menuitem'),
+    addNestedMenuItem: add(menuItems, 'nestedmenuitem'),
     addToggleMenuItem: add(menuItems, 'togglemenuitem'),
     addAutocompleter: add(popups, 'autocompleter'),
     addContextMenu: add(contextMenus, 'contextmenu'),
