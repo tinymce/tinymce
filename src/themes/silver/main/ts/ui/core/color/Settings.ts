@@ -1,6 +1,7 @@
-import { Cell } from '@ephox/katamari';
 import { Menu } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
+import ColorCache from './ColorCache';
+import { Arr } from '@ephox/katamari';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 
@@ -33,9 +34,7 @@ const defaultColors = [
   { type: choiceItem, text: 'White', value: '#ffffff' }
 ];
 
-const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  []
-);
+const colorCache = ColorCache(10);
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   let i;
@@ -70,21 +69,17 @@ const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
 };
 
 const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
-  return currentColors.get();
-};
-
-const setCurrentColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
-  currentColors.set(colors);
+  return Arr.map(colorCache.state(), (color) => {
+    return {
+      type: choiceItem,
+      text: color,
+      value: color
+    };
+  });
 };
 
 const addColor = (color: string) => {
-  setCurrentColors(getCurrentColors().concat([
-    {
-      type: 'choiceitem',
-      text: color,
-      value: color
-    }
-  ]));
+  colorCache.add(color);
 };
 
 export default {
@@ -94,6 +89,5 @@ export default {
   getColorMap,
   getColors,
   getCurrentColors,
-  setCurrentColors,
   addColor
 };

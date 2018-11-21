@@ -44,7 +44,7 @@ const registerCommands = (editor) => {
 };
 
 const calcCols = (colors) => {
-  return Math.ceil(Math.sqrt(colors));
+  return Math.max(5, Math.ceil(Math.sqrt(colors)));
 };
 
 const getColorCols = function (editor) {
