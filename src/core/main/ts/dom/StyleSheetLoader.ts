@@ -57,9 +57,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       state.passed = [];
       state.failed = [];
 
-      link.onload = null;
-      link.onerror = null;
-      link = null;
+      if (link) {
+        link.onload = null;
+        link.onerror = null;
+        link = null;
+      }
     };
 
     const passed = function () {
