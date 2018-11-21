@@ -61,15 +61,19 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     Pipeline.async({},
       Log.steps('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
         sAssertColors(colorSettings, mappedColors),
-        sAssertCols(editor, 2),
-        sAssertCalcCols(editor, 1, 1),
-        sAssertCalcCols(editor, 2, 2),
-        sAssertCalcCols(editor, 3, 2),
-        sAssertCalcCols(editor, 4, 2),
-        sAssertCalcCols(editor, 5, 3),
-        sAssertCalcCols(editor, 8, 3),
-        sAssertCalcCols(editor, 9, 3),
-        sAssertCalcCols(editor, 10, 4)
+        sAssertCols(editor, 5),
+        sAssertCalcCols(editor, 1, 5),
+        sAssertCalcCols(editor, 2, 5),
+        sAssertCalcCols(editor, 3, 5),
+        sAssertCalcCols(editor, 4, 5),
+        sAssertCalcCols(editor, 5, 5),
+        sAssertCalcCols(editor, 8, 5),
+        sAssertCalcCols(editor, 9, 5),
+        sAssertCalcCols(editor, 10, 5),
+        sAssertCalcCols(editor, 25, 5),
+        sAssertCalcCols(editor, 26, 6),
+        sAssertCalcCols(editor, 36, 6),
+        sAssertCalcCols(editor, 37, 7)
       ])
     , onSuccess, onFailure);
   }, {
