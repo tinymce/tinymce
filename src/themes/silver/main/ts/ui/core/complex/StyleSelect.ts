@@ -59,6 +59,7 @@ const getSpec = (editor): SelectSpec => {
   });
 
   return {
+    tooltip: Option.some('Formats'),
     isSelectedFor,
     getPreviewFor,
     onAction,

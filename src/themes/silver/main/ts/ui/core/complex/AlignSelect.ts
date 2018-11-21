@@ -57,6 +57,7 @@ const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
   return createSelectButton(editor, backstage, dataset, {
+    tooltip: Option.some('Align'),
     isSelectedFor,
     getPreviewFor,
     onAction,
