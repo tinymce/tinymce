@@ -73,13 +73,10 @@ export default function () {
         }
       });
 
-      ed.ui.registry.addMenuItem('d1', {
-        type: 'menuitem',
+      ed.ui.registry.addNestedMenuItem('d1', {
+        type: 'nestedmenuitem',
         // icon: Icons.getOr('icon-drop', () => 'oh no'),
         text: 'nested',
-        onAction () {
-          console.log('Just Text click');
-        },
         getSubmenuItems: () => [
           {
             type: 'menuitem',

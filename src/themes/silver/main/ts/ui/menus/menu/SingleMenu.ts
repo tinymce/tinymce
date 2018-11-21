@@ -30,8 +30,8 @@ export interface InternalStyleMenuItemApi {
   item: BridgeMenu.ToggleMenuItemApi | BridgeMenu.MenuItemApi;
 }
 
-export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.ToggleMenuItemApi | BridgeMenu.SeparatorMenuItemApi |
-  BridgeMenu.ChoiceMenuItemApi | InternalStyleMenuItemApi | BridgeMenu.FancyMenuItemApi;
+export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
+  BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | InternalStyleMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
 const hasIcon = (item) => item.icon !== undefined;
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
@@ -42,6 +42,12 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
         (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage))
+      );
+
+    case 'nestedmenuitem':
+      return BridgeMenu.createNestedMenuItem(item).fold(
+        handleError,
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
       );
 
     case 'styleitem': {

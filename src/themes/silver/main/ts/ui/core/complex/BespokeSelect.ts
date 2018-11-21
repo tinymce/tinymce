@@ -61,11 +61,11 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
       } as Menu.SeparatorMenuItemApi;
     } else if (rawItem.type === 'submenu') {
       return {
-        type: 'menuitem',
+        type: 'nestedmenuitem',
         text: translatedText,
         disabled,
         getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
-      } as Menu.MenuItemApi;
+      } as Menu.NestedMenuItemApi;
     } else {
       return rawItem.getStylePreview().fold(
         () => {

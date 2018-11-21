@@ -10,7 +10,7 @@ import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
-type MenuItem =  string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
@@ -27,7 +27,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
         return separator;
       case 'submenu':
         return {
-          type: 'menuitem',
+          type: 'nestedmenuitem',
           text: item.text,
           icon: item.icon,
           getSubmenuItems: () => {

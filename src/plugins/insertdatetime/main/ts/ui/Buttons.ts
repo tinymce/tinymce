@@ -38,7 +38,8 @@ const register = function (editor) {
     Actions.insertDateTime(editor, format);
   };
 
-  editor.ui.registry.addMenuItem('insertdatetime', {
+  editor.ui.registry.addNestedMenuItem('insertdatetime', {
+    type: 'nestedmenuitem',
     icon: 'insert-time',
     text: 'Date/time',
     getSubmenuItems: () => Tools.map(formats, (format) => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))
