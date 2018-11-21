@@ -1,4 +1,5 @@
 Version 5.0.0-preview-5 (TBD)
+    Changed the color swatch to save selected custom colors to local storage for use across sessions #TINY-2722
     Added title attribute to color swatch colors #TINY-2669
     Added anchorbar component to anchor inline toolbar dialogs to instead of the toolbar #TINY-2040
     Added support for toolbar<n> and toolbar array config options to be squashed into a single toolbar and not create multiple toolbars #TINY-2195
