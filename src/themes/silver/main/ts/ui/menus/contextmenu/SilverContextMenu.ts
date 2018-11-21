@@ -10,7 +10,7 @@ import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
-type MenuItem =  string | Menu.MenuItemApi | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem =  string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
