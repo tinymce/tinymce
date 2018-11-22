@@ -5,6 +5,8 @@
 .tox {
   .tox-textarea {
     &:extend(.tox .tox-textfield);
+    // This is required to allow white-spaces and new lines within textareas in Firefox
+    white-space: pre;
   }
 
   .tox-textarea:focus {
