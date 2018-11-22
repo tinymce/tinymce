@@ -159,8 +159,8 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
       // context menu fires before node change, so check the selection here first
       resetTargets();
       // ignoring element since it's monitored elsewhere
-      return targets().fold(() => [], () => {
-        return ['cell', 'row', 'column', '|', 'tableprops', 'deletetable'];
+      return targets().fold(() => '', () => {
+        return 'cell row column | tableprops deletetable';
       });
     }
   });

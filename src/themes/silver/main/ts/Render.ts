@@ -103,10 +103,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-menubar' ]
     },
     getSink: lazySink,
-    providers: {
-      icons: () => editor.ui.registry.getAll().icons,
-      translate: I18n.translate
-    },
+    providers: backstage.shared.providers,
     onEscape () {
       editor.focus();
     }
