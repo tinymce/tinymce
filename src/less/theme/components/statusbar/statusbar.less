@@ -9,16 +9,18 @@
 .tox {
   .tox-statusbar {
     align-items: center;
+    background-color: @background-color;
     border-color: @border-color;
     border-radius: @statusbar-border-radius;
     border-style: solid;
     border-width: 1px;
     color: @text-color-muted;
     display: flex;
-    flex-shrink: 0;
+    flex: 0 0 auto;
     font-size: @font-size-xs;
     height: @statusbar-height;
     margin-top: -1px;
+    overflow: hidden;
     padding: 0 @statusbar-padding-x;
     position: relative;
     text-transform: uppercase;
@@ -33,20 +35,31 @@
     }
   }
 
+  .tox-statusbar__text-container {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
   .tox-statusbar__path {
     display: flex;
+    flex: 1 1 auto;
     margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tox-statusbar__path > * {
+    display: inline;
     margin-right: @pad-xs;
+    white-space: nowrap;
   }
 
-  .tox-statusbar__wordcount {
-    margin-left: 1ch;
-  }
-
+  .tox-statusbar__wordcount,
   .tox-statusbar__branding {
+    flex: 0 0 auto;
     margin-left: 1ch;
   }
 
@@ -55,6 +68,7 @@
     align-self: stretch;
     cursor: nwse-resize;
     display: flex;
+    flex: 0 0 auto;
     justify-content: flex-end;
     margin-right: -@statusbar-padding-x;
     padding-left: 1ch;

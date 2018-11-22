@@ -1,0 +1,48 @@
+//
+// Resize handle
+//
+
+@resize-handle-color: #feca57;
+@resize-handle-size: 10px;
+
+.mce-content-body div.mce-resizehandle {
+  @offset: -@resize-handle-size / 3;
+
+  background-color: @resize-handle-color;
+  border-color: @resize-handle-color;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  height: @resize-handle-size;
+  position: absolute;
+  width: @resize-handle-size;
+
+  &:hover {
+    background-color: @resize-handle-color;
+  }
+
+  &:nth-of-type(1) {
+    //border-width: 2px 0 0 2px;
+    cursor: nwse-resize;
+    display: none;
+    transform: translateX(-4px) translateY(-4px);
+  }
+
+  &:nth-of-type(2) {
+    //border-width: 2px 2px 0 0;
+    cursor: nesw-resize;
+    display: none;
+  }
+
+  &:nth-of-type(3) {
+    //border-width: 0 2px 2px 0;
+    cursor: nwse-resize;
+    transform: translateX(2px) translateY(2px);
+  }
+
+  &:nth-of-type(4) {
+    // border-width: 0 0 2px 2px;
+    cursor: nesw-resize;
+    display: none;
+  }
+}

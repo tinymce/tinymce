@@ -1,0 +1,172 @@
+//
+// Objects
+//
+
+@document-selection-color: fade(#feca57, 10%);
+@object-block-selected-color: fade(#feca57, 35%);
+@object-block-selected-outline-width: 5px;
+
+.mce-content-body {
+
+  // Selection outline on certain editable objects
+  img[data-mce-selected],
+  table[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  hr[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+    outline-offset: 1px;
+  }
+
+  // Selection outline on non editable elements
+  *[contentEditable=false] *[contentEditable=true]:focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false] *[contentEditable=true]:hover {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false][data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  &.mce-content-readonly {
+    *[contentEditable=true]:focus,
+    *[contentEditable=true]:hover {
+      outline: none;
+    }
+  }
+
+  // TODO: What's this?
+  *[data-mce-selected="inline-boundary"] {
+    background: @content-boundary-bg;
+  }
+
+  // Anchor object
+  .mce-item-anchor {
+    background: transparent url("data:image/svg+xml;charset=utf8,%3Csvg width='8' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L8 0 8 12 4.09117821 9 0 12z'/%3E%3C/svg%3E") no-repeat center;
+    cursor: default;
+    display: inline-block;
+    height: 12px !important;
+    padding: 0 2px;
+    -webkit-user-modify: read-only;
+    -moz-user-modify: read-only;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    user-select: all;
+    width: 8px !important;
+  }
+
+  .mce-item-anchor[data-mce-selected] {
+    outline-offset: 1px;
+  }
+
+  // Fixes TINY-1618
+  //  Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+  //  tables, making it impossible to enter spaces into small table cells
+  table {
+    -webkit-nbsp-mode: normal;
+  }
+
+  // Selection of whole table cells
+  td[data-mce-selected],
+  th[data-mce-selected] {
+    background-color: @document-selection-color !important;
+
+    &::selection {
+      //Prevent selection to be visible
+      background: none;
+    }
+
+    * {
+      //Prevent selection to be visible
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+  }
+}
+
+// Table border resizing handles
+.ephox-snooker-resizer-bar {
+  background-color: @object-block-selected-color;
+  opacity: 0;
+}
+
+.ephox-snooker-resizer-cols {
+  cursor: col-resize;
+}
+
+.ephox-snooker-resizer-rows {
+  cursor: row-resize;
+}
+
+.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
+  opacity: 1;
+}
+
+// Figure alignment
+figure.align-left {
+  float: left;
+}
+
+figure.align-right {
+  float: right;
+}
+
+figure.image.align-center {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Table of contents
+.mce-toc {
+  //
+}
+
+.mce-toc h2 {
+  //
+}
+
+.mce-toc li {
+  //
+}
+
+// Page break
+.mce-pagebreak {
+  border: 1px dashed #666;
+  cursor: default;
+  display: block;
+  height: 5px;
+  margin-top: 15px;
+  page-break-before: always;
+  width: 100%;
+}
+
+@media print {
+  .mce-pagebreak {
+    border: 0;
+  }
+}
+
+// Spell checking marker
+.mce-spellchecker-word {
+  //background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ff0000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#ff0000' fill='none' stroke-linecap='round' stroke-opacity='.5' d='M0 3L2 1 4 3'/%3E%3C/svg%3E");
+  background-position: 0 calc(~"100% + 1px");
+  background-repeat: repeat-x;
+  background-size: auto 6px;
+  cursor: default;
+  height: 2rem;
+}
+
+// Grammar checking marker
+.mce-spellchecker-grammar {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#008800' fill='none' stroke-linecap='round' d='M0 3L2 1 4 3'/%3E%3C/svg%3E");
+  background-position: 0 calc(~"100% + 1px");
+  background-repeat: repeat-x;
+  background-size: auto 6px;
+  cursor: default;
+}

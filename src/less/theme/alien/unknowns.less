@@ -170,13 +170,6 @@
     height: 650px;
   }
 
-  .tox-form {
-    display: flex;
-    flex: 1;
-    -ms-flex-preferred-size: auto;
-    flex-direction: column;
-  }
-
   .tox-dropzone-container {
     display: flex;
     flex: 1;
@@ -250,6 +243,10 @@
     max-width: 25em;
   }
 
+  .tox-autocompleter .tox-menu {
+    max-width: 25em;
+  }
+
   // Do we want a focus style for disabled buttons?
   .tox-collection__item.tox-collection__item--state-disabled.tox-collection__item--active {
     background-color: @collection-item-active-background-color;
@@ -296,39 +293,4 @@
   }
 
   /* stylelint-enable */
-
-  .tox-statusbar {
-    background-color: @background-color;
-    display: flex;
-    flex: 0 0 auto;
-    overflow: hidden;
-  }
-
-  .tox-statusbar__text-container {
-    display: flex;
-    flex: 1 1 auto;
-    overflow: hidden;
-  }
-
-  .tox-statusbar__resize-handle {
-    flex: 0 0 auto;
-  }
-
-  .tox-statusbar .tox-statusbar__wordcount,
-  .tox-statusbar .tox-statusbar__branding, {
-    flex: 0 0 auto;
-  }
-
-  .tox-statusbar .tox-statusbar__path {
-    display: block;
-    flex: 1 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .tox-statusbar .tox-statusbar__path * {
-    display: inline;
-    white-space: nowrap;
-  }
 }
