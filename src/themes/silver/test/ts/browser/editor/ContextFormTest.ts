@@ -8,7 +8,6 @@ import { Element, Body } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 
 import { TestStore } from '../../module/AlloyTestUtils';
-import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
