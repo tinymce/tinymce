@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.4.0] - 2018-11-21
+### Changed
+ - Dropdowns no longer set the aria-pressed attribute on the button
+
 # [4.3.0] - 2018-11-05
-###
+### Added
  - Exposed a new LazySink type
 
 ### Changed
