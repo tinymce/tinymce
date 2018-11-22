@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.4.1] - 2018-11-22
+### Changed
+ - Bounder will now attempt to corral the element within the provided bounds
+
 # [4.4.0] - 2018-11-21
 ### Changed
  - Dropdowns no longer set the aria-pressed attribute on the button
