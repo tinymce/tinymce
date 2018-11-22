@@ -135,12 +135,6 @@ gulp.task('getInternal',
   shell.task('npm install ' + packages.join(' ') + ' --no-save --registry http://nexus:8081/repository/npm-group/')
 );
 
-// Backstopjs
-
-const backstopConfig = require('./backstop.json');
-
-gulp.task('backstop', () => backstop('test', { config: { ...backstopConfig, report: [], docker: true }}))
-
 //
 // clean tmp
 //
