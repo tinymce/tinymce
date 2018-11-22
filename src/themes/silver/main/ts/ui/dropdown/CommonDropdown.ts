@@ -67,6 +67,10 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
     AlloyTriggers.emitWith(dropdown, 'keydown', {
       raw: se.event().raw()
     });
+
+    // Close the dropdown
+    AlloyDropdown.close(dropdown);
+
     return Option.some(true);
   };
 
