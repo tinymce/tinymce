@@ -1,6 +1,6 @@
-import { Assertions, Step, Log } from '@ephox/agar';
+import { Assertions, Step, Log, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Class } from '@ephox/sugar';
+import { Class, Width } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -14,8 +14,8 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
   if (PhantomSkipper.skip()) { return success(); }
 
   const slidingStyles = [
-    '.test-sliding-width-growing { transition: width 5.0s ease }',
-    '.test-sliding-width-shrinking { transition: width 5.0s ease }'
+    '.test-sliding-width-growing { transition: width 5.0s ease; }',
+    '.test-sliding-width-shrinking { transition: width 5.0s ease; background: green !important; }'
   ];
 
   GuiSetup.setup((store, doc, body) => {
@@ -29,18 +29,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
             'height': '20px'
           }
         },
-        components: [
-          {
-            dom: {
-              tag: 'div',
-              styles: {
-                width: '20px',
-                height: '10px',
-                transition: 'width 0.1s ease'
-              }
-            }
-          }
-        ],
+        components: [ ],
         containerBehaviours: Behaviour.derive([
           Sliding.config({
             closedClass: 'test-sliding-closed',
@@ -103,9 +92,27 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       Step.wait(1000),
 
       Log.stepsAsStep('TBA', 'Grow while shrinking should have growing and not shrinking', [
+        Step.stateful((value, next, die) => {
+          next({
+            ...value,
+            width: Width.get(component.element())
+          });
+        }),
         sGrow,
+        Logger.t(
+          'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
+          Step.stateful((value, next, die) => {
+            const actualWidth = Width.get(component.element());
+            Assertions.assertEq(
+              `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,
+              true,
+              Math.abs(actualWidth - value.width) < 20
+            );
+            next(value);
+          })
+        ),
         sIsGrowing,
-        sIsNotShrinking
+        sIsNotShrinking,
       ])
     ];
   }, () => { success(); }, failure);
