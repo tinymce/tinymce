@@ -1,13 +1,14 @@
 import { Arbitraries } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { composeList } from '../../../main/ts/listModel/ComposeList';
-import { parseLists } from '../../../main/ts/listModel/ParseLists';
-import { Arr, Option } from '@ephox/katamari';
-import { normalizeEntries } from '../../../main/ts/listModel/NormalizeEntries';
-import { ListType } from '../../../main/ts/listModel/ListType';
 import { Entry } from '../../../main/ts/listModel/Entry';
-import { Element } from '@ephox/sugar';
+import { ListType } from '../../../main/ts/listModel/ListType';
+import { normalizeEntries } from '../../../main/ts/listModel/NormalizeEntries';
+import { parseLists } from '../../../main/ts/listModel/ParseLists';
 
 UnitTest.test('ListModelTest', () => {
   const arbitratyContent = Jsc.bless({
@@ -32,7 +33,7 @@ UnitTest.test('ListModelTest', () => {
   });
 
   const composeParse = (entries: Entry[]): Entry[] => {
-    return composeList(entries)
+    return composeList(document, entries)
       .map((list) => parseLists([list], Option.none()))
       .bind(Arr.head)
       .map((entrySet) => entrySet.entries)
