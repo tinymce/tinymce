@@ -3,20 +3,20 @@ import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const storageName = 'tinymce-custom-colors';
 
-export default function (max: number = 10) {
+export default (max: number = 10) => {
   const storageString = LocalStorage.getItem(storageName);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
-  const prune = function (list) {
+  const prune = (list: string[]): string[] => {
     // When the localStorage cache is too big,
     // remove the difference from the tail (head is fresh, tail is stale!)
     const diff = max - list.length;
     return (diff < 0) ? list.slice(0, max) : list;
   };
 
-  const cache: string[] = prune(localstorage);
+  const cache = prune(localstorage);
 
-  const add = function (key) {
+  const add = (key: string): void => {
     // Remove duplicates first.
     Arr.indexOf(cache, key).each(remove);
 
@@ -30,11 +30,11 @@ export default function (max: number = 10) {
     LocalStorage.setItem(storageName, JSON.stringify(cache));
   };
 
-  const remove = function (idx) {
+  const remove = (idx: number): void => {
     cache.splice(idx, 1);
   };
 
-  const state = function () {
+  const state = (): string[] => {
     return cache.slice(0);
   };
 
@@ -42,4 +42,4 @@ export default function (max: number = 10) {
     add,
     state
   };
-}
+};
