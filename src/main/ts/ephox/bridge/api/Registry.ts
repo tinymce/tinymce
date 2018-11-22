@@ -23,24 +23,24 @@ export interface Registry {
   addContextToolbar: (name: string, spec: ContextToolbarApi) => void;
   addContextForm: (name: string, spec: ContextFormApi) => void;
   addIcon: (name: string, svgData: string) => void;
+  addAutocompleter: (name: string, spec: AutocompleterApi) => void;
+
   getAll: () => {
-    buttons: Record<string, any>;
-    menuItems: Record<string, any>;
-    popups: Record<string, any>;
+    buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
+    menuItems: Record<string, MenuItemApi | ToggleMenuItemApi>;
+    popups: Record<string, AutocompleterApi>;
     contextMenus: Record<string, ContextMenuApi>;
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
     icons: Record<string, string>;
   };
-
-  addAutocompleter: (name: string, spec: AutocompleterApi) => void;
 }
 
 export const create = (): Registry => {
-  const buttons: Record<string, any> = {};
-  const menuItems: Record<string, any> = {};
-  const popups: Record<string, any> = {};
+  const buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi> = {};
+  const menuItems: Record<string, MenuItemApi | ToggleMenuItemApi> = {};
+  const popups: Record<string, AutocompleterApi> = {};
   const icons: Record<string, string> = {};
-  const contextMenus: Record<string, any> = {};
+  const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = Merger.merge({ type }, spec);
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;

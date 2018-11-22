@@ -3,11 +3,13 @@ import { Fun, Result, Option } from '@ephox/katamari';
 import { ToggleMenuItemApi, SeparatorMenuItemApi, FancyMenuItemApi } from '../../api/Menu';
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
+export type MenuItemContents = string | MenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi;
+
 // A menu item that allows individual actions and submenus
 export interface MenuItemApi extends CommonMenuItemApi {
   type?: 'menuitem';
   icon?: string;
-  getSubmenuItems?: () => Array<MenuItemApi | ToggleMenuItemApi | SeparatorMenuItemApi | FancyMenuItemApi>;
+  getSubmenuItems?: () => string | Array<MenuItemContents>;
   onSetup?: (api: MenuItemInstanceApi) => (api: MenuItemInstanceApi) => void;
   onAction?: (api: MenuItemInstanceApi) => void;
 }
