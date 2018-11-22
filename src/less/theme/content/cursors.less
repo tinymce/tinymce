@@ -1,0 +1,19 @@
+//
+// Cursors
+//
+
+// Note, the svg requires the `xmlns` attribute
+@cursor-format-painter: ~'<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><g id="icon-format-painter-cursor" stroke="none" stroke-width="1" fill-rule="nonzero"><path d="M15 6c0-.5-.4-1-1-1H6a1 1 0 0 0-1 1v4c0 .6.5 1 1 1h8c.6 0 1-.4 1-1V9h1v3H9v7c0 .6.4 1 1 1h1c.6 0 1-.4 1-1v-5h6V7h-3V6z" id="Shape"/><path d="M1 1h7.3c.4 0 .7.3.7.8 0 .4-.3.7-.8.7H2.5v5.8c0 .4-.3.7-.8.7a.8.8 0 0 1-.7-.8V1z" id="Path"/></g></svg>';
+
+// Mixin to inline svg
+.inline-svg (@svg) {
+  @_cursor-svg-code: escape(~'<?xml version="1.0" ?>@{svg}');
+  @_cursor-inline-svg: ~"data:image/svg+xml;charset=utf8,@{_cursor-svg-code}";
+  @_cursor-inline-svg-url: ~"url('@{_cursor-inline-svg}'), default";
+}
+
+.tox-cursor-format-painter {
+  .inline-svg(@cursor-format-painter); // Call mixin
+
+  cursor: @_cursor-inline-svg-url;
+}
