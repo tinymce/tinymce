@@ -54,8 +54,9 @@ const remove =  (editor: Editor): void => {
     }
 
     Events.fireRemove(editor);
-
     editor.editorManager.remove(editor);
+
+    Events.fireDetach(editor);
     DOM.remove(editor.getContainer());
 
     safeDestroy(_selectionOverrides);

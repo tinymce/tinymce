@@ -1,11 +1,13 @@
 Version 5.0.0-preview-5 (TBD)
     Changed Help dialog to be accessible to screen readers #TINY-2687
+    Changed the color swatch to save selected custom colors to local storage for use across sessions #TINY-2722
     Added title attribute to color swatch colors #TINY-2669
     Added anchorbar component to anchor inline toolbar dialogs to instead of the toolbar #TINY-2040
     Added support for toolbar<n> and toolbar array config options to be squashed into a single toolbar and not create multiple toolbars #TINY-2195
     Added error handling for when forced_root_block config option is set to true #TINY-2261
     Added functionality for the removed_menuitems config option #TINY-2184
     Fixed an issue in IE 11 where calling selection.getContent() would return an empty string when the editor didn't have focus #TINY-2325
+    Added the ability to use a string to reference menu items in menu buttons and submenu items #TINY-2253
 Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211

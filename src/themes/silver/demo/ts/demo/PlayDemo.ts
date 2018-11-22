@@ -1,4 +1,5 @@
-// import ButtonSetupDemo from './ButtonSetupDemo';
+import ButtonSetupDemo from './ButtonSetupDemo';
+
 declare let tinymce: any;
 
 export default function () {
@@ -9,7 +10,7 @@ export default function () {
     theme: 'silver',
     toolbar: [ 'styleselect', 'MagicButton', 'code', 'undo', 'toc', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
-      'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove'
+      'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1'
     ].join(' '),
     // content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
     plugins: [
@@ -95,7 +96,7 @@ export default function () {
     ],
 
     setup (ed) {
-      // ButtonSetupDemo.setup(ed);
+      ButtonSetupDemo.setup(ed);
 
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout

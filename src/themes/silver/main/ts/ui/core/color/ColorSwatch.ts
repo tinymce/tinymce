@@ -44,11 +44,11 @@ const registerCommands = (editor) => {
 };
 
 const calcCols = (colors) => {
-  return Math.ceil(Math.sqrt(colors));
+  return Math.max(5, Math.ceil(Math.sqrt(colors)));
 };
 
 const getColorCols = function (editor) {
-  const colors = Settings.getCurrentColors();
+  const colors = Settings.getColors(editor);
   const defaultCols = calcCols(colors.length);
   return Settings.getColorCols(editor, defaultCols);
 };
@@ -100,9 +100,9 @@ const applyColour = function (editor, format, splitButtonApi, value, onChoice: (
   }
 };
 
-const getFetch = (hasCustom: boolean) => (callback) => {
+const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
   callback(
-    Settings.getCurrentColors().concat(getAdditionalColors(hasCustom))
+    colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)))
   );
 };
 
@@ -116,7 +116,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       icon: name === 'forecolor' ? 'text-color' : 'background-color',
       select: () => false,
       columns: getColorCols(editor),
-      fetch: getFetch(Settings.hasCustomColors(editor)),
+      fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
       onAction: (splitButtonApi) => {
         // do something with last colour
         if (lastColour.get() !== null) {
@@ -197,7 +197,6 @@ const colorPickerDialog = (editor) => (callback, value) => {
 };
 
 const register = (editor) => {
-  Settings.register(editor);
   registerCommands(editor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
