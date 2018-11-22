@@ -18,33 +18,37 @@ const separator: Menu.SeparatorMenuItemApi = {
   type: 'separator'
 };
 
-const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): Menu.SeparatorMenuItemApi | Menu.MenuItemApi => {
-  switch (item.type) {
-    case 'separator':
-      return separator;
-    case 'submenu':
-      return {
-        type: 'menuitem',
-        text: item.text,
-        icon: item.icon,
-        getSubmenuItems: () => {
-          const items = item.getSubmenuItems();
-          if (Type.isString(items)) {
-            return items;
-          } else {
-            return Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
+const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): MenuItem => {
+  if (Type.isString(item)) {
+    return item;
+  } else {
+    switch (item.type) {
+      case 'separator':
+        return separator;
+      case 'submenu':
+        return {
+          type: 'menuitem',
+          text: item.text,
+          icon: item.icon,
+          getSubmenuItems: () => {
+            const items = item.getSubmenuItems();
+            if (Type.isString(items)) {
+              return items;
+            } else {
+              return Arr.map(items, makeContextItem);
+            }
           }
-        }
-      };
-    default:
-      // case 'item', or anything else really
-      return {
-        type: 'menuitem',
-        text: item.text,
-        icon: item.icon,
-        // disconnect the function from the menu item API bridge defines
-        onAction: Fun.noarg(item.onAction)
-      };
+        };
+      default:
+        // case 'item', or anything else really
+        return {
+          type: 'menuitem',
+          text: item.text,
+          icon: item.icon,
+          // disconnect the function from the menu item API bridge defines
+          onAction: Fun.noarg(item.onAction)
+        };
+    }
   }
 };
 
@@ -72,7 +76,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
         return addContextMenuGroup(acc, items.split(' '));
       } else if (items.length > 0) {
         // TODO: Should we add a ValueSchema check here?
-        const allItems = Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
+        const allItems = Arr.map(items, makeContextItem);
         return addContextMenuGroup(acc, allItems);
       } else {
         return acc;
