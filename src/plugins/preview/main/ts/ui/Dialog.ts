@@ -41,6 +41,7 @@ export const open = (editor) => {
     }
   });
 
-  // NOTE: AP-217 hack - Workout why this is necessary
-  dataApi.focus('cancel');
+  // Focus the close button, as by default the first element in the body is selected
+  // which we don't want to happen here since the body only has the iframe content
+  dataApi.focus('close');
 };

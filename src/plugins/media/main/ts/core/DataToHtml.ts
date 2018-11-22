@@ -15,13 +15,29 @@ import Mime from './Mime';
 import UpdateHtml from './UpdateHtml';
 import * as UrlPatterns from './UrlPatterns';
 import VideoScript from './VideoScript';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const getIframeHtml = function (data) {
+export interface MediaDialogData {
+  allowFullscreen: boolean;
+  source1: string;
+  source1mime: string;
+  width: number;
+  height: number;
+  embed: string;
+  poster: string;
+  source2: string;
+  source2mime: string;
+  type: 'iframe' | 'script';
+}
+
+export type DataToHtmlCallback = (data: MediaDialogData) => string;
+
+const getIframeHtml = function (data: MediaDialogData) {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
   return '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
-const getFlashHtml = function (data) {
+const getFlashHtml = function (data: MediaDialogData) {
   let html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
@@ -33,7 +49,7 @@ const getFlashHtml = function (data) {
   return html;
 };
 
-const getAudioHtml = function (data, audioTemplateCallback) {
+const getAudioHtml = function (data: MediaDialogData, audioTemplateCallback: DataToHtmlCallback) {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
@@ -49,7 +65,7 @@ const getAudioHtml = function (data, audioTemplateCallback) {
   }
 };
 
-const getVideoHtml = function (data, videoTemplateCallback) {
+const getVideoHtml = function (data: MediaDialogData, videoTemplateCallback: DataToHtmlCallback) {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
@@ -66,12 +82,12 @@ const getVideoHtml = function (data, videoTemplateCallback) {
   }
 };
 
-const getScriptHtml = function (data) {
+const getScriptHtml = function (data: MediaDialogData) {
   return '<script src="' + data.source1 + '"></script>';
 };
 
-const dataToHtml = function (editor, dataIn) {
-  const data = Tools.extend({}, dataIn);
+const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
+  const data: MediaDialogData = Tools.extend({}, dataIn);
 
   if (!data.source1) {
     Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));

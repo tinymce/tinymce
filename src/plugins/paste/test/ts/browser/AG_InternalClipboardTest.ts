@@ -4,7 +4,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import Utils from 'tinymce/plugins/paste/core/Utils';
-import Plugin from 'tinymce/plugins/paste/Plugin';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import MockDataTransfer from '../module/test/MockDataTransfer';
@@ -12,7 +13,8 @@ import MockDataTransfer from '../module/test/MockDataTransfer';
 UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (success, failure) => {
   let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
 
-  Plugin();
+  PastePlugin();
+  TablePlugin();
   Theme();
 
   const sResetProcessEvents = Logger.t('Reset process events', Step.sync(function () {
@@ -93,8 +95,30 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
         sAssertClipboardData('', ''),
         tinyApis.sAssertContent('<p>abc</p>'),
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
-      ])
-    ;
+      ]),
+
+      Log.stepsAsStep('TBA', 'Copy collapsed selection with table selection', [
+        sCopy(editor, tinyApis,
+          '<table data-mce-selected="1">' +
+            '<tbody>' +
+              '<tr>' +
+                '<td data-mce-first-selected="1" data-mce-selected="1">a</td>' +
+                '<td data-mce-last-selected="1" data-mce-selected="1">b</td>' +
+              '</tr>' +
+            '</tbody>' +
+          '</table>',
+        [0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0),
+        sAssertClipboardData(
+          '<table>\n' +
+            '<tbody>\n' +
+              '<tr>\n' +
+                '<td>a</td>\n' +
+                '<td>b</td>\n' +
+              '</tr>\n' +
+            '</tbody>\n' +
+          '</table>', 'ab'),
+        tinyApis.sAssertSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0)
+      ]);
   };
 
   const sTestCut = function (editor, tinyApis) {
@@ -193,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
       sTestPaste(editor, tinyApis)
     ], onSuccess, onFailure);
   }, {
-    plugins: 'paste',
+    plugins: 'paste table',
     init_instance_callback (editor) {
       editor.on('PastePreProcess', function (evt) {
         lastPreProcessEvent = evt;

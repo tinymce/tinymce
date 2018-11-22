@@ -5,12 +5,12 @@ import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/sil
 import { formatSelectMenu } from '../../core/complex/FormatSelect';
 import { styleSelectMenu } from '../../core/complex/StyleSelect';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import { ItemResponse } from '../item/MenuItems';
 import * as NestedMenus from '../menu/NestedMenus';
 import { MenubarItemSpec } from './SilverMenubar';
 import { fontSelectMenu } from '../../core/complex/FontSelect';
 import { fontsizeSelectMenu } from '../../core/complex/FontsizeSelect';
 import { getRemovedMenuItems } from '../../../api/Settings';
+import ItemResponse from '../item/ItemResponse';
 
 export interface MenuRegistry {
   menuItems: Record<string, any>;

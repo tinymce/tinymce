@@ -5,8 +5,8 @@ import { renderFormField, renderLabel } from 'tinymce/themes/silver/ui/alien/Fie
 
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { ItemResponse } from '../menus/item/MenuItems';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import ItemResponse from '../menus/item/ItemResponse';
 
 // tslint:disable:no-console
 

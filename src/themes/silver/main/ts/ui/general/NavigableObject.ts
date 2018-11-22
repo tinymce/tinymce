@@ -1,4 +1,4 @@
-import { AlloyTriggers, Behaviour, NativeEvents, Tabstopping } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, NativeEvents, Tabstopping } from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
 import { Class, SelectorExists } from '@ephox/sugar';
 
@@ -22,6 +22,7 @@ const craftWithClasses = function (classes) {
       classes
     },
     behaviours: Behaviour.derive([
+      Focusing.config( { ignore: true }),
       Tabstopping.config({ })
     ])
   };

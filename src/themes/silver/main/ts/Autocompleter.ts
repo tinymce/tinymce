@@ -9,7 +9,6 @@ import { getContext } from './ui/autocomplete/AutocompleteContext';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './ui/autocomplete/AutocompleteEditorEvents';
 import { AutocompleteLookupData, lookup } from './ui/autocomplete/AutocompleteLookup';
 import * as Autocompleters from './ui/autocomplete/Autocompleters';
-import { ItemResponse } from './ui/menus/item/MenuItems';
 import {
   createAutocompleteItems,
   createMenuFrom,
@@ -17,6 +16,7 @@ import {
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
 import { Range } from '@ephox/dom-globals';
+import ItemResponse from './ui/menus/item/ItemResponse';
 
 const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
   const autocompleter = GuiFactory.build(
