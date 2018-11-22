@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Option, Options, Fun } from '@ephox/katamari';
-import { Element, InsertAll, Remove, Fragment } from '@ephox/sugar';
+import { Arr, Fun, Option, Options } from '@ephox/katamari';
+import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
+import Selection from '../core/Selection';
+import TextBlock from '../core/TextBlock';
 import { composeList } from './ComposeList';
 import { Entry, isIndented, isSelected } from './Entry';
-import { IndentValue, indentEntry } from './Indentation';
+import { indentEntry, IndentValue } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
-import { ItemTuple, parseLists, EntrySet } from './ParseLists';
-import { Editor } from 'tinymce/core/api/Editor';
-import TextBlock from '../core/TextBlock';
-import Selection from '../core/Selection';
+import { EntrySet, ItemTuple, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
 const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
@@ -27,15 +27,15 @@ const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   });
 };
 
-const indentedComposer = (entries: Entry[]): Element[] => {
+const indentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   normalizeEntries(entries);
-  return composeList(entries).toArray();
+  return composeList(editor.contentDocument, entries).toArray();
 };
 
 const composeEntries = (editor, entries: Entry[]): Element[] => {
   return Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
     const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
-    return groupIsIndented ? indentedComposer(entries) : outdentedComposer(editor, entries);
+    return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
   });
 };
 
@@ -63,3 +63,4 @@ const listsIndentation = (editor: Editor, lists: Element[], indentation: IndentV
 };
 
 export { listsIndentation };
+
