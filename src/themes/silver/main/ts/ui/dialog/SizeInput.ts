@@ -73,11 +73,11 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
   };
 
   const pField1 = AlloyFormCoupledInputs.parts().field1(
-    renderDimensionField({ label: 'Width', isField1: true, placeholderText: 'Width' })
+    renderDimensionField({ label: 'Dimension width', isField1: true, placeholderText: 'Width' })
   );
 
   const pField2 = AlloyFormCoupledInputs.parts().field2(
-    renderDimensionField({ label: 'Height', isField1: false, placeholderText: 'Height' })
+    renderDimensionField({ label: 'Dimension height', isField1: false, placeholderText: 'Height' })
   );
 
   const pLock = AlloyFormCoupledInputs.parts().lock({

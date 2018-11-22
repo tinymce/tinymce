@@ -77,6 +77,8 @@ Flags                     <new>                 Emoticons
 Metadata and Document Properties [Document Properties] Fullpage
 
 Image...                  [Image]               Image
+Dimension width           <new>                 Image
+Dimension height          <new>                 Image
 
 Link...                   [Link]                Link
 Insert/Edit Link          [Insert Link]         Link
