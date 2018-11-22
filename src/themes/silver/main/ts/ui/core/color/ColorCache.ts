@@ -23,7 +23,7 @@ export default function (max: number = 10) {
     cache.unshift(key);
 
     // When max size is exceeded, the oldest colors will be removed
-    if (cache.length >= max) {
+    if (cache.length > max) {
       cache.pop();
     }
 
