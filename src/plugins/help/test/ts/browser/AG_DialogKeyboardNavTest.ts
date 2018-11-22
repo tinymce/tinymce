@@ -18,6 +18,9 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
     // Tab key press
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
+    // Down arrow key press to nav between tabs
+    const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
+
     // Assert focus is on the expected form element
     const sAssertFocusOnItem = (label, selector) => {
       return FocusTools.sTryOnSelector(
@@ -27,43 +30,43 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       );
     };
 
-    Pipeline.async({}, Log.steps('TBA', 'Help: Open dialog, test the tab key navigation cycles through all focusable fields in Handy Shortcuts, Plugins and Version tab', [
-      // Open help dialog
-      tinyApis.sExecCommand('mceHelp'),
+    Pipeline.async({}, [
+      Log.stepsAsStep('TBA', 'Help: Open dialog', [
+        tinyApis.sExecCommand('mceHelp')
+      ]),
 
-      // Keyboard nav within the Handy Shortcuts tab
-      sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
-      sPressTabKey,
-      sAssertFocusOnItem('Handy Shortcuts Items', 'div[role="presentation"]'),
-      sPressTabKey,
-      sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
-      sPressTabKey,
-      sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
+      Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Handy Shortcuts tab', [
+        sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Handy Shortcuts Items', 'div[role="presentation"]'),
+        sPressTabKey,
+        sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
+        sPressDownArrowKey
+      ]),
 
-      // Press arrow keys to nav between tabs
-      Keyboard.sKeydown(doc, Keys.down(), { }),
+      Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Plugins tab', [
+        sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Installed Plugins', 'div[role="presentation"]'),
+        sPressTabKey,
+        sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
+        sPressDownArrowKey
+      ]),
 
-      // Keyboard nav within the Plugins tab
-      sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
-      sPressTabKey,
-      sAssertFocusOnItem('Installed Plugins', 'div[role="presentation"]'),
-      sPressTabKey,
-      sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
-      sPressTabKey,
-      sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
-
-      // Press arrow keys to nav between tabs
-      Keyboard.sKeydown(doc, Keys.down(), { }),
-
-      // Keyboard nav within the Version tab
-      sAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")'),
-      sPressTabKey,
-      sAssertFocusOnItem('TinyMCE Version', 'div[role="presentation"]'),
-      sPressTabKey,
-      sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
-      sPressTabKey,
-      sAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")')
-    ]), onSuccess, onFailure);
+      Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Version tab', [
+        sAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")'),
+        sPressTabKey,
+        sAssertFocusOnItem('TinyMCE Version', 'div[role="presentation"]'),
+        sPressTabKey,
+        sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")')
+      ])
+    ], onSuccess, onFailure);
   }, {
       plugins: 'help',
       toolbar: 'help',
