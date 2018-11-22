@@ -1,12 +1,9 @@
 import { Arr, Type } from '@ephox/katamari';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
-const DEFAULT_MAX_STACK = 10;
-
 const storageName = 'tinymce-custom-colors';
 
-export default function (_MAX_STACK?) {
-  const max = Type.isNumber(_MAX_STACK) ? _MAX_STACK : DEFAULT_MAX_STACK;
+export default function (max: number = 10) {
   const storageString = LocalStorage.getItem(storageName);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
