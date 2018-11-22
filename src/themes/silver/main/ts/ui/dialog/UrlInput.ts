@@ -73,6 +73,9 @@ const renderInputButton = (label: Option<string>, eventName: string, className: 
         title: providersBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
       }
     },
+    buttonBehaviours: Behaviour.derive([
+      Tabstopping.config({})
+    ]),
     action: (component) => {
       AlloyTriggers.emit(component, eventName);
     }

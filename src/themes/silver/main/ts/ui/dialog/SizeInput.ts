@@ -59,7 +59,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     });
 
     const pAriaDescriptor = AlloyFormField.parts()['aria-descriptor']({
-      text: subspec.label
+      text: providersBackstage.translate(subspec.label)
     });
 
     return renderFormFieldSpec(pAriaDescriptor, pField);
