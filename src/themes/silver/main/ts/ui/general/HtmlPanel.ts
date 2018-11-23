@@ -1,5 +1,5 @@
 import { SketchSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/SpecTypes';
-import { Container as AlloyContainer } from '@ephox/alloy';
+import { Container as AlloyContainer, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
 
 export interface HtmlPanelFoo {
   type: 'htmlpanel';
@@ -11,6 +11,10 @@ export const renderHtmlPanel = (spec: HtmlPanelFoo): SketchSpec => {
     dom: {
       tag: 'div',
       innerHtml: spec.html
-    }
+    },
+    containerBehaviours: Behaviour.derive([
+      Tabstopping.config({ }),
+      Focusing.config({ })
+    ])
   });
 };

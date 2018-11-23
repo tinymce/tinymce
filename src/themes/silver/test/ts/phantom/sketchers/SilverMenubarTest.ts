@@ -54,6 +54,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             onSetup: store.adder('Menubar.setup'),
             providers: {
               icons: () => <Record<string, string>> {},
+              menuItems: () => <Record<string, any>> {},
               translate: I18n.translate
             },
             getSink: () => {
