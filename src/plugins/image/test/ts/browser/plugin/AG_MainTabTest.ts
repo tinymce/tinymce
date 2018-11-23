@@ -5,7 +5,6 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import {
-  cAssertActiveDialogData,
   cAssertCleanHtml,
   cExecCommand,
   cFillActiveDialog,
@@ -33,31 +32,6 @@ UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse 
       }),
       cExecCommand('mceImage', true),
       cWaitForDialog(),
-      cAssertActiveDialogData('checking initial dialog data', (() => {
-        if (Env.ceFalse) {
-          return {
-            src: { value: '', meta: {} },
-            alt: '',
-            classes: 'class1',
-            dimensions: {
-              height: '',
-              width: ''
-            },
-            images: '',
-            caption: 'unchecked'
-          };
-        } else { // old IE
-          return {
-            src: { value: '',  meta: {} },
-            alt: '',
-            classes: 'class1',
-            dimensions: {
-              height: '',
-              width: ''
-            }
-          };
-        }
-      })()),
       cFillActiveDialog({
         src: { value: 'src' },
         alt: 'alt',

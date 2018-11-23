@@ -5,18 +5,22 @@ import { Element, Body } from '@ephox/sugar';
 import { Editor } from '../../../../../core/main/ts/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
+
+export const dialogSelectors = {
+  titleInput : 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
+  descriptionInput : 'label.tox-label:contains("Image description") + input.tox-textfield',
+  widthInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Width") + input.tox-textfield',
+  heightInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Height") + input.tox-textfield',
+  captionRadio : 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
+};
+
 // dupe: Should be in mcagar
-const cGetTopmostWindowApi = Chain.control(
-  Chain.binder((editor: Editor) => {
-    const wins: any[] = editor.windowManager.getWindows();
-    if (wins.length > 0) {
-      const topWin = wins[wins.length - 1];
-      return Result.value(topWin);
-    } else {
-      return Result.error('No open dialog');
-    }
-  }),
-  Guard.addLogging('Get top most window API')
+const cGetTopmostDialog = Chain.control(
+  Chain.fromChains([
+    Chain.inject(Body.body()),
+    UiFinder.cFindIn('[role=dialog]')
+  ]),
+  Guard.addLogging('Get top most dialog')
 );
 
 // dupe: Should be in mcagar
@@ -24,8 +28,8 @@ const cFillActiveDialog = function (data) {
   return Chain.control(
       NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetTopmostWindowApi, 'dialogApi'),
-      NamedChain.direct('dialogApi', Chain.op((dialogApi) => {
+      NamedChain.direct('editor', cGetTopmostDialog, 'dialogParent'),
+      NamedChain.direct('dialogParent', Chain.op((dialogApi) => {
         dialogApi.setData(data);
       }), '_'),
       NamedChain.outputInput
@@ -33,28 +37,6 @@ const cFillActiveDialog = function (data) {
     Guard.addLogging('Fill active dialog')
   );
 };
-
-const cActiveDialogData = () => Chain.control(
-  NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', cGetTopmostWindowApi, 'dialogApi'),
-    NamedChain.direct('dialogApi', Chain.binder((dialogApi) => {
-      return Result.value(dialogApi.getData());
-    }), 'data'),
-    NamedChain.output('data')
-  ]),
-  Guard.addLogging('Active dialog data')
-);
-
-const cAssertActiveDialogData = (message, data) => Chain.control(
-  Chain.fromParent(Chain.identity, [
-    Chain.fromChains([
-      cActiveDialogData(),
-      Assertions.cAssertEq(message, data)
-    ])
-  ]),
-  Guard.addLogging('Assert active dialog data')
-);
 
 const cFakeEvent = function (name) {
   return Chain.control(
@@ -160,10 +142,7 @@ const silverSettings = {
 
 export {
   silverSettings,
-  cGetTopmostWindowApi,
   cFillActiveDialog,
-  cActiveDialogData,
-  cAssertActiveDialogData,
   cFakeEvent,
   cExecCommand,
   cInputForLabel,

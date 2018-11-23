@@ -1,13 +1,13 @@
 import { Debugging } from '@ephox/alloy';
-import { Fun, Id, Merger, Option } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
-
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import Render, { RenderInfo } from './Render';
 import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
+
 
 ThemeManager.add('silver', (editor: Editor) => {
   const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
@@ -23,32 +23,7 @@ ThemeManager.add('silver', (editor: Editor) => {
 
   return {
     renderUI,
-    getWindowManagerImpl () {
-
-      const getTop = () => {
-        const win = editor.windowManager.windows;
-        return Option.from(win[win.length - 1]);
-      };
-
-      const currentWin = getTop().fold(() => {
-        return {
-          getParams: Fun.noop,
-          setParams: Fun.noop
-        };
-      }, (win) => {
-        return {
-          getParams: win.getData,
-          setParams: win.setData
-        };
-      });
-
-      const windows = {
-        getWindows: () => editor.windowManager.windows,
-        windows: editor.windowManager.windows
-      };
-
-      return Merger.merge(windowMgr, currentWin, windows);
-    },
+    getWindowManagerImpl: Fun.constant(windowMgr),
     getNotificationManagerImpl: () => {
       return NotificationManagerImpl(editor, {backstage}, uiMothership);
     },

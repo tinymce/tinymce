@@ -11,8 +11,8 @@ export const setup = (extras: ConfirmDialogSetup) => {
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
 
-    const closeDialog = (dialog, state) => {
-      ModalDialog.hide(dialog);
+    const closeDialog = (state) => {
+      ModalDialog.hide(confirmDialog);
       callback(state);
     };
 
@@ -36,7 +36,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
-            closeDialog(confirmDialog, false);
+            closeDialog(false);
           }),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
@@ -44,8 +44,8 @@ export const setup = (extras: ConfirmDialogSetup) => {
             memFooterYes.asSpec()
           ]))
         },
-        onCancel: () => closeDialog(confirmDialog, false),
-        onSubmit: () => closeDialog(confirmDialog, true),
+        onCancel: () => closeDialog(false),
+        onSubmit: () => closeDialog(true),
         extraClasses: [ 'tox-confirm-dialog' ]
       })
     );
