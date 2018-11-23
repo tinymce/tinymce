@@ -8,15 +8,6 @@ import { PlatformDetection } from '@ephox/sand';
 UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
   const browser = PlatformDetection.detect().browser;
 
-  // TODO FIXME TINY-2722
-  // maybe remove this and depend on the default color pallete when the color_map property is changed from global
-  const colorSettings = [
-    '1abc9c', 'Black',
-    '2ecc71', 'Black',
-    '3498db', 'Black',
-    '9b59b6', 'Black',
-  ];
-
   const forecolorStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
@@ -85,6 +76,5 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
     plugins: '',
     toolbar: 'forecolor backcolor fontsizeselect',
     skin_url: '/project/js/tinymce/skins/oxide',
-    color_map: colorSettings
   }, success, failure);
 });

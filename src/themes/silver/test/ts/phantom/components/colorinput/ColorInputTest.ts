@@ -22,10 +22,6 @@ const choiceItem: 'choiceitem' = 'choiceitem';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
-  // TODO FIXME DISABLED-TEST TINY-2722
-  // Disable reason: Dependent on the color_map setting in previous tests
-  success();
-  return;
   const memSink = Memento.record({
     dom: {
       tag: 'div',
