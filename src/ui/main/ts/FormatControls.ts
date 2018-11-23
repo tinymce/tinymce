@@ -1,9 +1,14 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Fun } from '@ephox/katamari';
 import { Element, SelectorFind } from '@ephox/sugar';
-
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-
 import Control from './Control';
 import Align from './editorui/Align';
 import FontSelect from './editorui/FontSelect';
@@ -17,16 +22,6 @@ import VisualAid from './editorui/VisualAid';
 import FloatPanel from './FloatPanel';
 import Widget from './Widget';
 import { document } from '@ephox/dom-globals';
-
-/**
- * FormatControls.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
 
 const setupEnvironment = function () {
   Widget.tooltips = !Env.iOS;

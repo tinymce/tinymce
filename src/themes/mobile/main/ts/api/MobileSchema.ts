@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
