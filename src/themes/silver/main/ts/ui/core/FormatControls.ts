@@ -1,9 +1,3 @@
-import Align from './Align';
-import SimpleControls from './SimpleControls';
-import UndoRedo from './UndoRedo';
-import VisualAid from './VisualAid';
-import ColorSwatch from './color/ColorSwatch';
-
 /**
  * FormatControls.js
  *
@@ -14,13 +8,19 @@ import ColorSwatch from './color/ColorSwatch';
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const setup = (editor) => {
+import Align from './Align';
+import SimpleControls from './SimpleControls';
+import UndoRedo from './UndoRedo';
+import VisualAid from './VisualAid';
+import ColorSwatch from './color/ColorSwatch';
+import { Editor } from 'tinymce/core/api/Editor';
+
+const setup = (editor: Editor) => {
   Align.register(editor);
   SimpleControls.register(editor);
   UndoRedo.register(editor);
   ColorSwatch.register(editor);
   VisualAid.register(editor);
-  // InsertButton.register(editor); // TODO AP-300
 };
 
 export default {

@@ -37,6 +37,7 @@ export interface UpdateMenuTextEvent extends CustomEvent {
 export interface BasketballFoo {
   text: Option<string>;
   icon: Option<string>;
+  tooltip: Option<string>;
   role: string;
   fetch: (callback: (tdata: TieredData) => void) => void;
   onAttach: (comp: AlloyComponent) => void;
@@ -75,7 +76,15 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
       role: spec.role,
       dom: {
         tag: 'button',
-        classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`))
+        classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
+        attributes: spec.tooltip.fold(
+          () => ({}),
+          (tooltip) => {
+            return {
+              title: sharedBackstage.providers.translate(tooltip) // TODO: tooltips AP-213
+            };
+          }
+        )
       },
       components: componentRenderPipeline([
         spec.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons)),

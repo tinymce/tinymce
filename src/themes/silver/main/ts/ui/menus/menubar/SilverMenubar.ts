@@ -60,6 +60,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         // TODO: backstage me
         text: Option.some(m.text),
         icon: Option.none(),
+        tooltip: Option.none(),
         fetch: (callback) => {
           callback(m.getItems());
         }

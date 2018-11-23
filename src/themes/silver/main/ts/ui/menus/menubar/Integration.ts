@@ -36,6 +36,7 @@ export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
+    tooltip: spec.tooltip,
      // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,
     fetch: (callback) => {
