@@ -18,6 +18,8 @@ import { renderColorInput } from '../../../../../main/ts/ui/dialog/ColorInput';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 
+const choiceItem: 'choiceitem' = 'choiceitem';
+
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
   // TODO FIXME DISABLED-TEST TINY-2722
@@ -57,12 +59,20 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                  );
                },
                providers: {
-                icons: () => <Record<string, string>> {},
-                translate: I18n.translate,
+                 icons: () => <Record<string, string>> {},
+                 menuItems: () => <Record<string, any>> {},
+                 translate: I18n.translate,
               }
              }, {
                colorPicker: (callback, value) => {},
-               hasCustomColors: () => true
+               hasCustomColors: () => true,
+               getColors: () => [
+                { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
+                { type: choiceItem, text: 'Green', value: '#2FCC71' },
+                { type: choiceItem, text: 'Blue', value: '#3598DB' },
+                { type: choiceItem, text: 'Purple', value: '#9B59B6' },
+                { type: choiceItem, text: 'Navy Blue', value: '#34495E' }
+               ]
              })
           ]
         })

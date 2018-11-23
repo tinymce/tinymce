@@ -5,7 +5,7 @@ import Env from 'tinymce/core/api/Env';
 const convertText = (source: string) => {
   const mac = {
     alt: '&#x2325;',
-    ctrl: '&#x2318;',
+    ctrl: '&#x5E;',
     shift: '&#x21E7;',
     meta: '&#x2318;'
   };
@@ -22,7 +22,7 @@ const convertText = (source: string) => {
     return Obj.has(replace, search) ? replace[search] : segment;
   });
 
-  return updated.join('+');
+  return Env.mac ? (updated.join('')).replace(/\s/, '') : updated.join('+');
 };
 
 export default { convertText };

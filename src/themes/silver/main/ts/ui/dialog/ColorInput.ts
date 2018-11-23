@@ -123,7 +123,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
         onLtr: () => [ Layout.southwest ]
       }),
       components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.hasCustomColors()),
+      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
       onItemAction
     }, sharedBackstage)
   );
