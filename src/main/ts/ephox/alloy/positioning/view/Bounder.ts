@@ -52,7 +52,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
 
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
-  const maxX = bounds.x() + bounds.width() - width;
+  const maxX = bounds.x() + bounds.width();
   const minX = Math.max(bounds.x(), newX);
   const limitX = Math.min(minX, maxX);
 
@@ -87,17 +87,19 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // console.log(candidate.label());
   // console.log('xfit', (boundsX + boundsWidth), ',', (newX + width), ',', newX);
   // console.log('yfit', (boundsY + boundsHeight), ',', (newY + height), ',', newY, ',', height);
-  // console.table([{
-  //   xInBounds,
-  //   xFit,
-  //   limitX,
-  //   deltaW,
-  //   boundsX,
-  //   boundsWidth,
-  //   candidateX: candidate.x(),
-  //   newX,
-  //   width
-  // }]);
+  console.table([{
+    xInBounds,
+    xFit,
+    limitX,
+    minX,
+    maxX,
+    deltaW,
+    boundsX,
+    boundsWidth,
+    candidateX: candidate.x(),
+    newX,
+    width
+  }]);
   // console.log('y', yInBounds, yFit, '\t', Math.round(deltaH), '\t', (boundsY === 0 ? '000' : Math.round(boundsY)), '\t', Math.round(boundsHeight), '\t', Math.round(candidate.y()), '\t', Math.round(newY), '\t', height);
   // console.log('maxheight:', deltaH, maxHeight);
   // console.log('originInBounds:', originInBounds);
