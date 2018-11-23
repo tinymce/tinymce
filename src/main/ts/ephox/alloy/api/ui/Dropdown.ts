@@ -67,9 +67,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         Toggling.config({
           toggleClass: detail.toggleClass,
           aria: {
-            // INVESTIGATE: Are we sure we want aria-pressed as well as aria-expanded here?
-            mode: 'pressed',
-            syncWithExpanded: true
+            mode: 'expanded'
           }
         }),
         Coupling.config({
