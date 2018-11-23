@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 
@@ -14,7 +15,7 @@ export interface PluginUrlType {
   name: string;
 }
 
-const tab = (editor) => {
+const tab = (editor: Editor) => {
   const availablePlugins = () => {
     return '<div style="padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +

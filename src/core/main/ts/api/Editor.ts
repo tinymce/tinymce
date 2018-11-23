@@ -31,6 +31,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import Sidebar from '../ui/Sidebar';
 import I18n from 'tinymce/core/api/util/I18n';
+import { WindowManager } from './WindowManager';
 
 /**
  * Include the base event class documentation.
@@ -120,7 +121,7 @@ export interface Editor {
   undoManager: UndoManager;
   ui: Ui;
   validate: boolean;
-  windowManager: any;
+  windowManager: WindowManager;
   _beforeUnload: AnyFunction;
   _eventDispatcher: any;
   _mceOldSubmit: any;

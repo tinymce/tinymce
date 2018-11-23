@@ -10,6 +10,7 @@ import { URL } from '@ephox/sand';
 import Actions from '../core/Actions';
 import ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const createState = (blob) => {
   return {
@@ -18,7 +19,7 @@ const createState = (blob) => {
   };
 };
 
-const makeOpen = (editor, imageUploadTimerState) => () => {
+const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   const getLoadedSpec = (currentState) => {
     return {
       title: 'Edit Image',

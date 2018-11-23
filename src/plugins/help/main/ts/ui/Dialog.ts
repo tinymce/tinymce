@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
 
-const opener = function (editor, pluginUrl) {
+const opener = function (editor: Editor, pluginUrl) {
   return function () {
     editor.windowManager.open(
       {

@@ -7,14 +7,19 @@
 
 import Settings from '../api/Settings';
 import Content from '../core/Content';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const open = function (editor) {
+const open = function (editor: Editor) {
   const minWidth = Settings.getMinWidth(editor);
   const minHeight = Settings.getMinHeight(editor);
 
   const editorContent = Content.getContent(editor);
 
-  editor.windowManager.open({
+  type DialogData = {
+    code: string
+  };
+
+  editor.windowManager.open<DialogData>({
     title: 'Source Code',
     size: 'large',
     body: {
