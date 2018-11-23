@@ -169,7 +169,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             testLog.get().concat([ 'onSubmit' ])
           );
         }
-      }, {}, () => {});
+      }, {});
     }),
 
     FocusTools.sTryOnSelector(

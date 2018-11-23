@@ -61,7 +61,7 @@ export default () => {
         onSubmit: (api) => {
           api.close();
         }
-      }, {}, () => {});
+      }, {});
   });
 
   // The end user will use this as config

@@ -47,7 +47,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
         onClose: store.adder('onClose'),
         onChange: store.adder('onChange'),
         onAction: store.adder('onAction')
-      }, {}, () => store.adder('closeWindow')());
+      }, {});
     }),
 
     Chain.op((dialogApi) => {
@@ -78,7 +78,6 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for all dialog events when closing',
       store.sAssertEq('Checking stuff', [
-        'closeWindow',
         'onClose',
       ]),
       100,

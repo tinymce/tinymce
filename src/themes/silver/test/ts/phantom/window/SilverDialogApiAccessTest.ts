@@ -68,7 +68,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
             store.adder('newData: ' + currentData.fieldA)();
           }, 2000);
         }
-      }, params, () => store.adder('closeWindow')());
+      }, params);
     }),
 
     Chain.op((dialogApi) => {
@@ -108,7 +108,6 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
         'Wait until getData and setData calls fire asynchronously',
         store.sAssertEq('Checking stuff', [
           'onCancel',
-          'closeWindow',
           'onClose',
           'currentData: Init Value',
           'newData: Init Value'

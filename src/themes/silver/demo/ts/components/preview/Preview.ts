@@ -1,7 +1,6 @@
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-
 import { setupDemo } from '../DemoHelpers';
-import { Fun } from '@ephox/katamari';
+
 
 export default () => {
   const helpers = setupDemo();
@@ -37,5 +36,5 @@ export default () => {
       onClose: () => {
         console.log('Preview Demo Close');
       }
-    }, {}, Fun.noop);
+    }, {});
 };

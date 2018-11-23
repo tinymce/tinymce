@@ -6,7 +6,7 @@ import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 import { document } from '@ephox/dom-globals';
-import { Result, Fun } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
 
 UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   const helpers = setupDemo();
@@ -42,7 +42,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
               buttons: [],
               initialData: {}
             };
-            windowManager.open(dialogSpec, params, Fun.noop );
+            windowManager.open(dialogSpec, params);
         }),
         sAssertDialogLabelledBy,
       ])

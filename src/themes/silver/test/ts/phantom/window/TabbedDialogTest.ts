@@ -101,7 +101,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
         onSubmit: () => {
 
         }
-      }, {}, () => {});
+      }, {});
     }),
 
     Chain.asStep({ }, [

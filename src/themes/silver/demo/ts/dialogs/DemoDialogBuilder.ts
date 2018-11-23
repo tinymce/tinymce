@@ -7,7 +7,7 @@ const buildDemoDialog = (spec) => {
   const helpers = setupDemo();
   Debugging.registerInspector(spec.title, helpers.uiMothership);
   const winMgr = WindowManager.setup(helpers.extras);
-  winMgr.open(spec, {}, () => {});
+  winMgr.open(spec, {});
 };
 
 export {
