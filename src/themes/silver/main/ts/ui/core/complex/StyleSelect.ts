@@ -71,7 +71,7 @@ const styleSelectMenu = (editor, backstage) => {
   const data = backstage.styleselect;
   const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
   return {
-    type: 'menuitem',
+    type: 'nestedmenuitem',
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   };

@@ -19,7 +19,7 @@ export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
-  menuItems: () => Record<string, Menu.MenuItemApi | Menu.ToggleMenuItemApi>;
+  menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
   translate: (any) => TranslatedString;
 }
 

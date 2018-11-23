@@ -89,7 +89,6 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
   editor.ui.registry.addButton('spellchecker', Merger.merge(buttonArgs, languageMenuItems.length > 1 ? getSplitButtonArgs() : {type: 'togglebutton'}));
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
-    type: 'togglemenuitem',
     text: 'Spellcheck',
     onSetup: (menuApi) => {
       menuApi.setActive(startedState.get());

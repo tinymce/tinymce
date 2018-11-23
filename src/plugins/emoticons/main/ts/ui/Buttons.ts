@@ -15,7 +15,6 @@ const register = function (editor: Editor, database: EmojiDatabase): void {
   const onAction = () => Dialog.open(editor, database);
 
   editor.ui.registry.addButton('emoticons', {
-    type: 'button',
     tooltip: 'Emoticons',
     icon: 'emoji',
     onAction

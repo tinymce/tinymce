@@ -4,11 +4,11 @@ import { Arr, Obj, Id, Merger, Type } from '@ephox/katamari';
 
 import { SingleMenuItemApi } from './SingleMenu';
 
-type MenuItemRegistry = Record<string, Menu.MenuItemApi | Menu.ToggleMenuItemApi>;
+type MenuItemRegistry = Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
 
 const isMenuItemReference = (item: string | SingleMenuItemApi): item is string => Type.isString(item);
 const isSeparator = (item: SingleMenuItemApi): item is Menu.SeparatorMenuItemApi => item.type === 'separator';
-const isExpandingMenuItem = (item: SingleMenuItemApi): item is Menu.MenuItemApi => {
+const isExpandingMenuItem = (item: SingleMenuItemApi): item is Menu.NestedMenuItemApi => {
   return Obj.has(item as Record<string, any>, 'getSubmenuItems');
 };
 
@@ -44,7 +44,7 @@ const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: M
   return realItems;
 };
 
-const getFromExpandingItem = (item: Menu.MenuItemApi, menuItems: MenuItemRegistry) => {
+const getFromExpandingItem = (item: Menu.NestedMenuItemApi, menuItems: MenuItemRegistry) => {
   const submenuItems = item.getSubmenuItems();
   const rest = expand(submenuItems, menuItems);
 

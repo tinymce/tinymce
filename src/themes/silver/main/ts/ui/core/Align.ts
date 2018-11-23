@@ -8,8 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Menu } from '@ephox/bridge';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import { Editor } from '../../../../../../core/main/ts/api/Editor';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
@@ -24,12 +25,11 @@ const register = (editor) => {
     { type: 'menuitem', text: 'Center', icon: 'align-center', onAction: toggleFormat(editor, 'aligncenter') },
     { type: 'menuitem', text: 'Right', icon: 'align-right', onAction: toggleFormat(editor, 'alignright') },
     { type: 'menuitem', text: 'Justify', icon: 'align-justify', onAction: toggleFormat(editor, 'alignjustify') }
-  ];
+  ] as Menu.MenuItemApi[];
 
-  editor.ui.registry.addMenuItem('align', {
+  editor.ui.registry.addNestedMenuItem('align', {
     text: 'Align',
     icon: defaultAlignIcon,
-    hasSubmenu: true,
     getSubmenuItems: () => alignMenuItems
   });
 

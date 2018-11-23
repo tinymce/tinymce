@@ -131,7 +131,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 onAction: store.adder('togglemenuitem.onAction')
               },
               {
-                type: 'menuitem',
+                type: 'nestedmenuitem',
                 text: 'Beta',
                 icon: 'B',
                 getSubmenuItems: () => {

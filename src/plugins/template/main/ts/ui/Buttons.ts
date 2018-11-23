@@ -19,7 +19,6 @@ const showDialog = function (editor) {
 
 const register = function (editor) {
   editor.ui.registry.addButton('template', {
-    type: 'button',
     icon: 'template',
     tooltip: 'Insert template',
     onAction: Templates.createTemplateList(editor.settings, showDialog(editor))

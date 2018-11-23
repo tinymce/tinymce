@@ -46,7 +46,6 @@ const isWithinList = (editor: Editor, e, nodeName) => {
 
 const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
-    type: 'splitbutton',
     active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',

@@ -2,15 +2,17 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
+import { renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import ItemResponse from '../ItemResponse';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
-  const getApi = (component): Menu.MenuItemInstanceApi => {
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+  const caret = renderSubmenuCaret(providersBackstage.icons);
+  const getApi = (component): Menu.NestedMenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
       setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
@@ -22,7 +24,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     iconContent: spec.icon,
     textContent: spec.text,
     ariaLabel: spec.text,
-    caret: Option.none(),
+    caret: Option.some(caret),
     checkMark: Option.none(),
     shortcutContent: spec.shortcut
   }, providersBackstage);
@@ -31,11 +33,11 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     data: buildData(spec),
     getApi,
     disabled: spec.disabled,
-    onAction: spec.onAction,
+    onAction: Fun.noop,
     onSetup: spec.onSetup,
-    triggersSubmenu: false,
+    triggersSubmenu: true,
     itemBehaviours: [ ]
   }, structure, itemResponse);
 };
 
-export { renderNormalItem };
+export { renderNestedItem };

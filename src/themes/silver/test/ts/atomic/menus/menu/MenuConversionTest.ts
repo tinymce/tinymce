@@ -3,12 +3,20 @@ import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
 UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
-  const buildMenuItem = (name: string, submenus?: string | (Menu.MenuItemApi | Menu.SeparatorMenuItemApi)[]): Menu.MenuItemApi => {
+  const buildMenuItem = (name: string): Menu.MenuItemApi => {
     return {
       type: 'menuitem',
       text: name,
+      value: `${name}-value`
+    };
+  };
+
+  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemApi => {
+    return {
+      type: 'nestedmenuitem',
+      text: name,
       value: `${name}-value`,
-      ...submenus ? { getSubmenuItems: () => submenus } : {}
+      getSubmenuItems: () => submenus
     };
   };
 
@@ -20,9 +28,9 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   const menu2 = buildMenuItem('menu-2');
   const submenu1 = buildMenuItem('submenu-1');
   const submenu2a = buildMenuItem('submenu-2a');
-  const submenu2 = buildMenuItem('submenu-2', [ submenu2a ]);
-  const nestedMenu = buildMenuItem('nested-menu-1', [ submenu1, separator, submenu2 ]);
-  const nestedMenuWithReferences = buildMenuItem('nested-menu-2', 'submenu-1 | submenu-2');
+  const submenu2 = buildNestedMenuItem('submenu-2', [ submenu2a ]);
+  const nestedMenu = buildNestedMenuItem('nested-menu-1', [ submenu1, separator, submenu2 ]);
+  const nestedMenuWithReferences = buildNestedMenuItem('nested-menu-2', 'submenu-1 | submenu-2');
 
   const menuItems = {
     'menu-1': menu1,
@@ -31,7 +39,7 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
     'submenu-2': submenu2
   };
 
-  const expandAndAssertEq = (items: string | Array<string | Menu.MenuItemApi>, expected) => {
+  const expandAndAssertEq = (items: string | Array<Menu.NestedMenuItemContents>, expected) => {
     assert.eq(expected, MenuConversion.expand(items, menuItems));
   };
 
