@@ -94,6 +94,10 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                       classes: [ arr.has('tox-collection__group') ],
                       children: [
                         s.element('div', {
+                          classes: [ arr.has('tox-collection__item'), arr.has('tox-collection__group-heading') ],
+                          children: [ s.text(str.is('Example Separator')) ]
+                        }),
+                        s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
                           children: [
                             s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
