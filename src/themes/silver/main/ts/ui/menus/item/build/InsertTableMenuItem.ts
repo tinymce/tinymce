@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Menu } from '@ephox/bridge';
 import { WidgetItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { ItemWidget, AlloyEvents, NativeEvents, Behaviour, AddEventsBehaviour, GuiFactory, Memento, Toggling, AlloyTriggers, Keying, Focusing, CustomEvent, AlloyComponent, AlloySpec, Replacing, SystemEvents } from '@ephox/alloy';

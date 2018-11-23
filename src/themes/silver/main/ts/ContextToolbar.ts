@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning } from '@ephox/alloy';
 import { expandable } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/MaxHeight';
 import { Objects } from '@ephox/boulder';
