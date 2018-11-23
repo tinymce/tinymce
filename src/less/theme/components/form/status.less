@@ -3,6 +3,7 @@
 //
 
 @status-error-color: red;
+@status-success-color: green;
 
 .tox {
   // Statuses is used as accessory icons within .tox-control-wrap
@@ -14,9 +15,8 @@
     }
   }
 
-  // TODO: Is this used?
-  .tox-status__icon-checkmark svg {
-    fill: green;
+  .tox-status__icon-success svg {
+    fill: @status-success-color;
   }
 
   // TODO: Is this used?
