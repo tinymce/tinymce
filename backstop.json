@@ -21,6 +21,24 @@
       "readyEvent": null,
       "delay": 5000,
       "misMatchThreshold" : 0.1
+    },
+    {
+      "label": "Test toolbar separation",
+      "url": "./build/tests/test-toolbar-separation.html",
+      "hideSelectors": [],
+      "removeSelectors": [],
+      "selectors": [
+        "body"
+      ],
+      "readyEvent": null,
+      "delay": 5000,
+      "misMatchThreshold" : 0.1,
+      "viewports": [
+        {
+          "width": 800,
+          "height": 440
+        }
+      ]
     }
 
   ],
