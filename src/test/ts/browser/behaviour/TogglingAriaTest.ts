@@ -7,7 +7,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TogglingTest', (success, failure) => {
+UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
@@ -24,7 +24,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
         containerBehaviours: Behaviour.derive([
           Toggling.config({
             selected: true,
-            toggleClass: 'test-selected',
             aria: {
               mode: 'pressed'
             }
@@ -41,10 +40,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
           'Asserting structure shows selected\n' + label,
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [
-                arr.has('test-selected'),
-                arr.not('selected')
-              ],
               attrs: {
                 'aria-pressed': str.is('true'),
                 'aria-expanded': str.none()
@@ -62,10 +57,6 @@ UnitTest.asynctest('TogglingTest', (success, failure) => {
           'Asserting structure shows not selected\n' + label,
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [
-                arr.not('test-selected'),
-                arr.not('selected')
-              ],
               attrs: {
                 'aria-pressed': str.is('false'),
                 'aria-expanded': str.none()

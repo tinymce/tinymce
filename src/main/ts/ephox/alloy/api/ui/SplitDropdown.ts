@@ -1,5 +1,6 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';

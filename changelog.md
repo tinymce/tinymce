@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.5.0] - 2018-12-05
+### Changed
+ - Updated the toggling behaviour to make the toggleClass optional
+
 # [4.4.3] - 2018-11-26
 ### Changed
  - alloy UIDs are random (again) to prevent issues with nested motherships loaded with different scripts
