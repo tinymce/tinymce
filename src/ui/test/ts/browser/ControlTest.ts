@@ -14,6 +14,10 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function () {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
+  Control.translate = function (text) {
+    return EditorManager.translate(text);
+  };
+
   // Registers ui widgets to factory
   Api.registerToFactory();
 
