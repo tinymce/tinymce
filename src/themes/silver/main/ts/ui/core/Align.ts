@@ -28,7 +28,6 @@ const register = (editor) => {
   ] as Menu.MenuItemApi[];
 
   editor.ui.registry.addNestedMenuItem('align', {
-    type: 'nestedmenuitem',
     text: 'Align',
     icon: defaultAlignIcon,
     getSubmenuItems: () => alignMenuItems

@@ -11,7 +11,6 @@ import Dialog from './Dialog';
 
 const register = function (editor) {
   editor.ui.registry.addButton('code', {
-    type: 'button',
     icon: 'sourcecode',
     tooltip: 'Source code',
     onAction: () => Dialog.open(editor)

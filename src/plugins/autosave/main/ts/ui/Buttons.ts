@@ -25,7 +25,6 @@ const register = (editor: Editor, started: Cell<boolean>) => {
   Storage.startStoreDraft(editor, started);
 
   editor.ui.registry.addButton('restoredraft', {
-    type: 'button',
     tooltip: 'Restore last draft',
     icon: 'restore-draft',
     onAction: () => {
@@ -35,7 +34,6 @@ const register = (editor: Editor, started: Cell<boolean>) => {
   });
 
   editor.ui.registry.addMenuItem('restoredraft', {
-    type: 'menuitem',
     text: 'Restore last draft',
     icon: 'restore-draft',
     onAction: () => {

@@ -18,7 +18,6 @@ const register = function (editor) {
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 
   editor.ui.registry.addSplitButton('insertdatetime', {
-    type: 'splitbutton',
     icon: 'insert-time',
     tooltip: 'Insert date/time',
     fetch: (done) => {
@@ -39,7 +38,6 @@ const register = function (editor) {
   };
 
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
-    type: 'nestedmenuitem',
     icon: 'insert-time',
     text: 'Date/time',
     getSubmenuItems: () => Tools.map(formats, (format) => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))

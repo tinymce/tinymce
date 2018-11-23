@@ -136,14 +136,12 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
 
   if (hasTableGrid(editor) === false) {
     editor.ui.registry.addMenuItem('inserttable', {
-      type: 'menuitem',
       text: 'Table',
       icon: 'table',
       onAction: cmd('mceInsertTable')
     });
   } else {
     editor.ui.registry.addNestedMenuItem('inserttable', {
-      type: 'nestedmenuitem',
       text: 'Table',
       icon: 'table',
       getSubmenuItems: () => [{type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction}]

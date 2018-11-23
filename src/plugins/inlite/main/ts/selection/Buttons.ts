@@ -11,7 +11,6 @@ const setupButtons = (editor) => {
     const name = 'h' + i;
 
     editor.ui.registry.addToggleButton(name, {
-      type: 'togglebutton',
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
       onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(name, buttonApi.setActive).unbind,
