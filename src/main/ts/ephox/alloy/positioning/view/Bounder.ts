@@ -87,19 +87,19 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // console.log(candidate.label());
   // console.log('xfit', (boundsX + boundsWidth), ',', (newX + width), ',', newX);
   // console.log('yfit', (boundsY + boundsHeight), ',', (newY + height), ',', newY, ',', height);
-  console.table([{
-    xInBounds,
-    xFit,
-    limitX,
-    minX,
-    maxX,
-    deltaW,
-    boundsX,
-    boundsWidth,
-    candidateX: candidate.x(),
-    newX,
-    width
-  }]);
+  // console.table([{
+  //   xInBounds,
+  //   xFit,
+  //   limitX,
+  //   minX,
+  //   maxX,
+  //   deltaW,
+  //   boundsX,
+  //   boundsWidth,
+  //   candidateX: candidate.x(),
+  //   newX,
+  //   width
+  // }]);
   // console.log('y', yInBounds, yFit, '\t', Math.round(deltaH), '\t', (boundsY === 0 ? '000' : Math.round(boundsY)), '\t', Math.round(boundsHeight), '\t', Math.round(candidate.y()), '\t', Math.round(newY), '\t', height);
   // console.log('maxheight:', deltaH, maxHeight);
   // console.log('originInBounds:', originInBounds);
