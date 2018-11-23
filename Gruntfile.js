@@ -735,14 +735,14 @@ module.exports = function (grunt) {
 
     'bedrock-auto': {
       phantomjs: {
-        browser: 'phantomjs',
+        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs',
         config: 'tsconfig.json',
         testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/test/json/routes.json',
-        name: 'phantomjs'
+        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs'
       },
       'chrome-headless': {
         browser: 'chrome-headless',
@@ -793,16 +793,6 @@ module.exports = function (grunt) {
         singleTimeout: 300000,
         customRoutes: 'src/core/test/json/routes.json',
         name: 'ie'
-      },
-      apollo: {
-        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs',
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts', 'src/plugins/*/test/ts/browser/**/AG_*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'apollo-tests'
       },
       silver: {
         browser: 'phantomjs',
