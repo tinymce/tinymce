@@ -66,7 +66,7 @@ UnitTest.test('BounderMenuTest', () => {
   // All fit -> southeast because of order of preference.
   check({
     label: 'link-layout-se',
-    x: 350 - 100, // 270 + 2, capped at view width
+    x: 270 + 2
     y: 100
   }, four, bounds(270, 100, 2, 2), panelBox, bubb, view);
 
@@ -103,14 +103,14 @@ UnitTest.test('BounderMenuTest', () => {
   // Southeast (1px short on x and y).
   check({
     label: 'link-layout-se',
-    x: 350 - 100, // 350+50 - 2-101 + 2, capped at view width
+    x: 350 + 50 - 2 - 101 + 2,
     y: 220 + 50 - 76
   }, four, bounds(350 + 50 - 2 - 101, 220 + 50 - 76, 2, 2), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
     label: 'link-layout-se',
-    x: 350 - 100, // 350 + 50 - 2-100 + 2,
+    x: 350 + 50 - 2 - 100 + 2,
     y: 220 + 50 - 75
   }, four, bounds(350 + 50 - 2 - 100, 220 + 50 - 75, 2, 2), panelBox, bubb, view);
 
@@ -124,7 +124,7 @@ UnitTest.test('BounderMenuTest', () => {
   // Southeast -> Northeast (1px too far on y).
   check({
     label: 'link-layout-ne',
-    x: 350 - 100, // 350 + 50 - 100, capped at view width
+    x: 350 + 50 - 100,
     y: 220 + 50 - 74 + 2 - 75
   }, four, bounds(350 + 50 - 2 - 100, 220 + 50 - 74, 2, 2), panelBox, bubb, view);
 
