@@ -66,7 +66,7 @@ UnitTest.test('BounderMenuTest', () => {
   // All fit -> southeast because of order of preference.
   check({
     label: 'link-layout-se',
-    x: 270 + 2
+    x: 270 + 2,
     y: 100
   }, four, bounds(270, 100, 2, 2), panelBox, bubb, view);
 
