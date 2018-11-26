@@ -1,30 +1,24 @@
-import { Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
+import 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  Theme();
   SpellcheckerPlugin();
 
-  const sCheckButtonType = function (editor, expected) {
-    return Step.sync(function () {
-      const button = editor.buttons.spellchecker;
-
-      RawAssertions.assertEq('should have same type', expected, button.type);
-    });
-  };
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, [
-      sCheckButtonType(editor, 'splitbutton')
-    ], onSuccess, onFailure);
+    const ui = TinyUi(editor);
+
+    Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Multiple languages split button', [
+      ui.sWaitForUi('my button', '.tox-split-button'),
+    ]), onSuccess, onFailure);
   }, {
+    theme: 'silver',
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',

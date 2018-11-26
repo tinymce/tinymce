@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
 
   const sAssertMenuItemCount = function (expected, editor) {
     return Step.sync(function () {
-      const actual = document.querySelectorAll('.mce-menu-item').length;
+      const actual = document.querySelectorAll('.tox-collection__item').length;
       RawAssertions.assertEq('Should be correct count', expected, actual);
     });
   };
@@ -21,8 +21,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
-      tinyUi.sClickOnToolbar('Could not find fontsize select', 'div[aria-label="Font Sizes"] button'),
-      tinyUi.sWaitForUi('Menu did not appear', 'div.mce-floatpanel'),
+      tinyUi.sClickOnToolbar('Could not find fontsize select', 'button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke'),
+      tinyUi.sWaitForUi('Menu did not appear', 'div.tox-menu.tox-collection.tox-collection--list.tox-selected-menu'),
       sAssertMenuItemCount(1, editor)
     ], onSuccess, onFailure);
   }, {

@@ -5,10 +5,12 @@ import {
   FocusTools,
   Keyboard,
   Keys,
-  Logger,
   Mouse,
   Pipeline,
   UiFinder,
+  GeneralSteps,
+  Log,
+  Step,
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
@@ -17,8 +19,10 @@ import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
+  const isIE = PlatformDetection.detect().browser.isIE();
   Theme();
 
   TinyLoader.setup(
@@ -27,36 +31,35 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
 
       const apis = TinyApis(editor);
 
-      Pipeline.async({ }, Logger.ts(
-        'Check structure of font format',
-        [
-          GuiSetup.mAddStyles(doc, [
+      Pipeline.async({}, [
+        Log.step('TBA', 'Check structure of font format', GeneralSteps.sequence([
+          Step.label('Add styles to the editor', GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }',
             '.tox-collection__item-label > * { margin: 0px; }'
-          ]),
+          ])),
 
-          apis.sSetContent('<blockquote>Text</blockquote>'),
-          apis.sSetCursor([ 0, 0 ], 'Te'.length),
+          Step.label('Set editor content', apis.sSetContent('<blockquote>Text</blockquote>')),
+          Step.label('Set cursor position', apis.sSetCursor([0, 0], 'Te'.length)),
 
-          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
-          Chain.asStep(Body.body(), [
+          Step.label('Click on the style select button', Mouse.sClickOn(Body.body(), '.tox-toolbar button')),
+          Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]')),
+          Step.label('Checking menu structure', Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
               ApproxStructure.build((s, str, arr) => {
                 return s.element('div', {
-                  classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list') ],
+                  classes: [arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list')],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-collection__group') ],
+                      classes: [arr.has('tox-collection__group')],
                       children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('h1', { html: str.is('Title') })
                               ]
@@ -64,11 +67,11 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('h2', { html: str.is('Main heading') })
                               ]
@@ -76,11 +79,11 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('h3', { html: str.is('Sub heading') })
                               ]
@@ -91,7 +94,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                     }),
 
                     s.element('div', {
-                      classes: [ arr.has('tox-collection__group') ],
+                      classes: [arr.has('tox-collection__group')],
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.has('tox-collection__group-heading') ],
@@ -100,9 +103,9 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('p', { html: str.is('Paragraph') })
                               ]
@@ -110,11 +113,11 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('blockquote', { html: str.is('Blockquote') })
                               ]
@@ -122,11 +125,11 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('pre', { html: str.is('Code') })
                               ]
@@ -134,29 +137,29 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               html: str.is('Others')
                             }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-caret') ]
+                              classes: [arr.has('tox-collection__item-caret')]
                             })
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('span', {
                                   html: str.is('Red text'),
                                   styles: {
-                                    color: str.is('rgb(255, 0, 0)')
+                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
                                   }
                                 })
                               ]
@@ -164,16 +167,16 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('p', {
                                   html: str.is('Red paragraph'),
                                   styles: {
-                                    color: str.is('rgb(255, 0, 0)')
+                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
                                   }
                                 })
                               ]
@@ -181,11 +184,11 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
+                          classes: [arr.has('tox-collection__item')],
                           children: [
-                            s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                            s.element('span', { classes: [arr.has('tox-collection__item-icon')] }),
                             s.element('span', {
-                              classes: [ arr.has('tox-collection__item-label') ],
+                              classes: [arr.has('tox-collection__item-label')],
                               children: [
                                 s.element('div', { html: str.is('Table row 1') })
                               ]
@@ -198,17 +201,17 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                 });
               })
             )
-          ]),
-          FocusTools.sTryOnSelector('Focus should be on Title', doc, '.tox-collection__item:contains(Title)'),
-          Keyboard.sKeydown(doc, Keys.down(), { }),
-          FocusTools.sTryOnSelector('Focus should be on Main heading', doc, '.tox-collection__item:contains(Main heading)'),
-          Keyboard.sKeydown(doc, Keys.down(), { }),
-          FocusTools.sTryOnSelector('Focus should be on Sub heading', doc, '.tox-collection__item:contains(Sub heading)'),
-          Keyboard.sKeydown(doc, Keys.down(), { }),
-          FocusTools.sTryOnSelector('Focus should be on Paragraph', doc, '.tox-collection__item:contains(Paragraph)'),
-          GuiSetup.mRemoveStyles
-        ]
-      ), onSuccess, onFailure);
+          ])),
+          Step.label('Check focus is on "Title"', FocusTools.sTryOnSelector('Focus should be on Title', doc, '.tox-collection__item:contains(Title)')),
+          Step.label('Press down arrow', Keyboard.sKeydown(doc, Keys.down(), {})),
+          Step.label('Check focus is on "Main heading"', FocusTools.sTryOnSelector('Focus should be on Main heading', doc, '.tox-collection__item:contains(Main heading)')),
+          Step.label('Press down arrow (again)', Keyboard.sKeydown(doc, Keys.down(), {})),
+          Step.label('Check focus is on "Sub heading"', FocusTools.sTryOnSelector('Focus should be on Sub heading', doc, '.tox-collection__item:contains(Sub heading)')),
+          Step.label('Press down arrow (3rd time)', Keyboard.sKeydown(doc, Keys.down(), {})),
+          Step.label('Check focus is on "Paragraph"', FocusTools.sTryOnSelector('Focus should be on Paragraph', doc, '.tox-collection__item:contains(Paragraph)')),
+          Step.label('Remove styles', GuiSetup.mRemoveStyles)
+        ]))
+      ], onSuccess, onFailure);
     },
     {
       theme: 'silver',

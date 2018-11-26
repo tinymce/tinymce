@@ -85,8 +85,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
       const changedHeight = state.get().h + change.dh;
       const changedWidth = state.get().w + change.dw;
 
-      Assertions.assertEq('height has changed as expected', true, looseEqual(changedHeight, height, 3));
-      Assertions.assertEq('width has changed as expected', true, looseEqual(changedWidth, width, 3));
+      Assertions.assertEq('height is ' + height + ' but expected ' + changedHeight, true, looseEqual(changedHeight, height, 4));
+      Assertions.assertEq('width is ' + width + ' but expected ' + changedWidth, true, looseEqual(changedWidth, width, 4));
     }));
   };
 

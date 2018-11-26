@@ -7,7 +7,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (success, failure) {
   AdvListPlugin();
   ListsPlugin();
   Theme();

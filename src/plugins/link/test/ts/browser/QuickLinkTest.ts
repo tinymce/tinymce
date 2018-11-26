@@ -1,16 +1,14 @@
-import '../../../../../themes/silver/main/ts/Theme';
-
-import { FocusTools, Keyboard, Keys, Log, Pipeline, Step, GeneralSteps, UiFinder } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-
-import { TestLinkUi } from '../module/TestLinkUi';
 import { Body } from '@ephox/sugar';
+import LinkPlugin from 'src/plugins/link/main/ts/Plugin';
+import SilverTheme from 'src/themes/silver/main/ts/Theme';
+import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failure) => {
-
+  SilverTheme();
   LinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -21,13 +19,18 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
       Step.sync(() => {
         editor.execCommand('mceLink');
       }),
+      // tests were erronously allowed to pass when the quick link dialog would
+      // open and very quickly close because this was happing at superhuman
+      // speeds. So I'm slowing it down.
+      Step.wait(500),
       FocusTools.sTryOnSelector('Selector should be in contextform input', doc, '.tox-toolbar input'),
     ]);
 
     Pipeline.async({}, [
+      tinyApis.sFocus,
+      TestLinkUi.sClearHistory,
+
       Log.stepsAsStep('TBA', 'Checking that QuickLink can insert a link', [
-        TestLinkUi.sClearHistory,
-        tinyApis.sFocus,
         sOpenQuickLink,
         FocusTools.sSetActiveValue(doc, 'http://tiny.cloud'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
@@ -68,7 +71,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can remove an existing link', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud/4">Word</a></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 'W'.length, [ 0, 0, 0 ], 'W'.length),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 'Wor'.length, [ 0, 0, 0 ], 'Wor'.length),
+        // TODO FIXME TINY-2691
+        // Note the following assert fails on IE
+        // tinyApis.sAssertSelection([ 0, 0, 0 ], 'Wor'.length, [ 0, 0, 0 ], 'Wor'.length),
         sOpenQuickLink,
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         Keyboard.sKeydown(doc, Keys.right(), { }),

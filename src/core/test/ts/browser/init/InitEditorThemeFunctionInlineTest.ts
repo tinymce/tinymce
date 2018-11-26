@@ -6,9 +6,7 @@ import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionInlineTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+  function (success, failure) {
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
@@ -26,7 +24,7 @@ UnitTest.asynctest(
           Assertions.assertDomEq('Should be expected editor container element', editorElement, Element.fromDom(editor.editorContainer));
           Assertions.assertDomEq('Should be expected editor body element', targetElement, Element.fromDom(editor.getBody()));
           Assertions.assertDomEq('Should be expected editor target element', targetElement, Element.fromDom(editor.getElement()));
-          Assertions.assertEq('Should be undefined for inline mode', undefined, editor.contentAreaContainer);
+          Assertions.assertDomEq('Should be expected content area container', targetElement, Element.fromDom(editor.contentAreaContainer));
         }))
       ], onSuccess, onFailure);
     }, {

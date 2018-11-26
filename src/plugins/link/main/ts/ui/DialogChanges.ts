@@ -7,7 +7,12 @@
 
 import { Arr, Cell, Option, Options, Fun } from '@ephox/katamari';
 
-import { LinkDialogData, LinkDialogInfo, ListItem, ListValue } from './DialogTypes';
+import { LinkDialogData, LinkDialogInfo, ListItem, ListValue, LinkDialogUrlData } from './DialogTypes';
+
+export interface DialogDelta {
+  url: LinkDialogUrlData;
+  text: string;
+}
 
 const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> => {
   return Options.findMap(catalog, (item) => {
@@ -15,8 +20,7 @@ const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> 
       Option.some(item).filter((i) => i.value === value);
   });
 };
-
-const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<{url, text: string}> => {
+const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<DialogDelta> => {
   const value = data[fieldName];
   const hasPersistentText = persistentText.length > 0;
   return value !== undefined ? findTextByValue(value, catalog).map((i) => {

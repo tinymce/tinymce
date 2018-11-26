@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
@@ -81,20 +81,20 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   };
 
   const checkApply = function (rawScenario) {
-    const schema = ValueSchema.objOfOnly([
-      FieldSchema.strict('label'),
-      FieldSchema.strictObjOf('info', [
-        FieldSchema.option('url'),
-        FieldSchema.option('text'),
-        FieldSchema.option('title'),
-        FieldSchema.option('target'),
-        FieldSchema.option('link')
-      ]),
-      FieldSchema.defaulted('mutations', Fun.noop),
-      FieldSchema.defaulted('expected', [ ])
-    ]);
+    const toResult = (info, param) => Option.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
+    const scenario = {
+      label: Option.from(rawScenario.label).getOrDie('Missing label'),
+      info: Option.from(rawScenario.info).map((info) => ({
+        url: toResult(info, 'url'),
+        text: toResult(info, 'text'),
+        title: toResult(info, 'title'),
+        target: toResult(info, 'target'),
+        link: toResult(info, 'link'),
+      })).getOrDie('Missing info'),
+      mutations: Option.from(rawScenario.mutations).getOr(Fun.noop),
+      expected: Option.from(rawScenario.expected).getOr([]),
+    };
 
-    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
     Logger.sync('setInfo ... ' + scenario.label, function () {
       store.clear();
       LinkBridge.applyInfo(editor, scenario.info);

@@ -6,7 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Body } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', function (success, failure) {
   Theme();
   ListsPlugin();
   AdvlistPlugin();
