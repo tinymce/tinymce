@@ -9,9 +9,9 @@ import NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import { isBackwards, isForwards, isInSameBlock, findNode } from './CaretUtils';
-import Arr from '../util/Arr';
-import Fun from '../util/Fun';
 import { Node } from '@ephox/dom-globals';
+import { Fun, Arr } from '@ephox/katamari';
+import ArrUtils from '../util/ArrUtils';
 
 export interface CaretWalker {
   next(caretPosition: CaretPosition): CaretPosition;
@@ -213,7 +213,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 
   nextNode = findNode(node, direction, isEditableCaretCandidate, root);
 
-  rootContentEditableFalseElm = Arr.last(Arr.filter(getParents(container, root), isContentEditableFalse));
+  rootContentEditableFalseElm = ArrUtils.last(Arr.filter(getParents(container, root), isContentEditableFalse));
   if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
     if (isForwards(direction)) {
       caretPosition = CaretPosition.after(rootContentEditableFalseElm);

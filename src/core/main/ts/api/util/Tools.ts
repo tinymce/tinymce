@@ -6,7 +6,7 @@
  */
 
 import Env from '../Env';
-import Arr from '../../util/Arr';
+import ArrUtils from '../../util/ArrUtils';
 import { window } from '@ephox/dom-globals';
 
 /**
@@ -42,7 +42,7 @@ const is = function (obj: Record<string, any> | {}, type: string) {
     return obj !== undefined;
   }
 
-  if (type === 'array' && Arr.isArray(obj)) {
+  if (type === 'array' && ArrUtils.isArray(obj)) {
     return true;
   }
 
@@ -261,7 +261,7 @@ const walk = function (o, f, n?, s?) {
       o = o[n];
     }
 
-    Arr.each(o, function (o, i) {
+    ArrUtils.each(o, function (o, i) {
       if (f.call(s, o, i, n) === false) {
         return false;
       }
@@ -351,7 +351,7 @@ const explode = function (s, d?) {
     return s;
   }
 
-  return Arr.map(s.split(d || ','), trim);
+  return ArrUtils.map(s.split(d || ','), trim);
 };
 
 const _addCacheSuffix = function (url) {
@@ -374,7 +374,7 @@ export default {
    * @param {Object} obj Object to check.
    * @return {boolean} true/false state if the object is an array or not.
    */
-  isArray: Arr.isArray,
+  isArray: ArrUtils.isArray,
 
   is,
 
@@ -385,7 +385,7 @@ export default {
    * @param {Object} obj Object to convert into array.
    * @return {Array} Array object based in input.
    */
-  toArray: Arr.toArray,
+  toArray: ArrUtils.toArray,
   makeMap,
 
   /**
@@ -408,7 +408,7 @@ export default {
    *     console.debug("Value: " + v + ", Key: " + k);
    * });
    */
-  each: Arr.each,
+  each: ArrUtils.each,
 
   /**
    * Creates a new array by the return value of each iteration function call. This enables you to convert
@@ -419,7 +419,7 @@ export default {
    * @param {function} callback Function to call for each item. It's return value will be the new value.
    * @return {Array} Array with new values based on function return values.
    */
-  map: Arr.map,
+  map: ArrUtils.map,
 
   /**
    * Filters out items from the input array by calling the specified function for each item.
@@ -433,7 +433,7 @@ export default {
    * // Filter out some items, this will return an array with 4 and 5
    * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});
    */
-  grep: Arr.filter,
+  grep: ArrUtils.filter,
 
   /**
    * Returns an index of the item or -1 if item is not present in the array.
@@ -443,7 +443,7 @@ export default {
    * @param {Array} arr Array to search in.
    * @return {Number} index of the item or -1 if item was not found.
    */
-  inArray: Arr.indexOf,
+  inArray: ArrUtils.indexOf,
 
   hasOwn: hasOwnProperty,
 

@@ -1,7 +1,8 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Fun from 'tinymce/core/util/Fun';
 import { UnitTest } from '@ephox/bedrock';
+import { Fun } from '@ephox/katamari';
+import Predicate from 'tinymce/core/util/Predicate';
 
 UnitTest.asynctest('browser.tinymce.core.util.FunTest', function () {
   const success = arguments[arguments.length - 2];
@@ -27,25 +28,25 @@ UnitTest.asynctest('browser.tinymce.core.util.FunTest', function () {
   });
 
   suite.test('negate', function () {
-    LegacyUnit.strictEqual(Fun.negate(isTrue)(false), true);
-    LegacyUnit.strictEqual(Fun.negate(isFalse)(true), false);
+    LegacyUnit.strictEqual(Fun.not(isTrue)(false), true);
+    LegacyUnit.strictEqual(Fun.not(isFalse)(true), false);
   });
 
   suite.test('and', function () {
     const isAbove5 = Fun.curry(isAbove, Fun.constant(5));
     const isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
-    LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(10)), false);
-    LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(30)), true);
+    LegacyUnit.strictEqual(Predicate.and(isAbove10, isAbove5)(Fun.constant(10)), false);
+    LegacyUnit.strictEqual(Predicate.and(isAbove10, isAbove5)(Fun.constant(30)), true);
   });
 
   suite.test('or', function () {
     const isAbove5 = Fun.curry(isAbove, Fun.constant(5));
     const isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
-    LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(5)), false);
-    LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(15)), true);
-    LegacyUnit.strictEqual(Fun.or(isAbove5, isAbove10)(Fun.constant(15)), true);
+    LegacyUnit.strictEqual(Predicate.or(isAbove10, isAbove5)(Fun.constant(5)), false);
+    LegacyUnit.strictEqual(Predicate.or(isAbove10, isAbove5)(Fun.constant(15)), true);
+    LegacyUnit.strictEqual(Predicate.or(isAbove5, isAbove10)(Fun.constant(15)), true);
   });
 
   suite.test('compose', function () {

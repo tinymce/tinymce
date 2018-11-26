@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, Attr } from '@ephox/sugar';
 import { Node } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
@@ -17,7 +17,6 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
-import Fun from '../util/Fun';
 import { Selection } from '../api/dom/Selection';
 import { Editor } from '../api/Editor';
 import { isCaretNode, getParentCaretContainer } from './FormatContainer';
