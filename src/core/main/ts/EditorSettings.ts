@@ -121,7 +121,7 @@ const processPlugins = function (isTouchDevice, sectionResult, defaultOverrideSe
 
 const isOnMobile = function (isTouchDevice, sectionResult) {
   const isInline = sectionResult.settings().inline; // We don't support mobile inline yet
-  return isTouchDevice && hasSection(sectionResult, 'mobile') && !isInline;
+  return isTouchDevice && !isInline;
 };
 
 const combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideSettings, settings) {
