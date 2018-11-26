@@ -54,6 +54,10 @@ body {
 table {
   border-collapse: collapse;
   border-color: @border-color;
+  // Fixes TINY-1618
+  //  Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+  //  tables, making it impossible to enter spaces into small table cells
+  -webkit-nbsp-mode: normal;
   width: 100%;
 }
 
