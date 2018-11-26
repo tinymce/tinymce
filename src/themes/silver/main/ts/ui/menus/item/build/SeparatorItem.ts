@@ -11,13 +11,16 @@ import { Menu } from '@ephox/bridge';
 import * as ItemClasses from '../ItemClasses';
 
 const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemSpec => {
+  const innerHtml = spec.text.fold(
+    () => ({ }),
+    (text) => ({ innerHtml: text })
+  );
   return {
     type: 'separator',
     dom: {
       tag: 'div',
-      classes: [ ItemClasses.separatorClass ],
-
-      innerHtml: spec.text.getOr('')
+      classes: [ ItemClasses.selectableClass, ItemClasses.groupHeadingClass ],
+      ...innerHtml
     },
     components: [ ]
   };

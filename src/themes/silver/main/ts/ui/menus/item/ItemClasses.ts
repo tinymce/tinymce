@@ -19,6 +19,7 @@ const presetClasses = {
 
 const tickedClass = 'tox-collection__item--enabled';
 const separatorClass = 'tox-collection__separator';
+const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
 const textClass = 'tox-collection__item-label';
 const accessoryClass = 'tox-collection__item-accessory';
@@ -40,6 +41,7 @@ export {
   textClass,
   tickedClass,
   separatorClass,
+  groupHeadingClass,
   iconClass,
   accessoryClass,
   caretClass,
