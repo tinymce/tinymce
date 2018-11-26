@@ -26,7 +26,6 @@ export default function () {
 
     setup (ed: Editor) {
       ed.ui.registry.addMenuItem('x1', {
-        type: 'menuitem',
         icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
         text: 'Text with icon',
         onAction () {
@@ -35,7 +34,6 @@ export default function () {
       });
 
       ed.ui.registry.addMenuItem('x2', {
-        type: 'menuitem',
         // icon: Icons.getOr('bold', () => 'oh no'),
         text: 'Just Text',
         onAction () {
@@ -44,7 +42,6 @@ export default function () {
       });
 
       ed.ui.registry.addMenuItem('x3', {
-        type: 'menuitem',
         // icon: Icons.getOr('bold', () => 'oh no'),
         text: 'Just Text with shortcut',
         shortcut: 'Ctrl+Alt+Delete',
@@ -54,7 +51,6 @@ export default function () {
       });
 
       ed.ui.registry.addToggleMenuItem('t1', {
-        type: 'togglemenuitem',
         text: 'button with Toggle',
         shortcut: '⌘+C',
         onSetup: (comp) => {
@@ -73,13 +69,9 @@ export default function () {
         }
       });
 
-      ed.ui.registry.addMenuItem('d1', {
-        type: 'menuitem',
+      ed.ui.registry.addNestedMenuItem('d1', {
         // icon: Icons.getOr('icon-drop', () => 'oh no'),
         text: 'nested',
-        onAction () {
-          console.log('Just Text click');
-        },
         getSubmenuItems: () => [
           {
             type: 'menuitem',

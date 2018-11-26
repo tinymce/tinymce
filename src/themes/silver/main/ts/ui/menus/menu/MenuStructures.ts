@@ -1,6 +1,13 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloySpec, Menu as AlloyMenu, RawDomSchema } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => {
   return (items: I[]) => {
@@ -62,7 +69,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = <A>(items: A[], isSeparator: (a: A, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items: ItemSpec[], isSeparator: (a: ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {
@@ -71,6 +78,9 @@ const preprocessCollection = <A>(items: A[], isSeparator: (a: A, index: number) 
         allSplits.push(currentSplit);
       }
       currentSplit = [ ];
+      if (Obj.has(item.dom, 'innerHtml')) {
+        currentSplit.push(item);
+      }
     } else {
       currentSplit.push(item);
     }
@@ -107,7 +117,7 @@ const forCollection = (columns: number | 'auto', initItems: ItemSpec[]) => {
               classes: [ 'tox-collection__group' ]
             }, columns)(items);
           } else {
-            return preprocessCollection<ItemSpec>(items, (item, i) => {
+            return preprocessCollection(items, (item, i) => {
               return initItems[i].type === 'separator';
             });
           }
@@ -121,6 +131,5 @@ export {
   chunk,
   forSwatch,
   forCollection,
-  forToolbar,
-  preprocessCollection
+  forToolbar
 };

@@ -415,7 +415,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         });
 
         ed.ui.registry.addMenuItem('x1', {
-          type: 'menuitem',
           icon: 'italic',
           text: 'Text with icon',
           shortcut: 'Meta+M',

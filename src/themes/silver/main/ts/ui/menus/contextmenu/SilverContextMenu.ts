@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloyComponent, GuiFactory, InlineView } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
@@ -10,7 +17,7 @@ import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
-type MenuItem =  string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
+type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
@@ -27,7 +34,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
         return separator;
       case 'submenu':
         return {
-          type: 'menuitem',
+          type: 'nestedmenuitem',
           text: item.text,
           icon: item.icon,
           getSubmenuItems: () => {

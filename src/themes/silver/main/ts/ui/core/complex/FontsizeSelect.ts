@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Option, Arr } from '@ephox/katamari';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { AlloyTriggers } from '@ephox/alloy';
@@ -88,7 +95,7 @@ const fontsizeSelectMenu = (editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   return {
-    type: 'menuitem',
+    type: 'nestedmenuitem',
     text: 'Font Sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   };

@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Objects } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
 
@@ -12,6 +19,7 @@ const presetClasses = {
 
 const tickedClass = 'tox-collection__item--enabled';
 const separatorClass = 'tox-collection__separator';
+const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
 const textClass = 'tox-collection__item-label';
 const accessoryClass = 'tox-collection__item-accessory';
@@ -33,6 +41,7 @@ export {
   textClass,
   tickedClass,
   separatorClass,
+  groupHeadingClass,
   iconClass,
   accessoryClass,
   caretClass,
