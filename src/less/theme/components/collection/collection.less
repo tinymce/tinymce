@@ -19,7 +19,14 @@
 @collection-item-list-icon-width: 24px;
 
 @collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
-@collection-item-separator-margin: @pad-xs;
+@collection-item-separator-margin-y: @pad-xs;
+
+@collection-group-label-background-color: lighten(@border-color, 15%);
+@collection-group-label-font-size: @font-size-xs;
+@collection-group-label-font-style: normal;
+@collection-group-label-font-weight: @font-weight-normal;
+@collection-group-label-text-color: @text-color-muted;
+@collection-group-label-text-transform: none;
 
 .tox {
   .tox-collection {
@@ -59,11 +66,27 @@
     border-right-width: 0;
     border-style: solid;
     border-top-width: 1px;
-    padding: @collection-item-separator-margin 0;
+    padding: @collection-item-separator-margin-y 0;
 
     &:first-child {
       border-top-width: 0;
     }
+  }
+
+  // Group headings should only be used on collection lists.
+  .tox-collection__group-heading {
+    background-color: @collection-group-label-background-color;
+    color: @collection-group-label-text-color;
+    cursor: default;
+    font-size: @collection-group-label-font-size;
+    font-style: @collection-group-label-font-style;
+    font-weight: @collection-group-label-font-weight;
+    margin-bottom: @collection-item-separator-margin-y;
+    margin-top: -@collection-item-separator-margin-y;
+    padding: @collection-item-padding;
+    text-transform: @collection-group-label-text-transform;
+    -webkit-touch-callout: none;
+    user-select: none;
   }
 
   .tox-collection__item {
