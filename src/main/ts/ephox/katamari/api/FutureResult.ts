@@ -6,6 +6,7 @@ export interface FutureResult<A, E> extends Future<Result<A, E>> {
   bindFuture: <B>(f: (value: A) => Future<Result<B, E>>) => FutureResult<B, E>;
   bindResult: <B>(f: (value: A) => Result<B, E>) => FutureResult<B, E>;
   mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
+  mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
   foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
   withTimeout: <E2>(timeout: number, errorThunk: () => E2) => FutureResult<A, E | E2>
 }
@@ -35,6 +36,10 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
     return wrap(delegate.map((resA) => resA.map(f)));
   };
 
+  const mapError = function <B>(f: (error: E) => B) {
+    return wrap(delegate.map((resA) => resA.mapError(f)));
+  };
+
   const foldResult = function <X>(whenError: (error: E) => X, whenValue: (value: A) => X) {
     return delegate.map((res) => res.fold(whenError, whenValue));
   };
@@ -62,6 +67,7 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
     bindFuture,
     bindResult,
     mapResult,
+    mapError,
     foldResult,
     withTimeout
   };

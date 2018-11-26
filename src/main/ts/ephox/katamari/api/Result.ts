@@ -6,6 +6,7 @@ export interface Result<T, E> {
   or: (result: Result<T, E>) => Result<T, E>;
   orThunk: (makeResult: () => Result<T, E>) => Result<T, E>;
   map: <U> (mapper: (value: T) => U) => Result<U, E>;
+  mapError: <U> (mapper: (err: E) => U) => Result<T, U>;
   each: (worker: (value: T) => void) => void;
   bind: <U> (binder: (value: T) => Result<U, E>) => Result<U, E>;
   fold: <U> (whenError: (err: E) => U, mapper: (value: T) => U) => U;
@@ -54,6 +55,10 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     return value(f(o));
   };
 
+  const mapError = function <U>(f: (error: E) => U) {
+    return value(o);
+  };
+
   const each = function (f: (value: T) => void) {
     f(o);
   };
@@ -89,6 +94,7 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     orThunk: orThunk,
     fold: fold,
     map: map,
+    mapError,
     each: each,
     bind: bind,
     exists: exists,
@@ -118,6 +124,10 @@ const error = function <T=any, E=any>(message: E): Result<T, E> {
     return error<U, E>(message);
   };
 
+  const mapError = function <U>(f: (error: E) => U) {
+    return error(f(message));
+  };
+
   const bind = function <U>(f: (value: T) => Result<U, E>) {
     return error<U, E>(message);
   };
@@ -137,6 +147,7 @@ const error = function <T=any, E=any>(message: E): Result<T, E> {
     orThunk: orThunk,
     fold: fold,
     map: map,
+    mapError: mapError,
     each: Fun.noop,
     bind: bind,
     exists: Fun.never,

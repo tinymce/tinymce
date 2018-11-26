@@ -111,6 +111,10 @@ UnitTest.test('Result.error tests', function() {
       return Jsc.eq(true, getErrorOrDie(res) === getErrorOrDie(actual));
     });
 
+    Jsc.property('Checking error.mapError(f) === f(error)', arbResultError, 'string -> json', function (res, f) {
+      return Jsc.eq(res.mapError(f).fold(Fun.identity, Fun.constant(false)), f(res.fold(Fun.identity, Fun.constant(true))));
+    });
+
     Jsc.property('Checking error.each(f) === undefined', arbResultError, 'string -> json', function (res, f) {
       const actual = res.each(f);
       return Jsc.eq(undefined, actual);
