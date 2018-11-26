@@ -2,7 +2,6 @@ import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import { PlatformDetection } from '@ephox/sand';
 import { Body } from '@ephox/sugar';
 import LinkPlugin from 'src/plugins/link/main/ts/Plugin';
 import SilverTheme from 'src/themes/silver/main/ts/Theme';
@@ -11,10 +10,6 @@ import { TestLinkUi } from '../module/TestLinkUi';
 UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failure) => {
   SilverTheme();
   LinkPlugin();
-
-  const platform = PlatformDetection.detect();
-  const isIE = platform.browser.isIE();
-  const skipOnIE = <T, U> (step: Step<T, U>): Step<T, U> => isIE ? Step.pass : step;
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -46,9 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
         UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
       ]),
 
-      // TODO FIXME DISABLED-TEST TINY-2325
-      // Reason: IE does not correctly read the current selection
-      skipOnIE(Log.stepsAsStep('TBA', 'Checking that QuickLink can add a link to selected text and keep the current text', [
+      Log.stepsAsStep('TBA', 'Checking that QuickLink can add a link to selected text and keep the current text', [
         tinyApis.sSetContent('<p>Word</p>'),
         tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length),
         sOpenQuickLink,
@@ -60,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
           'a:contains("Word")': 1
         }),
         UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
-      ])),
+      ]),
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can edit and existing link', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud/3">Word</a></p>'),
