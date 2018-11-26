@@ -7,10 +7,10 @@
     "build": "gulp build",
     "start": "gulp",
     "prepublishOnly": "npm run build",
-    "backstop:test": "backstop test --docker",
+    "backstop:test": "gulp backstop:test",
     "backstop:report": "backstop openReport",
-    "backstop:approve": "backstop approve",
-    "backstop:reference": "backstop reference --docker"
+    "backstop:approve": "gulp backstop:approve",
+    "backstop:reference": " gulp backstop:reference"
   },
   "keywords": [
     "TinyMCE"
@@ -24,7 +24,7 @@
     "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/oxide-icons-default": "latest",
-    "backstopjs": "^3.7.0",
+    "backstopjs": "^3.8.5",
     "browser-sync": "^2.24.4",
     "event-stream": "^3.3.4",
     "gulp": "^4.0.0",
