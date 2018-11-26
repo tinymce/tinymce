@@ -83,14 +83,13 @@ const external = (spec: ExternalElement): PremadeSpec => {
   return GuiTypes.premade(me);
 };
 
-const uids = (() => {
-  let counter = 0;
-
-  return (prefix) => {
-    counter++;
-    return prefix + '_' + counter;
-  };
-})();
+// We experimented with just having a counter for efficiency, but that fails for situations
+// where an external JS file is using alloy, and is contained within another
+// alloy root container. The ids can conflict, because the counters do not
+// know about each other (being parts of separate scripts).
+//
+// There are other solutions than this ... not sure if they are going to have better performance, though
+const uids = Tagger.generate;
 
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => {

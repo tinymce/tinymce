@@ -53,6 +53,7 @@ const doStartShrink = (component: AlloyComponent, slideConfig: SlidingConfig, sl
   Css.reflow(component.element());
 
   const root = getAnimationRoot(component, slideConfig);
+  Class.remove(root, slideConfig.growingClass);
   Class.add(root, slideConfig.shrinkingClass); // enable transitions
   setShrunk(component, slideConfig);
   slideConfig.onStartShrink(component);
@@ -68,20 +69,37 @@ const doStartSmartShrink = (component: AlloyComponent, slideConfig: SlidingConfi
 // Showing is complex due to the inability to transition to "auto".
 // We also can't cache the dimension as the parents may have resized since it was last shown.
 const doStartGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  setGrown(component, slideConfig);
-  const fullSize = getDimension(slideConfig, component.element());
-  setShrunk(component, slideConfig);
-
   // Start the growing animation styles
   const root = getAnimationRoot(component, slideConfig);
+
+  // Record whether this is interrupting a shrink and its current size
+  const wasShrinking = Class.has(root, slideConfig.shrinkingClass);
+  const beforeSize = getDimension(slideConfig, component.element());
+  setGrown(component, slideConfig);
+  const fullSize = getDimension(slideConfig, component.element());
+
+  // If the grow is interrupting a shrink, use the size from before the grow as the start size
+  // And reflow so that the animation works.
+  const startPartialGrow = () => {
+    Css.set(component.element(), getDimensionProperty(slideConfig), beforeSize);
+    Css.reflow(component.element());
+  };
+
+  // If the grow is not interrupting a shrink, start from 0 (shrunk)
+  const startCompleteGrow = () => {
+    setShrunk(component, slideConfig);
+  };
+
+  // Determine what the initial size for the grow operation should be.
+  const setStartSize = wasShrinking ? startPartialGrow : startCompleteGrow;
+  setStartSize();
+
+  Class.remove(root, slideConfig.shrinkingClass);
   Class.add(root, slideConfig.growingClass);
 
   setGrown(component, slideConfig);
 
   Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
-  // We might need to consider having a Css.reflow here. We can't have it in setGrown because
-  // it stops the transition immediately because it jumps to the final size.
-
   slideState.setExpanded();
   slideConfig.onStartGrow(component);
 };

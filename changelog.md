@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.4.3] - 2018-11-26
+### Changed
+ - alloy UIDs are random (again) to prevent issues with nested motherships loaded with different scripts
+
+### Fixed
+ - Sliding shrinking and growing classes were not being removed when toggling mid-animation
+
 # [4.4.1] - 2018-11-22
 ### Changed
  - Bounder will now attempt to corral the element within the provided bounds
