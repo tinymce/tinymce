@@ -19,7 +19,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
-import Theme from '../../../../../../silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
@@ -33,6 +33,14 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           `Focus should be on ${itemText}`,
           doc,
           `.tox-collection__item:contains("${itemText}")`
+        );
+      };
+
+      const sAssertFocusOnToolbarButton = (buttonText: string) => {
+        return FocusTools.sTryOnSelector(
+          `Focus should be on ${buttonText}`,
+          doc,
+          `.tox-toolbar button:contains("${buttonText}")`
         );
       };
 
@@ -314,12 +322,32 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         Keyboard.sKeydown(doc, Keys.escape(), { })
       ]);
 
+      const sTestToolbarKeyboardNav = Log.stepsAsStep('TBA', 'Checking toolbar keyboard navigation', [
+        tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
+        sOpenMenu('Alignment', 'Align'),
+        sAssertFocusOnItem('Left'),
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        sAssertFocusOnItem('Center'),
+
+        // Check moving left and right closes the open dropdown and navigates to the next item
+        Keyboard.sKeydown(doc, Keys.right(), { }),
+        sAssertFocusOnToolbarButton('Verdana'), // Font Select
+        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        sAssertFocusOnItem('Andale Mono'),
+        Keyboard.sKeydown(doc, Keys.left(), { }),
+        sAssertFocusOnToolbarButton('Align'), // Alignment
+        UiFinder.sNotExists(Body.body(), '[role="menu"]')
+      ]);
+
       Pipeline.async({ }, [
         sTestAlignment,
         sTestFontSelect,
         sTestFontSizeSelect,
         sTestFormatSelect,
-        sTestStyleSelect
+        sTestStyleSelect,
+        sTestToolbarKeyboardNav
       ], onSuccess, onFailure);
     },
     {

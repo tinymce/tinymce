@@ -1,11 +1,8 @@
 /**
- * EventUtils.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import Env from '../Env';
@@ -191,6 +188,9 @@ const bindOnReady = function (win, callback, eventUtils) {
 
   // Gets called when the DOM is ready
   const readyHandler = function () {
+    removeEvent(win, 'DOMContentLoaded', readyHandler);
+    removeEvent(win, 'load', readyHandler);
+
     if (!eventUtils.domLoaded) {
       eventUtils.domLoaded = true;
       callback(event);

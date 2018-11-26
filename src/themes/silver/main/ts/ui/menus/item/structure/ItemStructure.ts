@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { AlloySpec, RawDomSchema, DomFactory } from '@ephox/alloy';
 import { Option, Fun, Merger } from '@ephox/katamari';
@@ -35,20 +42,21 @@ interface NormalItemSpec {
   ariaLabel: Option<string>;
 }
 
-const renderColorStructure = (itemValue: string, iconSvg: Option<string>): ItemStructure => {
+const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>): ItemStructure => {
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
+    const title = itemText.map((text) => ` title="${text}"`).getOr('');
 
     if (itemValue === colorPickerCommand) {
-      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn">${icon}</button>`);
+      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn"${title}>${icon}</button>`);
     } else if (itemValue === removeColorCommand) {
-      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove">${icon}</div>`);
+      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove"${title}>${icon}</div>`);
     } else {
-      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"></div>`);
+      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"${title}></div>`);
     }
   };
 
@@ -94,7 +102,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   // Convert the icon to a SVG string, if we have one
   const icon = info.iconContent.map((iconName) => Icons.getOr('icon-' + iconName, providersBackstage.icons, Fun.constant(iconName)));
   if (info.presets === 'color') {
-    return renderColorStructure(info.value, icon);
+    return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
     return renderNormalItemStructure(info, icon);
   }

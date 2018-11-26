@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning } from '@ephox/alloy';
 import { expandable } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/MaxHeight';
 import { Objects } from '@ephox/boulder';
@@ -30,8 +37,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   editor.on('init', () => {
     const scroller = editor.getBody().ownerDocument.defaultView;
-    // FIX: Unbind AND make a lot nicer.
-    DomEvent.bind(Element.fromDom(scroller), 'scroll', () => {
+
+    // FIX: make a lot nicer.
+    const onScroll = DomEvent.bind(Element.fromDom(scroller), 'scroll', () => {
       lastAnchor.get().each((anchor) => {
         const elem = lastElement.get().getOr(editor.selection.getNode());
         const nodeBounds = elem.getBoundingClientRect();
@@ -45,6 +53,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           Positioning.positionWithin(sink, anchor, contextbar, getBoxElement());
         }
       });
+    });
+
+    editor.on('remove', () => {
+      onScroll.unbind();
     });
   });
 

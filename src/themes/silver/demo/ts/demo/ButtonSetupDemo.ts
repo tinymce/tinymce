@@ -75,45 +75,46 @@ export default {
       }
     });
 
-    // ed.addButton('menu-button-1', {
-    //   type: 'menubutton',
-    //   text: 'menu',
-    //   items: [ 'menu-item-1', 'menu-item-2' ]
-    // });
+    ed.ui.registry.addMenuButton('menu-button-1', {
+      text: 'menu',
+      fetch: (callback) => callback('menu-button-item-1 menu-button-item-2')
+    });
 
-    // ed.addMenuItem('menu-item-1', {
-    //   type: 'item',
-    //   text: 'menu-item-1',
-    //   onAction () {
-    //     console.log('menu-item-1 click');
-    //   }
-    // });
+    ed.ui.registry.addMenuItem('menu-button-item-1', {
+      text: 'menu-button-item-1',
+      onAction () {
+        console.log('menu-button-item-1 click');
+      }
+    });
 
-    // ed.addMenuItem('menu-item-2', {
-    //   type: 'menu',
-    //   text: 'menu-item-1',
-    //   items: [
-    //     {
-    //       type: 'item',
-    //       text: 'submenu-1',
-    //       onAction () {
-    //         console.log('submenu1');
-    //       }
-    //     },
-    //     {
-    //       type: 'menu',
-    //       text: 'submenu-2',
-    //       items: [
-    //         {
-    //           type: 'item',
-    //           text: 'submenu-2-a',
-    //           onAction () {
-    //             console.log('submenu2a');
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // });
+    ed.ui.registry.addMenuItem('menu-button-item-2', {
+      text: 'menu-button-item-2',
+      getSubmenuItems () {
+        return [
+          {
+            type: 'menuitem',
+            text: 'submenu-1',
+            onAction () {
+              console.log('submenu1');
+            }
+          },
+          {
+            type: 'menuitem',
+            text: 'submenu-2',
+            getSubmenuItems () {
+              return [
+                {
+                  type: 'menuitem',
+                  text: 'submenu-2-a',
+                  onAction () {
+                    console.log('submenu2a');
+                  }
+                }
+              ];
+            }
+          }
+        ];
+      }
+    });
   }
 };

@@ -1,11 +1,8 @@
 /**
- * Buttons.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -18,7 +15,6 @@ const register = function (editor) {
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 
   editor.ui.registry.addSplitButton('insertdatetime', {
-    type: 'splitbutton',
     icon: 'insert-time',
     tooltip: 'Insert date/time',
     fetch: (done) => {
@@ -38,7 +34,7 @@ const register = function (editor) {
     Actions.insertDateTime(editor, format);
   };
 
-  editor.ui.registry.addMenuItem('insertdatetime', {
+  editor.ui.registry.addNestedMenuItem('insertdatetime', {
     icon: 'insert-time',
     text: 'Date/time',
     getSubmenuItems: () => Tools.map(formats, (format) => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))

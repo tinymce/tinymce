@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { MementoRecord, Representing, AlloyComponent } from '@ephox/alloy';
 import { RepresentingConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/behaviour/representing/RepresentingTypes';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';

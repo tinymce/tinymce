@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { FormField as AlloyFormField, Representing, SketchSpec, Typeahead } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Future, Option } from '@ephox/katamari';

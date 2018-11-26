@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -62,16 +69,19 @@ const setup = (editor, mothership, uiMothership) => {
     editor.off('mousedown', onContentMousedown);
     editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
-    Attachment.detachSystem(mothership);
-    Attachment.detachSystem(uiMothership);
-    mothership.destroy();
-    uiMothership.destroy();
 
     onMousedown.unbind();
     onTouchstart.unbind();
     onMouseup.unbind();
 
     onWindowScroll.unbind();
+  });
+
+  editor.on('detach', () => {
+    Attachment.detachSystem(mothership);
+    Attachment.detachSystem(uiMothership);
+    mothership.destroy();
+    uiMothership.destroy();
   });
 };
 

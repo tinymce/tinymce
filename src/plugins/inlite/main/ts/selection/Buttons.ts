@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import Actions from './Actions';
 
 const setupButtons = (editor) => {
@@ -11,7 +18,6 @@ const setupButtons = (editor) => {
     const name = 'h' + i;
 
     editor.ui.registry.addToggleButton(name, {
-      type: 'togglebutton',
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
       onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(name, buttonApi.setActive).unbind,

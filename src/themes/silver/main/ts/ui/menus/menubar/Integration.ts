@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Merger } from '@ephox/katamari';
@@ -36,6 +43,7 @@ export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
+    tooltip: spec.tooltip,
      // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,
     fetch: (callback) => {

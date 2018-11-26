@@ -90,14 +90,14 @@ export default function () {
   };
 
   const iframeSettings = Merger.deepMerge(generalSettings, {
-    toolbar: 'fontsizeselect fontselect insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'fontsizeselect fontselect insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl'
   });
 
   const inlineSettings = Merger.deepMerge(generalSettings, {
     inline: true,
     toolbar: [
-      'fontsizeselect fontselect insertfile undo redo | insert | styleselect',
+      'fontsizeselect fontselect insertfile undo redo | styleselect',
       'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
       'print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl'
     ]

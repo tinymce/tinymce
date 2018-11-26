@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloyTriggers } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
@@ -71,7 +78,7 @@ const styleSelectMenu = (editor, backstage) => {
   const data = backstage.styleselect;
   const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
   return {
-    type: 'menuitem',
+    type: 'nestedmenuitem',
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   };

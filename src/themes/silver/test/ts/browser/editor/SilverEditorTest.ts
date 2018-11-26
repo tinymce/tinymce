@@ -211,7 +211,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         }),
                         s.element('span', {
                           classes: [ arr.has('tox-collection__item-accessory') ],
-                          html: str.is((Env.mac ? '\u2318' : 'Ctrl') + '+M')
+                          html: str.is(Env.mac ? '\u2318' + 'M' : 'Ctrl' + '+M')
                         })
                       ]
                     });
@@ -415,7 +415,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         });
 
         ed.ui.registry.addMenuItem('x1', {
-          type: 'menuitem',
           icon: 'italic',
           text: 'Text with icon',
           shortcut: 'Meta+M',

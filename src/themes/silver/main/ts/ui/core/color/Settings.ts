@@ -1,6 +1,14 @@
-import { Cell } from '@ephox/katamari';
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Menu } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
+import ColorCache from './ColorCache';
+import { Arr } from '@ephox/katamari';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 
@@ -33,9 +41,7 @@ const defaultColors = [
   { type: choiceItem, text: 'White', value: '#ffffff' }
 ];
 
-const currentColors: Cell<Menu.ChoiceMenuItemApi[]> = Cell<Menu.ChoiceMenuItemApi[]>(
-  defaultColors
-);
+const colorCache = ColorCache(10);
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   let i;
@@ -64,38 +70,23 @@ const getColorMap = (editor: Editor): string[] => {
   return editor.getParam('color_map');
 };
 
-const setColorsFromMap = (editor: Editor, getter: (editor: Editor) => string[], setter: (colors) => void): void => {
-  const unmapped = getter(editor);
-  if (unmapped !== undefined) {
-    const mapped = mapColors(unmapped);
-    setter(mapped);
-  }
-};
-
-const setColors = (editor: Editor): void => {
-  setColorsFromMap(editor, getColorMap, setCurrentColors);
-};
-
-const register = (editor: Editor): void => {
-  setColors(editor);
+const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
+  const unmapped = getColorMap(editor);
+  return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
 const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
-  return currentColors.get();
-};
-
-const setCurrentColors = (colors: Menu.ChoiceMenuItemApi[]): void => {
-  currentColors.set(colors);
+  return Arr.map(colorCache.state(), (color) => {
+    return {
+      type: choiceItem,
+      text: color,
+      value: color
+    };
+  });
 };
 
 const addColor = (color: string) => {
-  setCurrentColors(getCurrentColors().concat([
-    {
-      type: 'choiceitem',
-      text: color,
-      value: color
-    }
-  ]));
+  colorCache.add(color);
 };
 
 export default {
@@ -103,8 +94,7 @@ export default {
   getColorCols,
   hasCustomColors,
   getColorMap,
-  register,
+  getColors,
   getCurrentColors,
-  setCurrentColors,
   addColor
 };

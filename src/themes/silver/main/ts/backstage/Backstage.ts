@@ -1,6 +1,14 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloyComponent, AlloySpec, Layout } from '@ephox/alloy';
 import { AnchorSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/mode/Anchoring';
 import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
+import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
@@ -18,6 +26,7 @@ export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
+  menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
   translate: (any) => TranslatedString;
 }
 
@@ -48,6 +57,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
     shared: {
       providers: {
         icons: () => editor.ui.registry.getAll().icons,
+        menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
       },
       interpreter: (s) => {

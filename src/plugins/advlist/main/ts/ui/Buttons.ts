@@ -1,11 +1,8 @@
 /**
- * Buttons.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -46,7 +43,6 @@ const isWithinList = (editor: Editor, e, nodeName) => {
 
 const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
-    type: 'splitbutton',
     active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',

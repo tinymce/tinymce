@@ -1,17 +1,22 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 
-import { renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import ItemResponse from '../ItemResponse';
 
 // Note, this does not create a valid SketchSpec.
 const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
-  const caret = spec.hasSubmenu ? Option.some(renderSubmenuCaret(providersBackstage.icons)) : Option.none();
   const getApi = (component): Menu.MenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
@@ -24,7 +29,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     iconContent: spec.icon,
     textContent: spec.text,
     ariaLabel: spec.text,
-    caret,
+    caret: Option.none(),
     checkMark: Option.none(),
     shortcutContent: spec.shortcut
   }, providersBackstage);
@@ -35,7 +40,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     disabled: spec.disabled,
     onAction: spec.onAction,
     onSetup: spec.onSetup,
-    triggersSubmenu: spec.hasSubmenu,
+    triggersSubmenu: false,
     itemBehaviours: [ ]
   }, structure, itemResponse);
 };

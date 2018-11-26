@@ -10,6 +10,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
   const providers = {
     icons: () => <Record<string, string>> {},
+    menuItems: () => <Record<string, any>> {},
     translate: I18n.translate
   };
 
