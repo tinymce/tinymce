@@ -20,10 +20,6 @@
 
 .tox {
   .tox-comment-thread {
-    > div{
-      //for delete conversation
-    }
-
     > *:not(:first-child) {
       margin-top: @pad-sm;
     }
@@ -37,6 +33,7 @@
     box-shadow: @comment-box-shadow;
     padding: @comment-padding;
     position: relative;
+
   }
 
   .tox-comment__header {
@@ -64,6 +61,29 @@
     margin: 0;
   }
 
+  .tox-comment-thread--overlay{
+    > div::after {
+      content: "";
+      background: #fff;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 5;
+      opacity: 0.9;
+      position: absolute;
+      text-align: center;
+      @comment-font-size: @font-size-lg;
+      align-items: center;
+      padding: 1em;
+    }
+
+  }
+
+
   .tox-comment--gradient::after {
     background-image: linear-gradient(
       to bottom,
@@ -83,6 +103,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    flex-shrink: 0;
+    margin-top: @pad-sm;
 
     > *:first-child {
       margin-bottom: @pad-sm;
@@ -122,21 +144,37 @@
   }
 
   .tox-comment--overlaytext {
-    @comment-font-size: @font-size-lg;
-    align-items: center;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    left: 0;
-    padding: 1em;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    top: 0;
-    z-index: 10;
+     @comment-font-size: @font-size-lg;
+     //align-items: center;
+     bottom: 0;
+    // display: flex;
+     flex-direction: column;
+     left: 0;
+     padding: 1em;
+     position: absolute;
+     right: 0;
+    // text-align: center;
+     top: 0;
+     z-index: 10;
+     > div{
+      text-align: center;
+     }
+     //second child = smaller for second line of text
+     div:nth-of-type(2) {
+      font-size: .8em;
+     }
   }
 
   .tox-comment--buttonspacing {
     padding: @pad-md;
+
   }
+
+.tox-comment__scroll{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex-shrink: 1;
+  
+}
 } //End of tox
