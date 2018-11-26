@@ -24,13 +24,14 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^3.4.1",
+    "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.3",
     "tinymce": "latest",
-    "typescript": "^2.6.2",
+    "typescript": "^3.1.5",
     "webpack": "^3.10.0",
     "tinymce-4.5.x": "npm:tinymce@4.5.x",
-    "tinymce-4.8.x": "npm:tinymce@4.8.x"
+    "tinymce-4.8.x": "npm:tinymce@4.8.x",
+    "tinymce-5.0.x": "npm:@ephox/tinymce@>=5.0.0-preview-3-build.28"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

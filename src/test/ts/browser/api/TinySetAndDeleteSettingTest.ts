@@ -6,10 +6,9 @@ import { Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock';
+import { sAssertVersion } from '../../module/AssertVersion';
 
-UnitTest.asynctest('TinySetAndDeleteSettingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   var sAssertSetting = function (editor, key, expected) {
     return Step.sync(function () {
@@ -27,31 +26,38 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', function() {
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var apis = TinyApis(editor);
+  var sTestVersion = (version: string, major, minor) => {
+    return TinyLoader.sSetupVersion(version, [], (editor) => {
+      var apis = TinyApis(editor);
 
-    Pipeline.async({}, [
-      Logger.t('set and change setting', GeneralSteps.sequence([
-        apis.sSetSetting('a', 'b'),
-        sAssertSetting(editor, 'a', 'b'),
-        apis.sSetSetting('a', 'c'),
-        sAssertSetting(editor, 'a', 'c')
-      ])),
+      return GeneralSteps.sequence([
+        sAssertVersion(major, minor),
+        Logger.t('set and change setting', GeneralSteps.sequence([
+          apis.sSetSetting('a', 'b'),
+          sAssertSetting(editor, 'a', 'b'),
+          apis.sSetSetting('a', 'c'),
+          sAssertSetting(editor, 'a', 'c')
+        ])),
 
-      Logger.t('set setting to function', GeneralSteps.sequence([
-        apis.sSetSetting('a', function (a) {
-          return a;
-        }),
-        sAssertSettingType(editor, 'a', 'function')
-      ])),
+        Logger.t('set setting to function', GeneralSteps.sequence([
+          apis.sSetSetting('a', function (a) {
+            return a;
+          }),
+          sAssertSettingType(editor, 'a', 'function')
+        ])),
 
-      Logger.t('delete setting', GeneralSteps.sequence([
-        apis.sDeleteSetting('a'),
-        sAssertSetting(editor, 'a', undefined)
-      ]))
+        Logger.t('delete setting', GeneralSteps.sequence([
+          apis.sDeleteSetting('a'),
+          sAssertSetting(editor, 'a', undefined)
+        ]))
+      ]);
+    }, { });
+  };
 
-    ], onSuccess, onFailure);
-
-  }, { }, success, failure);
+  Pipeline.async({}, [
+    sTestVersion('4.5.x', 4, 5),
+    sTestVersion('4.8.x', 4, 8),
+    sTestVersion('5.0.x', 5, 0)
+  ], () => success(), failure);
 });
 

@@ -2,7 +2,6 @@ import { UnitTest } from '@ephox/bedrock';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { sAssertVersion } from '../../module/AssertVersion';
 import { Pipeline, GeneralSteps, Assertions } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
 
 declare const tinymce;
 
@@ -25,6 +24,7 @@ const sTestVersion = (loadVersion: string, expectedMajor: number, expectedMinor:
 UnitTest.asynctest('TinyLoaderVersionTest', (success, failure) => {
   Pipeline.async({}, [
     sTestVersion('4.5.x', 4, 5),
-    sTestVersion('4.8.x', 4, 8)
+    sTestVersion('4.8.x', 4, 8),
+    sTestVersion('5.0.x', 5, 0)
   ], () => success(), failure);
 });
