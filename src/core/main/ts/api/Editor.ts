@@ -909,7 +909,9 @@ Editor.prototype = {
     html = args.content;
 
     if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
-      elm.innerHTML = html;
+      if (args.is_removing || !self.inline) {
+        elm.innerHTML = html;
+      }
 
       // Update hidden form element
       if ((form = DOM.getParent(self.id, 'form'))) {
