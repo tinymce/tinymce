@@ -8,7 +8,7 @@ import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, failure) {
 
-  // TODO FIXME DISABLED-TEST
+  // TODO FIXME DISABLED-TEST TINY-2793
   // Reason for disabling:
   // Unable to identify buttons as they do not have any distinguishing features (like aria-label)
   success();

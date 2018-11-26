@@ -21,7 +21,6 @@
   "scripts": {
     "test": "grunt bedrock-auto:chrome-headless",
     "lint": "tslint src/**/*.ts",
-    "apollo-test": "grunt bedrock-auto:apollo",
     "apollo-test-manual": "grunt bedrock-manual:apollo",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
