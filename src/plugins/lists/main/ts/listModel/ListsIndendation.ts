@@ -60,4 +60,3 @@ const listsIndentation = (editor: Editor, lists: Element[], indentation: IndentV
 };
 
 export { listsIndentation };
-

@@ -100,4 +100,3 @@ const composeList = (scope: Document, entries: Entry[]): Option<Element> => {
 };
 
 export { composeList };
-
