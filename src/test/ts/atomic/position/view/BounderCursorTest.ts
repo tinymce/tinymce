@@ -34,7 +34,7 @@ UnitTest.test('BounderCursorTest', () => {
   const bigPanel = bounds(0, 0, 75, 500);
   const widePanel = bounds(0, 0, 350, 500);
   const view = bounds(50, 50, 350, 220);
-  const bubb = Bubble.fallback()
+  const bubb = Bubble.fallback();
 
   /*
    * The expected values include the calculations that layout and bounder are doing
@@ -71,7 +71,7 @@ UnitTest.test('BounderCursorTest', () => {
   // All fit -> southeast because of order of preference.
   check({
     label: 'layout-se',
-    x: 350 - 100, //  capped at view width
+    x: 270 + 0, //  capped at view width
     y: 100 + 2
   }, four, bounds(270, 100, 2, 2), panelBox, bubb, view);
 
@@ -85,7 +85,7 @@ UnitTest.test('BounderCursorTest', () => {
   // None near top right -> best fit is southwest
   check({
     label: 'layout-sw',
-    x: 350 - 75,
+    x: 350 - 75 + 2,
     y: 55 + 2
   }, four, bounds(350, 55, 2, 2), bigPanel, bubb, view);
 
@@ -100,7 +100,7 @@ UnitTest.test('BounderCursorTest', () => {
   // None near bottom right -> best fit is northwest
   check({
     label: 'layout-nw',
-    x: 350 - 75,
+    x: 350 - 75 + 2,
     y: 50,
     candidateYforTest: 200 - 500
   }, four, bounds(350, 200, 2, 2), bigPanel, bubb, view);
@@ -109,7 +109,7 @@ UnitTest.test('BounderCursorTest', () => {
   // southwest
   check({
     label: 'layout-sw',
-    x: 0,
+    x: 0 + 50,
     y: 50 + 2
   }, four, bounds(300, 50, 2, 2), widePanel, bubb, view);
 
@@ -117,7 +117,7 @@ UnitTest.test('BounderCursorTest', () => {
   // northwest
   check({
     label: 'layout-nw',
-    x: 0,
+    x: 0 + 50,
     y: 50,
     candidateYforTest: 200 - 500
   }, four, bounds(300, 200, 2, 2), widePanel, bubb, view);
@@ -125,14 +125,14 @@ UnitTest.test('BounderCursorTest', () => {
   // Southeast (1px short on x and y).
   check({
     label: 'layout-se',
-    x: 350 - 100, // 350 + 50 - 101, capped at view width
+    x: 350 + 50 - 101,
     y: 220 + 50 - 2 - 76 + 2
   }, four, bounds(350 + 50 - 101, 220 + 50 - 2 - 76, 2, 2), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
     label: 'layout-se',
-    x: 350 - 100, // 350 + 50 - 100, capped at view width
+    x: 350 + 50 - 100,
     y: 220 + 50 - 2 - 75 + 2
   }, four, bounds(350 + 50 - 100, 220 + 50 - 2 - 75, 2, 2), panelBox, bubb, view);
 
@@ -146,7 +146,7 @@ UnitTest.test('BounderCursorTest', () => {
   // Southeast -> Northeast (1px too far on y).
   check({
     label: 'layout-ne',
-    x: 350 - 100, // 350 + 50 - 100, capped at view width
+    x: 350 + 50 - 100,
     y: 220 + 50 - 2 - 74 - 75
   }, four, bounds(350 + 50 - 100, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
 

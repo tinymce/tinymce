@@ -129,7 +129,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // Southwest.
   check({
     label: 'layout-sw',
-    x: 350 - 100, // 320 - 100 + 32 - 1, capped at view width
+    x: 281,
     y: 55 + 10 - 2
   }, four, bounds(320, 55, 30, 10), panelBox, bubb, view);
 
@@ -143,14 +143,14 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // Northwest.
   check({
     label: 'layout-nw',
-    x: 350 - 100, // 320 - 100 + 32 - 1, capped at view width
+    x: 261,
     y: 235 - 75 + 1
   }, four, bounds(320, 235, 10, 10), panelBox, bubb, view);
 
   // All fit -> southeast because of order of preference.
   check({
     label: 'layout-se',
-    x: 350 - 100, // 270 - 1, capped at view width
+    x: 270 - 1,
     y: 100 + 10 - 2
   }, four, bounds(270, 100, 10, 10), panelBox, bubb, view);
 
@@ -164,7 +164,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // None near top right -> best fit is southwest
   check({
     label: 'layout-sw',
-    x: 350 - 75, // 350 - 75 + 32 - 1, capped at view width
+    x: 350 - 75 + 32 - 1 + 10,
     y: 55 + 10 - 2
   }, four, bounds(350, 55, 10, 10), bigPanel, bubb, view);
 
@@ -179,7 +179,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // None near bottom right -> best fit is northwest
   check({
     label: 'layout-nw',
-    x: 350 - 75, // 350 - 75 + 32 - 1, capped at view width
+    x: 350 - 75 + 32 - 1 + 10,
     y: 50,
     candidateYforTest: 200 - 500 + 1
   }, four, bounds(350, 200, 10, 10), bigPanel, bubb, view);
@@ -187,14 +187,14 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // Southeast (1px short on x and y).
   check({
     label: 'layout-se',
-    x: 350 - 100, // 350+50+1-101 - 1,
+    x: 350 + 50 + 1 - 101 - 1,
     y: 220 + 50 + 2 - 10 - 76 + 10 - 2
   }, four, bounds(350 + 50 + 1 - 101, 220 + 50 + 2 - 10 - 76, 10, 10), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
     label: 'layout-se',
-    x: 350 - 100, // 350+50+1-100 - 1, capped at view width
+    x: 350 + 50 + 1 - 100 - 1,
     y: 220 + 50 + 2 - 10 - 75 + 10 - 2
   }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
@@ -208,7 +208,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
   // Southeast -> Northeast (1px too far on y).
   check({
     label: 'layout-ne',
-    x: 350 - 100, // 350+50+1-100 - 1, capped at view width
+    x: 350 + 50 + 1 - 100 - 1,
     y: 220 + 50 + 2 - 10 - 74 - 75 + 1
   }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 
