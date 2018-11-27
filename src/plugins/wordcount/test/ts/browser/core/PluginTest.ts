@@ -26,6 +26,12 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     }));
   };
 
+  const sAssertContent = (tinyApis, expected) => {
+    return GeneralSteps.sequence(Log.steps('TBA', 'asserting contents after undo', [
+      tinyApis.sAssertContent(expected)
+    ]));
+  };
+
   const sWaitForWordcount = function (num) {
     return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 100, 3000);
   };
@@ -66,8 +72,10 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
       tinyApis.sSetContent('<p>a b c</p>'),
       sWaitForWordcount(3),
       sExecCommand(editor, 'undo'),
+      sAssertContent(tinyApis, ''),
       sWaitForWordcount(0),
       sExecCommand(editor, 'redo'),
+      sAssertContent(tinyApis, '<p>a b c</p>'),
       sWaitForWordcount(3),
       tinyApis.sSetRawContent('<p>hello world</p>'),
       sExecCommand(editor, 'mceAddUndoLevel'),
