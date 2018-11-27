@@ -24,6 +24,17 @@ const loadScript = (url: string, success: () => void, failure: (err: Error) => v
 
 const versionToPackageName = (version: string) => version === 'latest' ? 'tinymce' : `tinymce-${version}`;
 
+const loadFrom = (customUrl: string, baseUrl: string, success: () => void, failure: (err: Error) => void) => {
+  unload();
+  loadScript(customUrl, () => {
+    getTinymce().each((tinymce) => {
+      tinymce.baseURL = baseUrl;
+      tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
+    });
+    success();
+  }, failure);
+};
+
 const load = (version: string, success: () => void, failure: (err: Error) => void) => {
   const packageName = versionToPackageName(version);
 
@@ -67,6 +78,15 @@ const sLoad = (version: string) => {
   ]);
 };
 
+const sLoadFrom = (customUrl: string, baseUrl: string) => {
+  return GeneralSteps.sequence([
+    sUnload,
+    Step.async((next, die) => {
+      loadFrom(customUrl, baseUrl, next, die);
+    })
+  ]);
+}
+
 const sWithVersion = (version: string, step: Step<any, any>) => {
   const plugins = readAllPlugins();
 
@@ -91,5 +111,6 @@ export {
 
   sWithVersion,
   sLoad,
+  sLoadFrom,
   sUnload
 };
