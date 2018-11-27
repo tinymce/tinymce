@@ -29,6 +29,7 @@
 
   *[contentEditable=false][data-mce-selected] {
     outline: @object-block-selected-outline-width solid @object-block-selected-color;
+    cursor: not-allowed;
   }
 
   &.mce-content-readonly {
@@ -38,9 +39,9 @@
     }
   }
 
-  // TODO: What's this?
+  // Styles for certain selected objects, like links, in inline mode
   *[data-mce-selected="inline-boundary"] {
-    background: #bfe6ff;
+    //
   }
 
   // Selection of whole table cells
