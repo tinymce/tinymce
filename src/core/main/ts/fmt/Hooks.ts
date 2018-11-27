@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Arr from '../util/Arr';
+import ArrUtils from '../util/ArrUtils';
 import NodeType from '../dom/NodeType';
 import $ from '../api/dom/DomQuery';
 
@@ -16,7 +16,7 @@ import $ from '../api/dom/DomQuery';
  * @class tinymce.fmt.Hooks
  */
 
-const postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
+const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
   let hooks = postProcessHooks[name];
@@ -39,7 +39,7 @@ addPostProcessHook('pre', function (editor) {
   let isPre, blocks;
 
   const hasPreSibling = function (pre) {
-    return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
+    return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
   };
 
   const joinPre = function (pre1, pre2) {

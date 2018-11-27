@@ -1,13 +1,11 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Arr from 'tinymce/core/util/Arr';
 import * as Dimensions from 'tinymce/core/dom/Dimensions';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -28,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', function () {
 
   suite.test('getClientRects from array', function () {
     const viewElm = setupHtml('<b>a</b><b>b</b>');
-    const clientRects = Dimensions.getClientRects(Arr.toArray(viewElm.childNodes));
+    const clientRects = Dimensions.getClientRects(Arr.from(viewElm.childNodes));
 
     LegacyUnit.strictEqual(clientRects.length, 2);
     LegacyUnit.equalDom(clientRects[0].node, viewElm.childNodes[0]);

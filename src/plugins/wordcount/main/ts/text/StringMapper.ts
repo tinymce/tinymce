@@ -6,7 +6,7 @@
  */
 
 import UnicodeData from './UnicodeData';
-import Arr from '../alien/Arr';
+import { Arr } from '@ephox/katamari';
 
 const SETS = UnicodeData.SETS;
 const OTHER = UnicodeData.characterIndices.OTHER;
