@@ -1,4 +1,3 @@
-var path = require('path');
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var less = require('gulp-less');
@@ -12,6 +11,7 @@ var shell = require('gulp-shell');
 var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
+const runBackstopCommand = require('./tools/tasks/run_backstop');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
 var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin/less-variables.json'});
@@ -145,6 +145,19 @@ gulp.task('cleanTmp', function () {
   })
   .pipe(clean());
 });
+
+gulp.task('backstop:test', (done) => {
+  return runBackstopCommand(browserSync, done, 'test');
+});
+
+gulp.task('backstop:approve', (done) => {
+  return runBackstopCommand(browserSync, done, 'approve');
+});
+
+gulp.task('backstop:reference', (done) => {
+  return runBackstopCommand(browserSync, done, 'reference');
+});
+
 
 //
 // clean all the things
