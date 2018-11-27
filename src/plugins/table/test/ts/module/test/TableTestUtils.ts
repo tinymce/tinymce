@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Mouse, Step, UiFinder, Waiter, UiControls, Logger, NamedChain } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyDom } from '@ephox/mcagar';
-import { Element, SelectorFind, Body } from '@ephox/sugar';
+import { Body, Element, SelectorFind, Value } from '@ephox/sugar';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
@@ -60,32 +60,6 @@ const sClickDialogButton = (label: string, isSave: boolean) => Logger.t('Close d
   )
 ]));
 
-// TODO: Maybe make a partial one which only reads the fields specified?
-const cAssertDialogContents = (editor, expected) => {
-  return Chain.control(Chain.op((_) => {
-      const actual = editor.windowManager.getWindows()[0].getData();
-      Assertions.assertEq('Asserting dialog contents', expected, actual);
-    }),
-    Guard.addLogging('Assert dialog contents ' + expected)
-  );
-};
-
-const sAssertDialogContents = (editor, expected) => Logger.t('Assert dialog contents ' + expected, Chain.asStep(TinyDom.fromDom(document.body), [
-    Chain.control(
-      UiFinder.cFindIn('[role="dialog"]'),
-      Guard.tryUntil('Waiting for dialog', 100, 1000)
-    ),
-    cAssertDialogContents(editor, expected)
-]));
-
-const cSetDialogContents = (editor, values) => {
-  return Chain.control(Chain.op((_) => {
-      editor.windowManager.getWindows()[0].setData(values);
-    }),
-    Guard.addLogging('Set dialog contents')
-  );
-};
-
 const cSetInputValue = (section, newValue) =>  Chain.control(
   Chain.fromChains([
     UiFinder.cFindIn(`label:contains(${section}) + div > input`),
@@ -93,15 +67,6 @@ const cSetInputValue = (section, newValue) =>  Chain.control(
   ]),
   Guard.addLogging('Set input value' + newValue)
 );
-
-const sSetDialogContents = (editor, values) => Logger.t('Set and assert dialog contents', Chain.asStep(TinyDom.fromDom(document.body), [
-  Chain.control(
-    UiFinder.cFindIn('.tox-dialog[role="dialog"]'),
-    Guard.tryUntil('Waiting for dialog', 100, 1000)
-  ),
-  cSetDialogContents(editor, values),
-  cAssertDialogContents(editor, values)
-]));
 
 const cWaitForDialog = Chain.control(
   Chain.fromChains([
@@ -116,11 +81,6 @@ const sChooseTab = (tabName: string) => Logger.t('Choose tab ' + tabName, Chain.
   UiFinder.cFindIn(`[role="tab"]:contains(${tabName})`),
   Mouse.cClick
 ]));
-
-const sSetPartialDialogContents = (editor, newValues) => Logger.t('Partially set dialog contents ' + newValues, Step.sync(() => {
-  editor.windowManager.getWindows()[0].setData(newValues);
-  // partial assert?
-}));
 
 const sAssertDialogPresence = (label, expected) => Logger.t('Assert dialog is present', Chain.asStep({}, [
   cWaitForDialog,
@@ -204,6 +164,42 @@ const cGetWidth = Chain.control(
   Guard.addLogging('Get width')
 );
 
+const cGetInput = (selector: string) => Chain.control(
+  Chain.fromChains([
+    Chain.inject(Body.body()),
+    UiFinder.cFindIn(selector)
+  ]),
+  Guard.addLogging('Get input')
+);
+
+const sCheckInputValue = (Label, selector, expected) => {
+  return Logger.t(Label,
+    Chain.asStep({}, [
+      cGetInput(selector),
+      Chain.op((element) => {
+        Assertions.assertEq(`The input value for ${Label} should be: `, expected, Value.get(element));
+      })
+    ]),
+  );
+};
+
+const sSetInputValue = (Label, selector, value) => {
+  return Logger.t(Label,
+    Chain.asStep({}, [
+      cGetInput(selector),
+      Chain.op((element) => {
+        Value.set(element, value);
+      })
+    ]),
+  );
+};
+
+const sGotoAdvancedTab = Chain.asStep({}, [
+  Chain.inject(Body.body()),
+  UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
+  Mouse.cClick
+]);
+
 export default {
   sAssertDialogPresence,
   sAssertSelectValue,
@@ -211,9 +207,9 @@ export default {
   sOpenToolbarOn,
   sAssertTableStructure,
   sOpenTableDialog,
-  sSetDialogContents,
-  sSetPartialDialogContents,
-  sAssertDialogContents,
+  sGotoAdvancedTab,
+  sCheckInputValue,
+  sSetInputValue,
   sClickDialogButton,
   sAssertElementStructure,
   sAssertApproxElementStructure,
