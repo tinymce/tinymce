@@ -44,6 +44,11 @@
     //
   }
 
+  // Styles for a selected inline editable block
+  .mce-edit-focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
   // Selection of whole table cells
   td[data-mce-selected],
   th[data-mce-selected] {
