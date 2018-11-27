@@ -1,12 +1,15 @@
-import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 
 UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
+
   Theme();
+  const testDialogApi = Cell({} as any);
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
@@ -57,6 +60,9 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
             100,
             3000
           ),
+          Step.sync(() => {
+            testDialogApi.get().unblock();
+          }),
           Waiter.sTryUntil(
             'Waiting for busy structure to go away',
             Chain.asStep(Body.body(), [
@@ -97,7 +103,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
           type: 'button',
           text: 'Launch Dialog',
           onAction: () => {
-            ed.windowManager.open({
+            testDialogApi.set(ed.windowManager.open({
               title: 'Testing Blocking',
               body: {
                 type: 'panel',
@@ -113,13 +119,9 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
               onAction: (dialogApi, actionData) => {
                 if (actionData.name === 'busy-button') {
                   dialogApi.block('Dialog is blocked.');
-
-                  setTimeout(() => {
-                    dialogApi.unblock();
-                  }, 2000);
                 }
               }
-            });
+            }));
           }
         });
       }
