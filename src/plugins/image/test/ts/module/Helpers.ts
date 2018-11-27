@@ -1,20 +1,31 @@
 import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard } from '@ephox/agar';
 import { Result } from '@ephox/katamari';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
-import { Element, Body } from '@ephox/sugar';
+import { Element, Body, Value } from '@ephox/sugar';
 import { Editor } from '../../../../../core/main/ts/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
+export type ImageDialogData = {
+  src: {
+    value: string
+  },
+  alt: string,
+  dimensions: {
+    width: string,
+    height: string
+  },
+  caption: string,
+  class: string
+}
 
 export const dialogSelectors = {
-  titleInput : 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
+  sourceInput : 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
   descriptionInput : 'label.tox-label:contains("Image description") + input.tox-textfield',
   widthInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Width") + input.tox-textfield',
   heightInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Height") + input.tox-textfield',
   captionRadio : 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
 };
 
-// dupe: Should be in mcagar
 const cGetTopmostDialog = Chain.control(
   Chain.fromChains([
     Chain.inject(Body.body()),
@@ -23,15 +34,22 @@ const cGetTopmostDialog = Chain.control(
   Guard.addLogging('Get top most dialog')
 );
 
-// dupe: Should be in mcagar
-const cFillActiveDialog = function (data) {
+
+const cUpdateTitle = (data: Partial<ImageDialogData>) => Chain.control(
+  Chain.fromChains([
+    Chain.inject(Body.body()),
+    UiFinder.cFindIn(dialogSelectors.sourceInput),
+    Chain.op((title: Element) => Value.set(title, data.src.value))
+  ]),
+  Guard.addLogging('Get input')
+);
+
+const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
   return Chain.control(
       NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetTopmostDialog, 'dialogParent'),
-      NamedChain.direct('dialogParent', Chain.op((dialogApi) => {
-        dialogApi.setData(data);
-      }), '_'),
+      NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
+      NamedChain.direct('parent', cUpdateTitle(data), '_'),
       NamedChain.outputInput
     ]),
     Guard.addLogging('Fill active dialog')
