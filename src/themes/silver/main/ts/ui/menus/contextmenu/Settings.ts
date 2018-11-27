@@ -15,8 +15,9 @@ const shouldNeverUseNative = function (editor: Editor): boolean {
 };
 
 const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
+  const contextMenus = editor.ui.registry.getAll().contextMenus;
   return Obj.get(editor.settings, name).map(patchPipeConfig).getOrThunk(() => {
-    return Arr.filter(patchPipeConfig(defaultItems), (item) => Obj.has(editor.ui.registry.getAll().contextMenus, item));
+    return Arr.filter(patchPipeConfig(defaultItems), (item) => Obj.has(contextMenus, item));
   });
 };
 
