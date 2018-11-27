@@ -25,8 +25,6 @@ const loadScript = (url: string, success: () => void, failure: (err: Error) => v
 const versionToPackageName = (version: string) => version === 'latest' ? 'tinymce' : `tinymce-${version}`;
 
 const loadFrom = (customUrl: string, baseUrl: string, success: () => void, failure: (err: Error) => void) => {
-  // const packageName = versionToPackageName(version);
-
   unload();
   loadScript(customUrl, () => {
     getTinymce().each((tinymce) => {
