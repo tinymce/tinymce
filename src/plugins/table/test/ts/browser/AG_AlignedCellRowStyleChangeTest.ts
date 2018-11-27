@@ -15,6 +15,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
+    const selectors = {
+      backgroundInput : 'label.tox-label:contains(Background color) + div>input.tox-textfield',
+    };
+
     Pipeline.async({}, Log.steps('TBA', 'Table: Set background color on selected table row with text-align: center', [
       UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sFocus,
@@ -22,7 +26,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
       tinyApis.sExecCommand('mceTableRowProps'),
       UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),
-      TableTestUtils.sSetPartialDialogContents(editor, { backgroundcolor: 'red'}),
+      TableTestUtils.sGotoAdvancedTab,
+      TableTestUtils.sSetInputValue('Background color', selectors.backgroundInput, 'red'),
       TableTestUtils.sClickDialogButton('close dialog', true),
       TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
         return s.element('table', {
