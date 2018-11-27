@@ -8,8 +8,8 @@
 import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { Objects, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option, Result, Type } from '@ephox/katamari';
-import { AddButtonSettings } from 'tinymce/core/api/Editor';
+import { Arr, Fun, Option, Result, Type, Obj } from '@ephox/katamari';
+import { AddButtonSettings, Editor } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 import {
   renderSplitButton,
@@ -23,6 +23,7 @@ import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { renderMenuButton } from '../menus/menubar/Integration';
+import { RenderUiConfig } from '../../Render';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -113,12 +114,18 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
-const createToolbar = (toolbarConfig) => {
+const removeUnusedDefaults = (buttons, defaultItems: string) => {
+  return Arr.filter(defaultItems.split(/[, ]/), (item) => {
+    return item === '|' || Obj.has(buttons, item) || Obj.has(bespokeButtons as any, item);
+  }).join(' ');
+};
+
+const createToolbar = (toolbarConfig: Partial<RenderUiConfig>) => {
   const toolbar = () => {
     if (toolbarConfig.toolbar === false) {
       return '';
     } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
-      return defaultToolbar;
+      return removeUnusedDefaults(toolbarConfig.buttons, defaultToolbar);
     } else {
       return toolbarConfig.toolbar;
     }
@@ -128,15 +135,15 @@ const createToolbar = (toolbarConfig) => {
   return toolbarArray.join(' | ');
 };
 
-const identifyButtons = function (editor, registry, extras): SketchSpec[][] {
-  const toolbar = createToolbar(registry);
+const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): SketchSpec[][] {
+  const toolbar = createToolbar(toolbarConfig);
   const groupsStrings = toolbar.split('|');
   const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
   const groups = Arr.map(toolbarGroups, (group) => {
     return Arr.bind(group, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(registry.buttons, toolbarItem.toLowerCase()).fold(
+      return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(toolbarConfig.buttons, toolbarItem.toLowerCase()).fold(
         () => {
-          return Objects.readOptFrom<(spec: AddButtonSettings, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
+          return Objects.readOptFrom<(spec: Editor, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
             return r(editor, extras);
           }).orThunk(() => {
             console.error('No representation for toolbarItem: ' + toolbarItem);

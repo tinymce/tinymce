@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 
 import { identifyButtons } from '../../../main/ts/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export default function () {
 
@@ -71,6 +72,19 @@ export default function () {
   };
 
   const helpers = setupDemo();
+  const mockEditor: Editor = {
+    on: () => { },
+    formatter: {
+      canApply: () => true,
+      match: () => true,
+      remove: () => { },
+      apply: () => { }
+    },
+    focus: () => { },
+    undoManager: {
+      transact: (f) => f()
+    }
+  } as any;
 
   const toolbar = GuiFactory.build({
     dom: {
@@ -120,19 +134,7 @@ export default function () {
                 'align-items': 'center'
               }
             },
-            components: Arr.flatten(identifyButtons({
-              on: () => { },
-              formatter: {
-                canApply: () => true,
-                match: () => true,
-                remove: () => { },
-                apply: () => { }
-              },
-              focus: () => { },
-              undoManager: {
-                transact: (f) => f()
-              }
-            }, { buttons, toolbar: button }, helpers.extras))
+            components: Arr.flatten(identifyButtons(mockEditor, { buttons, toolbar: button }, helpers.extras))
           }
         ]
       };
