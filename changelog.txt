@@ -1,3 +1,10 @@
+Version 4.9.0 (2018-11-27)
+    Added a replace feature to the Textpattern Plugin. #TINY-1908
+    Added functionality to the Lists Plugin that improves the indentation logic. #TINY-1790
+    Fixed a bug where it wasn't possible to delete/backspace when the caret was between a contentEditable=false element and a BR. #TINY-2372
+    Fixed a bug where copying table cells without a text selection would fail to copy anything. #TINY-1789
+    Implemented missing `autosave_restore_when_empty` functionality in the Autosave Plugin. Patch contributed by gzzo. #GH-4447
+    Reduced insertion of unnecessary nonbreaking spaces in the editor. #TINY-1879
 Version 4.8.5 (2018-10-30)
     Added a content_css_cors setting to the editor that adds the crossorigin="anonymous" attribute to link tags added by the StyleSheetLoader. #TINY-1909
     Fixed a bug where trying to remove formatting with a collapsed selection range would throw an exception. #GH-4636
