@@ -9,39 +9,45 @@ import { Editor } from '../api/Editor';
 import ScrollIntoView from '../dom/ScrollIntoView';
 import { Range, DocumentFragment, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
-import { Element, Traverse, Remove } from '@ephox/sugar';
-import NodeType from '../dom/NodeType';
-
-const isText = (el: Element): boolean => NodeType.isText(el.dom());
+import { Element, Traverse, Node, Remove } from '@ephox/sugar';
 
 const prependData = (target: Text, data: string): void => {
   target.insertData(0, data);
 };
 
-// Wrapper to rng.insertNode which takes care of empty and splitted text nodes
-const rngInsertNode = (rng: Range, fragment: DocumentFragment): void => {
-  const startFragmentText = Option.from(fragment.firstChild).map(Element.fromDom).filter(isText);
-  const endFragmentText = Option.from(fragment.lastChild).map(Element.fromDom).filter(isText);
+const removeEmpty = (text: Element): Option<Element> => {
+  if (text.dom().length === 0) {
+    Remove.remove(text);
+    return Option.none();
+  }
+  return Option.some(text);
+};
 
+const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
+  const firstChild = Option.from(fragment.firstChild).map(Element.fromDom);
+  const lastChild = Option.from(fragment.lastChild).map(Element.fromDom);
+
+  rng.deleteContents();
   rng.insertNode(fragment);
 
-  const prevText = startFragmentText.bind(Traverse.prevSibling).filter(isText);
-  const nextText = endFragmentText.bind(Traverse.nextSibling).filter(isText);
+  const prevText = firstChild.bind(Traverse.prevSibling).filter(Node.isText).bind(removeEmpty);
+  const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
 
   // Join start
-  Options.liftN([prevText, startFragmentText], (prev: Element, startFrag: Element) => {
-    prependData(startFrag.dom(), prev.dom().data);
-    rng.setStart(startFrag.dom(), prev.dom().length);
+  Options.liftN([prevText, firstChild.filter(Node.isText)], (prev: Element, start: Element) => {
+    prependData(start.dom(), prev.dom().data);
     Remove.remove(prev);
   });
 
   // Join end
-  Options.liftN([nextText, endFragmentText], (next: Element, endFrag: Element) => {
-    const oldLength = endFrag.dom().length;
-    endFrag.dom().appendData(next.dom().data);
-    rng.setEnd(endFrag.dom(), oldLength);
+  Options.liftN([nextText, lastChild.filter(Node.isText)], (next: Element, end: Element) => {
+    const oldLength = end.dom().length;
+    end.dom().appendData(next.dom().data);
+    rng.setEnd(end.dom(), oldLength);
     Remove.remove(next);
   });
+
+  rng.collapse(false);
 };
 
 const setupArgs = (args, content: string) => {
@@ -64,12 +70,9 @@ const setContent = (editor: Editor, content: string, args) => {
   }
 
   const rng = editor.selection.getRng();
-
-  rng.deleteContents();
-  rngInsertNode(rng, rng.createContextualFragment(args.content));
-
-  rng.collapse(false);
+  rngSetContent(rng, rng.createContextualFragment(args.content));
   editor.selection.setRng(rng);
+
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 
   if (!args.no_events) {

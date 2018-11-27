@@ -132,6 +132,57 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           root
         ),
       ])),
+
+      Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a</p>'),
+        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        sSetContent(editor, 'b<em>c</em>', {}),
+        Assertions.sAssertStructure('Checking initial structure',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('ab')),
+                    s.element('em', {
+                      children: [
+                        s.text(str.is('c'))
+                      ]
+                    })
+                  ]
+                })
+              ]
+            });
+          }),
+          root
+        ),
+      ])),
+
+      Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>a</p>'),
+        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        sSetContent(editor, '<em>b</em>c', {}),
+        Assertions.sAssertStructure('Checking initial structure',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('em', {
+                      children: [
+                        s.text(str.is('b'))
+                      ]
+                    }),
+                    s.text(str.is('c'))
+                  ]
+                })
+              ]
+            });
+          }),
+          root
+        ),
+      ])),
     ], onSuccess, onFailure);
   }, {
     selector: 'textarea',
