@@ -1,194 +1,159 @@
-//
-// Tiny Comment
-//
-
-@comment-background-color: contrast(
-  @background-color,
-  @background-color,
-  lighten(@background-color, 5%)
-);
+// Tiny Comments//
+@comment-background-color: contrast(@background-color,@background-color,lighten(@background-color, 5%));
 @comment-border-radius: @panel-border-radius;
 @comment-border: 1px solid @border-color;
-@comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%); //TODO: Same as menu. Make a common helper variable?
-@comment-font-size: @font-size-sm;
+@comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+//TODO: Same as menu. Make a common helper variable?@comment-font-size: @font-size-sm;
 @comment-font-style: normal;
 @comment-font-weight: @font-weight-normal;
 @comment-line-height: @line-height-base;
 @comment-padding: @pad-sm @pad-sm @pad-md @pad-sm;
 @comment-text-color: @text-color;
 @comment-text-transform: initial;
-
 .tox {
-  .tox-comment-thread {
-    > *:not(:first-child) {
-      margin-top: @pad-sm;
-    }
-  }
-
+	.tox-comment-thread {
+		> *:not(:first-child) {
+			margin-top: @pad-sm;
+		}
+	}
   // An individual comment
   .tox-comment {
-    background: @comment-background-color;
-    border: @comment-border;
-    border-radius: @comment-border-radius;
-    box-shadow: @comment-box-shadow;
-    padding: @comment-padding;
-    position: relative;
-
-  }
-
-  .tox-comment__header {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .tox-comment__date {
-    color: @text-color-muted;
-    font-size: @font-size-xs;
-  }
-
-  .tox-comment__body {
-    color: @comment-text-color;
-    font-size: @comment-font-size;
-    font-style: @comment-font-style;
-    font-weight: @comment-font-weight;
-    line-height: @comment-line-height;
-    margin-top: @pad-sm;
-    text-transform: @comment-text-transform;
-  }
-
-  .tox-comment__body p {
-    margin: 0;
-  }
-
-  .tox-comment-thread--overlay{
-    > div::after {
-      content: "";
-      background: #fff;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      left: 0;
-      right: 0;
-      top: 0;
-      z-index: 5;
-      opacity: 0.9;
-      position: absolute;
-      text-align: center;
-      @comment-font-size: @font-size-lg;
-      align-items: center;
-      padding: 1em;
-    }
-
-  }
-
-  .tox-comment--gradient::after {
-    > *:first-child {
-
-
-    background-image: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0,
-      #fff 100%
-    );
-    content: "";
-    display: block;
-    height: 40px;
-    margin-top: -40px;
-    position: relative;
-    width: 100%;
-    }
-  }
-
+		background: @comment-background-color;
+		border: @comment-border;
+		border-radius: @comment-border-radius;
+		box-shadow: @comment-box-shadow;
+		padding: @comment-padding;
+		position: relative;
+	}
+	.tox-comment__header {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+	}
+	.tox-comment__date {
+		color: @text-color-muted;
+		font-size: @font-size-xs;
+	}
+	.tox-comment__body {
+		color: @comment-text-color;
+		font-size: @comment-font-size;
+		font-style: @comment-font-style;
+		font-weight: @comment-font-weight;
+		line-height: @comment-line-height;
+		margin-top: @pad-sm;
+		text-transform: @comment-text-transform;
+	}
+	.tox-comment__body p {
+		margin: 0;
+	}
+	.tox-comment-thread--overlay{
+		> div::after {
+			content: "";
+			background: #fff;
+			bottom: 0;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			left: 0;
+			right: 0;
+			top: 0;
+			z-index: 5;
+			opacity: 0.9;
+			position: absolute;
+			text-align: center;
+			@comment-font-size: @font-size-lg;
+			align-items: center;
+			padding: 1em;
+		}
+	}
+	.tox-comment--gradient::after {
+		> *:first-child {
+			background-image: linear-gradient(to bottom,rgba(255, 255, 255, 0) 0,#fff 100%);
+			content: "";
+			display: block;
+			height: 40px;
+			margin-top: -40px;
+			position: relative;
+			width: 100%;
+		}
+	}
   // Write new comment block
   .tox-comment__reply {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    flex-shrink: 0;
-    margin-top: @pad-sm;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		flex-shrink: 0;
+		margin-top: @pad-sm;
+		> *:first-child {
+			margin-bottom: @pad-sm;
+			width: 100%;
+		}
+		> *:last-child {
+			margin-left: @pad-sm;
+		}
+	}
+	.tox-comment__edit {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		margin-left: @pad-sm;
+		margin-top: @pad-md;
+		> *:last-child {
+			margin-left: @pad-sm;
+		}
+	}
+	.tox-comment--overlay {
+		background: #fff;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		left: 0;
+		right: 0;
+		top: 0;
+		z-index: 5;
+		opacity: 0.9;
+		position: absolute;
+		text-align: center;
+	}
+	.tox-comment--overlaytext {
+		@comment-font-size: @font-size-lg;
+		bottom: 0;
+		flex-direction: column;
+		left: 0;
+		padding: 1em;
+		position: absolute;
+		right: 0;
 
-    > *:first-child {
-      margin-bottom: @pad-sm;
-      width: 100%;
-    }
-
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
-  }
-
-  .tox-comment__edit {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    margin-left: @pad-sm;
-    margin-top: @pad-md;
-
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
-  }
-
-  .tox-comment--overlay {
-    background: #fff;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 5;
-    opacity: 0.9;
-    position: absolute;
-    text-align: center;
-  }
-
-  .tox-comment--overlaytext {
-     @comment-font-size: @font-size-lg;
-     //align-items: center;
-     bottom: 0;
-    // display: flex;
-     flex-direction: column;
-     left: 0;
-     padding: 1em;
-     position: absolute;
-     right: 0;
-    // text-align: center;
-     top: 0;
-     z-index: 10;
-     > div{
-      text-align: center;
-     }
-     //second child = smaller for second line of text
-     div:nth-of-type(2) {
-      font-size: .8em;
-     }
-  }
-
-  .tox-comment--buttonspacing {
-    padding-top: @pad-md;
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
-  }
-
-.tox-comment__scroll{
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  flex-shrink: 1;
+		top: 0;
+		z-index: 10;
+		> div{
+			text-align: center;
+		}
+      //second child = smaller for second line of text
+      div:nth-of-type(2) {
+        font-size: .8em;
+      }
+		}
+	}//End of tox
+	.tox-comment--buttonspacing {
+		padding-top: @pad-md;
+		> *:last-child {
+			margin-left: @pad-sm;
+		}
+	}
+	.tox-comment__scroll{
+		display: flex;
+		flex-direction: column;
+		overflow: auto;
+		flex-shrink: 1;
+	}
+	.tox-comment__expander{
+		padding-top: @pad-sm;
+		p {
+			color: rgba(34, 47, 62, 0.6);
+			font-style: normal;
+			font-size: @font-size-sm;
+		}
+	}
 }
-.tox-comment__expander{
-  padding-top: @pad-sm;
-  p {
-    color: rgba(34, 47, 62, 0.6);
-    font-style: normal;
-    font-size: @font-size-sm;
-  }
-}
-
-
-} //End of tox
