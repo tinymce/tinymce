@@ -133,7 +133,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
 
   const sTestOpen = Chain.asStep({ }, [
     Chain.mapper((_) => {
-      return windowManager.open(dialogA, {});
+      return windowManager.open(dialogA, {}, () => store.adder('closeWindow')() );
     }),
     Chain.op((dialogApi) => {
       currentDialogApi.set(dialogApi);
@@ -190,6 +190,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for all dialog events when closing',
       store.sAssertEq('Checking stuff', [
+        'closeWindow',
         'onCloseC'
       ]),
       100,

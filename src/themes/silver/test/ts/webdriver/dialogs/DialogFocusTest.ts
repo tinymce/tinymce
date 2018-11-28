@@ -1,8 +1,10 @@
-import { FocusTools, Pipeline, RealMouse, Step } from '@ephox/agar';
+import { FocusTools, Pipeline, Step, RealMouse } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document, window } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 
@@ -45,7 +47,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
           initialData: {
             input1: 'Dog'
           }
-        }, { });
+        }, { }, Fun.noop);
       }),
 
       FocusTools.sTryOnSelector(

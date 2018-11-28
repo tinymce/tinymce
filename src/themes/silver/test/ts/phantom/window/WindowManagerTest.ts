@@ -13,6 +13,7 @@ import {
 import { UnitTest } from '@ephox/bedrock';
 import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 import { Body, Element as SugarElement } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -25,7 +26,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   const shouldFail = (label, conf, asserter) => {
     return Step.async(function (next, die) {
       try {
-        windowManager.open(conf, {});
+        windowManager.open(conf, {}, Fun.noop);
       } catch (err) {
         asserter(err);
         return next();
@@ -36,7 +37,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   };
 
   const sSetupDialog = (conf) => Step.sync(() => {
-    windowManager.open(conf, {});
+    windowManager.open(conf, {}, Fun.noop);
   });
 
   const sTeardown = GeneralSteps.sequence([
@@ -176,7 +177,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
           }
         };
 
-        const instanceApi = windowManager.open(conf, {});
+        const instanceApi = windowManager.open(conf, {}, Fun.noop);
         const dialogBody = SugarElement.fromDom(document.querySelector('.tox-dialog__body'));
 
         Assertions.assertStructure('It should load with form components in the dom structure',

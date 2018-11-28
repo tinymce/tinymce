@@ -50,7 +50,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         onChange: store.adder('onChange'),
         onAction: store.adder('onAction')
       };
-      return windowManager.open(dialogSpec, params);
+      return windowManager.open(dialogSpec, params, store.adder('closeWindow'));
     }),
 
     Chain.op((dialogApi) => {
@@ -85,6 +85,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       'Waiting for all dialog events when closing',
       store.sAssertEq('Checking stuff', [
         'onCancel',
+        'closeWindow',
         'onClose'
       ]),
       100,

@@ -96,5 +96,5 @@ export const open = () => {
   const helpers = setupDemo();
   const winMgr = WindowManager.setup(helpers.extras);
   // The end user will use this as config
-  winMgr.open(SearchReplaceDialogSpec, {});
+  winMgr.open(SearchReplaceDialogSpec, {}, () => {});
 };

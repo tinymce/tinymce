@@ -1,12 +1,13 @@
 import { FocusTools, Pipeline, RealKeys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Class, Element, Focus } from '@ephox/sugar';
-import Env from 'tinymce/core/api/Env';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
   const helpers = setupDemo();
@@ -58,7 +59,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
               }).join('\n') +
             '</body>'
           }
-        }, { });
+        }, { }, Fun.noop);
       }),
 
       RealKeys.sSendKeysOn(
