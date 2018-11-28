@@ -22,7 +22,7 @@ export type ImageDialogData = {
   style: string,
   vspace: string,
   borderstyle: string,
-}
+};
 
 export const dialogSelectors = {
   sourceInput : 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
@@ -39,7 +39,6 @@ const cGetTopmostDialog = Chain.control(
   ]),
   Guard.addLogging('Get top most dialog')
 );
-
 
 const cUpdateSource = (data: Partial<ImageDialogData>) => Chain.control(
   Chain.fromChains([

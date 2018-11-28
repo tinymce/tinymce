@@ -1,7 +1,6 @@
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import { setupDemo } from '../DemoHelpers';
 
-
 export default () => {
   const helpers = setupDemo();
   const winMgr = WindowManager.setup(helpers.extras);

@@ -100,8 +100,7 @@ export default function (editor: Editor) {
   };
 
   const confirm = function (message, callback, scope) {
-    const dialog = getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
-    addDialog(dialog);
+    getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
   };
 
   const close = function () {

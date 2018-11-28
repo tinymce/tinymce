@@ -6,7 +6,6 @@ import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 
-
 UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
   const helpers = setupDemo();
   const windowManager = WindowManager.setup(helpers.extras);

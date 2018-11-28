@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { TinyDom } from '@ephox/mcagar';
-import { Body, Element, SelectorFind, Value, Node } from '@ephox/sugar';
 import { Obj } from '@ephox/katamari';
+import { TinyDom } from '@ephox/mcagar';
+import { Body, Element, SelectorFind, Value } from '@ephox/sugar';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');

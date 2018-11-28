@@ -15,7 +15,6 @@ import Render, { RenderInfo } from './Render';
 import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
 
-
 ThemeManager.add('silver', (editor: Editor) => {
   const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
 
