@@ -26,6 +26,7 @@ UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse 
           { title: 'link2', value: 'link2' }
         ],
         image_class_list: [
+          { title: 'None', value: '' },
           { title: 'class1', value: 'class1' },
           { title: 'class2', value: 'class2' }
         ]
@@ -35,7 +36,7 @@ UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse 
       cFillActiveDialog({
         src: { value: 'src' },
         alt: 'alt',
-        class: 'class1',
+        classIndex: 1,
         dimensions: {
           width: '100',
           height: '200'

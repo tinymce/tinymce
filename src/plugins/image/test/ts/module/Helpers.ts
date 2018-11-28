@@ -1,8 +1,8 @@
-import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard } from '@ephox/agar';
+import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard, TestLogs } from '@ephox/agar';
 import { Result, Arr } from '@ephox/katamari';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
-import { Element, Body, Value } from '@ephox/sugar';
-import { Editor } from '../../../../../core/main/ts/api/Editor';
+import { Element, Body, Value, Checked, SelectTag } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
@@ -15,7 +15,7 @@ export type ImageDialogData = {
     height: string
   },
   caption: string,
-  class: string,
+  classIndex: number, // because the DOM api is setSelectedIndex
 
   border: string,
   hspace: string,
@@ -30,6 +30,7 @@ export const dialogSelectors = {
   widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension width") + input.tox-textfield',
   heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension height") + input.tox-textfield',
   captionRadio: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
+  classSelect: 'label.tox-label:contains("Class") + div.tox-selectfield select',
 };
 
 const cGetTopmostDialog = Chain.control(
@@ -81,12 +82,34 @@ const cUpdateHeight = (data: Partial<ImageDialogData>) => (!data.dimensions || !
   )
 ];
 
+const cUpdateClass = (data: Partial<ImageDialogData>) => (!data.classIndex) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.classSelect),
+      Chain.op((source: Element) => SelectTag.setSelected(source, data.classIndex)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cUpdateChecked = (data: Partial<ImageDialogData>) => (!data.caption) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.captionRadio),
+      Chain.op((source: Element) => Checked.set(source, data.caption === 'checked' ? true : false)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
 const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
   const updateDialogFields = Arr.flatten([
     cUpdateSource(data),
     cUpdateAlt(data),
     cUpdateWidth(data),
     cUpdateHeight(data),
+    cUpdateClass(data),
+    cUpdateChecked(data),
   ]);
 
   const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'))

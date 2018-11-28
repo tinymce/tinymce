@@ -1,4 +1,4 @@
-import { Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Log, Pipeline, UnitTest, Chain } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -20,6 +20,7 @@ UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
       Editor.cFromSettings(silverSettings),
       cExecCommand('mceImage', true),
       cWaitForDialog(),
+      Chain.async((v, n, d) => d('need to assert something here')),
       // TODO ACTUALLY FIX THIS
       // cAssertActiveDialogData('checking initial dialog data', {
       //   src: {
