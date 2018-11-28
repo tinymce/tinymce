@@ -83,8 +83,10 @@
 
   }
 
-
   .tox-comment--gradient::after {
+    > *:first-child {
+
+
     background-image: linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0) 0,
@@ -96,6 +98,7 @@
     margin-top: -40px;
     position: relative;
     width: 100%;
+    }
   }
 
   // Write new comment block
@@ -166,8 +169,10 @@
   }
 
   .tox-comment--buttonspacing {
-    padding: @pad-md;
-
+    padding-top: @pad-md;
+    > *:last-child {
+      margin-left: @pad-sm;
+    }
   }
 
 .tox-comment__scroll{
@@ -175,6 +180,15 @@
   flex-direction: column;
   overflow: auto;
   flex-shrink: 1;
-  
 }
+.tox-comment__expander{
+  padding-top: @pad-sm;
+  p {
+    color: rgba(34, 47, 62, 0.6);
+    font-style: normal;
+    font-size: @font-size-sm;
+  }
+}
+
+
 } //End of tox
