@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Behaviour, Button as AlloyButton, Container as AlloyContainer, SketchSpec } from '@ephox/alloy';
 import { AutocompleteGoo, renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';

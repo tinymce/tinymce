@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
               Chain.fromChains([
                 Chain.control(
                   Chain.fromChains([
-                    cSizeInputForLabel('Width'),
+                    cSizeInputForLabel('Dimension width'),
                     UiControls.cGetValue,
                     Assertions.cAssertEq('should be 1', '1')
                   ]),
@@ -35,13 +35,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
                 )
               ]),
               Chain.fromChains([
-                cSizeInputForLabel('Height'),
+                cSizeInputForLabel('Dimension height'),
                 Chain.op(Focus.focus),
                 UiControls.cSetValue('5'),
                 cFakeEvent('input')
               ]),
               Chain.fromChains([
-                cSizeInputForLabel('Width'),
+                cSizeInputForLabel('Dimension width'),
                 UiControls.cGetValue,
                 Assertions.cAssertEq('should have changed to 5', '5')
               ]),

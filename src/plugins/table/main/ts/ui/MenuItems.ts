@@ -1,13 +1,11 @@
 /**
- * MenuItems.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu } from '@ephox/bridge';
 import { Option, Thunk } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
@@ -16,7 +14,6 @@ import { Selections } from 'tinymce/plugins/table/selection/Selections';
 import InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import TableTargets from '../queries/TableTargets';
-import { MenuItemApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 
 const addMenuItems = (editor: Editor, selections: Selections) => {
   let targets = Option.none;
@@ -85,18 +82,6 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     editor.addVisual();
   };
 
-  const insertTable: MenuItemApi = hasTableGrid(editor) === false ?
-    {
-      text: 'Table',
-      icon: 'table',
-      onAction: cmd('mceInsertTable')
-    } :
-    {
-      text: 'Table',
-      icon: 'table',
-      getSubmenuItems: () => [{type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction}]
-    };
-
   const tableProperties = {
     text: 'Table properties',
     onSetup: setEnabled,
@@ -110,8 +95,8 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     onAction: cmd('mceTableDelete')
   };
 
-  // TODO: Get working with the new API
-  const row: MenuItemApi = {
+  const row: Menu.NestedMenuItemApi = {
+    type: 'nestedmenuitem',
     text: 'Row',
     getSubmenuItems: () => [
       { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup: setEnabled },
@@ -126,8 +111,8 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     ]
   };
 
-  // TODO: Get working with the new API
-  const column: MenuItemApi = {
+  const column: Menu.NestedMenuItemApi = {
+    type: 'nestedmenuitem',
     text: 'Column',
     getSubmenuItems: () => [
       { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup: setEnabled },
@@ -136,9 +121,8 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     ]
   };
 
-  // TODO: Get working with the new API
-  const cell: MenuItemApi = {
-    // separator: 'before',
+  const cell: Menu.NestedMenuItemApi = {
+    type: 'nestedmenuitem',
     text: 'Cell',
     getSubmenuItems: () => [
       { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup: setEnabled },
@@ -147,12 +131,25 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     ]
   };
 
-  editor.ui.registry.addMenuItem('inserttable', insertTable);
+  if (hasTableGrid(editor) === false) {
+    editor.ui.registry.addMenuItem('inserttable', {
+      text: 'Table',
+      icon: 'table',
+      onAction: cmd('mceInsertTable')
+    });
+  } else {
+    editor.ui.registry.addNestedMenuItem('inserttable', {
+      text: 'Table',
+      icon: 'table',
+      getSubmenuItems: () => [{type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction}]
+    });
+  }
+
   editor.ui.registry.addMenuItem('tableprops', tableProperties);
   editor.ui.registry.addMenuItem('deletetable', deleteTable);
-  editor.ui.registry.addMenuItem('row', row);
-  editor.ui.registry.addMenuItem('column', column);
-  editor.ui.registry.addMenuItem('cell', cell);
+  editor.ui.registry.addNestedMenuItem('row', row);
+  editor.ui.registry.addNestedMenuItem('column', column);
+  editor.ui.registry.addNestedMenuItem('cell', cell);
 
   editor.ui.registry.addContextMenu('table', {
     update: () => {

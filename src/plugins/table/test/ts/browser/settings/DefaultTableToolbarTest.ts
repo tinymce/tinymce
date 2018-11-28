@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', (suc
         tinyApis.sSetContent(tableHtml),
         TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
         Chain.asStep({}, [
-          tinyUi.cWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
+          tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
           Chain.mapper(function (x) {
             return SelectorFilter.descendants(x, 'button').length;
           }),

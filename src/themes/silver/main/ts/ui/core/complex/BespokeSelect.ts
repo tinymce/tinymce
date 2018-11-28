@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Menu } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
@@ -61,11 +68,11 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
       } as Menu.SeparatorMenuItemApi;
     } else if (rawItem.type === 'submenu') {
       return {
-        type: 'menuitem',
+        type: 'nestedmenuitem',
         text: translatedText,
         disabled,
         getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
-      } as Menu.MenuItemApi;
+      } as Menu.NestedMenuItemApi;
     } else {
       return rawItem.getStylePreview().fold(
         () => {
@@ -136,6 +143,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
     {
       text: Option.some(''),
       icon: Option.none(),
+      tooltip: Option.none(),
       role: 'button',
       fetch: items.getFetch(backstage, getStyleItems),
       onAttach: spec.nodeChangeHandler.map((f) => (comp) => editor.on('nodeChange', f(comp))).getOr(() => { }),

@@ -1,4 +1,4 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -18,9 +18,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
       Logger.t('test table grid disabled', GeneralSteps.sequence([
         tinyApis.sFocus,
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
-        tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
+        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item span.tox-collection__item-label:contains("Table")'), 10, 1000),
         Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[aria-label="Table properties"][role="dialog"]'),
+          tinyUi.cWaitForPopup('wait for popup', 'div.tox-dialog:has(div.tox-dialog__title:contains("Table Properties"))'),
           Chain.op(function (x) {
             Assertions.assertPresence(
               'assert presence of col and row input',

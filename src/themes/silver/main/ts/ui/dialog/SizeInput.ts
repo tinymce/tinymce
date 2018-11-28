@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import {
   AddEventsBehaviour,
   AlloyEvents,
@@ -59,7 +66,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     });
 
     const pAriaDescriptor = AlloyFormField.parts()['aria-descriptor']({
-      text: subspec.label
+      text: providersBackstage.translate(subspec.label)
     });
 
     return renderFormFieldSpec(pAriaDescriptor, pField);
@@ -73,11 +80,11 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
   };
 
   const pField1 = AlloyFormCoupledInputs.parts().field1(
-    renderDimensionField({ label: 'Width', isField1: true, placeholderText: 'Width' })
+    renderDimensionField({ label: 'Dimension width', isField1: true, placeholderText: 'Width' })
   );
 
   const pField2 = AlloyFormCoupledInputs.parts().field2(
-    renderDimensionField({ label: 'Height', isField1: false, placeholderText: 'Height' })
+    renderDimensionField({ label: 'Dimension height', isField1: false, placeholderText: 'Height' })
   );
 
   const pLock = AlloyFormCoupledInputs.parts().lock({

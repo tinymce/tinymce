@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', (suc
         Step.wait(100), // How should I do this better?
                         // I want to check that the inline toolbar does not appear,
                         // but I have to wait unless it won't exist any way because it's too fast
-        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Inline toolbar"]')
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div.tox-pop div.tox-toolbar')
       ])
     , onSuccess, onFailure);
   }, {

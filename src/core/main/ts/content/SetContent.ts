@@ -1,11 +1,8 @@
 /**
- * SetContent.ts
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import { Editor } from 'tinymce/core/api/Editor';
@@ -115,7 +112,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
   return content;
 };
 
-const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => {
+export const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => {
   args.format = args.format ? args.format : defaultFormat;
   args.set = true;
   args.content = isTreeNode(content) ? '' : content;
@@ -129,8 +126,4 @@ const setContent = (editor: Editor, content: Content, args: SetContentArgs = {})
     Fun.constant(content),
     (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
   );
-};
-
-export {
-  setContent
 };

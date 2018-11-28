@@ -1,11 +1,8 @@
 /**
- * Buttons.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import * as Storage from '../core/Storage';
@@ -25,7 +22,6 @@ const register = (editor: Editor, started: Cell<boolean>) => {
   Storage.startStoreDraft(editor, started);
 
   editor.ui.registry.addButton('restoredraft', {
-    type: 'button',
     tooltip: 'Restore last draft',
     icon: 'restore-draft',
     onAction: () => {
@@ -35,7 +31,6 @@ const register = (editor: Editor, started: Cell<boolean>) => {
   });
 
   editor.ui.registry.addMenuItem('restoredraft', {
-    type: 'menuitem',
     text: 'Restore last draft',
     icon: 'restore-draft',
     onAction: () => {

@@ -1,37 +1,39 @@
-import { Pipeline, RawAssertions, Step, Chain, UiFinder, Mouse } from '@ephox/agar';
+import { Pipeline, RawAssertions, Step, Chain, UiFinder, Mouse, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
+import 'tinymce/themes/silver/Theme';
 import { Element, Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (success, failure) => {
-  Theme();
+
   SpellcheckerPlugin();
 
   const dict = [];
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
+    const api = TinyApis(editor);
+    const ui = TinyUi(editor);
 
-    Pipeline.async({}, [
-      tinyApis.sFocus,
-      tinyApis.sSetContent('<p>hello world</p>'),
-      tinyUi.sClickOnToolbar('click spellcheck button', 'div[aria-label="Spellcheck"] button'),
+    Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Add a new word to dictionary', [
+      api.sFocus,
+      api.sSetContent('<p>hello world</p>'),
+      ui.sClickOnToolbar('click spellcheck button', 'button[title="Spellcheck"]'),
+      api.sSetCursor([ 0, 0, 0 ], 0),
       Chain.asStep(Element.fromDom(editor.getBody()), [
         UiFinder.cFindIn('span:contains("hello")'),
-        Mouse.cClick
+        Mouse.cContextMenu
       ]),
       Chain.asStep(Body.body(), [
-        UiFinder.cWaitFor('wait for context menu', 'div.mce-floatpanel'),
+        UiFinder.cWaitFor('wait for context menu', 'div[role="menu"]'),
         UiFinder.cFindIn('span:contains("Add to Dictionary")'),
         Mouse.cClick
       ]),
       Step.sync(() => RawAssertions.assertEq('dict should now have hello', ['hello'], dict))
-    ], onSuccess, onFailure);
+    ]), onSuccess, onFailure);
   }, {
+    theme: 'silver',
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',

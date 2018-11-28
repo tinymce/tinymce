@@ -75,6 +75,6 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
   }, {
     plugins: '',
     toolbar: 'forecolor backcolor fontsizeselect',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/oxide',
   }, success, failure);
 });

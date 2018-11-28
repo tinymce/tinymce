@@ -1,11 +1,8 @@
 /**
- * GetContent.ts
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import { Editor } from 'tinymce/core/api/Editor';
@@ -71,14 +68,10 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   return args.content;
 };
 
-const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {
+export const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {
   return Option.from(editor.getBody())
     .fold(
       Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
       (body) => getContentFromBody(editor, args, body)
     );
-};
-
-export {
-  getContent
 };

@@ -71,8 +71,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
       ]))
     ], onSuccess, onFailure);
   }, {
+    skin_url: '/project/js/tinymce/skins/oxide',
     plugins: '',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });

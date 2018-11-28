@@ -51,8 +51,8 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
     field6: 'label:contains("nested1") + input',
     field7: 'label:contains("nested2") + input',
     field8: 'button:contains("Cancel")',
-    field9: 'button:contains("Save")'
-
+    field9: 'button:contains("Save")',
+    browseButton: 'button[title=F3]'
   };
 
   Pipeline.async({ }, [
@@ -194,6 +194,13 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
 
     Keyboard.sKeydown(doc, Keys.tab(), { }),
     FocusTools.sTryOnSelector(
+      'Focus should move to browse button',
+      doc,
+      selectors.browseButton
+    ),
+
+    Keyboard.sKeydown(doc, Keys.tab(), { }),
+    FocusTools.sTryOnSelector(
       'Focus should move to charmap character a',
       doc,
       selectors.field4_a
@@ -257,6 +264,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
           { label: 'nested1', selector: selectors.field6 },
           { label: 'checkbox', selector: selectors.field5 },
           { label: 'charmap', selector: selectors.field4_a },
+          { label: 'browse button', selector: selectors.browseButton },
           { label: 'f3', selector: selectors.field3 },
           { label: 'f2', selector: selectors.field2 },
           { label: 'first input', selector: selectors.field1 }

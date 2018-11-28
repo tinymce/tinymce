@@ -1,4 +1,4 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Attr, SelectorFilter } from '@ephox/sugar';
@@ -10,9 +10,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { window, document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -136,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   };
 
-  const mCreateInlineModeMultipleInstances = Step.stateful(function (value, next, die) {
+  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful(function (value, next, die) {
     viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
 
     EditorManager.init({
@@ -144,13 +142,41 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       inline: true,
       skin_url: '/project/js/tinymce/skins/oxide'
     }).then(next, die);
-  });
+  }));
 
-  const mAssertEditors = Step.stateful(function (editors: any[], next, die) {
+  const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
-    Assertions.assertEq('Editor container should be null', null, editors[0].editorContainer);
-    Assertions.assertEq('Editor container should be null', null, editors[1].editorContainer);
+    console.log('Editor container 0:', editors[0].editorContainer);
+    const containerApproxStructure = ApproxStructure.build((s, str, arr) => {
+      return s.element('div', {
+        classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-editor-container') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-menubar') ],
+                attrs: {
+                  role: str.is('menubar'),
+                },
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                attrs: {
+                  role: str.is('group'),
+                },
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-anchorbar') ]
+              })
+            ]
+          })
+        ]
+      });
+    });
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[0].editorContainer));
+    Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[1].editorContainer));
 
     Assertions.assertEq(
       'Should only be two skin files the skin and the content for inline mode',
@@ -165,13 +191,13 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
 
     next(targets);
-  });
+  }));
 
-  const sRemoveAllEditors = Step.sync(function () {
+  const sRemoveAllEditors = Step.label('sRemoveAllEditors', Step.sync(function () {
     EditorManager.remove();
-  });
+  }));
 
-  const mAssertTargets = Step.stateful(function (targets: any[], next, die) {
+  const mAssertTargets = Step.label('mAssertTargets', Step.stateful(function (targets: any[], next, die) {
     Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
 
     Arr.each(targets, function (target) {
@@ -179,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
 
     next({});
-  });
+  }));
 
   setup();
   Pipeline.async({}, [

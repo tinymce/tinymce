@@ -1,6 +1,6 @@
 import { Logger, RawAssertions, UnitTest } from '@ephox/agar';
 
-import { DialogChanges } from '../../../main/ts/ui/DialogChanges';
+import { DialogChanges, DialogDelta } from '../../../main/ts/ui/DialogChanges';
 import { ListItem, LinkDialogData } from '../../../main/ts/ui/DialogTypes';
 import { Fun } from '@ephox/katamari';
 
@@ -28,7 +28,7 @@ UnitTest.test('DialogChanges', () => {
         });
       };
 
-      const assertSome = (label: string, expected: { url: { value: string, text: string, meta: { attach: Function } }, text: string }, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
+      const assertSome = (label: string, expected: DialogDelta, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
         Logger.sync('assertSome(' + label + ')', () => {
           const actual = DialogChanges.getDelta(previousText, 'anchor', catalog, data);
           RawAssertions.assertEq('Checking replacement text', expected, actual.getOrDie(
@@ -40,9 +40,9 @@ UnitTest.test('DialogChanges', () => {
       assertSome('Current text empty + Has mapping', {
         url: {
           value: 'alpha',
-          text: 'Alpha',
           meta: {
-            attach: Fun.noop
+            attach: Fun.noop,
+            text: 'Alpha'
           }
         },
         text: 'Alpha'
@@ -59,9 +59,9 @@ UnitTest.test('DialogChanges', () => {
       assertSome('Current text empty + Has mapping in nested list', {
         url: {
           value: 'gamma',
-          text: 'Gamma',
           meta: {
-            attach: Fun.noop
+            attach: Fun.noop,
+            text: 'Gamma'
           }
         },
         text: 'Gamma'

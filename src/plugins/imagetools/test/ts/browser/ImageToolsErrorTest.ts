@@ -1,15 +1,11 @@
-import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
-
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-
-import ImageUtils from '../module/test/ImageUtils';
-import { document } from '@ephox/dom-globals';
-
 import 'tinymce/themes/silver/Theme';
+import ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 
@@ -23,102 +19,62 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
   Plugin();
 
   const sAssertErrorMessage = function (html) {
-    return Chain.asStep(TinyDom.fromDom(document.body), [
-      UiFinder.cWaitFor('Could not find notification', '.tox-notification__body'),
-      Chain.mapper(Html.get),
-      Assertions.cAssertHtml('Message html does not match', html)
-    ]);
+    return Step.label('Check notification message', Chain.asStep(TinyDom.fromDom(document.body), [
+      UiFinder.cWaitFor('Find notification', '.tox-notification__body > p'),
+      Chain.label('Get notification HTML', Chain.mapper(Html.get)),
+      Chain.label('Assert HTML matches expected', Assertions.cAssertHtml('Message html does not match', html))
+    ]));
   };
 
-  const sCloseErrorMessage = Chain.asStep(TinyDom.fromDom(document.body), [
+  const sCloseErrorMessage = Step.label('Close error message', Chain.asStep(TinyDom.fromDom(document.body), [
     UiFinder.cWaitFor('Could not find notification', '.tox-notification > button'),
     Mouse.cClick
-  ]);
+  ]));
 
   TinyLoader.setup(
     function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
-      const stepsWithTeardown = Arr.bind([
-        Logger.t('incorrect service url no api key', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0.0.0/'),
-          tinyApis.sSetSetting('api_key', undefined),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy HTTP error: Incorrect Image Proxy URL')
-        ])),
 
-        Logger.t('incorrect service url with api key', GeneralSteps.sequence([
+      const sTestImageToolsError = (testId, description, proxyUrl, apiKey, errorMessage) => Log.step(
+        testId, description, GeneralSteps.sequence([
           uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0.0.0/'),
-          tinyApis.sSetSetting('api_key', 'fake_key'),
+          Step.label('Set image proxy URL', tinyApis.sSetSetting('imagetools_proxy', proxyUrl)),
+          Step.label('Set API key', tinyApis.sSetSetting('api_key', apiKey)),
           ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
+          Step.label('Select image', tinyApis.sSelect('img', [])),
           ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy HTTP error: Incorrect Image Proxy URL')
-        ])),
+          sAssertErrorMessage(errorMessage),
+          sCloseErrorMessage,
+          Step.label('Clear editor content', tinyApis.sSetContent(''))
+        ])
+      );
 
-        Logger.t('403 no api key', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', '/custom/403'),
-          tinyApis.sSetSetting('api_key', undefined),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy HTTP error: Rejected request')
-        ])),
+      const tests = [
 
-        Logger.t('403 with api key', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', '/custom/403'),
-          tinyApis.sSetSetting('api_key', 'fake_key'),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy Service error: Invalid JSON in service error message')
-        ])),
+        sTestImageToolsError('TBA', 'Incorrect service url no api key',
+            'http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
 
-        Logger.t('403 with api key and return error data', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', '/custom/403data'),
-          tinyApis.sSetSetting('api_key', 'fake_key'),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy Service error: Unknown service error')
-        ])),
+        sTestImageToolsError('TBA', 'Incorrect service url with api key',
+            'http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
 
-        Logger.t('404 no api key', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', '/custom/404'),
-          tinyApis.sSetSetting('api_key', undefined),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy HTTP error: Could not find Image Proxy')
-        ])),
+        sTestImageToolsError('TBA', '403 no api key',
+            '/custom/403', undefined, 'ImageProxy HTTP error: Rejected request'),
 
-        Logger.t('404 with api key', GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          tinyApis.sSetSetting('imagetools_proxy', '/custom/404'),
-          tinyApis.sSetSetting('api_key', 'fake_key'),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          tinyApis.sSelect('img', []),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage('ImageProxy HTTP error: Could not find Image Proxy')
-        ]))
-      ], function (step) {
-        return [
-          step,
-          GeneralSteps.sequence([
-            sCloseErrorMessage,
-            tinyApis.sSetContent('')
-          ])
-        ];
-      });
+        sTestImageToolsError('TBA', '403 with api key',
+            '/custom/403', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
 
-      Pipeline.async({}, stepsWithTeardown, onSuccess, onFailure);
+        sTestImageToolsError('TBA', '403 with api key and return error data',
+            '/custom/403data', 'fake_key', 'ImageProxy Service error: Unknown service error'),
+
+        sTestImageToolsError('TBA', '404 no api key',
+            '/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy'),
+
+        sTestImageToolsError('TBA', '404 with api key',
+            '/custom/404', 'fake_key', 'ImageProxy HTTP error: Could not find Image Proxy'),
+
+      ];
+
+      Pipeline.async({}, tests, onSuccess, onFailure);
     },
     {
       theme: 'silver',

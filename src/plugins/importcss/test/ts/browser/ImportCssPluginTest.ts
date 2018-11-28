@@ -1,392 +1,362 @@
-import { Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-
-import Factory from 'tinymce/core/api/ui/Factory';
-import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
+import { Step, Pipeline, Chain, UiFinder, Assertions, ApproxStructure, GeneralSteps, Mouse, Log } from '@ephox/agar';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock';
+import Plugin from 'tinymce/plugins/importcss/Plugin';
+import { Body, Element } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
-  let menuCtrl;
+UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, failure) => {
 
+  Plugin();
   Theme();
-  ImportCssPlugin();
 
-  const fireFormatsMenuEvent = function (editor: Editor, styleSheets, items?) {
-    menuCtrl = Factory.create('menu', {
-      items
-    }).renderTo(document.getElementById('view'));
+  const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
+    TinyLoader.setup((editor, onSuccess, onFailure) => {
 
-    return editor.fire('renderFormatsMenu', {
-      control: menuCtrl,
-      doc: {
-        styleSheets
-      }
-    });
-  };
+      const tinyUi = TinyUi(editor);
 
-  const getMenuItemFormat = function (editor: Editor, item) {
-    return editor.formatter.get(item.settings.format)[0];
-  };
-
-  const sTeardown = function (editor: Editor) {
-    return Step.sync(function () {
-      if (menuCtrl) {
-        menuCtrl.remove();
-        menuCtrl = null;
-      }
-
-      editor.contentCSS = [];
-      delete editor.settings.importcss_file_filter;
-      delete editor.settings.importcss_merge_classes;
-      delete editor.settings.importcss_append;
-      delete editor.settings.importcss_selector_filter;
-      delete editor.settings.importcss_groups;
-      delete editor.settings.importcss_exclusive;
-      delete editor.settings.importcss_selector_converter;
-    });
-  };
-
-  const appendTeardown = function (editor: Editor, steps) {
-    return Arr.bind(steps, function (step) {
-      return [step, sTeardown(editor)];
-    });
-  };
-
-  suite.test('Import content_css files', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.contentCSS.push('test2.css');
-
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css',
-        cssRules: [
-          { selectorText: '.a' },
-          { selectorText: 'p.b' },
-          { selectorText: 'img.c' }
-        ]
-      },
-
-      { href: 'test2.css', cssRules: [{ selectorText: '.d' }] },
-      { href: 'test3.css', cssRules: [{ selectorText: '.e' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 4);
-
-    LegacyUnit.equal(evt.control.items()[0].text(), 'a');
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[0]).classes, ['a']);
-
-    LegacyUnit.equal(evt.control.items()[1].text(), 'p.b');
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[1]).block, 'p');
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[1]).classes[0], 'b');
-
-    LegacyUnit.equal(evt.control.items()[2].text(), 'img.c');
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[2]).selector, 'img');
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[2]).classes[0], 'c');
-
-    LegacyUnit.equal(evt.control.items()[3].text(), 'd');
-  });
-
-  suite.test('Import custom importcss_merge_classes: false', function (editor: Editor) {
-    editor.contentCSS.push('test.css');
-    editor.settings.importcss_merge_classes = false;
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test.css', cssRules: [{ selectorText: '.a' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[0]).attributes, { class: 'a' });
-  });
-
-  suite.test('Import contentCSS with querystring', function (editor: Editor) {
-    editor.contentCSS.push('test.css?hello');
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test.css?hello', cssRules: [{ selectorText: '.a' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-  });
-
-  suite.test('Import custom importcss_append: true', function (editor: Editor) {
-    editor.contentCSS.push('test.css');
-    editor.settings.importcss_append = true;
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test.css', cssRules: [{ selectorText: '.b' }] }
-    ], { text: 'a' });
-
-    LegacyUnit.equal(evt.control.items().length, 2);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'a');
-    LegacyUnit.equal(evt.control.items()[1].text(), 'b');
-  });
-
-  suite.test('Import custom importcss_selector_filter (string)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_selector_filter = '.a';
-
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' }
-        ]
-      }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'a');
-  });
-
-  suite.test('Import custom importcss_selector_filter (function)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_selector_filter = function (selector) {
-      return selector === '.a';
-    };
-
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' }
-        ]
-      }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'a');
-  });
-
-  suite.test('Import custom importcss_selector_filter (regexp)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_selector_filter = /a/;
-
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' }
-        ]
-      }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'a');
-  });
-
-  suite.test('Import custom importcss_groups', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_groups = [
-      { title: 'g1', filter: /a/ },
-      { title: 'g2', filter: /b/ },
-      { title: 'g3' }
-    ];
-
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' },
-          { selectorText: '.c' }
-        ]
-      }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 3);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'g1');
-    LegacyUnit.equal(evt.control.items()[0].settings.menu[0].text, 'a');
-    LegacyUnit.equal(evt.control.items()[1].text(), 'g2');
-    LegacyUnit.equal(evt.control.items()[1].settings.menu[0].text, 'b');
-    LegacyUnit.equal(evt.control.items()[2].text(), 'g3');
-    LegacyUnit.equal(evt.control.items()[2].settings.menu[0].text, 'c');
-  });
-
-  suite.test('Import custom importcss_file_filter (string)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_file_filter = 'test2.css';
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
-      { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'b');
-  });
-
-  suite.test('Import custom importcss_file_filter (function)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_file_filter = function (href) {
-      return href === 'test2.css';
-    };
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
-      { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'b');
-  });
-
-  suite.test('Import custom importcss_file_filter (regexp)', function (editor: Editor) {
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_file_filter = /test2\.css/;
-
-    const evt = fireFormatsMenuEvent(editor, [
-      { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
-      { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
-    ]);
-
-    LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(evt.control.items()[0].text(), 'b');
-  });
-
-  suite.test('Import custom importcss_selector_converter', function (editor: Editor) {
-    editor.settings.importcss_groups = [
-      { title: 'g1', filter: /\.a/, custom: 'A' },
-      { title: 'g2', filter: /\.b/, custom: 'B' },
-      { title: 'g3', custom: 'C' }
-    ];
-
-    editor.contentCSS.push('test1.css');
-    editor.settings.importcss_selector_converter = function (selector, group) {
-      return {
-        title: selector + group.custom,
-        inline: 'span'
+      const sAssertMenu = (label: string, expected) => {
+        return Chain.asStep(Body.body(), [
+          UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
+          Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              classes: [ arr.has('tox-menu') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-collection__group') ],
+                  children: Arr.map(expected, (exp) => {
+                    return s.element('div', {
+                      classes: [ arr.has('tox-collection__item') ],
+                      children: [
+                        s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                        s.element('span', exp.submenu ? {
+                          classes: [ arr.has('tox-collection__item-label') ],
+                          html: str.is(exp.html)
+                        } : {
+                          classes: [ arr.has('tox-collection__item-label') ],
+                          children: [
+                            s.element(exp.tag, { html: str.is(exp.html) })
+                          ]
+                        })
+                      ].concat(exp.submenu ? [
+                        s.anything()
+                      ] : [ ])
+                    });
+                  })
+                })
+              ]
+            });
+          }))
+        ]);
       };
-    };
 
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' },
-          { selectorText: '.c' }
-        ]
-      }
-    ]);
+      const sOpenStyleMenu = GeneralSteps.sequence([
+        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
+      ]);
 
-    const items = evt.control.items();
-    LegacyUnit.equal(items.length, 3);
-    LegacyUnit.equal(items[0].text(), 'g1');
-    LegacyUnit.equal(items[0].settings.menu[0].text, '.aA');
-    LegacyUnit.equal(items[1].text(), 'g2');
-    LegacyUnit.equal(items[1].settings.menu[0].text, '.bB');
-    LegacyUnit.equal(items[2].text(), 'g3');
-    LegacyUnit.equal(items[2].settings.menu[0].text, '.cC');
+      Pipeline.async({}, [
+        sOpenStyleMenu,
+        sAssertMenu('Checking stuff', assertions.menuContents)
+      ].concat(assertions.choice.map((c) => [
+          Assertions.sAssertPresence(
+            `${c} should NOT be present before clicking`,
+            {
+              [c]: 0
+            },
+            Element.fromDom(editor.getBody())
+          ),
+          Mouse.sClickOn(Body.body(), `.tox-collection__item .tox-collection__item-label:contains(${c})`),
+          Assertions.sAssertPresence(
+            `${c} should be present`,
+            {
+              [c]: 1
+            },
+            Element.fromDom(editor.getBody())
+          )
+        ]).getOr([ ])), onSuccess, onFailure);
+    }, {
+      plugins: 'importcss',
+      toolbar: 'styleselect',
+      theme: 'silver',
+      content_css: pluginSettings.content_css,
+      importcss_append: pluginSettings.importcss_append,
+      importcss_selector_filter: pluginSettings.importcss_selector_filter,
+      importcss_file_filter: pluginSettings.importcss_file_filter,
+      importcss_groups: pluginSettings.importcss_groups,
+      importcss_selector_converter: pluginSettings.importcss_selector_converter,
+      importcss_exclusive: pluginSettings.importcss_exclusive,
+      skin_url: '/project/js/tinymce/skins/oxide'
+    }, () => onStepSuccess(), onStepFailure);
   });
 
-  suite.test('Import custom group selector_converter', function (editor: Editor) {
-    const constant = function (format) {
-      return function () {
-        return format;
-      };
-    };
+  Pipeline.async({ }, [
+    Log.step(
+      'TBA',
+      'importcss: content_css with one file, append default',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h1', html: 'h1.red', submenu: false },
+            { tag: 'p', html: 'p.other', submenu: false },
+            { tag: 'span', html: 'span.inline', submenu: false }
+          ],
+          choice: Option.some('h1.red')
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_append: undefined
+        }
+      )
+    ),
 
-    const formatA = {
-      title: 'my format a',
-      selector: 'p'
-    };
+    Log.step(
+      'TBA',
+      'importcss: content_css with no files, append true',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { html: 'Headings', submenu: true },
+            { html: 'Inline', submenu: true },
+            { html: 'Blocks', submenu: true },
+            { html: 'Alignment', submenu: true }
+          ],
+          choice: Option.none()
+        },
+        {
+          content_css: [ ],
+          importcss_append: true
+        }
+      )
+    ),
 
-    const formatB = {
-      title: 'my format b',
-      selector: 'h1'
-    };
+    Log.step(
+      'TBA',
+      'importcss: content_css with a file, append true',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { html: 'Headings', submenu: true },
+            { html: 'Inline', submenu: true },
+            { html: 'Blocks', submenu: true },
+            { html: 'Alignment', submenu: true },
+            { tag: 'h1', html: 'h1.red', submenu: false },
+            { tag: 'p', html: 'p.other', submenu: false },
+            { tag: 'span', html: 'span.inline', submenu: false }
+          ],
+          choice: Option.none()
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_append: true
+        }
+      )
+    ),
 
-    editor.settings.importcss_groups = [
-      { title: 'g1', filter: /\.a/, selector_converter: constant(formatA) },
-      { title: 'g2', filter: /\.b/, selector_converter: constant(formatB) },
-      { title: 'g3', custom: 'C' }
-    ];
+    Log.step(
+      'TBA',
+      'importcss: content_css with multiple files, append true',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { html: 'Headings', submenu: true },
+            { html: 'Inline', submenu: true },
+            { html: 'Blocks', submenu: true },
+            { html: 'Alignment', submenu: true },
+            { tag: 'h1', html: 'h1.red', submenu: false },
+            { tag: 'p', html: 'p.other', submenu: false },
+            { tag: 'span', html: 'span.inline', submenu: false },
+            { tag: 'h2', html: 'h2.advanced', submenu: false },
+            { tag: 'h3', html: 'h3.advanced', submenu: false },
+            { tag: 'h4', html: 'h4.advanced', submenu: false }
+          ],
+          choice: Option.none()
+        },
+        {
+          content_css: [
+            '/project/src/plugins/importcss/test/css/basic.css',
+            '/project/src/plugins/importcss/test/css/advanced.css',
+            '/project/src/plugins/importcss/test/css/other-adv.css'
+          ],
+          importcss_append: true
+        }
+      )
+    ),
 
-    editor.contentCSS.push('test1.css');
+    Log.step(
+      'TBA',
+      'importcss: content_css with one file, with merge classes',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h1', html: 'h1.red', submenu: false },
+            { tag: 'p', html: 'p.other', submenu: false },
+            { tag: 'span', html: 'span.inline', submenu: false }
+          ],
+          choice: Option.none()
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_merge_classes: false
+        }
+      )
+    ),
 
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' },
-          { selectorText: '.c' }
-        ]
-      }
-    ]);
+    Log.step(
+      'TBA',
+      'importcss: content_css with one file, append false, selector filter (string)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h1', html: 'h1.red', submenu: false }
+          ],
+          choice: Option.some('h1.red')
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_append: false,
+          importcss_selector_filter: '.red'
+        }
+      )
+    ),
 
-    const items = evt.control.items();
-    LegacyUnit.equal(items.length, 3);
-    LegacyUnit.equal(items[0].text(), 'g1');
-    LegacyUnit.equal(items[0].settings.menu[0].text, 'my format a');
-    LegacyUnit.equal(items[1].text(), 'g2');
-    LegacyUnit.equal(items[1].settings.menu[0].text, 'my format b');
-    LegacyUnit.equal(items[2].text(), 'g3');
-    LegacyUnit.equal(items[2].settings.menu[0].text, 'c');
-  });
+    Log.step(
+      'TBA',
+      'importcss: content_css with one file, append false, selector filter (function)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'p', html: 'p.other', submenu: false },
+            { tag: 'span', html: 'span.inline', submenu: false }
+          ],
+          choice: Option.some('p.other')
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_append: false,
+          importcss_selector_filter: (sel) => {
+            return sel.indexOf('p') > -1 || sel.indexOf('inline') > -1;
+          }
+        }
+      )
+    ),
 
-  suite.test('Import custom importcss_exclusive: true', function (editor: Editor) {
-    editor.settings.importcss_exclusive = true;
-    editor.settings.importcss_groups = [
-      { title: 'g1' },
-      { title: 'g2' }
-    ];
+    Log.step(
+      'TBA',
+      'importcss: content_css with one file, append false, selector filter (regex)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'span', html: 'span.inline', submenu: false }
+          ],
+          choice: Option.some('span.inline')
+        },
+        {
+          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          importcss_append: false,
+          importcss_selector_filter: /inline/
+        }
+      )
+    ),
 
-    editor.contentCSS.push('test1.css');
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' },
-          { selectorText: '.c' }
-        ]
-      }
-    ]);
+    Log.step(
+      'TBA',
+      'importcss: content_css with three files, append false, file_filter (string)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h2', html: 'h2.advanced', submenu: false },
+            { tag: 'h3', html: 'h3.advanced', submenu: false }
+          ],
+          choice: Option.some('h2.advanced')
+        },
+        {
+          content_css: [
+            '/project/src/plugins/importcss/test/css/basic.css',
+            '/project/src/plugins/importcss/test/css/advanced.css',
+            '/project/src/plugins/importcss/test/css/other-adv.css'
+          ],
+          importcss_append: false,
+          importcss_file_filter: 'advanced.css'
+        }
+      )
+    ),
 
-    const items = evt.control.items();
-    LegacyUnit.equal(items.length, 1);
-    LegacyUnit.equal(items[0].text(), 'g1');
-    LegacyUnit.equal(items[0].settings.menu[0].text, 'a');
-    LegacyUnit.equal(items[0].settings.menu[1].text, 'b');
-  });
+    Log.step(
+      'TBA',
+      'importcss: content_css with three files, append false, file_filter (function)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h2', html: 'h2.advanced', submenu: false },
+            { tag: 'h3', html: 'h3.advanced', submenu: false },
+            { tag: 'h4', html: 'h4.advanced', submenu: false }
+          ],
+          choice: Option.some('h2.advanced')
+        },
+        {
+          content_css: [
+            '/project/src/plugins/importcss/test/css/basic.css',
+            '/project/src/plugins/importcss/test/css/advanced.css',
+            '/project/src/plugins/importcss/test/css/other-adv.css'
+          ],
+          importcss_append: false,
+          importcss_file_filter: (href) => {
+            return href.indexOf('adv') > -1;
+          }
+        }
+      )
+    ),
 
-  suite.test('Import custom importcss_exclusive: false', function (editor: Editor) {
-    editor.settings.importcss_exclusive = false;
-    editor.settings.importcss_groups = [
-      { title: 'g1' },
-      { title: 'g2' }
-    ];
+    Log.step(
+      'TBA',
+      'importcss: content_css with three files, append false, file_filter (regex)',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { tag: 'h2', html: 'h2.advanced', submenu: false },
+            { tag: 'h3', html: 'h3.advanced', submenu: false },
+            { tag: 'h4', html: 'h4.advanced', submenu: false }
+          ],
+          choice: Option.some('h2.advanced')
+        },
+        {
+          content_css: [
+            '/project/src/plugins/importcss/test/css/basic.css',
+            '/project/src/plugins/importcss/test/css/advanced.css',
+            '/project/src/plugins/importcss/test/css/other-adv.css'
+          ],
+          importcss_append: false,
+          importcss_file_filter: /adv/
+        }
+      )
+    ),
 
-    editor.contentCSS.push('test1.css');
-    const evt = fireFormatsMenuEvent(editor, [
-      {
-        href: 'test1.css', cssRules: [
-          { selectorText: '.a' },
-          { selectorText: '.b' },
-          { selectorText: '.c' }
-        ]
-      }
-    ]);
+    Log.step(
+      'TBA',
+      'importcss: content_css with three files, append false, groups',
+      sTestEditorWithSettings(
+        {
+          menuContents: [
+            { html: 'Other', submenu: true },
+            { html: 'Advanced', submenu: true }
+          ],
+          choice: Option.none()
+        },
+        {
+          content_css: [
+            '/project/src/plugins/importcss/test/css/basic.css',
+            '/project/src/plugins/importcss/test/css/advanced.css',
+            '/project/src/plugins/importcss/test/css/other-adv.css'
+          ],
+          importcss_append: false,
+          importcss_groups: [
+            { title: 'Advanced', filter: /.adv/ },
+            { title: 'Other', custom: 'B' }
+          ]
+        }
+      )
+    )
+  ], () => success(), failure);
 
-    const items = evt.control.items();
-    LegacyUnit.equal(items.length, 2);
-    LegacyUnit.equal(items[0].text(), 'g1');
-    LegacyUnit.equal(items[0].settings.menu[0].text, 'a');
-    LegacyUnit.equal(items[0].settings.menu[1].text, 'b');
-    LegacyUnit.equal(items[1].text(), 'g2');
-    LegacyUnit.equal(items[1].settings.menu[0].text, 'a');
-    LegacyUnit.equal(items[1].settings.menu[1].text, 'b');
-  });
-
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, appendTeardown(editor, suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    plugins: 'importcss',
-    skin_url: '/project/js/tinymce/skins/oxide'
-  }, success, failure);
 });
