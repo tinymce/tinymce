@@ -11,6 +11,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
   Plugin();
   SilverTheme();
 
+  const generalSelectors = {
+    type: 'label.tox-label:contains(Row type) + div.tox-selectfield>select',
+    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
+    height: 'label.tox-label:contains(Height) + input.tox-textfield'
+  };
+
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
@@ -42,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, baseData),
+        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancel dialog', false)
       ]);
     };
@@ -53,11 +59,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sSetDialogContents(editor, {
+        TableTestUtils.sSetDialogValues({
           height: '10',
           align: 'right',
           type: 'thead'
-        }),
+        }, false, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
       ]);
@@ -69,11 +75,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
 
-        TableTestUtils.sSetDialogContents(editor, {
+        TableTestUtils.sSetDialogValues({
           height: '',
           align: '',
           type: 'thead'
-        }),
+        }, false, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
       ]);
@@ -85,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(advHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, advData),
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking cancel', false)
       ]);
     };
@@ -104,14 +110,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         ),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sSetDialogContents(editor, {
+        TableTestUtils.sSetDialogValues({
           align: '',
           height: '',
           type: 'tbody',
           bordercolor: 'blue',
           borderstyle: 'dotted',
           backgroundcolor: '#ff0000'
-        }),
+        }, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(
           '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
@@ -131,15 +137,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
         tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, advData),
-        TableTestUtils.sSetDialogContents(editor, {
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues({
           align: '',
           height: '',
           type: 'tbody',
           backgroundcolor: '',
           bordercolor: '',
           borderstyle: '',
-        }),
+        }, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(
           '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
@@ -203,8 +209,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(initialHtml),
         tinyApis.sSelect('tr:nth-child(2) td:nth-child(2)', [0]),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, initialData),
-        TableTestUtils.sSetDialogContents(editor, newData),
+        TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(newHtml),
       ]);

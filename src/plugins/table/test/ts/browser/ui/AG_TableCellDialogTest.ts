@@ -1,6 +1,5 @@
-import { GeneralSteps, Log, Pipeline } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from '../../../../../../themes/silver/main/ts/Theme';
@@ -17,56 +16,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     scope: 'label.tox-label:contains(Scope) + div.tox-selectfield>select',
     halign: 'label.tox-label:contains(H Align) + div.tox-selectfield>select',
     valign: 'label.tox-label:contains(V Align) + div.tox-selectfield>select'
-  };
-
-  const advSelectors = {
-    borderstyle: 'label.tox-label:contains(Border style) + div.tox-selectfield>select',
-    bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
-    backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
-  };
-
-  const sSetTabInputValues = (data, tabSelectors) => {
-    const steps = [];
-    Obj.mapToArray(tabSelectors, (value, key) => {
-      if (Obj.has(data, key)) {
-        steps.push(TableTestUtils.sSetInputValue(key, tabSelectors[key], data[key]));
-      }
-    });
-    return GeneralSteps.sequence(steps);
-  };
-
-  const sSetDialogContents = (data, hasAdvanced) => {
-    if (hasAdvanced) {
-      return GeneralSteps.sequence([
-        TableTestUtils.sGotoGeneralTab,
-        sSetTabInputValues(data, generalSelectors),
-        TableTestUtils.sGotoAdvancedTab,
-        sSetTabInputValues(data, advSelectors)
-      ]);
-    }
-    return sSetTabInputValues(data, generalSelectors);
-  };
-
-  const sAssertTabContents = (data, tabSelectors) => {
-    const steps = [];
-    Obj.mapToArray(tabSelectors, (value, key) => {
-      if (Obj.has(data, key)) {
-        steps.push(TableTestUtils.sCheckInputValue(key, value, data[key]));
-      }
-    });
-    return GeneralSteps.sequence(steps);
-  };
-
-  const sAssertDialogContents = (data, hasAdvanced) => {
-    if (hasAdvanced) {
-      return GeneralSteps.sequence([
-        TableTestUtils.sGotoGeneralTab,
-        sAssertTabContents(data, generalSelectors),
-        TableTestUtils.sGotoAdvancedTab,
-        sAssertTabContents(data, advSelectors)
-      ]);
-    }
-    return sAssertTabContents(data, generalSelectors);
   };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
@@ -111,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(baseData, false),
+        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', false)
       ]);
     };
@@ -122,15 +71,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(baseData, false),
-        sSetDialogContents({
+        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+        TableTestUtils.sSetDialogValues({
           width: '100',
           height: '101',
           celltype: 'td',
           scope: '',
           halign: '',
           valign: '',
-        }, false),
+        }, false, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', true),
         tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
       ]);
@@ -157,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(complexHtml),
         tinyApis.sSelect('th', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(complexData, true),
+        TableTestUtils.sAssertDialogValues(complexData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', false)
       ]);
     };
@@ -183,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent('<table><tr><td>X</td></tr></table>'),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        sSetDialogContents(advData, true),
+        TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml)
       ]);
@@ -224,8 +173,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(initialHtml),
         tinyApis.sSelect('td:nth-child(2)', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(baseAdvData, true),
-        sSetDialogContents(newData, true),
+        TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit', true),
         tinyApis.sAssertContent(newHtml),
       ]);
@@ -265,8 +214,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(advHtml),
         tinyApis.sSelect('th', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(advData, true),
-        sSetDialogContents(emptyData, true),
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(emptyData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(emptyTable)
       ]);
@@ -292,7 +241,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(advHtml),
         tinyApis.sSelect('th', [0]),
         tinyApis.sExecCommand('mceTableCellProps'),
-        sAssertDialogContents(advData, true),
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', false),
       ]);
     };
@@ -318,16 +267,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(baseAdvData, true),
+        TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('click cancel', false),
         tinyApis.sAssertContent(noSelectBaseHtml),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(baseAdvData, true),
-        sSetDialogContents(advData, true),
+        TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml),
         TableTestUtils.sOpenTableDialog,
-        sAssertDialogContents(advData, true),
+        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
       ]);
     };
 

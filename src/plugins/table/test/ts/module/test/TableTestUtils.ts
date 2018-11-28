@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logge
 import { document } from '@ephox/dom-globals';
 import { TinyDom } from '@ephox/mcagar';
 import { Body, Element, SelectorFind, Value } from '@ephox/sugar';
+import { Obj } from '@ephox/katamari';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
@@ -172,7 +173,7 @@ const cGetInput = (selector: string) => Chain.control(
   Guard.addLogging('Get input')
 );
 
-const sCheckInputValue = (label, selector, expected) => {
+const sAssertInputValue = (label, selector, expected) => {
   return Logger.t(label,
     Chain.asStep({}, [
       cGetInput(selector),
@@ -206,6 +207,56 @@ const sGotoAdvancedTab = Chain.asStep({}, [
   Mouse.cClick
 ]);
 
+const advSelectors = {
+  borderstyle: 'label.tox-label:contains(Border style) + div.tox-selectfield>select',
+  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
+  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+};
+
+const sSetTabInputValues = (data, tabSelectors) => {
+  const steps = [];
+  Obj.mapToArray(tabSelectors, (value, key) => {
+    if (Obj.has(data, key)) {
+      steps.push(sSetInputValue(key, tabSelectors[key], data[key]));
+    }
+  });
+  return GeneralSteps.sequence(steps);
+};
+
+const sSetDialogValues = (data, hasAdvanced, generalSelectors) => {
+  if (hasAdvanced) {
+    return GeneralSteps.sequence([
+      sGotoGeneralTab,
+      sSetTabInputValues(data, generalSelectors),
+      sGotoAdvancedTab,
+      sSetTabInputValues(data, advSelectors)
+    ]);
+  }
+  return sSetTabInputValues(data, generalSelectors);
+};
+
+const sAssertTabContents = (data, tabSelectors) => {
+  const steps = [];
+  Obj.mapToArray(tabSelectors, (value, key) => {
+    if (Obj.has(data, key)) {
+      steps.push(sAssertInputValue(key, value, data[key]));
+    }
+  });
+  return GeneralSteps.sequence(steps);
+};
+
+const sAssertDialogValues = (data, hasAdvanced, generalSelectors) => {
+  if (hasAdvanced) {
+    return GeneralSteps.sequence([
+      sGotoGeneralTab,
+      sAssertTabContents(data, generalSelectors),
+      sGotoAdvancedTab,
+      sAssertTabContents(data, advSelectors)
+    ]);
+  }
+  return sAssertTabContents(data, generalSelectors);
+};
+
 export default {
   sAssertDialogPresence,
   sAssertSelectValue,
@@ -215,8 +266,10 @@ export default {
   sOpenTableDialog,
   sGotoGeneralTab,
   sGotoAdvancedTab,
-  sCheckInputValue,
+  sAssertInputValue,
+  sAssertDialogValues,
   sSetInputValue,
+  sSetDialogValues,
   sClickDialogButton,
   sAssertElementStructure,
   sAssertApproxElementStructure,
