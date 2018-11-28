@@ -15,7 +15,13 @@ export type ImageDialogData = {
     height: string
   },
   caption: string,
-  class: string
+  class: string,
+
+  border: string,
+  hspace: string,
+  style: string,
+  vspace: string,
+  borderstyle: string,
 }
 
 export const dialogSelectors = {
@@ -35,21 +41,21 @@ const cGetTopmostDialog = Chain.control(
 );
 
 
-const cUpdateTitle = (data: Partial<ImageDialogData>) => Chain.control(
+const cUpdateSource = (data: Partial<ImageDialogData>) => Chain.control(
   Chain.fromChains([
     Chain.inject(Body.body()),
     UiFinder.cFindIn(dialogSelectors.sourceInput),
-    Chain.op((title: Element) => Value.set(title, data.src.value))
+    Chain.op((source: Element) => Value.set(source, data.src.value)),
   ]),
-  Guard.addLogging('Get input')
+  Guard.addLogging('Update source input')
 );
 
 const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
   return Chain.control(
-      NamedChain.asChain([
+    NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
-      NamedChain.direct('parent', cUpdateTitle(data), '_'),
+      NamedChain.direct('parent', cUpdateSource(data), '_'),
       NamedChain.outputInput
     ]),
     Guard.addLogging('Fill active dialog')
