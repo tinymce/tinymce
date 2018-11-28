@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerSpanClassTe
       api.sAssertContentPresence({
         span: 1
       }),
-      ui.sClickOnToolbar('click spellcheck button', 'button[title="Spellcheck"]'),
+      ui.sClickOnToolbar('click spellcheck button', '[title="Spellcheck"] > .tox-tbtn'),
       api.sAssertContentPresence({
         'span': 4,
         '.bold.mce-spellchecker-word': 0,
