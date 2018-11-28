@@ -21,10 +21,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
         ),
         tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
         tinyApis.sExecCommand('mceTableCellProps'),
-        TableTestUtils.sSetPartialDialogContents(editor, {
-          // This is now case sensitive
-          backgroundcolor: 'red'
-        }),
+        TableTestUtils.sGotoAdvancedTab,
+        TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
         TableTestUtils.sClickDialogButton('Clicking Save', true),
         tinyApis.sAssertContent(
           '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: red;">a</td><td style="background-color: red;">b</td></tr></tbody></table>'

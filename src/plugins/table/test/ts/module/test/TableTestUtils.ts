@@ -172,19 +172,19 @@ const cGetInput = (selector: string) => Chain.control(
   Guard.addLogging('Get input')
 );
 
-const sCheckInputValue = (Label, selector, expected) => {
-  return Logger.t(Label,
+const sCheckInputValue = (label, selector, expected) => {
+  return Logger.t(label,
     Chain.asStep({}, [
       cGetInput(selector),
       Chain.op((element) => {
-        Assertions.assertEq(`The input value for ${Label} should be: `, expected, Value.get(element));
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       })
     ]),
   );
 };
 
-const sSetInputValue = (Label, selector, value) => {
-  return Logger.t(Label,
+const sSetInputValue = (label, selector, value) => {
+  return Logger.t(label,
     Chain.asStep({}, [
       cGetInput(selector),
       Chain.op((element) => {
@@ -193,6 +193,12 @@ const sSetInputValue = (Label, selector, value) => {
     ]),
   );
 };
+
+const sGotoGeneralTab = Chain.asStep({}, [
+  Chain.inject(Body.body()),
+  UiFinder.cFindIn('div.tox-tab:contains(General)'),
+  Mouse.cClick
+]);
 
 const sGotoAdvancedTab = Chain.asStep({}, [
   Chain.inject(Body.body()),
@@ -207,6 +213,7 @@ export default {
   sOpenToolbarOn,
   sAssertTableStructure,
   sOpenTableDialog,
+  sGotoGeneralTab,
   sGotoAdvancedTab,
   sCheckInputValue,
   sSetInputValue,
