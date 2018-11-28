@@ -27,8 +27,8 @@ export type ImageDialogData = {
 export const dialogSelectors = {
   sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
   descriptionInput: 'label.tox-label:contains("Image description") + input.tox-textfield',
-  widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Width") + input.tox-textfield',
-  heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Height") + input.tox-textfield',
+  widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension width") + input.tox-textfield',
+  heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension height") + input.tox-textfield',
   captionRadio: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
 };
 
@@ -44,28 +44,49 @@ const cGetTopmostDialog = Chain.control(
 const cUpdateSource = (data: Partial<ImageDialogData>) => (!data.src || !data.src.value) ? [] : [
   Chain.control(
     Chain.fromChains([
-      Chain.inject(Body.body()),
       UiFinder.cFindIn(dialogSelectors.sourceInput),
-      Chain.op((source: Element) => Value.set(source, data.src.value))
+      Chain.op((component: Element) => Value.set(component, data.src.value))
     ]),
     Guard.addLogging('Update source input')
   )
 ];
+
 const cUpdateAlt = (data: Partial<ImageDialogData>) => (!data.alt) ? [] : [
   Chain.control(
     Chain.fromChains([
-      Chain.inject(Body.body()),
       UiFinder.cFindIn(dialogSelectors.descriptionInput),
-      Chain.op((source: Element) => Value.set(source, data.alt))
+      Chain.op((component: Element) => Value.set(component, data.alt))
     ]),
-    Guard.addLogging('Update source input')
+    Guard.addLogging('Update description (alt text) input')
+  )
+];
+
+const cUpdateWidth = (data: Partial<ImageDialogData>) => (!data.dimensions || !data.dimensions.width) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.widthInput),
+      Chain.op((source: Element) => Value.set(source, data.dimensions.width)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cUpdateHeight = (data: Partial<ImageDialogData>) => (!data.dimensions || !data.dimensions.height) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.heightInput),
+      Chain.op((source: Element) => Value.set(source, data.dimensions.height)),
+    ]),
+    Guard.addLogging('Update width input')
   )
 ];
 
 const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
   const updateDialogFields = Arr.flatten([
     cUpdateSource(data),
-    cUpdateAlt(data)
+    cUpdateAlt(data),
+    cUpdateWidth(data),
+    cUpdateHeight(data),
   ]);
 
   const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'))
