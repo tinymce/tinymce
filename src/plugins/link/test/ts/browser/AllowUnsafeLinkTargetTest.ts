@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (su
         tinyApis.sSetContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>'),
         tinyApis.sSelect('p', [0]),
         TestLinkUi.sOpenLinkDialog,
-        TestLinkUi.sAssertDialogContents(editor, {
+        TestLinkUi.sAssertDialogContents({
             text: 'Google',
             title: '',
             href: 'http://www.google.com',

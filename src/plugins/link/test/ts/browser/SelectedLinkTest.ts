@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
         tinyApis.sSetContent('<p><a href="http://tinymce.com">tiny</a></p>'),
         tinyApis.sSetSelection([0], 1, [0], 1),
         tinyApis.sExecCommand('mcelink'),
-        TestLinkUi.sAssertDialogContents(editor, {
+        TestLinkUi.sAssertDialogContents({
           href: '',
           text: '',
           title: '',

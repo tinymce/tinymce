@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
         TestLinkUi.sOpenLinkDialog,
 
         FocusTools.sSetActiveValue(doc, url),
-        TestLinkUi.sAssertDialogContents(editor, {
+        TestLinkUi.sAssertDialogContents({
           href: url,
           text: 'Something',
           title: '',
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
         TestLinkUi.sOpenLinkDialog,
 
         FocusTools.sSetActiveValue(doc, url),
-        TestLinkUi.sAssertDialogContents(editor, {
+        TestLinkUi.sAssertDialogContents({
           href: url,
           text: 'Something',
           title: '',
