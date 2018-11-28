@@ -39,17 +39,17 @@ const setup = (extras: WindowManagerSetup) => {
   const confirmDialog = ConfirmDialog.setup(extras);
 
   // Some plugins break with this API type specified. Investigate.
-  const open = (config/*: Types.Dialog.DialogApi<T>*/, params) => {
+  const open = (config/*: Types.Dialog.DialogApi<T>*/, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void) => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.toolbar());
+      return openInlineDialog(config, extras.backstage.shared.anchors.toolbar(), closeWindow);
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.cursor());
+      return openInlineDialog(config, extras.backstage.shared.anchors.cursor(), closeWindow);
     } else {
-      return openModalDialog(config);
+      return openModalDialog(config, closeWindow);
     }
   };
 
-  const openModalDialog = (config) => {
+  const openModalDialog = (config, closeWindow) => {
     const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
@@ -66,6 +66,7 @@ const setup = (extras: WindowManagerSetup) => {
           redial: DialogManager.DialogManager.redial,
           closeWindow: () => {
             ModalDialog.hide(dialog.dialog);
+            closeWindow(dialog.instanceApi);
           }
         },
         extras.backstage
@@ -79,7 +80,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor) => {
+  const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void) => {
     const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData: Record<string, string>, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData(internalInitialData, dataValidator);
 
@@ -95,6 +96,7 @@ const setup = (extras: WindowManagerSetup) => {
           redial: DialogManager.DialogManager.redial,
           closeWindow: () => {
             InlineView.hide(inlineDialog);
+            closeWindow(dialogUi.instanceApi);
           }
         },
         extras.backstage
@@ -142,7 +144,7 @@ const setup = (extras: WindowManagerSetup) => {
     });
   };
 
-  const close = (instanceApi: Types.Dialog.DialogInstanceApi<any>) => {
+  const close = (instanceApi) => {
     instanceApi.close();
   };
 
