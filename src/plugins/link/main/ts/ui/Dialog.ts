@@ -41,6 +41,7 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
 
   if (!url) {
     removeLink();
+    api.close();
     return;
   }
 
