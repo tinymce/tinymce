@@ -85,11 +85,11 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                 s.element('div', {
                   classes: [arr.has('tox-form__controls-h-stack')],
                   children: [
-                    fieldStructure(s, str, arr, 'Width'),
+                    fieldStructure(s, str, arr, 'Dimension width'),
                     s.element('span', {
                       html: str.is('×')
                     }),
-                    fieldStructure(s, str, arr, 'Height'),
+                    fieldStructure(s, str, arr, 'Dimension height'),
                     s.element('button', {
                       classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
                     })
