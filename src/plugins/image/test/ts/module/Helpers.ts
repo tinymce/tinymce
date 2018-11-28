@@ -1,5 +1,5 @@
 import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard } from '@ephox/agar';
-import { Result } from '@ephox/katamari';
+import { Result, Arr } from '@ephox/katamari';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Element, Body, Value } from '@ephox/sugar';
 import { Editor } from '../../../../../core/main/ts/api/Editor';
@@ -25,11 +25,11 @@ export type ImageDialogData = {
 };
 
 export const dialogSelectors = {
-  sourceInput : 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
-  descriptionInput : 'label.tox-label:contains("Image description") + input.tox-textfield',
-  widthInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Width") + input.tox-textfield',
-  heightInput : 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Height") + input.tox-textfield',
-  captionRadio : 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
+  sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
+  descriptionInput: 'label.tox-label:contains("Image description") + input.tox-textfield',
+  widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Width") + input.tox-textfield',
+  heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Height") + input.tox-textfield',
+  captionRadio: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
 };
 
 const cGetTopmostDialog = Chain.control(
@@ -40,23 +40,44 @@ const cGetTopmostDialog = Chain.control(
   Guard.addLogging('Get top most dialog')
 );
 
-const cUpdateSource = (data: Partial<ImageDialogData>) => Chain.control(
-  Chain.fromChains([
-    Chain.inject(Body.body()),
-    UiFinder.cFindIn(dialogSelectors.sourceInput),
-    Chain.op((source: Element) => Value.set(source, data.src.value)),
-  ]),
-  Guard.addLogging('Update source input')
-);
+// TODO: Consider de-duping, but it might be harder to understand
+const cUpdateSource = (data: Partial<ImageDialogData>) => (!data.src || !data.src.value) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      Chain.inject(Body.body()),
+      UiFinder.cFindIn(dialogSelectors.sourceInput),
+      Chain.op((source: Element) => Value.set(source, data.src.value))
+    ]),
+    Guard.addLogging('Update source input')
+  )
+];
+const cUpdateAlt = (data: Partial<ImageDialogData>) => (!data.alt) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      Chain.inject(Body.body()),
+      UiFinder.cFindIn(dialogSelectors.descriptionInput),
+      Chain.op((source: Element) => Value.set(source, data.alt))
+    ]),
+    Guard.addLogging('Update source input')
+  )
+];
 
 const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
+  const updateDialogFields = Arr.flatten([
+    cUpdateSource(data),
+    cUpdateAlt(data)
+  ]);
+
+  const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'))
+
   return Chain.control(
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
-      NamedChain.direct('parent', cUpdateSource(data), '_'),
+    ].concat(cUpdateDialogFields).concat([
       NamedChain.outputInput
-    ]),
+    ])
+    ),
     Guard.addLogging('Fill active dialog')
   );
 };
@@ -85,9 +106,9 @@ const cInputForLabel = (labelText: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'dialog'),
     NamedChain.direct('dialog', UiFinder.cFindIn('label:contains("' + labelText + '")'), 'label'),
-    NamedChain.direct('label', Chain.mapper((elem: Element) => (<HTMLLabelElement> elem.dom()).htmlFor), 'id'),
+    NamedChain.direct('label', Chain.mapper((elem: Element) => (<HTMLLabelElement>elem.dom()).htmlFor), 'id'),
     NamedChain.merge(['dialog', 'id'], 'pair'),
-    NamedChain.direct('pair', Chain.binder((pair: {dialog: Element, id: string}) => UiFinder.findIn(pair.dialog, '#' + pair.id)), 'field'),
+    NamedChain.direct('pair', Chain.binder((pair: { dialog: Element, id: string }) => UiFinder.findIn(pair.dialog, '#' + pair.id)), 'field'),
     NamedChain.output('field')
   ]),
   Guard.addLogging('Input for label')
@@ -99,7 +120,7 @@ const cSizeInputForLabel = (labelText: string) => Chain.control(
     NamedChain.direct('dialog', UiFinder.cFindIn('.tox-form__controls-h-stack span:contains("' + labelText + '")'), 'label'),
     NamedChain.direct('label', Chain.mapper((elem: Element) => elem.dom().id), 'id'),
     NamedChain.merge(['dialog', 'id'], 'pair'),
-    NamedChain.direct('pair', Chain.binder((pair: {dialog: Element, id: string}) => UiFinder.findIn(pair.dialog, `[aria-labelledby=${pair.id}]`)), 'field'),
+    NamedChain.direct('pair', Chain.binder((pair: { dialog: Element, id: string }) => UiFinder.findIn(pair.dialog, `[aria-labelledby=${pair.id}]`)), 'field'),
     NamedChain.output('field')
   ]),
   Guard.addLogging('Input for label')
