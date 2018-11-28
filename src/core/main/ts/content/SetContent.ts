@@ -112,7 +112,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
   return content;
 };
 
-const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => {
+export const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => {
   args.format = args.format ? args.format : defaultFormat;
   args.set = true;
   args.content = isTreeNode(content) ? '' : content;
@@ -126,8 +126,4 @@ const setContent = (editor: Editor, content: Content, args: SetContentArgs = {})
     Fun.constant(content),
     (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
   );
-};
-
-export {
-  setContent
 };
