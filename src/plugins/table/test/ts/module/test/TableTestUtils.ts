@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyDom } from '@ephox/mcagar';
-import { Body, Element, SelectorFind, Value } from '@ephox/sugar';
+import { Body, Element, SelectorFind, Value, Node } from '@ephox/sugar';
 import { Obj } from '@ephox/katamari';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
@@ -178,6 +178,10 @@ const sAssertInputValue = (label, selector, expected) => {
     Chain.asStep({}, [
       cGetInput(selector),
       Chain.op((element) => {
+        if (element.dom().type === 'checkbox') {
+          Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+          return;
+        }
         Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       })
     ]),
@@ -189,6 +193,10 @@ const sSetInputValue = (label, selector, value) => {
     Chain.asStep({}, [
       cGetInput(selector),
       Chain.op((element) => {
+        if (element.dom().type === 'checkbox') {
+          element.dom().checked = value;
+          return;
+        }
         Value.set(element, value);
       })
     ]),
