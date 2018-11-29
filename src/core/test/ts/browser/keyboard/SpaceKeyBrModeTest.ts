@@ -66,6 +66,22 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyBrModeTest', (success,
         tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sAssertSelection([2], 1, [2], 1),
         tinyApis.sAssertContent('a<br />&nbsp;b')
+      ])),
+      Logger.t('Press space at start of text after block', GeneralSteps.sequence([
+        tinyApis.sFocus,
+        tinyApis.sSetContent('<p>a</p>b'),
+        tinyApis.sSetCursor([1], 0),
+        tinyActions.sContentKeystroke(Keys.space(), {}),
+        tinyApis.sAssertSelection([1], 1, [1], 1),
+        tinyApis.sAssertContent('<p>a</p>&nbsp;b')
+      ])),
+      Logger.t('Press space end of text before block', GeneralSteps.sequence([
+        tinyApis.sFocus,
+        tinyApis.sSetContent('a<p>b</p>'),
+        tinyApis.sSetCursor([0], 1),
+        tinyActions.sContentKeystroke(Keys.space(), {}),
+        tinyApis.sAssertSelection([0], 2, [0], 2),
+        tinyApis.sAssertContent('a&nbsp;<p>b</p>')
       ]))
     ], onSuccess, onFailure);
   }, {
