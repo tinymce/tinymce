@@ -739,7 +739,7 @@ module.exports = function (grunt) {
         config: 'tsconfig.json',
         testfiles: ['src/**/test/ts/**/*Test.ts'],
         overallTimeout: 600000,
-        singleTimeout: 300000,
+        singleTimeout: 60000,
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: 'standard'
