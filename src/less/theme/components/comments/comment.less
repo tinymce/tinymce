@@ -63,6 +63,11 @@
     margin: 0;
   }
 
+  .tox-comment__body textarea {
+    resize: both;
+    overflow: auto;
+  }
+
   .tox-comment--buttonspacing {
     padding-top: @pad-md;
 
@@ -123,7 +128,7 @@
   }
 
   .tox-comment--gradient::after {
-    > *:first-child {
+    //> *:first-child {
       background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 100%);
       content: "";
       display: block;
@@ -131,7 +136,7 @@
       margin-top: -40px;
       position: relative;
       width: 100%;
-    }
+    //}
   }
 
   .tox-comment--overlay {
