@@ -740,7 +740,7 @@ module.exports = function (grunt) {
         testfiles: ['src/**/test/ts/**/*Test.ts'],
         overallTimeout: 600000,
         singleTimeout: 300000,
-        retries: 1,
+        retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: 'standard'
       },
