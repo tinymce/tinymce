@@ -734,15 +734,15 @@ module.exports = function (grunt) {
     },
 
     'bedrock-auto': {
-      phantomjs: {
-        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs',
+      standard: {
+        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless',
         config: 'tsconfig.json',
         testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
+        retries: 1,
         customRoutes: 'src/core/test/json/routes.json',
-        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs'
+        name: 'standard'
       },
       'chrome-headless': {
         browser: 'chrome-headless',

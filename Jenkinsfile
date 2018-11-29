@@ -81,7 +81,7 @@ node("primary") {
           }
 
 
-          def bedrock = "yarn grunt bedrock-auto:phantomjs --bedrock-browser=" + permutation.browser
+          def bedrock = "yarn grunt bedrock-auto:standard --bedrock-browser=" + permutation.browser
 
           def successfulTests = true
 
