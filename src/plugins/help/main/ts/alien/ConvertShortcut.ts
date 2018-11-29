@@ -17,7 +17,7 @@ const convertText = (source: string) => {
     meta: '&#x2318;'
   };
   const other = {
-    meta: 'Ctrl'
+    meta: 'Ctrl '
   };
   const replace: Record<string, string> = Env.mac ? mac : other;
 
