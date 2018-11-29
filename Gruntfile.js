@@ -742,7 +742,7 @@ module.exports = function (grunt) {
         singleTimeout: 60000,
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
-        name: 'standard'
+        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
       },
       'chrome-headless': {
         browser: 'chrome-headless',
