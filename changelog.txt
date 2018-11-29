@@ -1,4 +1,5 @@
 Version 5.0.0-preview-5 (TBD)
+    Changed the background color icon to highlight background icon #TINY-2258
     Added a new `addNestedMenuItem()` UI registry function and changed all nested menu items to use the new registry functions #TINY-2230
     Changed Help dialog to be accessible to screen readers #TINY-2687
     Changed the color swatch to save selected custom colors to local storage for use across sessions #TINY-2722
