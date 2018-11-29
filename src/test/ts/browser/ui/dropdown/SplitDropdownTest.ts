@@ -38,7 +38,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           }
         },
 
-        toggleClass: '.test-selected-dropdown',
+        toggleClass: 'test-selected-dropdown',
         onExecute (dropdown, button) {
           const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
           const arg1Name = Attr.get(button.element(), 'data-test-id');
@@ -130,7 +130,9 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('span', {
             attrs: {
-              role: str.is('presentation')
+              role: str.is('button'),
+              'aria-expanded': str.is('false'),
+              'aria-haspopup': str.is('true')
             },
 
             children: [
@@ -141,8 +143,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
               }),
               s.element('button', {
                 attrs: {
-                  role: str.is('button'),
-                  ['aria-haspopup']: str.is('true')
+                  role: str.is('button')
                 }
               })
             ]
@@ -167,6 +168,33 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         1000
       ),
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
+      Assertions.sAssertStructure(
+        'Check menu opened structure',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('span', {
+            attrs: {
+              role: str.is('button'),
+              'aria-expanded': str.is('true'),
+              'aria-haspopup': str.is('true')
+            },
+
+            children: [
+              s.element('button', {
+                attrs: {
+                  role: str.is('button')
+                }
+              }),
+              s.element('button', {
+                attrs: {
+                  role: str.is('button')
+                },
+                classes: [ arr.has('test-selected-dropdown') ]
+              })
+            ]
+          });
+        }),
+        component.element()
+      ),
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       UiFinder.sNotExists(gui.element(), '[role="menu"]'),
 
