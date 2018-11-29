@@ -9,6 +9,7 @@ Version 5.0.0-preview-5 (TBD)
     Added functionality for the removed_menuitems config option #TINY-2184
     Fixed an issue in IE 11 where calling selection.getContent() would return an empty string when the editor didn't have focus #TINY-2325
     Added the ability to use a string to reference menu items in menu buttons and submenu items #TINY-2253
+    Removed compat3x plugin
 Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211
