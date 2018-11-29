@@ -49,7 +49,7 @@ gulp.task('less', function() {
 // Minify CSS
 //
 gulp.task('minify-css', function() {
-  return gulp.src('./build/skins/oxide*/*.css')
+  return gulp.src(['./build/skins/oxide*/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
     .pipe(rename({ extname: '.min.css' }))
@@ -88,6 +88,11 @@ gulp.task('copyFilesC', function() {
     .pipe(gulp.dest('./build/skin/theme/'));
 });
 
+gulp.task('copyFilesD', function() {
+  return gulp.src(['./src/demo/editors/*.js'])
+    .pipe(gulp.dest('./build/editors/'));
+});
+
 //
 // Concat icon packs and copy iconManager
 //
@@ -97,7 +102,7 @@ gulp.task('setupIconManager', function() {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('copyFiles', gulp.series('copyFilesA', 'copyFilesB', 'copyFilesC', 'setupIconManager'));
+gulp.task('copyFiles', gulp.series('copyFilesA', 'copyFilesB', 'copyFilesC', 'copyFilesD', 'setupIconManager'));
 
 //
 // Browsersync
