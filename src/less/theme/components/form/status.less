@@ -2,29 +2,34 @@
 // Status
 //
 
-@status-error-color: red;
-@status-success-color: green;
+@status-invalid-color: red;
+@status-unknown-color: orange;
+@status-valid-color: transparent; // Valid state is invisible by default
 
 .tox {
   // Statuses is used as accessory icons within .tox-control-wrap
   .tox-status {
-    //
+    // Hide all statuses not shown
+    &:not(.tox-status--valid) .tox-status__icon-valid,
+    &:not(.tox-status--unknown) .tox-status__icon-unknown,
+    &:not(.tox-status--invalid) .tox-status__icon-invalid {
+      display: none;
+    }
 
     svg {
       display: block;
     }
   }
 
-  .tox-status__icon-success svg {
-    fill: @status-success-color;
+  .tox-status__icon-valid svg {
+    fill: @status-valid-color;
   }
 
-  // TODO: Is this used?
-  .tox-status__icon-warning svg {
-    fill: orange;
+  .tox-status__icon-unknown svg {
+    fill: @status-unknown-color;
   }
 
-  .tox-status__icon-error svg {
-    fill: @status-error-color;
+  .tox-status__icon-invalid svg {
+    fill: @status-invalid-color;
   }
 }
