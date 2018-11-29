@@ -74,6 +74,11 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     buttonArgs.onshow = updateSelection(editor, currentLanguageState);
     buttonArgs.onselect = function (e) {
       currentLanguageState.set(e.control.settings.data);
+      if (startedState.get()==true)
+        {
+        startSpellchecking();
+        }
+      editor.focus();
     };
   }
 
