@@ -139,8 +139,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
           };
 
           lastColour.set(newColour);
-          setIconFillAndStroke(name === 'forecolor' ? 'color' : 'Rectangle', newColour);
-          setIconFillAndStroke(name === 'backcolor' ? 'color' : 'Rectange', newColour);
+          setIconFillAndStroke('color', newColour);
         });
       }
     } as Toolbar.ToolbarSplitButtonApi;
