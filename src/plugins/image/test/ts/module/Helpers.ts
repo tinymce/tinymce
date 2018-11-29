@@ -1,4 +1,4 @@
-import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard, TestLogs } from '@ephox/agar';
+import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard } from '@ephox/agar';
 import { Result, Arr } from '@ephox/katamari';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Element, Body, Value, Checked, SelectTag } from '@ephox/sugar';
@@ -158,13 +158,10 @@ const cInputForLabel = (labelText: string) => Chain.control(
   Guard.addLogging('Input for label')
 );
 
-const cSizeInputForLabel = (labelText: string) => Chain.control(
+const cSizeInput = (selector: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'dialog'),
-    NamedChain.direct('dialog', UiFinder.cFindIn('.tox-form__controls-h-stack span:contains("' + labelText + '")'), 'label'),
-    NamedChain.direct('label', Chain.mapper((elem: Element) => elem.dom().id), 'id'),
-    NamedChain.merge(['dialog', 'id'], 'pair'),
-    NamedChain.direct('pair', Chain.binder((pair: { dialog: Element, id: string }) => UiFinder.findIn(pair.dialog, `[aria-labelledby=${pair.id}]`)), 'field'),
+    NamedChain.direct('dialog', UiFinder.cFindIn(selector), 'field'),
     NamedChain.output('field')
   ]),
   Guard.addLogging('Input for label')
@@ -205,7 +202,7 @@ const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, 
 const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent() as string)), 'content'),
+    NamedChain.direct('editor', Chain.mapper((editor: Editor) => { return cleanHtml(editor.getContent() as string) }), 'content'),
     NamedChain.direct('content', Assertions.cAssertHtml(label, expected), 'result'),
     NamedChain.outputInput
   ]),
@@ -234,7 +231,7 @@ export {
   cFakeEvent,
   cExecCommand,
   cInputForLabel,
-  cSizeInputForLabel,
+  cSizeInput,
   cWaitForDialog,
   cSubmitDialog,
   cAssertCleanHtml,
