@@ -208,7 +208,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     return ({
       dom: {
         tag: 'span',
-        classes: ['tox-icon', 'tox-status-icon__' + name],
+        classes: ['tox-icon', 'tox-status__icon-' + name],
         innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons),
         attributes: {
           title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
@@ -223,7 +223,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       classes: ['tox-status']
     },
     components: [
-      makeIcon('checkmark', 'checkmark',  'valid'),
+      makeIcon('success', 'checkmark',  'valid'),
       makeIcon('warning'),
       makeIcon('error', 'warning')
     ]
@@ -237,7 +237,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     {
       dom: {
         tag: 'div',
-        classes: ['tox-input-wrap']
+        classes: ['tox-control-wrap']
       },
       components: [pField, memStatus.asSpec()]
     }
