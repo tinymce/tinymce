@@ -43,7 +43,7 @@ UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
         }
       }),
       cSubmitDialog(),
-      cAssertCleanHtml('Checking output', '<p><img src="src" alt="alt" width="204rf0" height="100" /></p>'),
+      cAssertCleanHtml('Checking output', '<p><img src="src" alt="alt" width="200" height="100" /></p>'),
       Editor.cRemove
     ])
   ], () => success(), failure);

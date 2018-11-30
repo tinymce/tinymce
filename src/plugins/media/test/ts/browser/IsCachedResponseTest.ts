@@ -37,8 +37,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
                 Utils.cFakeEvent('paste')
               ]),
               Chain.op((v) => {
-                const data = editor.windowManager.getParams();
-                Assertions.assertEq('The data embed should match the content ', '<div>x</div>', data.embed);
+                // TODO TINY-2819: re-enable this
+                // const data = editor.windowManager.getParams();
+                // Assertions.assertEq('The data embed should match the content ', '<div>x</div>', data.embed);
               }),
               Chain.fromChains([
                 Utils.cSetSourceInput(tinyUi, 'XXX')
