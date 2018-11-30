@@ -6,11 +6,9 @@
  */
 
 import { URL } from '@ephox/sand';
-import Arr from '../../util/Arr';
-import Fun from '../../util/Fun';
 import Uuid from '../../util/Uuid';
 import { Blob } from '@ephox/dom-globals';
-import { Type } from '@ephox/katamari';
+import { Type, Fun, Arr } from '@ephox/katamari';
 
 export interface BlobCache {
   create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string) => BlobInfo;
@@ -43,7 +41,6 @@ export interface BlobInfo {
 
 export default function (): BlobCache {
   let cache: BlobInfo[] = [];
-  const constant = Fun.constant;
 
   const mimeToExt = function (mime) {
     const mimes = {
@@ -84,13 +81,13 @@ export default function (): BlobCache {
     name = o.name || id;
 
     return {
-      id: constant(id),
-      name: constant(name),
-      filename: constant(name + '.' + mimeToExt(o.blob.type)),
-      blob: constant(o.blob),
-      base64: constant(o.base64),
-      blobUri: constant(o.blobUri || URL.createObjectURL(o.blob)),
-      uri: constant(o.uri)
+      id: Fun.constant(id),
+      name: Fun.constant(name),
+      filename: Fun.constant(name + '.' + mimeToExt(o.blob.type)),
+      blob: Fun.constant(o.blob),
+      base64: Fun.constant(o.base64),
+      blobUri: Fun.constant(o.blobUri || URL.createObjectURL(o.blob)),
+      uri: Fun.constant(o.uri)
     };
   };
 

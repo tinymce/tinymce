@@ -11,9 +11,9 @@ import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
-import Fun from '../util/Fun';
-import { Arr, Options } from '@ephox/katamari';
+import { Arr, Options, Fun } from '@ephox/katamari';
 import { Document, Range, Element, ClientRect, Node } from '@ephox/dom-globals';
+import Predicate from '../util/Predicate';
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -31,8 +31,8 @@ const isElement = NodeType.isElement;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isBlock = NodeType.matchStyleValues('display', 'block table');
 const isFloated = NodeType.matchStyleValues('float', 'left right');
-const isValidElementCaretCandidate = Fun.and(isElement, isCaretCandidate, Fun.negate(isFloated));
-const isNotPre = Fun.negate(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap'));
+const isValidElementCaretCandidate = Predicate.and(isElement, isCaretCandidate, Fun.not(isFloated));
+const isNotPre = Fun.not(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap'));
 const isText = NodeType.isText;
 const isBr = NodeType.isBr;
 const nodeIndex = DOMUtils.nodeIndex;

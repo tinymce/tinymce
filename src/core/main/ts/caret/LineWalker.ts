@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Arr from '../util/Arr';
+import ArrUtils from '../util/ArrUtils';
 import * as Dimensions from '../dom/Dimensions';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretUtils from './CaretUtils';
@@ -54,7 +54,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
         continue;
       }
 
-      if (result.length > 0 && isAboveFn(clientRect, Arr.last(result))) {
+      if (result.length > 0 && isAboveFn(clientRect, ArrUtils.last(result))) {
         line++;
       }
 
@@ -68,7 +68,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
     }
   };
 
-  targetClientRect = Arr.last(caretPosition.getClientRects());
+  targetClientRect = ArrUtils.last(caretPosition.getClientRects());
   if (!targetClientRect) {
     return result;
   }
@@ -94,10 +94,10 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
 
   const getClientRect = function (caretPosition) {
     if (direction === 1) {
-      return Arr.last(caretPosition.getClientRects());
+      return ArrUtils.last(caretPosition.getClientRects());
     }
 
-    return Arr.last(caretPosition.getClientRects());
+    return ArrUtils.last(caretPosition.getClientRects());
   };
 
   if (direction === 1) {
@@ -125,7 +125,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
       continue;
     }
 
-    if (result.length > 0 && isBelowFn(clientRect, Arr.last(result))) {
+    if (result.length > 0 && isBelowFn(clientRect, ArrUtils.last(result))) {
       line++;
     }
 

@@ -7,9 +7,9 @@
 
 import Entities from '../api/html/Entities';
 import Diff from './Diff';
-import Arr from '../util/Arr';
 import NodeType from 'tinymce/core/dom/NodeType';
 import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 
 /**
  * This module reads and applies html fragments from/to dom nodes.
@@ -79,13 +79,13 @@ const applyDiff = function (diff, elm: Element) {
 };
 
 const read = function (elm: Element): string[] {
-  return Arr.filter(Arr.map(elm.childNodes, getOuterHtml), function (item) {
+  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), function (item) {
     return item.length > 0;
   });
 };
 
 const write = function (fragments: string[], elm: Element): Element {
-  const currentFragments = Arr.map(elm.childNodes, getOuterHtml);
+  const currentFragments = Arr.map(Arr.from(elm.childNodes), getOuterHtml);
   applyDiff(Diff.diff(currentFragments, fragments), elm);
   return elm;
 };
