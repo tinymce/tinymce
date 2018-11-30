@@ -1,6 +1,7 @@
 import { Future } from 'ephox/katamari/api/Future';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
+import * as Fun from 'ephox/katamari/api/Fun';
 import * as Results from 'ephox/katamari/api/Results';
 import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
@@ -154,6 +155,21 @@ UnitTest.asynctest('FutureResultsTest', function() {
     });
   };
 
+  const testMapError = function () {
+    return new Promise(function (resolve, reject) {
+      const fut = FutureResult.error('10');
+
+      const f = function (x) {
+        return x + '.map.result';
+      };
+
+      fut.mapError(f).get(function (output) {
+        const error = output.fold(Fun.identity, Fun.identity);
+        assert.eq('10.map.result', error);
+        resolve(true);
+      });
+    });
+  };
 
   const testSpecs = function () {
     return AsyncProps.checkProps([
@@ -360,6 +376,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
     .then(testBindResult)
     .then(testBindFuture)
     .then(testMapResult)
+    .then(testMapError)
     .then(testSpecs)
     .then(function () {
       success();
