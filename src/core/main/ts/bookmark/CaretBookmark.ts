@@ -7,10 +7,10 @@
 
 import NodeType from '../dom/NodeType';
 import DomUtils from '../api/dom/DOMUtils';
-import Fun from '../util/Fun';
-import Arr from '../util/Arr';
+import ArrUtils from '../util/ArrUtils';
 import CaretPosition from '../caret/CaretPosition';
 import { Node } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 
 /**
  * This module creates or resolves xpath like string representation of a CaretPositions.
@@ -50,7 +50,7 @@ const getChildNodes = (node: Node): Node[] => {
     return [];
   }
 
-  return Arr.reduce(node.childNodes, function (result, node) {
+  return ArrUtils.reduce(node.childNodes, function (result, node) {
     if (isBogus(node) && node.nodeName !== 'BR') {
       result = result.concat(getChildNodes(node));
     } else {
@@ -79,9 +79,9 @@ const normalizedNodeIndex = (node: Node): number => {
   let nodes, index, numTextFragments;
 
   nodes = getChildNodes(normalizedParent(node));
-  index = Arr.findIndex(nodes, equal(node), node);
+  index = ArrUtils.findIndex(nodes, equal(node), node);
   nodes = nodes.slice(0, index + 1);
-  numTextFragments = Arr.reduce(nodes, function (result, node, i) {
+  numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
     if (isText(node) && isText(nodes[i - 1])) {
       result++;
     }
@@ -89,8 +89,8 @@ const normalizedNodeIndex = (node: Node): number => {
     return result;
   }, 0);
 
-  nodes = Arr.filter(nodes, NodeType.matchNodeNames(node.nodeName));
-  index = Arr.findIndex(nodes, equal(node), node);
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames(node.nodeName));
+  index = ArrUtils.findIndex(nodes, equal(node), node);
 
   return index - numTextFragments;
 };
@@ -144,8 +144,8 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
 
   path.push(createPathItem(container));
   parents = parentsUntil(root, container);
-  parents = Arr.filter(parents, Fun.negate(NodeType.isBogus));
-  path = path.concat(Arr.map(parents, function (node) {
+  parents = ArrUtils.filter(parents, Fun.not(NodeType.isBogus));
+  path = path.concat(ArrUtils.map(parents, function (node) {
     return createPathItem(node);
   }));
 
@@ -155,11 +155,11 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
 const resolvePathItem = (node: Node, name: string, index: number): Node => {
   let nodes = getChildNodes(node);
 
-  nodes = Arr.filter(nodes, function (node, index) {
+  nodes = ArrUtils.filter(nodes, function (node, index) {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
-  nodes = Arr.filter(nodes, NodeType.matchNodeNames(name));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames(name));
   return nodes[index];
 };
 
@@ -203,7 +203,7 @@ const resolve = (root: Node, path: string): CaretPosition => {
   path = parts[0].split('/');
   offset = parts.length > 1 ? parts[1] : 'before';
 
-  container = Arr.reduce(path, function (result, value) {
+  container = ArrUtils.reduce(path, function (result, value) {
     value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
     if (!value) {
       return null;

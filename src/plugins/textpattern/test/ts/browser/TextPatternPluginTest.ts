@@ -166,8 +166,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
             editor.plugins.textpattern.getPatterns(),
           [
             {
-              format: 'h1',
-              start: '#'
+              format: 'h3',
+              start: '###'
             },
             {
               format: 'h2',
@@ -175,8 +175,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
             },
 
             {
-              format: 'h3',
-              start: '###'
+              format: 'h1',
+              start: '#'
             }
           ]
           );
