@@ -5,14 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
 import Content from '../core/Content';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const open = function (editor: Editor) {
-  const minWidth = Settings.getMinWidth(editor);
-  const minHeight = Settings.getMinHeight(editor);
-
   const editorContent = Content.getContent(editor);
 
   type DialogData = {
@@ -28,12 +24,7 @@ const open = function (editor: Editor) {
         {
           type: 'textarea',
           name: 'code',
-          multiline: true,
           flex: true,
-          minWidth,
-          minHeight,
-          spellcheck: false,
-          style: 'direction: ltr; text-align: left'
         }
       ]
     },
