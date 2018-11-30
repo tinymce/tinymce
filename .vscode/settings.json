@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "build/**/*.*": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "build/**/*.*": true
+  }
+}
