@@ -4,22 +4,50 @@
 
 @control-wrap-padding-for-icon: @pad-xl;
 
+@status-invalid-color: red;
+@status-unknown-color: orange;
+@status-valid-color: transparent; // Valid state is invisible by default
+
 .tox {
   .tox-control-wrap {
     flex: 1;
     position: relative;
 
+    // Hide all statuses by default
+    &:not(.tox-control-wrap--status-invalid) .tox-control-wrap__status-icon-invalid,
+    &:not(.tox-control-wrap--status-unknown) .tox-control-wrap__status-icon-unknown,
+    &:not(.tox-control-wrap--status-valid) .tox-control-wrap__status-icon-valid {
+      display: none;
+    }
+
+    // Make status icons block elements
+    svg {
+      display: block;
+    }
+
     // Add padding to textfield.
     .tox-textfield {
       padding-right: @control-wrap-padding-for-icon;
     }
+  }
 
-    // Position status component
-    .tox-status {
-      position: absolute;
-      right: @pad-xs;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    position: absolute;
+    right: @pad-xs;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .tox-control-wrap__status-icon-invalid svg {
+    fill: @status-invalid-color;
+  }
+
+  .tox-control-wrap__status-icon-unknown svg {
+    fill: @status-unknown-color;
+  }
+
+  .tox-control-wrap__status-icon-valid svg {
+    fill: @status-valid-color;
   }
 }
