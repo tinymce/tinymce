@@ -35,8 +35,8 @@ import { Types } from '@ephox/bridge';
 
 export interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
-  alert: (message: string, callback: (flag) => void) => void;
-  confirm: (message: string, callback: () => void) => void;
+  alert: (message: string, callback: () => void) => void;
+  confirm: (message: string, callback: (flag) => void) => void;
   close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
 }
 
