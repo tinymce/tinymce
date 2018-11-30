@@ -112,7 +112,7 @@ const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
     cUpdateChecked(data),
   ]);
 
-  const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'))
+  const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'));
 
   return Chain.control(
     NamedChain.asChain([
@@ -150,7 +150,7 @@ const cInputForLabel = (labelText: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'dialog'),
     NamedChain.direct('dialog', UiFinder.cFindIn('label:contains("' + labelText + '")'), 'label'),
-    NamedChain.direct('label', Chain.mapper((elem: Element) => (<HTMLLabelElement>elem.dom()).htmlFor), 'id'),
+    NamedChain.direct('label', Chain.mapper((elem: Element) => (<HTMLLabelElement> elem.dom()).htmlFor), 'id'),
     NamedChain.merge(['dialog', 'id'], 'pair'),
     NamedChain.direct('pair', Chain.binder((pair: { dialog: Element, id: string }) => UiFinder.findIn(pair.dialog, '#' + pair.id)), 'field'),
     NamedChain.output('field')
@@ -202,7 +202,7 @@ const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, 
 const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => { return cleanHtml(editor.getContent() as string) }), 'content'),
+    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent() as string)), 'content'),
     NamedChain.direct('content', Assertions.cAssertHtml(label, expected), 'result'),
     NamedChain.outputInput
   ]),
