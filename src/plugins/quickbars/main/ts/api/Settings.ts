@@ -10,11 +10,11 @@ import { Editor } from 'tinymce/core/api/Editor';
 import EditorSettings from '../alien/EditorSettings';
 
 const getTextSelectionToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(editor, 'inlite_selection_toolbar', 'bold forecolor italic | form:link-form h2 h3 blockquote');
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold forecolor italic | form:link-form h2 h3 blockquote');
 };
 
 const getInsertToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(editor, 'inlite_insert_toolbar', 'quickimage quicktable');
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_insert_toolbar', 'quickimage quicktable');
 };
 
 export default {
