@@ -4,7 +4,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.test('DialogChanges', () => {
   Logger.sync(
-    'Inlite plugin: Inlite Editor Settings and default values',
+    'Quick Toolbars plugin: Quick Toolbars Editor Settings and default values',
     () => {
 
       const test = (label: string, method: (editor: Editor) => string, settings: any, expected: string) => {
@@ -21,7 +21,7 @@ UnitTest.test('DialogChanges', () => {
       test('getTextSelectionToolbarItems: testing for empty string should return empty string',
         Settings.getTextSelectionToolbarItems,
         {
-          inlite_selection_toolbar: ''
+          quickbars_selection_toolbar: ''
         },
         ''
       );
@@ -29,7 +29,7 @@ UnitTest.test('DialogChanges', () => {
       test('getTextSelectionToolbarItems: testing for boolean false should return empty string',
         Settings.getTextSelectionToolbarItems,
         {
-          inlite_selection_toolbar: false
+          quickbars_selection_toolbar: false
         },
         ''
       );
@@ -37,7 +37,7 @@ UnitTest.test('DialogChanges', () => {
       test('getTextSelectionToolbarItems: testing for boolean true should fallback to defaults',
         Settings.getTextSelectionToolbarItems,
         {
-          inlite_selection_toolbar: true
+          quickbars_selection_toolbar: true
         },
         'bold forecolor italic | form:link-form h2 h3 blockquote'
       );
@@ -53,7 +53,7 @@ UnitTest.test('DialogChanges', () => {
       test('getTextSelectionToolbarItems: testing for custom config string',
         Settings.getTextSelectionToolbarItems,
         {
-          inlite_selection_toolbar: 'hello | friend'
+          quickbars_selection_toolbar: 'hello | friend'
         },
         'hello | friend'
       );
@@ -61,7 +61,7 @@ UnitTest.test('DialogChanges', () => {
       test('getInsertToolbarItems: testing for empty string should return empty string',
         Settings.getInsertToolbarItems,
         {
-          inlite_insert_toolbar: ''
+          quickbars_insert_toolbar: ''
         },
         ''
       );
@@ -69,7 +69,7 @@ UnitTest.test('DialogChanges', () => {
       test('getInsertToolbarItems: testing for boolean false should return empty string',
         Settings.getInsertToolbarItems,
         {
-          inlite_insert_toolbar: false
+          quickbars_insert_toolbar: false
         },
         ''
       );
@@ -77,7 +77,7 @@ UnitTest.test('DialogChanges', () => {
       test('getInsertToolbarItems: testing for boolean true should fallback to defaults',
         Settings.getInsertToolbarItems,
         {
-          inlite_insert_toolbar: true
+          quickbars_insert_toolbar: true
         },
         'quickimage quicktable'
       );
@@ -93,7 +93,7 @@ UnitTest.test('DialogChanges', () => {
       test('getInsertToolbarItems: testing for custom config string',
         Settings.getInsertToolbarItems,
         {
-          inlite_insert_toolbar: 'bye | now'
+          quickbars_insert_toolbar: 'bye | now'
         },
         'bye | now'
       );

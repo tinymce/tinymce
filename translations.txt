@@ -158,4 +158,4 @@ URL (es)
 skipped Items, circle back
 -----------------------------------------------------
 Spellcheck -> unable to run demo
-Inlite -> very broken atm
+Quickbars -> very broken atm
