@@ -23,11 +23,8 @@ node("primary") {
   def permutations = [
      [ name: "win10Chrome", os: "windows-10", browser: "chrome" ]
     ,[ name: "win10FF", os: "windows-10", browser: "firefox" ]
-    // ,[ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ]
-
-    // TODO: Enable IE at some point
-    // ,[ name: "win10IE", os: "windows-10", browser: "ie" ]
-
+    ,[ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ]
+    ,[ name: "win10IE", os: "windows-10", browser: "ie" ]
     ,[ name: "macSafari", os: "macos", browser: "safari" ]
     ,[ name: "macChrome", os: "macos", browser: "chrome" ]
     ,[ name: "macFirefox", os: "macos", browser: "firefox" ]
@@ -81,7 +78,7 @@ node("primary") {
           }
 
 
-          def bedrock = "yarn grunt bedrock-auto:phantomjs --bedrock-browser=" + permutation.browser
+          def bedrock = "yarn grunt bedrock-auto:standard --bedrock-browser=" + permutation.browser
 
           def successfulTests = true
 

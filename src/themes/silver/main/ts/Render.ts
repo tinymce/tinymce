@@ -249,14 +249,15 @@ const setup = (editor: Editor): RenderInfo => {
       return minHeight.map((mh) => Math.max(h, mh));
     }).getOr(baseHeight);
 
-    if (typeof parsedWidth === 'string') {
-      Css.set(outerContainer.element(), 'width', parsedWidth);
+    const stringWidth = Utils.numToPx(parsedWidth);
+    if (Css.isValidValue('div', 'width', stringWidth)) {
+      Css.set(outerContainer.element(), 'width', stringWidth);
     }
 
     if (!editor.inline) {
-      const pxHeight = Utils.numToPx(parsedHeight);
-      if (Css.isValidValue('div', 'height', pxHeight)) {
-        Css.set(outerContainer.element(), 'height', pxHeight);
+      const stringHeight = Utils.numToPx(parsedHeight);
+      if (Css.isValidValue('div', 'height', stringHeight)) {
+        Css.set(outerContainer.element(), 'height', stringHeight);
       } else {
         Css.set(outerContainer.element(), 'height', '200px');
       }

@@ -16,7 +16,6 @@ const urls = [
   { key: 'code', name: 'Code' },
   { key: 'codesample', name: 'Code Sample' },
   { key: 'colorpicker', name: 'Color Picker' },
-  { key: 'compat3x', name: '3.x Compatibility' },
   { key: 'directionality', name: 'Directionality' },
   { key: 'emoticons', name: 'Emoticons' },
   { key: 'fullpage', name: 'Full Page' },

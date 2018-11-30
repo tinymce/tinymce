@@ -41,6 +41,8 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
 
   if (!url) {
     removeLink();
+    // Temporary fix. TODO: TINY-2811
+    api.close();
     return;
   }
 

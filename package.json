@@ -19,7 +19,7 @@
   },
   "main": "tinymce.js",
   "scripts": {
-    "test": "grunt bedrock-auto:chrome-headless",
+    "test": "grunt bedrock-auto:standard",
     "lint": "tslint src/**/*.ts",
     "apollo-test-manual": "grunt bedrock-manual:apollo",
     "silver-test": "grunt bedrock-auto:silver",
