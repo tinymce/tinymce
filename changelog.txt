@@ -1,5 +1,5 @@
 Version 5.0.0-preview-5 (TBD)
-    Fixed and inline mode issue where saving can cause content loss #TINY-2659
+    Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659
     Changed the background color icon to highlight background icon #TINY-2258
     Added a new `addNestedMenuItem()` UI registry function and changed all nested menu items to use the new registry functions #TINY-2230
     Changed Help dialog to be accessible to screen readers #TINY-2687
