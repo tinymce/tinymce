@@ -223,9 +223,9 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       classes: ['tox-status']
     },
     components: [
-      makeIcon('success', 'checkmark',  'valid'),
-      makeIcon('warning'),
-      makeIcon('error', 'warning')
+      makeIcon('valid', 'checkmark',  'valid'),
+      makeIcon('unknown', 'warning'),
+      makeIcon('invalid', 'warning')
     ]
   });
 
