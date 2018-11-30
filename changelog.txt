@@ -1,4 +1,4 @@
-Version 5.0.0-preview-5 (TBD)
+Version 5.0.0-beta-1 (TBD)
     Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
     Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659
     Changed the background color icon to highlight background icon #TINY-2258
