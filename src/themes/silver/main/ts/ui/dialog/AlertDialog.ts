@@ -15,8 +15,8 @@ export const setup = (extras) => {
 
   const open = (message: string, callback: () => void) => {
 
-    const closeDialog = (dialog) => {
-      ModalDialog.hide(dialog);
+    const closeDialog = () => {
+      ModalDialog.hide(alertDialog);
       callback();
     };
 
@@ -34,14 +34,14 @@ export const setup = (extras) => {
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
-            closeDialog(alertDialog);
+            closeDialog();
           }),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterClose.asSpec()
           ]))
         },
-        onCancel: () => closeDialog(alertDialog),
+        onCancel: () => closeDialog(),
         onSubmit: Fun.noop,
         extraClasses: [ 'tox-alert-dialog' ]
       })

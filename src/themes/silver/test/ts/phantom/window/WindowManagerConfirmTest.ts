@@ -136,7 +136,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
 
   const sCreateConfirm = (message, callback) => {
     return Step.sync(() => {
-      windowManager.confirm(message, callback, () => {});
+      windowManager.confirm(message, callback);
     });
   };
 
@@ -179,7 +179,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
         const testCallback = () => {
           calls++;
         };
-        windowManager.confirm(label, testCallback, () => {});
+        windowManager.confirm(label, testCallback);
         Assertions.assertEq('callback should not have been called yet', 0, calls);
       }),
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),

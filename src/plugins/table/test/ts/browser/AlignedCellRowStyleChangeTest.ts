@@ -22,7 +22,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
       tinyApis.sExecCommand('mceTableRowProps'),
       UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),
-      TableTestUtils.sSetPartialDialogContents(editor, { backgroundcolor: 'red'}),
+      TableTestUtils.sGotoAdvancedTab,
+      TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
       TableTestUtils.sClickDialogButton('close dialog', true),
       TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
         return s.element('table', {

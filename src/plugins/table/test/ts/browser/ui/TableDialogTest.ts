@@ -1,4 +1,4 @@
-import { Pipeline, ApproxStructure, Log } from '@ephox/agar';
+import { Log, Pipeline, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -9,6 +9,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
 
   Plugin();
   SilverTheme();
+
+  const generalSelectors = {
+    width: 'label.tox-label:contains(Width) + input.tox-textfield',
+    height: 'label.tox-label:contains(Height) + input.tox-textfield',
+    cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
+    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
+    border: 'label.tox-label:contains(Border width) + input.tox-textfield',
+    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox>input',
+    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
+    class: 'label.tox-label:contains(Class) + div.tox-selectfield>select',
+  };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -24,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       cellspacing: '',
       cellpadding: '',
       border: '',
-      caption: 'unchecked',
+      caption: false,
       align: ''
     };
 
@@ -33,11 +44,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetTable,
         sSetCursor,
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, emptyStandardData),
+        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
         TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, emptyStandardData),
+        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancelling dialog', false)
       ]);
     };
@@ -80,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '5',
         cellpadding: '5',
         border: '1',
-        caption: 'checked',
+        caption: true,
         align: 'left'
       };
 
@@ -88,12 +99,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetTable,
         sSetCursor,
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, emptyStandardData),
-        TableTestUtils.sSetDialogContents(editor, fullStandardData),
+        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+        TableTestUtils.sSetDialogValues(fullStandardData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('filled dialog with full details', true),
         TableTestUtils.sAssertApproxElementStructure(editor, 'table', htmlFilledEmptyTable),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, fullStandardData),
+        TableTestUtils.sAssertDialogValues(fullStandardData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancelling dialog', false)
       ]);
     };
@@ -118,12 +129,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetTable,
         sSetCursor,
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, emptyAllOffData),
-        TableTestUtils.sSetDialogContents(editor, fullAllOffData),
+        TableTestUtils.sAssertDialogValues(emptyAllOffData, false, generalSelectors),
+        TableTestUtils.sSetDialogValues(fullAllOffData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('filled dialog with full details', true),
         TableTestUtils.sAssertElementStructure(editor, 'table', htmlFilledAllOffTable),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, fullAllOffData),
+        TableTestUtils.sAssertDialogValues(fullAllOffData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancelling dialog', false),
         tinyApis.sDeleteSetting('table_appearance_options')
       ]);
@@ -166,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '',
         cellpadding: '',
         border: '',
-        caption: 'unchecked',
+        caption: false,
         align: '',
         class: '',
         borderstyle: '',
@@ -180,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '5px',
         cellpadding: '5px',
         border: '1px',
-        caption: 'checked',
+        caption: true,
         align: 'left',
         class: 'dog',
         borderstyle: 'dotted',
@@ -199,13 +210,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         sSetTable,
         sSetCursor,
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, emptyAllOnData),
-        TableTestUtils.sSetDialogContents(editor, fullAllOnData),
+        TableTestUtils.sAssertDialogValues(emptyAllOnData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(fullAllOnData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('filled dialog with full details', true),
         TableTestUtils.sAssertApproxElementStructure(editor, 'table', htmlFilledAllOnTable),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, fullAllOnData),
-        TableTestUtils.sSetDialogContents(editor, emptyAllOnData),
+        TableTestUtils.sAssertDialogValues(fullAllOnData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(emptyAllOnData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('cancelling dialog', true),
         TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
         tinyApis.sDeleteSetting('table_class_list')
@@ -221,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '5px',
         cellpadding: '5px',
         border: '1px',
-        caption: 'checked',
+        caption: true,
         align: 'left',
         class: 'dog',
         borderstyle: 'dotted',
@@ -233,7 +244,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         tinyApis.sSetContent(baseHtml),
         sSetCursor,
         tinyApis.sExecCommand('mceTableProps'),
-        TableTestUtils.sAssertDialogContents(editor, baseData),
+        TableTestUtils.sAssertDialogValues(baseData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', false),
       ]);
     };
@@ -248,7 +259,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '',
         cellpadding: '',
         border: '',
-        caption: 'unchecked',
+        caption: false,
         align: '',
         class: '',
         borderstyle: '',
@@ -264,7 +275,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         cellspacing: '5px',
         cellpadding: '5px',
         border: '1px',
-        caption: 'checked',
+        caption: true,
         align: 'left',
         class: 'dog',
         borderstyle: 'dotted',
@@ -283,16 +294,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         tinyApis.sSetContent(baseHtml),
         sSetCursor,
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, baseData),
+        TableTestUtils.sAssertDialogValues(baseData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('click cancel', false),
         tinyApis.sAssertContent(baseHtml),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, baseData),
-        TableTestUtils.sSetDialogContents(editor, newData),
+        TableTestUtils.sAssertDialogValues(baseData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(newHtml),
         TableTestUtils.sOpenTableDialog,
-        TableTestUtils.sAssertDialogContents(editor, newData),
+        TableTestUtils.sAssertDialogValues(newData, true, generalSelectors),
       ]);
     };
 

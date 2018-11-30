@@ -4,7 +4,6 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import {
-  cAssertActiveDialogData,
   cAssertCleanHtml,
   cExecCommand,
   cFillActiveDialog,
@@ -24,13 +23,6 @@ UnitTest.asynctest('Image dialog image_dimensions: false', (success, failure) =>
       }),
       cExecCommand('mceImage', true),
       cWaitForDialog(),
-      cAssertActiveDialogData('checking initial dialog data', {
-        src: {
-          value: '',
-          meta: {}
-        },
-        alt: ''
-      }),
       cFillActiveDialog({
         src: {
           value: 'src'

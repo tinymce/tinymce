@@ -231,20 +231,6 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         sCheckInputValue('Robots', selectors.robotsInput, 'the nu robots'),
         sCheckInputValue('Author', selectors.authorInput, 'the nu author'),
         sCheckInputValue('Encoding', selectors.encodingInput, 'the nu encoding'),
-
-        Step.sync(() => {
-          const expected = {
-            author: 'the nu author',
-            description: 'the nu description',
-            docencoding: 'the nu encoding',
-            keywords: 'the nu keywords',
-            robots: 'the nu robots',
-            title: 'the nu title'
-          };
-          const data = editor.windowManager.getParams();
-          Assertions.assertEq('The dialog data should match the input values', expected, data);
-        }),
-
     ]), onSuccess, onFailure);
 
   }, {
