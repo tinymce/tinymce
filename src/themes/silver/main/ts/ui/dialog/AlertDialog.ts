@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
@@ -8,8 +15,8 @@ export const setup = (extras) => {
 
   const open = (message: string, callback: () => void) => {
 
-    const closeDialog = (dialog) => {
-      ModalDialog.hide(dialog);
+    const closeDialog = () => {
+      ModalDialog.hide(alertDialog);
       callback();
     };
 
@@ -27,14 +34,14 @@ export const setup = (extras) => {
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
-            closeDialog(alertDialog);
+            closeDialog();
           }),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterClose.asSpec()
           ]))
         },
-        onCancel: () => closeDialog(alertDialog),
+        onCancel: () => closeDialog(),
         onSubmit: Fun.noop,
         extraClasses: [ 'tox-alert-dialog' ]
       })

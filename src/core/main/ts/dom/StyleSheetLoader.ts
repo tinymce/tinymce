@@ -1,11 +1,8 @@
 /**
- * StyleSheetLoader.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
@@ -52,6 +49,18 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
+    const resolve = (status: number) => {
+      state.status = status;
+      state.passed = [];
+      state.failed = [];
+
+      if (link) {
+        link.onload = null;
+        link.onerror = null;
+        link = null;
+      }
+    };
+
     const passed = function () {
       const callbacks = state.passed;
       let i = callbacks.length;
@@ -60,9 +69,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
         callbacks[i]();
       }
 
-      state.status = 2;
-      state.passed = [];
-      state.failed = [];
+      resolve(2);
     };
 
     const failed = function () {
@@ -73,9 +80,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
         callbacks[i]();
       }
 
-      state.status = 3;
-      state.passed = [];
-      state.failed = [];
+      resolve(3);
     };
 
     // Sniffs for older WebKit versions that have the link.onload but a broken one

@@ -12,6 +12,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
       'icon-helpA': 'icon-provided-for-help',
       'icon-close': 'icon-provided-for-close'
     },
+    menuItems: () => <Record<string, any>> {},
     translate: I18n.translate
   };
 

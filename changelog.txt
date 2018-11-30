@@ -1,9 +1,18 @@
 Version 5.0.0-preview-5 (TBD)
+    Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659
+    Changed the background color icon to highlight background icon #TINY-2258
+    Added a new `addNestedMenuItem()` UI registry function and changed all nested menu items to use the new registry functions #TINY-2230
+    Changed Help dialog to be accessible to screen readers #TINY-2687
+    Changed the color swatch to save selected custom colors to local storage for use across sessions #TINY-2722
+    Added title attribute to color swatch colors #TINY-2669
     Added anchorbar component to anchor inline toolbar dialogs to instead of the toolbar #TINY-2040
     Added support for toolbar<n> and toolbar array config options to be squashed into a single toolbar and not create multiple toolbars #TINY-2195
     Added error handling for when forced_root_block config option is set to true #TINY-2261
     Added functionality for the removed_menuitems config option #TINY-2184
     Fixed an issue in IE 11 where calling selection.getContent() would return an empty string when the editor didn't have focus #TINY-2325
+    Added the ability to use a string to reference menu items in menu buttons and submenu items #TINY-2253
+    Removed compat3x plugin #TINY-2815
+    Changed `WindowManager` API - methods `getParams`, `setParams` and `getWindows`, and the legacy `windows` property, have been removed. `alert` and `confirm` dialogs are no longer tracked in the window list. #TINY-2603
 Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211
@@ -32,7 +41,7 @@ Version 5.0.0-preview-4 (2018-11-12)
     Fixed the `link_context_toolbar` configuration not disabling the context toolbar #AP-458
     Fixed the link context toolbar showing incorrect relative links #AP-435
     Fixed the alignment of the icon in alert banner dialog components #TINY-2220
-    Updated UI text for microcopy improvements #TINY-2281
+    Changed UI text for microcopy improvements #TINY-2281
     Fixed the visual blocks and visual char menu options not displaying their toggled state #TINY-2238
     Fixed the editor not displaying as fullscreen when toggled #TINY-2237
 Version 5.0.0-preview-3 (2018-10-18)

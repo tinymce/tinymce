@@ -1,16 +1,15 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
+import { Editor } from 'tinymce/core/api/Editor';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  suite.test('OpenWindow/CloseWindow events', function (editor) {
+  suite.test('OpenWindow/CloseWindow events', function (editor: Editor) {
     let openWindowArgs, closeWindowArgs;
 
     editor.on('CloseWindow', function (e) {
@@ -19,14 +18,20 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function () {
 
     editor.on('OpenWindow', function (e) {
       openWindowArgs = e;
-      e.win.close();
+      editor.windowManager.close(e.dialog);
     });
 
-    editor.windowManager.alert('test');
+    editor.windowManager.open({
+      title: 'Find and Replace',
+      body: {
+        type: 'panel',
+        items: []
+      },
+      buttons: []
+    });
 
     LegacyUnit.equal(openWindowArgs.type, 'openwindow');
     LegacyUnit.equal(closeWindowArgs.type, 'closewindow');
-    LegacyUnit.equal(editor.windowManager.getWindows().length, 0);
 
     editor.off('CloseWindow OpenWindow');
   });

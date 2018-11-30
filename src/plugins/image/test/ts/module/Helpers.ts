@@ -1,60 +1,130 @@
 import { Chain, NamedChain, UiFinder, Assertions, Mouse, Guard } from '@ephox/agar';
-import { Result } from '@ephox/katamari';
+import { Result, Arr } from '@ephox/katamari';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
-import { Element, Body } from '@ephox/sugar';
-import { Editor } from '../../../../../core/main/ts/api/Editor';
+import { Element, Body, Value, Checked, SelectTag } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
-// dupe: Should be in mcagar
-const cGetTopmostWindowApi = Chain.control(
-  Chain.binder((editor: Editor) => {
-    const wins: any[] = editor.windowManager.getWindows();
-    if (wins.length > 0) {
-      const topWin = wins[wins.length - 1];
-      return Result.value(topWin);
-    } else {
-      return Result.error('No open dialog');
-    }
-  }),
-  Guard.addLogging('Get top most window API')
+export type ImageDialogData = {
+  src: {
+    value: string
+  },
+  alt: string,
+  dimensions: {
+    width: string,
+    height: string
+  },
+  caption: string,
+  classIndex: number, // because the DOM api is setSelectedIndex
+
+  border: string,
+  hspace: string,
+  style: string,
+  vspace: string,
+  borderstyle: string,
+};
+
+export const dialogSelectors = {
+  sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
+  descriptionInput: 'label.tox-label:contains("Image description") + input.tox-textfield',
+  widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension width") + input.tox-textfield',
+  heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension height") + input.tox-textfield',
+  captionRadio: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
+  classSelect: 'label.tox-label:contains("Class") + div.tox-selectfield select',
+};
+
+const cGetTopmostDialog = Chain.control(
+  Chain.fromChains([
+    Chain.inject(Body.body()),
+    UiFinder.cFindIn('[role=dialog]')
+  ]),
+  Guard.addLogging('Get top most dialog')
 );
 
-// dupe: Should be in mcagar
-const cFillActiveDialog = function (data) {
-  return Chain.control(
-      NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetTopmostWindowApi, 'dialogApi'),
-      NamedChain.direct('dialogApi', Chain.op((dialogApi) => {
-        dialogApi.setData(data);
-      }), '_'),
-      NamedChain.outputInput
+// TODO: Consider de-duping, but it might be harder to understand
+const cUpdateSource = (data: Partial<ImageDialogData>) => (!data.src || !data.src.value) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.sourceInput),
+      Chain.op((component: Element) => Value.set(component, data.src.value))
     ]),
+    Guard.addLogging('Update source input')
+  )
+];
+
+const cUpdateAlt = (data: Partial<ImageDialogData>) => (!data.alt) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.descriptionInput),
+      Chain.op((component: Element) => Value.set(component, data.alt))
+    ]),
+    Guard.addLogging('Update description (alt text) input')
+  )
+];
+
+const cUpdateWidth = (data: Partial<ImageDialogData>) => (!data.dimensions || !data.dimensions.width) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.widthInput),
+      Chain.op((source: Element) => Value.set(source, data.dimensions.width)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cUpdateHeight = (data: Partial<ImageDialogData>) => (!data.dimensions || !data.dimensions.height) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.heightInput),
+      Chain.op((source: Element) => Value.set(source, data.dimensions.height)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cUpdateClass = (data: Partial<ImageDialogData>) => (!data.classIndex) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.classSelect),
+      Chain.op((source: Element) => SelectTag.setSelected(source, data.classIndex)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cUpdateChecked = (data: Partial<ImageDialogData>) => (!data.caption) ? [] : [
+  Chain.control(
+    Chain.fromChains([
+      UiFinder.cFindIn(dialogSelectors.captionRadio),
+      Chain.op((source: Element) => Checked.set(source, data.caption === 'checked' ? true : false)),
+    ]),
+    Guard.addLogging('Update width input')
+  )
+];
+
+const cFillActiveDialog = function (data: Partial<ImageDialogData>) {
+  const updateDialogFields = Arr.flatten([
+    cUpdateSource(data),
+    cUpdateAlt(data),
+    cUpdateWidth(data),
+    cUpdateHeight(data),
+    cUpdateClass(data),
+    cUpdateChecked(data),
+  ]);
+
+  const cUpdateDialogFields = Arr.map(updateDialogFields, (chain) => NamedChain.direct('parent', chain, '_'));
+
+  return Chain.control(
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cGetTopmostDialog, 'parent'),
+    ].concat(cUpdateDialogFields).concat([
+      NamedChain.outputInput
+    ])
+    ),
     Guard.addLogging('Fill active dialog')
   );
 };
-
-const cActiveDialogData = () => Chain.control(
-  NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', cGetTopmostWindowApi, 'dialogApi'),
-    NamedChain.direct('dialogApi', Chain.binder((dialogApi) => {
-      return Result.value(dialogApi.getData());
-    }), 'data'),
-    NamedChain.output('data')
-  ]),
-  Guard.addLogging('Active dialog data')
-);
-
-const cAssertActiveDialogData = (message, data) => Chain.control(
-  Chain.fromParent(Chain.identity, [
-    Chain.fromChains([
-      cActiveDialogData(),
-      Assertions.cAssertEq(message, data)
-    ])
-  ]),
-  Guard.addLogging('Assert active dialog data')
-);
 
 const cFakeEvent = function (name) {
   return Chain.control(
@@ -82,19 +152,16 @@ const cInputForLabel = (labelText: string) => Chain.control(
     NamedChain.direct('dialog', UiFinder.cFindIn('label:contains("' + labelText + '")'), 'label'),
     NamedChain.direct('label', Chain.mapper((elem: Element) => (<HTMLLabelElement> elem.dom()).htmlFor), 'id'),
     NamedChain.merge(['dialog', 'id'], 'pair'),
-    NamedChain.direct('pair', Chain.binder((pair: {dialog: Element, id: string}) => UiFinder.findIn(pair.dialog, '#' + pair.id)), 'field'),
+    NamedChain.direct('pair', Chain.binder((pair: { dialog: Element, id: string }) => UiFinder.findIn(pair.dialog, '#' + pair.id)), 'field'),
     NamedChain.output('field')
   ]),
   Guard.addLogging('Input for label')
 );
 
-const cSizeInputForLabel = (labelText: string) => Chain.control(
+const cSizeInput = (selector: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'dialog'),
-    NamedChain.direct('dialog', UiFinder.cFindIn('.tox-form__controls-h-stack span:contains("' + labelText + '")'), 'label'),
-    NamedChain.direct('label', Chain.mapper((elem: Element) => elem.dom().id), 'id'),
-    NamedChain.merge(['dialog', 'id'], 'pair'),
-    NamedChain.direct('pair', Chain.binder((pair: {dialog: Element, id: string}) => UiFinder.findIn(pair.dialog, `[aria-labelledby=${pair.id}]`)), 'field'),
+    NamedChain.direct('dialog', UiFinder.cFindIn(selector), 'field'),
     NamedChain.output('field')
   ]),
   Guard.addLogging('Input for label')
@@ -160,14 +227,11 @@ const silverSettings = {
 
 export {
   silverSettings,
-  cGetTopmostWindowApi,
   cFillActiveDialog,
-  cActiveDialogData,
-  cAssertActiveDialogData,
   cFakeEvent,
   cExecCommand,
   cInputForLabel,
-  cSizeInputForLabel,
+  cSizeInput,
   cWaitForDialog,
   cSubmitDialog,
   cAssertCleanHtml,

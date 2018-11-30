@@ -1,19 +1,17 @@
 /**
- * Selection.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from './NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
 import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
+import { HTMLElement } from '@ephox/sand';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import { Editor } from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
+import NodeType from './NodeType';
 
 const getParentList = function (editor) {
   const selectionStart = editor.selection.getStart(true);
@@ -94,7 +92,13 @@ const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
   return DomQuery.unique(listRoots);
 };
 
+const isList = (editor: Editor): boolean => {
+  const list = getParentList(editor);
+  return HTMLElement.isPrototypeOf(list);
+};
+
 export default {
+  isList,
   getParentList,
   getSelectedSubLists,
   getSelectedListItems,

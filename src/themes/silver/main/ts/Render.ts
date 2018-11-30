@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
@@ -103,10 +110,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-menubar' ]
     },
     getSink: lazySink,
-    providers: {
-      icons: () => editor.ui.registry.getAll().icons,
-      translate: I18n.translate
-    },
+    providers: backstage.shared.providers,
     onEscape () {
       editor.focus();
     }
@@ -245,14 +249,15 @@ const setup = (editor: Editor): RenderInfo => {
       return minHeight.map((mh) => Math.max(h, mh));
     }).getOr(baseHeight);
 
-    if (typeof parsedWidth === 'string') {
-      Css.set(outerContainer.element(), 'width', parsedWidth);
+    const stringWidth = Utils.numToPx(parsedWidth);
+    if (Css.isValidValue('div', 'width', stringWidth)) {
+      Css.set(outerContainer.element(), 'width', stringWidth);
     }
 
     if (!editor.inline) {
-      const pxHeight = Utils.numToPx(parsedHeight);
-      if (Css.isValidValue('div', 'height', pxHeight)) {
-        Css.set(outerContainer.element(), 'height', pxHeight);
+      const stringHeight = Utils.numToPx(parsedHeight);
+      if (Css.isValidValue('div', 'height', stringHeight)) {
+        Css.set(outerContainer.element(), 'height', stringHeight);
       } else {
         Css.set(outerContainer.element(), 'height', '200px');
       }

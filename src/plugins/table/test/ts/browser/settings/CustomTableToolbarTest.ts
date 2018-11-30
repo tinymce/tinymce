@@ -14,9 +14,7 @@ import TableTestUtils from '../../module/test/TableTestUtils';
  *
  */
 
-UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function (success, failure) {
 
   TablePlugin();
   Theme();
@@ -33,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
         tinyApis.sSetContent(tableHtml),
         TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
         Chain.asStep({}, [
-          tinyUi.cWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
+          tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
           Chain.mapper(function (x) {
             return SelectorFilter.descendants(x, 'button').length;
           }),

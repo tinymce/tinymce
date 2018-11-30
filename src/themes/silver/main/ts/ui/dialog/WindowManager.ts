@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import {
   AddEventsBehaviour,
   AlloyEvents,
@@ -125,16 +132,14 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const confirm = (message: string, callback: (flag) => void, closeWindow) => {
+  const confirm = (message: string, callback: (flag) => void) => {
     confirmDialog.open(message, (state) => {
-      closeWindow();
       callback(state);
     });
   };
 
-  const alert = (message: string, callback: () => void, closeWindow: () => void) => {
+  const alert = (message: string, callback: () => void) => {
     alertDialog.open(message, () => {
-      closeWindow();
       callback();
     });
   };
@@ -145,7 +150,6 @@ const setup = (extras: WindowManagerSetup) => {
 
   return {
     open,
-    openInlineDialog,
     alert,
     close,
     confirm

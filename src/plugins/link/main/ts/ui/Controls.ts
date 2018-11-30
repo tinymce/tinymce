@@ -1,12 +1,10 @@
 /**
- * Controls.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
+
 import { Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -53,8 +51,8 @@ const setupMenuItems = function (editor: Editor) {
 };
 
 const setupContextMenu = function (editor: Editor) {
-  const noLink = [ 'link' ];
-  const inLink = [ 'link', 'unlink', 'openlink' ];
+  const noLink = 'link';
+  const inLink = 'link unlink openlink';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
       return Utils.hasLinks(editor.dom.getParents(element, 'a')) ? inLink : noLink;

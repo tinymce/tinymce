@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import {
   AddEventsBehaviour,
   AlloyEvents,
@@ -73,6 +80,9 @@ const renderInputButton = (label: Option<string>, eventName: string, className: 
         title: providersBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
       }
     },
+    buttonBehaviours: Behaviour.derive([
+      Tabstopping.config({})
+    ]),
     action: (component) => {
       AlloyTriggers.emit(component, eventName);
     }

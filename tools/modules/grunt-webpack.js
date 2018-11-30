@@ -87,14 +87,18 @@ let buildDemoEntries = (pluginNames, type, demo) => pluginNames.reduce(
 
 let buildComponentEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
-    acc[name] = `src/${type}/${name}/demo/ts/components/${demo}`;
+    if (name !== 'mobile') {
+      acc[name] = `src/${type}/${name}/demo/ts/components/${demo}`;
+    }
     return acc;
   }, {}
 )
 
 let buildDialogEntries = (pluginNames, type, demo) => pluginNames.reduce(
   (acc, name) => {
-    acc[name] = `src/${type}/${name}/demo/ts/dialogs/${demo}`;
+    if (name !== 'mobile') {
+      acc[name] = `src/${type}/${name}/demo/ts/dialogs/${demo}`;
+    }
     return acc;
   }, {}
 )

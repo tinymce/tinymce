@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { DialogInstanceApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Dialog';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Future, Option, Options } from '@ephox/katamari';
@@ -34,6 +41,8 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
 
   if (!url) {
     removeLink();
+    // Temporary fix. TODO: TINY-2811
+    api.close();
     return;
   }
 

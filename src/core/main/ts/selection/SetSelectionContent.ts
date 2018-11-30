@@ -1,24 +1,66 @@
 /**
- * SetSelectionContent.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setContent = function (editor, content, args) {
-  let rng = editor.selection.getRng(), caretNode;
-  const doc = editor.getDoc();
-  let frag, temp;
+import { Editor } from '../api/Editor';
+import ScrollIntoView from '../dom/ScrollIntoView';
+import { Range, DocumentFragment, Text } from '@ephox/dom-globals';
+import { Option, Options } from '@ephox/katamari';
+import { Element, Traverse, Node, Remove } from '@ephox/sugar';
 
+const prependData = (target: Text, data: string): void => {
+  target.insertData(0, data);
+};
+
+const removeEmpty = (text: Element): Option<Element> => {
+  if (text.dom().length === 0) {
+    Remove.remove(text);
+    return Option.none();
+  }
+  return Option.some(text);
+};
+
+const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
+  const firstChild = Option.from(fragment.firstChild).map(Element.fromDom);
+  const lastChild = Option.from(fragment.lastChild).map(Element.fromDom);
+
+  rng.deleteContents();
+  rng.insertNode(fragment);
+
+  const prevText = firstChild.bind(Traverse.prevSibling).filter(Node.isText).bind(removeEmpty);
+  const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
+
+  // Join start
+  Options.liftN([prevText, firstChild.filter(Node.isText)], (prev: Element, start: Element) => {
+    prependData(start.dom(), prev.dom().data);
+    Remove.remove(prev);
+  });
+
+  // Join end
+  Options.liftN([nextText, lastChild.filter(Node.isText)], (next: Element, end: Element) => {
+    const oldLength = end.dom().length;
+    end.dom().appendData(next.dom().data);
+    rng.setEnd(end.dom(), oldLength);
+    Remove.remove(next);
+  });
+
+  rng.collapse(false);
+};
+
+const setupArgs = (args, content: string) => {
   args = args || { format: 'html' };
   args.set = true;
   args.selection = true;
   args.content = content;
+  return args;
+};
 
-  // Dispatch before set content event
+const setContent = (editor: Editor, content: string, args) => {
+  args = setupArgs(args, content); // mutates
+
   if (!args.no_events) {
     args = editor.fire('BeforeSetContent', args);
     if (args.isDefaultPrevented()) {
@@ -27,72 +69,12 @@ const setContent = function (editor, content, args) {
     }
   }
 
-  content = args.content;
+  const rng = editor.selection.getRng();
+  rngSetContent(rng, rng.createContextualFragment(args.content));
+  editor.selection.setRng(rng);
 
-  if (rng.insertNode) {
-    // Make caret marker since insertNode places the caret in the beginning of text after insert
-    content += '<span id="__caret">_</span>';
+  ScrollIntoView.scrollRangeIntoView(editor, rng);
 
-    // Delete and insert new node
-    if (rng.startContainer === doc && rng.endContainer === doc) {
-      // WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
-      doc.body.innerHTML = content;
-    } else {
-      rng.deleteContents();
-
-      if (doc.body.childNodes.length === 0) {
-        doc.body.innerHTML = content;
-      } else {
-        // createContextualFragment doesn't exists in IE 9 DOMRanges
-        if (rng.createContextualFragment) {
-          rng.insertNode(rng.createContextualFragment(content));
-        } else {
-          // Fake createContextualFragment call in IE 9
-          frag = doc.createDocumentFragment();
-          temp = doc.createElement('div');
-
-          frag.appendChild(temp);
-          temp.outerHTML = content;
-
-          rng.insertNode(frag);
-        }
-      }
-    }
-
-    // Move to caret marker
-    caretNode = editor.dom.get('__caret');
-
-    // Make sure we wrap it compleatly, Opera fails with a simple select call
-    rng = doc.createRange();
-    rng.setStartBefore(caretNode);
-    rng.setEndBefore(caretNode);
-    editor.selection.setRng(rng);
-
-    // Remove the caret position
-    editor.dom.remove('__caret');
-
-    try {
-      editor.selection.setRng(rng);
-    } catch (ex) {
-      // Might fail on Opera for some odd reason
-    }
-  } else {
-    if (rng.item) {
-      // Delete content and get caret text selection
-      doc.execCommand('Delete', false, null);
-      rng = editor.getRng();
-    }
-
-    // Explorer removes spaces from the beginning of pasted contents
-    if (/^\s+/.test(content)) {
-      rng.pasteHTML('<span id="__mce_tmp">_</span>' + content);
-      editor.dom.remove('__mce_tmp');
-    } else {
-      rng.pasteHTML(content);
-    }
-  }
-
-  // Dispatch set content event
   if (!args.no_events) {
     editor.fire('SetContent', args);
   }

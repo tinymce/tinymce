@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Behaviour, Replacing } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';

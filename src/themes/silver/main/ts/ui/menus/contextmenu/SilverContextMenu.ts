@@ -1,7 +1,14 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloyComponent, GuiFactory, InlineView } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
-import { Arr, Fun, Result, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
@@ -10,76 +17,89 @@ import Settings from './Settings';
 import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
+type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
+
+const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
+
 const separator: Menu.SeparatorMenuItemApi = {
   type: 'separator'
 };
 
-const makeContextItem = (item: Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): Menu.SeparatorMenuItemApi | Menu.MenuItemApi => {
-  switch (item.type) {
-    case 'separator':
-      return separator;
-    case 'submenu':
-      return {
-        type: 'menuitem',
-        text: item.text,
-        icon: item.icon,
-        getSubmenuItems: () => Arr.map(item.getSubmenuItems(), makeContextItem)
-      };
-    default:
-      // case 'item', or anything else really
-      return {
-        type: 'menuitem',
-        text: item.text,
-        icon: item.icon,
-        // disconnect the function from the menu item API bridge defines
-        onAction: Fun.noarg(item.onAction)
-      };
+const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemApi | Menu.ContextSubMenu): MenuItem => {
+  if (Type.isString(item)) {
+    return item;
+  } else {
+    switch (item.type) {
+      case 'separator':
+        return separator;
+      case 'submenu':
+        return {
+          type: 'nestedmenuitem',
+          text: item.text,
+          icon: item.icon,
+          getSubmenuItems: () => {
+            const items = item.getSubmenuItems();
+            if (Type.isString(items)) {
+              return items;
+            } else {
+              return Arr.map(items, makeContextItem);
+            }
+          }
+        };
+      default:
+        // case 'item', or anything else really
+        return {
+          type: 'menuitem',
+          text: item.text,
+          icon: item.icon,
+          // disconnect the function from the menu item API bridge defines
+          onAction: Fun.noarg(item.onAction)
+        };
+    }
   }
 };
 
-type Section = string | Menu.MenuItemApi | Menu.SeparatorMenuItemApi;
+const addContextMenuGroup = (xs: Array<MenuItem>, groupItems: Array<MenuItem>) => {
+  // Skip if there are no items
+  if (groupItems.length === 0) {
+    return xs;
+  }
 
-function generateContextMenu(contextMenus: Record<string, Menu.ContextMenuApi>, menuItems: Record<string, Menu.MenuItemApi>, menuConfig: string[], selectedElement: Element) {
-  const flattenedItems = Arr.bind(menuConfig, (name) => {
+  // Only add a separator at the beginning if the last item isn't a separator
+  const lastMenuItem = Arr.last(xs).filter((item) => !isSeparator(item));
+  const before = lastMenuItem.fold(
+    () => [],
+    (_) => [ separator ]
+  );
+  return xs.concat(before).concat(groupItems).concat([ separator ]);
+};
+
+const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: Element) => {
+  const items = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
-    if (contextMenus.hasOwnProperty(name)) {
+    if (Obj.has(contextMenus, name)) {
       const items = contextMenus[name].update(selectedElement);
-      // TODO: Should we add a ValueSchema check here?
-      if (items.length > 0) {
-        const allItems = Arr.map(items, (item) => Type.isString(item) ? item : makeContextItem(item));
-
-        const separatorArray: Section[] = ['|'];
-        return separatorArray.concat(allItems).concat(separatorArray);
-      } else {
-        return [];
-      }
-    } else {
-      return [name];
-    }
-  });
-
-  const items = Arr.foldl<Section, Array<Menu.MenuItemApi | Menu.SeparatorMenuItemApi>>(flattenedItems, (acc, item) => {
-    if (Type.isString(item)) {
-      if (menuItems.hasOwnProperty(item)) {
-        return acc.concat([menuItems[item]]);
-      } else if (item === '|' && acc.length > 0 && acc[acc.length - 1].type !== 'separator') {
-        // separator (when one isn't already at the end)
-        return acc.concat([separator]);
+      if (Type.isString(items)) {
+        return addContextMenuGroup(acc, items.split(' '));
+      } else if (items.length > 0) {
+        // TODO: Should we add a ValueSchema check here?
+        const allItems = Arr.map(items, makeContextItem);
+        return addContextMenuGroup(acc, allItems);
       } else {
         return acc;
       }
     } else {
-      // an already converted item
-      return acc.concat([item]);
+      return acc.concat([name]);
     }
   }, []);
 
-  if (items.length > 0 && items[items.length - 1].type === 'separator') {
+  // Strip off any trailing separator
+  if (items.length > 0 && isSeparator(items[items.length - 1])) {
     items.pop();
   }
 
   return items;
-}
+};
 
 const isNativeOverrideKeyEvent = function (editor, e) {
   return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
@@ -114,7 +134,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // Use the event target element for mouse clicks, otherwise fallback to the current selection
     const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
 
-    const items = generateContextMenu(registry.contextMenus, registry.menuItems, menuConfig, selectedElement);
+    const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
     if (items.length > 0) {
       e.preventDefault();

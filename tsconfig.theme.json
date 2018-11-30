@@ -27,7 +27,6 @@
       "tinymce/plugins/code/*": ["src/plugins/code/main/ts/*"],
       "tinymce/plugins/codesample/*": ["src/plugins/codesample/main/ts/*"],
       "tinymce/plugins/colorpicker/*": ["src/plugins/colorpicker/main/ts/*"],
-      "tinymce/plugins/compat3x/*": ["src/plugins/compat3x/main/ts/*"],
       "tinymce/plugins/contextmenu/*": ["src/plugins/contextmenu/main/ts/*"],
       "tinymce/plugins/directionality/*": ["src/plugins/directionality/main/ts/*"],
       "tinymce/plugins/emoticons/*": ["src/plugins/emoticons/main/ts/*"],

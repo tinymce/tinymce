@@ -54,6 +54,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             onSetup: store.adder('Menubar.setup'),
             providers: {
               icons: () => <Record<string, string>> {},
+              menuItems: () => <Record<string, any>> {},
               translate: I18n.translate
             },
             getSink: () => {
@@ -213,16 +214,14 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                     }
                   },
                   {
-                    type: 'menuitem',
+                    type: 'nestedmenuitem',
                     icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
                     text: 'Nested menu',
-                    onAction: () => { },
                     getSubmenuItems: () => [
                       {
-                        type: 'menuitem',
+                        type: 'nestedmenuitem',
                         icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
                         text: 'Nested menu x 2',
-                        onAction: () => { },
                         getSubmenuItems: () => [
                           {
                             type: 'menuitem',

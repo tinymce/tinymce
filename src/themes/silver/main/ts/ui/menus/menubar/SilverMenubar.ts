@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import {
   AddEventsBehaviour,
   AlloyEvents,
@@ -60,6 +67,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         // TODO: backstage me
         text: Option.some(m.text),
         icon: Option.none(),
+        tooltip: Option.none(),
         fetch: (callback) => {
           callback(m.getItems());
         }

@@ -1,11 +1,20 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Arr, Obj } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
 
 // Converts shortcut format to Mac/PC variants
+// Note: This is different to the help shortcut converter, as it doesn't padd the + symbol with spaces
+//       so as to not take up large amounts of space in the menus
 const convertText = (source: string) => {
   const mac = {
     alt: '&#x2325;',
-    ctrl: '&#x2318;',
+    ctrl: '&#x5E;',
     shift: '&#x21E7;',
     meta: '&#x2318;'
   };
@@ -22,7 +31,7 @@ const convertText = (source: string) => {
     return Obj.has(replace, search) ? replace[search] : segment;
   });
 
-  return updated.join('+');
+  return Env.mac ? updated.join('') : updated.join('+');
 };
 
 export default { convertText };

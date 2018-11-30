@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloySpec, Behaviour, ModalDialog, Reflecting } from '@ephox/alloy';
 import { InternalPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Panel';
 import { InternalTabPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/TabPanel';

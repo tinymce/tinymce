@@ -1,5 +1,12 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { AlloyEvents, Replacing, TabSection } from '@ephox/alloy';
-import { SelectorFind, Css } from '@ephox/sugar';
+import { SelectorFind, Css, Focus } from '@ephox/sugar';
 import { Option, Arr } from '@ephox/katamari';
 import { formResizeEvent } from '../general/FormEvents';
 
@@ -51,6 +58,7 @@ const setMode = (allTabs) => {
       }),
       AlloyEvents.run(formResizeEvent, (comp, se) => {
         SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
+          const oldFocus = Focus.active();
           Css.set(tabview, 'visibility', 'hidden');
           const oldHeight = Css.getRaw(tabview, 'height').map((h) => parseInt(h, 10));
           Css.remove(tabview, 'height');
@@ -66,6 +74,7 @@ const setMode = (allTabs) => {
           }
 
           Css.remove(tabview, 'visibility');
+          oldFocus.each(Focus.focus);
         });
 
       })

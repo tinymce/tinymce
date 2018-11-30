@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { AlloyEvents, FocusManagers, Keying, TieredMenu } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
@@ -30,8 +37,8 @@ export interface InternalStyleMenuItemApi {
   item: BridgeMenu.ToggleMenuItemApi | BridgeMenu.MenuItemApi;
 }
 
-export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.ToggleMenuItemApi | BridgeMenu.SeparatorMenuItemApi |
-  BridgeMenu.ChoiceMenuItemApi | InternalStyleMenuItemApi | BridgeMenu.FancyMenuItemApi;
+export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
+  BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | InternalStyleMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
 const hasIcon = (item) => item.icon !== undefined;
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
@@ -42,6 +49,12 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
         (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage))
+      );
+
+    case 'nestedmenuitem':
+      return BridgeMenu.createNestedMenuItem(item).fold(
+        handleError,
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
       );
 
     case 'styleitem': {
