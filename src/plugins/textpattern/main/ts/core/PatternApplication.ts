@@ -21,7 +21,6 @@ const setSelection = (editor: Editor, textNode: Text, offset: number): void => {
 };
 
 const splitContainer = (container, pattern, endOffset, startOffset) => {
-
   // Split text node and remove start/end from text node
   container = startOffset > 0 ? container.splitText(startOffset) : container;
   container.splitText(endOffset - startOffset + pattern.end.length);
@@ -31,7 +30,7 @@ const splitContainer = (container, pattern, endOffset, startOffset) => {
   return container;
 };
 
-const splitAndApply = (editor, container, found) => {
+const splitAndApply = (editor: Editor, container, found, inline) => {
   const formatArray = Tools.isArray(found.pattern.format) ? found.pattern.format : [found.pattern.format];
   const validFormats = Tools.grep(formatArray, (formatName) => {
     const format = editor.formatter.get(formatName);
@@ -41,6 +40,12 @@ const splitAndApply = (editor, container, found) => {
   if (validFormats.length !== 0) {
     editor.undoManager.transact(() => {
       container = splitContainer(container, found.pattern, found.endOffset, found.startOffset);
+      // The splitContainer function above moves the selection range in Safari
+      // so we have to set it back to the next sibling, the nbsp behind the
+      // split text node, when applying inline formats.
+      if (inline) {
+        editor.selection.setCursorLocation(container.nextSibling, 1);
+      }
       formatArray.forEach((format) => {
         editor.formatter.apply(format, {}, container);
       });
@@ -51,16 +56,15 @@ const splitAndApply = (editor, container, found) => {
 };
 
 // Handles inline formats like *abc* and **abc**
-const applyInlinePattern = (editor: Editor, patterns: InlinePattern[], space: boolean): Option<Text> => {
+const applyInlinePattern = (editor: Editor, patterns: InlinePattern[], inline: boolean): Option<Text> => {
   const rng = editor.selection.getRng();
-  return Option.from(findInlinePattern(patterns, rng, space)).map((foundPattern) => {
-    return splitAndApply(editor, rng.startContainer, foundPattern);
+  return Option.from(findInlinePattern(patterns, rng, inline)).map((foundPattern) => {
+    return splitAndApply(editor, rng.startContainer, foundPattern, inline);
   });
 };
 
 const applyInlinePatternSpace = (editor: Editor, patterns: InlinePattern[]): void => {
   applyInlinePattern(editor, patterns, true).each((wrappedTextNode) => {
-
     // Move space after the newly formatted node
     const lastChar = wrappedTextNode.data.slice(-1);
     if (/[\u00a0 ]/.test(lastChar)) {

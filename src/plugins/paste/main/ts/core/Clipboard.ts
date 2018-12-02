@@ -17,8 +17,8 @@ import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
-import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent } from '@ephox/dom-globals';
+import { Cell, Futures, Future, Arr } from '@ephox/katamari';
+import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
 
 declare let window: any;
 
@@ -136,19 +136,13 @@ const extractFilename = (editor: Editor, str: string) => {
 
 const uniqueId = Utils.createIdGenerator('mceclip');
 
-const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
-  if (rng) {
-    editor.selection.setRng(rng);
-    rng = null;
-  }
-
-  const dataUri = reader.result;
-  const base64 = getBase64FromUri(dataUri);
+const pasteImage = (editor: Editor, imageItem) => {
+  const base64 = getBase64FromUri(imageItem.uri);
   const id = uniqueId();
-  const name = editor.settings.images_reuse_filename && blob.name ? extractFilename(editor, blob.name) : id;
+  const name = editor.settings.images_reuse_filename && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
   const img = new Image();
 
-  img.src = dataUri;
+  img.src = imageItem.uri;
 
   // TODO: Move the bulk of the cache logic to EditorUpload
   if (isValidDataUriImage(editor.settings, img)) {
@@ -160,7 +154,7 @@ const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
     });
 
     if (!existingBlobInfo) {
-      blobInfo = blobCache.create(id, blob, base64, name);
+      blobInfo = blobCache.create(id, imageItem.blob, base64, name);
       blobCache.add(blobInfo);
     } else {
       blobInfo = existingBlobInfo;
@@ -168,11 +162,35 @@ const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
 
     pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
   } else {
-    pasteHtml(editor, '<img src="' + dataUri + '">', false);
+    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false);
   }
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
+
+const readBlobsAsDataUris = (items: File[]) => {
+  return Futures.mapM(items, (item: any) => {
+    return Future.nu((resolve) => {
+      const blob = item.getAsFile ? item.getAsFile() : item;
+
+      const reader = new window.FileReader();
+      reader.onload = () => {
+        resolve({
+          blob,
+          uri: reader.result
+        });
+      };
+      reader.readAsDataURL(blob);
+    });
+  });
+};
+
+const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
+  const items = dataTransfer.items ? Arr.map(Arr.from(dataTransfer.items), (item) => item.getAsFile()) : [];
+  const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
+  const images = Arr.filter(items.length > 0 ? items : files, (file) => /^image\/(jpeg|png|gif|bmp)$/.test(file.type));
+  return images;
+};
 
 /**
  * Checks if the clipboard contains image data if it does it will take that data
@@ -185,32 +203,27 @@ const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type =
 const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
-  function processItems(items) {
-    let i, item, reader, hadImage = false;
-
-    if (items) {
-      for (i = 0; i < items.length; i++) {
-        item = items[i];
-
-        if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
-          const blob = item.getAsFile ? item.getAsFile() : item;
-
-          reader = new window.FileReader();
-          reader.onload = pasteImage.bind(null, editor, rng, reader, blob);
-          reader.readAsDataURL(blob);
-
-          e.preventDefault();
-          hadImage = true;
-        }
-      }
-    }
-
-    return hadImage;
-  }
-
   if (editor.settings.paste_data_images && dataTransfer) {
-    return processItems(dataTransfer.items) || processItems(dataTransfer.files);
+    const images = getImagesFromDataTransfer(dataTransfer);
+
+    if (images.length > 0) {
+      e.preventDefault();
+
+      readBlobsAsDataUris(images).get((blobResults) => {
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
+
+        Arr.each(blobResults, (result) => {
+          pasteImage(editor, result);
+        });
+      });
+
+      return true;
+    }
   }
+
+  return false;
 };
 
 /**
