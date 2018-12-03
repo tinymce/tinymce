@@ -13,9 +13,9 @@
 @document-text-color: contrast(@document-background-color, @color-black, @color-white);
 @document-font-stack: @font-stack-base;
 @document-line-height: @line-height-base;
-@document-max-width: 100%;
+@document-max-width: none;
 @document-margin-x: 0;
-@document-margin-y: 0;
+@document-margin-y: 1rem;
 @document-padding: 0 @pad-md;
 
 @document-image-caption-font-size: @font-size-sm;
@@ -54,6 +54,10 @@ body {
 table {
   border-collapse: collapse;
   border-color: @border-color;
+  // Fixes TINY-1618
+  //  Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+  //  tables, making it impossible to enter spaces into small table cells
+  -webkit-nbsp-mode: normal;
   width: 100%;
 }
 

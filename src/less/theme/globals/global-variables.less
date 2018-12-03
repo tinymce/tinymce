@@ -45,10 +45,11 @@
 @pad-lg: @base-value * 1.5;
 @pad-xl: @base-value * 2;
 
-// z-index stack
-@z-index-sink: 100000;
-@z-index-fullscreen: 1000;
-@z-index-dialogs: 200;
+// z-index stack (reserved range 1000-10000)
+@z-index-sink: 1300;
+@z-index-fullscreen: 1200;
+@z-index-dialogs: 1100;
+@z-index-loading: 1000;
 
 // Responsive breakpoints
 @breakpoint-md: ~"only screen and (min-width:1000px)";
