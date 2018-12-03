@@ -11,8 +11,15 @@ import Actions from '../core/Actions';
 import ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Types } from '@ephox/bridge';
+import { Blob } from '@ephox/dom-globals';
 
-const createState = (blob) => {
+type ImageToolsState = {
+  blob: Blob,
+  url: string
+}
+
+const createState = (blob: Blob): ImageToolsState => {
   return {
     blob,
     url: URL.createObjectURL(blob)
@@ -20,7 +27,7 @@ const createState = (blob) => {
 };
 
 const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
-  const getLoadedSpec = (currentState) => {
+  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState}> => {
     return {
       title: 'Edit Image',
       size: 'large',
@@ -49,7 +56,7 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
           disabled: true
         }
       ],
-      onSubmit: (api, _details) => {
+      onSubmit: (api) => {
         const blob = api.getData().imagetools.blob;
         Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg, originalSize, blob);
         api.close();
