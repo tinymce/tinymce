@@ -391,7 +391,8 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
 };
 
 const alertErr = (editor: Editor) => (api: API, message: string) => {
-  editor.windowManager.alert(message, Fun.noop, api.close);
+  // TODO: it looks like the intention to close the entire dialog on an error. Is that really a good idea?
+  editor.windowManager.alert(message, api.close);
 };
 
 const normalizeCss = (editor: Editor) => (cssText: string) => {
