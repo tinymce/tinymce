@@ -5,6 +5,7 @@
   ],
   "rules": {
     "number-leading-zero": "never",
-    "order/properties-alphabetical-order": true
+    "order/properties-alphabetical-order": true,
+    "at-rule-empty-line-before": ["always", { ignoreAtRules: "import"}]
   }
 }
