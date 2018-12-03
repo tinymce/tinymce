@@ -133,6 +133,12 @@ Dark Gray                 <new>                 Color Swatch
 Black                     <new>                 Color Swatch
 White                     <new>                 Color Swatch
 
+Switch to or from fullscreen mode           <new>       Help shortcuts
+Find (if searchreplace plugin activated)    <new>       Help shortcuts
+Save (if save plugin activated)             <new>       Help shortcuts
+Insert link (if link plugin activated)      <new>       Help shortcuts
+Open help dialog                            <new>       Help shortcuts
+
 
 No longer Used
 -----------------------------------------------------
