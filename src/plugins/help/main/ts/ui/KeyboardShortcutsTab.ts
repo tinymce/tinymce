@@ -16,13 +16,9 @@ export interface ShortcutActionPairType {
 }
 
 const tab = () => {
-  const makeAriaLabel = (shortcut: ShortcutActionPairType) => {
-    const shortcutText = Arr.map(shortcut.shortcuts, (s) => s.replace(/Ctrl/g, 'Control')).join(' or ');
-    return 'aria-label="Action: ' + shortcut.action + ', Shortcut: ' + shortcutText + '"';
-  };
   const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut: ShortcutActionPairType) {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
-    return '<tr data-mce-tabstop="1" tabindex="-1" ' + makeAriaLabel(shortcut) + '>' +
+    return '<tr tabindex="-1" ' + '>' +
               '<td>' + I18n.translate(shortcut.action) + '</td>' +
               '<td>' + shortcutText + '</td>' +
             '</tr>';
@@ -39,7 +35,9 @@ const tab = () => {
                     '<th>' + I18n.translate('Action') + '</th>' +
                     '<th>' + I18n.translate('Shortcut') + '</th>' +
                   '</thead>' +
-                  shortcutLisString +
+                  '<tbody>' +
+                    shortcutLisString +
+                  '</tbody>' +
                 '</table>' +
               '</div>'
       }
