@@ -49,7 +49,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Logger.t('Italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a'))
+        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
+        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1)
       ])),
       Logger.t('Bold format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
