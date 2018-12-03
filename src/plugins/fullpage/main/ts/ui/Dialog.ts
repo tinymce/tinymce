@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Parser from '../core/Parser';
-import { Merger } from '@ephox/katamari';
+import { Merger, Cell } from '@ephox/katamari';
 
-const open = function (editor, headState) {
+const open = function (editor: Editor, headState: Cell<string>) {
   const data = Parser.htmlToData(editor, headState.get());
 
   const defaultData = {

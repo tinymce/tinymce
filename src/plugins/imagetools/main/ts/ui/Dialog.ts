@@ -27,7 +27,7 @@ const createState = (blob: Blob): ImageToolsState => {
 };
 
 const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
-  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState}> => {
+  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState }> => {
     return {
       title: 'Edit Image',
       size: 'large',
@@ -61,7 +61,7 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
         Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg, originalSize, blob);
         api.close();
       },
-      onCancel: () => {}, // TODO: reimplement me
+      onCancel: () => { }, // TODO: reimplement me
       onAction: (api, details) => {
         switch (details.name) {
           case ImageToolsEvents.saveState():
@@ -72,12 +72,12 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
             }
             break;
           case ImageToolsEvents.disable():
-            win.block('Updating image');
+            api.block('Updating image');
             api.disable('save');
             api.disable('cancel');
             break;
           case ImageToolsEvents.enable():
-            win.unblock();
+            api.unblock();
             api.enable('cancel');
             break;
         }
@@ -88,13 +88,11 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   const originalImg = Actions.getSelectedImage(editor);
   const originalSize = ImageSize.getNaturalImageSize(originalImg);
 
-  let win;
-
   const img = Actions.getSelectedImage(editor);
   if (Actions.isEditableImage(editor, img)) {
     Actions.findSelectedBlob(editor).then((blob) => {
       const state = createState(blob);
-      win = editor.windowManager.open(getLoadedSpec(state));
+      editor.windowManager.open(getLoadedSpec(state));
     });
   }
 };
