@@ -30,6 +30,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     markers: menuSpec.menu.markers,
 
     onEscape() {
+      // Note for the future: this should possibly also call detail.onHide
       Sandboxing.close(menuSandbox);
       detail.onEscape.map((handler) => {
         return handler(menuSandbox);
