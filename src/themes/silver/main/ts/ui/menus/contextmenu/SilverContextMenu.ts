@@ -8,7 +8,7 @@
 import { AlloyComponent, GuiFactory, InlineView } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result, Type, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
@@ -111,7 +111,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       dom: {
         tag: 'div',
       },
-      lazySink
+      lazySink,
+      onEscape: () => editor.focus()
     })
   );
 
