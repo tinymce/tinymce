@@ -10,10 +10,10 @@
 
 declare let tinymce: any;
 
-const inliteClassicConfig = {
+const quickbarsClassicConfig = {
   selector: 'textarea.tinymce',
-  plugins: 'inlite link code',
-  toolbar: 'inlite code',
+  plugins: 'quickbars link code',
+  toolbar: 'quickbars code',
   menubar: 'view insert tools custom',
   link_quicklink: true,
   height: 600,
@@ -31,11 +31,11 @@ const inliteClassicConfig = {
 
 const dfreeHeaderConfig = {
   selector: '.dfree-header',
-  plugins: [ 'inlite' ],
+  plugins: [ 'quickbars' ],
   toolbar: false,
   menubar: false,
   inline: true,
-  inlite_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote'
+  quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote'
 };
 
 const dfreeBodyConfig = {
@@ -51,15 +51,15 @@ const dfreeBodyConfig = {
     'table',
     'textcolor',
     'image',
-    'inlite'
+    'quickbars'
   ],
   toolbar: false,
-  inlite_insert_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-  inlite_selection_toolbar: 'bold italic | h2 h3 | blockquote quicklink',
+  quickbars_insert_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+  quickbars_selection_toolbar: 'bold italic | h2 h3 | blockquote quicklink',
   contextmenu: 'inserttable | cell row column deletetable',
 };
 
-tinymce.init(inliteClassicConfig);
+tinymce.init(quickbarsClassicConfig);
 tinymce.init(dfreeHeaderConfig);
 tinymce.init(dfreeBodyConfig);
 

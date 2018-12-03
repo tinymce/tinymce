@@ -12,7 +12,7 @@ import { default as InsertToolbars } from './insert/Toolbars';
 import { default as SelectionButtons } from './selection/Buttons';
 import { default as SelectionToolbars } from './selection/Toolbars';
 
-PluginManager.add('inlite', function (editor) {
+PluginManager.add('quickbars', function (editor) {
   InsertButtons.setupButtons(editor);
   InsertToolbars.addToEditor(editor);
 

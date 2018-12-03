@@ -8,10 +8,10 @@
 import DOMUtils from './api/dom/DOMUtils';
 import MousePosition from './dom/MousePosition';
 import NodeType from './dom/NodeType';
-import Arr from './util/Arr';
 import Delay from './api/util/Delay';
-import Fun from './util/Fun';
 import { document } from '@ephox/dom-globals';
+import Predicate from './util/Predicate';
+import { Arr } from '@ephox/katamari';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -127,7 +127,7 @@ const applyRelPos = function (state, position) {
 const start = function (state, editor) {
   return function (e) {
     if (isLeftMouseButtonPressed(e)) {
-      const ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
+      const ceElm = Arr.find(editor.dom.getParents(e.target), Predicate.or(isContentEditableFalse, isContentEditableTrue)).getOr(null);
 
       if (isDraggable(editor.getBody(), ceElm)) {
         const elmPos = editor.dom.getPos(ceElm);

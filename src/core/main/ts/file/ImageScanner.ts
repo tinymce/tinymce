@@ -6,12 +6,11 @@
  */
 
 import Promise from '../api/util/Promise';
-import Arr from '../util/Arr';
-import Fun from '../util/Fun';
 import Conversions from './Conversions';
 import Env from '../api/Env';
 import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
 import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import { Fun, Arr } from '@ephox/katamari';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;
@@ -91,8 +90,8 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
   }
 };
 
-const getAllImages = function (elm: HTMLElement): HTMLElement[] {
-  return elm ? (elm as any).getElementsByTagName('img') : [];
+const getAllImages = function (elm: HTMLElement): HTMLImageElement[] {
+  return elm ? Arr.from(elm.getElementsByTagName('img')) : [];
 };
 
 export default function (uploadStatus, blobCache: BlobCache): ImageScanner {

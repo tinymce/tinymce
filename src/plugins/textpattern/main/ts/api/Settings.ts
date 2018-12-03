@@ -5,6 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { createPatternSet, PatternSet } from './Pattern';
+import { Obj } from '@ephox/katamari';
+
 const defaultPatterns = [
   { start: '*', end: '*', format: 'italic' },
   { start: '**', end: '**', format: 'bold' },
@@ -20,12 +23,11 @@ const defaultPatterns = [
   { start: '- ', cmd: 'InsertUnorderedList' }
 ];
 
-const getPatterns = function (editorSettings) {
-  return editorSettings.textpattern_patterns !== undefined ?
-    editorSettings.textpattern_patterns :
-    defaultPatterns;
+const getPatternSet = (editorSettings): PatternSet => {
+  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
+  return createPatternSet(patterns);
 };
 
-export default {
-  getPatterns
+export {
+  getPatternSet,
 };

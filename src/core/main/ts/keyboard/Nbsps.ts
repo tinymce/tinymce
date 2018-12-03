@@ -52,7 +52,19 @@ const isInPre = (pos: CaretPosition) => {
     .exists((elm) => isPreValue(Css.get(elm, 'white-space')));
 };
 
-const isAtLineBoundary = (root: Element, pos: CaretPosition) => isAtStartOfBlock(root, pos) || isAtEndOfBlock(root, pos) || isAfterBr(root, pos) || isBeforeBr(root, pos);
+const isAtBeginningOfBody = (root, pos) => CaretFinder.prevPosition(root.dom(), pos).isNone();
+const isAtEndOfBody = (root, pos) => CaretFinder.nextPosition(root.dom(), pos).isNone();
+
+const isAtLineBoundary = (root: Element, pos: CaretPosition) => {
+  return (
+    isAtBeginningOfBody(root, pos) ||
+    isAtEndOfBody(root, pos) ||
+    isAtStartOfBlock(root, pos) ||
+    isAtEndOfBlock(root, pos) ||
+    isAfterBr(root, pos) ||
+    isBeforeBr(root, pos)
+  );
+};
 
 const needsToHaveNbsp = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
