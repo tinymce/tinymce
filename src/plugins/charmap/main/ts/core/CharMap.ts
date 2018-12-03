@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import { Arr } from '@ephox/katamari';
@@ -14,7 +15,12 @@ const isArray = Tools.isArray;
 // TODO: i18n
 export const UserDefined = 'User Defined';
 
-const getDefaultCharMap = function () {
+export type CharMap = {
+  name: string,
+  characters: [string, string][]
+};
+
+const getDefaultCharMap = function (): CharMap[] {
   return [
     // TODO: Merge categories with TBIO
     // {
@@ -378,7 +384,7 @@ const getCharsFromSetting = function (settingValue) {
   return [];
 };
 
-const extendCharMap = function (editor, charmap) {
+const extendCharMap = function (editor: Editor, charmap: CharMap[]) {
   const userCharMap = Settings.getCharMap(editor);
   if (userCharMap) {
     charmap = [{name: UserDefined, characters: getCharsFromSetting(userCharMap)}];
@@ -397,7 +403,7 @@ const extendCharMap = function (editor, charmap) {
   return charmap;
 };
 
-const getCharMap = function (editor) {
+const getCharMap = function (editor: Editor): CharMap[] {
   const groups = extendCharMap(editor, getDefaultCharMap());
   return groups.length > 1 ? [
     {
