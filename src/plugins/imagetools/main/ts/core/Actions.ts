@@ -36,7 +36,7 @@ const displayError = function (editor: Editor, error) {
 };
 
 const getSelectedImage = function (editor: Editor) {
-  return editor.selection.getNode();
+  return editor.selection.getNode() as HTMLImageElement;
 };
 
 const extractFilename = function (editor: Editor, url) {

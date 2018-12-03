@@ -180,7 +180,7 @@ export interface Editor {
   translate(text: string): string;
   unbindAllNativeEvents(): void;
   uploadImages(callback): void;
-  _scanForImages(): void;
+  _scanForImages(): Promise<any>;
 }
 
 export interface Ui {
