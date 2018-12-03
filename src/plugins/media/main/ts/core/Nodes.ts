@@ -106,7 +106,7 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
 
 const isPageEmbedWrapper = (node: Node) => {
   const nodeClass = node.attr('class') as string;
-  return nodeClass && nodeClass.indexOf('tiny-pageembed') !== -1;
+  return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
 };
 
 const isWithinEmbedWrapper = function (node: Node) {
