@@ -17,7 +17,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   inlineBehaviours: SketchBehaviours;
   onShow: (component: AlloyComponent) => void;
   onHide: (component: AlloyComponent) => void;
-  onEscape: (component: AlloyComponent) => void;
+  onEscape: Option<(component: AlloyComponent) => void>;
   getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;

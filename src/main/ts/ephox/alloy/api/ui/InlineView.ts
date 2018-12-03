@@ -19,7 +19,7 @@ import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
 import { LazySink } from '../component/CommonTypes';
 
-const makeMenu = (detail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
   return tieredMenu.sketch({
     dom: {
@@ -31,7 +31,9 @@ const makeMenu = (detail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuS
 
     onEscape() {
       Sandboxing.close(menuSandbox);
-      detail.onEscape(menuSandbox);
+      detail.onEscape.map((handler) => {
+        return handler(menuSandbox);
+      });
       return Option.some(true);
     },
 
@@ -53,7 +55,7 @@ const makeMenu = (detail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuS
   });
 };
 
-const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
+const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
   const isPartOfRelated = (sandbox, queryElem) => {
     const related = detail.getRelated(sandbox);
     return related.exists((rel) => {
@@ -76,9 +78,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(detail, sandbox, anchor, menuSpec);
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec);
 
-    Sandboxing.open(sandbox, thing);
+    Sandboxing.open(sandbox, menu);
     detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
@@ -135,7 +137,7 @@ const InlineView = Sketcher.single({
     FieldSchema.strict('lazySink'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
-    Fields.onHandler('onEscape'),
+    FieldSchema.optionFunction('onEscape'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
     FieldSchema.optionObjOf('fireDismissalEventInstead', [
       FieldSchema.defaulted('event', SystemEvents.dismissRequested())
