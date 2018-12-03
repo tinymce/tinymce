@@ -6,7 +6,7 @@ Welcome to the Beta!
 
 [Beta documentation](https://tiny.cloud/docs-preview/)
 
-[Log feedback](https://github.com/tinymce/tinymce/labels/beta)
+[Log feedback](https://github.com/tinymce/tinymce/labels/5.x)
 
 
 TinyMCE - JavaScript Library for Rich Text Editing
