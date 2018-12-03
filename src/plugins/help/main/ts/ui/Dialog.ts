@@ -11,7 +11,7 @@ import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
 import { Types } from '@ephox/bridge';
 
-const opener = function (editor: Editor, pluginUrl) {
+const opener = function (editor: Editor) {
   return function () {
     const body: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',

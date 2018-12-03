@@ -7,8 +7,8 @@
 
 import Dialog from '../ui/Dialog';
 
-const register = function (editor, pluginUrl) {
-  editor.addCommand('mceHelp', Dialog.opener(editor, pluginUrl));
+const register = function (editor) {
+  editor.addCommand('mceHelp', Dialog.opener(editor));
 };
 
 export default {
