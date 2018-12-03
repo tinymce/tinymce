@@ -1,8 +1,9 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Id, Option, Result } from '@ephox/katamari';
-
+import { BodyComponentApi } from './BodyComponent';
 import { InternalPanel, PanelApi, panelFields } from './Panel';
 import { InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+
 
 export interface DialogButtonApi {
   type: 'submit' | 'cancel' | 'custom';
@@ -12,6 +13,10 @@ export interface DialogButtonApi {
   primary?: boolean;
   disabled?: boolean;
 }
+
+export type PanelApi = PanelApi;
+export type TabPanelApi = TabPanelApi;
+export type BodyComponentApi = BodyComponentApi;
 
 export type DialogDataItem = any;
 export type DialogData = Record<string, DialogDataItem>;
