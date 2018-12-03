@@ -9,6 +9,7 @@ import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
+import { Types } from '@ephox/bridge';
 
 export interface PluginUrlType {
   key: string;
@@ -72,16 +73,17 @@ const tab = (editor: Editor) => {
       '</div>';
   };
 
+  const htmlPanel: Types.Dialog.BodyComponentApi = {
+    type: 'htmlpanel',
+    html: [
+      installedPlugins(editor),
+      availablePlugins()
+    ].join('')
+  };
   return {
     title: 'Plugins',
     items: [
-      {
-        type: 'htmlpanel',
-        html: [
-          installedPlugins(editor),
-          availablePlugins()
-        ].join('')
-      }
+      htmlPanel
     ]
   };
 };

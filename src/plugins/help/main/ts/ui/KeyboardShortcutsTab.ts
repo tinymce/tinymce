@@ -9,6 +9,7 @@ import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 import ConvertShortcut from '../alien/ConvertShortcut';
+import { Types } from '@ephox/bridge';
 
 export interface ShortcutActionPairType {
   shortcuts: string[];
@@ -24,23 +25,24 @@ const tab = () => {
             '</tr>';
   }).join('');
 
+  const htmlPanel: Types.Dialog.BodyComponentApi = {
+    type: 'htmlpanel',
+    html: '<div>' +
+      '<table class="mce-table-striped">' +
+      '<thead>' +
+      '<th>' + I18n.translate('Action') + '</th>' +
+      '<th>' + I18n.translate('Shortcut') + '</th>' +
+      '</thead>' +
+      '<tbody>' +
+      shortcutLisString +
+      '</tbody>' +
+      '</table>' +
+      '</div>'
+  };
   return {
     title: 'Handy Shortcuts',
     items: [
-      {
-        type: 'htmlpanel',
-        html: '<div>' +
-                '<table class="mce-table-striped">' +
-                  '<thead>' +
-                    '<th>' + I18n.translate('Action') + '</th>' +
-                    '<th>' + I18n.translate('Shortcut') + '</th>' +
-                  '</thead>' +
-                  '<tbody>' +
-                    shortcutLisString +
-                  '</tbody>' +
-                '</table>' +
-              '</div>'
-      }
+      htmlPanel
     ]
   };
 };
