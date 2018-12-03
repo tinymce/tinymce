@@ -18,7 +18,7 @@ export interface ShortcutActionPairType {
 const tab = () => {
   const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut: ShortcutActionPairType) {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
-    return '<tr tabindex="-1" ' + '>' +
+    return '<tr>' +
               '<td>' + I18n.translate(shortcut.action) + '</td>' +
               '<td>' + shortcutText + '</td>' +
             '</tr>';
