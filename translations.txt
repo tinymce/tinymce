@@ -135,6 +135,13 @@ White                     <new>                 Color Swatch
 
 Color Picker              [Color]               Color Picker
 
+Switch to or from fullscreen mode           <new>       Help shortcuts
+Find (if searchreplace plugin activated)    <new>       Help shortcuts
+Save (if save plugin activated)             <new>       Help shortcuts
+Insert link (if link plugin activated)      <new>       Help shortcuts
+Open help dialog                            <new>       Help shortcuts
+
+
 No longer Used
 -----------------------------------------------------
 Color               (Color Picker dialog)
@@ -181,4 +188,4 @@ URL (es)
 skipped Items, circle back
 -----------------------------------------------------
 Spellcheck -> unable to run demo
-Inlite -> very broken atm
+Quickbars -> very broken atm
