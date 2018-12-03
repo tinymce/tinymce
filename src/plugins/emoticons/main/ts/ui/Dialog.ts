@@ -11,10 +11,16 @@ import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
 import { insertEmoticon } from '../core/Actions';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';
 
 const open = function (editor: Editor, database: EmojiDatabase) {
+
+  const initialState = {
+    pattern: '',
+    results: emojisFrom(database.listAll(), '', Option.some(50))
+  };
 
   const scan = (dialogApi, category: string) => {
     const dialogData = dialogApi.getData();
@@ -32,60 +38,57 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   const currentTab = Cell(ALL_CATEGORY);
 
-  const searchField = {
+  const searchField: Types.Dialog.BodyComponentApi = {
     label: 'Search',
     type: 'input',
     name: patternName
   };
 
-  const resultsField = {
+  const resultsField: Types.Dialog.BodyComponentApi = {
     type: 'collection',
     name: 'results',
     columns: 'auto'
   };
 
-  const getInitialState = () => ({
-    title: 'Emoticons',
-    size: 'normal',
-    body: {
+  const getInitialState = (): Types.Dialog.DialogApi<typeof initialState> => {
+    const body: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
       // All tabs have the same fields.
-      tabs: Arr.map(
-        database.listCategories(),
-        (cat) => ({
-          title: cat,
-          items: [ searchField, resultsField ]
-        })
-      )
-    },
-    initialData: {
-      pattern: '',
-      results: emojisFrom(database.listAll(), '', Option.some(50))
-    },
-    onTabChange: (dialogApi, title: string) => {
-      currentTab.set(title);
-      updateFilter.throttle(dialogApi);
-    },
-    onChange: updateFilter.throttle,
-    onAction: (dialogApi, actionData) => {
-      if (actionData.name === 'results') {
-        insertEmoticon(editor, actionData.value);
-        dialogApi.close();
-      }
-    },
-    buttons: [
-      {
-        type: 'cancel',
-        text: 'Close'
-      }
-    ]
-  });
+      tabs: Arr.map(database.listCategories(), (cat) => ({
+        title: cat,
+        items: [searchField, resultsField]
+      }))
+    };
+    return {
+      title: 'Emoticons',
+      size: 'normal',
+      body,
+      initialData: initialState,
+      onTabChange: (dialogApi, title: string) => {
+        currentTab.set(title);
+        updateFilter.throttle(dialogApi);
+      },
+      onChange: updateFilter.throttle,
+      onAction: (dialogApi, actionData) => {
+        if (actionData.name === 'results') {
+          insertEmoticon(editor, actionData.value);
+          dialogApi.close();
+        }
+      },
+      buttons: [
+        {
+          type: 'cancel',
+          text: 'Close'
+        }
+      ]
+    };
+  };
 
   const dialogApi = editor.windowManager.open(getInitialState());
 
   dialogApi.focus(patternName);
 
-  if (! database.hasLoaded()) {
+  if (!database.hasLoaded()) {
     dialogApi.block('Loading emoticons...');
     database.waitForLoad().then(() => {
       dialogApi.redial(getInitialState());
@@ -112,7 +115,10 @@ const open = function (editor: Editor, database: EmojiDatabase) {
             text: 'Close'
           }
         ],
-        initialData: { }
+        initialData: {
+          pattern: '',
+          results: []
+        }
       });
       dialogApi.focus(patternName);
       dialogApi.unblock();
