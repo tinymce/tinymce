@@ -5,14 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 import CodeSample from '../core/CodeSample';
 import Languages, { LanguageSpec } from '../core/Languages';
 import { Arr } from '@ephox/katamari';
 
-const open = (editor) => {
-  const minWidth = Settings.getDialogMinWidth(editor);
-  const minHeight = Settings.getDialogMinHeight(editor);
+const open = (editor: Editor) => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
   const defaultLanguage: string = Arr.head(languages).fold(() => '', (l) => l.value);
   const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
@@ -21,11 +19,6 @@ const open = (editor) => {
   editor.windowManager.open({
     title: 'Insert/Edit Code Sample',
     size: 'large',
-    minWidth,
-    minHeight,
-    layout: 'flex',
-    direction: 'column',
-    align: 'stretch',
     body: {
       type: 'panel',
       items: [
@@ -38,14 +31,8 @@ const open = (editor) => {
         {
           type: 'textarea',
           name: 'code',
-          multiline: true,
           flex: true,
-          spellcheck: false,
-          ariaLabel: 'Code view',
-          style: 'direction: ltr; text-align: left',
-          classes: 'monospace',
-          value: currentCode,
-          autofocus: true
+          label: 'Code view',
         }
       ]
     },
