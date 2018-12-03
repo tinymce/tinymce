@@ -19,7 +19,8 @@ import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
 import { LazySink } from '../component/CommonTypes';
 
-const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+const makeMenu = (detail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+  const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
   return tieredMenu.sketch({
     dom: {
       tag: 'div'
@@ -29,6 +30,8 @@ const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyCompon
     markers: menuSpec.menu.markers,
 
     onEscape() {
+      Sandboxing.close(menuSandbox);
+      detail.onEscape(menuSandbox);
       return Option.some(true);
     },
 
@@ -73,7 +76,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(() => detail.lazySink(sandbox), sandbox, anchor, menuSpec);
+    const thing = makeMenu(detail, sandbox, anchor, menuSpec);
 
     Sandboxing.open(sandbox, thing);
     detail.onShow(sandbox);
@@ -132,6 +135,7 @@ const InlineView = Sketcher.single({
     FieldSchema.strict('lazySink'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
+    Fields.onHandler('onEscape'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
     FieldSchema.optionObjOf('fireDismissalEventInstead', [
       FieldSchema.defaulted('event', SystemEvents.dismissRequested())
