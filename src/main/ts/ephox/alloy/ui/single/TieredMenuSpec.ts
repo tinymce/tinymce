@@ -1,5 +1,5 @@
-import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Body, Class, Classes, SelectorFind } from '@ephox/sugar';
+import { Arr, Fun, Obj, Option, Options, Cell } from '@ephox/katamari';
+import { Body, Class, Classes, SelectorFind, SelectorFilter, Attr } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
 import { Composing } from '../../api/behaviour/Composing';
@@ -23,7 +23,6 @@ import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
-
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
 
 export interface MenuPrepared {
@@ -37,6 +36,8 @@ export interface MenuNotBuilt {
 }
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
+  const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(Option.none());
+
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
     return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
 
@@ -53,7 +54,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           onHighlight: detail.onHighlight,
 
           focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
-        })
+        });
       };
 
       // Only build the primary at first. Build the others as needed.
@@ -102,7 +103,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       Arr.map(menuValues, (mv) => {
         return state.lookupMenu(mv).bind((prep) => {
           return prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
-        })
+        });
       })
     );
   };
@@ -117,11 +118,38 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
   };
 
+  const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => {
+    return submenuParentItems.get().fold(() => {
+      const r = { };
+      const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
+      const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
+      Arr.each(parentItems, (i) => {
+        container.getSystem().getByDom(i).each((itemComp) => {
+          const key = getItemValue(itemComp);
+          r[key] = itemComp;
+        });
+      });
+      submenuParentItems.set(Option.some(r));
+      return r;
+    }, (parentItems) => parentItems);
+  };
+
+  // Not ideal. Ideally, we would like a map of item keys to components.
+  const updateAriaExpansions = (container: AlloyComponent, path: string[]) => {
+    const parentItems = getSubmenuParents(container);
+    Obj.each(parentItems, (v, k) => {
+      // Really should turn path into a Set
+      const expanded = Arr.contains(path, k);
+      Attr.set(v.element(), 'aria-expanded', expanded);
+    });
+  };
+
   const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => {
     return Option.from(path[0]).bind((latestMenuName) => {
       return state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
-        if (menuPrep.type === 'notbuilt') return Option.none();
-        else {
+        if (menuPrep.type === 'notbuilt') {
+          return Option.none();
+        } else {
           const activeMenu = menuPrep.menu;
           const rest = getMenus(state, path.slice(1));
           Arr.each(rest, (r) => {
@@ -153,11 +181,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     } else {
       return menuPrep.menu;
     }
-  }
+  };
 
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
+      updateAriaExpansions(container, path);
       // When expanding, always select the first.
       return Option.from(path[0]).bind((menuName) => {
           return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
@@ -186,6 +215,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const collapseLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.collapse(value).bind((path) => {
+      updateAriaExpansions(container, path);
       return updateMenuPath(container, layeredState, path).map((activeMenu) => {
         detail.onCollapseMenu(container, item, activeMenu);
         return activeMenu;
@@ -292,13 +322,13 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const highlightPrimary = (container: AlloyComponent) => {
     layeredState.getPrimary().each((primary) => {
       setActiveMenu(container, primary);
-    })
-  }
+    });
+  };
 
   const apis: TieredMenuApis = {
     collapseMenu: collapseMenuApi,
     highlightPrimary
-  }
+  };
 
   return {
     uid: detail.uid,

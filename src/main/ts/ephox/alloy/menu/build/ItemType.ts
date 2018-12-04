@@ -25,8 +25,10 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
       // INVESTIGATE: If more efficient, destructure attributes out
       ...detail.domModification,
       attributes: {
-        role:  detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
-        ...detail.domModification.attributes
+        'role':  detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
+        ...detail.domModification.attributes,
+        'aria-haspopup': detail.hasSubmenu,
+        ...(detail.hasSubmenu ? { 'aria-expanded': false } : {})
       }
     },
 
@@ -85,6 +87,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.strict('data'),
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),
+  FieldSchema.defaulted('hasSubmenu', false),
 
   FieldSchema.option('toggling'),
 
