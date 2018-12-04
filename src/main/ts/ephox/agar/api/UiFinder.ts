@@ -75,6 +75,20 @@ const sNotExists = function <T>(container: Element, selector: string) {
   });
 };
 
+const cExists = (selector) => Chain.on((container: any, next, die, logs) => {
+  findIn(container, selector).fold(
+    () => die('Expected ' + selector + ' to exist.', logs),
+    () => next(Chain.wrap(container), logs)
+  );
+});
+
+const cNotExists = (selector) => Chain.on((container: any, next, die, logs) => {
+  findIn(container, selector).fold(
+    () => next(Chain.wrap(container), logs),
+    () => die('Expected ' + selector + ' not to exist.', logs)
+  );
+});
+
 const cFindIn = function (selector: string) {
   return Chain.binder(function (container: Element) {
     return findIn(container, selector);
@@ -97,6 +111,9 @@ export {
   sWaitFor,
   sWaitForVisible,
   sWaitForHidden,
+
+  cExists,
+  cNotExists,
 
   cWaitFor,
   cWaitForVisible,

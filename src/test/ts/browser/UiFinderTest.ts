@@ -28,6 +28,8 @@ UnitTest.asynctest('UiFinderTest', function () {
     UiFinder.sExists(container, 'strong'),
 
     Chain.asStep(container, [
+      UiFinder.cNotExists('em'),
+      UiFinder.cExists('strong'),
       UiFinder.cFindIn('strong'),
       Chain.op(function (strong) {
         Assertions.assertEq('Checking contents of strong tag', 'bold', Html.get(strong));
