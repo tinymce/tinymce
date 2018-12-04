@@ -11,6 +11,7 @@ import UndoRedo from './UndoRedo';
 import VisualAid from './VisualAid';
 import ColorSwatch from './color/ColorSwatch';
 import { Editor } from 'tinymce/core/api/Editor';
+import IndentOutdent from './IndentOutdent';
 
 const setup = (editor: Editor) => {
   Align.register(editor);
@@ -18,6 +19,7 @@ const setup = (editor: Editor) => {
   UndoRedo.register(editor);
   ColorSwatch.register(editor);
   VisualAid.register(editor);
+  IndentOutdent.register(editor);
 };
 
 export default {

@@ -133,6 +133,14 @@ const getLanguageUrl = (editor: Editor) => {
   return editor.getParam('language_url', '', 'string');
 };
 
+const shouldIndentUseMargin = (editor: Editor) => {
+  return editor.getParam('indent_use_margin', false);
+};
+
+const getIndentation = (editor: Editor) => {
+  return editor.getParam('indentation', '40px', 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -159,5 +167,7 @@ export default {
   getImagesUploadHandler,
   shouldUseContentCssCors,
   getLanguageCode,
-  getLanguageUrl
+  getLanguageUrl,
+  shouldIndentUseMargin,
+  getIndentation
 };

@@ -33,13 +33,11 @@ const map = Tools.map, inArray = Tools.inArray;
 export default function (editor: Editor) {
   let dom: DOMUtils, selection: Selection, formatter;
   const commands = { state: {}, exec: {}, value: {} };
-  let settings = editor.settings,
-    bookmark;
+  let bookmark;
 
   editor.on('PreInit', function () {
     dom = editor.dom;
     selection = editor.selection;
-    settings = editor.settings;
     formatter = editor.formatter;
   });
 
@@ -553,23 +551,7 @@ export default function (editor: Editor) {
     },
 
     'Outdent' () {
-      let node;
-
-      if (settings.inline_styles) {
-        if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return true;
-        }
-
-        if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return true;
-        }
-      }
-
-      return (
-        queryCommandState('InsertUnorderedList') ||
-        queryCommandState('InsertOrderedList') ||
-        (!settings.inline_styles && !!dom.getParent(selection.getNode(), 'BLOCKQUOTE'))
-      );
+      return IndentOutdent.canOutdent(editor);
     },
 
     'InsertUnorderedList,InsertOrderedList' (command) {

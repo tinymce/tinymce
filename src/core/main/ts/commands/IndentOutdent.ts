@@ -8,25 +8,49 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import { Arr } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/dom-globals';
-import { isListItem, isList } from '../dom/ElementType';
-import { Element, Traverse } from '@ephox/sugar';
+import { isListItem, isList, isTable } from '../dom/ElementType';
+import { Element, Traverse, Css } from '@ephox/sugar';
+import Settings from '../api/Settings';
+
+const parseIndentValue = (value: string) => {
+  const number = parseInt(value, 10);
+  return isNaN(number) ? 0 : number;
+};
+
+const getIndentStyleName = (useMargin: boolean, element: Element) => {
+  const indentStyleName = useMargin || isTable(element) ? 'margin' : 'padding';
+  const suffix = Css.get(element, 'direction') === 'rtl' ? '-right' : '-left';
+  return indentStyleName + suffix;
+};
 
 const indentElement = (dom, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement) => {
   if (dom.getContentEditable(element) === 'false') {
     return;
   }
 
-  let indentStyleName = useMargin ? 'margin' : 'padding';
-  indentStyleName = element.nodeName === 'TABLE' ? 'margin' : indentStyleName;
-  indentStyleName += dom.getStyle(element, 'direction', true) === 'rtl' ? 'Right' : 'Left';
+  const indentStyleName = getIndentStyleName(useMargin, Element.fromDom(element));
 
   if (command === 'outdent') {
-    const styleValue = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - value);
+    const styleValue = Math.max(0, parseIndentValue(element.style[indentStyleName]) - value);
     dom.setStyle(element, indentStyleName, styleValue ? styleValue + unit : '');
   } else {
-    const styleValue = (parseInt(element.style[indentStyleName] || 0, 10) + value) + unit;
+    const styleValue = parseIndentValue(element.style[indentStyleName]) + value + unit;
     dom.setStyle(element, indentStyleName, styleValue);
   }
+};
+
+const validateBlocks = (editor: Editor, blocks: Element[]) => {
+  return Arr.forall(blocks, (block) => {
+    const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
+    const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
+    const contentEditable = editor.dom.getContentEditable(block.dom());
+    return contentEditable !== 'false' && intentValue > 0;
+  });
+};
+
+const canOutdent = (editor: Editor) => {
+  const blocks = getBlocksToIndent(editor);
+  return editor.readonly !== true && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
 const isListComponent = (el: Element) => {
@@ -43,15 +67,17 @@ const getBlocksToIndent = (editor: Editor) => {
   );
 };
 
-export const handle = (editor: Editor, command: string) => {
-  const { settings, dom, selection, formatter } = editor;
-  const indentUnit = /[a-z%]+$/i.exec(settings.indentation)[0];
-  const indentValue = parseInt(settings.indentation, 10);
-  const useMargin = editor.getParam('indent_use_margin', false);
+const handle = (editor: Editor, command: string) => {
+  const { dom, selection, formatter } = editor;
+  const indentation = Settings.getIndentation(editor);
+  const indentUnit = /[a-z%]+$/i.exec(indentation)[0];
+  const indentValue = parseInt(indentation, 10);
+  const useMargin = Settings.shouldIndentUseMargin(editor);
+  const forcedRootBlock = Settings.getForcedRootBlock(editor);
 
   // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
   if (!editor.queryCommandState('InsertUnorderedList') && !editor.queryCommandState('InsertOrderedList')) {
-    if (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {
+    if (forcedRootBlock === '' && !dom.getParent(selection.getNode(), dom.isBlock)) {
       formatter.apply('div');
     }
   }
@@ -59,4 +85,9 @@ export const handle = (editor: Editor, command: string) => {
   Arr.each(getBlocksToIndent(editor), (block) => {
     indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom());
   });
+};
+
+export {
+  canOutdent,
+  handle
 };
