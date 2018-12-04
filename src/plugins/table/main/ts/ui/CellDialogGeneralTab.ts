@@ -5,14 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import { getCellClassList } from '../api/Settings';
 import Helpers from './Helpers';
 import { Option } from '@ephox/katamari';
+import { Types } from '@ephox/bridge';
 
-const getClassList = (editor): Option<Object> => {
+const getClassList = (editor: Editor) => {
   const rowClassList = getCellClassList(editor);
 
-  const classes = Helpers.buildListItems(
+  const classes: Types.SelectBox.ExternalSelectBoxItem[] = Helpers.buildListItems(
     rowClassList,
     (item) => {
       if (item.value) {
@@ -24,17 +26,17 @@ const getClassList = (editor): Option<Object> => {
   );
 
   if (rowClassList.length > 0) {
-    return Option.some({
+    return Option.some<Types.Dialog.BodyComponentApi>({
       name: 'class',
       type: 'selectbox',
       label: 'Class',
       items: classes
     });
   }
-  return Option.none();
+  return Option.none<Types.Dialog.BodyComponentApi>();
 };
 
-const children: Object[] = [
+const children: Types.Dialog.BodyComponentApi[] = [
   {
     name: 'width',
     type: 'input',
@@ -90,21 +92,15 @@ const children: Object[] = [
   }
 ];
 
-const tab = (editor) => {
+const items = (editor): Types.Dialog.BodyComponentApi[] => {
 
-  const items = getClassList(editor).fold(
+  return getClassList(editor).fold(
     () => children,
     (classlist) => children.concat(classlist)
   );
 
-  return {
-    title: 'General',
-    type: 'grid',
-    columns: 2,
-    items
-  };
 };
 
 export default {
-  tab
+  items
 };
