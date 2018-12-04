@@ -14,6 +14,8 @@
 
 .tox {
   .tox-comment-thread {
+    position: relative;
+
     > *:not(:first-child) {
       margin-top: @pad-sm;
     }
@@ -64,38 +66,30 @@
   }
 
   .tox-comment__body textarea {
-    resize: both;
     overflow: auto;
+    resize: both;
   }
 
   .tox-comment--buttonspacing {
     padding-top: @pad-md;
+    text-align: center;
 
     > *:last-child {
       margin-left: @pad-sm;
     }
   }
 
-  .tox-comment-thread--overlay {
-    > div::after {
-      align-items: center;
-      background: #fff;
-      bottom: 0;
-      @comment-font-size: @font-size-lg;
-
-      content: "";
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      left: 0;
-      opacity: .9;
-      padding: 1em;
-      position: absolute;
-      right: 0;
-      text-align: center;
-      top: 0;
-      z-index: 5;
-    }
+  .tox-comment-thread--overlay::after {
+    background-color: #fff;
+    bottom: 0;
+    content: "";
+    display: flex;
+    left: 0;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 5;
   }
 
   .tox-comment__reply {
@@ -128,15 +122,13 @@
   }
 
   .tox-comment--gradient::after {
-    //> *:first-child {
-      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 100%);
-      content: "";
-      display: block;
-      height: 40px;
-      margin-top: -40px;
-      position: relative;
-      width: 100%;
-    //}
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 100%);
+    content: "";
+    display: block;
+    height: 40px;
+    margin-top: -40px;
+    position: relative;
+    width: 100%;
   }
 
   .tox-comment--overlay {
@@ -166,7 +158,9 @@
     top: 0;
     z-index: 10;
 
-    > div {
+    p {
+      background-color: white;
+      box-shadow: 0 0 8px 8px white;
       text-align: center;
     }
 
