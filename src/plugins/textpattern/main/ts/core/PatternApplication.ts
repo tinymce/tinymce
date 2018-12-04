@@ -7,11 +7,15 @@
 
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Tools from 'tinymce/core/api/util/Tools';
-import { Text } from '@ephox/dom-globals';
+import { Text, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { InlinePattern, BlockPattern, ReplacementPattern } from '../api/Pattern';
 import { Editor } from 'tinymce/core/api/Editor';
 import { findInlinePattern, findPattern, findReplacementPattern, ReplacementMatch } from './FindPatterns';
+
+const isText = (node: Node): node is Text => {
+  return node && node.nodeType === 3;
+};
 
 const setSelection = (editor: Editor, textNode: Text, offset: number): void => {
   const newRng = editor.dom.createRng();
@@ -97,7 +101,7 @@ const applyBlockPattern = (editor: Editor, patterns: BlockPattern[]): void => {
   if (textBlockElm) {
     walker = new TreeWalker(textBlockElm, textBlockElm);
     while ((node = walker.next())) {
-      if (node.nodeType === 3) {
+      if (isText(node)) {
         firstTextNode = node;
         break;
       }
@@ -143,44 +147,65 @@ const applyBlockPattern = (editor: Editor, patterns: BlockPattern[]): void => {
   }
 };
 
-const replaceData = (target: Text, match: ReplacementMatch) => {
-  target.deleteData(match.startOffset, match.pattern.start.length);
-  target.insertData(match.startOffset, match.pattern.replacement);
-};
+const selectionInsertText = (editor: Editor, string: string) => {
+  const rng = editor.selection.getRng();
+  const container = rng.startContainer;
 
-const replaceMiddle = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  const startOffset = editor.selection.getRng().startOffset;
-  replaceData(target, match);
-  const newOffset = startOffset - match.pattern.start.length + match.pattern.replacement.length;
-  setSelection(editor, target, newOffset);
-};
-
-const replaceEnd = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  replaceData(target, match);
-  setSelection(editor, target, target.data.length);
-};
-
-const replace = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  if (match.startOffset < target.data.length) {
-    replaceMiddle(editor, target, match);
+  if (isText(container)) {
+    const offset = rng.startOffset;
+    container.insertData(offset, string);
+    setSelection(editor, container, offset + string.length);
   } else {
-    replaceEnd(editor, target, match);
+    const newNode = editor.dom.doc.createTextNode(string);
+    rng.insertNode(newNode);
+    setSelection(editor, newNode, newNode.length);
   }
 };
 
-const applyReplacementPattern = (editor: Editor, patterns: ReplacementPattern[]) => {
-  const rng = editor.selection.getRng();
+const applyReplacement = (editor: Editor, target: Text, match: ReplacementMatch) => {
+  target.deleteData(match.startOffset, match.pattern.start.length);
+  editor.insertContent(match.pattern.replacement);
 
-  if (rng.collapsed && rng.startContainer.nodeType === 3) {
-    const container = rng.startContainer as Text;
+  Option.from(target.nextSibling).filter(isText).each((nextSibling: Text) => {
+    nextSibling.insertData(0, target.data);
+    editor.dom.remove(target);
+  });
+};
+
+const extractChar = (node: Text, match: ReplacementMatch): string => {
+  const offset = match.startOffset + match.pattern.start.length;
+  const char = node.data.slice(offset, offset + 1);
+  node.deleteData(offset, 1);
+  return char;
+};
+
+const applyReplacementPattern = (editor: Editor, patterns: ReplacementPattern[], inline: boolean) => {
+  const rng = editor.selection.getRng();
+  const container = rng.startContainer;
+
+  if (rng.collapsed && isText(container)) {
     findReplacementPattern(patterns, rng.startOffset, container.data).each((match) => {
-      replace(editor, container, match);
+      const char = inline ? Option.some(extractChar(container, match)) : Option.none();
+
+      applyReplacement(editor, container, match);
+
+      char.each((ch) => selectionInsertText(editor, ch));
     });
   }
 };
 
+const applyReplacementPatternSpace = (editor: Editor, patterns: ReplacementPattern[]) => {
+  applyReplacementPattern(editor, patterns, true);
+};
+
+const applyReplacementPatternEnter = (editor: Editor, patterns: ReplacementPattern[]) => {
+  applyReplacementPattern(editor, patterns, false);
+};
+
 export {
   applyReplacementPattern,
+  applyReplacementPatternSpace,
+  applyReplacementPatternEnter,
   applyInlinePatternSpace,
   applyInlinePatternEnter,
   applyBlockPattern
