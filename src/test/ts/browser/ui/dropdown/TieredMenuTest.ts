@@ -1,8 +1,9 @@
 
-import { Assertions, Chain, Keyboard, Keys, Step, ApproxStructure, Mouse } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -15,7 +16,6 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
@@ -104,7 +104,9 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           classes: [ arr.has('item'), (sel ? arr.has : arr.not)('selected-item') ],
           attrs: {
             'aria-haspopup': str.is(hasPopups[i].toString()),
-            ...hasPopups[i] ? {'aria-expanded': str.is(isExpandeds[i].toString())} : {}
+            ...hasPopups[i]
+              ? {'aria-expanded': str.is(isExpandeds[i].toString())}
+              : { 'aria-expanded': str.none('aria-expanded should not exist') }
           }
         }))
       });
