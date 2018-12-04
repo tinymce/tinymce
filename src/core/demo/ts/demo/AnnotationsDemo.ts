@@ -22,38 +22,44 @@ export default function () {
 
     content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
-    setup: (ed: Editor) => {
-      ed.addButton('annotate-alpha', {
+    setup: (editor) => {
+      editor.ui.registry.addToggleButton('annotate-alpha', {
         text: 'Annotate',
-        onclick: () => {
+        onAction() {
           const comment = prompt('Comment with?');
-          ed.annotator.annotate('alpha', {
+          editor.annotator.annotate('alpha', {
             comment
           });
-          ed.focus();
+          editor.focus();
         },
+        onSetup (btnApi) {
 
-        onpostrender: (ctrl) => {
-          const button = ctrl.control;
-          ed.on('init', () => {
-            ed.annotator.annotationChanged('alpha', (state, name, obj) => {
+          // todo check this works annotationchanged
+          const toggleBtn = () => {
+            editor.annotator.annotationChanged('alpha', (state, name, obj) => {
               if (! state) {
-                button.active(false);
+                btnApi.setDisabled(true);
               } else {
-                button.active(true);
+                btnApi.setActive(true);
               }
             });
-          });
+          };
+          editor.on('init', toggleBtn);
+
+          return (btnApi) => {
+            editor.off('init', toggleBtn);
+          };
         }
       });
 
-      ed.on('init', () => {
-        ed.annotator.register('alpha', {
+      editor.on('init', () => {
+        editor.annotator.register('alpha', {
           persistent: true,
           decorate: (uid, data) => {
             return {
               attributes: {
-                'data-mce-comment': data.comment
+                'data-mce-comment': data.comment ? data.comment : '',
+                'data-mce-author': data.author ? data.author : 'anonymous'
               }
             };
           }
