@@ -5,8 +5,8 @@ import { Type } from '@ephox/katamari';
 
 export const selectors = {
   source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
-  width: '.tox-form__controls-h-stack span:contains(Dimension width) + input.tox-textfield',
-  height: '.tox-form__controls-h-stack span:contains(Dimension height) + input.tox-textfield',
+  width: '.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield',
+  height: '.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield',
   embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',
   saveButton: 'button.tox-button:contains(Save)',
   xClose: 'button[aria-label=Close]',

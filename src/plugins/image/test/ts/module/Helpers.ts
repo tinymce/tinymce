@@ -27,8 +27,8 @@ export type ImageDialogData = {
 export const dialogSelectors = {
   sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
   descriptionInput: 'label.tox-label:contains("Image description") + input.tox-textfield',
-  widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension width") + input.tox-textfield',
-  heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension height") + input.tox-textfield',
+  widthInput: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
+  heightInput: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
   captionRadio: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
   classSelect: 'label.tox-label:contains("Class") + div.tox-selectfield select',
 };
