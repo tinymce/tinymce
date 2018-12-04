@@ -114,7 +114,7 @@ const fromChainsWith = function <T>(initial: T, chains: Chain<any, any>[]) {
 
 const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[]) {
   return on(function (cvalue: T, cnext: NextFn<Wrap<U>>, cdie: DieFn, clogs: TestLogs) {
-    Pipeline.async(wrap(cvalue), [parent.runChain], function (value: Wrap<U>, finalLogs: TestLogs) {
+    Pipeline.async(wrap(cvalue), [parent.runChain], function (value: Wrap<U>, parentLogs: TestLogs) {
       const cs = Arr.map(chains, function (c) {
         return Pipe(function (_, next, die, logs) {
           // Replace _ with value
@@ -122,10 +122,10 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
         });
       });
 
-      Pipeline.async(wrap(cvalue), cs, function () {
+      Pipeline.async(wrap(cvalue), cs, function (_, finalLogs) {
         // Ignore all the values and use the original
         cnext(value, finalLogs);
-      }, cdie, clogs);
+      }, cdie, parentLogs);
     }, cdie, clogs);
   });
 };
