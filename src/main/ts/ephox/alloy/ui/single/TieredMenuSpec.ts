@@ -186,6 +186,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision  = ExpandHighlightDecision.HighlightSubmenu): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.expand(value).bind((path) => {
+      // Called when submenus are opened by keyboard AND hovering navigation
       updateAriaExpansions(container, path);
       // When expanding, always select the first.
       return Option.from(path[0]).bind((menuName) => {
@@ -215,6 +216,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const collapseLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.collapse(value).bind((path) => {
+      // Called when submenus are closed because of KEYBOARD navigation
       updateAriaExpansions(container, path);
       return updateMenuPath(container, layeredState, path).map((activeMenu) => {
         detail.onCollapseMenu(container, item, activeMenu);
@@ -226,6 +228,10 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const updateView = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.refresh(value).bind((path) => {
+      // Only this function collapses irrelevant submenus when navigating by HOVERING.
+      // Does mean this is called twice when navigating by hovering, since both
+      // updateView and expandRight are called by the ItemEvents.hover() handler
+      updateAriaExpansions(container, path);
       return updateMenuPath(container, layeredState, path);
     });
   };
