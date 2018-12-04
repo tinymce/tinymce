@@ -41,7 +41,7 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
         dom: {
           tag: 'button',
           classes: ['tox-notification__right-icon', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
-          innerHtml: Icons.get(`icon-${spec.icon}`, providersBackstage.icons),
+          innerHtml: Icons.get(spec.icon, providersBackstage.icons),
           attributes: {
             title: providersBackstage.translate(spec.actionLabel)
           }

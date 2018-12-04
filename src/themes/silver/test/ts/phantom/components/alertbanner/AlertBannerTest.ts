@@ -9,8 +9,8 @@ import I18n from 'tinymce/core/api/util/I18n';
 UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
   const providers = {
     icons: () => <Record<string, string>> {
-      'icon-helpA': 'icon-provided-for-help',
-      'icon-close': 'icon-provided-for-close'
+      helpA: 'provided-for-help',
+      close: 'provided-for-close'
     },
     menuItems: () => <Record<string, any>> {},
     translate: I18n.translate
@@ -49,7 +49,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
 
                 s.element('button', {
                   classes: [ arr.has('tox-notification__right-icon') ],
-                  html: str.is('icon-provided-for-help')
+                  html: str.is('provided-for-help')
                 }),
               ]
             });

@@ -326,7 +326,7 @@ export default () => {
   const linkInputSpec = renderTypeahead({
     label: Option.some('Url'),
     name: 'linkInput',
-    icon: 'icon-embed',
+    icon: 'embed',
     initialValue: '',
     getItems: (value) => {
       return Arr.map([
@@ -364,7 +364,7 @@ export default () => {
   const alertBannerSpec = renderAlertBanner({
     text: 'The alert banner message',
     level: 'warn',
-    icon: Icons.get('icon-close', sharedBackstage.providers.icons),
+    icon: Icons.get('close', sharedBackstage.providers.icons),
     actionLabel: 'Click here For somthing'
   }, sharedBackstage.providers);
 

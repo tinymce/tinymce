@@ -143,7 +143,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       detail.level.toArray(),
       detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
     ]),
-    (icon) => `icon-${icon}`
+    (icon) => icon
   );
 
   return {
@@ -189,7 +189,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
           dom: {
             tag: 'div',
             classes: ['tox-icon'],
-            innerHtml: getIcon('icon-close', detail.iconProvider)
+            innerHtml: getIcon('close', detail.iconProvider)
           }
         }],
         // TODO: aria label this button!

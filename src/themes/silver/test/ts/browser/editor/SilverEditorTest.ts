@@ -293,7 +293,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       setup: (ed) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',
-          icon: Icons.getDefault('icon-cut'),
+          icon: Icons.getDefault('cut'),
           onAction: () => {
             store.set(store.get().concat([ 'button1' ]));
           }

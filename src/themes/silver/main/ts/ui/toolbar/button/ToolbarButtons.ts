@@ -305,7 +305,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-          innerHtml: Icons.getOr('icon-chevron-down', sharedBackstage.providers.icons, Fun.constant(''))
+          innerHtml: Icons.getOr('chevron-down', sharedBackstage.providers.icons, Fun.constant(''))
         }
       })
     ]

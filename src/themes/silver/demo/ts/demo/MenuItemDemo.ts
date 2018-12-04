@@ -26,7 +26,7 @@ export default function () {
 
     setup (ed: Editor) {
       ed.ui.registry.addMenuItem('x1', {
-        icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
+        icon: Icons.getDefaultOr('drop', () => 'oh no'),
         text: 'Text with icon',
         onAction () {
           console.log('Just Text click');
@@ -70,7 +70,7 @@ export default function () {
       });
 
       ed.ui.registry.addNestedMenuItem('d1', {
-        // icon: Icons.getOr('icon-drop', () => 'oh no'),
+        // icon: Icons.getOr('drop', () => 'oh no'),
         text: 'nested',
         getSubmenuItems: () => [
           {
@@ -83,7 +83,7 @@ export default function () {
           {
             type: 'menuitem',
             text: 'Nested 2',
-            icon: Icons.getDefaultOr('icon-drop', () => 'oh no'),
+            icon: Icons.getDefaultOr('drop', () => 'oh no'),
             onAction () {
               console.log('clicked nested 1');
             }
