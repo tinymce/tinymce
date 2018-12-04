@@ -1,4 +1,3 @@
-import { Editor } from 'tinymce/core/api/Editor';
 import { prompt, document } from '@ephox/dom-globals';
 
 declare let tinymce: any;
@@ -23,7 +22,7 @@ export default function () {
     content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
     setup: (editor) => {
-      editor.ui.registry.addToggleButton('annotate-alpha', {
+      editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
         onAction() {
           const comment = prompt('Comment with?');
@@ -33,22 +32,9 @@ export default function () {
           editor.focus();
         },
         onSetup (btnApi) {
-
-          // todo check this works annotationchanged
-          const toggleBtn = () => {
-            editor.annotator.annotationChanged('alpha', (state, name, obj) => {
-              if (! state) {
-                btnApi.setDisabled(true);
-              } else {
-                btnApi.setActive(true);
-              }
-            });
-          };
-          editor.on('init', toggleBtn);
-
-          return (btnApi) => {
-            editor.off('init', toggleBtn);
-          };
+          editor.annotator.annotationChanged('alpha', (state, name, obj) => {
+            btnApi.setDisabled(state);
+          });
         }
       });
 
@@ -64,7 +50,6 @@ export default function () {
             };
           }
         });
-
       });
     },
 
