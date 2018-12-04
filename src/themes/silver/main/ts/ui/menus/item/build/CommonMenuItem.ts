@@ -47,6 +47,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
     components: componentRenderPipeline(structure.optComponents),
     data: spec.data,
     eventOrder: menuItemEventOrder,
+    hasSubmenu: spec.triggersSubmenu,
     itemBehaviours: Behaviour.derive(
       [
         AddEventsBehaviour.config('item-events', [
