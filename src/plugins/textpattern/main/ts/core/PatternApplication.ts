@@ -13,7 +13,7 @@ import { InlinePattern, BlockPattern, ReplacementPattern } from '../api/Pattern'
 import { Editor } from 'tinymce/core/api/Editor';
 import { findInlinePattern, findPattern, findReplacementPattern, ReplacementMatch } from './FindPatterns';
 
-const isText = function (node: Node): node is Text {
+const isText = (node: Node): node is Text => {
   return node && node.nodeType === 3;
 };
 
