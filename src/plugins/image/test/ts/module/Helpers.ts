@@ -25,7 +25,7 @@ export type ImageDialogData = {
 };
 
 export const dialogSelectors = {
-  sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-input-wrap input.tox-textfield',
+  sourceInput: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
   descriptionInput: 'label.tox-label:contains("Image description") + input.tox-textfield',
   widthInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension width") + input.tox-textfield',
   heightInput: 'label.tox-label:contains("Dimensions") + div.tox-form__controls-h-stack div span:contains("Dimension height") + input.tox-textfield',
