@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import FindReplaceText from './FindReplaceText';
 
@@ -18,7 +19,7 @@ const getElmIndex = function (elm) {
   return value;
 };
 
-const markAllMatches = function (editor, currentIndexState, regex) {
+const markAllMatches = function (editor: Editor, currentIndexState, regex) {
   let node, marker;
 
   marker = editor.dom.create('span', {
@@ -43,7 +44,7 @@ const unwrap = function (node) {
   node.parentNode.removeChild(node);
 };
 
-const findSpansByIndex = function (editor, index) {
+const findSpansByIndex = function (editor: Editor, index) {
   let nodes;
   const spans = [];
 
@@ -65,7 +66,7 @@ const findSpansByIndex = function (editor, index) {
   return spans;
 };
 
-const moveSelection = function (editor, currentIndexState, forward) {
+const moveSelection = function (editor: Editor, currentIndexState, forward) {
   let testIndex = currentIndexState.get();
   const dom = editor.dom;
 
@@ -99,7 +100,7 @@ const removeNode = function (dom, node) {
   }
 };
 
-const find = function (editor, currentIndexState, text, matchCase, wholeWord) {
+const find = function (editor: Editor, currentIndexState, text, matchCase, wholeWord) {
   text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   text = text.replace(/\s/g, '[^\\S\\r\\n]');
   text = wholeWord ? '\\b' + text + '\\b' : text;
@@ -114,7 +115,7 @@ const find = function (editor, currentIndexState, text, matchCase, wholeWord) {
   return count;
 };
 
-const next = function (editor, currentIndexState) {
+const next = function (editor: Editor, currentIndexState) {
   const index = moveSelection(editor, currentIndexState, true);
 
   if (index !== -1) {
@@ -122,7 +123,7 @@ const next = function (editor, currentIndexState) {
   }
 };
 
-const prev = function (editor, currentIndexState) {
+const prev = function (editor: Editor, currentIndexState) {
   const index = moveSelection(editor, currentIndexState, false);
 
   if (index !== -1) {
@@ -136,7 +137,7 @@ const isMatchSpan = function (node) {
   return matchIndex !== null && matchIndex.length > 0;
 };
 
-const replace = function (editor, currentIndexState, text, forward?, all?) {
+const replace = function (editor: Editor, currentIndexState, text, forward?, all?) {
   let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndexState.get(), hasMore;
 
   forward = forward !== false;
@@ -187,7 +188,7 @@ const replace = function (editor, currentIndexState, text, forward?, all?) {
   return !all && hasMore;
 };
 
-const done = function (editor, currentIndexState, keepEditorSelection?) {
+const done = function (editor: Editor, currentIndexState, keepEditorSelection?) {
   let i, nodes, startContainer, endContainer;
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
@@ -220,11 +221,11 @@ const done = function (editor, currentIndexState, keepEditorSelection?) {
   }
 };
 
-const hasNext = function (editor, currentIndexState) {
+const hasNext = function (editor: Editor, currentIndexState) {
   return findSpansByIndex(editor, currentIndexState.get() + 1).length > 0;
 };
 
-const hasPrev = function (editor, currentIndexState) {
+const hasPrev = function (editor: Editor, currentIndexState) {
   return findSpansByIndex(editor, currentIndexState.get() - 1).length > 0;
 };
 

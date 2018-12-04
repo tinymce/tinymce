@@ -5,15 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Obj } from '@ephox/katamari';
+import { Merger, Obj, Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
 import HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
 import Size from '../core/Size';
 import UpdateHtml from '../core/UpdateHtml';
+import { Types } from '@ephox/bridge';
 
+type DialogData = {
+  source1: string;
+  source2: string;
+  embed: string;
+  dimensions: {
+    width: string;
+    height: string;
+  };
+  poster: string;
+};
+
+// NOTE: This means the dialog doesn't actually comply with the DialogData type, but it's too complex to unwind now
 const unwrap = (data) => Merger.merge(data, {
   source1: data.source1.value,
   source2: data.source2.value,
@@ -26,7 +40,7 @@ const wrap = (data) => Merger.merge(data, {
   poster: { value: Obj.get(data, 'poster').getOr('') }
 });
 
-const handleError = function (editor) {
+const handleError = function (editor: Editor) {
   return function (error) {
     const errorMessage = error && error.msg ?
       'Media embed handler error: ' + error.msg :
@@ -35,18 +49,17 @@ const handleError = function (editor) {
   };
 };
 
-const snippetToData = (editor, embedSnippet) => {
+const snippetToData = (editor: Editor, embedSnippet) => {
   return Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet));
 };
 
-const getData = function (editor) {
+const getEditorData = function (editor: Editor): Partial<DialogData> {
   const element = editor.selection.getNode();
   const dataEmbed = element.getAttribute('data-ephox-embed-iri');
 
   if (dataEmbed) {
     return {
       'source1': dataEmbed,
-      'data-ephox-embed-iri': dataEmbed,
       'dimensions': {
         width: Size.getMaxWidth(element),
         height: Size.getMaxHeight(element)
@@ -59,12 +72,12 @@ const getData = function (editor) {
     {};
 };
 
-const getSource = function (editor) {
+const getSource = function (editor: Editor) {
   const elm = editor.selection.getNode();
   return elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri') ? editor.selection.getContent() : '';
 };
 
-const addEmbedHtml = function (win, editor) {
+const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
   return function (response) {
     const html = response.html;
     const snippetData = snippetToData(editor, html);
@@ -81,7 +94,7 @@ const addEmbedHtml = function (win, editor) {
   };
 };
 
-const selectPlaceholder = function (editor, beforeObjects) {
+const selectPlaceholder = function (editor: Editor, beforeObjects) {
   let i;
   let y;
   const afterObjects = editor.dom.select('img[data-mce-object]');
@@ -98,7 +111,7 @@ const selectPlaceholder = function (editor, beforeObjects) {
   editor.selection.select(afterObjects[0]);
 };
 
-const handleInsert = function (editor, html) {
+const handleInsert = function (editor: Editor, html) {
   const beforeObjects = editor.dom.select('img[data-mce-object]');
 
   editor.insertContent(html);
@@ -106,7 +119,7 @@ const handleInsert = function (editor, html) {
   editor.nodeChanged();
 };
 
-const submitForm = function (data, editor) {
+const submitForm = function (data, editor: Editor) {
   data.embed = UpdateHtml.updateHtml(data.embed, data);
 
   if (data.embed && Service.isCached(data.source1)) {
@@ -119,23 +132,19 @@ const submitForm = function (data, editor) {
   }
 };
 
-const showDialog = function (editor) {
-  let win;
-
-  const initialHtmlData = getData(editor);
-
-  const defaultData = {
+const showDialog = function (editor: Editor) {
+  const defaultData: DialogData = {
     source1: '',
     source2: '',
     embed: getSource(editor),
     poster: '',
     dimensions: {
-      height: initialHtmlData.height ? initialHtmlData.height : '',
-      width: initialHtmlData.width ? initialHtmlData.width : ''
+      height: '',
+      width: ''
     }
   };
 
-  const initialData = wrap(Merger.merge(defaultData, initialHtmlData));
+  const initialData: DialogData = wrap(Merger.merge(defaultData, getEditorData(editor)));
 
   const getSourceData = (api) => {
     const data = unwrap(api.getData());
@@ -165,47 +174,37 @@ const showDialog = function (editor) {
     api.setData(wrap(dataFromEmbed));
   };
 
-  const generalTab = Settings.hasDimensions(editor) ?
-    {
+  const mediaInput: Types.Dialog.BodyComponentApi[] = [{
+    name: 'source1',
+    type: 'urlinput',
+    filetype: 'media',
+    label: 'Source'
+  }];
+  const sizeInput: Types.Dialog.BodyComponentApi[] = !Settings.hasDimensions(editor) ? [] : [{
+    type: 'sizeinput',
+    name: 'dimensions',
+    label: 'Constrain proportions',
+    constrain: true
+  }];
+
+  const generalTab = {
       title: 'General',
-      items: [
-        {
-          name: 'source1',
-          type: 'urlinput',
-          filetype: 'media',
-          label: 'Source'
-        },
-        {
-          type: 'sizeinput',
-          name: 'dimensions',
-          label: 'Constrain proportions',
-          constrain: true
-        }
-      ]
-    } : {
-      title: 'General',
-      items: [
-        {
-          name: 'source1',
-          type: 'urlinput',
-          filetype: 'media',
-          label: 'Source'
-        },
-      ]
+      items: Arr.flatten<Types.Dialog.BodyComponentApi>([mediaInput, sizeInput])
     };
 
+  const embedTextarea: Types.Dialog.BodyComponentApi = {
+    type: 'textarea',
+    name: 'embed',
+    label: 'Paste your embed code below:'
+  };
   const embedTab = {
     title: 'Embed',
     items: [
-      {
-        type: 'textarea',
-        name: 'embed',
-        label: 'Paste your embed code below:'
-      }
+      embedTextarea
     ]
   };
 
-  const advancedFormItems = [];
+  const advancedFormItems: Types.Dialog.BodyComponentApi[] = [];
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
@@ -240,14 +239,15 @@ const showDialog = function (editor) {
     tabs.push(advancedTab);
   }
 
-  win = editor.windowManager.open({
+  const body: Types.Dialog.TabPanelApi = {
+    type: 'tabpanel',
+    tabs
+  };
+  let win = editor.windowManager.open({
     title: 'Insert/Edit Media',
     size: 'normal',
 
-    body: {
-      type: 'tabpanel',
-      tabs
-    },
+    body,
     buttons: [
       {
         type: 'cancel',
