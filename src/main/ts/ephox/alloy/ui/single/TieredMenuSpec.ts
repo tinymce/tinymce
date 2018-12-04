@@ -171,9 +171,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   };
 
-  enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent };
+  enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent }
 
-  const buildIfRequired = (container: AlloyComponent,menuName: string, menuPrep: MenuPreparation) => {
+  const buildIfRequired = (container: AlloyComponent, menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {
       const menu = container.getSystem().build(menuPrep.nbMenu());
       layeredState.setMenuBuilt(menuName, menu);
