@@ -6,7 +6,7 @@
  */
 
 import { File } from '@ephox/dom-globals';
-import { Arr, Fun, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
+import { Arr, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
 import { Editor } from '../../../../../core/main/ts/api/Editor';

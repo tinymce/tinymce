@@ -36,14 +36,14 @@ import { Types } from '@ephox/bridge';
 export interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
   alert: (message: string, callback?: () => void, scope?) => void;
-  confirm: (message: string, callback?: (flag) => void, scope?) => void;
+  confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
   close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
 }
 
 export interface WindowManagerImpl {
   open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
   alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (flag) => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void) => void;
   close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
 }
 
@@ -106,7 +106,7 @@ const funcBind = function (scope, f) {
     getImplementation().alert(message, funcBind(scope ? scope : this, callback));
   };
 
-  const confirm = function (message, callback?: (flag) => void, scope?) {
+  const confirm = function (message, callback?: (state: boolean) => void, scope?) {
     getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
   };
 
