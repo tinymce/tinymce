@@ -8,6 +8,7 @@
 import { DialogInstanceApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Dialog';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Future, Option, Options } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
 import { ListOptions } from '../core/ListOptions';
@@ -16,6 +17,7 @@ import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
+import { Types } from '@ephox/bridge';
 
 const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
@@ -86,9 +88,9 @@ const getInitialData = (settings: LinkDialogInfo): LinkDialogData => ({
   classz: settings.anchor.linkClass.getOr('')
 });
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<LinkDialogData> => {
 
-  const urlInput = [
+  const urlInput: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'url',
       type: 'urlinput',
@@ -97,7 +99,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
     }
   ];
 
-  const displayText = settings.anchor.text.map(() => (
+  const displayText = settings.anchor.text.map<Types.Dialog.BodyComponentApi>(() => (
     {
       name: 'text',
       type: 'input',
@@ -105,7 +107,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
     }
   )).toArray();
 
-  const titleText = settings.flags.titleEnabled ? [
+  const titleText: Types.Dialog.BodyComponentApi[] = settings.flags.titleEnabled ? [
     {
       name: 'title',
       type: 'input',
@@ -113,28 +115,29 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
     }
   ] : [];
 
-  const initialData: LinkDialogData = getInitialData(settings);
+  const initialData = getInitialData(settings);
   const dialogDelta = DialogChanges.init(initialData, settings);
   const catalogs = settings.catalogs;
 
+  const body: Types.Dialog.PanelApi = {
+    type: 'panel',
+    items: Arr.flatten([
+      urlInput,
+      displayText,
+      titleText,
+      Options.cat<Types.Dialog.BodyComponentApi>([
+        catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
+        catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
+        catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
+        catalogs.link.map(ListOptions.createUi('link', 'Link list')),
+        catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
+      ])
+    ])
+  };
   return {
     title: 'Insert/Edit Link',
     size: 'normal',
-    body: {
-      type: 'panel',
-      items: Arr.flatten([
-        urlInput,
-        displayText,
-        titleText,
-        Options.cat([
-          catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
-          catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
-          catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
-          catalogs.link.map(ListOptions.createUi('link', 'Link list')),
-          catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
-        ])
-      ])
-    },
+    body,
     buttons: [
       {
         type: 'cancel',
@@ -158,7 +161,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit) => {
   };
 };
 
-const open = function (editor) {
+const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
     const onSubmit = handleSubmit(editor, info, info.anchor.text, Settings.assumeExternalTargets(editor.settings));
