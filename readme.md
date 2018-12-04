@@ -1,12 +1,12 @@
-# TinyMCE 5 Developer Preview
+# TinyMCE 5 Beta
 
-Welcome to the Developer Preview!
+Welcome to the Beta!
 
-[Download the preview](https://devpreview.tiny.cloud/download/tinymce.zip)
+[Download the beta](https://devpreview.tiny.cloud/download/tinymce.zip)
 
-[Preview documentation](https://tiny.cloud/docs-preview/)
+[Beta documentation](https://tiny.cloud/docs-preview/)
 
-[Log feedback](https://github.com/tinymce/tinymce/labels/dev%20preview)
+[Log feedback](https://github.com/tinymce/tinymce/labels/5.x)
 
 
 TinyMCE - JavaScript Library for Rich Text Editing

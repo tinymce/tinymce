@@ -8,11 +8,11 @@ let path = require('path');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'code', 'codesample',
-  'colorpicker', /*'compat3x', */ 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
+  'colorpicker', 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
   'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
   'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
   'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount', 'inlite',
+  'visualblocks', 'visualchars', 'wordcount', 'quickbars',
 ];
 
 let themes = [
@@ -153,14 +153,6 @@ module.exports = function (grunt) {
           files: [
             { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
             { src: 'src/core/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
-          ]
-        },
-        'compat3x-plugin': {
-          files: [
-            {
-              src: 'src/plugins/compat3x/main/js/plugin.js',
-              dest: 'js/tinymce/plugins/compat3x/plugin.min.js'
-            }
           ]
         }
       },
@@ -304,9 +296,6 @@ module.exports = function (grunt) {
       },
       plugins: {
         files: [
-          { expand: true, cwd: 'src/plugins/compat3x/main', src: ['img/**'], dest: 'js/tinymce/plugins/compat3x' },
-          { expand: true, cwd: 'src/plugins/compat3x/main', src: ['css/**'], dest: 'js/tinymce/plugins/compat3x' },
-          { expand: true, cwd: 'src/plugins/compat3x/main/js', src: ['utils/**', 'plugin.js', 'tiny_mce_popup.js'], dest: 'js/tinymce/plugins/compat3x' },
           { src: 'src/plugins/codesample/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
         ]
       },
@@ -338,7 +327,6 @@ module.exports = function (grunt) {
             'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
-            'js/tinymce/plugins/compat3x',
             'js/tinymce/plugins/visualblocks/img',
             'js/tinymce/skins/*/fonts/*.json',
             'js/tinymce/skins/*/fonts/readme.md',
@@ -423,7 +411,6 @@ module.exports = function (grunt) {
                 'js/tinymce/tinymce.min.js',
                 'js/tinymce/themes/*/theme.min.js',
                 'js/tinymce/plugins/*/plugin.min.js',
-                '!js/tinymce/plugins/compat3x/plugin.min.js',
                 '!js/tinymce/plugins/example/plugin.min.js',
                 '!js/tinymce/plugins/example_dependency/plugin.min.js'
               ],
@@ -463,7 +450,6 @@ module.exports = function (grunt) {
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/example',
             'js/tinymce/plugins/example_dependency',
-            'js/tinymce/plugins/compat3x',
             'js/tinymce/plugins/visualblocks/img',
             'js/tinymce/skins/*/fonts/*.json',
             'js/tinymce/skins/*/fonts/readme.md'
@@ -734,15 +720,15 @@ module.exports = function (grunt) {
     },
 
     'bedrock-auto': {
-      phantomjs: {
-        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs',
+      standard: {
+        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless',
         config: 'tsconfig.json',
         testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
+        overallTimeout: 900000,
+        singleTimeout: 30000,
+        retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
-        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'phantomjs'
+        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
       },
       'chrome-headless': {
         browser: 'chrome-headless',

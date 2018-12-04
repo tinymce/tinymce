@@ -91,8 +91,10 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
         attributes: spec.tooltip.fold(
           () => ({}),
           (tooltip) => {
+            const translatedTooltip = sharedBackstage.providers.translate(tooltip);
             return {
-              title: sharedBackstage.providers.translate(tooltip) // TODO: tooltips AP-213
+              'title': translatedTooltip, // TODO: tooltips AP-213
+              'aria-label': translatedTooltip
             };
           }
         )

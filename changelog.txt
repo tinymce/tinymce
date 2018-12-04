@@ -1,4 +1,9 @@
-Version 5.0.0-preview-5 (TBD)
+Version 5.0.0-beta-2 (TBD)
+    Fixed accessibility issues with the font select, font size, style select and format select toolbar dropdowns #TINY-2713
+Version 5.0.0-beta-1 (2018-11-30)
+    Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
+    Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659
+    Changed the background color icon to highlight background icon #TINY-2258
     Added a new `addNestedMenuItem()` UI registry function and changed all nested menu items to use the new registry functions #TINY-2230
     Changed Help dialog to be accessible to screen readers #TINY-2687
     Changed the color swatch to save selected custom colors to local storage for use across sessions #TINY-2722
@@ -9,6 +14,8 @@ Version 5.0.0-preview-5 (TBD)
     Added functionality for the removed_menuitems config option #TINY-2184
     Fixed an issue in IE 11 where calling selection.getContent() would return an empty string when the editor didn't have focus #TINY-2325
     Added the ability to use a string to reference menu items in menu buttons and submenu items #TINY-2253
+    Removed compat3x plugin #TINY-2815
+    Changed `WindowManager` API - methods `getParams`, `setParams` and `getWindows`, and the legacy `windows` property, have been removed. `alert` and `confirm` dialogs are no longer tracked in the window list. #TINY-2603
 Version 5.0.0-preview-4 (2018-11-12)
     Fixed distraction free plugin #AP-470
     Removed the tox-custom-editor class that was added to the wrapping element of codemirror #TINY-2211
@@ -69,6 +76,13 @@ Version 5.0.0-preview-2 (2018-10-10)
 Version 5.0.0-preview-1 (2018-10-01)
     Developer preview 1
     Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
+Version 4.9.0 (2018-11-27)
+    Added a replace feature to the Textpattern Plugin. #TINY-1908
+    Added functionality to the Lists Plugin that improves the indentation logic. #TINY-1790
+    Fixed a bug where it wasn't possible to delete/backspace when the caret was between a contentEditable=false element and a BR. #TINY-2372
+    Fixed a bug where copying table cells without a text selection would fail to copy anything. #TINY-1789
+    Implemented missing `autosave_restore_when_empty` functionality in the Autosave Plugin. Patch contributed by gzzo. #GH-4447
+    Reduced insertion of unnecessary nonbreaking spaces in the editor. #TINY-1879
 Version 4.8.5 (2018-10-30)
     Added a content_css_cors setting to the editor that adds the crossorigin="anonymous" attribute to link tags added by the StyleSheetLoader. #TINY-1909
     Fixed a bug where trying to remove formatting with a collapsed selection range would throw an exception. #GH-4636

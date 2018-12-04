@@ -6,9 +6,9 @@
  */
 
 import NodeType from '../dom/NodeType';
-import Arr from '../util/Arr';
 import * as CaretContainer from './CaretContainer';
 import { Node, HTMLElement } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 
 /**
  * This module contains logic for handling caret candidates. A caret candidate is
@@ -67,7 +67,7 @@ const isAtomicContentEditableFalse = (node: Node): boolean => {
     return false;
   }
 
-  return Arr.reduce(node.getElementsByTagName('*'), function (result, elm) {
+  return Arr.foldl(Arr.from(node.getElementsByTagName('*')), function (result, elm) {
     return result || isContentEditableTrue(elm);
   }, false) !== true;
 };

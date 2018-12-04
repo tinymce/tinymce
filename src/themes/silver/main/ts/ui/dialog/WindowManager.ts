@@ -132,16 +132,14 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const confirm = (message: string, callback: (flag) => void, closeWindow) => {
+  const confirm = (message: string, callback: (flag) => void) => {
     confirmDialog.open(message, (state) => {
-      closeWindow();
       callback(state);
     });
   };
 
-  const alert = (message: string, callback: () => void, closeWindow: () => void) => {
+  const alert = (message: string, callback: () => void) => {
     alertDialog.open(message, () => {
-      closeWindow();
       callback();
     });
   };
@@ -152,7 +150,6 @@ const setup = (extras: WindowManagerSetup) => {
 
   return {
     open,
-    openInlineDialog,
     alert,
     close,
     confirm

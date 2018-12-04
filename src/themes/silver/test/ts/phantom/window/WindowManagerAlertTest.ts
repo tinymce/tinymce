@@ -17,17 +17,13 @@ import { Body, Element as SugarElement, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { TestStore } from '../../module/AlloyTestUtils';
 
 UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
   const helpers = setupDemo();
   const windowManager = WindowManager.setup(helpers.extras);
   const sink = document.querySelector('.mce-silver-sink');
 
-  const store = TestStore();
-
   const sTeardown = GeneralSteps.sequence([
-    store.sClear,
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
@@ -35,7 +31,6 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
       100,
       1000
     ),
-    store.sAssertEq('Clicking x should fire closeWindow', [ 'alert.closeWindow' ])
   ]);
 
   const sHasBasicStructure = (label) => {
@@ -131,7 +126,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
 
   const sCreateAlert = (message, callback) => {
     return Step.sync(() => {
-      windowManager.alert(message, callback, store.adder('alert.closeWindow'));
+      windowManager.alert(message, callback);
     });
   };
 
@@ -174,7 +169,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
         const testCallback = () => {
           calls++;
         };
-        windowManager.alert(label, testCallback, () => {});
+        windowManager.alert(label, testCallback);
         Assertions.assertEq('callback should not have been called yet', 0, calls);
       }),
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
@@ -200,11 +195,9 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
   const sCloseButtonShouldWork = Logger.t(
     'Check that clicking ok in the dialog makes the dialog go away',
     GeneralSteps.sequence([
-      store.sClear,
       sCreateAlert('Showing an alert', Fun.noop),
       Mouse.sClickOn(Body.body(), '.tox-button:contains("OK")'),
       UiFinder.sNotExists(Body.body(), '[role="dialog"]'),
-      store.sAssertEq('closeWindow should have fired', [ 'alert.closeWindow' ])
     ])
   );
 

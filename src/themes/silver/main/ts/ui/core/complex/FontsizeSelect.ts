@@ -75,6 +75,7 @@ const getSpec = (editor) => {
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
   return {
+    tooltip: 'Font Sizes',
     isSelectedFor,
     getPreviewFor,
     onAction,

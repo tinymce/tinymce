@@ -63,10 +63,10 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
 
     const cCloseOnlyWindow =  Chain.control(
       Chain.op(() => {
-        const windows = editor.windowManager.getWindows();
-        Assertions.assertEq('One window exists', 1, windows.length);
-        windows[0].close();
-        Assertions.assertEq('No windows exist', 0, editor.windowManager.getWindows().length);
+        const dialogs = () => UiFinder.findAllIn(Body.body(), '[role="dialog"]');
+        Assertions.assertEq('One window exists', 1, dialogs().length);
+        editor.windowManager.close();
+        Assertions.assertEq('No windows exist', 0, dialogs().length);
       }),
       Guard.addLogging('Close window')
     );

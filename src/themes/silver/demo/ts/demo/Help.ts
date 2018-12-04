@@ -4,6 +4,7 @@ import VersionTab from 'src/plugins/help/main/ts/ui/VersionTab';
 import PluginsTab from 'src/plugins/help/main/ts/ui/PluginsTab';
 
 import { setupDemo } from '../components/DemoHelpers';
+import { Fun } from '@ephox/katamari';
 
 declare let tinymce: any;
 
@@ -61,7 +62,7 @@ export default () => {
         onSubmit: (api) => {
           api.close();
         }
-      }, {}, () => {});
+      }, {}, Fun.noop);
   });
 
   // The end user will use this as config

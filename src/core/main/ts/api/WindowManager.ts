@@ -8,6 +8,8 @@
 import { Arr, Option } from '@ephox/katamari';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
+import { Editor } from './Editor';
+import { Types } from '@ephox/bridge';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
@@ -31,8 +33,15 @@ import WindowManagerImpl from '../ui/WindowManagerImpl';
  * });
  */
 
-export default function (editor) {
-  const windows = [];
+export interface WindowManager {
+  open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
+  alert: (message: string, callback: () => void) => void;
+  confirm: (message: string, callback: (flag) => void) => void;
+  close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
+}
+
+export default function (editor: Editor) {
+  let dialogs = [];
 
   const getImplementation = function () {
     const theme = editor.theme;
@@ -45,94 +54,69 @@ export default function (editor) {
     };
   };
 
-  const fireOpenEvent = function (win) {
+  const fireOpenEvent = function (dialog) {
     editor.fire('OpenWindow', {
-      win
+      dialog
     });
   };
 
-  const fireCloseEvent = function (win) {
+  const fireCloseEvent = function (dialog) {
     editor.fire('CloseWindow', {
-      win
+      dialog
     });
   };
 
-  const addWindow = function (win) {
-    windows.push(win);
-    fireOpenEvent(win);
+  const addDialog = function (dialog) {
+    dialogs.push(dialog);
+    fireOpenEvent(dialog);
   };
 
-  const closeWindow = function (win) {
-    Arr.findIndex(windows, function (otherWindow) {
-      return otherWindow === win;
-    }).each(function (index) {
-      // Mutate here since third party might have stored away the window array, consider breaking this api
-      windows.splice(index, 1);
-
-      fireCloseEvent(win);
-
-      // Move focus back to editor when the last window is closed
-      if (windows.length === 0) {
-        editor.focus();
-      }
+  const closeDialog = function (dialog) {
+    fireCloseEvent(dialog);
+    dialogs = Arr.filter(dialogs, function (otherDialog) {
+      return otherDialog !== dialog;
     });
+    // Move focus back to editor when the last window is closed
+    if (dialogs.length === 0) {
+      editor.focus();
+    }
   };
 
-  const getTopWindow = function () {
-    return Option.from(windows[windows.length - 1]);
+  const getTopDialog = function () {
+    return Option.from(dialogs[dialogs.length - 1]);
   };
 
-  const open = function (args, params) {
+  const open = function (args, params?) {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
-    const win = getImplementation().open(args, params, closeWindow);
-    addWindow(win);
-    return win;
+    const dialog = getImplementation().open(args, params, closeDialog);
+    addDialog(dialog);
+    return dialog;
   };
 
   const alert = function (message, callback, scope) {
-    const win = getImplementation().alert(message, funcBind(scope ? scope : this, callback), closeWindow);
-    addWindow(win);
+    getImplementation().alert(message, funcBind(scope ? scope : this, callback));
   };
 
   const confirm = function (message, callback, scope) {
-    const win = getImplementation().confirm(message, funcBind(scope ? scope : this, callback), closeWindow);
-    addWindow(win);
+    getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
   };
 
   const close = function () {
-    getTopWindow().each(function (win) {
-      getImplementation().close(win);
-      closeWindow(win);
+    getTopDialog().each(function (dialog) {
+      getImplementation().close(dialog);
+      closeDialog(dialog);
     });
-  };
-
-  const getParams = function () {
-    return getTopWindow().map(getImplementation().getParams).getOr(null);
-  };
-
-  const setParams = function (params) {
-    getTopWindow().each(function (win) {
-      getImplementation().setParams(win, params);
-    });
-  };
-
-  const getWindows = function () {
-    return windows;
   };
 
   editor.on('remove', function () {
-    Arr.each(windows.slice(0), function (win) {
-      getImplementation().close(win);
+    Arr.each(dialogs, function (dialog) {
+      getImplementation().close(dialog);
     });
   });
 
   return {
-    // Used by the legacy3x compat layer and possible third party
-    // TODO: Deprecate this, and possible switch to a immutable window array for getWindows
-    windows,
-
     /**
      * Opens a new window.
      *
@@ -186,34 +170,6 @@ export default function (editor) {
      *
      * @method close
      */
-    close,
-
-    /**
-     * Returns the params of the last window open call. This can be used in iframe based
-     * dialog to get params passed from the tinymce plugin.
-     *
-     * @example
-     * var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
-     *
-     * @method getParams
-     * @return {Object} Name/value object with parameters passed from windowManager.open call.
-     */
-    getParams,
-
-    /**
-     * Sets the params of the last opened window.
-     *
-     * @method setParams
-     * @param {Object} params Params object to set for the last opened window.
-     */
-    setParams,
-
-    /**
-     * Returns the currently opened window objects.
-     *
-     * @method getWindows
-     * @return {Array} Array of the currently opened windows.
-     */
-    getWindows
+    close
   };
 }

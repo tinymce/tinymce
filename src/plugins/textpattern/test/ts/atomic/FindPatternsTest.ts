@@ -1,25 +1,29 @@
 import { RawAssertions } from '@ephox/agar';
-import Settings from 'tinymce/plugins/textpattern/api/Settings';
-import Patterns from 'tinymce/plugins/textpattern/core/Patterns';
+import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
 import { UnitTest } from '@ephox/bedrock';
+import { findEndPattern, findPattern } from '../../../main/ts/core/FindPatterns';
 
 UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () {
-  const defaultPatterns = Settings.getPatterns({});
+  const defaultPatterns = [
+    ...Settings.getPatternSet({}).inlinePatterns,
+    ...Settings.getPatternSet({}).blockPatterns,
+    ...Settings.getPatternSet({}).replacementPatterns
+  ];
 
   const testFindEndPattern = function (text, offset, space, expectedPattern) {
-    const actual = Patterns.findEndPattern(defaultPatterns, text, offset, space ? 1 : 0);
+    const actual = findEndPattern(defaultPatterns, text, offset, space ? 1 : 0);
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.end);
   };
 
   const testFindStartPattern = function (text, expectedPattern) {
-    const actual = Patterns.findPattern(defaultPatterns, text);
+    const actual = findPattern(defaultPatterns, text);
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.start);
   };
 
   const testFindStartPatternUndefined = function (text) {
-    const actual = Patterns.findPattern(defaultPatterns, text);
+    const actual = findPattern(defaultPatterns, text);
 
     RawAssertions.assertEq('Assert correct pattern', undefined, actual);
   };

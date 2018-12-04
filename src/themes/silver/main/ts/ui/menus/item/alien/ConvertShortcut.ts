@@ -9,10 +9,12 @@ import { Arr, Obj } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
 
 // Converts shortcut format to Mac/PC variants
+// Note: This is different to the help shortcut converter, as it doesn't padd the + symbol with spaces
+//       so as to not take up large amounts of space in the menus
 const convertText = (source: string) => {
   const mac = {
     alt: '&#x2325;',
-    ctrl: '&#x5E;',
+    ctrl: '&#x2303;',
     shift: '&#x21E7;',
     meta: '&#x2318;'
   };

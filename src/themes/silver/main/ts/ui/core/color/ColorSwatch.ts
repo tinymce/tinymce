@@ -120,7 +120,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       type: 'splitbutton',
       tooltip,
       presets: 'color',
-      icon: name === 'forecolor' ? 'text-color' : 'background-color',
+      icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
       select: () => false,
       columns: getColorCols(editor),
       fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
@@ -139,7 +139,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
           };
 
           lastColour.set(newColour);
-          setIconFillAndStroke(name === 'forecolor' ? 'color' : 'Rectangle', newColour);
+          setIconFillAndStroke('color', newColour);
         });
       }
     } as Toolbar.ToolbarSplitButtonApi;

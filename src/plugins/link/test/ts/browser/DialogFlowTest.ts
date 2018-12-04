@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       tinyApis.sSetContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>'),
       TestLinkUi.sOpenLinkDialog,
       sSetHtmlSelectValue('Anchor', '#anchor2'),
-      TestLinkUi.sAssertDialogContents(editor, {
+      TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'anchor2',
         title: '',
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         target: ''
       }),
       sSetHtmlSelectValue('Anchor', '#anchor1'),
-      TestLinkUi.sAssertDialogContents(editor, {
+      TestLinkUi.sAssertDialogContents({
         href: '#anchor1',
         text: 'anchor1',
         title: '',
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       // Change the text ...so text won't change, but href will still
       sSetInputFieldValue('Text to display', 'Other text'),
       sSetHtmlSelectValue('Anchor', '#anchor2'),
-      TestLinkUi.sAssertDialogContents(editor, {
+      TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'Other text',
         title: '',
@@ -151,7 +151,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         TestLinkUi.sOpenLinkDialog,
 
         FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
-        TestLinkUi.sAssertDialogContents(editor, {
+        TestLinkUi.sAssertDialogContents({
           href: 'http://www.tiny.cloud',
           text: 'Something',
           title: '',
