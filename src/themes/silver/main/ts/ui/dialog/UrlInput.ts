@@ -121,7 +121,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
           getRoot: (comp) => Traverse.parent(comp.element()),
-          invalidClass: 'tox-status-invalid',
+          invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
           },
           validator: {
@@ -135,8 +135,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
                       (b ? Class.add : Class.remove)(component.element(), clazz);
                     };
                     // TODO handle the aria implications of the other 3 states
-                    toggle(urlBox, 'tox-status-valid', validation.status === 'valid');
-                    toggle(urlBox, 'tox-status-unknown', validation.status === 'unknown');
+                    toggle(urlBox, 'tox-control-wrap--status-valid', validation.status === 'valid');
+                    toggle(urlBox, 'tox-control-wrap--status-unknown', validation.status === 'unknown');
                   });
                   completer((validation.status === 'invalid' ? Result.error : Result.value)(validation.message));
                 });
@@ -207,8 +207,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     // TODO: Aria this, most likley be an aria live because its dynamic
     return ({
       dom: {
-        tag: 'span',
-        classes: ['tox-icon', 'tox-status__icon-' + name],
+        tag: 'div',
+        classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
         innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons),
         attributes: {
           title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
@@ -219,8 +219,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
 
   const memStatus = Memento.record({
     dom: {
-      tag: 'span',
-      classes: ['tox-status']
+      tag: 'div',
+      classes: ['tox-control-wrap__status-icon-wrap']
     },
     components: [
       makeIcon('valid', 'checkmark',  'valid'),
