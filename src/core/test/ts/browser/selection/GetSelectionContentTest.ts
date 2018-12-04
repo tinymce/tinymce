@@ -1,30 +1,48 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
-import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
+import { Editor } from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/modern/Theme';
 
-UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success, failure) => {
   Theme();
+  const testDivId = 'testDiv1';
 
-  const cGetContent = function (args) {
-    return Chain.mapper(function (editor) {
+  const sFocusDiv = Step.sync(() => {
+    const input: any = document.querySelector('#' + testDivId);
+    input.focus();
+  });
+
+  const sRemoveTestDiv = Step.sync(() => {
+    const input = document.querySelector('#' + testDivId);
+    input.parentNode.removeChild(input);
+  });
+
+  const sAddTestDiv = Step.sync(function () {
+    const div = document.createElement('div');
+    div.innerHTML = 'xxx';
+    div.contentEditable = 'true';
+    div.id = testDivId;
+    document.body.appendChild(div);
+  });
+
+  const cGetContent = (args: any) => {
+    return Chain.mapper((editor: Editor) => {
       return GetSelectionContent.getContent(editor, args);
     });
   };
 
-  const sAssertGetContent = function (label, editor, expectedContents) {
+  const sAssertGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => {
     return Chain.asStep(editor, [
-      cGetContent({}),
+      cGetContent(args),
       Assertions.cAssertEq('Should be expected contents', expectedContents)
     ]);
   };
 
-  const sAssertGetContentOverrideBeforeGetContent = function (label, editor, expectedContents) {
-    const handler = function (e) {
+  const sAssertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => {
+    const handler = (e) => {
       if (e.selection === true) {
         e.preventDefault();
         e.content = expectedContents;
@@ -36,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
         editor.on('BeforeGetContent', handler);
       }),
       Chain.asStep(editor, [
-        cGetContent({}),
+        cGetContent(args),
         Assertions.cAssertEq('Should be expected contents', expectedContents)
       ]),
       Step.sync(function () {
@@ -45,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
     ]);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -63,6 +81,14 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
         sAssertGetContentOverrideBeforeGetContent('Should be overridden content', editor, 'X')
+      ])),
+      Logger.t('Should be text contents when editor isn\'t focused and format is text', GeneralSteps.sequence([
+        sAddTestDiv,
+        tinyApis.sSetContent('<p>ab</p>'),
+        tinyApis.sSetSelection([0, 0], 0, [0, 0], 2),
+        sFocusDiv,
+        sAssertGetContent('Should be some content', editor, 'ab', { format: 'text' }),
+        sRemoveTestDiv
       ]))
     ], onSuccess, onFailure);
   }, {
