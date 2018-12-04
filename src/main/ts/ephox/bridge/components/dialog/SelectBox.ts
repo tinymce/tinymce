@@ -13,7 +13,7 @@ export interface SelectBoxApi extends FormComponentApi {
   size?: number;
 }
 
-export interface InternalSelectBoxItem extends ExternalSelectBoxItem {
+interface InternalSelectBoxItem extends ExternalSelectBoxItem {
   text: string;
   value: string;
 }
