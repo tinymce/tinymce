@@ -94,9 +94,8 @@ const onSubmitTableForm = (editor: Editor, tableElm, api: Types.Dialog.DialogIns
 
   editor.undoManager.transact(() => {
     if (!tableElm) {
-      // Should this be parseInt instead of pretending?
-      const cols = (data.cols || '1') as unknown as number;
-      const rows = (data.rows || '1') as unknown as number;
+      const cols = parseInt(data.cols, 10) || 1;
+      const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
       tableElm = InsertTable.insert(editor, cols, rows);
     }
