@@ -142,5 +142,22 @@ UnitTest.test('OptionsTest', function() {
       }
     }
   );
+
+  Jsc.property(
+    'Options.lift with two arguments mirrors cat with two items',
+    ArbDataTypes.option,
+    ArbDataTypes.option,
+    Jsc.fun(Jsc.json),
+    function (a, b, f) {
+      const args = Options.cat([a, b]);
+      const output = Options.lift(a, b, f);
+
+      if (args.length === 2) {
+        return Jsc.eq(output.getOrDie(), f.apply(undefined, args));
+      } else {
+        return output.isNone();
+      }
+    }
+  );
 });
 
