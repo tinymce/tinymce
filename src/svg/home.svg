@@ -4,7 +4,7 @@
     <title>icon-home</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="icon-home" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <polygon id="Shape" fill="#000000" fill-rule="nonzero" points="10 20 10 14 14 14 14 20 19 20 19 12 22 12 12 3 2 12 5 12 5 20"></polygon>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon fill="#000000" fill-rule="nonzero" points="10 20 10 14 14 14 14 20 19 20 19 12 22 12 12 3 2 12 5 12 5 20"></polygon>
     </g>
 </svg>

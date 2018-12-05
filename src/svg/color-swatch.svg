@@ -4,7 +4,7 @@
     <title>icon-color-swatch</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="icon-color-swatch" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect id="Rectangle" fill="#000000" x="3" y="3" width="18" height="18" rx="1"></rect>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#000000" x="3" y="3" width="18" height="18" rx="1"></rect>
     </g>
 </svg>

@@ -4,7 +4,7 @@
     <title>icon-horizontal-rule</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="icon-horizontal-rule" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <polygon id="shape" fill="#000000" points="4 11 20 11 20 13 4 13"></polygon>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon fill="#000000" points="4 11 20 11 20 13 4 13"></polygon>
     </g>
 </svg>

@@ -4,12 +4,12 @@
     <title>icon-list-bull-square</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="icon-list-bull-square" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect id="Rectangle" fill="#000000" x="8" y="11" width="6" height="6"></rect>
-        <rect id="Rectangle-Copy" fill="#000000" x="8" y="21" width="6" height="6"></rect>
-        <rect id="Rectangle-Copy-2" fill="#000000" x="8" y="31" width="6" height="6"></rect>
-        <rect id="Rectangle-2" fill="#000000" opacity="0.2" x="18" y="12" width="22" height="4"></rect>
-        <rect id="Rectangle-2-Copy" fill="#000000" opacity="0.2" x="18" y="22" width="22" height="4"></rect>
-        <rect id="Rectangle-2-Copy-2" fill="#000000" opacity="0.2" x="18" y="32" width="22" height="4"></rect>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#000000" x="8" y="11" width="6" height="6"></rect>
+        <rect fill="#000000" x="8" y="21" width="6" height="6"></rect>
+        <rect fill="#000000" x="8" y="31" width="6" height="6"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="12" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="22" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="32" width="22" height="4"></rect>
     </g>
 </svg>
