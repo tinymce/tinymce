@@ -19,7 +19,10 @@ export interface ImageTools extends FormComponent {
 }
 
 export const imageToolsFields: FieldProcessorAdt[] = formComponentFields.concat([
-  FieldSchema.strict('currentState')
+  FieldSchema.strictOf('currentState', ValueSchema.objOf([
+    FieldSchema.strict('blob'),
+    FieldSchema.strictString('url')
+  ]))
 ]);
 
 export const imageToolsSchema = ValueSchema.objOf(imageToolsFields);
