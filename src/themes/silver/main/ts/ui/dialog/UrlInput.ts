@@ -209,7 +209,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       dom: {
         tag: 'div',
         classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
-        innerHtml: Icons.get('icon-' + icon, sharedBackstage.providers.icons),
+        innerHtml: Icons.get(icon, sharedBackstage.providers.icons),
         attributes: {
           title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
         }
@@ -251,7 +251,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'icon-browse', sharedBackstage.providers)).toArray()
+        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'browse', sharedBackstage.providers)).toArray()
       ])
     };
   };

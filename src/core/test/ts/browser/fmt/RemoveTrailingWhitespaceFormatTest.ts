@@ -18,7 +18,7 @@ UnitTest.asynctest(
       const tinyUi = TinyUi(editor);
 
       const boldSelector = 'button[aria-label="Bold"]';
-      const unlinkSelector = 'button:has(span>svg>g[id="icon-unlink"])';
+      const unlinkSelector = 'button[title="Remove link"]';
 
       Pipeline.async({}, [
         tinyApis.sFocus,

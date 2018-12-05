@@ -115,7 +115,7 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
       dom: {
         tag: 'span',
         classes: ['tox-icon', 'tox-checkbox-icon__' + className],
-        innerHtml: Icons.get('icon-' + iconName, providerBackstage.icons)
+        innerHtml: Icons.get(iconName, providerBackstage.icons)
       }
     };
   };

@@ -10,7 +10,7 @@ export default {
         type: 'alertbanner',
         text: 'Demo the alert banner message',
         level: 'warn',
-        icon: Icons.getDefault('icon-help'),
+        icon: Icons.getDefault('help'),
         url: 'https://www.tiny.cloud/'
       }
     ]

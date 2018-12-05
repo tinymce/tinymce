@@ -22,6 +22,7 @@ const setupButtons = function (editor: Editor) {
 
   editor.ui.registry.addButton('unlink', {
     icon: 'unlink',
+    tooltip: 'Remove link',
     onAction: Utils.unlink(editor),
     onSetup: Actions.toggleEnabledState(editor)
   });

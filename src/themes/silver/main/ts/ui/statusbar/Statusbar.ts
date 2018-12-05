@@ -24,7 +24,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         attributes: {
           title: providersBackstage.translate('Resize') // TODO: tooltips AP-213
         },
-        innerHtml: getDefaultOr('icon-resize-handle', () => ''),
+        innerHtml: getDefaultOr('resize-handle', () => ''),
       },
       behaviours: Behaviour.derive([
         Dragging.config({

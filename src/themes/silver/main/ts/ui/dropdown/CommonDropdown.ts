@@ -106,7 +106,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
           dom: {
             tag: 'div',
             classes: [ `${prefix}__select-chevron` ],
-            innerHtml: Icons.get('icon-chevron-down', sharedBackstage.providers.icons)
+            innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
           }
         })
       ]),

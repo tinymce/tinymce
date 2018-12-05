@@ -39,7 +39,7 @@ const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'span',
     classes: [ ItemClasses.iconClass, ItemClasses.checkmarkClass ],
-    innerHtml: getIcon('icon-checkmark', icons)
+    innerHtml: getIcon('checkmark', icons)
   }
 });
 
@@ -47,7 +47,7 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'span',
     classes: [ ItemClasses.caretClass ],
-    innerHtml: getIcon('icon-chevron-right', icons)
+    innerHtml: getIcon('chevron-right', icons)
   }
 });
 

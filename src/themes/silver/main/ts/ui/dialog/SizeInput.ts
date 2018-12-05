@@ -100,14 +100,14 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
         dom: {
           tag: 'span',
           classes: ['tox-icon', 'tox-lock-icon__lock'],
-          innerHtml: Icons.get('icon-lock', providersBackstage.icons)
+          innerHtml: Icons.get('lock', providersBackstage.icons)
         }
       },
       {
         dom: {
           tag: 'span',
           classes: ['tox-icon', 'tox-lock-icon__unlock'],
-          innerHtml: Icons.get('icon-unlock', providersBackstage.icons)
+          innerHtml: Icons.get('unlock', providersBackstage.icons)
         }
       }
     ],

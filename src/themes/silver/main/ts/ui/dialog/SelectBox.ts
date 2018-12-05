@@ -53,7 +53,7 @@ export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackst
         dom: {
           tag: 'div',
           classes: ['tox-selectfield__icon-js'],
-          innerHtml: Icons.get('icon-chevron-down', providersBackstage.icons)
+          innerHtml: Icons.get('chevron-down', providersBackstage.icons)
         }
       });
 
