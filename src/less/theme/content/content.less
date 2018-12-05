@@ -13,9 +13,9 @@
 @document-text-color: contrast(@document-background-color, @color-black, @color-white);
 @document-font-stack: @font-stack-base;
 @document-line-height: @line-height-base;
-@document-max-width: 100%;
+@document-max-width: none;
 @document-margin-x: 0;
-@document-margin-y: 0;
+@document-margin-y: 1rem;
 @document-padding: 0 @pad-md;
 
 @document-image-caption-font-size: @font-size-sm;
@@ -26,9 +26,10 @@ html {
   background: @content-background;
   background-size: @content-background-size;
   display: block;
-  padding: @content-padding
+  padding: @content-padding;
 }
 
+/* stylelint-disable property-no-unknown */
 body {
   background: @document-background-color;
   border-radius: @document-border-radius;
@@ -53,6 +54,10 @@ body {
 table {
   border-collapse: collapse;
   border-color: @border-color;
+  // Fixes TINY-1618
+  //  Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+  //  tables, making it impossible to enter spaces into small table cells
+  -webkit-nbsp-mode: normal;
   width: 100%;
 }
 
@@ -64,7 +69,7 @@ table caption {
 table th,
 table td {
   border: 1px solid @border-color;
-  padding: 0.4rem;
+  padding: .4rem;
 }
 
 blockquote {
@@ -76,7 +81,7 @@ blockquote {
 code {
   background-color: #e8e8e8;
   border-radius: 3px;
-  padding: 0.1rem 0.2rem;
+  padding: .1rem .2rem;
 }
 
 hr {
@@ -100,10 +105,8 @@ figure.image img {
 }
 
 figure.image figcaption {
-  margin: .5rem;
-  font-size: @document-image-caption-font-size;
   color: @document-image-caption-font-color;
+  font-size: @document-image-caption-font-size;
+  margin: .5rem;
   text-align: center;
 }
-
-
