@@ -76,13 +76,6 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     return renderFormFieldSpec(pField, pLabel(fieldlabel));
   };
 
-  const separator = {
-    dom: {
-      tag: 'span',
-      innerHtml: '×'
-    }
-  };
-
   const pField1 = AlloyFormCoupledInputs.parts().field1(
     renderDimensionField(true, 'Width')
   );
@@ -134,7 +127,6 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
         components: [
           // NOTE: Form coupled inputs to the FormField.sketch themselves.
           pField1,
-          separator,
           pField2,
           pLock
         ]

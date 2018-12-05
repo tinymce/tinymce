@@ -140,8 +140,6 @@ Open help dialog                            <new>       Help shortcuts
 
 No longer Used
 -----------------------------------------------------
-Dimension width           <new>                 Image
-Dimension height          <new>                 Image
 
 
 
