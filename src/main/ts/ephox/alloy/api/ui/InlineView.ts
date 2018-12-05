@@ -19,7 +19,8 @@ import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
 import { LazySink } from '../component/CommonTypes';
 
-const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+  const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
   return tieredMenu.sketch({
     dom: {
       tag: 'div'
@@ -29,6 +30,11 @@ const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyCompon
     markers: menuSpec.menu.markers,
 
     onEscape() {
+      // Note for the future: this should possibly also call detail.onHide
+      Sandboxing.close(menuSandbox);
+      detail.onEscape.map((handler) => {
+        return handler(menuSandbox);
+      });
       return Option.some(true);
     },
 
@@ -50,7 +56,7 @@ const makeMenu = (lazySink: () => ReturnType<LazySink>, menuSandbox: AlloyCompon
   });
 };
 
-const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, spec): SketchSpec => {
+const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
   const isPartOfRelated = (sandbox, queryElem) => {
     const related = detail.getRelated(sandbox);
     return related.exists((rel) => {
@@ -73,9 +79,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail, 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const thing = makeMenu(() => detail.lazySink(sandbox), sandbox, anchor, menuSpec);
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec);
 
-    Sandboxing.open(sandbox, thing);
+    Sandboxing.open(sandbox, menu);
     detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
@@ -132,6 +138,7 @@ const InlineView = Sketcher.single({
     FieldSchema.strict('lazySink'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
+    FieldSchema.optionFunction('onEscape'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
     FieldSchema.optionObjOf('fireDismissalEventInstead', [
       FieldSchema.defaulted('event', SystemEvents.dismissRequested())
