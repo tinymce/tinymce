@@ -141,7 +141,7 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
   type DialogData = {
     template: string;
     preview: string;
-  }
+  };
 
   const openDialog = (templates: TemplateData[]) => {
     const selectBoxItems = createSelectBoxItems(templates);

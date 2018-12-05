@@ -59,8 +59,8 @@ const getEditorData = function (editor: Editor): Partial<DialogData> {
 
   if (dataEmbed) {
     return {
-      'source1': dataEmbed,
-      'dimensions': {
+      source1: dataEmbed,
+      dimensions: {
         width: Size.getMaxWidth(element),
         height: Size.getMaxHeight(element)
       }
@@ -243,7 +243,7 @@ const showDialog = function (editor: Editor) {
     type: 'tabpanel',
     tabs
   };
-  let win = editor.windowManager.open({
+  const win = editor.windowManager.open({
     title: 'Insert/Edit Media',
     size: 'normal',
 

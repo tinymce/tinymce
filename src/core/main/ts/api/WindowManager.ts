@@ -55,7 +55,7 @@ export default function (editor: Editor): WindowManager {
     return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
   };
 
-const funcBind = function (scope, f) {
+  const funcBind = function (scope, f) {
     return function () {
       return f ? f.apply(scope, arguments) : undefined;
     };

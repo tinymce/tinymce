@@ -24,8 +24,8 @@ const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
     } else {
     }
     */
-      const value = extractValue(item);
-      out.push({ text, value }); // list value
+    const value = extractValue(item);
+    out.push({ text, value }); // list value
   });
   return out;
 };

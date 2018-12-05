@@ -39,7 +39,7 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
 
-  const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() })
+  const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() });
 
   const makeTabPanel = (): Types.Dialog.TabPanelApi => ({ type: 'tabpanel', tabs: makeTabs() });
 
