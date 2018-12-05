@@ -1,6 +1,6 @@
-import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { Arr, Fun, Merger, Result } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
 import { getThemeSelectors } from './ThemeSelectors';
 
@@ -87,21 +87,6 @@ var cTriggerContextMenu = function (label: string, target, menu) {
     // Ignores input
     cWaitForPopup(label, menu)
   ]);
-};
-
-var silverDialogByPopup = (input: any) => {
-  var wins = input.editor.windowManager.getWindows();
-  // Note: t5 dialogs don't have ids, so just grabbing the first one.
-  return wins.length ? Result.value(wins[0]) : Result.error("dialog was not found");
-};
-
-var modernDialogByPopup = (input: any) => {
-  var wins = input.editor.windowManager.getWindows();
-  var popupId = input.popupNode.dom().id;
-  var dialogs =  Arr.filter(wins, function (dialog) {
-    return popupId === dialog._id;
-  });
-  return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
 };
 
 var cClickPopupButton = function (btnType: string, selector?: string) {
