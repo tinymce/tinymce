@@ -111,7 +111,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       dom: {
         tag: 'div',
       },
-      lazySink
+      lazySink,
+      onEscape: () => editor.focus()
     })
   );
 
