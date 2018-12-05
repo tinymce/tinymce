@@ -75,14 +75,14 @@ const sNotExists = function <T>(container: Element, selector: string) {
   });
 };
 
-const cExists = (selector) => Chain.async((container: any, next, die) => {
+const cExists = (selector: string) => Chain.async((container: Element, next, die) => {
   findIn(container, selector).fold(
     () => die('Expected ' + selector + ' to exist.'),
     () => next(container)
   );
 });
 
-const cNotExists = (selector) => Chain.async((container: any, next, die) => {
+const cNotExists = (selector: string) => Chain.async((container: Element, next, die) => {
   findIn(container, selector).fold(
     () => next(container),
     () => die('Expected ' + selector + ' not to exist.')
