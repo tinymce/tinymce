@@ -13,14 +13,13 @@ export interface CharItem {
   text: string;
 }
 
-const scan = (group: { characters: [string, string][] }, pattern: string): CharItem[] => {
-  const matches = [ ];
+const scan = (group: { characters: [number, string][] }, pattern: string): CharItem[] => {
+  const matches: [number, string][] = [];
   Arr.each(group.characters, (g) => {
-    // dual casting is arguably better than pretending the first array entry is a number. Is parseint worth the cost?
-    if (String.fromCharCode(g[0] as unknown as number).indexOf(pattern) > -1 || g[1].indexOf(pattern) > -1) {
+    if (String.fromCharCode(g[0]).indexOf(pattern) > -1 || g[1].indexOf(pattern) > -1) {
       matches.push(g);
     }
-});
+  });
 
   return Arr.map(matches, (m) => {
     return {
