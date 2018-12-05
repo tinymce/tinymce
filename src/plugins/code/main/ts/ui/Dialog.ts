@@ -9,13 +9,9 @@ import Content from '../core/Content';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const open = function (editor: Editor) {
-  const editorContent = Content.getContent(editor);
+  const editorContent: string = Content.getContent(editor);
 
-  type DialogData = {
-    code: string
-  };
-
-  editor.windowManager.open<DialogData>({
+  editor.windowManager.open({
     title: 'Source Code',
     size: 'large',
     body: {

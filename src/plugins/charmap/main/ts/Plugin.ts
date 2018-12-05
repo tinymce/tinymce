@@ -6,7 +6,6 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { Editor } from 'tinymce/core/api/Editor';
 
 import Api from './api/Api';
 import Commands from './api/Commands';
@@ -14,7 +13,7 @@ import * as Autocompletion from './ui/Autocompletion';
 import Buttons from './ui/Buttons';
 import CharMap from './core/CharMap';
 
-PluginManager.add('charmap', function (editor: Editor) {
+PluginManager.add('charmap', function (editor) {
   const charMap = CharMap.getCharMap(editor);
   Commands.register(editor, charMap);
   Buttons.register(editor);

@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Dialog from './Dialog';
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addButton('help', {
     icon: 'help',
     tooltip: 'Help',

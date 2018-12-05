@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, 
 
     editor.on('OpenWindow', function (e) {
       openWindowArgs = e;
-      editor.windowManager.close(e.dialog);
+      editor.windowManager.close();
     });
 
     editor.windowManager.open({

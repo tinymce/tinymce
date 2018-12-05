@@ -37,7 +37,7 @@ export interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
-  close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
+  close: () => void;
 }
 
 export interface WindowManagerImpl {
