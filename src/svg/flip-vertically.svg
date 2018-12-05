@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-flip-vertically</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M14,19 L16,19 L16,17 L14,17 L14,19 Z M18,11 L20,11 L20,9 L18,9 L18,11 Z M4,7 L4,17 C4,18.1 4.9,19 6,19 L9,19 L9,17 L6,17 L6,7 L9,7 L9,5 L6,5 C4.9,5 4,5.9 4,7 Z M18,5 L18,7 L20,7 C20,5.9 19.1,5 18,5 Z M11,21 L13,21 L13,3 L11,3 L11,21 Z M18,15 L20,15 L20,13 L18,13 L18,15 Z M14,7 L16,7 L16,5 L14,5 L14,7 Z M18,19 C19.1,19 20,18.1 20,17 L18,17 L18,19 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 12.000000) rotate(90.000000) translate(-12.000000, -12.000000) "></path>
+    </g>
+</svg>
