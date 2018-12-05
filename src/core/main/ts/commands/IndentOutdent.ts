@@ -9,8 +9,15 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { Arr } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/dom-globals';
 import { isListItem, isList, isTable } from '../dom/ElementType';
-import { Element, Traverse, Css } from '@ephox/sugar';
+import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
 import Settings from '../api/Settings';
+import NodeType from '../dom/NodeType';
+
+const isEditable = (target: Element) => {
+  return PredicateFind.closest(target, (elm) => {
+    return NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom());
+  }).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
+};
 
 const parseIndentValue = (value: string) => {
   const number = parseInt(value, 10);
@@ -24,10 +31,6 @@ const getIndentStyleName = (useMargin: boolean, element: Element) => {
 };
 
 const indentElement = (dom, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement) => {
-  if (dom.getContentEditable(element) === 'false') {
-    return;
-  }
-
   const indentStyleName = getIndentStyleName(useMargin, Element.fromDom(element));
 
   if (command === 'outdent') {
@@ -63,7 +66,7 @@ const parentIsListComponent = (el: Element) => {
 
 const getBlocksToIndent = (editor: Editor) => {
   return Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
-    !isListComponent(el) && !parentIsListComponent(el)
+    !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
   );
 };
 
