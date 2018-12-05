@@ -119,7 +119,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   };
 
   const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => {
-    return submenuParentItems.get().fold(() => {
+    return submenuParentItems.get().getOrThunk(() => {
       const r = { };
       const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
       const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
@@ -131,7 +131,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       });
       submenuParentItems.set(Option.some(r));
       return r;
-    }, (parentItems) => parentItems);
+    });
   };
 
   // Not ideal. Ideally, we would like a map of item keys to components.

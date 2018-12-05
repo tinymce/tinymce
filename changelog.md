@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.4.3] - 2018-11-26
+# [4.5.0] - 2018-12-05
 ### Added
  - Tiered menus handle toggling aria-expanded as submenus are opened and closed
 
+# [4.4.3] - 2018-11-26
 ### Changed
  - alloy UIDs are random (again) to prevent issues with nested motherships loaded with different scripts
 
