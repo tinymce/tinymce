@@ -16,16 +16,16 @@ const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
   const out: ListItem[] = [];
   Tools.each(list, function (item) {
     const text: string = Type.isString(item.text) ? item.text : Type.isString(item.title) ? item.title : '';
-    // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-    /*
     if (item.menu !== undefined) {
+      // TODO TINY-2236 re-enable this (support will need to be added to bridge)
+      /*
       const items = sanitizeList(item.menu, extractValue);
       out.push({ text, items }); // list group
+      */
     } else {
+      const value = extractValue(item);
+      out.push({ text, value }); // list value
     }
-    */
-    const value = extractValue(item);
-    out.push({ text, value }); // list value
   });
   return out;
 };
