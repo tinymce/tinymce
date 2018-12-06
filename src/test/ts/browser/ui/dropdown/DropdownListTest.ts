@@ -128,7 +128,9 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('button', {
             attrs: {
-              role: str.is('button')
+              role: str.is('button'),
+              'aria-expanded': str.is('false'),
+              'aria-haspopup': str.is('true')
             }
           });
         }),

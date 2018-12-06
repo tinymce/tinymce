@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Tiered menus handle toggling aria-expanded as submenus are opened and closed
 
+### Changed
+ - Updated the toggling behaviour to make the toggleClass optional
+ - Reworked SplitDropdown so that it's treated as a single button from keyboard navigation and aria perspectives
+
 # [4.4.3] - 2018-11-26
 ### Changed
  - alloy UIDs are random (again) to prevent issues with nested motherships loaded with different scripts

@@ -26,7 +26,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
   FieldSchema.defaulted('matchWidth', false),
-  FieldSchema.defaulted('useMinWidth', false)
+  FieldSchema.defaulted('useMinWidth', false),
+  FieldSchema.defaulted('eventOrder', {}),
+  FieldSchema.option('role')
 ].concat(
   SketcherFields.sandboxFields()
 ));
@@ -40,7 +42,6 @@ const arrowPart = PartType.required({
       dom: {
         attributes: {
           role: 'button',
-          'aria-haspopup': true
         }
       },
       buttonBehaviours: Behaviour.derive([
@@ -57,10 +58,7 @@ const arrowPart = PartType.required({
       buttonBehaviours: Behaviour.derive([
         Toggling.config({
           toggleOnExecute: false,
-          toggleClass: detail.toggleClass,
-          aria: {
-            mode: 'pressed'
-          }
+          toggleClass: detail.toggleClass
         })
       ])
     };
@@ -98,6 +96,28 @@ const buttonPart = PartType.required({
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   arrowPart,
   buttonPart,
+
+  PartType.optional({
+    factory: {
+      sketch (spec) {
+        return {
+          uid: spec.uid,
+          dom: {
+            tag: 'span',
+            styles: {
+              display: 'none',
+            },
+            attributes: {
+              'aria-hidden': 'true'
+            },
+            innerHtml: spec.text
+          }
+        };
+      }
+    },
+    schema: [ FieldSchema.strict('text') ],
+    name: 'aria-descriptor'
+  }),
 
   PartType.external({
     schema: [
