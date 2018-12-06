@@ -53,17 +53,16 @@ const snippetToData = (editor: Editor, embedSnippet) => {
   return Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet));
 };
 
-const getEditorData = function (editor: Editor): Partial<DialogData> {
+const getEditorData = function (editor: Editor) {
+  // This return type is 'any' almost entirely because 'htmlToDataSax' returns any
   const element = editor.selection.getNode();
   const dataEmbed = element.getAttribute('data-ephox-embed-iri');
 
   if (dataEmbed) {
     return {
       source1: dataEmbed,
-      dimensions: {
-        width: Size.getMaxWidth(element),
-        height: Size.getMaxHeight(element)
-      }
+      width: Size.getMaxWidth(element),
+      height: Size.getMaxHeight(element)
     };
   }
 
@@ -133,18 +132,21 @@ const submitForm = function (data, editor: Editor) {
 };
 
 const showDialog = function (editor: Editor) {
+  const editorData = getEditorData(editor);
+
   const defaultData: DialogData = {
     source1: '',
     source2: '',
     embed: getSource(editor),
     poster: '',
     dimensions: {
-      height: '',
-      width: ''
+      height: editorData.height ? editorData.height : '',
+      width: editorData.width ? editorData.width : ''
     }
   };
 
-  const initialData: DialogData = wrap(Merger.merge(defaultData, getEditorData(editor)));
+  // This is a bit of a lie because the editor data doesn't have dimensions sub-objects, but that's handled above
+  const initialData: DialogData = wrap(Merger.merge(defaultData, editorData));
 
   const getSourceData = (api) => {
     const data = unwrap(api.getData());
