@@ -37,16 +37,16 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
 
   const ratioEvent = Id.generate('ratio-event');
 
-  const renderFormFieldSpec = (pAriaDescriptor, pField) => {
+  const renderFormFieldSpec = (pField, pLabel) => {
     return {
       dom: {
         tag: 'div'
       },
-      components: [pAriaDescriptor, pField]
+      components: [pLabel, pField]
     };
   };
 
-  const renderDimensionField = function (subspec) {
+  const renderDimensionField = function (isfield1, fieldlabel) {
     const pField = AlloyFormField.parts().field({
       factory: AlloyInput,
       inputClasses: ['tox-textfield'],
@@ -54,37 +54,34 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
         Tabstopping.config({}),
         AddEventsBehaviour.config('size-input-events', [
           AlloyEvents.run(NativeEvents.focusin(), function (component, simulatedEvent) {
-            AlloyTriggers.emitWith(component, ratioEvent, { isField1: subspec.isField1 });
+            AlloyTriggers.emitWith(component, ratioEvent, { isField1: isfield1 });
           }),
           AlloyEvents.run(NativeEvents.change(), function (component, simulatedEvent) {
             AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
           })
         ])
       ]),
-      inputAttributes: { placeholder: providersBackstage.translate(subspec.placeholderText) },
       selectOnFocus: false
     });
 
-    const pAriaDescriptor = AlloyFormField.parts()['aria-descriptor']({
-      text: providersBackstage.translate(subspec.label)
-    });
-
-    return renderFormFieldSpec(pAriaDescriptor, pField);
-  };
-
-  const separator = {
-    dom: {
-      tag: 'span',
-      innerHtml: '×'
-    }
+    const pLabel = (label: string) => {
+      return AlloyFormField.parts().label({
+        dom: {
+          tag: 'label',
+          classes: ['tox-label'],
+          innerHtml: providersBackstage.translate(label)
+        }
+      });
+    };
+    return renderFormFieldSpec(pField, pLabel(fieldlabel));
   };
 
   const pField1 = AlloyFormCoupledInputs.parts().field1(
-    renderDimensionField({ label: 'Dimension width', isField1: true, placeholderText: 'Width' })
+    renderDimensionField(true, 'Width')
   );
 
   const pField2 = AlloyFormCoupledInputs.parts().field2(
-    renderDimensionField({ label: 'Dimension height', isField1: false, placeholderText: 'Height' })
+    renderDimensionField(false, 'Height')
   );
 
   const pLock = AlloyFormCoupledInputs.parts().lock({
@@ -124,20 +121,12 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     components: [
       {
         dom: {
-          tag: 'label',
-          classes: [ 'tox-label' ],
-          innerHtml: providersBackstage.translate('Dimensions')
-        }
-      },
-      {
-        dom: {
           tag: 'div',
           classes: ['tox-form__controls-h-stack']
         },
         components: [
           // NOTE: Form coupled inputs to the FormField.sketch themselves.
           pField1,
-          separator,
           pField2,
           pLock
         ]

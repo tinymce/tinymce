@@ -1,4 +1,5 @@
 Version 5.0.0-beta-2 (TBD)
+    Updated SizeInput labels to "Height" and "Width" instead of Dimensions #TINY-2833
     Fixed accessibility issues with the font select, font size, style select and format select toolbar dropdowns #TINY-2713
 Version 5.0.0-beta-1 (2018-11-30)
     Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
