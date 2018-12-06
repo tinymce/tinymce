@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const overrideFormats = function (editor) {
+const overrideFormats = (editor: Editor) => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
     fontSizes = Tools.explode(editor.settings.font_size_style_values),
     schema = editor.schema;
@@ -66,7 +67,7 @@ const overrideFormats = function (editor) {
     schema.addValidElements('font[face|size|color|style]');
   }
 
-  // Add the missing and depreacted align attribute for the serialization engine
+  // Add the missing and deprecated align attribute for the serialization engine
   Tools.each(alignElements.split(','), function (name) {
     const rule = schema.getElementRule(name);
 
@@ -79,11 +80,44 @@ const overrideFormats = function (editor) {
   });
 };
 
-const setup = function (editor) {
+const overrideSettings = (editor: Editor) => {
+  const defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
+  const defaultFontsFormats =
+    'Andale Mono=andale mono,monospace;' +
+    'Arial=arial,helvetica,sans-serif;' +
+    'Arial Black=arial black,sans-serif;' +
+    'Book Antiqua=book antiqua,palatino,serif;' +
+    'Comic Sans MS=comic sans ms,sans-serif;' +
+    'Courier New=courier new,courier,monospace;' +
+    'Georgia=georgia,palatino,serif;' +
+    'Helvetica=helvetica,arial,sans-serif;' +
+    'Impact=impact,sans-serif;' +
+    'Symbol=symbol;' +
+    'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+    'Terminal=terminal,monaco,monospace;' +
+    'Times New Roman=times new roman,times,serif;' +
+    'Trebuchet MS=trebuchet ms,geneva,sans-serif;' +
+    'Verdana=verdana,geneva,sans-serif;' +
+    'Webdings=webdings;' +
+    'Wingdings=wingdings,zapf dingbats';
+
   editor.settings.inline_styles = false;
-  editor.on('init', function () {
-    overrideFormats(editor);
-  });
+
+  // Override the default font size and format settings if a user hasn't already specified an override.
+  // This way we don't need to override the entire button and can let the default UI render our legacy
+  // font sizes/formats
+  if (!editor.getParam('fontsize_formats')) {
+    editor.settings.fontsize_formats = defaultFontsizeFormats;
+  }
+
+  if (!editor.getParam('font_formats')) {
+    editor.settings.font_formats = defaultFontsFormats;
+  }
+};
+
+const setup = (editor: Editor) => {
+  overrideSettings(editor);
+  editor.on('init', () => overrideFormats(editor));
 };
 
 export default {

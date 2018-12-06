@@ -43,7 +43,7 @@ export type Attribute = {
 };
 
 export type ElementRule = {
-  attributes: Attribute[];
+  attributes: Record<string, Attribute>;
   attributesOrder: string[];
   attributePatterns?: RegExp[];
   paddEmpty?: boolean;
