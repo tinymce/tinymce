@@ -25,7 +25,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
   };
 };
 
-const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }}): ItemSpec => {
+const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }, hasSubmenu: boolean}): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -42,6 +42,7 @@ const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta
   } : {
     type: spec.type,
     data: spec.data,
+    hasSubmenu: spec.hasSubmenu,
     dom: {
       tag: 'li',
       attributes: {
@@ -105,7 +106,7 @@ const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: Al
     }),
     comp.element()
   );
-}
+};
 
 const itemMarkers = {
   item: 'item',
