@@ -1,9 +1,10 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { ApiChains, Editor, TinyDom, UiChains } from '@ephox/mcagar';
+import { ApiChains, Editor as McEditor, TinyDom, UiChains } from '@ephox/mcagar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function () {
   const success = arguments[arguments.length - 2];
@@ -33,9 +34,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function ()
     });
   };
 
+  const cFillActiveDialog = (json) => Chain.op((editor: Editor) => {
+    editor.windowManager.getWindows()[0].fromJSON(json);
+  });
+
   Pipeline.async({}, [
     Chain.asStep({}, [
-      Editor.cFromSettings({
+      McEditor.cFromSettings({
         plugins: 'image',
         toolbar: 'image',
         indent: false,
@@ -44,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function ()
         skin_url: '/project/js/tinymce/skins/lightgray'
       }),
       UiChains.cClickOnToolbar('click image button', 'div[aria-label="Insert/edit image"]'),
-      UiChains.cFillActiveDialog({
+      cFillActiveDialog({
         src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
         width: 100,
         height: 100,
@@ -69,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function ()
         NamedChain.direct('imgSize', Assertions.cAssertEq('asserting image size after resize', { w: '200px', h: '200px' }), '_'),
         NamedChain.output('editor')
       ]),
-      Editor.cRemove
+      McEditor.cRemove
     ])
   ], function () {
     success();
