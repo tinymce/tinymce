@@ -62,6 +62,7 @@ export interface NormalItemSpec {
   ignoreFocus?: boolean;
   domModification?: DomModificationSpec;
   eventOrder?: Record<string, string[]>;
+  hasSubmenu?: boolean;
 }
 
 export interface NormalItemDetail extends ItemDetail {
@@ -75,6 +76,7 @@ export interface NormalItemDetail extends ItemDetail {
   domModification: DomModification;
   eventOrder: Record<string, string[]>;
   builder: <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
+  hasSubmenu: boolean;
 }
 
 export interface ItemDetail {
