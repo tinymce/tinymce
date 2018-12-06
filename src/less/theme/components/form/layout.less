@@ -24,9 +24,28 @@
     -ms-flex-preferred-size: auto;
   }
 
+  .tox-form--2col {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   // Wraps a label and input combo.
   .tox-form__group {
     //
+  }
+
+  .tox-form--2col > .tox-form__group {
+    box-sizing: border-box;
+    width: 50%;
+  }
+
+  .tox-form--2col > .tox-form__group:nth-child(even) {
+    padding-left: @pad-md / 2;
+  }
+
+  .tox-form--2col > .tox-form__group:nth-child(odd) {
+    padding-right: @pad-md / 2;
   }
 
   .tox-form > .tox-form__group:not(:last-child) {
@@ -36,12 +55,6 @@
   // Modifier for validation error
   .tox-form__group--error {
     //
-  }
-
-  .tox-form--2col {
-    display: grid;
-    grid-gap: 0 @pad-md;
-    grid-template-columns: repeat(2, 1fr);
   }
 
   // Horizontally stack elements.
