@@ -184,6 +184,10 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
       sCheckDialogStructure('After showing', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
+          attrs: {
+            'aria-modal': str.is('true'),
+            'role': str.is('dialog')
+          },
           classes: [ arr.has('test-dialog') ],
           children: [
             s.element('div', { }),
