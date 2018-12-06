@@ -1,21 +1,22 @@
-import { BarApi, Bar } from './Bar';
-import { ButtonApi, Button } from './Button';
-import { CheckboxApi, Checkbox } from './Checkbox';
-import { TextAreaApi, TextArea } from './Textarea';
-import { InputApi, Input } from './Input';
-import { SelectBoxApi, SelectBox } from './SelectBox';
-import { SizeInputApi, SizeInput } from './SizeInput';
-import { IframeApi, Iframe } from './Iframe';
-import { UrlInputApi, UrlInput } from './UrlInput';
-import { DropZoneApi, DropZone } from './Dropzone';
-import { ColorInputApi, ColorInput } from './ColorInput';
-import { GridApi, Grid } from './Grid';
-import { ColorPickerApi, ColorPicker } from './ColorPicker';
-import { ImageToolsApi, ImageTools } from './ImageTools';
-import { AlertBannerApi, AlertBanner } from './AlertBanner';
-import { CollectionApi, Collection } from './Collection';
-import { LabelApi, Label } from './Label';
-import { TableApi, Table } from './Table';
+import { AlertBanner, AlertBannerApi } from './AlertBanner';
+import { Bar, BarApi } from './Bar';
+import { Button, ButtonApi } from './Button';
+import { Checkbox, CheckboxApi } from './Checkbox';
+import { Collection, CollectionApi } from './Collection';
+import { ColorInput, ColorInputApi } from './ColorInput';
+import { ColorPicker, ColorPickerApi } from './ColorPicker';
+import { DropZone, DropZoneApi } from './Dropzone';
+import { Grid, GridApi } from './Grid';
+import { Iframe, IframeApi } from './Iframe';
+import { ImageTools, ImageToolsApi } from './ImageTools';
+import { Input, InputApi } from './Input';
+import { Label, LabelApi } from './Label';
+import { SelectBox, SelectBoxApi } from './SelectBox';
+import { SizeInput, SizeInputApi } from './SizeInput';
+import { Table, TableApi } from './Table';
+import { TextArea, TextAreaApi } from './Textarea';
+import { UrlInput, UrlInputApi } from './UrlInput';
+import { HtmlPanel, HtmlPanelApi } from './HtmlPanel';
 
 export type BodyComponentApi
   = BarApi
@@ -26,6 +27,7 @@ export type BodyComponentApi
   | SelectBoxApi
   | SizeInputApi
   | IframeApi
+  | HtmlPanelApi
   | UrlInputApi
   | DropZoneApi
   | ColorInputApi
@@ -46,6 +48,7 @@ export type BodyComponent
   | SelectBox
   | SizeInput
   | Iframe
+  | HtmlPanel
   | UrlInput
   | DropZone
   | ColorInput
