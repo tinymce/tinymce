@@ -2,20 +2,6 @@
 // Form layout
 //
 
-// .tox-grid {
-//   display: grid;
-//   grid-template-columns: repeat(1, 1fr);
-//   grid-gap: @pad-sm @pad-md;
-// }
-
-// .tox-grid--2col {
-//   grid-template-columns: repeat(2, 1fr);
-// }
-
-// .tox-grid--span-2col {
-//   grid-column: span 2;
-// }
-
 .tox {
   .tox-form {
     display: flex;
@@ -24,32 +10,40 @@
     -ms-flex-preferred-size: auto;
   }
 
-  .tox-form--2col {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-
   // Wraps a label and input combo.
   .tox-form__group {
-    //
-  }
-
-  .tox-form--2col > .tox-form__group {
     box-sizing: border-box;
-    // Escape the calc expression otherwise less incorrectly converts this to 42%
-    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
-    width: calc(~"50% - @{pad-sm}");
-  }
-
-  .tox-form > .tox-form__group:not(:last-child) {
     margin-bottom: @pad-xs;
   }
 
   // Modifier for validation error
   .tox-form__group--error {
     //
+  }
+
+  .tox-form__grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .tox-form__grid--2col > .tox-form__group {
+    // Escape the calc expression otherwise less incorrectly converts this to 42%
+    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
+    width: calc(~"50% - @{pad-sm}");
+  }
+
+  .tox-form__grid--3col > .tox-form__group {
+    // Escape the calc expression otherwise less incorrectly converts this to 42%
+    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
+    width: calc(~"100% / 3 - @{pad-sm}");
+  }
+
+  .tox-form__grid--4col > .tox-form__group {
+    // Escape the calc expression otherwise less incorrectly converts this to 42%
+    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
+    width: calc(~"25% - @{pad-sm}");
   }
 
   // Horizontally stack elements.
