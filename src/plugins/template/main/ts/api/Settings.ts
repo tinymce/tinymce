@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const getCreationDateClasses = function (editor) {
@@ -40,14 +39,6 @@ const getMdateFormat = (editor: Editor) => {
   return editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
 };
 
-const getDialogWidth = function (editor) {
-  return editor.getParam('template_popup_width', 600);
-};
-
-const getDialogHeight = function (editor) {
-  return Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500));
-};
-
 export default {
   getCreationDateClasses,
   getModificationDateClasses,
@@ -57,6 +48,4 @@ export default {
   getTemplates,
   getCdateFormat,
   getMdateFormat,
-  getDialogWidth,
-  getDialogHeight
 };

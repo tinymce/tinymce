@@ -10,16 +10,24 @@ import { URL } from '@ephox/sand';
 import Actions from '../core/Actions';
 import ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Types } from '@ephox/bridge';
+import { Blob } from '@ephox/dom-globals';
 
-const createState = (blob) => {
+type ImageToolsState = {
+  blob: Blob,
+  url: string
+};
+
+const createState = (blob: Blob): ImageToolsState => {
   return {
     blob,
     url: URL.createObjectURL(blob)
   };
 };
 
-const makeOpen = (editor, imageUploadTimerState) => () => {
-  const getLoadedSpec = (currentState) => {
+const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
+  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState }> => {
     return {
       title: 'Edit Image',
       size: 'large',
@@ -48,12 +56,12 @@ const makeOpen = (editor, imageUploadTimerState) => () => {
           disabled: true
         }
       ],
-      onSubmit: (api, _details) => {
+      onSubmit: (api) => {
         const blob = api.getData().imagetools.blob;
         Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg, originalSize, blob);
         api.close();
       },
-      onCancel: () => {}, // TODO: reimplement me
+      onCancel: () => { }, // TODO: reimplement me
       onAction: (api, details) => {
         switch (details.name) {
           case ImageToolsEvents.saveState():
@@ -64,12 +72,12 @@ const makeOpen = (editor, imageUploadTimerState) => () => {
             }
             break;
           case ImageToolsEvents.disable():
-            win.block('Updating image');
+            api.block('Updating image');
             api.disable('save');
             api.disable('cancel');
             break;
           case ImageToolsEvents.enable():
-            win.unblock();
+            api.unblock();
             api.enable('cancel');
             break;
         }
@@ -80,13 +88,11 @@ const makeOpen = (editor, imageUploadTimerState) => () => {
   const originalImg = Actions.getSelectedImage(editor);
   const originalSize = ImageSize.getNaturalImageSize(originalImg);
 
-  let win;
-
   const img = Actions.getSelectedImage(editor);
   if (Actions.isEditableImage(editor, img)) {
     Actions.findSelectedBlob(editor).then((blob) => {
       const state = createState(blob);
-      win = editor.windowManager.open(getLoadedSpec(state));
+      editor.windowManager.open(getLoadedSpec(state));
     });
   }
 };

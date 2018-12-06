@@ -5,37 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import Actions from '../core/Actions';
+import { Types } from '@ephox/bridge';
 
-const open = function (editor, currentIndexState) {
-  let last: any = {}, selectedText;
+const open = function (editor: Editor, currentIndexState) {
+  let last: any = {}, selectedText: string;
   editor.undoManager.add();
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api) {
+  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
     const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const disableAll = function (api, disable: boolean) {
+  const disableAll = function (api: Types.Dialog.DialogInstanceApi<typeof initialData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api) {
+  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
     editor.windowManager.alert('Could not find the specified string.', function () {
       api.focus('findtext');
     });
   }
 
-  const doSubmit = (api) => {
+  const doSubmit = (api: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
     const data = api.getData();
 
     if (!data.findtext.length) {
@@ -69,6 +71,12 @@ const open = function (editor, currentIndexState) {
     };
   };
 
+  const initialData = {
+    findtext: selectedText,
+    replacetext: '',
+    matchcase: 'unchecked',
+    wholewords: 'unchecked'
+  };
   editor.windowManager.open({
     title: 'Find and Replace',
     size: 'normal',
@@ -140,12 +148,7 @@ const open = function (editor, currentIndexState) {
         disabled: true,
       }
     ],
-    initialData: {
-      findtext: selectedText,
-      replacetext: '',
-      matchcase: 'unchecked',
-      wholewords: 'unchecked'
-    },
+    initialData,
     onAction: (api, details) => {
       const data = api.getData();
       switch (details.name) {

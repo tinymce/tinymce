@@ -18,7 +18,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
 
-    const closeDialog = (state) => {
+    const closeDialog = (state: boolean) => {
       ModalDialog.hide(confirmDialog);
       callback(state);
     };

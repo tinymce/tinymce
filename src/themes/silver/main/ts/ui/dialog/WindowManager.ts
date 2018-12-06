@@ -132,7 +132,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const confirm = (message: string, callback: (flag) => void) => {
+  const confirm = (message: string, callback: (state: boolean) => void) => {
     confirmDialog.open(message, (state) => {
       callback(state);
     });

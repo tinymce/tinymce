@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Dialog from '../ui/Dialog';
 
-const register = function (editor, pluginUrl) {
-  editor.addCommand('mceHelp', Dialog.opener(editor, pluginUrl));
+const register = function (editor: Editor) {
+  editor.addCommand('mceHelp', Dialog.opener(editor));
 };
 
 export default {

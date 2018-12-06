@@ -5,14 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
 import Content from '../core/Content';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const open = function (editor) {
-  const minWidth = Settings.getMinWidth(editor);
-  const minHeight = Settings.getMinHeight(editor);
-
-  const editorContent = Content.getContent(editor);
+const open = function (editor: Editor) {
+  const editorContent: string = Content.getContent(editor);
 
   editor.windowManager.open({
     title: 'Source Code',
@@ -23,12 +20,7 @@ const open = function (editor) {
         {
           type: 'textarea',
           name: 'code',
-          multiline: true,
           flex: true,
-          minWidth,
-          minHeight,
-          spellcheck: false,
-          style: 'direction: ltr; text-align: left'
         }
       ]
     },

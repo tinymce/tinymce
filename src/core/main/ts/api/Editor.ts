@@ -7,7 +7,6 @@
 
 import { Registry } from '@ephox/bridge';
 import { Document, HTMLElement, Window } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
 import { Annotator } from 'tinymce/core/api/Annotator';
 import { Selection } from 'tinymce/core/api/dom/Selection';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -31,6 +30,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import Sidebar from '../ui/Sidebar';
 import I18n from 'tinymce/core/api/util/I18n';
+import { WindowManager } from './WindowManager';
 
 /**
  * Include the base event class documentation.
@@ -120,7 +120,7 @@ export interface Editor {
   undoManager: UndoManager;
   ui: Ui;
   validate: boolean;
-  windowManager: any;
+  windowManager: WindowManager;
   _beforeUnload: AnyFunction;
   _eventDispatcher: any;
   _mceOldSubmit: any;
@@ -180,22 +180,11 @@ export interface Editor {
   translate(text: string): string;
   unbindAllNativeEvents(): void;
   uploadImages(callback): void;
-  _scanForImages(): void;
+  _scanForImages(): Promise<any>;
 }
 
 export interface Ui {
   registry: Registry.Registry;
-  // WIP - TODO
-  dialog: {
-    open: () => void,    // windowManager.open
-    confirm: () => void, // windowManager.confirm
-    alert: () => void    // windowManager.alert
-  };
-  notification: {
-    open: () => void,   // notificationManager.open
-    close: () => void,  // notificationManager.open
-    getNotifications: () => void // notificationManager.getNotifications
-  };
 }
 
 export interface AddButtonSettings {
@@ -378,17 +367,7 @@ export const Editor = function (id, settings, editorManager) {
    * @type Object
    */
   self.ui = {
-    registry,
-    dialog: {
-      open: Fun.noop,    // windowManager.open
-      confirm: Fun.noop, // windowManager.confirm
-      alert: Fun.noop    // windowManager.alert
-    },
-    notification: {
-      open: Fun.noop,   // notificationManager.open
-      close: Fun.noop,  // notificationManager.open
-      getNotifications: Fun.noop // notificationManager.getNotifications
-    }
+    registry
   };
 
   // Call setup

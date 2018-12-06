@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 
-const parseHeader = function (head) {
+const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
@@ -19,7 +20,7 @@ const parseHeader = function (head) {
   }).parse(head);
 };
 
-const htmlToData = function (editor, head) {
+const htmlToData = function (editor: Editor, head: string) {
   const headerFragment = parseHeader(head);
   const data: any = {};
   let elm, matches;

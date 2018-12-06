@@ -6,13 +6,27 @@
  */
 
 import { Arr, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
+import { Types } from '@ephox/bridge';
 
-const getPreviewContent = (editor, html) => {
+interface TemplateValues {
+  url?: string;
+  content: string;
+  description: string;
+}
+
+interface TemplateData {
+  selected: boolean;
+  text: string;
+  value: TemplateValues;
+}
+
+const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
     let contentCssLinks = '';
 
@@ -44,7 +58,7 @@ const getPreviewContent = (editor, html) => {
   return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = (editor, templateList) => {
+const open = (editor: Editor, templateList: TemplateData[]) => {
   const createTemplates = () => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
@@ -65,7 +79,7 @@ const open = (editor, templateList) => {
     }));
   };
 
-  const createSelectBoxItems = (templates) => {
+  const createSelectBoxItems = (templates: TemplateData[]) => {
     return Arr.map(templates, (v) => {
       return {
         text: v.text,
@@ -74,18 +88,18 @@ const open = (editor, templateList) => {
     });
   };
 
-  const findTemplate = (templates, templateTitle) => {
+  const findTemplate = (templates: TemplateData[], templateTitle: string) => {
     return Arr.find(templates, (t) => {
       return t.text === templateTitle;
     });
   };
 
-  const getTemplateContent = (t) => {
-    return new Promise((resolve, reject) => {
+  const getTemplateContent = (t: TemplateData) => {
+    return new Promise<string>((resolve, reject) => {
       if (t.value.url) {
         XHR.send({
           url: t.value.url,
-          success (html) {
+          success (html: string) {
             resolve(html);
           },
           error: (e) => {
@@ -114,7 +128,7 @@ const open = (editor, templateList) => {
     }
   };
 
-  const onSubmit = (templates) => (api) => {
+  const onSubmit = (templates: TemplateData[]) => (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
@@ -124,31 +138,17 @@ const open = (editor, templateList) => {
     });
   };
 
-  interface TemplateValues {
-    url?: string;
-    content: string;
-    description: string;
-  }
-
-  interface TemplateData {
-    selected: boolean;
-    text: string;
-    value: TemplateValues;
-  }
+  type DialogData = {
+    template: string;
+    preview: string;
+  };
 
   const openDialog = (templates: TemplateData[]) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
-    const dialogSpec = (bodyItems = [], initialData = {}) => ({
+    const dialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
       title: 'Insert Template',
       size: 'large',
-      layout: 'flex',
-      direction: 'column',
-      align: 'stretch',
-      padding: 15,
-      spacing: 10,
-      minWidth: Settings.getDialogWidth(editor),
-      minHeight: Settings.getDialogHeight(editor),
       body: {
         type: 'panel',
         items: bodyItems
@@ -171,12 +171,12 @@ const open = (editor, templateList) => {
       onChange: onChange(templates)
     });
 
-    const dialogApi = editor.windowManager.open(dialogSpec());
+    const dialogApi = editor.windowManager.open(dialogSpec([], { template: '', preview: '' }));
     dialogApi.block('Loading...');
 
     getTemplateContent(templates[0]).then((previewHtml) => {
       const content = getPreviewContent(editor, previewHtml);
-      const bodyItems = [
+      const bodyItems: Types.Dialog.BodyComponentApi[] = [
         {
           type: 'selectbox',
           name: 'template',
@@ -188,7 +188,6 @@ const open = (editor, templateList) => {
           type: 'iframe',
           name: 'preview',
           flex: true,
-          border: 1,
           sandboxed: false
         }
       ];

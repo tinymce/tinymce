@@ -15,6 +15,7 @@ import { hasAdvancedCellTab } from '../api/Settings';
 import CellDialogGeneralTab from './CellDialogGeneralTab';
 import Helpers, { CellData } from './Helpers';
 import DomModifiers from './DomModifiers';
+import { Types } from '@ephox/bridge';
 
 const updateSimpleProps = (modifiers, data: CellData) => {
   modifiers.setAttrib('scope', data.scope);
@@ -32,14 +33,14 @@ const updateAdvancedProps = (modifiers, data: CellData) => {
 // When applying to a single cell, values can be falsy. That is
 // because there should be a consistent value across the cell
 // selection, so it should also be possible to toggle things off.
-const applyToSingle = (editor, cells: Node[], data: CellData) => {
+const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
   // NOTE: cells instead of cellElm passed through here just to keep signature
   // same as applyToMultiple. Probably change.
   // let cellElm = cells[0] as HTMLTableCellElement;
   const dom = editor.dom;
 
   // Switch cell type
-  const cellElm: HTMLTableCellElement = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? dom.rename(cells[0], data.celltype) : cells[0];
+  const cellElm = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement) : cells[0];
 
   const modifiers = DomModifiers.normal(dom, cellElm);
 
@@ -99,7 +100,7 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
   });
 };
 
-const onSubmitCellForm = (editor: Editor, cells: Node[], api) => {
+const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) => {
   const data = api.getData();
   api.close();
 
@@ -111,6 +112,7 @@ const onSubmitCellForm = (editor: Editor, cells: Node[], api) => {
 };
 
 const open = (editor: Editor) => {
+  // these any types are cheating, but seem difficult to unwind
   let cellElm, cells = [];
 
   // Get selected cells or the current cell
@@ -133,24 +135,30 @@ const open = (editor: Editor) => {
   );
   const data: CellData = Helpers.getSharedValues(cellsData);
 
-  const body = hasAdvancedCellTab(editor) ?
-    {
-      type: 'tabpanel',
-      tabs: [
-        CellDialogGeneralTab.tab(editor),
-        Helpers.getAdvancedTab()
-      ]
-    } : {
-      type: 'panel',
-      items: [
-        CellDialogGeneralTab.tab(editor),
-      ]
-    };
-
+  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+    type: 'tabpanel',
+    tabs: [
+      {
+        title: 'General',
+        items: CellDialogGeneralTab.items(editor)
+      },
+      Helpers.getAdvancedTab()
+    ]
+  };
+  const dialogPanel: Types.Dialog.PanelApi = {
+    type: 'panel',
+    items: [
+      {
+        type: 'grid',
+        columns: 2,
+        items: CellDialogGeneralTab.items(editor)
+      },
+    ]
+  };
   editor.windowManager.open({
     title: 'Cell Properties',
     size: 'normal',
-    body,
+    body: hasAdvancedCellTab(editor) ? dialogTabPanel : dialogPanel,
     buttons: [
       {
         type: 'cancel',

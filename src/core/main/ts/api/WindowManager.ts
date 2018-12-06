@@ -35,15 +35,22 @@ import { Types } from '@ephox/bridge';
 
 export interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
+  alert: (message: string, callback?: () => void, scope?) => void;
+  confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
+  close: () => void;
+}
+
+export interface WindowManagerImpl {
+  open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
   alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (flag) => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void) => void;
   close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
 }
 
-export default function (editor: Editor) {
-  let dialogs = [];
+export default function (editor: Editor): WindowManager {
+  let dialogs: Types.Dialog.DialogInstanceApi<any>[] = [];
 
-  const getImplementation = function () {
+  const getImplementation = function (): WindowManagerImpl {
     const theme = editor.theme;
     return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
   };
@@ -54,24 +61,24 @@ export default function (editor: Editor) {
     };
   };
 
-  const fireOpenEvent = function (dialog) {
+  const fireOpenEvent = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function (dialog) {
+  const fireCloseEvent = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function (dialog) {
+  const addDialog = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function (dialog) {
+  const closeDialog = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, function (otherDialog) {
       return otherDialog !== dialog;
@@ -86,20 +93,20 @@ export default function (editor: Editor) {
     return Option.from(dialogs[dialogs.length - 1]);
   };
 
-  const open = function (args, params?) {
+  const open = function <T>(args, params?): Types.Dialog.DialogInstanceApi<T> {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
-    const dialog = getImplementation().open(args, params, closeDialog);
+    const dialog = getImplementation().open<T>(args, params, closeDialog);
     addDialog(dialog);
     return dialog;
   };
 
-  const alert = function (message, callback, scope) {
+  const alert = function (message, callback?: () => void, scope?) {
     getImplementation().alert(message, funcBind(scope ? scope : this, callback));
   };
 
-  const confirm = function (message, callback, scope) {
+  const confirm = function (message, callback?: (state: boolean) => void, scope?) {
     getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
   };
 

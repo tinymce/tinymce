@@ -77,7 +77,7 @@ const htmlToDataSax = function (prefixes, html) {
   return data;
 };
 
-const ephoxEmbedHtmlToData = function (html) {
+const ephoxEmbedHtmlToData = function (html: string) {
   const fragment = DOM.createFragment(html);
   const div = fragment.firstChild;
 
