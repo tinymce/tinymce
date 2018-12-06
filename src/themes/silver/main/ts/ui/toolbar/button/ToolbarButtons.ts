@@ -266,9 +266,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         });
       },
       isActive: () => {
-        return SelectorFind.descendant(comp.element(), 'button').bind((button) => {
-          return comp.getSystem().getByDom(button).map((buttonComp) => Toggling.isOn(buttonComp)).toOption();
-        }).getOr(false);
+        return SelectorFind.descendant(comp.element(), 'button').exists((button) => {
+          return comp.getSystem().getByDom(button).exists((buttonComp) => Toggling.isOn(buttonComp));
+        });
       },
     };
   };
