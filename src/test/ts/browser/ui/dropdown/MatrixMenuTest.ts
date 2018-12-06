@@ -20,10 +20,10 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', meta: { } } },
-          { type: 'item', data: { value: 'beta', meta: { } } },
-          { type: 'item', data: { value: 'gamma', meta: { } } },
-          { type: 'item', data: { value: 'delta', meta: { } } }
+          { type: 'item', data: { value: 'alpha', meta: { } }, hasSubmenu: false },
+          { type: 'item', data: { value: 'beta', meta: { } }, hasSubmenu: false },
+          { type: 'item', data: { value: 'gamma', meta: { } }, hasSubmenu: false },
+          { type: 'item', data: { value: 'delta', meta: { } }, hasSubmenu: false }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',
@@ -46,7 +46,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
                   classes: [ 'row-class' ]
                 },
                 components: c
-              }))
+              }));
             }
           })
         ],

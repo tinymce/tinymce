@@ -61,27 +61,27 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           value: 'tools-menu-value',
           text: 'Tools Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' } } },
+            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' } }, hasSubmenu: true },
             { type: 'item', data: { value: 'about', meta: { text: 'About' } } },
             { type: 'widget', widget, data: { value: 'widget', meta: { } } }
           ], TestDropdownMenu.renderItem)
         },
-        'packages-menu': {
+        'packages': { // menu name should be triggering parent item so TieredMenuSpec path works
           value: 'packages-menu-value',
           text: 'Packages Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' } } }
+            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' } }, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
-        'sortby-menu': {
+        'sortby': {
           value: 'sortby-menu-value',
           text: 'Sortby Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' } } },
-            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' } } }
+            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' } }, hasSubmenu: true },
+            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' } }, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
-        'strings-menu': {
+        'strings': {
           value: 'strings-menu-value',
           text: 'Strings Menu',
           items: Arr.map([
@@ -89,19 +89,19 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
             { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' } } }
           ], TestDropdownMenu.renderItem)
         },
-        'numbers-menu': {
+        'numbers': {
           value: 'numbers-menu-value',
           text: 'Numbers Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' } } }
+            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' } }, hasSubmenu: false }
           ], TestDropdownMenu.renderItem)
         }
       }, TestDropdownMenu.renderMenu),
       expansions: {
-        packages: 'packages-menu',
-        sortby: 'sortby-menu',
-        strings: 'strings-menu',
-        numbers: 'numbers-menu'
+        packages: 'packages',
+        sortby: 'sortby',
+        strings: 'strings',
+        numbers: 'numbers'
       }
     };
 
