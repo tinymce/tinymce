@@ -21,6 +21,7 @@ import {
   SketchSpec,
   SplitDropdown as AlloySplitDropdown,
   Toggling,
+  SystemEvents,
 } from '@ephox/alloy';
 import { BehaviourConfigDetail, BehaviourConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
 import { PartialMenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
@@ -68,6 +69,13 @@ const getToggleApi = (component): Toolbar.ToolbarToggleButtonInstanceApi => {
   };
 };
 
+const getTooltipAttributes = (tooltip: Option<string>, providersBackstage: UiFactoryBackstageProviders) => {
+  return tooltip.map<{}>((tooltip) => ({
+    'aria-label': providersBackstage.translate(tooltip),
+    'title': providersBackstage.translate(tooltip)
+  })).getOr({});
+};
+
 interface GeneralToolbarButton<T> {
   icon: Option<string>;
   text: Option<string>;
@@ -78,17 +86,12 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, providersBackstage: UiFactoryBackstageProviders) => {
-  const tooltipAttributes = tooltip.map<{}>((tooltip) => ({
-    'aria-label': providersBackstage.translate(tooltip),
-    'title': providersBackstage.translate(tooltip)
-  })).getOr({});
-
+const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
   return {
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
-      attributes: tooltipAttributes
+      attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
       icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
@@ -124,14 +127,14 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
             }
           });
         }).toArray()
-      )
+      ).concat(behaviours.getOr([ ]))
     )
   };
 };
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders) => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -255,7 +258,13 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         });
       },
       setActive: (state) => {
+        // Toggle the main component
         Toggling.set(comp, state);
+        Attr.set(comp.element(), 'aria-pressed', state);
+        // Toggle the inner button state as well
+        SelectorFind.descendant(comp.element(), 'button').each((button) => {
+          comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
+        });
       },
       isActive: () => Toggling.isOn(comp),
     };
@@ -269,7 +278,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   return AlloySplitDropdown.sketch({
     dom: {
       tag: 'div',
-      classes: [ ToolbarButtonClasses.SplitButton ]
+      classes: [ ToolbarButtonClasses.SplitButton ],
+      attributes: Merger.merge({ 'aria-pressed': false }, getTooltipAttributes(spec.tooltip, sharedBackstage.providers))
     },
 
     onExecute (button: AlloyComponent) {
@@ -279,7 +289,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (a, b, c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false }),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
@@ -287,8 +296,11 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ])
     ]),
 
-    // FIX: this.
-    toggleClass: 'mce-active',
+    eventOrder: {
+      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events' ]
+    },
+
+    toggleClass: ToolbarButtonClasses.Ticked,
     lazySink: sharedBackstage.getSink,
     fetch: fetchChoices(getApi, spec, sharedBackstage.providers),
 
@@ -299,7 +311,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     components: [
       AlloySplitDropdown.parts().button(
-        renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.some(displayChannel), sharedBackstage.providers)
+        renderCommonStructure(spec.icon, spec.text, Option.none(), Option.some(displayChannel), Option.some([
+          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false })
+        ]), sharedBackstage.providers)
       ),
       AlloySplitDropdown.parts().arrow({
         dom: {
@@ -307,6 +321,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
           innerHtml: Icons.getOr('chevron-down', sharedBackstage.providers.icons, Fun.constant(''))
         }
+      }),
+      AlloySplitDropdown.parts()['aria-descriptor']({
+        text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
       })
     ]
   });

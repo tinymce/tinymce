@@ -125,6 +125,15 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                       children: [
                                         s.element('svg', { })
                                       ]
+                                    }),
+                                    s.element('span', {
+                                      attrs: {
+                                        'aria-hidden': str.is('true'),
+                                        'style': str.is('display: none;')
+                                      },
+                                      children: [
+                                        s.text(str.is('To open the popup, press Shift+Enter'))
+                                      ]
                                     })
                                   ]
                                 }),
@@ -147,6 +156,15 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                       classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
+                                      ]
+                                    }),
+                                    s.element('span', {
+                                      attrs: {
+                                        'aria-hidden': str.is('true'),
+                                        'style': str.is('display: none;')
+                                      },
+                                      children: [
+                                        s.text(str.is('To open the popup, press Shift+Enter'))
                                       ]
                                     })
                                   ]
@@ -257,9 +275,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
             Log.stepsAsStep('TBA', 'Clicking on a split button primary part should not toggle. It is up to the setActive api to do that', [
               Mouse.sClickOn(container, '.tox-toolbar .tox-split-button:contains("Delta")'),
               Chain.asStep(container, [
-                UiFinder.cFindIn('.tox-split-button:contains("Delta")'),
+                UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('div', {
+                  return s.element('button', {
                     classes: [ arr.not('tox-tbtn--enabled') ]
                   });
                 }))
@@ -271,9 +289,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 editor.fire('splitbutton1-toggle');
               }),
               Chain.asStep(container, [
-                UiFinder.cFindIn('.tox-split-button:contains("Delta")'),
+                UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('div', {
+                  return s.element('button', {
                     classes: [ arr.has('tox-tbtn--enabled') ]
                   });
                 }))

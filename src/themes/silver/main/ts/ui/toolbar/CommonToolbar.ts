@@ -42,7 +42,7 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
     items: foo.items,
     markers: {
       // nav within a group breaks if disabled buttons are first in their group so skip them
-      itemSelector: '.tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
+      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     },
 
     tgroupBehaviours: Behaviour.derive([

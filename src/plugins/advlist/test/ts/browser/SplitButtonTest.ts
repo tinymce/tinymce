@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
 
   const clickOnSplitBtnFor = (label) => {
     return Log.stepsAsStep('TBA', `ADVlist: Test split menu for ${label} has the correct Dom structure`, [
-      Mouse.sClickOn(Body.body(), 'button[aria-label="' + label + '"] + button.tox-split-button__chevron'),
+      Mouse.sClickOn(Body.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
       Waiter.sTryUntil(
         `Waiting for ${label} menu to appear`,
         UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu'),

@@ -9,6 +9,7 @@ Border width              <new>
 Error                     <new>
 Warn                      <new>
 Valid                     <new>
+To open the popup, press Shift+Enter <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
