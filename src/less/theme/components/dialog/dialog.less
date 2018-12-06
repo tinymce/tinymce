@@ -156,10 +156,8 @@
   .tox-dialog__body-content {
     flex: 1;
     -ms-flex-preferred-size: auto;
-    // TODO (verify max-height for dialogs)
-    max-height: 650px;
-    //overflow controls all scrolling in the dialogs
-    overflow: auto;
+    max-height: 650px;// TODO (verify max-height for dialogs)
+    overflow: auto;//overflow controls all scrolling in the dialogs
 
     > * {
       margin-bottom: 0;
@@ -236,8 +234,7 @@
 
   .tox-loading-text {
     align-items: center;
-    background-color: white;
-    box-shadow: 0 0 8px 10px white;
+    color: @dialog-body-text-color;
     display: flex;
     flex-direction: column;
     position: relative;

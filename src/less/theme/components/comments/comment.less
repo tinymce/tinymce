@@ -11,6 +11,7 @@
 @comment-padding: @pad-sm @pad-sm @pad-md @pad-sm;
 @comment-text-color: @text-color;
 @comment-text-transform: initial;
+@comment-text-color-muted: @text-color-muted;
 
 .tox {
   .tox-comment-thread {
@@ -55,7 +56,7 @@
     padding-top: @pad-sm;
 
     p {
-      color: rgba(34, 47, 62, .6);
+      color: @comment-text-color-muted;
       font-size: @font-size-sm;
       font-style: normal;
     }
@@ -70,7 +71,7 @@
     resize: both;
   }
 
-  .tox-comment--buttonspacing {
+  .tox-comment__buttonspacing {
     padding-top: @pad-md;
     text-align: center;
 
@@ -79,8 +80,8 @@
     }
   }
 
-  .tox-comment-thread--overlay::after {
-    background-color: #fff;
+  .tox-comment-thread__overlay::after {
+    background: @comment-background-color;
     bottom: 0;
     content: "";
     display: flex;
@@ -121,8 +122,8 @@
     }
   }
 
-  .tox-comment--gradient::after {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, #fff 100%);
+  .tox-comment__gradient::after {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, @comment-background-color 100%);
     content: "";
     display: block;
     height: 40px;
@@ -131,8 +132,8 @@
     width: 100%;
   }
 
-  .tox-comment--overlay {
-    background: #fff;
+  .tox-comment__overlay {
+    background: @comment-background-color;
     bottom: 0;
     display: flex;
     flex-direction: column;
@@ -146,11 +147,10 @@
     z-index: 5;
   }
 
-  .tox-comment--overlaytext {
+  .tox-comment__overlaytext {
     bottom: 0;
-    @comment-font-size: @font-size-lg;
-
     flex-direction: column;
+    font-size: @font-size-sm;
     left: 0;
     padding: 1em;
     position: absolute;
@@ -159,8 +159,9 @@
     z-index: 10;
 
     p {
-      background-color: white;
-      box-shadow: 0 0 8px 8px white;
+      background-color: @comment-background-color;
+      box-shadow: 0 0 8px 8px @comment-background-color;
+      color: @comment-text-color;
       text-align: center;
     }
 
