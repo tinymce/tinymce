@@ -10,8 +10,9 @@ import VK from '../api/util/VK';
 import { Editor } from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
 import { KeyboardEvent } from '@ephox/dom-globals';
+import { UndoManager } from '../api/UndoManager';
 
-const endTypingLevel = function (undoManager) {
+const endTypingLevel = function (undoManager: UndoManager) {
   if (undoManager.typing) {
     undoManager.typing = false;
     undoManager.add();

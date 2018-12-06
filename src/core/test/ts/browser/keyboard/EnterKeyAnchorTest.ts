@@ -5,10 +5,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success, failure) => {
   Theme();
 
   const sSetup = function (tinyApis, html, elementPath, offset) {
