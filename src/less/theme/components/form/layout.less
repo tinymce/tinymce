@@ -28,6 +28,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
   }
 
   // Wraps a label and input combo.
@@ -37,15 +38,9 @@
 
   .tox-form--2col > .tox-form__group {
     box-sizing: border-box;
-    width: 50%;
-  }
-
-  .tox-form--2col > .tox-form__group:nth-child(even) {
-    padding-left: @pad-md / 2;
-  }
-
-  .tox-form--2col > .tox-form__group:nth-child(odd) {
-    padding-right: @pad-md / 2;
+    // Escape the calc expression otherwise less incorrectly converts this to 42%
+    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
+    width: calc(~"50% - @{pad-sm}");
   }
 
   .tox-form > .tox-form__group:not(:last-child) {
