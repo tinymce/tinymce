@@ -15,6 +15,7 @@
 
 .tox {
   .tox-comment-thread {
+    background: @comment-background-color;
     position: relative;
 
     > *:not(:first-child) {
@@ -33,12 +34,13 @@
 
   .tox-comment__header {
     align-items: center;
+    color: @comment-text-color;
     display: flex;
     justify-content: space-between;
   }
 
   .tox-comment__date {
-    color: @text-color-muted;
+    color: @user-name-text-color;
     font-size: @font-size-xs;
   }
 
@@ -123,7 +125,7 @@
   }
 
   .tox-comment__gradient::after {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, @comment-background-color 100%);
+    background-image: linear-gradient(to bottom, rgba(255,0,0,0), @comment-background-color);
     content: "";
     display: block;
     height: 40px;
@@ -169,7 +171,33 @@
       font-size: .8em;
     }
   }
-}
+
+  .tox-comment__busy-spinner {
+    align-items: center;
+    background-color: @comment-background-color;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-dialogs + 3;
+  }
+
+  .tox-loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
+} //end tox
 
 .tox-comment__scroll {
   display: flex;
