@@ -267,7 +267,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       },
       isActive: () => {
         return SelectorFind.descendant(comp.element(), 'button').exists((button) => {
-          return comp.getSystem().getByDom(button).exists((buttonComp) => Toggling.isOn(buttonComp));
+          return comp.getSystem().getByDom(button).exists(Toggling.isOn);
         });
       },
     };
