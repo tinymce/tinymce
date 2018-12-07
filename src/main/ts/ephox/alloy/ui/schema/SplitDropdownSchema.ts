@@ -41,7 +41,7 @@ const arrowPart = PartType.required({
     return {
       dom: {
         attributes: {
-          role: 'button',
+          role: 'presentation',
         }
       },
       buttonBehaviours: Behaviour.derive([
@@ -73,7 +73,7 @@ const buttonPart = PartType.required({
     return {
       dom: {
         attributes: {
-          role: 'button'
+          role: 'presentation'
         }
       },
       buttonBehaviours: Behaviour.derive([
