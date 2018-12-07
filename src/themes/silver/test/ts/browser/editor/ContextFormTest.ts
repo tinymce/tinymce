@@ -78,7 +78,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Open context form', sOpen('test-form')),
           Step.label('Check focus is on the input', FocusTools.sTryOnSelector('Focus should now be on input in context form', doc, 'input')),
           Step.label('Press tab', Keyboard.sKeydown(doc, Keys.tab(), { })),
-          Step.label('Check focus is on the button "A"', FocusTools.sTryOnSelector('Focus should now be on button in context form', doc, 'button:contains("A")')),
+          Step.label('Check focus is on the button "A"', FocusTools.sTryOnSelector('Focus should now be on button in context form', doc, 'button[aria-label="A"]')),
           Step.label('Press tab (again)', Keyboard.sKeydown(doc, Keys.tab(), { })),
           Step.label('Check focus returned to the input', FocusTools.sTryOnSelector('Focus should go back to input in context form', doc, 'input')),
           Step.label('Set the active focus (input) value to "Words"', FocusTools.sSetActiveValue(doc, 'Words')),
@@ -169,7 +169,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         ed.ui.registry.addContextForm('test-form', {
           launch: {
             type: 'contextformtogglebutton',
-            icon: 'ABC',
+            icon: 'fake-icon-name',
+            tooltip: 'ABC',
             onSetup: (buttonApi) => {
               const f = (evt) => {
                 if (evt.hasOwnProperty('disable')) {
@@ -191,7 +192,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           commands: [
             {
               type: 'contextformbutton',
-              icon: 'A',
+              icon: 'fake-icon-name',
+              tooltip: 'A',
               onSetup: (buttonApi) => {
                 const f = (evt) => {
                   if (evt.hasOwnProperty('disable')) {
@@ -209,13 +211,15 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
             },
             {
               type: 'contextformbutton',
-              icon: 'B',
+              icon: 'fake-icon-name',
+              tooltip: 'B',
               primary: true,
               onAction: (formApi, buttonApi) => store.adder('B.' + formApi.getValue())()
             },
             {
               type: 'contextformtogglebutton',
-              icon: 'C',
+              icon: 'fake-icon-name',
+              tooltip: 'C',
               onSetup: (buttonApi) => {
                 const f = (evt) => {
                   if (evt.hasOwnProperty('disable')) {

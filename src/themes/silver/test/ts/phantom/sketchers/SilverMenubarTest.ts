@@ -199,7 +199,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   {
                     type: 'menuitem',
                     text: 'Item1',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: Icons.getDefault('drop'),
                     onAction: store.adder('menuitem-1-action')
                   },
                   {
@@ -207,7 +207,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   },
                   {
                     type: 'menuitem',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: Icons.getDefault('drop'),
                     text: 'Item2',
                     onAction: () => {
                       store.adder('menuitem-2 action')();
@@ -215,17 +215,17 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   },
                   {
                     type: 'nestedmenuitem',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: Icons.getDefault('drop'),
                     text: 'Nested menu',
                     getSubmenuItems: () => [
                       {
                         type: 'nestedmenuitem',
-                        icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                        icon: Icons.getDefault('drop'),
                         text: 'Nested menu x 2',
                         getSubmenuItems: () => [
                           {
                             type: 'menuitem',
-                            icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                            icon: Icons.getDefault('drop'),
                             text: 'Nested menu x 3',
                             onAction: () => { }
                           }

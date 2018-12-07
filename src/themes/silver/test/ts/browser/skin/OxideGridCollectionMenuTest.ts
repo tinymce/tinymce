@@ -51,11 +51,16 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
                       children: Arr.map([ '1', '2', '3', '4', '5', '6', '7', '8' ], (num) => {
                         return s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
+                          attrs: {
+                            title: str.is(num)
+                          },
                           children: [
                             // NOTE: The oxide demo page has div, but I think that's just a mistake
                             s.element('span', {
                              classes: [ arr.has('tox-collection__item-icon') ],
-                             html: str.is(num)
+                             children: [
+                               s.element('svg', {})
+                             ]
                             })
                           ]
                         });
@@ -69,11 +74,11 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
 
           // Without layout, the flatgrid cannot be calculated on phantom
           navigator.userAgent.indexOf('PhantomJS') > -1 ? Step.pass : GeneralSteps.sequence([
-            FocusTools.sTryOnSelector('Focus should be on 1', doc, '.tox-collection__item:contains("1")'),
+            FocusTools.sTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]'),
             Keyboard.sKeydown(doc, Keys.right(), { }),
-            FocusTools.sTryOnSelector('Focus should be on 2', doc, '.tox-collection__item:contains("2")'),
+            FocusTools.sTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]'),
             Keyboard.sKeydown(doc, Keys.right(), { }),
-            FocusTools.sTryOnSelector('Focus should be on 3', doc, '.tox-collection__item:contains("3")')
+            FocusTools.sTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]')
           ]),
           GuiSetup.mRemoveStyles
         ]
@@ -95,7 +100,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
                   type: 'choiceitem',
                   value: num,
                   text: num,
-                  icon: num
+                  icon: 'fake-icon-name'
                 };
               })
             );
