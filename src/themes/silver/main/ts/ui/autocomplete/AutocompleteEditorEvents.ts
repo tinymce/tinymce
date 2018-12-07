@@ -11,7 +11,7 @@ import { Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 
 export interface AutocompleterUiApi {
-  onKeypressThrottle: (evt: Event) => void;
+  onKeypress: { cancel: () => void, throttle: (evt: Event) => void };
   getView: () => Option<AlloyComponent>;
   isActive: () => boolean;
   closeIfNecessary: () => void;
@@ -19,7 +19,9 @@ export interface AutocompleterUiApi {
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
-  editor.on('keypress', api.onKeypressThrottle);
+  editor.on('keypress', api.onKeypress.throttle);
+
+  editor.on('remove', api.onKeypress.cancel);
 
   const redirectKeyToItem = (item, e) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
@@ -33,7 +35,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
     if (api.isActive()) {
       // Pressing <backspace> updates the autocompleter
       if (e.which === 8) {
-        api.onKeypressThrottle(e);
+        api.onKeypress.throttle(e);
       }
 
       // Pressing <esc> closes the autocompleter
