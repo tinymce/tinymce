@@ -27,17 +27,17 @@ const tab = () => {
 
   const htmlPanel: Types.Dialog.BodyComponentApi = {
     type: 'htmlpanel',
-    html: '<div>' +
-      '<table class="mce-table-striped">' +
-      '<thead>' +
-      '<th>' + I18n.translate('Action') + '</th>' +
-      '<th>' + I18n.translate('Shortcut') + '</th>' +
-      '</thead>' +
-      '<tbody>' +
-      shortcutLisString +
-      '</tbody>' +
-      '</table>' +
-      '</div>'
+    // Temporary width set to enhance dialog appearance
+    // TODO: Fix table styles #TINY-2909
+    html: '<table class="tox-dialog__table" style = "width: 75%;">' +
+          '<thead>' +
+          '<th>' + I18n.translate('Action') + '</th>' +
+          '<th>' + I18n.translate('Shortcut') + '</th>' +
+          '</thead>' +
+          '<tbody>' +
+          shortcutLisString +
+          '</tbody>' +
+          '</table>'
   };
   return {
     title: 'Handy Shortcuts',

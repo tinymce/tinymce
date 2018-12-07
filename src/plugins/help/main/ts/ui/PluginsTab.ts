@@ -18,15 +18,23 @@ export interface PluginUrlType {
 
 const tab = (editor: Editor) => {
   const availablePlugins = () => {
-    return '<div style="padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
-      '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
+    const premiumPlugins = [
+      'PowerPaste',
+      'Spell Checker Pro',
+      'Accessibility Checker',
+      'Advanced Code Editor',
+      'Enhanced Media Embed',
+      'Link Checker'
+    ];
+
+    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => {
+      return '<li>' + I18n.translate(plugin) + '</li>';
+    }).join('');
+
+    return '<div data-mce-tabstop="1" tabindex="-1">' +
+      '<p><b>' + I18n.translate('Premium plugins:') + '</p></b>' +
       '<ul>' +
-      '<li>PowerPaste</li>' +
-      '<li>Spell Checker Pro</li>' +
-      '<li>Accessibility Checker</li>' +
-      '<li>Advanced Code Editor</li>' +
-      '<li>Enhanced Media Embed</li>' +
-      '<li>Link Checker</li>' +
+      premiumPluginList +
       '</ul><br />' +
       '<p style="float: right;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></p>' +
       '</div>';
@@ -60,15 +68,17 @@ const tab = (editor: Editor) => {
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
 
-    return '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</b></p>' +
+    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</p></b>' +
       '<ul>' + pluginsString + '</ul>';
+
+    return html;
   };
 
   const installedPlugins = (editor) => {
     if (editor == null) {
       return '';
     }
-    return '<div style="overflow-y: auto; overflow-x: hidden; max-height: 230px; height: 230px;" data-mce-tabstop="1" tabindex="-1">' +
+    return '<div data-mce-tabstop="1" tabindex="-1">' +
       pluginLister(editor) +
       '</div>';
   };
