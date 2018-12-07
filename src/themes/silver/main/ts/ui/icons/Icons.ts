@@ -11,37 +11,27 @@ import { getAll as getAllOxide } from '@ephox/oxide-icons-default';
 export type IconProvider = () => Record<string, string>;
 
 const defaultIcons = getAllOxide();
+const fallbackIcon = Option.from(defaultIcons['temporary-placeholder']).getOr('!not found!');
 
-const getDefault = (name: string) => {
-  // todo add a broken icon here instead of !not found!
-  return getDefaultOr(name, () => '!not found!');
+const getDefault = (name: string): string => {
+  return Option.from(defaultIcons[name]).getOr(fallbackIcon);
 };
 
-const getDefaultOr = (name: string, fallback: () => string) => {
-  return Option.from(defaultIcons[name]).getOrThunk(fallback);
-};
-
-const get = (name: string, icons: IconProvider) => {
+const get = (name: string, icons: IconProvider): string => {
   return Option.from(icons()[name]).getOrThunk(() => getDefault(name));
 };
 
-const getOr = (name: string, icons: IconProvider, fallback: () => string) => {
-  return Option.from(icons()[name]).getOrThunk(() => getDefaultOr(name, fallback));
+const getDefaultFirst = (names: string[]): string => {
+  return Options.findMap(names, (name) => Option.from(defaultIcons[name])).getOr(fallbackIcon);
 };
 
-const getDefaultFirstOr = (names: string[], fallback: () => string) => {
-  return Options.findMap(names, (name) => Option.from(defaultIcons[name])).getOrThunk(fallback);
-};
-
-const getFirstOr = (names: string[], icons: IconProvider, fallback: () => string) => {
-  return Options.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(fallback);
+const getFirst = (names: string[], icons: IconProvider): string => {
+  return Options.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(() => getDefaultFirst(names));
 };
 
 export {
   getDefault,
-  getDefaultOr,
-  getDefaultFirstOr,
-  getFirstOr,
-  get,
-  getOr
+  getDefaultFirst,
+  getFirst,
+  get
 };
