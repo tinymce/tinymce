@@ -32,7 +32,7 @@ const tab = (editor: Editor) => {
     }).join('');
 
     return '<div data-mce-tabstop="1" tabindex="-1">' +
-      '<p><b>' + I18n.translate('Premium plugins:') + '</p></b>' +
+      '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
       '<ul>' +
       premiumPluginList +
       '</ul><br />' +
@@ -68,7 +68,7 @@ const tab = (editor: Editor) => {
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
 
-    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</p></b>' +
+    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</b></p>' +
       '<ul>' + pluginsString + '</ul>';
 
     return html;
