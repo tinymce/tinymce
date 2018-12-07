@@ -258,15 +258,18 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         });
       },
       setActive: (state) => {
-        // Toggle the main component
-        Toggling.set(comp, state);
+        // Toggle the pressed aria state component
         Attr.set(comp.element(), 'aria-pressed', state);
-        // Toggle the inner button state as well
+        // Toggle the inner button state, as that's the toggle component of the split button
         SelectorFind.descendant(comp.element(), 'button').each((button) => {
           comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
         });
       },
-      isActive: () => Toggling.isOn(comp),
+      isActive: () => {
+        return SelectorFind.descendant(comp.element(), 'button').exists((button) => {
+          return comp.getSystem().getByDom(button).exists(Toggling.isOn);
+        });
+      },
     };
   };
 
@@ -312,7 +315,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     components: [
       AlloySplitDropdown.parts().button(
         renderCommonStructure(spec.icon, spec.text, Option.none(), Option.some(displayChannel), Option.some([
-          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false })
+          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),
       AlloySplitDropdown.parts().arrow({
