@@ -138,9 +138,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   };
 
   const iconChoices = Arr.flatten([
-      detail.icon.toArray(),
-      detail.level.toArray(),
-      detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
+    detail.icon.toArray(),
+    detail.level.toArray(),
+    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
   ]);
 
   return {
