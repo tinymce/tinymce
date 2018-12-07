@@ -6,11 +6,10 @@
  */
 
 import { Behaviour, Replacing } from '@ephox/alloy';
-import { Fun } from '@ephox/katamari';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { getOr, IconProvider } from '../icons/Icons';
+import { get as getIcon, IconProvider } from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 const renderIcon = (iconHtml) =>
@@ -23,9 +22,7 @@ const renderIcon = (iconHtml) =>
   });
 
 const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
-  return renderIcon(
-    getOr(iconName, iconsProvider, Fun.constant(iconName))
-  );
+  return renderIcon(getIcon(iconName, iconsProvider));
 };
 
 const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({

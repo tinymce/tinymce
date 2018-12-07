@@ -26,7 +26,7 @@ export default function () {
 
     setup (ed: Editor) {
       ed.ui.registry.addMenuItem('x1', {
-        icon: Icons.getDefaultOr('drop', () => 'oh no'),
+        icon: Icons.getDefault('drop'),
         text: 'Text with icon',
         onAction () {
           console.log('Just Text click');
@@ -83,7 +83,7 @@ export default function () {
           {
             type: 'menuitem',
             text: 'Nested 2',
-            icon: Icons.getDefaultOr('drop', () => 'oh no'),
+            icon: Icons.getDefault('drop'),
             onAction () {
               console.log('clicked nested 1');
             }

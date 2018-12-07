@@ -8,7 +8,7 @@
 import { AlloyComponent, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher, AlloySpec } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Option, Arr } from '@ephox/katamari';
-import { IconProvider, get as getIcon, getFirstOr, getDefaultFirstOr } from '../icons/Icons';
+import { IconProvider, get as getIcon, getFirst } from '../icons/Icons';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
 export interface NotificationSketchApis {
@@ -137,14 +137,11 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     updateText
   };
 
-  const iconChoices = Arr.map(
-    Arr.flatten([
+  const iconChoices = Arr.flatten([
       detail.icon.toArray(),
       detail.level.toArray(),
       detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
-    ]),
-    (icon) => icon
-  );
+  ]);
 
   return {
     uid: detail.uid,
@@ -161,9 +158,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         dom: {
           tag: 'div',
           classes: [ 'tox-notification__icon' ],
-          innerHtml: getFirstOr(iconChoices, detail.iconProvider, () => {
-            return getDefaultFirstOr(iconChoices, () => '');
-          })
+          innerHtml: getFirst(iconChoices, detail.iconProvider)
         }
       } as AlloySpec,
       {
