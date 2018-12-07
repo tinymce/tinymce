@@ -4,6 +4,9 @@ import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
+import { PlatformDetection } from '@ephox/sand';
+
+const browser = PlatformDetection.detect().browser;
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failure) => {
   Theme();
@@ -94,10 +97,11 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
       ])),
       Logger.t('Insert newline before image in link', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><a href="#">a<img src="about:blank" /></a></p>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([0, 0], 1),
         sInsertNewline(editor, { }),
         tinyApis.sAssertContent('<p><a href="#">a</a></p><p><a href="#"><img src="about:blank" /></a></p>'),
-        tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+        // For some bizarre IE issue getSelection().addRange() creates a zwsp from nowhere and moves the caret after it
+        browser.isIE() ? tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1) : tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
       ]))
     ], onSuccess, onFailure);
   }, {
