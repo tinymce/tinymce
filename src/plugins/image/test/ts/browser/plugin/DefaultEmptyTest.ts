@@ -1,14 +1,16 @@
-import { Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Chain, Log, Pipeline, UnitTest, NamedChain } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import {
   cAssertCleanHtml,
+  cAssertInputValue,
   cExecCommand,
   cFillActiveDialog,
   cSubmitDialog,
   cWaitForDialog,
+  generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
 
@@ -20,18 +22,14 @@ UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
       Editor.cFromSettings(silverSettings),
       cExecCommand('mceImage', true),
       cWaitForDialog(),
-      // TODO TINY-2819 - assert this properly (i.e. check each DOM input separately)
-      // cAssertActiveDialogData('checking initial dialog data', {
-      //   src: {
-      //     value: '',
-      //     meta: {}
-      //   },
-      //   alt: '',
-      //   dimensions: {
-      //     width: '',
-      //     height: ''
-      //   }
-      // }),
+      NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.src, ''), '_'),
+        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.alt, ''), '_'),
+        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.height, ''), '_'),
+        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.width, ''), '_'),
+        NamedChain.outputInput
+      ]),
       cFillActiveDialog({
         src: {
           value: 'src'
