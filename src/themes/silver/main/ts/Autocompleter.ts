@@ -119,7 +119,7 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
           InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
         });
       }
-    )
+    );
   }, 50);
 
   const autocompleterUiApi: AutocompleterUiApi = {
