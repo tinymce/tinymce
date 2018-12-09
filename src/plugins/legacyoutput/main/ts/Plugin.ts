@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Formats from './core/Formats';
 
@@ -16,7 +15,7 @@ import Formats from './core/Formats';
  * @private
  */
 
-PluginManager.add('legacyoutput', (editor: Editor) => {
+PluginManager.add('legacyoutput', (editor) => {
   Formats.setup(editor);
 });
 

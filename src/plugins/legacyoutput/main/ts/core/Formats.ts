@@ -7,6 +7,7 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import Settings from '../api/Settings';
 
 const overrideFormats = (editor: Editor) => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
@@ -101,17 +102,17 @@ const overrideSettings = (editor: Editor) => {
     'Webdings=webdings;' +
     'Wingdings=wingdings,zapf dingbats';
 
-  editor.settings.inline_styles = false;
+  Settings.setInlineStyles(editor, false);
 
   // Override the default font size and format settings if a user hasn't already specified an override.
   // This way we don't need to override the entire button and can let the default UI render our legacy
   // font sizes/formats
-  if (!editor.getParam('fontsize_formats')) {
-    editor.settings.fontsize_formats = defaultFontsizeFormats;
+  if (!Settings.getFontSizeFormats(editor)) {
+    Settings.setFontSizeFormats(editor, defaultFontsizeFormats);
   }
 
-  if (!editor.getParam('font_formats')) {
-    editor.settings.font_formats = defaultFontsFormats;
+  if (!Settings.getFontFormats(editor)) {
+    Settings.setFontFormats(editor, defaultFontsFormats);
   }
 };
 
