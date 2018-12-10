@@ -52,6 +52,11 @@
     line-height: @comment-line-height;
     margin-top: @pad-sm;
     text-transform: @comment-text-transform;
+
+    textarea {
+      white-space: normal;
+      width: 100%;
+    }
   }
 
   .tox-comment__expander {
@@ -68,12 +73,16 @@
     margin: 0;
   }
 
-  .tox-comment__body textarea {
-    //overflow: auto;
-    overflow: scroll;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+  // .tox-comment__body {
+
+  //   textarea {
+  //   overflow: auto;
+  //   overflow-x: hidden;
+  //   overflow-y: scroll;
+  //   width: 100%;
+  //   white-space: normal;
+  //   }
+  // }
 
   .tox-comment__buttonspacing {
     padding-top: @pad-md;
