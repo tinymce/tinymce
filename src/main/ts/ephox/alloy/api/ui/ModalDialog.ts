@@ -1,4 +1,4 @@
-import { Cell, Id, Merger, Option } from '@ephox/katamari';
+import { Cell, Id, Option } from '@ephox/katamari';
 import { Attr, Traverse } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -131,7 +131,8 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     eventOrder,
     domModification: {
       attributes: {
-        role: 'dialog'
+        'role': 'dialog',
+        'aria-modal': 'true'
       }
     },
     behaviours: SketchBehaviours.augment(

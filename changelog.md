@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.5.1] - 2018-12-06
+### Fixed
+ - ModalDialog now correctly sets the "aria-modal" attribute
+
 # [4.5.0] - 2018-12-05
 ### Added
  - Tiered menus handle toggling aria-expanded as submenus are opened and closed
