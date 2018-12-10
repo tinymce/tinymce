@@ -69,8 +69,10 @@
   }
 
   .tox-comment__body textarea {
-    overflow: auto;
-    resize: both;
+    //overflow: auto;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   .tox-comment__buttonspacing {
@@ -125,7 +127,7 @@
   }
 
   .tox-comment__gradient::after {
-    background-image: linear-gradient(to bottom, rgba(255,0,0,0), @comment-background-color);
+    background: linear-gradient(transparent, @comment-background-color);
     content: "";
     display: block;
     height: 40px;
