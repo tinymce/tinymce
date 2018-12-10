@@ -151,6 +151,18 @@
     z-index: 5;
   }
 
+  .tox-loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
   .tox-comment__overlaytext {
     bottom: 0;
     flex-direction: column;
@@ -186,20 +198,8 @@
     top: 0;
     z-index: @z-index-dialogs + 3;
   }
-
-  .tox-loading-text {
-    align-items: center;
-    color: @comment-text-color;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
-    > div {
-      padding-bottom: @pad-md;
-    }
-  }
-
-} //end tox
+}
+//end tox
 
 .tox-comment__scroll {
   display: flex;
