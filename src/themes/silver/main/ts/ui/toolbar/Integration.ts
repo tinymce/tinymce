@@ -69,8 +69,7 @@ const types = {
       return renderMenuButton(
         s,
         ToolbarButtonClasses.Button,
-        extras.backstage.shared,
-        'button'
+        extras.backstage.shared
       );
     }
   ),
