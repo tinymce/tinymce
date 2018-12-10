@@ -39,11 +39,6 @@ const arrowPart = PartType.required({
   name: 'arrow',
   defaults (detail) {
     return {
-      dom: {
-        attributes: {
-          role: 'presentation',
-        }
-      },
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
         Focusing.revoke()
@@ -71,11 +66,6 @@ const buttonPart = PartType.required({
   name: 'button',
   defaults (detail) {
     return {
-      dom: {
-        attributes: {
-          role: 'presentation'
-        }
-      },
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
         Focusing.revoke()
