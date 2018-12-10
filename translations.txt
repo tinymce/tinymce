@@ -9,6 +9,7 @@ Border width              <new>
 Error                     <new>
 Warn                      <new>
 Valid                     <new>
+To open the popup, press Shift+Enter <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
@@ -77,8 +78,6 @@ Flags                     <new>                 Emoticons
 Metadata and Document Properties [Document Properties] Fullpage
 
 Image...                  [Image]               Image
-Dimension width           <new>                 Image
-Dimension height          <new>                 Image
 
 Link...                   [Link]                Link
 Insert/Edit Link          [Insert Link]         Link
@@ -172,7 +171,6 @@ border              (Table)
 style               (style)
 
 Document Properties   (Fullpage)
-
 
 Items that are translated but may look like english
 -----------------------------------------------------

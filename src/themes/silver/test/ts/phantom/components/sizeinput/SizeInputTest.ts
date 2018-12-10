@@ -12,11 +12,9 @@ import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 const fieldStructure = (s, str, arr, label) => {
   return s.element('div', {
     children: [
-      s.element('span', {
-        html: str.is(label),
-        attrs: {
-          'aria-hidden': str.is('true')
-        }
+      s.element('label', {
+        classes: [arr.has('tox-label')],
+        html: str.is(label)
       }),
       s.element('input', {
         classes: [arr.has('tox-textfield')],
@@ -78,18 +76,11 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
             return s.element('div', {
               classes: [arr.has('tox-form__group')],
               children: [
-                s.element('label', {
-                  classes: [arr.has('tox-label')],
-                  html: str.is('Dimensions')
-                }),
                 s.element('div', {
                   classes: [arr.has('tox-form__controls-h-stack')],
                   children: [
-                    fieldStructure(s, str, arr, 'Dimension width'),
-                    s.element('span', {
-                      html: str.is('×')
-                    }),
-                    fieldStructure(s, str, arr, 'Dimension height'),
+                    fieldStructure(s, str, arr, 'Width'),
+                    fieldStructure(s, str, arr, 'Height'),
                     s.element('button', {
                       classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
                     })

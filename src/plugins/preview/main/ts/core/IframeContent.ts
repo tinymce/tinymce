@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import { Fun } from '@ephox/katamari';
 
-const getPreviewHtml = function (editor) {
-  let previewHtml;
+const getPreviewHtml = function (editor: Editor) {
   let headHtml = '';
   const encode = editor.dom.encode;
   const contentStyle = Settings.getContentStyle(editor);
@@ -51,7 +50,7 @@ const getPreviewHtml = function (editor) {
 
   const dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
 
-  previewHtml = (
+  const previewHtml = (
     '<!DOCTYPE html>' +
     '<html>' +
     '<head>' +
@@ -67,9 +66,6 @@ const getPreviewHtml = function (editor) {
   return previewHtml;
 };
 
-const injectIframeContent = Fun.noop;
-
 export default {
   getPreviewHtml,
-  injectIframeContent
 };

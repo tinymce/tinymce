@@ -32,6 +32,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure
       sCheckElement('h1', ElementType.isInline, false),
       sCheckText(ElementType.isInline)
     ])),
+    Logger.t('Check tables', GeneralSteps.sequence([
+      sCheckElement('b', ElementType.isTable, false),
+      sCheckElement('p', ElementType.isTable, false),
+      sCheckElement('table', ElementType.isTable, true),
+      sCheckText(ElementType.isTable)
+    ])),
     Logger.t('Check heading elements', GeneralSteps.sequence([
       sCheckElement('h1', ElementType.isHeading, true),
       sCheckElement('h2', ElementType.isHeading, true),

@@ -5,24 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
+import { Types } from '@ephox/bridge';
 
-const opener = function (editor, pluginUrl) {
+const opener = function (editor: Editor) {
   return function () {
+    const body: Types.Dialog.TabPanelApi = {
+      type: 'tabpanel',
+      tabs: [
+        KeyboardShortcutsTab.tab(),
+        PluginsTab.tab(editor),
+        VersionTab.tab()
+      ]
+    };
     editor.windowManager.open(
       {
         title: 'Help',
         size: 'medium',
-        body: {
-          type: 'tabpanel',
-          tabs: [
-            KeyboardShortcutsTab.tab(),
-            PluginsTab.tab(editor),
-            VersionTab.tab()
-          ]
-        },
+        body,
         buttons: [
           {
             type: 'cancel',

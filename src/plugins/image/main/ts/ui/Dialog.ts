@@ -6,7 +6,7 @@
  */
 
 import { File } from '@ephox/dom-globals';
-import { Arr, Fun, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
+import { Arr, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
 import { Editor } from '../../../../../core/main/ts/api/Editor';
@@ -22,6 +22,7 @@ import { collect } from './DialogInfo';
 import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
 import { UploadTab } from './UploadTab';
 import { StyleMap } from '../../../../../core/main/ts/api/html/Styles';
+import { Types } from '@ephox/bridge';
 
 interface ChangeEvent {
   name: string;
@@ -311,7 +312,7 @@ const closeHandler = (state: ImageDialogState) => () => {
 
 const makeDialogBody = (info: ImageDialogInfo) => {
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
-    return {
+    const tabPanel: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
       tabs: Arr.flatten<any>([
         [MainTab.makeTab(info)],
@@ -319,15 +320,17 @@ const makeDialogBody = (info: ImageDialogInfo) => {
         info.hasUploadUrl || info.hasUploadHandler ? [UploadTab.makeTab(info)] : []
       ])
     };
+    return tabPanel;
   } else {
-    return {
+    const panel: Types.Dialog.PanelApi = {
       type: 'panel',
       items: MainTab.makeItems(info)
     };
+    return panel;
   }
 };
 
-const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo) => {
+const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): Types.Dialog.DialogApi<ImageDialogData> => {
   const state = createState(info);
   return {
     title: 'Insert/Edit Image',
@@ -388,7 +391,8 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
 };
 
 const alertErr = (editor: Editor) => (api: API, message: string) => {
-  editor.windowManager.alert(message, Fun.noop, api.close);
+  // TODO: it looks like the intention to close the entire dialog on an error. Is that really a good idea?
+  editor.windowManager.alert(message, api.close);
 };
 
 const normalizeCss = (editor: Editor) => (cssText: string) => {

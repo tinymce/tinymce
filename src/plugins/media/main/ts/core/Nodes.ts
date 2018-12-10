@@ -104,9 +104,14 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
   }
 };
 
-const isWithinEphoxEmbed = function (node: Node) {
+const isPageEmbedWrapper = (node: Node) => {
+  const nodeClass = node.attr('class') as string;
+  return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
+};
+
+const isWithinEmbedWrapper = function (node: Node) {
   while ((node = node.parent)) {
-    if (node.attr('data-ephox-embed-iri')) {
+    if (node.attr('data-ephox-embed-iri') || isPageEmbedWrapper(node)) {
       return true;
     }
   }
@@ -148,11 +153,11 @@ const placeHolderConverter = function (editor: Editor) {
       }
 
       if (node.name === 'iframe' && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
-        if (!isWithinEphoxEmbed(node)) {
+        if (!isWithinEmbedWrapper(node)) {
           node.replace(createPreviewIframeNode(editor, node));
         }
       } else {
-        if (!isWithinEphoxEmbed(node)) {
+        if (!isWithinEmbedWrapper(node)) {
           node.replace(createPlaceholderNode(editor, node));
         }
       }

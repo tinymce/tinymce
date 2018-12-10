@@ -24,7 +24,7 @@ const renderIcon = (iconHtml) =>
 
 const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
   return renderIcon(
-    getOr('icon-' + iconName, iconsProvider, Fun.constant(iconName))
+    getOr(iconName, iconsProvider, Fun.constant(iconName))
   );
 };
 

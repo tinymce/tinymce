@@ -2,7 +2,7 @@ import { Logger, Mouse, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
 import { Behaviour, GuiFactory, ModalDialog, Positioning } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { ValueSchema } from '@ephox/boulder';
-import { Types } from '@ephox/bridge';
+import { Types, DialogManager } from '@ephox/bridge';
 import { Fun, Result } from '@ephox/katamari';
 
 import { renderDialog } from '../../../../main/ts/ui/window/SilverDialog';
@@ -12,7 +12,8 @@ import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
-  const dialogSpec = (store) => {
+  const dialogSpec = (store): DialogManager.DialogInit<{}> => {
+    // the `any` here can't be removed, because internalDialog uses types that aren't exposed from Bridge
     return {
       internalDialog: {
         title: 'test dialog',

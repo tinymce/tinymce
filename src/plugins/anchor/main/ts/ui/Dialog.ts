@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Anchor from '../core/Anchor';
 
-const insertAnchor = function (editor, newId) {
+const insertAnchor = function (editor: Editor, newId: string) {
   if (!Anchor.isValidId(newId)) {
     editor.windowManager.alert(
       'Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
@@ -19,7 +20,7 @@ const insertAnchor = function (editor, newId) {
   }
 };
 
-const open = function (editor) {
+const open = function (editor: Editor) {
   const currentId = Anchor.getId(editor);
 
   editor.windowManager.open({

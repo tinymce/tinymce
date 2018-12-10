@@ -7,11 +7,12 @@
 
 import { Future, Option, Options } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import { LinkDialogOutput } from './DialogTypes';
 
 // Delay confirm since onSubmit will move focus
-const delayedConfirm = function (editor, message, callback) {
+const delayedConfirm = function (editor: Editor, message: string, callback: (state: boolean) => void) {
   const rng = editor.selection.getRng();
 
   Delay.setEditorTimeout(editor, function () {
@@ -49,8 +50,7 @@ const tryProtocolTransform = (assumeExternalTargets: boolean) => (data: LinkDial
   }) : Option.none();
 };
 
-const preprocess = (editor, assumeExternalTargets: boolean, data: LinkDialogOutput): Future<LinkDialogOutput> => {
-  console.log('preprocessing');
+const preprocess = (editor: Editor, assumeExternalTargets: boolean, data: LinkDialogOutput): Future<LinkDialogOutput> => {
   return Options.findMap(
     [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets) ],
     (f) => f(data)

@@ -66,6 +66,7 @@ const getSpec = (editor): SelectSpec & { dataset } => {
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
 
   return {
+    tooltip: 'Blocks',
     isSelectedFor,
     getPreviewFor,
     onAction,

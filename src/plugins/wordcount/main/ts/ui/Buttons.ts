@@ -13,6 +13,12 @@ const register = function (editor) {
     icon: 'character-count',
     onAction: () => Dialog.open(editor)
   });
+
+  editor.ui.registry.addMenuItem('wordcount', {
+    text: 'Wordcount',
+    icon: 'character-count',
+    onAction: () => Dialog.open(editor)
+  });
 };
 
 export {

@@ -13,19 +13,21 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import Styles from '../actions/Styles';
 import { shouldStyleWithCss, getDefaultStyles, getDefaultAttributes } from '../api/Settings';
+import { Types } from '@ephox/bridge';
 
 /**
  * @class tinymce.table.ui.Helpers
  * @private
  */
 
-const buildListItems = (inputList, itemCallback, startItems?) => {
-  const appendItems = (values, output?) => {
+const buildListItems = (inputList, itemCallback, startItems?): Types.SelectBox.ExternalSelectBoxItem[] => {
+  const appendItems = (values, output?: Types.SelectBox.ExternalSelectBoxItem[]) => {
     output = output || [];
 
     Tools.each(values, (item) => {
       const menuItem: any = { text: item.text || item.title };
 
+      // TODO TINY-2236 - this implies table_class_list supports nested menus, but bridge doesn't, so this either needs to be supported or deleted
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
       } else {
@@ -83,38 +85,39 @@ const getSharedValues = (data) => {
 };
 
 const getAdvancedTab = () => {
+  const items: Types.Dialog.BodyComponentApi[] = [
+    {
+      name: 'borderstyle',
+      type: 'selectbox',
+      label: 'Border style',
+      items: [
+        { text: 'Select...', value: '' },
+        { text: 'Solid', value: 'solid' },
+        { text: 'Dotted', value: 'dotted' },
+        { text: 'Dashed', value: 'dashed' },
+        { text: 'Double', value: 'double' },
+        { text: 'Groove', value: 'groove' },
+        { text: 'Ridge', value: 'ridge' },
+        { text: 'Inset', value: 'inset' },
+        { text: 'Outset', value: 'outset' },
+        { text: 'None', value: 'none' },
+        { text: 'Hidden', value: 'hidden' }
+      ]
+    },
+    {
+      name: 'bordercolor',
+      type: 'colorinput',
+      label: 'Border color'
+    },
+    {
+      name: 'backgroundcolor',
+      type: 'colorinput',
+      label: 'Background color'
+    }
+  ];
   return {
     title: 'Advanced',
-    items: [
-      {
-        name: 'borderstyle',
-        type: 'selectbox',
-        label: 'Border style',
-        items: [
-          { text: 'Select...', value: '' },
-          { text: 'Solid', value: 'solid' },
-          { text: 'Dotted', value: 'dotted' },
-          { text: 'Dashed', value: 'dashed' },
-          { text: 'Double', value: 'double' },
-          { text: 'Groove', value: 'groove' },
-          { text: 'Ridge', value: 'ridge' },
-          { text: 'Inset', value: 'inset' },
-          { text: 'Outset', value: 'outset' },
-          { text: 'None', value: 'none' },
-          { text: 'Hidden', value: 'hidden' }
-        ]
-      },
-      {
-        name: 'bordercolor',
-        type: 'colorinput',
-        label: 'Border color'
-      },
-      {
-        name: 'backgroundcolor',
-        type: 'colorinput',
-        label: 'Background color'
-      }
-    ]
+    items
   };
 };
 

@@ -6,15 +6,16 @@
  */
 
 import { Arr, Cell, Throttler } from '@ephox/katamari';
-
+import { Editor } from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
 import Scan from '../core/Scan';
-import {UserDefined} from '../core/CharMap';
+import { UserDefined, CharMap } from '../core/CharMap';
+import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';
 
-const open = function (editor, charMap) {
-  const makeGroupItems = () => [
+const open = function (editor: Editor, charMap: CharMap[]) {
+  const makeGroupItems = (): Types.Dialog.BodyComponentApi[] => [
     {
       label: 'Search',
       type: 'input',
@@ -38,15 +39,11 @@ const open = function (editor, charMap) {
 
   const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
 
-  const makeBodyItems = () => {
-    if (charMap.length === 1) {
-      return { items: makeGroupItems() };
-    } else {
-      return { tabs: makeTabs() };
-    }
-  };
+  const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() });
 
-  const scanAndSet = (dialogApi, pattern: string) => {
+  const makeTabPanel = (): Types.Dialog.TabPanelApi => ({ type: 'tabpanel', tabs: makeTabs() });
+
+  const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
     Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
       const items = Scan.scan(f, pattern.toLowerCase());
       dialogApi.setData({
@@ -57,18 +54,22 @@ const open = function (editor, charMap) {
 
   const SEARCH_DELAY = 40;
 
-  const updateFilter = Throttler.last((dialogApi) => {
+  const updateFilter = Throttler.last((dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
     const pattern = dialogApi.getData().pattern;
     scanAndSet(dialogApi, pattern);
   }, SEARCH_DELAY);
 
-  const bridgeSpec = {
+  const body = charMap.length === 1 ? makePanel() : makeTabPanel();
+
+  const initialData = {
+    pattern: '',
+    results: Scan.scan(charMap[0], '')
+  };
+
+  const bridgeSpec: Types.Dialog.DialogApi<typeof initialData> = {
     title: 'Special Character',
     size: 'normal',
-    body: {
-      type: charMap.length === 1 ? 'panel' : 'tabpanel',
-      ...makeBodyItems()
-    },
+    body,
     buttons: [
       {
         type: 'cancel',
@@ -76,10 +77,7 @@ const open = function (editor, charMap) {
         text: 'Close'
       }
     ],
-    initialData: {
-      pattern: '',
-      results: Scan.scan(charMap[0], '')
-    },
+    initialData,
     onAction(api, details) {
       if (details.name === 'results') {
         Actions.insertChar(editor, details.value);

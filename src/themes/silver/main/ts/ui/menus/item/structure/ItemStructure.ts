@@ -100,7 +100,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
 // TODO: Maybe need aria-label
 const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
   // Convert the icon to a SVG string, if we have one
-  const icon = info.iconContent.map((iconName) => Icons.getOr('icon-' + iconName, providersBackstage.icons, Fun.constant(iconName)));
+  const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, Fun.constant(iconName)));
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {

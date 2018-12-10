@@ -123,7 +123,7 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
   }, 50);
 
   const autocompleterUiApi: AutocompleterUiApi = {
-    onKeypressThrottle: onKeypress.throttle,
+    onKeypress,
     closeIfNecessary,
     isActive,
     getView: () => InlineView.getContent(autocompleter),

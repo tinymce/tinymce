@@ -91,8 +91,10 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
         attributes: spec.tooltip.fold(
           () => ({}),
           (tooltip) => {
+            const translatedTooltip = sharedBackstage.providers.translate(tooltip);
             return {
-              title: sharedBackstage.providers.translate(tooltip) // TODO: tooltips AP-213
+              'title': translatedTooltip, // TODO: tooltips AP-213
+              'aria-label': translatedTooltip
             };
           }
         )
@@ -104,7 +106,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
           dom: {
             tag: 'div',
             classes: [ `${prefix}__select-chevron` ],
-            innerHtml: Icons.get('icon-chevron-down', sharedBackstage.providers.icons)
+            innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
           }
         })
       ]),

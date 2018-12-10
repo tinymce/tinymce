@@ -8,14 +8,14 @@
 import { Element } from '@ephox/dom-globals';
 import { Fun, Merger } from '@ephox/katamari';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Editor } from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
-import Tools from 'tinymce/core/api/util/Tools';
 import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getDefaultAttributes, getDefaultStyles } from '../api/Settings';
-import Helpers from './Helpers';
+import Helpers, { TableData } from './Helpers';
 import { Types } from '@ephox/bridge';
 
 // Explore the layers of the table till we find the first layer of tds or ths
@@ -31,7 +31,7 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
   }
 };
 
-const applyDataToElement = (editor, tableElm, data) => {
+const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   const dom = editor.dom;
   const attrs: any = {};
   const styles: any = {};
@@ -81,7 +81,7 @@ const applyDataToElement = (editor, tableElm, data) => {
   dom.setAttribs(tableElm, Merger.merge(getDefaultAttributes(editor), attrs));
 };
 
-const onSubmitTableForm = (editor, tableElm, api) => {
+const onSubmitTableForm = (editor: Editor, tableElm, api: Types.Dialog.DialogInstanceApi<TableData>) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();
@@ -94,8 +94,10 @@ const onSubmitTableForm = (editor, tableElm, api) => {
 
   editor.undoManager.transact(() => {
     if (!tableElm) {
+      const cols = parseInt(data.cols, 10) || 1;
+      const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
-      tableElm = InsertTable.insert(editor, data.cols || '1', data.rows || '1');
+      tableElm = InsertTable.insert(editor, cols, rows);
     }
 
     applyDataToElement(editor, tableElm, data);
@@ -124,7 +126,7 @@ const onSubmitTableForm = (editor, tableElm, api) => {
   });
 };
 
-const open = (editor, isNew?) => {
+const open = (editor: Editor, isNew?: boolean) => {
   const dom = editor.dom;
   let tableElm;
   let data = Helpers.extractDataFromSettings(editor, hasAdvancedTableTab(editor));
@@ -143,25 +145,19 @@ const open = (editor, isNew?) => {
     } else {
       // Case 3 - isNew == false && non-table parent. data is set to basic defaults so just add the adv properties if needed
       if (hasAdvancedTableTab(editor)) {
-        Tools.extend(data, {
-          borderstyle: '',
-          bordercolor: '',
-          backgroundcolor: '',
-        });
+        data.borderstyle = '';
+        data.bordercolor = '';
+        data.backgroundcolor = '';
       }
     }
   } else {
     // Case 1 - isNew == true. We're inserting a new table so use defaults and add cols and rows + adv properties.
-    Tools.extend(data, {
-      cols: '1',
-      rows: '1'
-    });
+    data.cols = '1';
+    data.rows = '1';
     if (hasAdvancedTableTab(editor)) {
-      Tools.extend(data, {
-        borderstyle: '',
-        bordercolor: '',
-        backgroundcolor: '',
-      });
+      data.borderstyle = '';
+      data.bordercolor = '';
+      data.backgroundcolor = '';
     }
   }
 
@@ -173,14 +169,7 @@ const open = (editor, isNew?) => {
     }
   }
 
-  interface DialogItems {
-      type: string;
-      name?: string;
-      label: string;
-      items?: Array<DialogItems | Types.SelectBox.InternalSelectBoxItem>;
-    }
-
-  const rowColCountItems: DialogItems[] = !isNew ? [] : [
+  const rowColCountItems: Types.Dialog.BodyComponentApi[] = !isNew ? [] : [
     {
       type: 'input',
       name: 'cols',
@@ -193,7 +182,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const alwaysItems: DialogItems[] = [
+  const alwaysItems: Types.Dialog.BodyComponentApi[] = [
     {
       type: 'input',
       name: 'width',
@@ -206,7 +195,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const appearanceItems: DialogItems[] = hasAppearanceOptions(editor) ? [
+  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(editor) ? [
     {
       type: 'input',
       name: 'cellspacing',
@@ -235,7 +224,7 @@ const open = (editor, isNew?) => {
     }
   ] : [];
 
-  const alignmentItem: DialogItems[] = [
+  const alignmentItem: Types.Dialog.BodyComponentApi[] = [
     {
       type: 'selectbox',
       name: 'align',
@@ -249,7 +238,7 @@ const open = (editor, isNew?) => {
     }
   ];
 
-  const classListItem: DialogItems[] = hasClasses ? [
+  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses ? [
     {
       type: 'selectbox',
       name: 'class',
@@ -269,18 +258,18 @@ const open = (editor, isNew?) => {
 
   const generalTabItems = rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
 
-  const generalPanel = {
+  const generalPanel: Types.Dialog.BodyComponentApi = {
     type: 'grid',
     columns: 2,
     items: generalTabItems
   };
 
-  const nonAdvancedForm = {
+  const nonAdvancedForm: Types.Dialog.PanelApi = {
     type: 'panel',
     items: [ generalPanel ]
   };
 
-  const advancedForm = {
+  const advancedForm: Types.Dialog.TabPanelApi = {
     type: 'tabpanel',
     tabs: [
       {
@@ -296,7 +285,6 @@ const open = (editor, isNew?) => {
   editor.windowManager.open({
     title: 'Table Properties',
     size: 'normal',
-    data,
     body: dialogBody,
     onSubmit: Fun.curry(onSubmitTableForm, editor, tableElm),
     buttons: [

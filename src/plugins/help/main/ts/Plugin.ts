@@ -9,9 +9,9 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('help', function (editor, pluginUrl) {
-  Buttons.register(editor, pluginUrl);
-  Commands.register(editor, pluginUrl);
+PluginManager.add('help', function (editor) {
+  Buttons.register(editor);
+  Commands.register(editor);
   editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
 });
 

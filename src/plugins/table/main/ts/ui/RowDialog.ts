@@ -17,6 +17,7 @@ import { hasAdvancedRowTab } from '../api/Settings';
 import DomModifiers from './DomModifiers';
 import Helpers, { RowData } from './Helpers';
 import RowDialogGeneralTab from './RowDialogGeneralTab';
+import { Types } from '@ephox/bridge';
 
 const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType) => {
   const tableElm = dom.getParent(rowElm, 'table');
@@ -119,25 +120,31 @@ const open = (editor: Editor) => {
   const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
   const data: RowData = Helpers.getSharedValues(rowsData);
 
-  const body = hasAdvancedRowTab(editor) ?
-    {
-      type: 'tabpanel',
-      tabs: [
-        RowDialogGeneralTab.tab(editor),
-        Helpers.getAdvancedTab()
-      ]
-    } : {
-      type: 'panel',
-      items: [
-        RowDialogGeneralTab.tab(editor),
-      ]
-    };
+  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+    type: 'tabpanel',
+    tabs: [
+      {
+        title: 'General',
+        items: RowDialogGeneralTab.items(editor)
+      },
+      Helpers.getAdvancedTab()
+    ]
+  };
+  const dialogPanel: Types.Dialog.PanelApi = {
+    type: 'panel',
+    items: [
+      {
+        type: 'grid',
+        columns: 2,
+        items: RowDialogGeneralTab.items(editor)
+      }
+    ]
+  };
 
   editor.windowManager.open({
     title: 'Row Properties',
     size: 'normal',
-    data,
-    body,
+    body: hasAdvancedRowTab(editor) ? dialogTabPanel : dialogPanel,
     buttons: [
       {
         type: 'cancel',

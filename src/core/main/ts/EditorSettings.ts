@@ -79,7 +79,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor) {
     forced_root_block: 'p',
     hidden_input: true,
     render_ui: true,
-    indentation: '40px',
     inline_styles: true,
     convert_fonts_to_spans: true,
     indent: 'simple',

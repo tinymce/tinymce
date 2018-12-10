@@ -1,13 +1,3 @@
-/**
- * Demo.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
-
 declare let tinymce: any;
 
 tinymce.init({
@@ -16,6 +6,10 @@ tinymce.init({
   toolbar: 'link code',
   menubar: 'view insert tools custom',
   link_quicklink: true,
+  link_list: [
+    {title: 'My page 1', value: 'https://www.tiny.cloud'},
+    {title: 'My page 2', value: 'https://about.tiny.cloud'}
+  ],
   menu: {
     custom: { title: 'Custom', items: 'link unlink openlink' }
   },

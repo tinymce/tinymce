@@ -28,6 +28,7 @@ const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: ['Alt + F10'], action: 'Focus to toolbar' },
   { shortcuts: ['Alt + F11'], action: 'Focus to element path' },
   { shortcuts: ['Ctrl + F9'], action: 'Focus to contextual toolbar' },
+  { shortcuts: ['Shift + Enter'], action: 'Open popup menu for split buttons' },
   { shortcuts: ['Meta + K'], action: 'Insert link (if link plugin activated)' },
   { shortcuts: ['Meta + S'], action: 'Save (if save plugin activated)' },
   { shortcuts: ['Meta + F'], action: 'Find (if searchreplace plugin activated)' },

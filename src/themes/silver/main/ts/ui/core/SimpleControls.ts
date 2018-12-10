@@ -56,8 +56,6 @@ const registerFormatButtons = (editor) => {
 
 const registerCommandButtons = (editor) => {
   Tools.each([
-    {name: 'outdent', text: 'Decrease indent', action: 'Outdent', icon: 'outdent'},
-    {name: 'indent', text: 'Increase indent', action: 'Indent', icon: 'indent'},
     {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut'},
     {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy'},
     {name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste'},

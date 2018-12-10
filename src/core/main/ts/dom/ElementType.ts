@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
+import { Node, Element } from '@ephox/sugar';
 
 const blocks = [
   'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
@@ -38,7 +38,7 @@ const wsElements = ['pre', 'script', 'textarea', 'style'];
 
 const lazyLookup = function (items) {
   let lookup;
-  return (node): boolean => {
+  return (node: Element): boolean => {
     lookup = lookup ? lookup : Arr.mapToObject(items, Fun.constant(true));
     return lookup.hasOwnProperty(Node.name(node));
   };
@@ -46,8 +46,9 @@ const lazyLookup = function (items) {
 
 const isHeading = lazyLookup(headings);
 const isBlock = lazyLookup(blocks);
-const isInline = (node) => Node.isElement(node) && !isBlock(node);
-const isBr = (node) => Node.isElement(node) && Node.name(node) === 'br';
+const isTable = (node: Element) => Node.name(node) === 'table';
+const isInline = (node: Element) => Node.isElement(node) && !isBlock(node);
+const isBr = (node: Element) => Node.isElement(node) && Node.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
@@ -58,6 +59,7 @@ const isWsPreserveElement = lazyLookup(wsElements);
 
 export {
   isBlock,
+  isTable,
   isInline,
   isHeading,
   isTextBlock,

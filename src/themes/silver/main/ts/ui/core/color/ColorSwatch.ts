@@ -7,6 +7,7 @@
 
 import { Cell } from '@ephox/katamari';
 
+import { Editor } from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from '@ephox/bridge';
 import Settings from './Settings';
 
@@ -146,7 +147,7 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
   })());
 };
 
-const colorPickerDialog = (editor) => (callback, value) => {
+const colorPickerDialog = (editor: Editor) => (callback, value) => {
   const getOnSubmit = (callback) => {
     return (api) => {
       const data = api.getData();
