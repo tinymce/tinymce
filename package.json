@@ -10,7 +10,7 @@
     "backstop:test": "gulp backstop:test",
     "backstop:report": "backstop openReport",
     "backstop:approve": "gulp backstop:approve",
-    "backstop:reference": " gulp backstop:reference"
+    "backstop:reference": "gulp backstop:reference"
   },
   "keywords": [
     "TinyMCE"
