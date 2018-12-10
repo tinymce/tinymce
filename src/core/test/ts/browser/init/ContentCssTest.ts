@@ -20,6 +20,7 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
 
   testContentCss('Expected empty array on empty input', [], []);
   testContentCss('Expected empty array on boolean false value', [], false);
+  testContentCss('Expected default content css on undefined value', [`${skinsBaseUrl}/document/content.css`], undefined);
   testContentCss('Expected array with absolute url from .css file name', [`${baseUrl}/test.css`], 'test.css');
   testContentCss('Expected array with absolute url from relative string', [`${baseUrl}/content/test.css`], '/content/test.css');
   testContentCss('Expected array with absolute url from array with relative string', [`${baseUrl}/content/test.css`], ['/content/test.css']);
@@ -28,8 +29,12 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
     ['/content/a.css', '/content/b.css']
   );
   testContentCss('Expected array with absolute url from absolute string', ['http://localhost/a/b/test.css'], 'http://localhost/a/b/test.css');
-  testContentCss('Expected array with absolute url from string with skin name', [`${skinsBaseUrl}/document`], 'document');
-  testContentCss('Expected array with absolute url from array with skin name', [`${skinsBaseUrl}/document`], ['document']);
-  testContentCss('Expected array with absolute url from string with skin name with dash', [`${skinsBaseUrl}/business-letter`], 'business-letter');
+  testContentCss('Expected array with absolute url from string with skin name', [`${skinsBaseUrl}/document/content.css`], 'document');
+  testContentCss('Expected array with absolute url from array with skin name', [`${skinsBaseUrl}/document/content.css`], ['document']);
+  testContentCss('Expected array with absolute url from string with skin name with dash', [`${skinsBaseUrl}/business-letter/content.css`], 'business-letter');
   testContentCss('Expected empty array on empty input', [], []);
+
+  const inlineEditor = new Editor('id', { content_css: 'document', inline: true }, EditorManager);
+  appendContentCssFromSettings(inlineEditor);
+  RawAssertions.assertEq('Content skins should not load in inline mode', [`${baseUrl}/document`], inlineEditor.contentCSS);
 });

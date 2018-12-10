@@ -148,8 +148,10 @@ const getContentCss = (editor: Editor): string[] => {
     return Arr.map(contentCss.split(','), Strings.trim);
   } else if (Type.isArray(contentCss)) {
     return contentCss;
-  } else {
+  } else if (contentCss === false) {
     return [];
+  } else {
+    return ['document'];
   }
 };
 

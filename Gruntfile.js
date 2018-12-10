@@ -247,7 +247,7 @@ module.exports = function (grunt) {
           }
         ]
       },
-      skins: {
+      'ui-skins': {
         files: [
           {
             expand: true,
@@ -292,6 +292,17 @@ module.exports = function (grunt) {
             ],
             dest: 'js/tinymce/skins/ui/oxide-dark'
           }
+        ]
+      },
+      // TODO: These should not be hardcoded and the min files should probably not just be copies #TINY-2914
+      'content-skins': {
+        files: [
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/document.css', dest: 'js/tinymce/skins/content/document/content.css' },
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/document.css', dest: 'js/tinymce/skins/content/document/content.min.css' },
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/scrapbook.css', dest: 'js/tinymce/skins/content/scrapbook/content.css' },
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/scrapbook.css', dest: 'js/tinymce/skins/content/scrapbook/content.min.css' },
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/writer.css', dest: 'js/tinymce/skins/content/writer/content.css' },
+          { src: 'node_modules/@ephox/oxide/build/skins/content-skins/writer.css', dest: 'js/tinymce/skins/content/writer/content.min.css' }
         ]
       },
       plugins: {

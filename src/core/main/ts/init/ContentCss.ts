@@ -9,15 +9,18 @@ import { Editor } from '../api/Editor';
 import Settings from '../api/Settings';
 import { Arr } from '@ephox/katamari';
 
-const isNamedContentCss = (url: string) => /^[a-z0-9\-]+$/i.test(url);
+const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
 const getContentCssUrls = (editor: Editor): string[] => {
   const contentCss = Settings.getContentCss(editor);
   const skinUrl = editor.editorManager.baseURL + '/skins/content';
+  const suffix = editor.editorManager.suffix;
+  const contentCssFile = `content${suffix}.css`;
+  const inline = editor.inline === true;
 
   return Arr.map(contentCss, (url) => {
-    if (isNamedContentCss(url)) {
-      return `${skinUrl}/` + url;
+    if (isContentCssSkinName(url) && !inline) {
+      return `${skinUrl}/${url}/${contentCssFile}`;
     } else {
       return editor.documentBaseURI.toAbsolute(url);
     }
