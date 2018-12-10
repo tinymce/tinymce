@@ -19,18 +19,18 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
       return Objects.readOptFrom<string>(attrs, attr);
     });
-  }
+  };
 
   // Button tags should not have a default role of button, and only buttons should
   // get a type of button.
   const getModAttributes = () => {
     if (tag === 'button') {
       // Default to type button, unless specified otherwise
-      const type = lookupAttr('type').getOr('button')
+      const type = lookupAttr('type').getOr('button');
       // Only use a role if it is specified
       const roleAttrs = lookupAttr('role').map(
         (role: string) => ({ role } as Record<string, string>)
-      ).getOr({ })
+      ).getOr({ });
 
       return {
         type,
@@ -39,10 +39,10 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     } else {
       // We are not a button, so type is irrelevant (unless specified)
       // Default role to button
-      const role =  lookupAttr('role').getOr('button');
+      const role = lookupAttr('role').getOr('button');
       return { role };
     }
-  }
+  };
 
   return {
     uid: detail.uid,

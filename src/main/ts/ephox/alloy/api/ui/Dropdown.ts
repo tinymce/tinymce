@@ -57,6 +57,17 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     return Option.some(true);
   };
 
+  const attributes = detail.role.fold(() => {
+    return {
+      'aria-haspopup': 'true'
+    };
+  }, (role) => {
+    return {
+      'role': role,
+      'aria-haspopup': 'true'
+    };
+  });
+
   return {
     uid: detail.uid,
     dom: detail.dom,
@@ -120,10 +131,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     apis,
 
     domModification: {
-      attributes: {
-        'role': detail.role.getOr('button'),
-        'aria-haspopup': 'true'
-      }
+      attributes
     }
   };
 };
