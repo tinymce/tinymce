@@ -1,4 +1,4 @@
-import { Chain, Log, Pipeline, UnitTest, NamedChain } from '@ephox/agar';
+import { Chain, Log, Pipeline, UnitTest } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -22,13 +22,11 @@ UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
       Editor.cFromSettings(silverSettings),
       cExecCommand('mceImage', true),
       cWaitForDialog(),
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.src, ''), '_'),
-        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.alt, ''), '_'),
-        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.height, ''), '_'),
-        NamedChain.direct('editor', cAssertInputValue(generalTabSelectors.width, ''), '_'),
-        NamedChain.outputInput
+      Chain.fromParent(Chain.identity, [
+        cAssertInputValue(generalTabSelectors.src, ''),
+        cAssertInputValue(generalTabSelectors.alt, ''),
+        cAssertInputValue(generalTabSelectors.height, ''),
+        cAssertInputValue(generalTabSelectors.width, '')
       ]),
       cFillActiveDialog({
         src: {
