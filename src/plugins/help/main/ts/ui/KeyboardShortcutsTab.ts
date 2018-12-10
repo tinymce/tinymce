@@ -6,7 +6,6 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import I18n from 'tinymce/core/api/util/I18n';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 import ConvertShortcut from '../alien/ConvertShortcut';
 import { Types } from '@ephox/bridge';
@@ -17,32 +16,21 @@ export interface ShortcutActionPairType {
 }
 
 const tab = () => {
-  const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut: ShortcutActionPairType) {
+  const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
-    return '<tr>' +
-              '<td>' + I18n.translate(shortcut.action) + '</td>' +
-              '<td>' + shortcutText + '</td>' +
-            '</tr>';
-  }).join('');
+    return [ shortcut.action, shortcutText ];
+  });
 
-  const htmlPanel: Types.Dialog.BodyComponentApi = {
-    type: 'htmlpanel',
-    // Temporary width set to enhance dialog appearance
+  const tablePanel: Types.Dialog.BodyComponentApi = {
+    type: 'table',
     // TODO: Fix table styles #TINY-2909
-    html: '<table class="tox-dialog__table" style = "width: 75%;">' +
-          '<thead>' +
-          '<th>' + I18n.translate('Action') + '</th>' +
-          '<th>' + I18n.translate('Shortcut') + '</th>' +
-          '</thead>' +
-          '<tbody>' +
-          shortcutLisString +
-          '</tbody>' +
-          '</table>'
+    header: [ 'Action', 'Shortcut' ],
+    cells: shortcutList
   };
   return {
     title: 'Handy Shortcuts',
     items: [
-      htmlPanel
+      tablePanel
     ]
   };
 };

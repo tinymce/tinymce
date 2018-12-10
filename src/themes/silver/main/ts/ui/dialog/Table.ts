@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { SimpleSpec } from '@ephox/alloy';
+import { SimpleSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
 export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
@@ -41,6 +41,10 @@ export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFacto
     components: [
       renderHeader(spec.header),
       renderRows(spec.cells)
-    ]
+    ],
+    behaviours: Behaviour.derive([
+      Tabstopping.config({ }),
+      Focusing.config({ })
+    ])
   };
 };
