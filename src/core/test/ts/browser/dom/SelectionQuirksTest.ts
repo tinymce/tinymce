@@ -89,6 +89,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

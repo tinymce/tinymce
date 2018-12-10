@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
       EditorManager.init({
         selector: '.tinymce-editor',
         inline: true,
-        skin_url: '/project/js/tinymce/skins/oxide',
+        skin_url: '/project/js/tinymce/skins/ui/oxide',
         setup (editor) {
           editor.on('SkinLoaded', function () {
             next(editor);

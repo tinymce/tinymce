@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
       theme: 'silver',
       plugins: 'imagetools',
       automatic_uploads: false,
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
     },
     success,
     failure

@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     }, {
       plugins: '',
       toolbar: '',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/ui/oxide'
     }, function () {
       success();
     }, failure);

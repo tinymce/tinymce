@@ -184,7 +184,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'dialog-button',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',

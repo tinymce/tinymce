@@ -34,7 +34,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
     },
     {
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('alpha', {
           text: 'Alpha',

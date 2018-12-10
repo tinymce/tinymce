@@ -46,6 +46,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function () 
   }, {
     inline: true,
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

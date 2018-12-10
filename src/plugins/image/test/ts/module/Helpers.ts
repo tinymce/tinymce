@@ -204,8 +204,8 @@ const silverSettings = {
   theme: 'silver',
   plugins: 'image',
   indent: false,
-  skin_url: '/project/js/tinymce/skins/oxide/',
-  content_css: '/project/js/tinymce/skins/oxide/content.min.css'
+  skin_url: '/project/js/tinymce/skins/ui/oxide/',
+  content_css: '/project/js/tinymce/skins/ui/oxide/content.min.css'
 };
 
 export {

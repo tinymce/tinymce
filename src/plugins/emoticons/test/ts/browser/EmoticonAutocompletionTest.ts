@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
     plugins: 'emoticons',
     toolbar: 'emoticons',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     emoticons_database_url: '/project/src/plugins/emoticons/test/js/test-emojis.js'
   }, success, failure);
 });

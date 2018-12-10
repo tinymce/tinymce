@@ -35,6 +35,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', (suc
   }, {
     plugins: 'table',
     table_toolbar: '',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

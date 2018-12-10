@@ -78,7 +78,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
     {
       theme: 'silver',
       toolbar: 'show-color show-urlinput',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('show-color', {
           text: 'Show Color Dialog',

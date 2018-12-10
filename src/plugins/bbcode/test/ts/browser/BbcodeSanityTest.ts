@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', (success, 
   }, {
     plugins: 'bbcode',
     toolbar: 'bbcode',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     bbcode_dialect: 'punbb'
   }, success, failure);
 });

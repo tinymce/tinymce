@@ -90,6 +90,6 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

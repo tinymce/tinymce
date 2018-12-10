@@ -23,6 +23,6 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
     plugins: 'fullscreen link',
     toolbar: 'fullscreen link',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

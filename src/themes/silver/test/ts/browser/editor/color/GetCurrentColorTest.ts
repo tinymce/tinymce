@@ -36,7 +36,7 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     }, {
       plugins: '',
       toolbar: 'forecolor backcolor',
-      skin_url: '/project/js/tinymce/skins/oxide/'
+      skin_url: '/project/js/tinymce/skins/ui/oxide/'
     }, success, failure);
   }
 );

@@ -15,7 +15,7 @@ export default function () {
   document.body.appendChild(button);
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     toolbar: 'annotate-alpha',
     plugins: [ ],

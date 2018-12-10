@@ -9,7 +9,7 @@ const addStyles = function () {
   const link = Element.fromTag('link');
   Attr.setAll(link, {
     rel: 'Stylesheet',
-    href: '/project/js/tinymce/skins/oxide/skin.mobile.min.css',
+    href: '/project/js/tinymce/skins/ui/oxide/skin.mobile.min.css',
     type: 'text/css'
   });
   Class.add(link, styleClass);

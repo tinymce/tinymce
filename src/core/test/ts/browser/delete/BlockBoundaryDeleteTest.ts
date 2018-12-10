@@ -259,7 +259,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     indent: false
   }, success, failure);
 });

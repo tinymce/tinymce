@@ -32,7 +32,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
 
     const css = Element.fromTag('link');
     Attr.setAll(css, {
-      href: '/project/js/tinymce/skins/oxide/skin.mobile.min.css',
+      href: '/project/js/tinymce/skins/ui/oxide/skin.mobile.min.css',
       rel: 'Stylesheet',
       type: 'text/css'
     });

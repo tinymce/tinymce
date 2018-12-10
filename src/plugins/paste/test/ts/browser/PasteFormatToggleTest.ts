@@ -33,6 +33,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (succe
     plugins: 'paste',
     toolbar: '',
     valid_styles: 'font-family,color',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

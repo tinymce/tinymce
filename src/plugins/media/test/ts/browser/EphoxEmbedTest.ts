@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
       });
     },
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

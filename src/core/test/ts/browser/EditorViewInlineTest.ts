@@ -83,6 +83,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
     ], onSuccess, onFailure);
   }, {
       inline: true,
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/ui/oxide'
     }, success, failure);
 });

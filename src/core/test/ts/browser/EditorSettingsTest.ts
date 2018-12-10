@@ -291,6 +291,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
       }))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

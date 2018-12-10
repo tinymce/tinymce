@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });

@@ -203,6 +203,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
     plugins: 'table',
     indent : false,
     theme : 'silver',
-    skin_url : '/project/js/tinymce/skins/oxide'
+    skin_url : '/project/js/tinymce/skins/ui/oxide'
   }, success, failure );
 });

@@ -91,6 +91,6 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     plugins: '',
     theme: 'silver',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
   }, success, failure);
 });

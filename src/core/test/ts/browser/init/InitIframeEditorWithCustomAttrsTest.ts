@@ -23,7 +23,7 @@ UnitTest.asynctest(
         }))
       ], onSuccess, onFailure);
     }, {
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       iframe_attrs: {
         'id': 'x',
         'data-custom1': 'a',

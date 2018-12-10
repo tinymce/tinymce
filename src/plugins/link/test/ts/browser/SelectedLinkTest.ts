@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
     plugins: 'link',
     toolbar: '',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

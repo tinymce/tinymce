@@ -203,7 +203,7 @@ module.exports = function (grunt) {
             optimization: 2
         },
         files: {
-          'js/tinymce/skins/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
+          'js/tinymce/skins/ui/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
         }
       },
       'content-mobile': {
@@ -213,7 +213,7 @@ module.exports = function (grunt) {
             compress: true
         },
         files: {
-          'js/tinymce/skins/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
+          'js/tinymce/skins/ui/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
         }
       }
     },
@@ -258,14 +258,14 @@ module.exports = function (grunt) {
               '!*.json',
               '!*.md'
             ],
-            dest: 'js/tinymce/skins/oxide/fonts'
+            dest: 'js/tinymce/skins/ui/oxide/fonts'
           },
           {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/img',
             src: '**',
-            dest: 'js/tinymce/skins/oxide/img'
+            dest: 'js/tinymce/skins/ui/oxide/img'
           },
           {
             expand: true,
@@ -274,14 +274,14 @@ module.exports = function (grunt) {
               '*.min.css',
               '*.min.css.map'
             ],
-            dest: 'js/tinymce/skins/oxide'
+            dest: 'js/tinymce/skins/ui/oxide'
           },
           {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/img',
             src: '**',
-            dest: 'js/tinymce/skins/oxide-dark/img'
+            dest: 'js/tinymce/skins/ui/oxide-dark/img'
           },
           {
             expand: true,
@@ -290,7 +290,7 @@ module.exports = function (grunt) {
               '*.min.css',
               '*.min.css.map'
             ],
-            dest: 'js/tinymce/skins/oxide-dark'
+            dest: 'js/tinymce/skins/ui/oxide-dark'
           }
         ]
       },

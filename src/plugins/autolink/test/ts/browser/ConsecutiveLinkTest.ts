@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', (succ
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'autolink',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

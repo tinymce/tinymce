@@ -40,6 +40,6 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
   }, {
     theme: 'silver',
     plugins: 'preview',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
   }, success, failure);
 });

@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     inline: true
   }, success, failure);
 });

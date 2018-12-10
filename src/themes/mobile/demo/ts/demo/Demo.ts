@@ -10,7 +10,7 @@ export default function () {
       'autolink', // Required for turning pasted text into hyperlinks
       'autosave' // Required to prevent users losing content when they press back
     ],
-    skin_url: '../../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../../js/tinymce/skins/ui/oxide',
 
     setup (ed) {
       ed.on('skinLoaded', function () {
