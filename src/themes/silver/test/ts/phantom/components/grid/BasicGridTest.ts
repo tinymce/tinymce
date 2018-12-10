@@ -43,7 +43,7 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [arr.has('tox-form'), arr.has('tox-form--10col')],
+              classes: [arr.has('tox-form__grid'), arr.has('tox-form__grid--10col')],
               children: [
                 s.element('div', {
                   classes: [arr.has('foo')]
