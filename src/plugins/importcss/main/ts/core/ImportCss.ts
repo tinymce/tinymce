@@ -27,7 +27,7 @@ const isSkinContentCss = function (editor: Editor, href: string) {
   const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
 
   if (skin) {
-    const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/' + skin;
+    const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/ui/' + skin;
     return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
   }
 
