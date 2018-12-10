@@ -33,6 +33,10 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
   testContentCss('Expected array with absolute url from array with skin name', [`${skinsBaseUrl}/document/content.css`], ['document']);
   testContentCss('Expected array with absolute url from string with skin name with dash', [`${skinsBaseUrl}/business-letter/content.css`], 'business-letter');
   testContentCss('Expected empty array on empty input', [], []);
+  testContentCss('Expected array with absolute url from a comma separated list of css files',
+    [`${baseUrl}/a.css`, `${baseUrl}/b.css`],
+    'a.css,b.css'
+  );
 
   const inlineEditor = new Editor('id', { content_css: 'document', inline: true }, EditorManager);
   appendContentCssFromSettings(inlineEditor);
