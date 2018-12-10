@@ -48,10 +48,15 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
+                          attrs: {
+                            title: str.is('Alpha')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon'), arr.has('tox-collection__item-checkmark') ],
-                              // html: str.is('A')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             }),
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-label') ]
@@ -63,10 +68,15 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
+                          attrs: {
+                            title: str.is('Beta')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('B')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             }),
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-label') ]
@@ -83,10 +93,15 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item') ],
+                          attrs: {
+                            title: str.is('Gamma')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('C')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             }),
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-label') ]
@@ -127,13 +142,13 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Alpha',
                 active: true,
                 shortcut: 'Ctrl+A',
-                icon: 'A',
+                icon: 'fake-icon-name',
                 onAction: store.adder('togglemenuitem.onAction')
               },
               {
                 type: 'nestedmenuitem',
                 text: 'Beta',
-                icon: 'B',
+                icon: 'fake-icon-name',
                 getSubmenuItems: () => {
                   return [
                     {
@@ -150,7 +165,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 type: 'menuitem',
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
-                icon: 'C'
+                icon: 'fake-icon-name'
               },
             ]);
           }

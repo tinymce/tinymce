@@ -20,13 +20,18 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
 
       const eDoc = Element.fromDom(editor.getDoc());
 
-      const structWithIconAndText = (d) => (s, str, arr) => {
+      const structWithTitleAndIconAndText = (d) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
+          attrs: {
+            title: str.is(d.title)
+          },
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              html: str.is(d.icon)
+              children: [
+                s.element('svg', {})
+              ]
             }),
             s.element('span', {
               classes: [ arr.has('tox-collection__item-label') ],
@@ -36,13 +41,18 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         });
       };
 
-      const structWithIcon = (d) => (s, str, arr) => {
+      const structWithTitleAndIcon = (d) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
+          attrs: {
+            title: str.is(d.title)
+          },
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              html: str.is(d.icon)
+              children: [
+                s.element('svg', {})
+              ]
             })
           ]
         });
@@ -89,11 +99,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-collection__group') ],
               children: Arr.map([
-                { icon: 'plus-a', text: 'p-a' },
-                { icon: 'plus-b', text: 'p-b' },
-                { icon: 'plus-c', text: 'p-c' },
-                { icon: 'plus-d', text: 'p-d' }
-              ], (d) => structWithIconAndText(d)(s, str, arr))
+                { title: 'p-a', text: 'p-a' },
+                { title: 'p-b', text: 'p-b' },
+                { title: 'p-c', text: 'p-c' },
+                { title: 'p-d', text: 'p-d' }
+              ], (d) => structWithTitleAndIconAndText(d)(s, str, arr))
             })
           ]
         }),
@@ -113,18 +123,18 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               s.element('div', {
                 classes: [ arr.has('tox-collection__group') ],
                 children: Arr.map([
-                  { icon: 'colon1-a', text: 'c1-a' },
-                  { icon: 'colon2-a', text: 'c2-a' }
+                  { title: 'c1-a', text: 'c1-a' },
+                  { title: 'c2-a', text: 'c2-a' }
                 ], (d) => {
-                  return structWithIcon(d)(s, str, arr);
+                  return structWithTitleAndIcon(d)(s, str, arr);
                 })
               }),
               s.element('div', {
                 classes: [ arr.has('tox-collection__group') ],
                 children: Arr.map([
-                  { icon: 'colon2-b', text: 'c2-b' }
+                  { title: 'c2-b', text: 'c2-b' }
                 ], (d) => {
-                  return structWithIcon(d)(s, str, arr);
+                  return structWithTitleAndIcon(d)(s, str, arr);
                 })
               })
             ]
@@ -146,12 +156,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               s.element('div', {
                 classes: [ arr.has('tox-collection__group') ],
                 children: Arr.map([
-                  { icon: 'tilde-a' },
-                  { icon: 'tilde-b' },
-                  { icon: 'tilde-c' },
-                  { icon: 'tilde-d' }
+                  { title: 't-a' },
+                  { title: 't-b' },
+                  { title: 't-c' },
+                  { title: 't-d' }
                 ], (d) => {
-                  return structWithIcon(d)(s, str, arr);
+                  return structWithTitleAndIcon(d)(s, str, arr);
                 })
               })
             ]
@@ -175,10 +185,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               s.element('div', {
                 classes: [ arr.has('tox-collection__group') ],
                 children: Arr.map([
-                  { icon: 'eq-two' },
-                  { icon: 'eq-three' }
+                  { title: 'two' },
+                  { title: 'three' }
                 ], (d) => {
-                  return structWithIcon(d)(s, str, arr);
+                  return structWithTitleAndIcon(d)(s, str, arr);
                 })
               })
             ]
@@ -215,7 +225,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
                   value: `plus-${letter}`,
                   text: `p-${letter}`,
-                  icon: `plus-${letter}`
+                  icon: 'fake-icon-name'
                 }))
               );
             });
@@ -237,7 +247,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a' ], (letter) => ({
                   value: `colon1-${letter}`,
                   text: `c1-${letter}`,
-                  icon: `colon1-${letter}`
+                  icon: 'fake-icon-name'
                 }))
               );
             });
@@ -258,7 +268,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b' ], (letter) => ({
                   value: `colon2-${letter}`,
                   text: `c2-${letter}`,
-                  icon: `colon2-${letter}`
+                  icon: 'fake-icon-name'
                 }))
               );
             });
@@ -279,7 +289,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
                   value: `tilde-${letter}`,
                   text: `t-${letter}`,
-                  icon: `tilde-${letter}`
+                  icon: 'fake-icon-name'
                 }))
               );
             });
@@ -304,7 +314,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'two', 'three' ], (number) => ({
                   value: `${number}`,
                   text: `${number}`,
-                  icon: `eq-${number}`
+                  icon: 'fake-icon-name'
                 }))
               );
             });

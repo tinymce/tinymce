@@ -5,7 +5,6 @@ import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import { Element, Body } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
-import * as Icons from '../../../../main/ts/ui/icons/Icons';
 import { document } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
 
@@ -317,7 +316,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       setup: (ed) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',
-          icon: Icons.getDefault('cut'),
+          icon: 'cut',
           onAction: () => {
             store.set(store.get().concat([ 'button1' ]));
           }

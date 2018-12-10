@@ -51,28 +51,43 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('A-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('A')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('B-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('B')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('C-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('C')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         })
@@ -83,28 +98,43 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('D-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('D')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('E-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('E')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                          attrs: {
+                            title: str.is('F-button')
+                          },
                           children: [
                             s.element('span', {
                               classes: [ arr.has('tox-collection__item-icon') ],
-                              html: str.is('F')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         })
@@ -115,11 +145,11 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
               })
             )
           ]),
-          FocusTools.sTryOnSelector('Focus should start on A', doc, '.tox-collection__item:contains("A")'),
+          FocusTools.sTryOnSelector('Focus should start on A', doc, '.tox-collection__item[title="A-button"]'),
           Keyboard.sKeydown(doc, Keys.down(), { }),
-          FocusTools.sTryOnSelector('Focus should move to D', doc, '.tox-collection__item:contains("D")'),
+          FocusTools.sTryOnSelector('Focus should move to D', doc, '.tox-collection__item[title="D-button"]'),
           Keyboard.sKeydown(doc, Keys.right(), { }),
-          FocusTools.sTryOnSelector('Focus should move to E', doc, '.tox-collection__item:contains("E")')
+          FocusTools.sTryOnSelector('Focus should move to E', doc, '.tox-collection__item[title="E-button"]')
         ]
       ), onSuccess, onFailure);
     },
@@ -139,7 +169,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                 return {
                   type: 'choiceitem',
                   value: `${letter}`,
-                  icon: `${letter}`,
+                  icon: 'fake-icon-name',
                   text: `${letter}-button`,
                   onAction: store.adder(`${letter}-onAction`)
                 };

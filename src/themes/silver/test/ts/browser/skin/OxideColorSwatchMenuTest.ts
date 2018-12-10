@@ -86,7 +86,9 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
                           children: (structColors([ 'white' ])(s, str, arr)).concat([
                             s.element('div', {
                               classes: [ arr.has('tox-swatch'), arr.has('tox-swatch--remove') ],
-                              html: str.is('ICON-REMOVE')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ])
                         }),
@@ -95,7 +97,9 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
                           children: [
                             s.element('button', {
                               classes: [ arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn') ],
-                              html: str.is('ICON-CUSTOM')
+                              children: [
+                                s.element('svg', {})
+                              ]
                             })
                           ]
                         })
@@ -140,13 +144,13 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
               {
                 type: 'choiceitem',
                 text: 'Remove',
-                icon: 'ICON-REMOVE',
+                icon: 'fake-icon-name',
                 value: 'remove'
               },
               {
                 type: 'choiceitem',
                 text: 'Custom',
-                icon: 'ICON-CUSTOM',
+                icon: 'fake-icon-name',
                 value: 'custom'
               }
             ]));
