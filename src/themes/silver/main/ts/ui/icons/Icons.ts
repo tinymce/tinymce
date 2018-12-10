@@ -30,8 +30,6 @@ const getFirst = (names: string[], icons: IconProvider): string => {
 };
 
 export {
-  getDefault,
-  getDefaultFirst,
   getFirst,
   get
 };
