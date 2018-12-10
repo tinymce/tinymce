@@ -137,7 +137,7 @@
   }
 
   .tox-comment__gradient::after {
-    background: linear-gradient(transparent, @comment-background-color);
+    background: linear-gradient(fade(@comment-background-color, 0), @comment-background-color);
     content: "";
     display: block;
     height: 40px;
