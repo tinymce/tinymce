@@ -151,7 +151,7 @@ const getContentCss = (editor: Editor): string[] => {
   } else if (contentCss === false) {
     return [];
   } else {
-    return ['document'];
+    return ['default'];
   }
 };
 

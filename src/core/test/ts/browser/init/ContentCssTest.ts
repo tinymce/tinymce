@@ -20,7 +20,7 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
 
   testContentCss('Expected empty array on empty input', [], []);
   testContentCss('Expected empty array on boolean false value', [], false);
-  testContentCss('Expected default content css on undefined value', [`${skinsBaseUrl}/document/content.css`], undefined);
+  testContentCss('Expected default content css on undefined value', [`${skinsBaseUrl}/default/content.css`], undefined);
   testContentCss('Expected array with absolute url from .css file name', [`${baseUrl}/test.css`], 'test.css');
   testContentCss('Expected array with absolute url from relative string', [`${baseUrl}/content/test.css`], '/content/test.css');
   testContentCss('Expected array with absolute url from array with relative string', [`${baseUrl}/content/test.css`], ['/content/test.css']);
