@@ -1,6 +1,5 @@
 import * as MockDemo from './MockDemo';
 import { Editor } from 'tinymce/core/api/Editor';
-import * as Icons from '../../../main/ts/ui/icons/Icons';
 
 declare let tinymce: any;
 
@@ -26,7 +25,7 @@ export default function () {
 
     setup (ed: Editor) {
       ed.ui.registry.addMenuItem('x1', {
-        icon: Icons.getDefault('drop'),
+        icon: 'drop',
         text: 'Text with icon',
         onAction () {
           console.log('Just Text click');
@@ -83,7 +82,7 @@ export default function () {
           {
             type: 'menuitem',
             text: 'Nested 2',
-            icon: Icons.getDefault('drop'),
+            icon: 'drop',
             onAction () {
               console.log('clicked nested 1');
             }
