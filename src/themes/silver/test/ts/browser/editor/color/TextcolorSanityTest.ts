@@ -51,10 +51,10 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
         tinyApis.sFocus,
         tinyApis.sSetContent('hello test'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Color"] > .tox-tbtn + .tox-split-button__chevron'),
+        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#18A085"]'),
-        tinyUi.sClickOnToolbar('click forecolor again', '[aria-label="Color"] > .tox-tbtn + .tox-split-button__chevron'),
+        tinyUi.sClickOnToolbar('click forecolor again', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click blue color', 'div[data-mce-color="#2B3E50"]'),
         tinyApis.sAssertContentStructure(forecolorStruct)
