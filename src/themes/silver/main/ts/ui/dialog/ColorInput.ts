@@ -135,7 +135,7 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
       dom: {
         tag: 'span',
         attributes: {
-          'aria-label': 'Color swatch'
+          'aria-label': sharedBackstage.providers.translate('Color swatch')
         }
       },
       layouts: Option.some({
