@@ -7,7 +7,7 @@
 
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar } from '@ephox/bridge';
-import { Cell, Strings } from '@ephox/katamari';
+import { Cell, Option, Strings } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
@@ -123,14 +123,14 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       presets: 'color',
       icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
       select: (value) => {
-        const currentColor = getCurrentColor(editor, format);
-        if (currentColor !== undefined) {
-          return RgbaColour.fromString(currentColor).fold(() => false, (rgba) => {
-            // note: value = '#FFFFFF', HexColour.fromRgba(rgba).value() = 'ffffff'
-            return Strings.contains(value.toLowerCase(), HexColour.fromRgba(rgba).value());
+        const optCurrentRgb = Option.from(getCurrentColor(editor, format));
+        return optCurrentRgb.bind((currentRgb) => {
+          return RgbaColour.fromString(currentRgb).map((rgba) => {
+            const currentHex = HexColour.fromRgba(rgba).value();
+            // note: value = '#FFFFFF', currentHex = 'ffffff'
+            return Strings.contains(value.toLowerCase(), currentHex);
           });
-        }
-        return false;
+        }).getOr(false);
       },
       columns: getColorCols(editor),
       fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
