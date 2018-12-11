@@ -109,6 +109,7 @@ Border style              <new>                 Table (better description than j
 
 Update                    <new>                 TOC
 
+Color swatch              <new>                 Color Swatch
 Turquoise                 <new>                 Color Swatch
 Green                     <new>                 Color Swatch
 Blue                      <new>                 Color Swatch
