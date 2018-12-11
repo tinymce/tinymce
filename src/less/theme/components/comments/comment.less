@@ -51,6 +51,7 @@
     font-weight: @comment-font-weight;
     line-height: @comment-line-height;
     margin-top: @pad-sm;
+    position: relative;
     text-transform: @comment-text-transform;
 
     textarea {
@@ -73,17 +74,6 @@
   .tox-comment__body p {
     margin: 0;
   }
-
-  // .tox-comment__body {
-
-  //   textarea {
-  //   overflow: auto;
-  //   overflow-x: hidden;
-  //   overflow-y: scroll;
-  //   width: 100%;
-  //   white-space: normal;
-  //   }
-  // }
 
   .tox-comment__buttonspacing {
     padding-top: @pad-md;
@@ -138,11 +128,12 @@
 
   .tox-comment__gradient::after {
     background: linear-gradient(fade(@comment-background-color, 0), @comment-background-color);
+    bottom: 0;
     content: "";
     display: block;
-    height: 40px;
+    height: 5em;
     margin-top: -40px;
-    position: relative;
+    position: absolute;
     width: 100%;
   }
 
@@ -161,7 +152,7 @@
     z-index: 5;
   }
 
-  .tox-loading-text {
+  .tox-comment__loading-text {
     align-items: center;
     color: @comment-text-color;
     display: flex;
@@ -208,12 +199,21 @@
     top: 0;
     z-index: @z-index-dialogs + 3;
   }
+
+  .tox-comment__scroll {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+
+  .tox-comment--disappearing {
+    //placeholder - need to use jQuery, currently in process
+
+    &:hover {
+      //placeholder - need to use jQuery, in process
+
+    }
+  }
 }
 //end tox
-
-.tox-comment__scroll {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 1;
-  overflow: auto;
-}
