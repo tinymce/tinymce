@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - New configuration parameter for Keying configs which controls when to focus inside: "focusInside"
 
+### Changed
+ - Handling of focusIn for keying configs
+
 # [4.5.1] - 2018-12-06
 ### Fixed
  - ModalDialog now correctly sets the "aria-modal" attribute
