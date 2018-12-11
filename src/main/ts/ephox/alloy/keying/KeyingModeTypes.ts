@@ -4,7 +4,7 @@ import { Element } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { FocusManager } from '../api/focus/FocusManagers';
 import { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 
 // TODO: Fix this.
 export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
@@ -25,7 +25,7 @@ export interface GeneralKeyingConfigSpec {
 
 export interface GeneralKeyingConfig {
   focusManager: FocusManager;
-  sendFocusIn: <C extends GeneralKeyingConfig>(conf: C) => Option<(comp: AlloyComponent, config: C, _state) => void>;
+  sendFocusIn: <C extends GeneralKeyingConfig, S>(conf: C) => Option<(comp: AlloyComponent, config: C, state: S, evt?: SimulatedEvent<any>) => void>;
   focusInside: FocusInsideModes;
 }
 

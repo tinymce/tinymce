@@ -21,7 +21,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
   stateInit: (config: C) => BehaviourState,
   getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
   getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Array<KeyRules.KeyRule<C, S>>,
-  optFocusIn: (config: C) => Option<(comp: AlloyComponent, config: C, state: S, evt) => void>) => {
+  optFocusIn: (config: C) => Option<(comp: AlloyComponent, config: C, state: S) => void>) => {
   const schema = () => {
     return infoSchema.concat([
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),
@@ -46,7 +46,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
 
     const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode ? Option.none() : optFocusIn(keyingConfig).map((focusIn) => {
       return AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
-        focusIn(component, keyingConfig, keyingState, simulatedEvent);
+        focusIn(component, keyingConfig, keyingState);
         simulatedEvent.stop();
       });
     });
@@ -57,7 +57,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
 
       if (keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpaceMode && isEnterOrSpace && EventRoot.isSource(component, simulatedEvent)) {
         optFocusIn(keyingConfig).each((focusIn) => {
-          focusIn(component, keyingConfig, keyingState, simulatedEvent);
+          focusIn(component, keyingConfig, keyingState);
           simulatedEvent.stop();
         });
       }
