@@ -23,6 +23,10 @@ const setFontFormats = (editor: Editor, font_formats: string) => {
   editor.settings.font_formats = font_formats;
 };
 
+const getFontSizeStyleValues = (editor: Editor): string => {
+  return editor.getParam('font_size_style_values');
+};
+
 const setInlineStyles = (editor: Editor, inline_styles: boolean) => {
   editor.settings.inline_styles = inline_styles;
 };
@@ -32,5 +36,6 @@ export default {
   getFontSizeFormats,
   setFontSizeFormats,
   setFontFormats,
+  getFontSizeStyleValues,
   setInlineStyles
 };

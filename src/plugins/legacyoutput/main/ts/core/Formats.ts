@@ -11,7 +11,7 @@ import Settings from '../api/Settings';
 
 const overrideFormats = (editor: Editor) => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
-    fontSizes = Tools.explode(editor.settings.font_size_style_values),
+    fontSizes = Tools.explode(Settings.getFontSizeStyleValues(editor)),
     schema = editor.schema;
 
   // Override some internal formats to produce legacy elements and attributes
