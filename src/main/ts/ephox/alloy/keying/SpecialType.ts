@@ -60,10 +60,4 @@ const getKeyupRules =  (component: AlloyComponent, simulatedEvent: NativeSimulat
   ] : [ ]
 };
 
-const focusIn = (component: AlloyComponent, specialInfo: SpecialConfig): Option<boolean>  => {
-  return specialInfo.focusIn.bind((f) => {
-    return f(component, specialInfo);
-  });
-};
-
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, (specialInfo: SpecialConfig) => specialInfo.focusIn);
