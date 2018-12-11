@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
-
-import { Editor } from 'tinymce/core/api/Editor';
+import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar } from '@ephox/bridge';
+import { Cell, Strings } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
 const getCurrentColor = function (editor, format) {
@@ -75,13 +75,13 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
     type,
-    text: 'Remove',
+    text: 'Remove color',
     icon: getIcon('remove'),
     value: 'remove'
   };
   const custom = {
     type,
-    text: 'Custom',
+    text: 'Custom color',
     icon: getIcon('custom'),
     value: 'custom'
   };
@@ -122,7 +122,16 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
       tooltip,
       presets: 'color',
       icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
-      select: () => false,
+      select: (value) => {
+        const currentColor = getCurrentColor(editor, format);
+        if (currentColor !== undefined) {
+          return RgbaColour.fromString(currentColor).fold(() => false, (rgba) => {
+            // note: value = '#FFFFFF', HexColour.fromRgba(rgba).value() = 'ffffff'
+            return Strings.contains(value.toLowerCase(), HexColour.fromRgba(rgba).value());
+          });
+        }
+        return false;
+      },
       columns: getColorCols(editor),
       fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
       onAction: (splitButtonApi) => {
@@ -207,7 +216,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value) => {
 
 const register = (editor) => {
   registerCommands(editor);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
+  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color');
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
