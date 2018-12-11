@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.5.3] - 2018-12-06
+### Fixed
+ - SplitButtons now use span elements for their buttons for accessibility
+
 # [4.5.1] - 2018-12-06
 ### Fixed
  - ModalDialog now correctly sets the "aria-modal" attribute
