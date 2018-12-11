@@ -33,7 +33,6 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     // Trap the "Tab" key and don't let it escape.
     Keying.config({
       mode: 'special',
-      focusIn: Focusing.focus,
       onTab: () => Option.some(true),
       onShiftTab: () => Option.some(true)
     }),
