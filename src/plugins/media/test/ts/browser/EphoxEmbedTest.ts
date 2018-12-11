@@ -53,11 +53,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
         apis.sSelect('div', []),
         Utils.sOpenDialog(ui),
         Utils.sAssertSourceValue(ui, 'embed-iri'),
-        Step.sync(() => {
-          // TODO TINY-2819: re-enable this
-          // const data = editor.windowManager.getParams();
-          // Assertions.assertEq('The data embed should match the content ', content, data.embed);
-        }),
+        Utils.sAssertEmbedData(ui, content),
         Utils.sSubmitDialog(ui),
         Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure), 100, 3000)
       ])

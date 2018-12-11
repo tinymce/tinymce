@@ -1,4 +1,4 @@
-import { Chain, Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Chain, Log, Pipeline, UnitTest, UiFinder } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -9,10 +9,10 @@ import {
   cExecCommand,
   cFakeEvent,
   cFillActiveDialog,
-  cInputForLabel,
   cOpFromChains,
   cSubmitDialog,
   cWaitForDialog,
+  generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
 
@@ -36,7 +36,7 @@ UnitTest.asynctest('Image recognizes relative src url and prepends absolute imag
       }),
       cOpFromChains([
         Chain.inject(Body.body()),
-        cInputForLabel('Source'),
+        UiFinder.cFindIn(generalTabSelectors.src),
         cFakeEvent('change')
       ]),
       cSubmitDialog(),
