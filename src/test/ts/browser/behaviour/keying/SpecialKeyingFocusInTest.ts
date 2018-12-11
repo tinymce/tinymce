@@ -51,11 +51,11 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cOne = SelectorFind.descendant(component.element() ,'.one').bind((elem) => {
+    const oneComp = SelectorFind.descendant(component.element() ,'.one').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "one" div');
 
-    const cTwo = SelectorFind.descendant(component.element() ,'.two').bind((elem) => {
+    const twoComp = SelectorFind.descendant(component.element() ,'.two').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "two" div');
 
@@ -69,7 +69,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
       Log.step('TBA', 'Check focus inside a component with focusIn set does not set focus, and calls focusIn', GeneralSteps.sequence([
         store.sAssertEq('Store starts empty', [ ]),
         Step.sync(() => {
-          Keying.focusIn(cOne);
+          Keying.focusIn(oneComp);
         }),
         store.sAssertEq('focusIn should have fired', [  'focusIn' ]),
         FocusTools.sTryOnSelector('Focus should stay on body', doc, 'body'),
@@ -79,7 +79,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
       Log.step('TBA', 'Check focus inside a component with no focusIn should just focus', GeneralSteps.sequence([
         store.sAssertEq('Store starts empty', [ ]),
         Step.sync(() => {
-          Keying.focusIn(cTwo);
+          Keying.focusIn(twoComp);
         }),
         store.sAssertEq('Nothing should have fired', [  ]),
         FocusTools.sTryOnSelector('Focus should move to cTwo', doc, '.two')

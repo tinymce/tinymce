@@ -55,7 +55,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
     const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent) => {
       const isEnterOrSpace = inSet(Keys.SPACE().concat(Keys.ENTER()))(simulatedEvent.event());
 
-      if (keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpace && isEnterOrSpace && EventRoot.isSource(component, simulatedEvent)) {
+      if (keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpaceMode && isEnterOrSpace && EventRoot.isSource(component, simulatedEvent)) {
         optFocusIn(keyingConfig).each((focusIn) => {
           focusIn(component, keyingConfig, keyingState, simulatedEvent);
           simulatedEvent.stop();

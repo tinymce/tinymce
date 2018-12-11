@@ -57,7 +57,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
           Keying.config({
             mode: 'cyclic',
             selector: '[data-widget-tabstop]',
-            focusInside: FocusInsideModes.OnEnterOrSpace,
+            focusInside: FocusInsideModes.OnEnterOrSpaceMode,
             onEscape: (comp) => {
               Focusing.focus(comp);
               return Option.some(true);

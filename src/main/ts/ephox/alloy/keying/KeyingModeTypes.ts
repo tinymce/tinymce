@@ -14,8 +14,8 @@ export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEve
 
 export enum FocusInsideModes {
   OnFocusMode ='onFocus',
-  OnEnterOrSpace = 'onEnterOrSpace',
-  onApi = 'onApi'
+  OnEnterOrSpaceMode = 'onEnterOrSpace',
+  OnApiMode = 'onApi'
 }
 
 export interface GeneralKeyingConfigSpec {
