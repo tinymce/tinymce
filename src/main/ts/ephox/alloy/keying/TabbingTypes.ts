@@ -115,16 +115,18 @@ const create = (cyclicField: FieldProcessorAdt) => {
     });
   };
 
+  const scope = KeyRules.KeyScope.InternalScope;
+
   const getKeydownRules = Fun.constant([
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
-    KeyRules.rule(KeyMatch.inSet(Keys.TAB()), goForwards),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), exit),
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), execute)
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), scope, goBackwards),
+    KeyRules.rule(KeyMatch.inSet(Keys.TAB()), scope, goForwards),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), scope, exit),
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), scope, execute)
   ]);
 
   const getKeyupRules = Fun.constant([ ]);
 
-  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));
+  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
 };
 
 export {

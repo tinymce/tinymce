@@ -11,12 +11,22 @@ export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEven
 
 export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
 
+
+export enum FocusInsideModes {
+  OnFocusMode ='onFocus',
+  OnEnterOrSpace = 'onEnterOrSpace',
+  onApi = 'onApi'
+}
+
 export interface GeneralKeyingConfigSpec {
   focusManager?: FocusManager;
+  focusInside?: FocusInsideModes;
 }
 
 export interface GeneralKeyingConfig {
   focusManager: FocusManager;
+  sendFocusIn: <C extends GeneralKeyingConfig>(conf: C) => Option<(comp: AlloyComponent, config: C, _state) => void>;
+  focusInside: FocusInsideModes;
 }
 
 export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyingConfigSpec {
