@@ -37,9 +37,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
   const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules, keyingConfig: C, keyingState?: S): Option<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    const isInternal = !EventRoot.isSource(component, simulatedEvent);
-
-    return KeyRules.choose(isInternal, rules, simulatedEvent.event()).bind((rule) => {
+    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
       return rule(component, simulatedEvent, keyingConfig, keyingState);
     });
   };

@@ -19,6 +19,9 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
    * within a widget, but to enter that cycle, you must press enter (or space)
    * on the widget. Focusing the widget itself will not move into the inner cycle.
    * It must be triggered manually.
+   *
+   * Note, the widget needs to use a different attribute for tabstops, otherwise
+   * you will tab into the inner parts from outside.
    */
 
   GuiSetup.setup((store, doc, body) => {

@@ -18,7 +18,7 @@ const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulate
 };
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), KeyRules.KeyScope.BothScope, doEscape)
+  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
 ]);
 
 const getKeyupRules = Fun.constant([ ]);

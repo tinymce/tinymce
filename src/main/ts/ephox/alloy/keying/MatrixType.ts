@@ -79,18 +79,16 @@ const moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight
 const moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
 const moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
-const scope = KeyRules.KeyScope.BothScope;
-
 const getKeydownRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), scope, DomMovement.west(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), scope, DomMovement.east(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.UP()), scope, DomMovement.north(moveNorth)),
-  KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), scope, DomMovement.south(moveSouth)),
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())),scope, execute)
+  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
+  KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
+  KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<MatrixConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()),scope, KeyingTypes.stopEventForFirefox)
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

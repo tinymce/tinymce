@@ -30,34 +30,33 @@ const schema = [
 ];
 
 const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
-  const scope = KeyRules.KeyScope.BothScope;
   return [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), scope, specialInfo.onSpace),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), scope, specialInfo.onEnter
+      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onEnter
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), scope, specialInfo.onShiftEnter
+      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onShiftEnter
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), scope, specialInfo.onShiftTab
+      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onShiftTab
     ),
     KeyRules.rule(
-      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), scope, specialInfo.onTab
+      KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onTab
     ),
 
-    KeyRules.rule(KeyMatch.inSet(Keys.UP()), scope, specialInfo.onUp),
-    KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), scope, specialInfo.onDown),
-    KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), scope, specialInfo.onLeft),
-    KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), scope, specialInfo.onRight),
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), scope, specialInfo.onSpace),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), scope, specialInfo.onEscape)
+    KeyRules.rule(KeyMatch.inSet(Keys.UP()), specialInfo.onUp),
+    KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), specialInfo.onDown),
+    KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), specialInfo.onLeft),
+    KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), specialInfo.onRight),
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), specialInfo.onEscape)
   ];
 };
 
 const getKeyupRules =  (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => {
   return specialInfo.stopSpaceKeyup ? [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyRules.KeyScope.BothScope, stopEventForFirefox)
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), stopEventForFirefox)
   ] : [ ]
 };
 

@@ -31,15 +31,15 @@ const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimula
   const execKeys = spaceExec.concat(enterExec).concat(downExec);
 
   return [
-    KeyRules.rule(KeyMatch.inSet(execKeys), KeyRules.KeyScope.BothScope, execute)
+    KeyRules.rule(KeyMatch.inSet(execKeys), execute)
   ].concat(executeConfig.useControlEnter ? [
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), KeyRules.KeyScope.BothScope, execute)
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
   ] : [ ]);
 };
 
 const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   return executeConfig.useSpace && !EditableFields.inside(component.element()) ? [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()),KeyRules.KeyScope.BothScope, KeyingTypes.stopEventForFirefox)
+    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
   ] : [ ]
 };
 

@@ -115,13 +115,12 @@ const create = (cyclicField: FieldProcessorAdt) => {
     });
   };
 
-  const scope = KeyRules.KeyScope.InternalScope;
-
+  // Tab layouts should only handle the keypress from within the layout
   const getKeydownRules = Fun.constant([
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), scope, goBackwards),
-    KeyRules.rule(KeyMatch.inSet(Keys.TAB()), scope, goForwards),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), scope, exit),
-    KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), scope, execute)
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
+    KeyRules.rule(KeyMatch.inSet(Keys.TAB()), goForwards),
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), exit),
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), execute)
   ]);
 
   const getKeyupRules = Fun.constant([ ]);
