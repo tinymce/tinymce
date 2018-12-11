@@ -7,16 +7,16 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', (success, failure) => {
-
-    // TODO FIXME DISABLED-TEST TINY-2301
-    // Disable reason: plugin is not implemented yet...
-    success();
-    return;
-
     const suite = LegacyUnit.createSuite();
 
     Plugin();
     Theme();
+
+    suite.test('TestCase-TBA: LegacyOutput: Setting overrides', function (editor) {
+      LegacyUnit.equal(editor.getParam('inline_styles'), false);
+      LegacyUnit.equal(editor.getParam('fontsize_formats'), '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7');
+      LegacyUnit.equal(editor.getParam('font_formats'), 'Arial=arial,helvetica,sans-serif;');
+    });
 
     suite.test('TestCase-TBA: LegacyOutput: Font color', function (editor) {
       editor.focus();
@@ -101,7 +101,8 @@ UnitTest.asynctest(
     }, {
       plugins: 'legacyoutput',
       indent: false,
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/oxide',
+      font_formats: 'Arial=arial,helvetica,sans-serif;'
     }, success, failure);
   }
 );
