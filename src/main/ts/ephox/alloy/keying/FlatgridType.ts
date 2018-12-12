@@ -90,4 +90,4 @@ const getKeyupRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ])
 
-export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, Option.some(focusIn));
+export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

@@ -5,6 +5,7 @@ import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { Css } from '@ephox/sugar';
 
 UnitTest.asynctest('TransitioningTest', (success, failure) => {
 
@@ -45,6 +46,9 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
         '[data-transitioning-state="gamma"], div[data-transitioning-state="alpha"]:not(.transitioning), div[data-transitioning-destination="alpha"] { opacity: 0.8 }',
         '[data-transitioning-state="gamma"], div[data-transitioning-state="beta"]:not(.transitioning), div[data-transitioning-destination="beta"] { opacity: 0.2 }'
       ]),
+      Step.sync(() => {
+        Css.reflow(component.element());
+      }),
       Assertions.sAssertStructure(
         'Checking initial state',
         ApproxStructure.build((s, str, arr) => {
