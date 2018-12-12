@@ -175,6 +175,7 @@ export default function (settings?, schema = Schema()) {
   const filterNode = (node: Node): Node => {
     let i, name, list;
 
+    name = node.name;
     // Run element filters
     if (name in nodeFilters) {
       list = matchedNodes[name];
