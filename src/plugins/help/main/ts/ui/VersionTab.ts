@@ -18,7 +18,7 @@ const tab = () => {
 
   const htmlPanel: Types.Dialog.BodyComponentApi = {
     type: 'htmlpanel',
-    html: I18n.translate(['You are using {0}', changeLogLink])
+    html: '<p>' + I18n.translate(['You are using {0}', changeLogLink]) + '</p>'
   };
   return {
     title: 'Version',
