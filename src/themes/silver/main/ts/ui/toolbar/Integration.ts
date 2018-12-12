@@ -70,7 +70,7 @@ const types = {
         s,
         ToolbarButtonClasses.Button,
         extras.backstage.shared,
-        'button'
+        Option.none()
       );
     }
   ),

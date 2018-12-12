@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerChangeLangu
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Change language test', [
-      ui.sClickOnToolbar('Click spelling', 'button.tox-split-button__chevron'),
+      ui.sClickOnToolbar('Click spelling', 'span.tox-split-button__chevron'),
       ui.sWaitForUi('Wait for menu', 'span:contains("German")'),
       ui.sClickOnUi('click german', 'span:contains("German")'),
       Step.sync(() => RawAssertions.assertEq('should be "de"', 'de', editor.plugins.spellchecker.getLanguage()))
