@@ -55,7 +55,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
         ps['aria-descriptor']().each((descriptor) => {
           const descriptorId = Id.generate(detail.prefix);
           Attr.set(descriptor.element(), 'id', descriptorId);
-          Attr.set(field.element(), 'aria-labelledby', descriptorId);
+          Attr.set(field.element(), 'aria-describedby', descriptorId);
         });
       });
     })
