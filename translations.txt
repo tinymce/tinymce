@@ -10,6 +10,7 @@ Error                     <new>
 Warn                      <new>
 Valid                     <new>
 To open the popup, press Shift+Enter <new>
+Rich Text Area. Press ALT-0 for help. <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
@@ -112,6 +113,7 @@ Update                    <new>                 TOC
 Text color                [Color]               Color Swatch
 Remove color              [Remove]              Color Swatch
 Custom color              [Custom]              Color Swatch
+Color swatch              <new>                 Color Swatch
 Turquoise                 <new>                 Color Swatch
 Green                     <new>                 Color Swatch
 Blue                      <new>                 Color Swatch

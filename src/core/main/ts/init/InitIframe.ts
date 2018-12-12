@@ -85,8 +85,7 @@ const getIframeHtml = function (editor) {
 
 const createIframe = function (editor, o) {
   const title = editor.editorManager.translate(
-    'Rich Text Area. Press ALT-F9 for menu. ' +
-    'Press ALT-F10 for toolbar. Press ALT-0 for help'
+    'Rich Text Area. Press ALT-0 for help.'
   );
 
   const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();

@@ -34,14 +34,19 @@ import ColorSwatch from '../core/color/ColorSwatch';
 import Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
 
-const colorInputChangeEvent = Id.generate('color-change');
-const colorSwatchChangeEvent = Id.generate('hex-change');
+const colorInputChangeEvent = Id.generate('color-input-change');
+const colorSwatchChangeEvent = Id.generate('color-swatch-change');
+const colorPickerCancelEvent = Id.generate('color-picker-cancel');
 
 interface ColorInputChangeEvent extends CustomEvent {
   color: () => string;
 }
 
 interface ColorSwatchChangeEvent extends CustomEvent {
+  value: () => string;
+}
+
+interface ColorPickerCancelEvent extends CustomEvent {
   value: () => string;
 }
 
@@ -107,9 +112,14 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
     sharedBackstage.getSink().each((sink) => {
       memColorButton.getOpt(sink).each((colorBit) => {
         if (value === 'custom') {
-          colorInputBackstage.colorPicker((value) => {
-            emitSwatchChange(colorBit, value);
-            Settings.addColor(value);
+          colorInputBackstage.colorPicker((valueOpt) => {
+            valueOpt.fold(
+              () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
+              (value) => {
+                emitSwatchChange(colorBit, value);
+                Settings.addColor(value);
+              }
+            );
           }, '#ffffff');
         } else if (value === 'remove') {
           emitSwatchChange(colorBit, '');
@@ -123,7 +133,10 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
   const memColorButton = Memento.record(
     renderPanelButton({
       dom: {
-        tag: 'span'
+        tag: 'span',
+        attributes: {
+          'aria-label': sharedBackstage.providers.translate('Color swatch')
+        }
       },
       layouts: Option.some({
         onRtl: () => [ Layout.southeast ],
@@ -164,6 +177,11 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
           FormField.getField(comp).each((field) => {
             Representing.setValue(field, se.event().value());
             // Focus the field now that we've set its value
+            Composing.getCurrent(comp).each(Focusing.focus);
+          });
+        }),
+        AlloyEvents.run<ColorPickerCancelEvent>(colorPickerCancelEvent, (comp, se) => {
+          FormField.getField(comp).each((field) => {
             Composing.getCurrent(comp).each(Focusing.focus);
           });
         })
