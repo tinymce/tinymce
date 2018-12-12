@@ -17,7 +17,7 @@ const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) 
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
   return Arr.head(parentBlocks).fold(
     () => {
-      return CaretFinder.navigate(forward, root.dom(), pos).exists((newPos) => {
+      return CaretFinder.navigate(forward, root.dom(), pos).forall((newPos) => {
         return isInSameBlock(newPos, pos, root.dom()) === false;
       });
     },
