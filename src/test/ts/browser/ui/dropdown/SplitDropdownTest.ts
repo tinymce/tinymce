@@ -136,14 +136,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
             },
 
             children: [
-              s.element('button', {
+              s.element('span', {
                 attrs: {
-                  role: str.is('button')
+                  role: str.is('presentation')
                 }
               }),
-              s.element('button', {
+              s.element('span', {
                 attrs: {
-                  role: str.is('button')
+                  role: str.is('presentation')
                 }
               })
             ]
@@ -179,14 +179,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
             },
 
             children: [
-              s.element('button', {
+              s.element('span', {
                 attrs: {
-                  role: str.is('button')
+                  role: str.is('presentation')
                 }
               }),
-              s.element('button', {
+              s.element('span', {
                 attrs: {
-                  role: str.is('button')
+                  role: str.is('presentation')
                 },
                 classes: [ arr.has('test-selected-dropdown') ]
               })
