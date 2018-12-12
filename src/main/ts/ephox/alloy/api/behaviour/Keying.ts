@@ -34,9 +34,17 @@ const Keying = Behaviour.createModes({
     }
   },
   apis: {
-    focusIn (component/*, keyConfig, keyState */) {
-      // TODO: Should this use the focusManager?
-      component.getSystem().triggerFocus(component.element(), component.element());
+    focusIn (component, keyConfig: GeneralKeyingConfig, keyState) {
+      // If we have a custom sendFocusIn function, use that.
+      // Otherwise, we just trigger focus on the outer element.
+      keyConfig.sendFocusIn(keyConfig).fold(
+        () => {
+          component.getSystem().triggerFocus(component.element(), component.element());
+        },
+        (sendFocusIn) => {
+          sendFocusIn(component, keyConfig, keyState);
+        }
+      );
     },
 
     // These APIs are going to be interesting because they are not

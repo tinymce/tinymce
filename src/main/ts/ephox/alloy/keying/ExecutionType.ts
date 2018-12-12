@@ -43,4 +43,4 @@ const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulate
   ] : [ ]
 };
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.none());
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());
