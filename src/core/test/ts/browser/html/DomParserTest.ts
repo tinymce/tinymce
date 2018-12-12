@@ -246,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
       });
     });
     const root = parser.parse('<p>a<p>123</p>b</p>');
-    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P in P, no nodes before/after');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
   });
 
   suite.test('Parse invalid contents with attribute filters', function () {
@@ -257,7 +257,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
       });
     });
     const root = parser.parse('<p class="y">a<p class="y">123</p>b</p>');
-    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P in P, no nodes before/after');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
   });
 
   suite.test('addNodeFilter', function () {
