@@ -73,7 +73,8 @@ const rgbFormFactory = (translate, getClass, onValidHexx, onInvalidHexx) => {
       data,
       factory: Input,
       inputAttributes: {
-        type: 'text'
+        type: 'text',
+        ...name === 'hex' ? {'aria-live': 'polite'} : {}
       },
       inputClasses: [ getClass('textfield') ],
 
