@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Handy Shortcuts tab', [
         sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
         sPressTabKey,
-        sAssertFocusOnItem('Handy Shortcuts Items', 'div[role="presentation"]'),
+        sAssertFocusOnItem('Handy Shortcuts Items', '.tox-dialog__table'),
         sPressTabKey,
         sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
         sPressTabKey,

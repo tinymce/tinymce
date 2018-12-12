@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
-
-import { Editor } from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from '@ephox/bridge';
+import { Cell, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
 const getCurrentColor = function (editor, format) {
@@ -94,10 +93,12 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
 const applyColour = function (editor, format, splitButtonApi, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
-    dialog((color) => {
-      Settings.addColor(color);
-      editor.execCommand('mceApplyTextcolor', format, color);
-      onChoice(color);
+    dialog((colorOpt) => {
+      colorOpt.each((color) => {
+        Settings.addColor(color);
+        editor.execCommand('mceApplyTextcolor', format, color);
+        onChoice(color);
+      });
     }, '#000000');
   } else if (value === 'remove') {
     onChoice('');
@@ -140,7 +141,8 @@ const registerTextColorButton = (editor, name: string, format: string, tooltip: 
           };
 
           lastColour.set(newColour);
-          setIconFillAndStroke('color', newColour);
+          const id = name === 'forecolor' ? 'tox-icon-text-color__color' : 'tox-icon-highlight-bg-color__color';
+          setIconFillAndStroke(id, newColour);
         });
       }
     } as Toolbar.ToolbarSplitButtonApi;
@@ -151,7 +153,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value) => {
   const getOnSubmit = (callback) => {
     return (api) => {
       const data = api.getData();
-      callback(data.colorpicker);
+      callback(Option.from(data.colorpicker));
       api.close();
     };
   };
@@ -198,8 +200,9 @@ const colorPickerDialog = (editor: Editor) => (callback, value) => {
     },
     onAction,
     onSubmit: submit,
-    onClose: () => {
-      editor.focus();
+    onClose: () => { },
+    onCancel: () => {
+      callback(Option.none());
     }
   });
 };

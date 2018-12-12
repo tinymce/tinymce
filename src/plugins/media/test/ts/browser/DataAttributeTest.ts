@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
       // We can't assert the DOM because tab panels don't render hidden tabs, so we check the data model
-      Utils.sAssertEmbedData(editor, ui, content),
+      Utils.sAssertEmbedData(ui, content),
       Utils.sSubmitAndReopen(ui),
       Utils.sAssertSourceValue(ui, url),
       Utils.sCloseDialog(ui)
@@ -26,11 +26,11 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     return Logger.t(`Assert embeded ${content} from ${url} and ${content2} from ${url2}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
-      Utils.sAssertEmbedData(editor, ui, content),
+      Utils.sAssertEmbedData(ui, content),
       Utils.sSubmitAndReopen(ui),
       Utils.sAssertSourceValue(ui, url),
       Utils.sPasteSourceValue(ui, url2),
-      Utils.sAssertEmbedData(editor, ui, content2),
+      Utils.sAssertEmbedData(ui, content2),
       Utils.sCloseDialog(ui)
     ]));
   };
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
           '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
           '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
         ),
-        Utils.sTestEmbedContentFromUrl(editor, ui,
+        Utils.sTestEmbedContentFromUrl(ui,
           'a',
           '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
         ),

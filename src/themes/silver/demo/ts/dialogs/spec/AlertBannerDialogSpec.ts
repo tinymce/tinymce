@@ -1,4 +1,3 @@
-import * as Icons from '../../../../../../themes/silver/main/ts/ui/icons/Icons';
 import { window } from '@ephox/dom-globals';
 
 export default {
@@ -10,7 +9,7 @@ export default {
         type: 'alertbanner',
         text: 'Demo the alert banner message',
         level: 'warn',
-        icon: Icons.getDefault('help'),
+        icon: 'help',
         url: 'https://www.tiny.cloud/'
       }
     ]

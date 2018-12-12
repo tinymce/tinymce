@@ -10,7 +10,7 @@ import { Strings } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { getDefaultOr } from '../icons/Icons';
+import { get as getIcon } from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
 import ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
@@ -24,7 +24,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         attributes: {
           title: providersBackstage.translate('Resize') // TODO: tooltips AP-213
         },
-        innerHtml: getDefaultOr('resize-handle', () => ''),
+        innerHtml: getIcon('resize-handle', providersBackstage.icons),
       },
       behaviours: Behaviour.derive([
         Dragging.config({
@@ -40,7 +40,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   };
 
   const renderBranding = (): SimpleSpec => {
-    const linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" role="presentation" tabindex="-1">Tiny</a>';
+    const linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1">Tiny</a>';
     const html = I18n.translate(['Powered by {0}', linkHtml]);
     return {
       dom: {

@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, Mouse, Logger, Guard, RawAssertions } from '@ephox/agar';
 import { Event, HTMLElement, document } from '@ephox/dom-globals';
-import { Element, Focus } from '@ephox/sugar';
+import { Body, Element, Focus } from '@ephox/sugar';
 import { Type } from '@ephox/katamari';
 
 export const selectors = {
@@ -192,21 +192,24 @@ const sPasteTextareaValue = function (ui, value) {
   ]));
 };
 
-const sAssertEmbedData = function (editor, ui, content) {
-  return Waiter.sTryUntil('Textarea should have a proper value',
-    Step.sync(() => {
-      // TODO TINY-2819: re-enable this
-      // const embedValue = editor.windowManager.getParams().embed;
-      // Assertions.assertEq('the embed value should be correct', content, embedValue);
-    })
-    , 1, 3000);
+const sAssertEmbedData = function (ui, content) {
+  return GeneralSteps.sequence([
+    ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
+    Waiter.sTryUntil('Textarea should have a proper value',
+    Chain.asStep(Body.body(), [
+      cFindInDialog(selectors.embed)(ui),
+      UiControls.cGetValue,
+      Assertions.cAssertEq('embed content', content)
+    ]), 1, 3000),
+    ui.sClickOnUi('Switch to General tab', '.tox-tab:contains("General")')
+  ]);
 };
 
-const sTestEmbedContentFromUrl = function (editor, ui, url, content) {
+const sTestEmbedContentFromUrl = function (ui, url, content) {
   return Logger.t(`Assert embed ${content} from ${url}`, GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, url),
-    sAssertEmbedData(editor, ui, content),
+    sAssertEmbedData(ui, content),
     sCloseDialog(ui)
   ]));
 };

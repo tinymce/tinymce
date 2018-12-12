@@ -145,7 +145,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       text: Option.some(''),
       icon: Option.none(),
       tooltip: Option.from(spec.tooltip),
-      role: 'button',
+      role: Option.none(),
       fetch: items.getFetch(backstage, getStyleItems),
       onAttach: spec.nodeChangeHandler.map((f) => (comp) => editor.on('nodeChange', f(comp))).getOr(() => { }),
       onDetach: spec.nodeChangeHandler.map((f) => (comp) => editor.off('nodeChange', f(comp))).getOr(() => { }),

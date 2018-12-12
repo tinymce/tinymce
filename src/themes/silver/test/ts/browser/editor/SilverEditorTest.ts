@@ -5,7 +5,6 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element, Body } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import * as Icons from '../../../../main/ts/ui/icons/Icons';
 import { document } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
 
@@ -111,7 +110,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                 s.element('div', {
                                   classes: [ arr.has('tox-split-button') ],
                                   children: [
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn') ],
                                       children: [
                                         s.element('span', {
@@ -120,7 +119,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                         })
                                       ]
                                     }),
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
@@ -142,7 +141,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                 s.element('div', {
                                   classes: [ arr.has('tox-split-button') ],
                                   children: [
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn') ],
                                       children: [
                                         s.element('span', {
@@ -152,7 +151,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                         })
                                       ]
                                     }),
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
@@ -277,7 +276,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
               Chain.asStep(container, [
                 UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('button', {
+                  return s.element('span', {
                     classes: [ arr.not('tox-tbtn--enabled') ]
                   });
                 }))
@@ -291,7 +290,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
               Chain.asStep(container, [
                 UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('button', {
+                  return s.element('span', {
                     classes: [ arr.has('tox-tbtn--enabled') ]
                   });
                 }))
@@ -311,7 +310,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       setup: (ed) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',
-          icon: Icons.getDefault('cut'),
+          icon: 'cut',
           onAction: () => {
             store.set(store.get().concat([ 'button1' ]));
           }

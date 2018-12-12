@@ -18,7 +18,6 @@ import { UnitTest } from '@ephox/bedrock';
 import { Result, Fun, Arr, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors } from '@ephox/sugar';
 
-import * as Icons from '../../../../main/ts/ui/icons/Icons';
 import SilverMenubar from '../../../../main/ts/ui/menus/menubar/SilverMenubar';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -199,7 +198,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   {
                     type: 'menuitem',
                     text: 'Item1',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: 'drop',
                     onAction: store.adder('menuitem-1-action')
                   },
                   {
@@ -207,7 +206,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   },
                   {
                     type: 'menuitem',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: 'drop',
                     text: 'Item2',
                     onAction: () => {
                       store.adder('menuitem-2 action')();
@@ -215,17 +214,17 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   },
                   {
                     type: 'nestedmenuitem',
-                    icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                    icon: 'drop',
                     text: 'Nested menu',
                     getSubmenuItems: () => [
                       {
                         type: 'nestedmenuitem',
-                        icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                        icon: 'drop',
                         text: 'Nested menu x 2',
                         getSubmenuItems: () => [
                           {
                             type: 'menuitem',
-                            icon: Icons.getDefaultOr('drop', () => 'oh no'),
+                            icon: 'drop',
                             text: 'Nested menu x 3',
                             onAction: () => { }
                           }

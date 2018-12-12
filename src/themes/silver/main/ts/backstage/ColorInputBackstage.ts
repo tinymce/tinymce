@@ -9,9 +9,10 @@ import { Editor } from '../../../../../core/main/ts/api/Editor';
 import ColorSwatch from '../ui/core/color/ColorSwatch';
 import Settings from '../ui/core/color/Settings';
 import { Menu } from '@ephox/bridge';
+import { Option } from '@ephox/katamari';
 
 export interface UiFactoryBackstageForColorInput {
-  colorPicker: (callback, value) => void;
+  colorPicker: (callback: (valueOpt: Option<string>) => void, value) => void;
   hasCustomColors: () => boolean;
   getColors: () => Menu.ChoiceMenuItemApi[];
 }

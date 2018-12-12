@@ -1,17 +1,13 @@
-import { Assertions, Chain, Logger, Mouse, Pipeline, UiControls, UiFinder, Log } from '@ephox/agar';
+import { Chain, GeneralSteps, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import { cFakeEvent } from '../module/Helpers';
+import { advancedTabSelectors, cAssertInputValue, cFillActiveDialog, cSetInputValue, ImageDialogData } from '../module/Helpers';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, failure) => {
-  // TODO TINY-2819 - update test properly (will require cFillActiveDialog to be able to switch tabs)
-  success();
-  return;
-
   SilverTheme();
   Plugin();
 
@@ -19,103 +15,42 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    const getFrontmostWindow = function () {
-      return editor.windowManager.windows[editor.windowManager.windows.length - 1];
-    };
-
-    const getDialogData = function () {
-      return getFrontmostWindow().getData();
-    };
-
-    const setDialogData = function (data) {
-      const win = getFrontmostWindow();
-      win.setData(data);
-    };
-
-    const sAssertDataInApi = function (msg, data) {
-      return Logger.t('Assert data in API', Chain.asStep({}, [
-        Chain.mapper(function () {
-          const oc = getDialogData();
-          for (const k in data) {
-            Assertions.assertEq(msg + ': Value in [' + k + ']', oc[k], data[k]);
-          }
-        })
-      ]));
-    };
-
-    const createTestWithContent = (name: string, content: string, cursorPos: any, data: any, expectedContent: string) => {
-      return Log.stepsAsStep('TBA', 'Image: ' + name, [
+    const sInitAndOpenDialog = (content: string, cursorPos: any) => {
+      return GeneralSteps.sequence([
         api.sSetSetting('image_advtab', true),
         api.sSetSetting('image_dimensions', false),
         api.sSetContent(content),
-        api.sExecCommand('mceImage', true),
-        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-
         // api.sSetCursor([0], 1),
         api.sSetCursor(cursorPos.elementPath, cursorPos.offset),
-        //
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Chain.mapper(function (v) {
-            setDialogData(data);
-          }),
-        ]),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Save")')
+        api.sExecCommand('mceImage', true),
+        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ]);
+    };
 
+    const createTestWithContent = (name: string, content: string, cursorPos: any, data: Partial<ImageDialogData>, expectedContent: string) => {
+      return Log.stepsAsStep('TBA', 'Image: ' + name, [
+        sInitAndOpenDialog(content, cursorPos),
+        Chain.asStep({}, [
+          cFillActiveDialog(data, true)
         ]),
+        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
         api.sAssertContent(expectedContent)
       ]);
     };
 
-    const createTestOnEmptyEditor = (name: string, data: any, expectedContent: string) => {
-      return Log.stepsAsStep('TBA', 'Image: ' + name, [
-        api.sSetSetting('image_advtab', true),
-        api.sSetSetting('image_dimensions', false),
-        api.sSetContent(''),
-        api.sExecCommand('mceImage', true),
-        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-        //
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Chain.mapper(function (v) {
-            setDialogData(data);
-          }),
-        ]),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Save")')
-
-        ]),
-        api.sAssertContent(expectedContent)
-      ]);
+    const createTestOnEmptyEditor = (name: string, data: Partial<ImageDialogData>, expectedContent: string) => {
+      return createTestWithContent(name, '', { elementPath: [0], offset: 0 }, data, expectedContent);
     };
 
-    const createTestUpdatedStyle = (name: string, style: string, expectedData: any) => {
+    const createTestUpdatedStyle = (name: string, style: string, assertion: Step<any, any>) => {
       return Log.stepsAsStep('TBA', 'Image: ' + name, [
-        api.sSetSetting('image_advtab', true),
-        api.sSetSetting('image_dimensions', false),
-        api.sSetContent(''),
-        api.sExecCommand('mceImage', true),
-        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+        sInitAndOpenDialog('', { elementPath: [0], offset: 0 }),
         ui.sClickOnUi('Switch to Advanced tab', '.tox-tab:contains("Advanced")'),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          UiFinder.cFindIn('label:contains("Style")'),
-          Chain.mapper(function (val) {
-            const inputElm = document.getElementById(val.dom().htmlFor);
-            return TinyDom.fromDom(inputElm);
-          }),
-          UiControls.cSetValue(style),
-          cFakeEvent('input'),
+        Chain.asStep(Body.body(), [
+          cSetInputValue(advancedTabSelectors.style, style)
         ]),
-        sAssertDataInApi(name, expectedData),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          Mouse.cClickOn('button:contains("Save")')
-
-        ])
+        assertion,
+        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
       ]);
     };
 
@@ -127,7 +62,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           hspace: '10',
           src: {
             value: 'src',
-            meta: {}
           },
           vspace: '10'
         },
@@ -138,8 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         {
           alt: 'alt',
           src: {
-            value: 'src',
-            meta: {}
+            value: 'src'
           },
           style: 'border-width: 10px; border-style: solid;'
         },
@@ -150,8 +83,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         {
           alt: 'alt',
           src: {
-            value: 'src',
-            meta: {}
+            value: 'src'
           },
           style: 'margin: 10px;'
         },
@@ -163,8 +95,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           alt: 'alt',
           border: '10',
           src: {
-            value: 'src',
-            meta: {}
+            value: 'src'
           },
           style: 'border-width: 15px;'
         },
@@ -176,8 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           alt: 'alt',
           hspace: '10',
           src: {
-            value: 'src',
-            meta: {}
+            value: 'src'
           },
           style: 'margin-left: 15px; margin-top: 20px;',
           vspace: '10'
@@ -203,130 +133,65 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       createTestUpdatedStyle(
         'Advanced image dialog non-shorthand horizontal margin style change test',
         'margin-left: 15px; margin-right: 15px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '15',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin-left: 15px; margin-right: 15px;',
-          vspace: '',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, ''),
+          cAssertInputValue(advancedTabSelectors.hspace, '15'),
+          cAssertInputValue(advancedTabSelectors.style, 'margin-left: 15px; margin-right: 15px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog non-shorthand vertical margin style change test',
         'margin-top: 15px; margin-bottom: 15px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin-top: 15px; margin-bottom: 15px;',
-          vspace: '15',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, '15'),
+          cAssertInputValue(advancedTabSelectors.hspace, ''),
+          cAssertInputValue(advancedTabSelectors.style, 'margin-top: 15px; margin-bottom: 15px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog shorthand margin 1 value style change test',
         'margin: 5px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '5',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 5px;',
-          vspace: '5',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, '5'),
+          cAssertInputValue(advancedTabSelectors.hspace, '5'),
+          cAssertInputValue(advancedTabSelectors.style, 'margin: 5px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog shorthand margin 2 value style change test',
         'margin: 5px 10px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '10',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 5px 10px 5px 10px;',
-          vspace: '5',
-          borderstyle: ''
-        }
-      ),
-      createTestUpdatedStyle(
-        'Advanced image dialog shorthand margin 2 value style change test',
-        'margin: 5px 10px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '10',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 5px 10px 5px 10px;',
-          vspace: '5',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, '5'),
+          cAssertInputValue(advancedTabSelectors.hspace, '10'),
+          cAssertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 5px 10px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog shorthand margin 3 value style change test',
         'margin: 5px 10px 15px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '10',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 5px 10px 15px 10px;',
-          vspace: '',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, ''),
+          cAssertInputValue(advancedTabSelectors.hspace, '10'),
+          cAssertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 15px 10px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog shorthand margin 4 value style change test',
         'margin: 5px 10px 15px 20px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 5px 10px 15px 20px;',
-          vspace: '',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, ''),
+          cAssertInputValue(advancedTabSelectors.hspace, ''),
+          cAssertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 15px 20px;')
+        ])
       ),
       createTestUpdatedStyle(
         'Advanced image dialog shorthand margin 4 value style change test',
         'margin: 5px 10px 15px 20px; margin-top: 15px;',
-        {
-          alt: '',
-          border: '',
-          hspace: '',
-          src: {
-            value: '',
-            meta: {}
-          },
-          style: 'margin: 15px 10px 15px 20px;',
-          vspace: '15',
-          borderstyle: ''
-        }
+        Chain.asStep({}, [
+          cAssertInputValue(advancedTabSelectors.vspace, '15'),
+          cAssertInputValue(advancedTabSelectors.hspace, ''),
+          cAssertInputValue(advancedTabSelectors.style, 'margin: 15px 10px 15px 20px;')
+        ])
       )
     ];
     Pipeline.async({}, suiteArr, onSuccess, onFailure);

@@ -184,6 +184,11 @@ const setup = (editor: Editor): RenderInfo => {
     isInline ? [ ] : statusbar.toArray()
   ]);
 
+  const attributes = {
+    role: 'application',
+    ...I18n.isRtl() ? { dir: 'rtl' } : {}
+  };
+
   const outerContainer = GuiFactory.build(
     OuterContainer.sketch({
       dom: {
@@ -193,7 +198,7 @@ const setup = (editor: Editor): RenderInfo => {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
         },
-        ...dirAttributes
+        attributes
       },
       components: containerComponents,
       behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([

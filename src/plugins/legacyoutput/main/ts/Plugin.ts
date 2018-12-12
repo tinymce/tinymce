@@ -6,8 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-// import Formats from './core/Formats';
-// import Buttons from './ui/Buttons';
+import Formats from './core/Formats';
 
 /**
  * This class contains all core logic for the legacyoutput plugin.
@@ -16,11 +15,8 @@ import PluginManager from 'tinymce/core/api/PluginManager';
  * @private
  */
 
-PluginManager.add('legacyoutput', function (editor) {
-  console.error('Legacy output plugin has not yet been updated for TinyMCE 5');
-  return;
-  // Formats.setup(editor);
-  // Buttons.register(editor);
+PluginManager.add('legacyoutput', (editor) => {
+  Formats.setup(editor);
 });
 
 export default function () { }

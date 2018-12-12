@@ -7,7 +7,7 @@
 
 import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Merger } from '@ephox/katamari';
+import { Arr, Obj, Merger, Option } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { formatSelectMenu } from '../../core/complex/FormatSelect';
 import { styleSelectMenu } from '../../core/complex/StyleSelect';
@@ -38,7 +38,7 @@ const defaultMenus = {
   help: { title: 'Help', items: 'help' }
 };
 
-export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: string): SketchSpec => {
+export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
 
   return renderCommonDropdown({
     text: spec.text,

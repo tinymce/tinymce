@@ -12,7 +12,6 @@ import { ValueSchema } from '@ephox/boulder';
 import { Arr, Id, Option, Fun } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
-import * as Icons from '../../../../../themes/silver/main/ts/ui/icons/Icons';
 import { renderAutocomplete } from '../../../main/ts/ui/dialog/Autocomplete';
 import { renderBodyPanel } from '../../../main/ts/ui/dialog/BodyPanel';
 import { renderColorInput } from '../../../main/ts/ui/dialog/ColorInput';
@@ -364,7 +363,7 @@ export default () => {
   const alertBannerSpec = renderAlertBanner({
     text: 'The alert banner message',
     level: 'warn',
-    icon: Icons.get('close', sharedBackstage.providers.icons),
+    icon: 'close',
     actionLabel: 'Click here For somthing'
   }, sharedBackstage.providers);
 
