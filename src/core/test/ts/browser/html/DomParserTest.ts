@@ -4,6 +4,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
   const success = arguments[arguments.length - 2];
@@ -235,6 +236,28 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
       '<p>a<span></span><span> </span><span id="x">b</span><span id="y"></span></p><p></p><p><span></span></p><p> </p>'
     );
     LegacyUnit.equal(serializer.serialize(root), '<p>a <span id="x">b</span><span id="y"></span></p>');
+  });
+
+  suite.test('Parse invalid contents with node filters', function () {
+    const parser = DomParser({}, schema);
+    parser.addNodeFilter('p', (nodes) => {
+      Arr.each(nodes, (node) => {
+        node.attr('class', 'x');
+      });
+    });
+    const root = parser.parse('<p>a<p>123</p>b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
+  });
+
+  suite.test('Parse invalid contents with attribute filters', function () {
+    const parser = DomParser({}, schema);
+    parser.addAttributeFilter('class', (nodes) => {
+      Arr.each(nodes, (node) => {
+        node.attr('class', 'x');
+      });
+    });
+    const root = parser.parse('<p class="y">a<p class="y">123</p>b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
   });
 
   suite.test('addNodeFilter', function () {
