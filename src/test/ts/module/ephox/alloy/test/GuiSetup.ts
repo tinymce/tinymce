@@ -31,13 +31,14 @@ const setup = (createComponent, f: (doc: Element, body: Element, gui: Gui.GuiSys
 };
 
 const mSetupKeyLogger = (body) => {
-  return Step.stateful((_, next, die) => {
+  return Step.stateful((oldState, next, die) => {
     const onKeydown = DomEvent.bind(body, 'keydown', (event) => {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });
 
     const log = [ ];
     const newState = {
+      ...oldState,
       log,
       onKeydown
     };
@@ -49,7 +50,8 @@ const mTeardownKeyLogger = (body, expected) => {
   return Step.stateful((state: any, next, die) => {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
-    next({});
+    const { onKeydown, log, ...rest } = state;
+    next(rest);
   });
 };
 

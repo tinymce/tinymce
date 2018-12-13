@@ -23,4 +23,4 @@ const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> 
 
 const getKeyupRules = Fun.constant([ ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.none());
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());

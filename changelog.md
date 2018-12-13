@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.6.2] - 2018-12-12
+### Fixed
+ - SplitButtons now use span elements for their buttons for accessibility
+
+# [4.6.0] - 2018-12-11
+### Added
+ - New configuration parameter for Keying configs which controls when to focus inside: "focusInside"
+
+### Changed
+ - Handling of focusIn for keying configs
+
 # [4.5.1] - 2018-12-06
 ### Fixed
  - ModalDialog now correctly sets the "aria-modal" attribute

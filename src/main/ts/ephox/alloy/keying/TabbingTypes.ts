@@ -124,7 +124,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   const getKeyupRules = Fun.constant([ ]);
 
-  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, Option.some(focusIn));
+  return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
 };
 
 export {

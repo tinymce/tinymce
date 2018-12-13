@@ -39,11 +39,6 @@ const arrowPart = PartType.required({
   name: 'arrow',
   defaults (detail) {
     return {
-      dom: {
-        attributes: {
-          role: 'button',
-        }
-      },
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
         Focusing.revoke()
@@ -52,6 +47,12 @@ const arrowPart = PartType.required({
   },
   overrides (detail) {
     return {
+      dom: {
+        tag: 'span',
+        attributes: {
+          role: 'presentation'
+        }
+      },
       action (arrow) {
         arrow.getSystem().getByUid(detail.uid).each(AlloyTriggers.emitExecute);
       },
@@ -71,11 +72,6 @@ const buttonPart = PartType.required({
   name: 'button',
   defaults (detail) {
     return {
-      dom: {
-        attributes: {
-          role: 'button'
-        }
-      },
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
         Focusing.revoke()
@@ -84,6 +80,12 @@ const buttonPart = PartType.required({
   },
   overrides (detail) {
     return {
+      dom: {
+        tag: 'span',
+        attributes: {
+          role: 'presentation'
+        }
+      },
       action (btn) {
         btn.getSystem().getByUid(detail.uid).each((splitDropdown) => {
           detail.onExecute(splitDropdown, btn);
