@@ -53,7 +53,7 @@ UnitTest.asynctest('Browser Test: .FormatterTest', (success, failure) => {
         Assertions.cAssertEq('is undefined', 'undefined')
       ]
     )),
-    Log.step('TBA', 'TextPattern: inline * with uncollapsed range returns undefined', Chain.asStep(createRng('*x***', 5, 5), [
+    Log.step('TBA', 'TextPattern: inline *** pattern end with no matching pattern start returns undefined', Chain.asStep(createRng('*x***', 5, 5), [
       cGetInlinePattern(inlinePatterns, false),
       Assertions.cAssertEq('is correct pattern and offset', 'undefined')
     ])),
@@ -61,15 +61,15 @@ UnitTest.asynctest('Browser Test: .FormatterTest', (success, failure) => {
       cGetInlinePattern(inlinePatterns, false),
       Assertions.cAssertEq('is correct pattern and offset', 'undefined')
     ])),
-    Log.step('TBA', 'TextPattern: pattern without content returns undefined', Chain.asStep(createRng('**', 2, 2), [
+    Log.step('TBA', 'TextPattern: inline ** pattern end without start pattern returns undefined', Chain.asStep(createRng('**', 2, 2), [
       cGetInlinePattern(inlinePatterns, false),
       Assertions.cAssertEq('is correct pattern and offset', 'undefined')
     ])),
-    Log.step('TBA', 'TextPattern: pattern without content returns undefined', Chain.asStep(createRng('***', 3, 3), [
+    Log.step('TBA', 'TextPattern: inline *** end pattern without start pattern returns undefined', Chain.asStep(createRng('***', 3, 3), [
       cGetInlinePattern(inlinePatterns, false),
       Assertions.cAssertEq('is correct pattern and offset', 'undefined')
     ])),
-    Log.step('TBA', 'TextPattern: pattern without content returns undefined', Chain.asStep(createRng('*** x***', 4, 4), [
+    Log.step('TBA', 'TextPattern: cursor in middle of pattern returns undefined', Chain.asStep(createRng('*** x***', 4, 4), [
       cGetInlinePattern(inlinePatterns, true),
       Assertions.cAssertEq('is correct pattern and offset', 'undefined')
     ])),
