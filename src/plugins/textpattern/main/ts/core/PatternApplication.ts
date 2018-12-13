@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import Tools from 'tinymce/core/api/util/Tools';
-import { Text } from '@ephox/dom-globals';
+import { Node, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { InlinePattern, BlockPattern, ReplacementPattern } from '../api/Pattern';
+import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
+import NodeType from 'tinymce/core/dom/NodeType';
+import { BlockPattern, InlinePattern, ReplacementPattern } from '../api/Pattern';
 import { findInlinePattern, findPattern, findReplacementPattern, ReplacementMatch } from './FindPatterns';
 
 const setSelection = (editor: Editor, textNode: Text, offset: number): void => {
@@ -20,7 +21,7 @@ const setSelection = (editor: Editor, textNode: Text, offset: number): void => {
   editor.selection.setRng(newRng);
 };
 
-const splitContainer = (container, pattern, endOffset, startOffset) => {
+const splitContainer = (container: Text, pattern: InlinePattern, endOffset: number, startOffset: number) => {
   // Split text node and remove start/end from text node
   container = startOffset > 0 ? container.splitText(startOffset) : container;
   container.splitText(endOffset - startOffset + pattern.end.length);
@@ -30,7 +31,7 @@ const splitContainer = (container, pattern, endOffset, startOffset) => {
   return container;
 };
 
-const splitAndApply = (editor: Editor, container, found, inline) => {
+const splitAndApply = (editor: Editor, container: Text, found: {pattern: InlinePattern, startOffset: number, endOffset: number}, inline: boolean) => {
   const formatArray = Tools.isArray(found.pattern.format) ? found.pattern.format : [found.pattern.format];
   const validFormats = Tools.grep(formatArray, (formatName) => {
     const format = editor.formatter.get(formatName);
@@ -59,7 +60,7 @@ const splitAndApply = (editor: Editor, container, found, inline) => {
 const applyInlinePattern = (editor: Editor, patterns: InlinePattern[], inline: boolean): Option<Text> => {
   const rng = editor.selection.getRng();
   return Option.from(findInlinePattern(patterns, rng, inline)).map((foundPattern) => {
-    return splitAndApply(editor, rng.startContainer, foundPattern, inline);
+    return splitAndApply(editor, rng.startContainer as Text, foundPattern, inline);
   });
 };
 
@@ -84,34 +85,35 @@ const applyInlinePatternEnter = (editor: Editor, patterns: InlinePattern[]): voi
 
 // Handles block formats like ##abc or 1. abc
 const applyBlockPattern = (editor: Editor, patterns: BlockPattern[]): void => {
-  let selection, dom, container, firstTextNode, node, format, textBlockElm, pattern, walker, rng, offset;
 
-  selection = editor.selection;
-  dom = editor.dom;
+  const selection = editor.selection;
+  const dom = editor.dom;
 
   if (!selection.isCollapsed()) {
     return;
   }
 
-  textBlockElm = dom.getParent(selection.getStart(), 'p');
+  const textBlockElm = dom.getParent(selection.getStart(), 'p');
   if (textBlockElm) {
-    walker = new TreeWalker(textBlockElm, textBlockElm);
+    const walker = new TreeWalker(textBlockElm, textBlockElm);
+    let node: Node;
+    let firstTextNode: Text;
     while ((node = walker.next())) {
-      if (node.nodeType === 3) {
+      if (NodeType.isText(node)) {
         firstTextNode = node;
         break;
       }
     }
 
     if (firstTextNode) {
-      pattern = findPattern(patterns, firstTextNode.data);
+      const pattern = findPattern(patterns, firstTextNode.data);
       if (!pattern) {
         return;
       }
 
-      rng = selection.getRng(true);
-      container = rng.startContainer;
-      offset = rng.startOffset;
+      const rng = selection.getRng();
+      const container = rng.startContainer;
+      let offset = rng.startOffset;
 
       if (firstTextNode === container) {
         offset = Math.max(0, offset - pattern.start.length);
@@ -122,7 +124,7 @@ const applyBlockPattern = (editor: Editor, patterns: BlockPattern[]): void => {
       }
 
       if (pattern.format) {
-        format = editor.formatter.get(pattern.format);
+        const format = editor.formatter.get(pattern.format);
         if (format && format[0].block) {
           firstTextNode.deleteData(0, pattern.start.length);
           editor.formatter.apply(pattern.format, {}, firstTextNode);
@@ -170,9 +172,9 @@ const replace = (editor: Editor, target: Text, match: ReplacementMatch) => {
 
 const applyReplacementPattern = (editor: Editor, patterns: ReplacementPattern[]) => {
   const rng = editor.selection.getRng();
+  const container = rng.startContainer;
 
-  if (rng.collapsed && rng.startContainer.nodeType === 3) {
-    const container = rng.startContainer as Text;
+  if (rng.collapsed && NodeType.isText(container)) {
     findReplacementPattern(patterns, rng.startOffset, container.data).each((match) => {
       replace(editor, container, match);
     });

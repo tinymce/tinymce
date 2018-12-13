@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InlinePattern, Pattern, ReplacementPattern } from '../api/Pattern';
-import { document, Range, Text } from '@ephox/dom-globals';
+import { document, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import { InlinePattern, Pattern, ReplacementPattern } from '../api/Pattern';
+import NodeType from 'tinymce/core/dom/NodeType';
 
 // Finds a matching pattern to the specified text
-const findPattern = (patterns: Pattern[], text: string): Pattern => {
+const findPattern = <P extends Pattern>(patterns: P[], text: string): P => {
   for (let i = 0; i < patterns.length; i++) {
     const pattern: any = patterns[i];
     if (text.indexOf(pattern.start) !== 0) {
@@ -25,7 +26,7 @@ const findPattern = (patterns: Pattern[], text: string): Pattern => {
   }
 };
 
-const isMatchingPattern = (pattern: InlinePattern, text: string, offset: number, delta: number): boolean => {
+const isMatchingPattern = (pattern: InlinePattern, text: string, offset: number, delta: 0 | 1): boolean => {
   const textEnd = text.substr(offset - pattern.end.length - delta, pattern.end.length);
   return textEnd === pattern.end;
 };
@@ -35,12 +36,10 @@ const hasContent = (offset: number, delta: number, pattern: InlinePattern) => {
 };
 
 // Finds the best matching end pattern
-const findEndPattern = (patterns, text, offset, delta) => {
-  let pattern, i;
-
+const findEndPattern = (patterns: InlinePattern[], text: string, offset: number, delta: 0 | 1) => {
   // Find best matching end
-  for (i = 0; i < patterns.length; i++) {
-    pattern = patterns[i];
+  for (let i = 0; i < patterns.length; i++) {
+    const pattern = patterns[i];
     if (pattern.end !== undefined && isMatchingPattern(pattern, text, offset, delta) && hasContent(offset, delta, pattern)) {
       return pattern;
     }
@@ -52,13 +51,13 @@ const findInlinePattern = (patterns: InlinePattern[], rng: Range, space: boolean
     return;
   }
 
-  const container = rng.startContainer as Text;
-  const text = container.data;
-  const delta = space === true ? 1 : 0;
-
-  if (container.nodeType !== 3) {
+  const container = rng.startContainer;
+  if (!NodeType.isText(container)) {
     return;
   }
+
+  const text = container.data;
+  const delta = space === true ? 1 : 0;
 
   // Find best matching end
   const endPattern = findEndPattern(patterns, text, rng.startOffset, delta);
