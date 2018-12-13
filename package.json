@@ -11,7 +11,8 @@
     "@ephox/katamari": "latest",
     "@ephox/sugar": "latest",
     "@ephox/boulder": "latest",
-    "@ephox/alloy": "latest"
+    "@ephox/alloy": "latest",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",
