@@ -182,7 +182,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
           children: [
             s.element('input', {
               attrs: {
-                'aria-labelledby': str.is(spanID)
+                'aria-describedby': str.is(spanID)
               }
             }),
             s.element('label', {
