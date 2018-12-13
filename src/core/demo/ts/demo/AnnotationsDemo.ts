@@ -1,4 +1,3 @@
-import { Editor } from 'tinymce/core/api/Editor';
 import { prompt, document } from '@ephox/dom-globals';
 
 declare let tinymce: any;
@@ -22,43 +21,35 @@ export default function () {
 
     content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
-    setup: (ed: Editor) => {
-      ed.addButton('annotate-alpha', {
+    setup: (editor) => {
+      editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
-        onclick: () => {
+        onAction() {
           const comment = prompt('Comment with?');
-          ed.annotator.annotate('alpha', {
+          editor.annotator.annotate('alpha', {
             comment
           });
-          ed.focus();
+          editor.focus();
         },
-
-        onpostrender: (ctrl) => {
-          const button = ctrl.control;
-          ed.on('init', () => {
-            ed.annotator.annotationChanged('alpha', (state, name, obj) => {
-              if (! state) {
-                button.active(false);
-              } else {
-                button.active(true);
-              }
-            });
+        onSetup (btnApi) {
+          editor.annotator.annotationChanged('alpha', (state, name, obj) => {
+            btnApi.setDisabled(state);
           });
         }
       });
 
-      ed.on('init', () => {
-        ed.annotator.register('alpha', {
+      editor.on('init', () => {
+        editor.annotator.register('alpha', {
           persistent: true,
           decorate: (uid, data) => {
             return {
               attributes: {
-                'data-mce-comment': data.comment
+                'data-mce-comment': data.comment ? data.comment : '',
+                'data-mce-author': data.author ? data.author : 'anonymous'
               }
             };
           }
         });
-
       });
     },
 

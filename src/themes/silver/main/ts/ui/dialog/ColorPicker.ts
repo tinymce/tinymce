@@ -34,7 +34,7 @@ const english = {
   'colorcustom.hue.slider': 'Hue Slider',
   'colorcustom.hue.palette': 'Hue Palette',
   'colorcustom.hue.instructions': 'Use arrow keys to select a hue',
-  'aria.color.picker': 'Color',
+  'aria.color.picker': 'Color Picker',
   'aria.input.invalid': 'Invalid input'
 };
 

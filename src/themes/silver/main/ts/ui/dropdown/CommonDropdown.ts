@@ -45,7 +45,7 @@ export interface BasketballFoo {
   text: Option<string>;
   icon: Option<string>;
   tooltip: Option<string>;
-  role: string;
+  role: Option<string>;
   fetch: (callback: (tdata: TieredData) => void) => void;
   onAttach: (comp: AlloyComponent) => void;
   onDetach: (comp: AlloyComponent) => void;
@@ -82,9 +82,11 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
     return Option.some(true);
   };
 
+  const role = spec.role.fold(() => ({ }), (role) => ({ role }));
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
-      role: spec.role,
+      ...role,
       dom: {
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),

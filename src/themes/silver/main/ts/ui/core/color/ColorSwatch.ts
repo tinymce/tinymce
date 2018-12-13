@@ -61,28 +61,18 @@ const getColorCols = function (editor) {
   return Settings.getColorCols(editor, defaultCols);
 };
 
-const getIcon = (color: string) => {
-  if (color === 'remove') {
-    return '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M25 5L5 25" stroke-width="1.5" fill="none"></path></svg>';
-  } else if (color === 'custom') {
-    return 'color-picker';
-  } else {
-    return `<div style="width: 24px; height: 24px; background-color: ${color};"></div>`;
-  }
-};
-
 const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
     type,
     text: 'Remove color',
-    icon: getIcon('remove'),
+    icon: 'color-swatch-remove-color',
     value: 'remove'
   };
   const custom = {
     type,
     text: 'Custom color',
-    icon: getIcon('custom'),
+    icon: 'color-picker',
     value: 'custom'
   };
   return hasCustom ? [
@@ -180,7 +170,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value) => {
 
   const submit = getOnSubmit(callback);
   editor.windowManager.open({
-    title: 'Color',
+    title: 'Color Picker',
     size: 'normal',
     body: {
       type: 'panel',
