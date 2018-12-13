@@ -1,5 +1,6 @@
 Version 5.0.0-beta-2 (TBD)
     Added `tox-dialog__table` instead of `mce-table-striped` class to enhance Help dialog appearance #TINY-2360
+    Added title attribute to iframes so, screen readers can announce iframe labels #TINY-2692
     Updated SizeInput labels to "Height" and "Width" instead of Dimensions #TINY-2833
     Fixed accessibility issues with the font select, font size, style select and format select toolbar dropdowns #TINY-2713
     Fixed accessibility issues with split dropdowns #TINY-2697
