@@ -8,7 +8,7 @@
 import { Behaviour, Focusing, Tabstopping, FormField } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
-import { Cell, Merger, Option } from '@ephox/katamari';
+import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr } from '@ephox/sugar';
 
@@ -55,9 +55,10 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
 const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
-  const sandboxAttrs = isSandbox ? {
-    sandbox: 'allow-scripts'
-  } : { };
+  const attributes = {
+    ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
+    ...isSandbox ? { sandbox : 'allow-scripts' } : { }
+  };
 
   const sourcing = getDynamicSource(isSandbox);
 
@@ -70,9 +71,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
         uid: newSpec.uid,
         dom: {
           tag: 'iframe',
-          attributes: Merger.deepMerge(
-            sandboxAttrs
-          )
+          attributes
         },
         behaviours: Behaviour.derive([
           Tabstopping.config({ }),
