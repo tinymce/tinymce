@@ -381,6 +381,29 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', function () {
     );
   });
 
+  suite.test('Outdenting an item should not affect its attributes', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+        '<li style="color: red;" class="xyz">a' +
+          '<ul>' +
+            '<li style="color: blue;">b</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul ul li', 0);
+    LegacyUnit.execCommand(editor, 'Outdent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+        '<li style="color: red;" class="xyz">a</li>' +
+        '<li style="color: blue;">b</li>' +
+      '</ul>'
+    );
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

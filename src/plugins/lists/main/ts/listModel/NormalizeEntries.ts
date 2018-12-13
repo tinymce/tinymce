@@ -8,10 +8,9 @@
 import { Entry } from './Entry';
 import { Arr, Merger, Option } from '@ephox/katamari';
 
-const assimilateEntry = (adherent: Entry, source: Entry) => {
+const assimilateEntry = (adherent: Entry, source: Entry): void => {
   adherent.listType = source.listType;
   adherent.listAttributes = Merger.merge({}, source.listAttributes);
-  adherent.itemAttributes = Merger.merge({}, source.itemAttributes);
 };
 
 const normalizeShallow = (outline: Array<Option<Entry>>, entry: Entry): Array<Option<Entry>> => {
