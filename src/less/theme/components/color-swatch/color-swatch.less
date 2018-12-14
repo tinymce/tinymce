@@ -6,7 +6,7 @@
 @swatch-picker-button-icon-height: 24px;
 @swatch-picker-button-icon-width: 24px;
 @swatch-remove-color-stroke-color: #e74c3c;
-@swatch-outline-color: @border-color;
+@swatch-outline-color: rgba(127, 127, 127, .3) inset;
 
 .tox {
   .tox-toolbar .tox-swatches {
@@ -22,25 +22,15 @@
     transition: transform .15s, box-shadow .15s;
     width: @swatch-size;
 
-    &:hover {
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 0 1px @swatch-outline-color;
       transform: scale(.8);
-    }
-  }
-
-  .tox-swatch--outline {
-    //
-
-    &:hover {
-      box-shadow: 0 0 0 2px @swatch-outline-color;
     }
   }
 
   .tox-swatch--remove {
     //
-
-    &:hover {
-      &:extend(.tox .tox-swatch--outline:hover);
-    }
 
     svg {
       stroke: @swatch-remove-color-stroke-color;
