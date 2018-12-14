@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
 import DeepFlatten from '../alien/DeepFlatten';
@@ -118,9 +117,9 @@ const bindContextualToolbarsEvents = function (editor: Editor, panel: InlitePane
   editor.on('ResizeEditor keyup', throttledTogglePanel);
   editor.on('ResizeWindow', reposition);
 
-  DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
+  DOMUtils.DOM.bind(editor.settings.ui_container, 'scroll', reposition);
   editor.on('remove', function () {
-    DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
+    DOMUtils.DOM.unbind(editor.settings.ui_container, 'scroll', reposition);
     panel.remove();
   });
 
