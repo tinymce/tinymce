@@ -1,13 +1,12 @@
-import { Pipeline, RawAssertions, Step, Log, Keyboard, Keys, Chain, Guard, FocusTools } from '@ephox/agar';
+import { Pipeline, RawAssertions, Step, Log, Keyboard, Keys, FocusTools } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
 
 import Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { document } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
-import { name } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/PartType';
 import Tools from '../../../../../core/main/ts/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
