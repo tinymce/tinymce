@@ -31,7 +31,6 @@ const open = (editor: Editor) => {
         {
           type: 'textarea',
           name: 'code',
-          flex: true,
           label: 'Code view',
         }
       ]

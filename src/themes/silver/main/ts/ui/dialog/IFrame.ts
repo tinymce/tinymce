@@ -88,9 +88,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
     factory: { sketch: factory }
   });
 
-  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-
-  return renderFormFieldWith(pLabel, pField, extraClasses);
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched']);
 };
 
 export {

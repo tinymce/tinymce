@@ -22,7 +22,6 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
           name: 'selector',
           size: 1,
           label: Option.some('selector'),
-          colspan: Option.none(),
           items: [
             { value: 'one', text: 'One' },
             { value: 'two', text: 'Two' },
@@ -46,7 +45,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
                 s.element('div', {
                   classes: [arr.has('tox-selectfield')],
                   children: [
-                    s.element('select', {
+                  s.element('select', {
                       value: str.is('one'),
                       attrs: {
                         size: str.is('1')

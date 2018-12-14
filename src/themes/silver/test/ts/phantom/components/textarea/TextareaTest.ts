@@ -18,7 +18,6 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
       return GuiFactory.build(
         renderTextarea({
           name: 'textarea',
-          flex: false,
           label: Option.some('LabelA'),
           placeholder: Option.none(),
           validation: Option.none()
