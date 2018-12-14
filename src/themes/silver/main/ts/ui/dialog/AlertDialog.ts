@@ -35,7 +35,7 @@ export const setup = (extras) => {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
             closeDialog();
-          }),
+          }, sharedBackstage.providers),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             memFooterClose.asSpec()
