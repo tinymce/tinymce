@@ -17,8 +17,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
     const steps = Utils.withTeardown([
       Logger.t('Apply html replacement pattern on space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'heading'),
-        tinyApis.sAssertContent('<h1>My Heading&nbsp;</h1>'),
-        tinyApis.sAssertSelection([0, 0], 11, [0, 0], 11)
+        tinyApis.sAssertContent('<h1>My Heading</h1>'),
+        tinyApis.sAssertSelection([0, 0], 10, [0, 0], 10)
       ])),
       Logger.t('Apply html replacement pattern on enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'heading'),
@@ -41,14 +41,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
 
       Logger.t('Apply text replacement pattern on space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brb'),
-        tinyApis.sAssertContent('<p>Be Right Back&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 14, [0, 0], 14)
+        tinyApis.sAssertContent('<p>Be Right Back</p>'),
+        tinyApis.sAssertSelection([0, 0], 13, [0, 0], 13)
       ])),
       Logger.t('Apply text replacement pattern on space with content after', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>brbX</p>'),
         tinyApis.sSetSelection([0, 0], 3, [0, 0], 3),
         Utils.sPressSpace(tinyApis, tinyActions),
-        tinyApis.sAssertContent('<p>Be Right Back X</p>'),
+        tinyApis.sAssertContent('<p>Be Right BackX</p>'),
         tinyApis.sAssertSelection([0, 0], 14, [0, 0], 14)
       ])),
       Logger.t('Apply text replacement pattern on enter', GeneralSteps.sequence([
