@@ -184,10 +184,12 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
           dom: {
             tag: 'div',
             classes: ['tox-icon'],
-            innerHtml: getIcon('close', detail.iconProvider)
+            innerHtml: getIcon('close', detail.iconProvider),
+            attributes: {
+              'aria-label': detail.translationProvider('Close')
+            }
           }
         }],
-        // TODO: aria label this button!
         action: (comp) => {
           detail.onAction(comp);
         }

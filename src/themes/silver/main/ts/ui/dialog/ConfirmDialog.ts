@@ -44,7 +44,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
             closeDialog(false);
-          }),
+          }, sharedBackstage.providers),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             footerNo,
