@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
     plugins: 'table',
     table_grid: false,
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
   }, success, failure);
 });

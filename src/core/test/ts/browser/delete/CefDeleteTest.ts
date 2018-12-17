@@ -159,6 +159,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function () {
       sTestDeletePadd(editor, tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

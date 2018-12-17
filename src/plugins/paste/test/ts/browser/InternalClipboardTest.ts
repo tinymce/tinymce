@@ -227,6 +227,6 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
         lastPostProcessEvent = evt;
       });
     },
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

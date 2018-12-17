@@ -125,7 +125,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'swatch-button',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed) => {
 
         ed.ui.registry.addSplitButton('swatch-button', {

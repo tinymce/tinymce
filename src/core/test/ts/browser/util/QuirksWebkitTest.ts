@@ -326,6 +326,6 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
     add_unload_trigger: false,
     indent: false,
     disable_nodechange: true,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

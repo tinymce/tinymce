@@ -157,7 +157,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'toolbar-collection',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed) => {
         ed.ui.registry.addSplitButton('toolbar-collection', {
           type: 'splitbutton',

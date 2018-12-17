@@ -8,7 +8,7 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { HTMLImageElement } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { Fun, Type, Strings, Arr } from '@ephox/katamari';
 import { UploadHandler } from 'tinymce/core/file/Uploader';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
@@ -141,6 +141,20 @@ const getIndentation = (editor: Editor) => {
   return editor.getParam('indentation', '40px', 'string');
 };
 
+const getContentCss = (editor: Editor): string[] => {
+  const contentCss = editor.settings.content_css;
+
+  if (Type.isString(contentCss)) {
+    return Arr.map(contentCss.split(','), Strings.trim);
+  } else if (Type.isArray(contentCss)) {
+    return contentCss;
+  } else if (contentCss === false) {
+    return [];
+  } else {
+    return ['default'];
+  }
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -169,5 +183,6 @@ export default {
   getLanguageCode,
   getLanguageUrl,
   shouldIndentUseMargin,
-  getIndentation
+  getIndentation,
+  getContentCss
 };

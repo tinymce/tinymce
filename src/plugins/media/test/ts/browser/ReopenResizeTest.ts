@@ -55,6 +55,6 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
     theme: 'silver',
     indent: false,
     forced_root_block: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

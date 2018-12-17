@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
     ], onSuccess, onFailure);
   }, {
     theme: false,
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
     init_instance_callback (editor) {
       editor.fire('SkinLoaded');
     }

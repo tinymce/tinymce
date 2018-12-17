@@ -187,6 +187,6 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

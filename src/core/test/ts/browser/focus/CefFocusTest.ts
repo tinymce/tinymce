@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
       EditorManager.init({
         selector: '.tinymce',
         inline: true,
-        skin_url: '/project/js/tinymce/skins/oxide'
+        skin_url: '/project/js/tinymce/skins/ui/oxide'
       }).then(function () {
         done();
       });

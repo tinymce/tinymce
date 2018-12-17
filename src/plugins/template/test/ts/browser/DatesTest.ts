@@ -96,6 +96,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
     plugins: 'template',
     toolbar: 'template',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide/',
+    skin_url: '/project/js/tinymce/skins/ui/oxide/',
   }, success, failure);
 });

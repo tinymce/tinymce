@@ -29,6 +29,6 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     theme: 'silver',
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

@@ -191,6 +191,6 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function
       '*': 'list-style-type'
     },
     disable_nodechange: true,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

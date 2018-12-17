@@ -30,6 +30,6 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', functio
     ], onSuccess, onFailure);
   }, {
     content_style: contentStyle,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

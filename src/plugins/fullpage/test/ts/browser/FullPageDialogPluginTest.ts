@@ -235,7 +235,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
 
   }, {
     plugins: 'fullpage',
-    skin_url: '/project/js/tinymce/skins/oxide/',
+    skin_url: '/project/js/tinymce/skins/ui/oxide/',
     indent: false,
     theme: 'silver',
     fullpage_default_title: 'Fullpage Dialog Test Title',

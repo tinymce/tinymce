@@ -260,6 +260,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
     entities: 'raw',
     indent: false,
     content_style: previewStyles(),
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

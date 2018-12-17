@@ -23,6 +23,6 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerChangeLangu
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

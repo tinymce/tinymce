@@ -93,6 +93,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
     toolbar: 'link',
     link_quicklink: true,
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

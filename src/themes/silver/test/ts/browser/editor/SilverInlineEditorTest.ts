@@ -312,7 +312,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       menu: {
         menutest: { title: 'test', items: 'x1'}
       },
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       setup: (ed) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',

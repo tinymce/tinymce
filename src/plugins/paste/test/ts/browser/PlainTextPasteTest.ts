@@ -24,7 +24,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
         EditorManager.init(Merger.merge(settings, {
           selector: '#' + randomId,
-          skin_url: '/project/js/tinymce/skins/oxide',
+          skin_url: '/project/js/tinymce/skins/ui/oxide',
           indent: false,
           setup (editor) {
             editor.on('SkinLoaded', function () {

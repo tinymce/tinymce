@@ -142,7 +142,7 @@ UnitTest.asynctest(
       plugins: 'searchreplace',
       valid_elements: 'b,i,br',
       indent: false,
-      skin_url: '/project/js/tinymce/skins/oxide',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
       theme: 'silver'
     }, success, failure);
   }

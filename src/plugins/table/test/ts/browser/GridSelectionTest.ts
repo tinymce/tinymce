@@ -96,6 +96,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    skin_url: '/project/js/tinymce/skins/ui/oxide',
   }, success, failure);
 });

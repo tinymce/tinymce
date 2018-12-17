@@ -4,7 +4,7 @@ declare let tinymce: any;
 
 export default function () {
   const generalSettings = {
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
     visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     images_upload_url: 'd',

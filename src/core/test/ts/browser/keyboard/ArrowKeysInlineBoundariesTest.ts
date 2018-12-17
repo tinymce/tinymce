@@ -281,7 +281,7 @@ UnitTest.asynctest(
       ], onSuccess, onFailure);
     }, {
       add_unload_trigger: false,
-      skin_url: '/project/js/tinymce/skins/oxide'
+      skin_url: '/project/js/tinymce/skins/ui/oxide'
     }, success, failure);
   }
 );

@@ -40,6 +40,6 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });

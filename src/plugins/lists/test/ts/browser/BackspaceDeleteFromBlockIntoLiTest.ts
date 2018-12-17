@@ -55,6 +55,6 @@ UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', (success, fail
     plugins: 'lists',
     toolbar: '',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    skin_url: '/project/js/tinymce/skins/ui/oxide'
   }, success, failure);
 });
