@@ -6,14 +6,13 @@ declare let tinymce: any;
 
 export default function () {
   const DemoState2 = MockDemo.mockFeatureState();
-  const generateButton = (editor, buttonType, name, num) => {
+  const generateButton = (editor: Editor, buttonType: 'button', name, num) => {
     const names = [];
 
     for (let i = 0; i <= num; i++) {
       editor.ui.registry.addButton(`${name}-${i}`, {
-        type: `${buttonType}`,
+        type: buttonType,
         icon: `*-${i}-*`,
-        ariaLabel: `${i} aria says ${name} button ${i}`,
         onAction (comp) {
           console.log(`${name} ${i} button clicked`);
         }

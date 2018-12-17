@@ -5,6 +5,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
 
@@ -98,7 +99,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
       menubar: true,
       toolbar: 'dialog-button',
       base_url: '/project/js/tinymce',
-      setup: (ed) => {
+      setup: (ed: Editor) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',
           text: 'Launch Dialog',

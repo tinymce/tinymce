@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
+import { Menu, Toolbar } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -15,7 +15,7 @@ const toggleFormat = (editor: Editor, fmt: string) => {
   };
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   const defaultAlignIcon = 'align-left';
   const alignMenuItems = [
     { type: 'menuitem', text: 'Left', icon: 'align-left', onAction: toggleFormat(editor, 'alignleft') },
@@ -37,7 +37,7 @@ const register = (editor) => {
     { name: 'alignjustify', text: 'Justify', cmd: 'JustifyFull', icon: 'align-justify' }
   ];
 
-  const onSetup = (item) => (api) => {
+  const onSetup = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
     if (editor.formatter) {
       editor.formatter.formatChanged(item.name, api.setActive);
     } else {
@@ -45,6 +45,8 @@ const register = (editor) => {
         editor.formatter.formatChanged(item.name, api.setActive);
       });
     }
+
+    return () => {};
   };
 
   Tools.each(alignToolbarButtons, (item) => {

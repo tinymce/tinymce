@@ -5,10 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const stateSelectorAdapter = (editor, selector) => (buttonApi) =>
+import { Editor } from 'tinymce/core/api/Editor';
+import { Toolbar } from '@ephox/bridge';
+
+const stateSelectorAdapter = (editor: Editor, selector: string[]) => (buttonApi: Toolbar.ToolbarToggleButtonInstanceApi) =>
   editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addToggleButton('media', {
     tooltip: 'Insert/edit media',
     icon: 'embed',

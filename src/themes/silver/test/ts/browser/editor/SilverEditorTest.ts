@@ -7,6 +7,7 @@ import { Element, Body } from '@ephox/sugar';
 import Theme from '../../../../../silver/main/ts/Theme';
 import { document } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
@@ -307,7 +308,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         menutest: { title: 'test', items: 'x1'}
       },
       base_url: '/project/js/tinymce',
-      setup: (ed) => {
+      setup: (ed: Editor) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',
           icon: 'cut',
@@ -343,10 +344,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 }
               }
             ]);
-          },
-          onAction: () => { },
-          onItemAction: () => {
-            console.log('dropdown1.itemAction');
           }
         });
 
@@ -362,10 +359,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 }
               }
             ]);
-          },
-          onAction: () => { },
-          onItemAction: () => {
-            console.log('dropdown1.itemAction');
           }
         });
 

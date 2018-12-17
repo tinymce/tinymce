@@ -8,6 +8,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { SelectData } from './BespokeSelect';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const process = (rawFormats): Array<{ title: string, format: string}> => {
   return Arr.map(rawFormats, (item) => {
@@ -52,7 +53,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
+const buildBasicSettingsDataset = (editor: Editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
   const rawFormats = Objects.readOptFrom<string>(editor.settings, settingName).getOr(defaults);
   const data = process(split(rawFormats, delimiter));
   return {

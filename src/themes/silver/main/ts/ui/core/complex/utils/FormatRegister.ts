@@ -8,6 +8,7 @@
 import { Merger, Fun, Id, Arr, Obj, Option } from '@ephox/katamari';
 import { Objects } from '@ephox/boulder';
 import { FormatItem, PreviewSpec } from '../BespokeSelect';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export type IsSelectedForType = (format: string) => () => boolean;
 export type GetPreviewForType = (format: string) => () => Option<PreviewSpec>;
@@ -22,7 +23,7 @@ const processBasic = (item: { format: string }, isSelectedFor, getPreviewFor): F
 };
 
 // TODO: This is adapted from StyleFormats in the mobile theme. Consolidate.
-const register = (editor, formats, isSelectedFor: IsSelectedForType, getPreviewFor: GetPreviewForType) => {
+const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, getPreviewFor: GetPreviewForType) => {
   const enrichSupported = (item: { format: string }): FormatItem => {
     return processBasic(item, isSelectedFor, getPreviewFor);
   };

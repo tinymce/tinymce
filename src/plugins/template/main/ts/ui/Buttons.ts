@@ -7,14 +7,15 @@
 
 import Templates from '../core/Templates';
 import Dialog from './Dialog';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const showDialog = function (editor) {
+const showDialog = function (editor: Editor) {
   return function (templates) {
     Dialog.open(editor, templates);
   };
 };
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addButton('template', {
     icon: 'template',
     tooltip: 'Insert template',

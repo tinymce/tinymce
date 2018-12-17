@@ -20,6 +20,7 @@ import { Body, Element, Attr } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { GuiSetup } from '../../module/AlloyTestUtils';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
   Theme();
@@ -185,7 +186,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
       menubar: true,
       toolbar: 'dialog-button',
       base_url: '/project/js/tinymce',
-      setup: (ed) => {
+      setup: (ed: Editor) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',
           text: 'Go',

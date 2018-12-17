@@ -41,9 +41,8 @@ const isWithinList = (editor: Editor, e, nodeName) => {
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
-const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
+const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
-    active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     presets: 'toolbar',
@@ -85,7 +84,7 @@ const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   });
 };
 
-const addButton = function (editor, id, tooltip, cmd, nodeName, styles) {
+const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
