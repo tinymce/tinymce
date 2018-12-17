@@ -1,3 +1,12 @@
+Version 4.9.2 (2018-12-17)
+    Fixed a bug with pressing the space key on IE 11 would result in nbsp characters being inserted between words at the end of a block. #TINY-2996
+    Fixed a bug where character composition using quote and space on US International keyboards would produce a space instead of a quote. #TINY-2999
+    Fixed a bug where remove format wouldn't remove the inner most inline element in some situations. #TINY-2982
+    Fixed a bug where outdenting an list item would affect attributes on other list items within the same list. #TINY-2971
+    Fixed a bug where the DomParser filters wouldn't be applied for elements created when parsing invalid html. #TINY-2978
+    Fixed a bug where setProgressState wouldn't automatically close floating ui elements like menus. #TINY-2896
+    Fixed a bug where it wasn't possible to navigate out of a figcaption element using the arrow keys. #TINY-2894
+    Fixed a bug where enter key before an image inside a link would remove the image. #TINY-2780
 Version 4.9.1 (2018-12-04)
     Added functionality to insert html to the replacement feature of the Textpattern Plugin. #TINY-2839
     Fixed a bug where `editor.selection.getContent({format: 'text'})` didn't work as expected in IE11 on an unfocused editor. #TINY-2862
