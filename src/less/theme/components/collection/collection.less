@@ -12,7 +12,7 @@
 @collection-item-padding: @pad-xs @pad-sm;
 
 @collection-item-active-background-color: @toolbar-button-active-background-color;
-@collection-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-toolbar-lg-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
 @collection-item-list-icon-height: 24px;
@@ -138,6 +138,11 @@
   .tox-collection--toolbar-lg .tox-collection__item-icon {
     height: @collection-item-list-icon-height * 2;
     width: @collection-item-list-icon-width * 2;
+  }
+
+  // Only use background color for enabled items in a large icon-based menu (with no text)
+  .tox-collection--toolbar-lg .tox-collection__item--enabled {
+    background: @collection-toolbar-lg-item-enabled-background-color;
   }
 
   .tox-collection--list .tox-collection__item-icon:first-child {
