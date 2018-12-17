@@ -6,6 +6,11 @@
 @import 'src/less/theme/components/form/layout';
 @import 'src/less/theme/components/form/textfield';
 @import 'src/less/theme/components/form/textarea';
+@import 'src/less/theme/components/menu/menu';
+@import 'src/less/theme/components/menu/menu-toolbar';
+@import 'src/less/theme/components/toolbar/toolbar';
+@import 'src/less/theme/components/toolbar-button/toolbar-button';
+@import 'src/less/theme/components/toolbar/toolbar-group';
 @import 'src/less/theme/alien/sidebar';
 @import 'src/less/theme/common/button/button';
 @import 'src/less/theme/common/button/button-secondary';
@@ -14,11 +19,15 @@
 @import 'src/less/theme/common/spinner/spinner';
 
 // ADD TinyMCE 4 specific variable overrides here
-//Overall
-@comment-font-family: "Helvetica Neue";
 
-//Buttons
-@button-background-color: #1976D2;
+//Overall
+@font-stack: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
+//Comments
+@comment-border-radius: 0;
+
+//Button
+@button-background-color: #1976d2;
 @button-border-radius: 0;
 @button-font-weight: lighter;
 @button-font-size: @font-size-sm;
@@ -28,7 +37,7 @@
 @button-secondary-border-color: rgb(186, 186, 186);
 @button-font-family: Arial;
 
-//Button secondary
+//Button Secondary
 @button-secondary-text-color: #595959;
 @button-secondary-hover-background-color: @button-secondary-background-color;
 @button-secondary-hover-border-color: @button-secondary-border-color;
@@ -36,4 +45,6 @@
 //Textfield
 @textfield-border-color: #c5c5c5;
 @textfield-border-radius: 0;
-@textfield-font-family: @comment-font-family;
+
+//Menus
+@menu-border-radius: 0;
