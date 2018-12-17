@@ -1,8 +1,12 @@
 //
 // Collection
 //
-// A list of items that can be arranged as vertical list or a grid.
+// A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
 //
+
+@collection-item-padding: @pad-xs @pad-sm;
+@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-item-separator-margin-y: @pad-xs;
 
 @collection-item-label-font-size: @font-size-sm;
 @collection-item-label-font-style: normal;
@@ -11,15 +15,15 @@
 @collection-item-label-text-transform: none;
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-item-padding: @pad-xs @pad-sm;
-@collection-item-active-background-color: @toolbar-button-active-background-color;
-@collection-item-enabled-background-color: transparent;
+@collection-list-item-active-background-color: @toolbar-button-active-background-color;
+@collection-list-item-enabled-background-color: transparent;
+@collection-toolbar-item-active-background-color: @toolbar-button-active-background-color;
+@collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-grid-item-active-background-color: @toolbar-button-active-background-color;
+@collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
 
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
-
-@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
-@collection-item-separator-margin-y: @pad-xs;
 
 @collection-group-label-background-color: lighten(@border-color, 15%);
 @collection-group-label-font-size: @font-size-xs;
@@ -37,8 +41,17 @@
     //
   }
 
+  .tox-collection--toolbar {
+    //
+  }
+
   .tox-collection--grid {
     //
+  }
+
+  .tox-collection--toolbar .tox-collection__group {
+    display: flex;
+    padding: 0;
   }
 
   .tox-collection--grid .tox-collection__group {
@@ -89,16 +102,8 @@
     user-select: none;
   }
 
-  .tox-collection__item--active {
-    background-color: @collection-item-active-background-color;
-  }
-
-  .tox-collection__item--enabled {
-    background: @collection-item-enabled-background-color;
-  }
-
   // Disabled item
-  .tox-collection__item.tox-collection__item--state-disabled {
+  .tox-collection__item--state-disabled {
     background-color: unset;
     color: @collection-item-label-disabled-text-color;
     cursor: default;
@@ -108,9 +113,38 @@
     padding: @collection-item-padding;
   }
 
+  .tox-collection--toolbar .tox-collection__item {
+    border-radius: @toolbar-button-border-radius;
+    padding: @pad-xs;
+  }
+
   .tox-collection--grid .tox-collection__item {
     border-radius: @toolbar-button-border-radius;
     padding: @pad-xs;
+  }
+
+  .tox-collection--list .tox-collection__item--active {
+    background-color: @collection-list-item-active-background-color;
+  }
+
+  .tox-collection--list .tox-collection__item--enabled {
+    background-color: @collection-list-item-enabled-background-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--active {
+    background-color: @collection-toolbar-item-active-background-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--enabled {
+    background-color: @collection-toolbar-item-enabled-background-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active {
+    background-color: @collection-grid-item-active-background-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--enabled {
+    background-color: @collection-grid-item-enabled-background-color;
   }
 
   .tox-collection__item-icon {
@@ -123,6 +157,11 @@
     svg {
       fill: currentColor;
     }
+  }
+
+  .tox-collection--toolbar-lg .tox-collection__item-icon {
+    height: @collection-item-list-icon-height * 2;
+    width: @collection-item-list-icon-width * 2;
   }
 
   .tox-collection--list .tox-collection__item-icon:first-child {
@@ -145,7 +184,6 @@
     line-height: @collection-item-list-icon-height;
     text-transform: @collection-item-label-text-transform;
     word-break: break-all;
-    word-break: break-word;
   }
 
   .tox-collection__item-accessory {
