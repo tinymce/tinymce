@@ -45,6 +45,8 @@
     "stylelint-order": "^0.8.1"
   },
   "files": [
+    "build/skins/content/**/*.css",
+    "build/skins/content/**/*.css.map",
     "build/skins/oxide*/*.css",
     "build/skins/oxide*/*.css.map",
     "README.md",
