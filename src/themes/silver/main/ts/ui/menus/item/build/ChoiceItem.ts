@@ -84,9 +84,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     }, structure, itemResponse),
     {
       toggling: {
-        // lists with one column use ticks (controlled by css as stated above)
-        // lists with !== 1 columns appear as boxes, and therefore, get 'shaded'
-        toggleClass: useText ? ItemClasses.tickedClass : ItemClasses.shadedClass,
+        toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
         selected: spec.active
       }
