@@ -39,6 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),
+        FocusTools.sTryOnSelector('Focus should start on', doc, '[role="tab"]'),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
         Chain.asStep(Body.body() , [

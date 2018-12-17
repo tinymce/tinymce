@@ -1,10 +1,12 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { Pipeline, Log, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import Theme from '../../../../../themes/silver/main/ts/Theme';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
+// TODO immediately
+import { addLogEntry } from '@ephox/agar/lib/main/ts/ephox/agar/api/TestLogs';
 
 UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (success, failure) => {
 
@@ -31,7 +33,12 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
     };
 
     Pipeline.async({}, [
+      Step.raw((value, next, die, logs) => {
+        const newLogs = addLogEntry(logs, 'Current focus: ' + (document.activeElement ? document.activeElement.nodeName : 'none'));
+        next(value, newLogs);
+      }),
       Log.stepsAsStep('TBA', 'Help: Open dialog', [
+        tinyApis.sFocus,
         tinyApis.sExecCommand('mceHelp')
       ]),
 
