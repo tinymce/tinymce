@@ -16,11 +16,19 @@
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
 @collection-list-item-active-background-color: @toolbar-button-active-background-color;
-@collection-list-item-enabled-background-color: transparent;
+@collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
+@collection-list-item-enabled-background-color: inherit;
+@collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
+
 @collection-toolbar-item-active-background-color: @toolbar-button-active-background-color;
+@collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
+
 @collection-grid-item-active-background-color: @toolbar-button-active-background-color;
+@collection-grid-item-label-active-text-color: contrast(@collection-grid-item-active-background-color, @color-black, @color-white);
 @collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
 
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
@@ -125,26 +133,32 @@
 
   .tox-collection--list .tox-collection__item--active {
     background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
   }
 
   .tox-collection--list .tox-collection__item--enabled {
     background-color: @collection-list-item-enabled-background-color;
+    color: @collection-list-item-label-enabled-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--active {
     background-color: @collection-toolbar-item-active-background-color;
+    color: @collection-toolbar-item-label-active-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--enabled {
     background-color: @collection-toolbar-item-enabled-background-color;
+    color: @collection-toolbar-item-label-enabled-text-color;
   }
 
   .tox-collection--grid .tox-collection__item--active {
     background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
   }
 
   .tox-collection--grid .tox-collection__item--enabled {
     background-color: @collection-grid-item-enabled-background-color;
+    color: @collection-grid-item-label-enabled-text-color;
   }
 
   .tox-collection__item-icon {
