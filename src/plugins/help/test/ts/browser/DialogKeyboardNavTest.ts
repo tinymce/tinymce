@@ -1,4 +1,4 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
