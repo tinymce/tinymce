@@ -846,8 +846,8 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dev', [
-    // 'shell:tsc',
     'globals',
+    'shell:tsc',
     'rollup',
     'less',
     'copy'
