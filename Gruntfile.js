@@ -304,11 +304,6 @@ module.exports = function (grunt) {
           },
         ]
       },
-      plugins: {
-        files: [
-          { src: 'src/plugins/codesample/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
-        ]
-      },
       'emoticons-plugin': {
         files: [
           {
