@@ -1,3 +1,7 @@
+Version 4.10.0
+
+* Exposed Clicks.point on Mouse api.
+
 Version 4.9.0
 
 * Added cExists and cNotExists to UiFinder.
