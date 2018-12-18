@@ -65,7 +65,7 @@ const cMouseMoveTo = function (dx: number, dy: number) {
   return Chain.op(Clicks.mousemoveTo(dx, dy));
 };
 
-const point = Clicks.point
+const point = Clicks.point;
 
 const cTrueClick = Chain.op(trueClick);
 const cContextMenu = Chain.op(Clicks.contextmenu);
