@@ -5,7 +5,7 @@ declare let tinymce: any;
 export default function () {
   const generalSettings = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
+    content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
     // rtl_ui: true,
     link_list: [

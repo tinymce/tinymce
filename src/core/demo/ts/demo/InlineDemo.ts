@@ -5,7 +5,7 @@ export default function () {
   const settings = {
     selector: '.tinymce',
     inline: true,
-    codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
+    content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },

@@ -31,7 +31,6 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.ChangeLanguageCodeSampleT
     plugins: 'codesample',
     theme: 'silver',
     toolbar: 'codesample',
-    codesample_content_css: '/project/js/tinymce/plugins/codesample/css/prism.css',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });
