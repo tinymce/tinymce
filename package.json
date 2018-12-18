@@ -1,16 +1,16 @@
 {
   "name": "@ephox/oxide",
-  "version": "1.0.51",
+  "version": "1.0.80",
   "description": "TinyMCE 5 Oxide skin",
   "scripts": {
-    "test": "bedrock-auto -b phantomjs -d src/test/ts/atomic/",
+    "test": "echo 'No tests hooked up yet'",
     "build": "gulp build",
     "start": "gulp",
     "prepublishOnly": "npm run build",
     "backstop:test": "gulp backstop:test",
     "backstop:report": "backstop openReport",
     "backstop:approve": "gulp backstop:approve",
-    "backstop:reference": " gulp backstop:reference"
+    "backstop:reference": "gulp backstop:reference"
   },
   "keywords": [
     "TinyMCE"
@@ -45,8 +45,12 @@
     "stylelint-order": "^0.8.1"
   },
   "files": [
+    "build/skins/content/**/*.css",
+    "build/skins/content/**/*.css.map",
     "build/skins/oxide*/*.css",
     "build/skins/oxide*/*.css.map",
+    "build/skins/plugin-*/*.css",
+    "build/skins/plugin-*/*.css.map",
     "README.md",
     "LICENSE.txt"
   ]

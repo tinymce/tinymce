@@ -4,7 +4,7 @@
 
 @document-selection-color: #b4d7ff;
 @object-block-selected-color: #b4d7ff;
-@object-block-selected-outline-width: 5px;
+@object-block-selected-outline-width: 3px;
 
 .mce-content-body {
   // Selection outline on certain editable objects
@@ -64,6 +64,10 @@
       -webkit-touch-callout: none;
       user-select: none;
     }
+  }
+
+  img::selection {
+    background: none;
   }
 }
 

@@ -99,6 +99,7 @@
       flex: 1;
       -ms-flex-preferred-size: auto;
       resize: none;
+      white-space: normal;
     }
 
     .tox-navobj {
@@ -142,7 +143,7 @@
   }
 
   // This is so that the focus outline on the checkbox does not move the checkbox
-  .@{prefix}-checkbox__icons {
+  .tox-checkbox__icons {
     border-radius: @checkbox-focus-border-radius;
     box-shadow: @checkbox-unfocused-box-shadow;
     padding: calc(@button-padding-y - @button-border-width);
@@ -226,10 +227,6 @@
   a {
     cursor: pointer;
     color: #2276d2;
-  }
-
-  .tox-custom-editor {
-    display: flex;
   }
 
   .tox-image-tools-edit-panel {

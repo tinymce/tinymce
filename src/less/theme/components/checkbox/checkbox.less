@@ -8,8 +8,8 @@
 @checkbox-focus-box-shadow: inset 0 0 0 1px @button-background-color;
 @checkbox-focus-border-radius: @control-border-radius;
 
-.@{prefix} {
-  .@{prefix}-checkbox {
+.tox {
+  .tox-checkbox {
     align-items: center;
     border-radius: @control-border-radius;
     cursor: pointer;
@@ -18,7 +18,7 @@
     min-width: 36px;
   }
 
-  .@{prefix}-checkbox__input {
+  .tox-checkbox__input {
     /* Hide from view but visible to screen readers */
     height: 1px;
     left: -10000px;
@@ -28,62 +28,62 @@
     width: 1px;
   }
 
-  .@{prefix}-checkbox__icons {
+  .tox-checkbox__icons {
     height: @textfield-line-height;
     width: @textfield-line-height;
 
-    .@{prefix}-checkbox-icon__unchecked svg {
+    .tox-checkbox-icon__unchecked svg {
       display: block;
       fill: @checkbox-unselected-color;
     }
 
-    .@{prefix}-checkbox-icon__indeterminate svg {
+    .tox-checkbox-icon__indeterminate svg {
       display: none;
       fill: @checkbox-indeterminate-color;
     }
 
-    .@{prefix}-checkbox-icon__checked svg {
+    .tox-checkbox-icon__checked svg {
       display: none;
       fill: @checkbox-selected-color;
     }
   }
 
-  .@{prefix}-checkbox__icon {
+  .tox-checkbox__icon {
     //
   }
 
-  .@{prefix}-checkbox__label {
+  .tox-checkbox__label {
     margin-left: @pad-xs;
   }
 
-  input.@{prefix}-checkbox__input:checked + .@{prefix}-checkbox__icons {
-    .@{prefix}-checkbox-icon__unchecked svg {
+  input.tox-checkbox__input:checked + .tox-checkbox__icons {
+    .tox-checkbox-icon__unchecked svg {
       display: none;
     }
 
-    .@{prefix}-checkbox-icon__checked svg {
+    .tox-checkbox-icon__checked svg {
       display: block;
     }
   }
 
-  input.@{prefix}-checkbox__input:indeterminate + .@{prefix}-checkbox__icons {
-    .@{prefix}-checkbox-icon__unchecked svg {
+  input.tox-checkbox__input:indeterminate + .tox-checkbox__icons {
+    .tox-checkbox-icon__unchecked svg {
       display: none;
     }
 
-    .@{prefix}-checkbox-icon__indeterminate svg {
+    .tox-checkbox-icon__indeterminate svg {
       display: block;
     }
   }
 
-  input.@{prefix}-checkbox__input:focus + .@{prefix}-checkbox__icons {
+  input.tox-checkbox__input:focus + .tox-checkbox__icons {
     border-radius: @checkbox-focus-border-radius;
     box-shadow: @checkbox-focus-box-shadow;
     padding: calc(@button-padding-y - @button-border-width);
   }
 
   .tox-bar {
-    .@{prefix}-checkbox {
+    .tox-checkbox {
       margin-left: @pad-xs;
     }
   }

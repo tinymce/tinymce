@@ -62,14 +62,16 @@ Oxide includes visual regression testing through [Backstopjs](https://github.com
 
 After the test a website with the result will open where you can inspect the test.
 
-### A test failed!
-It's best to think about the test as a visual diff tool rather than in terms of _passes_ and _fails_. If you made a new component, the test will technically fail without it being a _fail_. When you have made a change and the test fails, inspect the changes and if they look alright you need to generate new reference files using `gulp backstop:reference`. You should commit these files to the repo.
+### A test failed
+It's best to think about the test as a visual diff tool rather than in terms of _passes_ and _fails_. If you made a new component, the test will technically fail without it being a _fail_. When you have made a change and the test fails, inspect the changes and if they look alright you need to generate new reference files using `npm run backstop:reference`. You should commit the changes to these files to the repo. **Important!** When running the reference command, you essentially create a new _truth_. Make sure there isn't any css issues you don't want to become the new truth before running the reference command by doing a regular `npm run backstop:test` first.
 
 If every test failed and "everything is changed" it's likely a issue with Docker. It's usually because font rendering differs between platforms and why we're using Docker to get consistent testing. Check that Docker is installed or running. If you cant get it sorted out, please feel free to file a bug.
 
 ### Create a new test
 
 New tests is created in `tools/tasks/backstop_config.js. See the [Backstopjs repository](https://github.com/garris/BackstopJS) for documentation.
+
+After a new test is created, you need to generate reference files for it using `npm run backstop:reference`. You should commit these files to the repo. **Important!** When running the reference command, you essentially create a new _truth_. Make sure there isn't any css issues you don't want to become the new truth before running the reference command by doing a regular `npm run backstop:test` first.
 
 ## Troubleshooting
 
