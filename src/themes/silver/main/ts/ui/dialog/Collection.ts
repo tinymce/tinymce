@@ -59,7 +59,10 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
         return `<span class="tox-collection__item-icon">${icon}</span>`;
       }).getOr('');
 
-      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}">${iconContent}${textContent}</div>`;
+      const getItemName = (item.text.getOr('')).replace(/\-/g, '');
+      const ariaTitle = getItemName.replace(/\_/g, ' ');
+
+      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaTitle}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];

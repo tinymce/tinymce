@@ -23,7 +23,7 @@ const scan = (group: { characters: [number, string][] }, pattern: string): CharI
 
   return Arr.map(matches, (m) => {
     return {
-      text: m[1] + ' (' + m[0] + ')',
+      text: m[1],
       value: String.fromCharCode(m[0]),
       icon: String.fromCharCode(m[0])
     };
