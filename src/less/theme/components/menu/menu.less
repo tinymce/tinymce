@@ -9,30 +9,11 @@
 @menu-border-style: solid;
 @menu-border-width: 1px;
 @menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
-@menu-padding-x: @pad-xs;
-@menu-padding-y: @pad-xs;
 @menu-text-color: @text-color;
 
-@menu-item-accessory-text-color: @text-color-muted;
-@menu-item-font-style: normal;
 @menu-item-collection-list-padding: 0;
 @menu-item-collection-toolbar-padding: @pad-xs;
 @menu-item-collection-grid-padding: @pad-xs;
-
-@menu-item-label-font-size: @font-size-sm;
-@menu-item-label-font-weight: @font-weight-normal;
-@menu-item-label-text-transform: none;
-
-@menu-item-icon-width: 24px;
-@menu-item-icon-height: 24px;
-
-@menu-item-hover-background-color: @toolbar-button-hover-background-color;
-@menu-item-hover-text-color: @toolbar-button-hover-text-color;
-
-@menu-item-disabled-text-color: @text-color-muted;
-
-@menu-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
-@menu-item-separator-margin: @pad-xs;
 
 .tox {
   .tox-menu {
@@ -60,102 +41,8 @@
     padding: @menu-item-collection-grid-padding;
   }
 
-  /*
-  .tox-menu__item {
-    color: @menu-item-label-text-color;
-    cursor: pointer;
-    display: flex;
-    padding: @menu-item-padding;
-    -webkit-touch-callout: none;
-    user-select: none;
-
-    &:focus,
-    &:hover {
-      background-color: @menu-item-hover-background-color;
-      color: @menu-item-hover-text-color;
-      outline: none;
-    }
-  }
-
-  .tox-menu__item--state-disabled {
-    color: @menu-item-disabled-text-color;
-    cursor: default;
-
-    &:hover {
-      background-color: unset;
-      color: @menu-item-disabled-text-color;
-    }
-  }
-
-  // Active state in menus. Active state is indicated by a checkbox
-  // and currently has no other styling.
-  .tox-menu__item--state-active {
-    //
-  }
-
-  // Make space for menu item icon
-  .tox-menu--has-icons {
-    .tox-menu__item {
-      > *:first-child:not(.tox-menu__icon) {
-        margin-left: @menu-item-icon-width + @pad-sm;
-      }
-    }
-  }
-
-  .tox-menu__icon {
-    align-items: center;
-    display: flex;
-    height: @menu-item-icon-height;
-    justify-content: center;
-    width: @menu-item-icon-width;
-
-    svg {
-      fill: currentColor;
-    }
-
-    &:first-child {
-      margin-right: @pad-sm;
-    }
-  }
-
-  .tox-menu__label {
-    color: currentColor;
-    display: inline-block;
-    flex: 1;
-    -ms-flex-preferred-size: auto;
-    font-size: @menu-item-label-font-size;
-    font-style: @menu-item-font-style;
-    font-weight: @menu-item-label-font-weight;
-    line-height: @menu-item-icon-height;
-    text-transform: @menu-item-label-text-transform;
-  }
-
-  .tox-menu__accessory {
-    color: @menu-item-accessory-text-color;
-    display: inline-block;
-    font-size: @font-size-sm;
-    font-style: @menu-item-font-style;
-    height: @menu-item-icon-height;
-    line-height: @menu-item-icon-height;
-    margin-left: @pad-md;
-    text-align: right;
-    text-transform: normal;
-  }
-
-  .tox-menu__separator {
-    border-bottom-width: 0;
-    border-color: @menu-item-separator-color;
-    border-left-width: 0;
-    border-right-width: 0;
-    border-style: solid;
-    border-top-width: 1px;
-    margin: @menu-item-separator-margin 0;
-    padding: 0;
-  }
-
-  */
-
   // Reset all margins for block elements when used in menu labels
+  // such as format and styles menu
   /* stylelint-disable */
   .tox-menu__label {
     h1,
