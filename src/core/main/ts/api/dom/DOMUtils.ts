@@ -195,7 +195,7 @@ export interface DOMUtils {
   addClass: (elm: string | Node | Node[], cls: string) => void;
   removeClass: (elm: string | Node | Node[], cls: string) => void;
   hasClass: (elm: string | Node, cls: string) => any;
-  toggleClass: (elm: string | Node | Node[], cls: string, state: boolean) => void;
+  toggleClass: (elm: string | Node | Node[], cls: string, state?: boolean) => void;
   show: (elm: string | Node) => void;
   hide: (elm: string | Node) => void;
   isHidden: (elm: string | Node) => boolean;
@@ -840,7 +840,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     });
   };
 
-  const toggleClass = (elm: string | Node | Node[], cls: string, state: boolean) => {
+  const toggleClass = (elm: string | Node | Node[], cls: string, state?: boolean) => {
     $$(elm).toggleClass(cls, state).each(function () {
       if (this.className === '') {
         DomQuery(this).attr('class', null);

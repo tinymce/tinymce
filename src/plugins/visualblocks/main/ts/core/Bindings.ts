@@ -7,8 +7,10 @@
 
 import Settings from '../api/Settings';
 import VisualBlocks from './VisualBlocks';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const setup = function (editor, pluginUrl, enabledState) {
+const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   // Prevents the visualblocks from being presented in the preview of formats when that is computed
   editor.on('PreviewFormats AfterPreviewFormats', function (e) {
     if (enabledState.get()) {

@@ -4,6 +4,7 @@ tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'visualblocks code',
   toolbar: 'visualblocks code',
+  content_css: '../../../../../js/tinymce/skins/content/default/content.css',
   visualblocks_default_state: true,
   // end_container_on_empty_block: true,
   // Style formats

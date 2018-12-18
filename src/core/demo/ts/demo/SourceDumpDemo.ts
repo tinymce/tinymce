@@ -7,7 +7,6 @@ export default function () {
     selector: 'textarea#editor',
     skin_url: '../../../../js/tinymce/skins/lightgray',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
-    visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     templates: [
       { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
       { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }

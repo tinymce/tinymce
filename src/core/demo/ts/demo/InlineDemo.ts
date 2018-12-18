@@ -6,7 +6,6 @@ export default function () {
     selector: '.tinymce',
     inline: true,
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
-    visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     images_upload_url: 'd',
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },
