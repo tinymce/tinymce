@@ -352,8 +352,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setStyles('test', { position : 'absolute', left : 100, top : 110 });
-    LegacyUnit.equal(DOM.getPos('test').x, 100);
-    LegacyUnit.equal(DOM.getPos('test').y, 110);
+    LegacyUnit.equal(Math.round(DOM.getPos('test').x), 100);
+    LegacyUnit.equal(Math.round(DOM.getPos('test').y), 110);
 
     DOM.setAttrib('test', 'style', '');
 
@@ -422,10 +422,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
     DOM.setStyles('test', { position : 'absolute', left : 100, top : 110, width : 320, height : 240 });
     r = DOM.getRect('test');
-    LegacyUnit.equal(r.x, 100);
-    LegacyUnit.equal(r.y, 110);
-    LegacyUnit.equal(r.w, 320);
-    LegacyUnit.equal(r.h, 240);
+    LegacyUnit.equal(Math.round(r.x), 100);
+    LegacyUnit.equal(Math.round(r.y), 110);
+    LegacyUnit.equal(Math.round(r.w), 320);
+    LegacyUnit.equal(Math.round(r.h), 240);
 
     DOM.setAttrib('test', 'style', '');
 
