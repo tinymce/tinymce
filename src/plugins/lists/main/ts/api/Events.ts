@@ -1,9 +1,4 @@
 import { Editor } from 'tinymce/core/api/Editor';
+import { ListAction } from '../core/ListAction';
 
-export const enum ListActions {
-  ToggleUlList = 'ToggleUlList',
-  ToggleOlList = 'ToggleOlList',
-  ToggleDLList = 'ToggleDLList'
-}
-
-export const fireListEvent = (editor: Editor, action: ListActions, element) => editor.fire('ListMutation', { action, element });
+export const fireListEvent = (editor: Editor, action: ListAction, element) => editor.fire('ListMutation', { action, element });

@@ -12,9 +12,10 @@ import NodeType from '../core/NodeType';
 import Selection from '../core/Selection';
 import { HTMLElement } from '@ephox/dom-globals';
 import { flattenListSelection } from './Indendation';
-import { ListActions, fireListEvent } from '../api/Events';
+import { fireListEvent } from '../api/Events';
 import { isCustomList } from '../core/Util';
 import { Editor } from 'tinymce/core/api/Editor';
+import { listActionFromListName } from '../core/ListAction';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
@@ -268,14 +269,6 @@ const toggleSingleList =  function (editor, parentList, listName, detail) {
   } else {
     applyList(editor, listName, detail);
     fireListEvent(editor, listActionFromListName(listName), parentList);
-  }
-};
-
-const listActionFromListName = (listName: 'UL' | 'OL' | 'DL'): ListActions => {
-  switch (listName) {
-    case 'UL': return ListActions.ToggleUlList;
-    case 'OL': return ListActions.ToggleOlList;
-    case 'DL': return ListActions.ToggleDLList;
   }
 };
 
