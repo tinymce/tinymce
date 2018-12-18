@@ -70,6 +70,8 @@ UnitTest.asynctest('MouseTest', function () {
       Mouse.sClickOn(container, 'input')
     ),
 
+    runStep('point test', [ 'container.click' ], Step.sync(() => Mouse.point('click', 0, container, 0, 0))),
+
     runStep(
       'sTrueClickOn (container > input)',
       // IE seems to fire input.focus at the end.

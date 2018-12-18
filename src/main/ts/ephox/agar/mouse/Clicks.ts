@@ -62,5 +62,6 @@ export {
   mousemoveTo,
   mouseover,
   mouseout,
-  contextmenu
+  contextmenu,
+  point
 };
