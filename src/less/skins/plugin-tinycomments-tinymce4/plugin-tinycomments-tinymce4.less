@@ -27,7 +27,7 @@
 //Comments
 @comment-border-radius: 0;
 
-//Button
+//Button Primary
 @button-background-color: #1976d2;
 @button-border-radius: 0;
 @button-font-weight: normal;
@@ -38,10 +38,27 @@
 @button-secondary-background-color: #fff;
 @button-secondary-border-color: rgb(186, 186, 186);
 
+//Button Primary Hover and Focus
+@button-hover-background-color: darken(@button-background-color, 5%);
+@button-hover-background-image: @button-background-image;
+@button-hover-border-color: @button-hover-background-color;
+@button-hover-box-shadow: @button-box-shadow;
+@button-hover-text-color: @button-text-color;
+@button-focus-background-color: @button-hover-background-color;
+@button-focus-border-color: @button-hover-border-color;
+@button-focus-box-shadow: @button-hover-box-shadow;
+@button-focus-text-color: @button-hover-text-color;
+
 //Button Secondary
 @button-secondary-text-color: #595959;
+
+//Button Secondary Hover and Focus
+@button-secondary-focus-background-color: @button-secondary-hover-background-color;
 @button-secondary-hover-background-color: @button-secondary-background-color;
 @button-secondary-hover-border-color: @button-secondary-border-color;
+@button-secondary-focus-border-color: @button-secondary-hover-border-color;
+@button-secondary-focus-box-shadow: @button-secondary-hover-box-shadow;
+@button-secondary-focus-text-color: @button-secondary-hover-text-color;
 
 //Textfield
 @textfield-border-color: #c5c5c5;
