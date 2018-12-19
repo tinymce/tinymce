@@ -59,9 +59,14 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
         return `<span class="tox-collection__item-icon">${icon}</span>`;
       }).getOr('');
 
-      const getItemName = (item.text.getOr('')).replace(/\-/g, '');
-      const ariaTitle = getItemName.replace(/\_/g, ' ');
-
+      const mapItemName = {
+        '_': ' ',
+        ' - ': ' ',
+        '-': ' '
+      };
+      const ariaTitle = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
+        return mapItemName[match];
+      });
       return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaTitle}">${iconContent}${textContent}</div>`;
     });
 

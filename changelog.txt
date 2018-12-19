@@ -1,4 +1,5 @@
 Version 5.0.0-beta-2 (TBD)
+    Updated Emoticons and Charmap dialogs to be screen reader accessible #TINY-2693
     Added `tox-dialog__table` instead of `mce-table-striped` class to enhance Help dialog appearance #TINY-2360
     Updated SizeInput labels to "Height" and "Width" instead of Dimensions #TINY-2833
     Fixed accessibility issues with the font select, font size, style select and format select toolbar dropdowns #TINY-2713
