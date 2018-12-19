@@ -269,6 +269,7 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
+            flatten: true,
             cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
             src: [
               '*.min.css',
