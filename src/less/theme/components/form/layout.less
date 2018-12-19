@@ -2,6 +2,10 @@
 // Form layout
 //
 
+@form-group-vertical-spacing: @pad-xs;
+@form-group-horizontal-spacing: @pad-xs;
+@form-grid-horizontal-gap: @pad-sm;
+
 .tox {
   .tox-form {
     display: flex;
@@ -13,7 +17,7 @@
   // Wraps a label and input combo.
   .tox-form__group {
     box-sizing: border-box;
-    margin-bottom: @pad-xs;
+    margin-bottom: @form-group-vertical-spacing;
   }
 
   // Modifier for validation error
@@ -31,15 +35,15 @@
   .tox-form__grid--2col > .tox-form__group {
     // Escape the calc expression otherwise less incorrectly converts this to 42%
     // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
-    width: calc(~"50% - @{pad-sm}");
+    width: calc(~"50% - (@{form-grid-horizontal-gap} / 2)");
   }
 
   .tox-form__grid--3col > .tox-form__group {
-    width: calc(~"100% / 3 - @{pad-sm}");
+    width: calc(~"100% / 3 - (@{form-grid-horizontal-gap} / 2)");
   }
 
   .tox-form__grid--4col > .tox-form__group {
-    width: calc(~"25% - @{pad-sm}");
+    width: calc(~"25% - (@{form-grid-horizontal-gap} / 2)");
   }
 
   // Horizontally stack elements.
@@ -50,7 +54,7 @@
     display: flex;
 
     > *:not(:first-child) {
-      margin-left: @pad-xs;
+      margin-left: @form-group-horizontal-spacing;
     }
   }
 

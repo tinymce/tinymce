@@ -15,17 +15,17 @@
 @collection-item-label-text-transform: none;
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-list-item-active-background-color: @toolbar-button-active-background-color;
+@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
 @collection-list-item-enabled-background-color: inherit;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @toolbar-button-active-background-color;
+@collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
-@collection-grid-item-active-background-color: @toolbar-button-active-background-color;
+@collection-grid-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-grid-item-label-active-text-color: contrast(@collection-grid-item-active-background-color, @color-black, @color-white);
 @collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
@@ -33,11 +33,14 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
-@collection-group-label-background-color: lighten(@border-color, 15%);
+@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-item-separator-margin-y: @pad-xs;
+
+@collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
 @collection-group-label-font-size: @font-size-xs;
 @collection-group-label-font-style: normal;
 @collection-group-label-font-weight: @font-weight-normal;
-@collection-group-label-text-color: @text-color-muted;
+@collection-group-label-text-color:contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
 @collection-group-label-text-transform: none;
 
 .tox {
