@@ -1,10 +1,12 @@
 export const enum ListAction {
   ToggleUlList = 'ToggleUlList',
   ToggleOlList = 'ToggleOlList',
-  ToggleDLList = 'ToggleDLList'
+  ToggleDLList = 'ToggleDLList',
+  IndentList = 'IndentList',
+  OutdentList = 'OutdentList'
 }
 
-export const listActionFromListName = (listName: 'UL' | 'OL' | 'DL'): ListAction => {
+export const listToggleActionFromListName = (listName: 'UL' | 'OL' | 'DL'): ListAction => {
   switch (listName) {
     case 'UL': return ListAction.ToggleUlList;
     case 'OL': return ListAction.ToggleOlList;

@@ -16,6 +16,8 @@ import { indentEntry, IndentValue } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemTuple, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
+import { fireListEvent } from '../api/Events';
+import { ListAction } from '../core/ListAction';
 
 const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   return Arr.map(entries, (entry) => {
@@ -54,7 +56,11 @@ const listsIndentation = (editor: Editor, lists: Element[], indentation: IndentV
 
   Arr.each(parsedLists, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
-    InsertAll.before(entrySet.sourceList, composeEntries(editor, entrySet.entries));
+    const composedLists = composeEntries(editor, entrySet.entries);
+    Arr.each(composedLists, (composedList) => {
+      fireListEvent(editor, indentation === IndentValue.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom());
+    });
+    InsertAll.before(entrySet.sourceList, composedLists);
     Remove.remove(entrySet.sourceList);
   });
 };

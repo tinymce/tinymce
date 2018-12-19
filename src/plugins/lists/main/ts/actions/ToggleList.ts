@@ -15,7 +15,7 @@ import { flattenListSelection } from './Indendation';
 import { fireListEvent } from '../api/Events';
 import { isCustomList } from '../core/Util';
 import { Editor } from 'tinymce/core/api/Editor';
-import { listActionFromListName } from '../core/ListAction';
+import { listToggleActionFromListName } from '../core/ListAction';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
@@ -225,10 +225,10 @@ const updateList = function (editor: Editor, list, listName, detail) {
   if (list.nodeName !== listName) {
     const newList = editor.dom.rename(list, listName);
     updateListWithDetails(editor.dom, newList, detail);
-    fireListEvent(editor, listActionFromListName(listName), newList);
+    fireListEvent(editor, listToggleActionFromListName(listName), newList);
   } else {
     updateListWithDetails(editor.dom, list, detail);
-    fireListEvent(editor, listActionFromListName(listName), list);
+    fireListEvent(editor, listToggleActionFromListName(listName), list);
   }
 };
 
@@ -264,11 +264,11 @@ const toggleSingleList =  function (editor, parentList, listName, detail) {
       const newList = editor.dom.rename(parentList, listName);
       mergeWithAdjacentLists(editor.dom, newList);
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
-      fireListEvent(editor, listActionFromListName(listName), newList);
+      fireListEvent(editor, listToggleActionFromListName(listName), newList);
     }
   } else {
     applyList(editor, listName, detail);
-    fireListEvent(editor, listActionFromListName(listName), parentList);
+    fireListEvent(editor, listToggleActionFromListName(listName), parentList);
   }
 };
 
