@@ -333,25 +333,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     CefFocus.setup(editor);
   };
 
-  const addCss = function () {
-    const styles = editor.contentStyles, rootClass = '.mce-content-body';
-
-    styles.push(fakeCaret.getCss());
-    styles.push(
-      rootClass + ' .mce-offscreen-selection {' +
-      'position: absolute;' +
-      'left: -9999999999px;' +
-      'max-width: 1000000px;' +
-      '}' +
-      rootClass + ' *[contentEditable=false] {' +
-      'cursor: default;' +
-      '}' +
-      rootClass + ' *[contentEditable=true] {' +
-      'cursor: text;' +
-      '}'
-    );
-  };
-
   const isWithinCaretContainer = function (node: Node) {
     return (
       CaretContainer.isCaretContainer(node) ||
@@ -507,7 +488,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
   if (Env.ceFalse) {
     registerEvents();
-    addCss();
   }
 
   return {

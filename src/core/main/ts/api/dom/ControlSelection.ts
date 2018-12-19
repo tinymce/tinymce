@@ -75,50 +75,6 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     sw: [0, 1, -1, 1]
   };
 
-  // Add CSS for resize handles, cloned element and selected
-  const rootClass = '.mce-content-body';
-  editor.contentStyles.push(
-    rootClass + ' div.mce-resizehandle {' +
-    'position: absolute;' +
-    'border: 1px solid black;' +
-    'box-sizing: content-box;' +
-    'background: #FFF;' +
-    'width: 7px;' +
-    'height: 7px;' +
-    'z-index: 10000' +
-    '}' +
-    rootClass + ' .mce-resizehandle:hover {' +
-    'background: #000' +
-    '}' +
-    rootClass + ' img[data-mce-selected],' + rootClass + ' hr[data-mce-selected] {' +
-    'outline: 1px solid black;' +
-    'resize: none' + // Have been talks about implementing this in browsers
-    '}' +
-    rootClass + ' .mce-clonedresizable {' +
-    'position: absolute;' +
-    (Env.gecko ? '' : 'outline: 1px dashed black;') + // Gecko produces trails while resizing
-    'opacity: .5;' +
-    'filter: alpha(opacity=50);' +
-    'z-index: 10000' +
-    '}' +
-    rootClass + ' .mce-resize-helper {' +
-    'background: #555;' +
-    'background: rgba(0,0,0,0.75);' +
-    'border-radius: 3px;' +
-    'border: 1px;' +
-    'color: white;' +
-    'display: none;' +
-    'font-family: sans-serif;' +
-    'font-size: 12px;' +
-    'white-space: nowrap;' +
-    'line-height: 14px;' +
-    'margin: 5px 10px;' +
-    'padding: 5px;' +
-    'position: absolute;' +
-    'z-index: 10001' +
-    '}'
-  );
-
   const isImage = function (elm) {
     return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
   };
