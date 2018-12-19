@@ -32,18 +32,19 @@
 @toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
 
-@toolbar-button-active-background-color: @toolbar-button-hover-background-color;
-@toolbar-button-active-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1) inset;
-@toolbar-button-active-icon-color: @toolbar-button-hover-icon-color;
-@toolbar-button-active-text-color: @toolbar-button-hover-text-color;
-@toolbar-button-active-transform: translateY(1px);
+@toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
+@toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
+@toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
+@toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
 
 @toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
 @toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
+@toolbar-button-enabled-transform: none;
 
-@toolbar-button-disabled-background-color:  transparent;
+@toolbar-button-disabled-background-color:  @toolbar-button-background-color;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
@@ -85,6 +86,10 @@
     background: @toolbar-button-enabled-background-color;
     box-shadow: @toolbar-button-enabled-box-shadow;
     color: @toolbar-button-enabled-text-color;
+
+    > * {
+      transform: @toolbar-button-enabled-transform;
+    }
 
     svg {
       fill: @toolbar-button-enabled-icon-color;
