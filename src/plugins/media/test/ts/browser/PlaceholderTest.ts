@@ -136,6 +136,6 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
         { filter: 'http://media1.tinymce.com' },
         { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ],
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

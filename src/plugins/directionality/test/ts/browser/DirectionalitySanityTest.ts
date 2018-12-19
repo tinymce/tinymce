@@ -47,7 +47,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'directionality',
       toolbar: 'ltr rtl',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      base_url: '/project/js/tinymce',
       theme: 'silver'
     }, success, failure);
   }

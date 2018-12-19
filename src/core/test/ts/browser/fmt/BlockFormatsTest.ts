@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
     Logger.t(
       'Testing that the selection is still collapsed after a formatting operation',
       sRunTinyWithSettings({
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
       }, (tinyApis: any, editor: Editor) => [
         Logger.t('apply heading format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
     Logger.t(
       ' when a user has defined style_formats, Applying formatting should update the dropdown to show the correct content formatting',
       sRunTinyWithSettings({
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         toolbar: 'styleselect',
         style_formats: [
           { title: 'Paragraph', block: 'p'},

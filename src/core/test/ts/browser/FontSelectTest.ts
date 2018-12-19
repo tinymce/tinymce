@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
     toolbar: 'fontsizeselect fontselect',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',

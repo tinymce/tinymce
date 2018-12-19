@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function() {
   suite.asyncTest('Setup editors', function (_, done) {
     $(function () {
       $('#elm1,#elm2').tinymce({
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         init_instance_callback: function () {
           var ed1 = EditorManager.get('elm1'), ed2 = EditorManager.get('elm2');
 

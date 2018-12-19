@@ -74,7 +74,8 @@ const setup = function (info, onSuccess, onFailure) {
         Replacing.set(toolbar, toolbarItems);
         f(realm, apis, toolbar, socket, buttons, onS, onF);
       }, {
-        theme: name
+        theme: name,
+        base_url: '/project/js/tinymce'
       }, onSuccess, onFailure);
     }
   };

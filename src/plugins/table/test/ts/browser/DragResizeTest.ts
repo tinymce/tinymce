@@ -242,6 +242,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
     height: 400,
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

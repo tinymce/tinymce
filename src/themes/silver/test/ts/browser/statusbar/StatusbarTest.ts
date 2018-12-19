@@ -123,7 +123,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Full statusbar', makeStep(
       {
         theme: 'silver',
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         plugins: 'wordcount'
       },
       'Full statusbar structure',
@@ -144,7 +144,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Statusbar without wordcount', makeStep(
       {
         theme: 'silver',
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
       },
       'Statusbar structure without wordcount',
       ApproxStructure.build((s, str, arr) => {
@@ -164,7 +164,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Statusbar without resize', makeStep(
       {
         theme: 'silver',
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         resize: false
       },
       'Statusbar structure without resize',
@@ -185,7 +185,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Remove statusbar', makeStep(
       {
         theme: 'silver',
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         statusbar: false
       },
       'Editor without statusbar',
@@ -202,7 +202,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     Log.step('TBA', 'Full statusbar - check element path on content change', Chain.asStep({}, [
       Editor.cFromSettings({
         theme: 'silver',
-        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        base_url: '/project/js/tinymce',
         toolbar: 'bold',
         resize: false,
         branding: false

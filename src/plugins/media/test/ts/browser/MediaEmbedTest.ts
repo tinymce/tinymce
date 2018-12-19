@@ -44,6 +44,6 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function (success, failure) {
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
       });
     },
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

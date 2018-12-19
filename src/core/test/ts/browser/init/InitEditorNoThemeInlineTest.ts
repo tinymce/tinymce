@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeInlineTest', func
   }, {
     theme: false,
     inline: true,
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
     init_instance_callback (editor) {
       editor.fire('SkinLoaded');
     }

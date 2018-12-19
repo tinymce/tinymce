@@ -37,6 +37,6 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
   theme: 'silver',
   plugins: 'image',
   toolbar: 'image',
-  skin_url: '/project/js/tinymce/skins/ui/oxide/'
+  base_url: '/project/js/tinymce'
 }, success, failure);
 });

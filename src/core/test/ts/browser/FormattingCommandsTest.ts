@@ -446,6 +446,6 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
         'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
     },
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

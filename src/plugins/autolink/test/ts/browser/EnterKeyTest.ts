@@ -29,6 +29,6 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
     ]), onSuccess, onFailure);
   }, {
     plugins: 'autolink',
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

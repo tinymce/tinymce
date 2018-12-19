@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
       theme: 'silver',
       plugins: 'image',
       toolbar: 'image',
-      skin_url: '/project/js/tinymce/skins/ui/oxide/',
+      base_url: '/project/js/tinymce',
       file_picker_callback(callback) {
         // tslint:disable-next-line:no-console
         console.log('file picker pressed');

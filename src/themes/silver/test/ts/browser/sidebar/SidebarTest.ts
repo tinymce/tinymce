@@ -77,7 +77,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
     setup (editor) {
       const logEvent = (name: string) => (api: UiSidebarApi) => {
