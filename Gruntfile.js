@@ -696,7 +696,8 @@ module.exports = function (grunt) {
         stopOnFailure: true,
         testfiles: [
           'src/**/test/ts/atomic/**/*Test.ts',
-          'src/**/test/ts/browser/**/*Test.ts'
+          'src/**/test/ts/browser/**/*Test.ts',
+          'src/**/test/ts/phantom/**/*Test.ts'
         ],
         customRoutes: 'src/core/test/json/routes.json'
       },

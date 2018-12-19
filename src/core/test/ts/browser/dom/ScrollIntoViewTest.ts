@@ -54,8 +54,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
 
   const sAssertScrollPosition = function (editor, x, y) {
     return Step.sync(function () {
-      Assertions.assertEq('Scroll position X should be expected value', x, editor.dom.getViewPort(editor.getWin()).x);
-      Assertions.assertEq('Scroll position Y should be expected value', y, editor.dom.getViewPort(editor.getWin()).y);
+      Assertions.assertEq('Scroll position X should be expected value', x, Math.round(editor.dom.getViewPort(editor.getWin()).x));
+      Assertions.assertEq('Scroll position Y should be expected value', y, Math.round(editor.dom.getViewPort(editor.getWin()).y));
     });
   };
 
