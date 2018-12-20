@@ -285,12 +285,13 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
   };
 
   const get = (elm: Node | string): HTMLElement => {
-    if (elm && doc && typeof elm === 'string') {
-      const node = doc.getElementById(elm);
+    const root = settings.root_element || doc;
+    if (elm && root && typeof elm === 'string') {
+      const node = root.querySelector(`#${elm}`) as HTMLElement;
 
       // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
       if (node && node.id !== elm) {
-        return doc.getElementsByName(elm)[1];
+        return root.querySelector(`[name='${elm}']`)[1];
       } else {
         return node;
       }
