@@ -208,7 +208,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
       LegacyUnit.equal(localDom, null, 'Should not be found unless set root element');
 
       const domWithRootElement = DOMUtils(document, { root_element: rootElement });
-      localDom = domWithRootElement.get('local');~1be found via root element');
+      localDom = domWithRootElement.get('local');
+      LegacyUnit.equal(localDom.className, 'shadowy', 'Should be found via root element');
     }
     DOM.remove('test');
   });
