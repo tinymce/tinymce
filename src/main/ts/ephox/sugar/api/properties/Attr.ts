@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Type, Option } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import * as Node from '../node/Node';
@@ -36,6 +36,8 @@ var get = function (element: Element, key: string) {
   // undefined is the more appropriate value for JS, and this matches JQuery
   return v === null ? undefined : v;
 };
+
+var getOpt = (element: Element, key: string) => Option.from(get(element, key));
 
 var has = function (element: Element, key: string) {
   var dom: HTMLElement = element.dom();
@@ -79,6 +81,7 @@ export {
   set,
   setAll,
   get,
+  getOpt,
   has,
   remove,
   hasNone,

@@ -30,15 +30,21 @@ UnitTest.test('AttrTest', function() {
   var check = function (k, v1, v2) {
     assert.eq(false, Attr.has(c, k));
     assert.eq(undefined, Attr.get(c, k));
+    assert.eq(true, Attr.getOpt(c, k).isNone())
     Attr.set(c, k, v1);
     assert.eq(true, Attr.has(c, k));
     assert.eq(v1, Attr.get(c, k));
+    assert.eq(true, Attr.getOpt(c, k).isSome())
+    assert.eq(v1, Attr.getOpt(c, k).getOr('X'))
     Attr.set(c, k, v2);
     assert.eq(true, Attr.has(c, k));
     assert.eq(v2, Attr.get(c, k));
+    assert.eq(true, Attr.getOpt(c, k).isSome())
+    assert.eq(v2, Attr.getOpt(c, k).getOr('X'))
     Attr.remove(c, k);
     assert.eq(false, Attr.has(c, k));
     assert.eq(undefined, Attr.get(c, k));
+    assert.eq(true, Attr.getOpt(c, k).isNone())
   };
 
 
