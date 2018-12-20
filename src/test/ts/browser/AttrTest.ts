@@ -4,10 +4,10 @@ import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Node } from '@ephox/dom-globals';
 
-UnitTest.test('AttrTest', function() {
-  var c = Div();
+UnitTest.test('AttrTest', function () {
+  const c = Div();
 
-  var checkErr = function (f, element, k, v?) {
+  const checkErr = function (f, element, k, v?) {
     try {
       f(element, k, v);
     } catch (e) {
@@ -17,7 +17,7 @@ UnitTest.test('AttrTest', function() {
     assert.fail('function did not throw an error');
   };
 
-  var checkTypeErr = function (e) {
+  const checkTypeErr = function (e) {
     checkErr(Attr.get, e, 'id');
     checkErr(Attr.set, e, 'id', '');
     checkErr(Attr.setAll, e, {id: ''});
@@ -27,26 +27,25 @@ UnitTest.test('AttrTest', function() {
     assert.eq(false, Attr.has(e, 'id'));
   };
 
-  var check = function (k, v1, v2) {
+  const check = function (k, v1, v2) {
     assert.eq(false, Attr.has(c, k));
     assert.eq(undefined, Attr.get(c, k));
-    assert.eq(true, Attr.getOpt(c, k).isNone())
+    assert.eq(true, Attr.getOpt(c, k).isNone());
     Attr.set(c, k, v1);
     assert.eq(true, Attr.has(c, k));
     assert.eq(v1, Attr.get(c, k));
-    assert.eq(true, Attr.getOpt(c, k).isSome())
-    assert.eq(v1, Attr.getOpt(c, k).getOr('X'))
+    assert.eq(true, Attr.getOpt(c, k).isSome());
+    assert.eq(v1, Attr.getOpt(c, k).getOr('X'));
     Attr.set(c, k, v2);
     assert.eq(true, Attr.has(c, k));
     assert.eq(v2, Attr.get(c, k));
-    assert.eq(true, Attr.getOpt(c, k).isSome())
-    assert.eq(v2, Attr.getOpt(c, k).getOr('X'))
+    assert.eq(true, Attr.getOpt(c, k).isSome());
+    assert.eq(v2, Attr.getOpt(c, k).getOr('X'));
     Attr.remove(c, k);
     assert.eq(false, Attr.has(c, k));
     assert.eq(undefined, Attr.get(c, k));
-    assert.eq(true, Attr.getOpt(c, k).isNone())
+    assert.eq(true, Attr.getOpt(c, k).isNone());
   };
-
 
   // setting a non-simple value
   checkErr(Attr.set, c, 'expect-console-error--value-undefined', undefined);
@@ -57,7 +56,6 @@ UnitTest.test('AttrTest', function() {
   checkTypeErr(Element.fromText(''));
   checkTypeErr(Element.fromHtml('<!--a-->'));
   checkTypeErr(Element.fromDom({} as Node));
-
 
   check('name', 'black', 'blue');
 
@@ -74,9 +72,8 @@ UnitTest.test('AttrTest', function() {
   assert.eq(false, Attr.hasNone(Element.fromHtml('<div style="display: block;"><span id="cat"></span></div>')));
 
   assert.eq({id: 'cat'}, Attr.clone(Element.fromHtml('<span id="cat"></span>')));
-  assert.eq({name: 'foo', 'data-ephox-foo': 'bar'}, Attr.clone(Element.fromHtml('<span name="foo" data-ephox-foo="bar"></span>')));
+  assert.eq({'name': 'foo', 'data-ephox-foo': 'bar'}, Attr.clone(Element.fromHtml('<span name="foo" data-ephox-foo="bar"></span>')));
 
   Attr.set(c, 'tabindex', -1);
   assert.eq('-1', Attr.get(c, 'tabindex'));
 });
-

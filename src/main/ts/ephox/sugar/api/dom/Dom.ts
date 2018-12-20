@@ -6,15 +6,15 @@ import * as PredicateFind from '../search/PredicateFind';
 import { document, Window } from '@ephox/dom-globals';
 
 // TEST: Is this just Body.inBody which doesn't need scope ??
-var attached = function (element: Element, scope: Element) {
-  var doc = scope || Element.fromDom(document.documentElement);
+const attached = function (element: Element, scope: Element) {
+  const doc = scope || Element.fromDom(document.documentElement);
   return PredicateFind.ancestor(element, Fun.curry(Compare.eq, doc)).isSome();
 };
 
 // TEST: Is this just Traverse.defaultView ??
-var windowOf = function (element: Element): Window {
-  var dom = element.dom();
-  if (dom === dom.window && element instanceof Window) return element;
+const windowOf = function (element: Element): Window {
+  const dom = element.dom();
+  if (dom === dom.window && element instanceof Window) { return element; }
   return Node.isDocument(element) ? dom.defaultView || dom.parentWindow : null;
 };
 

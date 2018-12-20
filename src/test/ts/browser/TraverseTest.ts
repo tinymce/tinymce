@@ -6,36 +6,36 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { document, window } from '@ephox/dom-globals';
 
-UnitTest.test('TraverseTest', function() {
-  var node = function (name) {
-    var div = Element.fromTag('div');
+UnitTest.test('TraverseTest', function () {
+  const node = function (name) {
+    const div = Element.fromTag('div');
     Attr.set(div, 'name', name);
     return div;
   };
 
-  var textNode = function (text) {
-    var el = Element.fromText(text);
-    return el;
+  const textNode = function (text) {
+    const elm = Element.fromText(text);
+    return elm;
   };
 
-  var grandparent = node('grandparent');
-  var uncle = node('uncle');
-  var mother = node('mother');
+  const grandparent = node('grandparent');
+  const uncle = node('uncle');
+  const mother = node('mother');
 
-  var youngest = node('youngest');
-  var middle = node('middle');
-  var oldest = node('oldest');
+  const youngest = node('youngest');
+  const middle = node('middle');
+  const oldest = node('oldest');
 
   InsertAll.append(grandparent, [ uncle, mother ]);
   InsertAll.append(mother, [ youngest, middle, oldest ]);
 
-  var checkNone = function (subject) {
+  const checkNone = function (subject) {
     assert.eq(true, Traverse.findIndex(subject).isNone(), 'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.');
   };
 
-  var checkIndex = function (expected, subject) {
-    var name = Attr.get(subject, 'name');
-    var actual = Traverse.findIndex(subject);
+  const checkIndex = function (expected, subject) {
+    const name = Attr.get(subject, 'name');
+    const actual = Traverse.findIndex(subject);
     assert.eq(true, actual.isSome(), 'Expected "' + name + '" to have a parent.');
     assert.eq(expected, actual.getOrDie(), 'Expected index of "' + name + '" was: ' + expected + '. Was ' + actual.getOrDie());
   };
@@ -47,10 +47,10 @@ UnitTest.test('TraverseTest', function() {
   checkIndex(1, middle);
   checkIndex(2, oldest);
 
-  var checkSiblings = function (expected, subject, direction) {
-    var actual = direction(subject);
+  const checkSiblings = function (expected, subject, direction) {
+    const actual = direction(subject);
 
-    var getName = function (e) { return Attr.get(e, 'name'); };
+    const getName = function (e) { return Attr.get(e, 'name'); };
 
     assert.eq(
       Arr.map(expected, getName),
@@ -58,13 +58,13 @@ UnitTest.test('TraverseTest', function() {
     );
   };
 
-  var aunt = node('aunt');
-  var c1 = node('c1');
-  var c2 = node('c2');
-  var c3 = node('c3');
-  var c4 = node('c4');
-  var c5 = node('c5');
-  var c6 = node('c6');
+  const aunt = node('aunt');
+  let c1 = node('c1');
+  let c2 = node('c2');
+  const c3 = node('c3');
+  const c4 = node('c4');
+  const c5 = node('c5');
+  const c6 = node('c6');
   InsertAll.append(aunt, [ c1, c2, c3, c4, c5, c6 ]);
 
   checkSiblings([ c1, c2 ],     c3, Traverse.prevSiblings);
@@ -73,16 +73,16 @@ UnitTest.test('TraverseTest', function() {
   checkSiblings([ c1 ],         c2, Traverse.prevSiblings);
   checkSiblings([ c6 ],         c5, Traverse.nextSiblings);
 
-  var el = Element.fromTag('div');
+  const el = Element.fromTag('div');
   assert.eq(true, Traverse.owner(el).dom() === document);
   assert.eq(true, Traverse.defaultView(el).dom() === window);
 
-  var n = node('n');
-  var c1 = node('c1');
-  var c2 = node('c2');
-  var t1 = textNode('t1');
-  var t2 = textNode('t2');
-  var t3 = textNode('t3');
+  const n = node('n');
+  c1 = node('c1');
+  c2 = node('c2');
+  const t1 = textNode('t1');
+  const t2 = textNode('t2');
+  const t3 = textNode('t3');
   InsertAll.append(n, [ c1, t1, c2, t2, t3 ]);
   assert.eq(0, Traverse.childNodesCount(c1));
   assert.eq(0, Traverse.childNodesCount(t1));
@@ -90,4 +90,3 @@ UnitTest.test('TraverseTest', function() {
   assert.eq(false, Traverse.hasChildNodes(t1));
   assert.eq(true, Traverse.hasChildNodes(n));
 });
-

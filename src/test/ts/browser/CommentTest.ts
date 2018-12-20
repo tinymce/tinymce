@@ -3,20 +3,20 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CommentTest', function() {
-  var ensureClobberedTextNodeDoesNotThrow = function () {
-    var span = Element.fromHtml('<span><!--a--></span>');
+UnitTest.test('CommentTest', function () {
+  const ensureClobberedTextNodeDoesNotThrow = function () {
+    const span = Element.fromHtml('<span><!--a--></span>');
     Traverse.child(span, 0).each(function (text0) {
       span.dom().innerHTML = 'smashed';
-      var v = Comment.get(text0); // Throws in IE10.
+      const v = Comment.get(text0); // Throws in IE10.
       assert.eq('string', typeof(v));
     });
   };
 
   ensureClobberedTextNodeDoesNotThrow();
 
-  var notComment = Element.fromTag('span');
-  var c = Element.fromHtml('<!--a-->');
+  const notComment = Element.fromTag('span');
+  const c = Element.fromHtml('<!--a-->');
   assert.eq('a', Comment.get(c));
   Comment.set(c, 'blue');
   assert.eq('blue', c.dom().nodeValue);
@@ -35,4 +35,3 @@ UnitTest.test('CommentTest', function() {
     // pass
   }
 });
-

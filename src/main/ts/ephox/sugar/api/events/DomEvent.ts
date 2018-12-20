@@ -1,13 +1,13 @@
 import { Fun } from '@ephox/katamari';
 import * as FilteredEvent from '../../impl/FilteredEvent';
 
-var filter = Fun.constant(true); // no filter on plain DomEvents
+const filter = Fun.constant(true); // no filter on plain DomEvents
 
-var bind = function (element, event, handler) {
+const bind = function (element, event, handler) {
   return FilteredEvent.bind(element, event, filter, handler);
 };
 
-var capture = function (element, event, handler) {
+const capture = function (element, event, handler) {
   return FilteredEvent.capture(element, event, filter, handler);
 };
 

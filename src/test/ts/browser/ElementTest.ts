@@ -2,8 +2,8 @@ import Element from 'ephox/sugar/api/node/Element';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.test('ElementTest', function() {
-  var checkErr = function (f, val) {
+UnitTest.test('ElementTest', function () {
+  const checkErr = function (f, val) {
     try {
       f(val);
     } catch (e) {
@@ -13,8 +13,8 @@ UnitTest.test('ElementTest', function() {
     assert.fail('function did not throw an error');
   };
 
-  var checkEl = function (f, el, expt) {
-    var element = f(el);
+  const checkEl = function (f, el, expt) {
+    const element = f(el);
     assert.eq(true, expt === element.dom());
   };
 
@@ -22,4 +22,3 @@ UnitTest.test('ElementTest', function() {
   checkErr(Element.fromDom, null);
   checkEl(Element.fromDom, document.body, document.body);
 });
-

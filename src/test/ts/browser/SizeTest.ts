@@ -7,20 +7,20 @@ import * as Width from 'ephox/sugar/api/view/Width';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SizeTest', function() {
-  var c = Div();
+UnitTest.test('SizeTest', function () {
+  const c = Div();
 
-  var checker = function (cssProp, api) {
-    var checkExc = function (expected, f) {
+  const checker = function (cssProp, api) {
+    const checkExc = function (expected, f) {
       try {
         f();
         assert.fail('Expected exception not thrown.');
       } catch (e) {
-        assert.eq(expected, e);
+        assert.eq(expected, e.message);
       }
     };
 
-    var exact = function () {
+    const exact = function () {
       return Css.getRaw(c, cssProp).getOrDie('value was not set');
     };
 
@@ -59,4 +59,3 @@ UnitTest.test('SizeTest', function() {
 
   Remove.remove(c);
 });
-

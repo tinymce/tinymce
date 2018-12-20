@@ -7,20 +7,20 @@ import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { window } from '@ephox/dom-globals';
 
-UnitTest.test('Browser Test: SelectionRectanglesTest', function() {
-  var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+UnitTest.test('Browser Test: SelectionRectanglesTest', function () {
+  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
   InsertAll.append(Body.body(), [ p1, p2 ]);
 
-  var selP1 = Selection.exact(p1, 0, p1, 1);
-  var selP2 = Selection.exact(p2, 0, p2, 1);
+  const selP1 = Selection.exact(p1, 0, p1, 1);
+  const selP2 = Selection.exact(p2, 0, p2, 1);
 
-  var rect1 = WindowSelection.getFirstRect(window, selP1).getOrDie(
+  const rect1 = WindowSelection.getFirstRect(window, selP1).getOrDie(
     'There should be a rectangle for paragraph 1'
   );
 
-  var rect2 = WindowSelection.getFirstRect(window, selP2).getOrDie(
+  const rect2 = WindowSelection.getFirstRect(window, selP2).getOrDie(
     'There should be a rectangle for paragraph 2'
   );
 
@@ -29,10 +29,10 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', function() {
     rect1.top() + ', and (2) was ' + rect2.top()
   );
 
-  var bounds1 = WindowSelection.getBounds(window, selP1).getOrDie(
+  const bounds1 = WindowSelection.getBounds(window, selP1).getOrDie(
     'There should be bounds for paragraph 1'
   );
-  var bounds2 = WindowSelection.getBounds(window, selP2).getOrDie(
+  const bounds2 = WindowSelection.getBounds(window, selP2).getOrDie(
     'There should be bounds for paragraph 2'
   );
   assert.eq(
@@ -45,4 +45,3 @@ UnitTest.test('Browser Test: SelectionRectanglesTest', function() {
   Remove.remove(p1);
   Remove.remove(p2);
 });
-

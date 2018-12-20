@@ -14,37 +14,44 @@ import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { window } from '@ephox/dom-globals';
 
-UnitTest.test('WindowSelectionTest', function() {
-  var container = Element.fromTag('div');
+UnitTest.test('WindowSelectionTest', function () {
+  const container = Element.fromTag('div');
   Class.add(container, 'window-selection-test');
   Attr.set(container, 'contenteditable', 'true');
 
-  var body = Body.body();
+  const body = Body.body();
   Insert.append(body, container);
 
   Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
 
-  var find = function (path) {
+  const find = function (path) {
     return Hierarchy.follow(container, path).getOrDie('invalid path');
   };
 
-  var detection = PlatformDetection.detect();
+  const detection = PlatformDetection.detect();
 
-  var detector = function (variants) {
-    if (detection.browser.isFirefox() && variants.firefox !== undefined) return variants.firefox;
-    else if (detection.browser.isSafari() && variants.safari !== undefined) return variants.safari;
-    else if (detection.browser.isIE() && variants.ie !== undefined) return variants.ie;
-    else if (detection.browser.isChrome() && variants.chrome !== undefined) return variants.chrome;
-    else if (detection.browser.isEdge() && variants.spartan !== undefined) return variants.spartan;
-    else return variants.fallback !== undefined ? variants.fallback : variants;
+  const detector = function (variants) {
+    if (detection.browser.isFirefox() && variants.firefox !== undefined) {
+      return variants.firefox;
+    } else if (detection.browser.isSafari() && variants.safari !== undefined) {
+      return variants.safari;
+    } else if (detection.browser.isIE() && variants.ie !== undefined) {
+      return variants.ie;
+    } else if (detection.browser.isChrome() && variants.chrome !== undefined) {
+      return variants.chrome;
+    } else if (detection.browser.isEdge() && variants.spartan !== undefined) {
+      return variants.spartan;
+    } else {
+      return variants.fallback !== undefined ? variants.fallback : variants;
+    }
   };
 
-  var checkSelection = function (label, variants, start, finish) {
-    var expected = detector(variants);
+  const checkSelection = function (label, variants, start, finish) {
+    const expected = detector(variants);
     WindowSelection.setRelative(window, start, finish);
-    var actual = WindowSelection.getExact(window).getOrDie('No selection after selection');
-    var expStart = find(expected.start);
-    var expFinish = find(expected.finish);
+    const actual = WindowSelection.getExact(window).getOrDie('No selection after selection');
+    const expStart = find(expected.start);
+    const expFinish = find(expected.finish);
 
     assert.eq(true, Compare.eq(expStart, actual.start()), 'Start element different');
     assert.eq(true, Compare.eq(expFinish, actual.finish()), 'Finish element different');
@@ -52,15 +59,15 @@ UnitTest.test('WindowSelectionTest', function() {
     assert.eq(expected.foffset, actual.foffset());
   };
 
-  var checkUniCodeSelection = function (content) {
+  const checkUniCodeSelection = function (content) {
     Remove.empty(container);
     Html.set(container, content);
     return checkSelection;
   };
 
-  var checkStringAt = function (label, expectedStr, start, finish) {
+  const checkStringAt = function (label, expectedStr, start, finish) {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
-    var actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
+    const actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
     assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');
   };
 
@@ -322,4 +329,3 @@ UnitTest.test('WindowSelectionTest', function() {
 
   Remove.remove(container);
 });
-

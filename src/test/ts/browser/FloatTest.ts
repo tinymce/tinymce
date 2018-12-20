@@ -7,9 +7,9 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import MathElement from 'ephox/sugar/test/MathElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FloatTest', function() {
-  var image = Element.fromTag('table');
-  var m = MathElement();
+UnitTest.test('FloatTest', function () {
+  const image = Element.fromTag('table');
+  const m = MathElement();
   assert.eq(null, Float.getRaw(image));
   Float.getRaw(m);
 
@@ -48,4 +48,3 @@ UnitTest.test('FloatTest', function() {
 
   Remove.remove(image);
 });
-

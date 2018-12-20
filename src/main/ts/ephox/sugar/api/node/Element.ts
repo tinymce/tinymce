@@ -1,6 +1,5 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { document, console, Node, Window, Document } from '@ephox/dom-globals';
+import { console, document, Document, Node, Window } from '@ephox/dom-globals';
+import { Fun, Option } from '@ephox/katamari';
 
 interface Element {
   dom: () => any;
@@ -11,8 +10,9 @@ const fromHtml = function (html: string, scope?: Document): Element {
   const div = doc.createElement('div');
   div.innerHTML = html;
   if (!div.hasChildNodes() || div.childNodes.length > 1) {
+    // tslint:disable-next-line:no-console
     console.error('HTML does not have a single root node', html);
-    throw 'HTML must have a single root node';
+    throw new Error('HTML must have a single root node');
   }
   return fromDom(div.childNodes[0]);
 };
@@ -30,7 +30,7 @@ const fromText = function (text: string, scope?: Document): Element {
 };
 
 const fromDom = function (node: Node | Window): Element {
-  if (node === null || node === undefined) throw new Error('Node cannot be null or undefined');
+  if (node === null || node === undefined) { throw new Error('Node cannot be null or undefined'); }
   return {
     dom: Fun.constant(node)
   };
@@ -41,6 +41,7 @@ const fromPoint = function (docElm: Element, x, y): Option<Element> {
   return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
 };
 
+// tslint:disable-next-line:variable-name
 const Element = {
   fromHtml,
   fromTag,

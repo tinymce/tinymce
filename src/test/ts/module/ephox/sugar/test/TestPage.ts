@@ -31,28 +31,28 @@ import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
         </p2>
       </div>
 */
-var container = Element.fromTag('div');
-var d1 = Element.fromTag('div');
+const container = Element.fromTag('div');
+const d1 = Element.fromTag('div');
 
-var p1 = Element.fromTag('p');
-var p2 = Element.fromTag('p');
-var p3 = Element.fromTag('p');
+const p1 = Element.fromTag('p');
+const p2 = Element.fromTag('p');
+const p3 = Element.fromTag('p');
 
-var s1 = Element.fromTag('span');
-var s2 = Element.fromTag('span');
-var s3 = Element.fromTag('span');
-var s4 = Element.fromTag('span');
+const s1 = Element.fromTag('span');
+const s2 = Element.fromTag('span');
+const s3 = Element.fromTag('span');
+const s4 = Element.fromTag('span');
 
-var t1 = Element.fromText('This is a test page. A test page contains ');
-var t2 = Element.fromText('many');
-var t3 = Element.fromText(' things. Like:');
-var t4 = Element.fromText('More data');
-var t5 = Element.fromText('And more data.');
-var t6 = Element.fromText('Nested inside div');
-var t7 = Element.fromText('Text in a node ancestor of another node with text (t6)');
+const t1 = Element.fromText('This is a test page. A test page contains ');
+const t2 = Element.fromText('many');
+const t3 = Element.fromText(' things. Like:');
+const t4 = Element.fromText('More data');
+const t5 = Element.fromText('And more data.');
+const t6 = Element.fromText('Nested inside div');
+const t7 = Element.fromText('Text in a node ancestor of another node with text (t6)');
 
-var ul = Element.fromTag('ul');
-var li = Element.fromTag('li');
+const ul = Element.fromTag('ul');
+const li = Element.fromTag('li');
 Insert.append(ul, li);
 InsertAll.append(li, [t7, d1]);
 
@@ -66,8 +66,8 @@ InsertAll.append(s4, [t5]);
 InsertAll.append(d1, [p3]);
 InsertAll.append(p3, [t6]);
 
-var connect = function () {
-  var body = Body.body();
+const connect = function () {
+  const body = Body.body();
   Insert.append(body, container);
 };
 

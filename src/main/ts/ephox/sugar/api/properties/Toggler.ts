@@ -1,31 +1,30 @@
 
-
 export default function (turnOff: () => void, turnOn: () => void, initial: boolean) {
-  var active = initial || false;
+  let active = initial || false;
 
-  var on = function () {
+  const on = function () {
     turnOn();
     active = true;
   };
 
-  var off = function () {
+  const off = function () {
     turnOff();
     active = false;
   };
 
-  var toggle = function () {
-    var f = active ? off : on;
+  const toggle = function () {
+    const f = active ? off : on;
     f();
   };
 
-  var isOn = function () {
+  const isOn = function () {
     return active;
   };
 
   return {
-    on: on,
-    off: off,
-    toggle: toggle,
-    isOn: isOn
+    on,
+    off,
+    toggle,
+    isOn
   };
-};
+}

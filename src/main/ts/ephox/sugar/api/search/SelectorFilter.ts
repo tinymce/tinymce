@@ -2,7 +2,7 @@ import * as PredicateFilter from './PredicateFilter';
 import * as Selectors from './Selectors';
 import Element from '../node/Element';
 
-var all = function (selector: string) {
+const all = function (selector: string) {
   return Selectors.all(selector);
 };
 
@@ -12,7 +12,7 @@ var all = function (selector: string) {
 // Traverse should also do this (but probably not by default).
 //
 
-var ancestors = function (scope: Element, selector: string, isRoot?) {
+const ancestors = function (scope: Element, selector: string, isRoot?) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all this wrapping and unwrapping
   return PredicateFilter.ancestors(scope, function (e) {
@@ -20,7 +20,7 @@ var ancestors = function (scope: Element, selector: string, isRoot?) {
   }, isRoot);
 };
 
-var siblings = function (scope: Element, selector: string) {
+const siblings = function (scope: Element, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.siblings(scope, function (e) {
@@ -28,7 +28,7 @@ var siblings = function (scope: Element, selector: string) {
   });
 };
 
-var children = function (scope: Element, selector: string) {
+const children = function (scope: Element, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.children(scope, function (e) {
@@ -36,7 +36,7 @@ var children = function (scope: Element, selector: string) {
   });
 };
 
-var descendants = function (scope: Element, selector: string) {
+const descendants = function (scope: Element, selector: string) {
   return Selectors.all(selector, scope);
 };
 

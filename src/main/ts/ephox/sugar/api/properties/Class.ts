@@ -12,13 +12,12 @@ import { Element as DomElement } from '@ephox/dom-globals';
  * If it did, the toggler could be better.
  */
 
-var add = function (element: Element, clazz: string) {
-  if (ClassList.supports(element)) element.dom().classList.add(clazz);
-  else ClassList.add(element, clazz);
+const add = function (element: Element, clazz: string) {
+  if (ClassList.supports(element)) { element.dom().classList.add(clazz); } else { ClassList.add(element, clazz); }
 };
 
-var cleanClass = function (element: Element) {
-  var classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
+const cleanClass = function (element: Element) {
+  const classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
   // classList is a "live list", so this is up to date already
   if (classList.length === 0) {
     // No more classes left, remove the class attribute as well
@@ -26,36 +25,35 @@ var cleanClass = function (element: Element) {
   }
 };
 
-var remove = function (element: Element, clazz: string) {
+const remove = function (element: Element, clazz: string) {
   if (ClassList.supports(element)) {
-    var classList = element.dom().classList;
+    const classList = element.dom().classList;
     classList.remove(clazz);
-  } else
+  } else {
     ClassList.remove(element, clazz);
+  }
 
   cleanClass(element);
 };
 
-var toggle = function (element: Element, clazz: string) {
+const toggle = function (element: Element, clazz: string) {
   return ClassList.supports(element) ? (element.dom() as DomElement).classList.toggle(clazz) :
                                        ClassList.toggle(element, clazz);
 };
 
-var toggler = function (element: Element, clazz: string) {
-  var hasClasslist = ClassList.supports(element);
-  var classList = element.dom().classList;
-  var off = function () {
-    if (hasClasslist) classList.remove(clazz);
-    else ClassList.remove(element, clazz);
+const toggler = function (element: Element, clazz: string) {
+  const hasClasslist = ClassList.supports(element);
+  const classList = element.dom().classList;
+  const off = function () {
+    if (hasClasslist) { classList.remove(clazz); } else { ClassList.remove(element, clazz); }
   };
-  var on = function () {
-    if (hasClasslist) classList.add(clazz);
-    else ClassList.add(element, clazz);
+  const on = function () {
+    if (hasClasslist) { classList.add(clazz); } else { ClassList.add(element, clazz); }
   };
   return Toggler(off, on, has(element, clazz));
 };
 
-var has = function (element: Element, clazz: string) {
+const has = function (element: Element, clazz: string) {
   // Cereal has a nasty habit of calling this with a text node >.<
   return ClassList.supports(element) && (element.dom() as DomElement).classList.contains(clazz);
 };

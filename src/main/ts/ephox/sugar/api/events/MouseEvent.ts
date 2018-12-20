@@ -2,22 +2,23 @@ import * as FilteredEvent from '../../impl/FilteredEvent';
 import { MouseEvent } from '@ephox/dom-globals';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-var isLeftClick = function (raw: MouseEvent) {
+const isLeftClick = function (raw: MouseEvent) {
   return raw.button === 0;
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
-var isLeftButtonPressed = function (raw: MouseEvent) {
+const isLeftButtonPressed = function (raw: MouseEvent) {
   // Only added by Chrome/Firefox in June 2015.
   // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
-  if (raw.buttons === undefined) return true;
+  if (raw.buttons === undefined) { return true; }
 
   // use bitwise & for optimal comparison
+  // tslint:disable-next-line:no-bitwise
   return (raw.buttons & 1) !== 0;
 };
 
 // Not 100% sure whether this works, so use with caution
-var isRealClick = function (raw: any) {
+const isRealClick = function (raw: any) {
   // Firefox non-standard property
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent#mozInputSource
   return (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false
@@ -28,9 +29,9 @@ var isRealClick = function (raw: any) {
     : true;
 };
 
-var filtered = function (event, filter) {
+const filtered = function (event, filter) {
   return {
-    bind: function (element, f) {
+    bind (element, f) {
       return FilteredEvent.bind(element, event, filter, f);
     }
   };

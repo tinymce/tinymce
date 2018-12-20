@@ -9,8 +9,8 @@ import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('VisibilityTest', function() {
-  var c = Div();
+UnitTest.test('VisibilityTest', function () {
+  const c = Div();
   assert.eq(false, Visibility.isVisible(c));
   Insert.append(Body.body(), c);
   assert.eq(true, Visibility.isVisible(c));
@@ -18,14 +18,14 @@ UnitTest.test('VisibilityTest', function() {
   Css.set(c, 'display', 'none');
   assert.eq(false, Visibility.isVisible(c));
 
-  var s = Element.fromTag('span');
+  const s = Element.fromTag('span');
   assert.eq(false, Visibility.isVisible(s));
 
   Insert.append(Body.body(), s);
-  var expected = PlatformDetection.detect().browser.isFirefox();
+  const expected = PlatformDetection.detect().browser.isFirefox();
   assert.eq(expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
 
-  var d = Div();
+  const d = Div();
   Insert.append(c, d);
   assert.eq(false, Visibility.isVisible(d));
 
@@ -33,7 +33,5 @@ UnitTest.test('VisibilityTest', function() {
   assert.eq(true, Visibility.isVisible(d));
   assert.eq(true, Visibility.isVisible(c));
 
-
   Arr.each([c, d, s], Remove.remove);
 });
-

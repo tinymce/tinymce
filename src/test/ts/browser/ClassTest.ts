@@ -6,11 +6,11 @@ import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ClassTest', function() {
-  var c = Div();
-  var m = MathElement();
+UnitTest.test('ClassTest', function () {
+  const c = Div();
+  const m = MathElement();
 
-  var check = function (blob, spot, mogel, t) {
+  const check = function (blob, spot, mogel, t) {
     assert.eq(blob, Class.has(c, 'blob'));
     assert.eq(spot, Class.has(c, 'spot'));
     assert.eq(mogel, Class.has(c, 'mogel'));
@@ -24,8 +24,6 @@ UnitTest.test('ClassTest', function() {
   Class.remove(c, 'blob');
   check(false, false, false, false);
   assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
-
-
 
   Class.add(c, 'blob');
   check(true, false, false, false);
@@ -51,12 +49,11 @@ UnitTest.test('ClassTest', function() {
   assert.eq(false, Class.toggle(c, 'mogel'));
   check(false, true, false, false);
 
-
   Class.remove(c, 'spot');
   check(false, false, false, false);
   assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
 
-  var incorrect = Element.fromText('a');
+  const incorrect = Element.fromText('a');
   assert.eq(false, Class.has(incorrect, 'anything'));
 
   assert.eq([], Classes.get(m));
@@ -72,8 +69,7 @@ UnitTest.test('ClassTest', function() {
   Class.toggle(m, 'a');
   assert.eq([], Classes.get(m));
 
-
-  var tgl = Class.toggler(m, 'tglClass');
+  const tgl = Class.toggler(m, 'tglClass');
   assert.eq(false, tgl.isOn());
   tgl.on();
   assert.eq(true, tgl.isOn());
@@ -82,4 +78,3 @@ UnitTest.test('ClassTest', function() {
   assert.eq(false, tgl.isOn());
   assert.eq([], Classes.get(m));
 });
-

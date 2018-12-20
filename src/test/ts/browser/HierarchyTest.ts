@@ -5,16 +5,16 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('HierarchyTest', function() {
-  var div = Element.fromTag('div');
-  var p1 = Element.fromTag('p');
-  var p2 = Element.fromTag('p');
-  var p1text = Element.fromText('One');
-  var p1textb = Element.fromText(', two');
-  var p1span = Element.fromTag('span');
-  var p1span1 = Element.fromText('cat');
-  var p1span2 = Element.fromText(' dog ');
-  var p2br = Element.fromTag('br');
+UnitTest.test('HierarchyTest', function () {
+  const div = Element.fromTag('div');
+  const p1 = Element.fromTag('p');
+  const p2 = Element.fromTag('p');
+  const p1text = Element.fromText('One');
+  const p1textb = Element.fromText(', two');
+  const p1span = Element.fromTag('span');
+  const p1span1 = Element.fromText('cat');
+  const p1span2 = Element.fromText(' dog ');
+  const p2br = Element.fromTag('br');
 
   InsertAll.append(div, [ p1, p2 ]);
   InsertAll.append(p1, [ p1text, p1textb, p1span ]);
@@ -41,4 +41,3 @@ UnitTest.test('HierarchyTest', function() {
   assert.eq(true, Compare.eq(p1span2, Hierarchy.follow(div, [ 0, 2, 1 ]).getOrDie()));
   assert.eq(true, Compare.eq(p2br, Hierarchy.follow(div, [ 1, 0 ]).getOrDie()));
 });
-

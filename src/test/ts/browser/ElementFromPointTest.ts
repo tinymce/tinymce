@@ -9,11 +9,11 @@ import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.test('ElementFromPointTest', function() {
-  var a = Div();
-  var bg = Div();
+UnitTest.test('ElementFromPointTest', function () {
+  const a = Div();
+  const bg = Div();
 
-  var placeElm = function (elm, x, y, w, h) {
+  const placeElm = function (elm, x, y, w, h) {
     Css.setAll(elm, {
       position: 'fixed',
       left: x + 'px',
@@ -24,19 +24,19 @@ UnitTest.test('ElementFromPointTest', function() {
     });
   };
 
-  var getAt = function (elm, placeX, placeY, testX, testY) {
+  const getAt = function (elm, placeX, placeY, testX, testY) {
     placeElm(elm, placeX, placeY, 100, 50);
     return Element.fromPoint(Element.fromDom(document), testX, testY);
   };
 
-  var checkMatch = function (placeElm, placeX, placeY, expectedElm, testX, testY) {
-    var actualElm = getAt(placeElm, placeX, placeY, testX, testY).getOrDie('Should be some element.');
-    //debugger
+  const checkMatch = function (p, placeX, placeY, expectedElm, testX, testY) {
+    const actualElm = getAt(p, placeX, placeY, testX, testY).getOrDie('Should be some element.');
+    // debugger
     assert.eq(true, Compare.eq(expectedElm, actualElm), 'Should be expected element');
   };
 
-  var checkNone = function (placeElm, placeX, placeY, testX, testY) {
-    assert.eq(true, getAt(placeElm, placeX, placeY, testX, testY).isNone(), 'Should be none');
+  const checkNone = function (p, placeX, placeY, testX, testY) {
+    assert.eq(true, getAt(p, placeX, placeY, testX, testY).isNone(), 'Should be none');
   };
 
   Arr.each([bg, a], function (elm) {
@@ -56,4 +56,3 @@ UnitTest.test('ElementFromPointTest', function() {
 
   Arr.each([bg, a], Remove.remove);
 });
-

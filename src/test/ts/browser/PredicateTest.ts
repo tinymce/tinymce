@@ -1,17 +1,15 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Fun, Option } from '@ephox/katamari';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
 import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
 import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
-import * as Remove from 'ephox/sugar/api/dom/Remove';
 import Checkers from 'ephox/sugar/test/Checkers';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('PredicateTest', function() {
+UnitTest.test('PredicateTest', function () {
   TestPage.connect(); // description of structure is in TestPage
-
 
   Checkers.checkOpt(Option.some(TestPage.p1), PredicateFind.first(Checkers.isName('p')));
 
@@ -23,7 +21,6 @@ UnitTest.test('PredicateTest', function() {
 
   Checkers.checkOpt(Option.none(), PredicateFind.ancestor(TestPage.s2, Checkers.isName('span')));
   Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.closest(TestPage.s2, Checkers.isName('span')));
-
 
   Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.descendant(TestPage.p2, Checkers.isName('span')));
   Checkers.checkOpt(Option.some(TestPage.t4), PredicateFind.descendant(TestPage.p2, Node.isText));
@@ -60,4 +57,3 @@ UnitTest.test('PredicateTest', function() {
 
   Remove.remove(TestPage.container);
 });
-

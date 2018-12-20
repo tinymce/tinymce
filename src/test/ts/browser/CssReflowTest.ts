@@ -8,13 +8,13 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.asynctest('CssReflowTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CssReflowTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="project/src/test/data/cssReflowTest.html"></iframe>');
+  const iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="project/src/test/data/cssReflowTest.html"></iframe>');
   Insert.append(Body.body(), iframe);
-  var run = DomEvent.bind(iframe, 'load', function () {
+  const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();
     try {
       checks();
@@ -26,19 +26,18 @@ UnitTest.asynctest('CssReflowTest', function() {
     }
   });
 
-  var checks = function () {
-    var iframeWin = iframe.dom().contentWindow;
-    var iframeDoc = iframeWin.document;
+  const checks = function () {
+    const iframeWin = iframe.dom().contentWindow;
+    const iframeDoc = iframeWin.document;
 
-    var styles = Element.fromTag('style', iframeDoc);
+    const styles = Element.fromTag('style', iframeDoc);
     Html.set(styles, 'span.style {border-left-style: solid; }');
     Insert.append(Element.fromDom(iframeDoc.head), styles);
 
-
-    var reflowTest = Element.fromTag('div', iframeDoc);
+    const reflowTest = Element.fromTag('div', iframeDoc);
     Insert.append(Element.fromDom(iframeDoc.body), reflowTest);
     Html.set(reflowTest, '<span class="style">text</span>');
-    var newspan = Traverse.firstChild(reflowTest).getOrDie('test broke');
+    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke');
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
     assert.eq('solid', Css.get(newspan, 'border-left-style'));
@@ -46,4 +45,3 @@ UnitTest.asynctest('CssReflowTest', function() {
 
   };
 });
-

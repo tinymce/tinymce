@@ -11,11 +11,11 @@ import Div from 'ephox/sugar/test/Div';
 import TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SelectorTest', function() {
+UnitTest.test('SelectorTest', function () {
   // Querying non-element nodes does not throw an error
 
-  var textnode = Element.fromText('');
-  var commentnode = Element.fromHtml('<!--a-->');
+  const textnode = Element.fromText('');
+  const commentnode = Element.fromHtml('<!--a-->');
   assert.eq(false, Selectors.is(textnode, 'anything'));
   assert.eq(false, Selectors.is(commentnode, 'anything'));
   assert.eq([], Selectors.all('anything', textnode));
@@ -26,19 +26,16 @@ UnitTest.test('SelectorTest', function() {
   assert.eq([], SelectorFilter.siblings(textnode, 'anything'));
   assert.eq([], SelectorFilter.children(textnode, 'anything'));
 
-
   try {
     // IE throws an error running complex queries on an empty div
     // http://jsfiddle.net/spyder/fv9ptr5L/
-    var empty = Div();
+    const empty = Div();
     Selectors.all('img:not([data-ephox-polish-blob])', empty);
   } catch (e) {
     assert.fail(e);
   }
 
-
   TestPage.connect(); // description of structure is in TestPage
-
 
   Checkers.checkOpt(Option.none(), Selectors.one('asdf'));
 
@@ -102,4 +99,3 @@ UnitTest.test('SelectorTest', function() {
 
   Remove.remove(TestPage.container);
 });
-

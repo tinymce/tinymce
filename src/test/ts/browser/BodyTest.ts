@@ -5,12 +5,12 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BodyTest', function() {
-  var body = SelectorFind.first('body').getOrDie();
+UnitTest.test('BodyTest', function () {
+  const body = SelectorFind.first('body').getOrDie();
 
-  var div = Element.fromTag('div');
-  var child = Element.fromTag('span');
-  var text = Element.fromText('hi');
+  const div = Element.fromTag('div');
+  const child = Element.fromTag('span');
+  const text = Element.fromText('hi');
   Insert.append(child, text);
   Insert.append(div, child);
   assert.eq(false, Body.inBody(div));
@@ -25,4 +25,3 @@ UnitTest.test('BodyTest', function() {
 
   Remove.remove(div);
 });
-

@@ -1,12 +1,11 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Obj } from '@ephox/katamari';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('AttrTransfer', function() {
-  var alpha = function () {
-    var r = Div();
+UnitTest.test('AttrTransfer', function () {
+  const alpha = function () {
+    const r = Div();
     Attr.setAll(r, {
       title: 'monkey',
       placeholder: 'start typing'
@@ -14,8 +13,8 @@ UnitTest.test('AttrTransfer', function() {
     return r;
   };
 
-  var beta = function () {
-    var r = Div();
+  const beta = function () {
+    const r = Div();
     Attr.setAll(r, {
       title: 'chimp',
       name: 'anon'
@@ -23,24 +22,22 @@ UnitTest.test('AttrTransfer', function() {
     return r;
   };
 
-  var gamma = function () {
-    var r = Div();
+  const gamma = function () {
+    const r = Div();
     Attr.setAll(r, {
       placeholder: 'lookup'
     });
     return r;
   };
 
-
-  var check = function (expectedPresent, expectedAbsent, source, destination, attributes) {
+  const check = function (expectedPresent, expectedAbsent, source, destination, attributes) {
     Attr.transfer(source, destination, attributes);
     Arr.each(expectedAbsent, function (k) {
-      if (Attr.has(destination, k)) assert.fail('Result should not have attribute: ' + k);
+      if (Attr.has(destination, k)) { assert.fail('Result should not have attribute: ' + k); }
     });
 
     Obj.each(expectedPresent, function (v, k) {
-      if (!Attr.has(destination, k)) assert.fail('Result should have attribute: ' + k);
-      else assert.eq(v, Attr.get(destination, k));
+      if (!Attr.has(destination, k)) { assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attr.get(destination, k)); }
     });
   };
 
@@ -81,4 +78,3 @@ UnitTest.test('AttrTransfer', function() {
     placeholder: 'lookup'
   }, [ 'name' ], beta(), gamma(), [ 'title', 'placeholder' ]);
 });
-
