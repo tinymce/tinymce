@@ -8,12 +8,12 @@ import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
-import { updateTinymceUrls } from '../loader/Urls';
+import { updateTinymceUrls, setTinymceBaseUrl } from '../loader/Urls';
 import { getTinymce } from '../loader/Globals';
 
 updateTinymceUrls('tinymce');
 
-var cFromElement = function (element, settings) {
+var cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
     var randomId = Id.generate('tiny-loader');
 
@@ -21,6 +21,10 @@ var cFromElement = function (element, settings) {
     Insert.append(Element.fromDom(document.body), element);
 
     getTinymce().each((tinymce) => {
+      if (settings.base_url) {
+        setTinymceBaseUrl(tinymce, settings.base_url);
+      }
+
       tinymce.init(Merger.merge(settings, {
         selector: '#' + randomId,
         setup: function (editor) {
@@ -35,12 +39,12 @@ var cFromElement = function (element, settings) {
   });
 };
 
-var cFromHtml = function (html: string, settings) {
+var cFromHtml = function (html: string, settings: Record<string, any>) {
   var element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea')
   return cFromElement(element, settings);
 };
 
-var cFromSettings = function (settings) {
+var cFromSettings = function (settings: Record<string, any>) {
   return cFromHtml(null, settings);
 };
 

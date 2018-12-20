@@ -9,7 +9,7 @@ import { document, console, setTimeout } from '@ephox/dom-globals';
 import 'tinymce';
 import { getTinymce } from '../loader/Globals';
 import * as TinyVersions from './TinyVersions';
-import { updateTinymceUrls } from '../loader/Urls';
+import { updateTinymceUrls, setTinymceBaseUrl } from '../loader/Urls';
 import { Step, Pipeline } from '@ephox/agar';
 import { registerPlugins, readPlugins, sRegisterPlugins } from '../loader/Plugins';
 
@@ -57,6 +57,10 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   getTinymce().fold(
     () => failure('Failed to get global tinymce instance'),
     (tinymce) => {
+      if (settings.base_url) {
+        setTinymceBaseUrl(tinymce, settings.base_url);
+      }
+
       tinymce.init(Merger.merge(settings, {
         selector: '#' + randomId,
         setup: function(editor) {
