@@ -191,6 +191,30 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     LegacyUnit.equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
   });
 
+  suite.test('get', function () {
+    DOM.add(document.body, 'div', { id : 'test', class: 'abc 123' });
+    LegacyUnit.equal(DOM.get('test').className, 'abc 123');
+
+    DOM.remove('test');
+  });
+
+  suite.test('get (shadow root)', function () {
+    const host = DOM.add(document.body, 'div', { id : 'test' });
+    if (host.attachShadow) {
+      const shadow = host.attachShadow({mode: 'open'});
+      const rootElement = DOM.add(shadow, 'p', { class : 'abc 123' }, '<span id="local" class="shadowy"><b>abc</b></span>');
+
+      const localDom = DOM.get('local');
+      LegacyUnit.equal(localDom, null, 'Should not be found unless set root element');
+
+      const domWithRootElement = DOMUtils(document, { root_element: rootElement });
+      localDom = domWithRootElement.get('local');
+
+      LegacyUnit.equal(localDom.className, 'shadowy', 'Should not be found via root element');
+    }
+    DOM.remove('test');
+  });
+
   suite.test('uniqueId', function () {
     LegacyUnit.equal(DOM.uniqueId(), 'mce_0');
     LegacyUnit.equal(DOM.uniqueId(), 'mce_1');
