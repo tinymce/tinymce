@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () 
       Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.inline)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
 
     // Setting exposed as another forced setting
     inline: true,

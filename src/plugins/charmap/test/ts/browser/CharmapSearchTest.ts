@@ -70,6 +70,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
     plugins: 'charmap',
     toolbar: 'charmap',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

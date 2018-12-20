@@ -34,6 +34,6 @@ UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
     plugins: 'help',
     toolbar: 'help',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

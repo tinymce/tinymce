@@ -306,7 +306,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       menu: {
         menutest: { title: 'test', items: 'x1'}
       },
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      base_url: '/project/js/tinymce',
       setup: (ed) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',

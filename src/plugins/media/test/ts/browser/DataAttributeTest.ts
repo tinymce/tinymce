@@ -66,6 +66,6 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     media_url_resolver (data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

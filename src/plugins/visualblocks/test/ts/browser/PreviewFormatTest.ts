@@ -51,6 +51,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
     visualblocks_content_css: pluginCss,
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

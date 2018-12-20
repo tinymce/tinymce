@@ -37,6 +37,6 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
     theme: 'silver',
     toolbar: 'codesample',
     codesample_content_css: '/project/js/tinymce/plugins/codesample/css/prism.css',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

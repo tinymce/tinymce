@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     forced_root_block: false,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

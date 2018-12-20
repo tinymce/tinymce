@@ -73,6 +73,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

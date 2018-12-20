@@ -307,8 +307,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
       plugins: 'table',
       width: 400,
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default/content.css'
+      base_url: '/project/js/tinymce'
     })),
 
     NamedChain.read('editor', cAssertWidth('which is empty', emptyTable)),

@@ -22,6 +22,6 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en',
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });
