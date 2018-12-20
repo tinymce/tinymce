@@ -3,7 +3,7 @@
 //
 
 .tox-checklist {
-  > li {
+  > li:not(.tox-checklist--hidden) {
     list-style: none;
     margin: .25em 0;
     position: relative;
@@ -21,7 +21,7 @@
     }
   }
 
-  li.tox-checklist--checked::before {
+  li:not(.tox-checklist--hidden).tox-checklist--checked::before {
     background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../svg/checklist-checked.svg');
   }
 }
