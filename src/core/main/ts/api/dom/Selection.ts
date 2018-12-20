@@ -42,8 +42,15 @@ const isNativeIeSelection = (rng: any): boolean => {
   return !!(<any> rng).select;
 };
 
+const isShadowNodeAttachedToDom = function (node: Node): boolean {
+  const shadowHost = DOMUtils.DOM.getTopLevelShadowHost(node);
+  return !!shadowHost && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(shadowHost));
+};
+
 const isAttachedToDom = function (node: Node): boolean {
-  return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
+  return !!(node && node.ownerDocument) &&
+    (Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node)) ||
+     isShadowNodeAttachedToDom(node));
 };
 
 const isValidRange = function (rng: Range) {
@@ -82,9 +89,9 @@ export interface Selection {
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-    node: Node;
-    selector: String;
-    parents: Element[];
+      node: Node;
+      selector: String;
+      parents: Element[];
   }) => void) => any;
   getScrollContainer: () => HTMLElement;
   scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
@@ -270,28 +277,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): NativeSelection => {
-    let selectionRoot: any = win;
-    try {
-      // We need to return Shadow Root if target element is under Shadow DOM and not using iframe
-      if (!editor.iframeElement && editor.targetElm.matches && editor.targetElm.matches(':host *')) {
-        (function (target: any) {
-          while (target.parentNode) {
-            target = target.parentNode;
-          }
-          // If there is no parent node, but there is `host` property - we've just found Shadow Root,
-          // where we'll get selection
-          if (target.host) {
-            selectionRoot = target;
-          }
-        })(editor.targetElm);
-      }
-    } catch (err) {
-      // Nothing, even if `.matches` method is present - it doesn't mean that browsers understands ':host *' selector
-    }
-
-    return selectionRoot.getSelection ? selectionRoot.getSelection() : (<any>win.document).selection;
-  }
+  const getSel = (): NativeSelection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.
