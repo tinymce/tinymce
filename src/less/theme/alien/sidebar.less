@@ -5,6 +5,11 @@
     display: flex;
     flex-direction: row;
     flex-grow: 1;
+    // TC-310: Without the min-height setting, browsers like Firefox default to
+    // min-height: auto, and the sidebar-wrap will grow in height as soon
+    // as the sidebar contents does. This happens even if the sidebar contents has
+    // overflow: auto.
+    min-height: 0px;
   }
 
   .tox-sidebar {
