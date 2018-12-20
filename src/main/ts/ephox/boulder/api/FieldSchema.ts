@@ -1,9 +1,15 @@
-import { Result, Type } from '@ephox/katamari';
+import { Result, Arr } from '@ephox/katamari';
 import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import { FieldProcessorAdt } from '../format/TypeTokens';
 import * as ValueSchema from './ValueSchema';
 import { SimpleResult } from '../alien/SimpleResult';
+
+const validateEnum = (values) => ValueSchema.valueOf((value) => {
+  return Arr.contains(values, value) ?
+    Result.value(value) :
+    Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`);
+});
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
@@ -19,6 +25,10 @@ const strictNumber = function (key: string): FieldProcessorAdt {
 
 const strictString = function (key: string): FieldProcessorAdt {
   return strictOf(key, ValueSchema.string);
+};
+
+const strictStringEnum = function (key: string, values: string[]): FieldProcessorAdt {
+  return field(key, key, FieldPresence.strict(), validateEnum(values));
 };
 
 const strictBoolean = function (key: string): FieldProcessorAdt {
@@ -78,6 +88,10 @@ const optionString = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.string);
 };
 
+const optionStringEnum = function (key: string, values: string[]): FieldProcessorAdt {
+  return optionOf(key, validateEnum(values));
+};
+
 const optionBoolean = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.boolean);
 };
@@ -110,6 +124,10 @@ const defaultedString = function (key: string, fallback: string): FieldProcessor
   return defaultedOf(key, fallback, ValueSchema.string);
 };
 
+const defaultedStringEnum = function (key: string, fallback: string, values: string[]): FieldProcessorAdt {
+  return defaultedOf(key, fallback, validateEnum(values));
+};
+
 const defaultedBoolean = function (key: string, fallback: boolean): FieldProcessorAdt {
   return defaultedOf(key, fallback, ValueSchema.boolean);
 };
@@ -134,6 +152,7 @@ export {
   strictArrayOfObj,
   strictNumber,
   strictString,
+  strictStringEnum,
   strictBoolean,
   strictFunction,
 
@@ -143,6 +162,7 @@ export {
   optionOf,
   optionNumber,
   optionString,
+  optionStringEnum,
   optionBoolean,
   optionFunction,
   optionObjOf,
@@ -152,6 +172,7 @@ export {
   defaultedOf,
   defaultedNumber,
   defaultedString,
+  defaultedStringEnum,
   defaultedBoolean,
   defaultedFunction,
   defaultedObjOf,
