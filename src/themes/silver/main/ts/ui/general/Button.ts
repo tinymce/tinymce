@@ -30,6 +30,7 @@ export interface ButtonFoo {
   text: string;
   disabled?: boolean;
   primary: boolean;
+  icon?: Option<string>;
 }
 
 export interface IconButtonFoo {
@@ -82,15 +83,23 @@ export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage
 export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const translatedText = providersBackstage.translate(spec.text);
 
+  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
+  const components = icon.isSome() ? componentRenderPipeline([
+    icon
+  ]) : [];
+
+  const innerHtml = icon.isSome() ? {} : {
+    innerHtml: translatedText
+  };
+
   const dom = {
     tag: 'button',
     classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    innerHtml: translatedText,
+    ...innerHtml,
     attributes: {
       title: translatedText // TODO: tooltips AP-213
     }
   };
-  const components = [];
   return renderCommon(spec, action, extraBehaviours, dom, components);
 };
 
