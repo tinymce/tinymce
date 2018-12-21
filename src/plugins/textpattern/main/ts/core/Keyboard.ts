@@ -17,15 +17,9 @@ const setup = function (editor, patternsState: Cell<PatternSet>) {
   const charCodes = [',', '.', ';', ':', '!', '?'];
   const keyCodes = [32];
 
-  editor.on('AddUndo', function (e) {
-    console.log('Adding an undo', e);
-  });
-
   editor.on('keydown', function (e: EditorEvent<KeyboardEvent>) {
     if (e.keyCode === 13 && !VK.modifierPressed(e)) {
-      console.log('keydown on enter');
-      const patterns = patternsState.get();
-      if (KeyHandler.handleEnter(editor, patterns)) {
+      if (KeyHandler.handleEnter(editor, patternsState.get())) {
         e.preventDefault();
       }
     }

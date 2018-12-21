@@ -27,7 +27,9 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
           Utils.sNormalizeTextNodes(editor),
           tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('em', 'a')),
           tinyApis.sExecCommand('Undo'),
-          tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>')
+          tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>'),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*</p>'),
         ]),
       ],
       tinyApis.sSetContent('')

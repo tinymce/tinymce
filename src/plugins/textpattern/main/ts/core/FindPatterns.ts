@@ -30,78 +30,12 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): P => {
   }
 };
 
-// const isMatchingPattern = (pattern: InlinePattern, text: string, offset: number, delta: 0 | 1): boolean => {
-//   const textEnd = text.substr(offset - pattern.end.length - delta, pattern.end.length);
-//   return textEnd === pattern.end;
-// };
-
-// const hasContent = (offset: number, delta: number, pattern: InlinePattern) => {
-//   return (offset - delta - pattern.end.length - pattern.start.length) > 0;
-// };
-
-// // Finds the best matching end pattern
-// const findEndPattern = (patterns: InlinePattern[], text: string, offset: number, delta: 0 | 1) => {
-//   // Find best matching end
-//   for (let i = 0; i < patterns.length; i++) {
-//     const pattern = patterns[i];
-//     if (pattern.end !== undefined && isMatchingPattern(pattern, text, offset, delta) && hasContent(offset, delta, pattern)) {
-//       return pattern;
-//     }
-//   }
-// };
-
-// const findInlinePattern = (patterns: InlinePattern[], rng: Range, space: boolean) => {
-//   if (rng.collapsed === false) {
-//     return;
-//   }
-
-//   const container = rng.startContainer;
-//   if (!NodeType.isText(container)) {
-//     return;
-//   }
-
-//   const text = container.data;
-//   const delta = space === true ? 1 : 0;
-
-//   // Find best matching end
-//   const endPattern = findEndPattern(patterns, text, rng.startOffset, delta);
-//   if (endPattern === undefined) {
-//     return;
-//   }
-
-//   // Find start of matched pattern
-//   let endOffset = text.lastIndexOf(endPattern.end, rng.startOffset - delta);
-//   const startOffset = text.lastIndexOf(endPattern.start, endOffset - endPattern.end.length);
-//   endOffset = text.indexOf(endPattern.end, startOffset + endPattern.start.length);
-
-//   if (startOffset === -1) {
-//     return;
-//   }
-
-//   // Setup a range for the matching word
-//   const patternRng = document.createRange();
-//   patternRng.setStart(container, startOffset);
-//   patternRng.setEnd(container, endOffset + endPattern.end.length);
-
-//   const startPattern = findPattern(patterns, patternRng.toString());
-
-//   if (endPattern === undefined || startPattern !== endPattern || (container.data.length <= endPattern.start.length + endPattern.end.length)) {
-//     return;
-//   }
-
-//   return {
-//     pattern: endPattern,
-//     startOffset,
-//     endOffset
-//   };
-// };
-
 interface Spot {
   node: Text;
   offset: number;
 }
 
-export interface PatternArea {
+export interface InlinePatternMatch {
   pattern: InlinePattern;
   range: PathRange;
 }
@@ -205,7 +139,7 @@ const findInlinePatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Tex
 // 4. A pattern start or pattern end will be self-contained in one text node
 // 5. All pattern ends must be directly before the cursor (represented by node + offset)
 // 6. Only text nodes matter
-const findInlinePatternRec = (dom: DOMUtils, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<PatternArea[]> => {
+const findInlinePatternRec = (dom: DOMUtils, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<InlinePatternMatch[]> => {
   return textBefore(node, offset, block).bind(({node: endNode, offset: endOffset}) => {
     const text = endNode.data.substring(0, endOffset);
     for (let i = 0; i < patterns.length; i++) {
@@ -243,7 +177,7 @@ const findInlinePatternRec = (dom: DOMUtils, patterns: InlinePattern[], node: No
   });
 };
 
-const findNestedInlinePatterns = (dom: DOMUtils, patterns: InlinePattern[], rng: Range, space: boolean): PatternArea[] => {
+const findNestedInlinePatterns = (dom: DOMUtils, patterns: InlinePattern[], rng: Range, space: boolean): InlinePatternMatch[] => {
   if (rng.collapsed === false) {
     return [];
   }

@@ -3,7 +3,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
 import { document, Range, Node, HTMLElement } from '@ephox/dom-globals';
-import { PatternArea, findNestedInlinePatterns } from '../../../main/ts/core/FindPatterns';
+import { InlinePatternMatch, findNestedInlinePatterns } from '../../../main/ts/core/FindPatterns';
 import { Obj, Arr, Type } from '@ephox/katamari';
 import { InlinePattern } from '../../../main/ts/api/Pattern';
 import DOMUtils from '../../../../../core/main/ts/api/dom/DOMUtils';
@@ -55,10 +55,6 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     return createComplexRng(text, [startOffset], [endOffset]);
   };
 
-  const createParagraphElementRng = function (text: string, startOffset: number, endOffset: number) {
-    return createComplexRng({n: 'p', cs: [text]}, [startOffset], [endOffset]);
-  };
-
   const cGetInlinePattern = function (patterns: InlinePattern[], space: boolean) {
     const asStr = (p: InlinePattern) => {
       if (p.type === 'inline-format') {
@@ -70,14 +66,14 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     };
 
     return Chain.label('Get inline ' + Arr.map(patterns, asStr).join(', '),
-      Chain.mapper<{root: HTMLElement, range: Range}, PatternArea[]>(function (input) {
+      Chain.mapper<{root: HTMLElement, range: Range}, InlinePatternMatch[]>(function (input) {
         const dom = DOMUtils(input.root.ownerDocument, { root_element: input.root });
         return findNestedInlinePatterns(dom, patterns, input.range, space);
       })
     );
   };
 
-  interface PatternPos {
+  interface ExpectedPatternMatch {
     pattern: Partial<{
       start: string;
       end: string;
@@ -89,23 +85,23 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     end: number[];
   }
 
-  const cAssertPatterns = function (expected: PatternPos[]) {
-    return Chain.op<PatternArea[]>((areas) => {
-      Assertions.assertEq('Pattern count does not match', expected.length, areas.length);
-      for (let i = 0; i < expected.length; i++) {
-        const pos = expected[i];
-        const area = areas[i];
-        const pattern = area.pattern;
-        Obj.each(pos.pattern, (value, key) => {
-          if (Obj.has(pattern as any, key)) {
+  const cAssertPatterns = function (expectedMatches: ExpectedPatternMatch[]) {
+    return Chain.op<InlinePatternMatch[]>((actualMatches) => {
+      Assertions.assertEq('Pattern count does not match', expectedMatches.length, actualMatches.length);
+      for (let i = 0; i < expectedMatches.length; i++) {
+        const expected = expectedMatches[i];
+        const actual = actualMatches[i];
+        const pattern = actual.pattern;
+        Obj.each(expected.pattern, (value, key) => {
+          if (Obj.has<any, string>(pattern, key)) {
             Assertions.assertEq('Pattern ' + (i + 1) + ' property `' + key + '` is not equal', value, pattern[key]);
           } else {
             assert.fail('Pattern ' + (i + 1) + ' property `' + key + '` is missing');
           }
         });
         // prepend a 0 because we always add a root node
-        Assertions.assertEq('start path does not match', [0].concat(pos.start), area.range.start);
-        Assertions.assertEq('end path does not match', [0].concat(pos.end), area.range.end);
+        Assertions.assertEq('start path does not match', [0].concat(expected.start), actual.range.start);
+        Assertions.assertEq('end path does not match', [0].concat(expected.end), actual.range.end);
       }
     });
   };
@@ -123,10 +119,17 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
       ]
     )),
     Step.label('Run on range that is not on a text node without pattern returns no match', Chain.asStep(
-      createParagraphElementRng('text', 1, 1),
+      createComplexRng({n: 'p', cs: ['text']}, [1], [1]),
       [
         cGetInlinePattern(inlinePatterns, false),
         cAssertPatterns([])
+      ]
+    )),
+    Step.label('Run on range that is not on a text node with pattern returns a match', Chain.asStep(
+      createComplexRng({n: 'p', cs: ['*a*']}, [1], [1]),
+      [
+        cGetInlinePattern(inlinePatterns, false),
+        cAssertSimpleMatch('*', '*', ['italic'], [0, 0], [0, 3])
       ]
     )),
     Step.label('inline * pattern with no gap to matching token returns no match', Chain.asStep(createRng('*x***', 5, 5), [
@@ -145,7 +148,7 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
       cGetInlinePattern(inlinePatterns, false),
       cAssertPatterns([])
     ])),
-    Step.label('cursor in middle of pattern returns undefined', Chain.asStep(createRng('*** x***', 4, 4), [
+    Step.label('cursor in middle of pattern returns no match', Chain.asStep(createRng('*** x***', 4, 4), [
       cGetInlinePattern(inlinePatterns, true),
       cAssertPatterns([])
     ])),

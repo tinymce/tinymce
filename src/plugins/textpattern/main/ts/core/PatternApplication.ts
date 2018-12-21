@@ -12,12 +12,12 @@ import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from 'tinymce/core/dom/NodeType';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
-import { PatternArea } from './FindPatterns';
+import { InlinePatternMatch } from './FindPatterns';
 import { resolvePath } from './PathRange';
 import { Strings, Arr } from '@ephox/katamari';
 
 // Handles inline formats like *abc* and **abc**
-const applyInlinePatterns = (editor: Editor, areas: PatternArea[]) => {
+const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   const dom: DOMUtils = editor.dom;
   const newMarker = () => dom.create('span', {'data-mce-type': 'bookmark'});
   const markers = Arr.map(areas, () => ({ start: newMarker(), end: newMarker() }));

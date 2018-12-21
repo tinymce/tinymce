@@ -7,16 +7,15 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { PatternSet, BlockPattern } from '../api/Pattern';
+import Zwsp from 'tinymce/core/text/Zwsp';
+import { PatternSet } from '../api/Pattern';
+import { findBlockPattern, findNestedInlinePatterns, textBefore } from './FindPatterns';
 import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
-import { findNestedInlinePatterns, findBlockPattern, textBefore } from './FindPatterns';
-import { Option } from '@ephox/katamari';
-import Zwsp from '../../../../../core/main/ts/text/Zwsp';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  const areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
-  const block: Option<BlockPattern> = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
-  if (editor.selection.isCollapsed() && (areas.length > 0 || block.isSome())) {
+  const inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
+  const blockArea = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
+  if (editor.selection.isCollapsed() && (inlineAreas.length > 0 || blockArea.isSome())) {
     editor.undoManager.add();
     editor.undoManager.extra(
       () => {
@@ -25,11 +24,12 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       () => {
         // create a cursor position that we can move to avoid the inline formats
         editor.insertContent(Zwsp.ZWSP);
-        applyInlinePatterns(editor, areas);
-        block.each((pattern) => applyBlockPattern(editor, pattern));
-        // find the node before the cursor position
+        applyInlinePatterns(editor, inlineAreas);
+        blockArea.each((pattern) => applyBlockPattern(editor, pattern));
+        // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getParent(range.startContainer, editor.dom.isBlock));
+        const block = editor.dom.getParent(range.startContainer, editor.dom.isBlock);
+        const spot = textBefore(range.startContainer, range.startOffset, block);
         editor.execCommand('mceInsertNewLine');
         spot.each((s) => {
           if (Zwsp.isZwsp(s.node.data.charAt(s.offset - 1))) {
