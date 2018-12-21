@@ -47,15 +47,10 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
             Mouse.cClick,
             Mouse.cClick
           ]),
-<<<<<<< HEAD
-          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled" title="Previous"]'),
-          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled" title="Next"]')
-=======
           UiFinder.cFindIn('button[title="Previous"]'),
           UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]'),
           UiFinder.cFindIn('button[title="Next"]'),
           UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]')
->>>>>>> e6e5783302d521943a62e8e2d4d40e7c8f217551
         ])
       ])
     ])
