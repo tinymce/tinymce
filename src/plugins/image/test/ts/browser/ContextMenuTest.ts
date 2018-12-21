@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
     plugins: 'image',
     toolbar: 'image',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/ui/oxide/',
+    base_url: '/project/js/tinymce',
     image_caption: true
   }, success, failure);
 });

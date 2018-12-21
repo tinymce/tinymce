@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Cell } from '@ephox/katamari';
+import { Cell, Option } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
@@ -97,11 +97,12 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'dialog-button',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      base_url: '/project/js/tinymce',
       setup: (ed) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',
           text: 'Launch Dialog',
+          icon: Option.none(),
           onAction: () => {
             testDialogApi.set(ed.windowManager.open({
               title: 'Testing Blocking',

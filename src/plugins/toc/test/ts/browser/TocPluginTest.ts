@@ -189,6 +189,6 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     toc_class: 'tst-toc',
     toc_depth: 2,
     toc_header: 'h3',
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

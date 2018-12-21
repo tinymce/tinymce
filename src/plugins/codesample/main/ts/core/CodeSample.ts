@@ -9,8 +9,9 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Prism from './Prism';
 import Utils from '../util/Utils';
 import { Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const getSelectedCodeSample = (editor) => {
+const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
 
   if (Utils.isCodeSample(node)) {
@@ -20,7 +21,7 @@ const getSelectedCodeSample = (editor) => {
   return Option.none();
 };
 
-const insertCodeSample = (editor, language, code) => {
+const insertCodeSample = (editor: Editor, language: string, code: string) => {
   editor.undoManager.transact(() => {
     const node = getSelectedCodeSample(editor);
 
@@ -38,7 +39,7 @@ const insertCodeSample = (editor, language, code) => {
   });
 };
 
-const getCurrentCode = (editor): string => {
+const getCurrentCode = (editor: Editor): string => {
   const node = getSelectedCodeSample(editor);
   return node.fold(() => '', (n) => n.textContent);
 };

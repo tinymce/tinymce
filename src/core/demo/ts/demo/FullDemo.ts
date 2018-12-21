@@ -25,8 +25,7 @@ export default function () {
 
   const settings = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
-    visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
+    content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
     selector: 'textarea',
     // rtl_ui: true,

@@ -101,7 +101,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'legacyoutput',
       indent: false,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      base_url: '/project/js/tinymce',
       font_formats: 'Arial=arial,helvetica,sans-serif;'
     }, success, failure);
   }

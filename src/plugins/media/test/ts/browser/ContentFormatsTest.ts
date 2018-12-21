@@ -178,7 +178,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     plugins: 'media',
     toolbar: 'media',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
     live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',

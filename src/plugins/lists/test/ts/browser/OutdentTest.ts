@@ -396,6 +396,6 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

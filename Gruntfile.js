@@ -269,6 +269,7 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
+            flatten: true,
             cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
             src: [
               '*.min.css',
@@ -302,11 +303,6 @@ module.exports = function (grunt) {
             src: '**',
             dest: 'js/tinymce/skins/content'
           },
-        ]
-      },
-      plugins: {
-        files: [
-          { src: 'src/plugins/codesample/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
         ]
       },
       'emoticons-plugin': {

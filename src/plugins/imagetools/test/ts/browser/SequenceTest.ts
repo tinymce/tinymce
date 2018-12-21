@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
     theme: 'silver',
     plugins: 'imagetools',
     imagetools_cors_hosts: ['moxiecode.cachefly.net'],
-    skin_url: '/project/js/tinymce/skins/ui/oxide',
+    base_url: '/project/js/tinymce',
     toolbar: 'editimage',
   }, success, failure);
 });

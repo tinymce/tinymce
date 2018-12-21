@@ -92,9 +92,14 @@ export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFact
     innerHtml: translatedText
   };
 
+  const classes = [
+    ...spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
+    ...spec.icon.isSome() ? ['tox-ibtn'] : []
+  ];
+
   const dom = {
     tag: 'button',
-    classes: spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
+    classes,
     ...innerHtml,
     attributes: {
       title: translatedText // TODO: tooltips AP-213

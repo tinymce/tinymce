@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStyles
     plugins: 'lists',
     toolbar: 'numlist bullist',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

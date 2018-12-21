@@ -88,7 +88,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'grid-button',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      base_url: '/project/js/tinymce',
       setup: (ed) => {
         ed.ui.registry.addSplitButton('grid-button', {
           type: 'splitbutton',

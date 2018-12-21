@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Layout } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Layout, Bubble } from '@ephox/alloy';
 import { AnchorSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/mode/Anchoring';
 import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
 import { Menu } from '@ephox/bridge';
@@ -52,6 +52,17 @@ export interface UiFactoryBackstage {
   colorinput?: UiFactoryBackstageForColorInput;
 }
 
+const bubbleAlignments = {
+  valignCentre: [],
+  alignCentre: [],
+  alignLeft: [],
+  alignRight: [],
+  right: [],
+  left: [],
+  bottom: [],
+  top: []
+};
+
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const backstage: UiFactoryBackstage = {
     shared: {
@@ -69,6 +80,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             anchor: 'hotspot',
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
+            bubble: Bubble.nu(-12, 12, bubbleAlignments),
             layouts: {
               onRtl: () => [ Layout.southeast ],
               onLtr: () => [ Layout.southwest ]

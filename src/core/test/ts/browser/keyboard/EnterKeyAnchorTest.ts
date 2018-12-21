@@ -206,6 +206,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       sTestEnterAtEndOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

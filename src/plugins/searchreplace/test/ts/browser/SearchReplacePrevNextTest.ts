@@ -28,24 +28,34 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
             UiFinder.cFindIn('button:contains("Find")'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled" title="Next"]'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]'),
           Chain.fromChains([
             UiFinder.cFindIn('button[title="Next"]'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled" title="Previous"]'),
+          UiFinder.cFindIn('button[title="Previous"]'),
+          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled"]'),
           Chain.fromChains([
             UiFinder.cFindIn('button[title="Next"]'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for next button to be disabled', 'button[disabled="disabled" title:"Next"]'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be disabled', 'button[disabled="disabled"]'),
           Chain.fromChains([
             UiFinder.cFindIn('button[title="Previous"]'),
             Mouse.cClick,
             Mouse.cClick
           ]),
+<<<<<<< HEAD
           UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled" title="Previous"]'),
           UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled" title="Next"]')
+=======
+          UiFinder.cFindIn('button[title="Previous"]'),
+          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]')
+>>>>>>> e6e5783302d521943a62e8e2d4d40e7c8f217551
         ])
       ])
     ])
@@ -53,7 +63,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
 }, {
   plugins: 'searchreplace',
   toolbar: 'searchreplace',
-  skin_url: '/project/js/tinymce/skins/ui/oxide',
+  base_url: '/project/js/tinymce',
   theme: 'silver'
 }, success, failure);
 });

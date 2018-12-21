@@ -210,6 +210,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
     plugins: 'image',
     indent: false,
     inline: true,
-    skin_url: '/project/js/tinymce/skins/ui/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });
