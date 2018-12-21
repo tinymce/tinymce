@@ -1,26 +1,24 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
+import { Traverse } from 'ephox/sugar/api/Main';
 import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
-import { UnitTest, assert } from '@ephox/bedrock';
-import { console } from '@ephox/dom-globals';
-import { Traverse } from 'ephox/sugar/api/Main';
 
-UnitTest.asynctest('LocationTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('LocationTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var browser = PlatformDetection.detect().browser;
-  var scrollBarWidth = Scroll.scrollBarWidth();
+  const browser = PlatformDetection.detect().browser;
+  const scrollBarWidth = Scroll.scrollBarWidth();
 
   const leftScrollBarWidth = (doc) => {
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
@@ -28,33 +26,33 @@ UnitTest.asynctest('LocationTest', function() {
     return Location.relative(Traverse.documentElement(doc.body)).left();
   };
 
-  var asserteq = function (expected, actual, message) {
+  const asserteq = function (expected, actual, message) {
     // I wish assert.eq printed expected and actual on failure
-    var m = message === undefined ? undefined : 'expected ' + expected + ', was ' + actual + ': ' + message;
+    const m = message === undefined ? undefined : 'expected ' + expected + ', was ' + actual + ': ' + message;
     assert.eq(expected, actual, m);
   };
 
-  var testOne = function (ifr, attrMap, next) {
-    var iframe = Element.fromHtml(ifr);
+  const testOne = function (i, attrMap, next) {
+    const iframe = Element.fromHtml(i);
     Attr.setAll(iframe, attrMap.iframe);
 
-    var run = DomEvent.bind(iframe, 'load', function () {
+    const run = DomEvent.bind(iframe, 'load', function () {
       run.unbind();
       try {
-        var iframeWin = iframe.dom().contentWindow;
-        var iframeDoc = iframeWin.document;
-        var html = Element.fromDom(iframeDoc.documentElement);
-        var body = Element.fromDom(iframeDoc.body);
+        const iframeWin = iframe.dom().contentWindow;
+        const iframeDoc = iframeWin.document;
+        const html = Element.fromDom(iframeDoc.documentElement);
+        const body = Element.fromDom(iframeDoc.body);
         attrMap.html.each(Fun.curry(Attr.setAll, html));
         attrMap.body.each(Fun.curry(Attr.setAll, body));
-        var doc = {
-          iframe: iframe,
+        const doc = {
+          iframe,
           rawWin: iframeWin,
           rawDoc: Element.fromDom(iframeDoc),
-          body: body,
+          body,
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attr.get(body, 'dir') || 'ltr',
-          byId: function (str) {
+          byId (str) {
             return Option.from(iframeDoc.getElementById(str))
               .map(Element.fromDom)
               .getOrDie('cannot find element with id ' + str);
@@ -73,7 +71,7 @@ UnitTest.asynctest('LocationTest', function() {
     Insert.append(Body.body(), iframe);
   };
 
-  var ifr = '<iframe src="project/src/test/data/locationTest.html"></iframe>';
+  const ifr = '<iframe src="project/src/test/data/locationTest.html"></iframe>';
 
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
@@ -89,7 +87,7 @@ UnitTest.asynctest('LocationTest', function() {
         success);
     });
 
-  var checks = function (doc) {
+  const checks = function (doc) {
 
     Arr.each([
       baseChecks,
@@ -104,10 +102,10 @@ UnitTest.asynctest('LocationTest', function() {
     });
   };
 
-  var baseChecks = function () {
+  const baseChecks = function () {
     // these checks actually depend on the tunic stylesheet. They might not actually be useful.
-    var body = Body.body();
-    var pos = Location.absolute(body);
+    const body = Body.body();
+    let pos = Location.absolute(body);
     assert.eq(0, pos.top());
     assert.eq(0, pos.left());
     pos = Location.relative(body);
@@ -120,9 +118,9 @@ UnitTest.asynctest('LocationTest', function() {
 
   };
 
-  var disconnectedChecks = function () {
-    var div = Element.fromTag('div');
-    var pos = Location.absolute(div);
+  const disconnectedChecks = function () {
+    const div = Element.fromTag('div');
+    let pos = Location.absolute(div);
     assert.eq(0, pos.top());
     assert.eq(0, pos.left());
     pos = Location.relative(div);
@@ -133,14 +131,14 @@ UnitTest.asynctest('LocationTest', function() {
     assert.eq(0, pos.left());
   };
 
-  var absoluteChecks = function (doc) {
+  const absoluteChecks = function (doc) {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // This one has position absolute, but no values set initially
     Css.setAll(doc.byId('positionTest'), { top: '10px', left: '10px' });
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
 
-    var tests = [
+    const tests = [
       {
         id: 'absolute-1',
         absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } },
@@ -176,12 +174,12 @@ UnitTest.asynctest('LocationTest', function() {
     runChecks(doc, tests);
   };
 
-  var relativeChecks = function (doc) {
+  const relativeChecks = function (doc) {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
 
-    var tests = [
+    const tests = [
       {
         id: 'relative-1',
         absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
@@ -225,12 +223,12 @@ UnitTest.asynctest('LocationTest', function() {
     runChecks(doc, tests);
   };
 
-  var staticChecks = function (doc) {
+  const staticChecks = function (doc) {
     const leftScrollW = leftScrollBarWidth(doc);
 
-    var extraHeight = 230; // because all tests are in one page
+    const extraHeight = 230; // because all tests are in one page
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
-    var tests = [
+    const tests = [
       {
         id: 'static-1',
         absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
@@ -260,8 +258,8 @@ UnitTest.asynctest('LocationTest', function() {
     runChecks(doc, tests);
   };
 
-  var tableChecks = function (doc) {
-    var extraHeight = 460; // because all tests are in one page
+  const tableChecks = function (doc) {
+    const extraHeight = 460; // because all tests are in one page
     const leftScrollW = leftScrollBarWidth(doc);
 
     // JQUERY BUG:
@@ -269,7 +267,7 @@ UnitTest.asynctest('LocationTest', function() {
     // We aren't replicating that.
 
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
-    var tests = [
+    const tests = [
       {
         id: 'table-1',
         absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth + leftScrollW } },
@@ -306,9 +304,10 @@ UnitTest.asynctest('LocationTest', function() {
     // the difference between table.getBoundingClientRect() and cell.getBoundingClientRect() is correct.
     // I don't want to make every browser pay for Chrome's mistake in a scenario we don't need for TBIO, so we're living with it.
     if (PlatformDetection.detect().browser.isChrome()) {
-      var chromeDifference = -2;
+      const chromeDifference = -2;
       Arr.each(tests, function (t) {
         if (t.id !== 'table-1') {
+          // tslint:disable-next-line:no-console
           console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
           t.relative.top += chromeDifference;
           t.relative.left.ltr += chromeDifference;
@@ -320,11 +319,11 @@ UnitTest.asynctest('LocationTest', function() {
     runChecks(doc, tests);
   };
 
-  var fixedChecks = function (doc) {
+  const fixedChecks = function (doc) {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
-    var noScroll = [
+    const noScroll = [
       {
         id: 'fixed-1',
         absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } },
@@ -346,10 +345,10 @@ UnitTest.asynctest('LocationTest', function() {
     ];
 
     // relative scroll
-    var leftScroll = (doc.rtl && (browser.isIE() || browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
-    var topScroll = 2000;
+    const leftScroll = (doc.rtl && (browser.isIE() || browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
+    const topScroll = 2000;
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
-    var withScroll = [
+    const withScroll = [
       {
         id: 'fixed-1',
         absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: 1 + leftScrollW } },
@@ -370,7 +369,7 @@ UnitTest.asynctest('LocationTest', function() {
       }
     ];
 
-    var afterSetPosition = [
+    const afterSetPosition = [
       {
         id: 'fixed-no-top-left',
         absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: 21 + leftScrollW } },
@@ -381,7 +380,7 @@ UnitTest.asynctest('LocationTest', function() {
 
     runChecks(doc, noScroll);
 
-    var scr = Scroll.get(doc.rawDoc);
+    const scr = Scroll.get(doc.rawDoc);
     assert.eq(0, scr.left(), 'expected 0, left is=' + scr.left());
     assert.eq(0, scr.top(), 'expected 0, top is ' + scr.top());
 
@@ -393,11 +392,11 @@ UnitTest.asynctest('LocationTest', function() {
   };
 
   /* Simple verification logic */
-  var runChecks = function (doc, tests) {
+  const runChecks = function (doc, tests) {
     Arr.each(tests, function (t) {
-      var div = doc.byId(t.id);
+      const div = doc.byId(t.id);
 
-      var pos = Location.absolute(div);
+      let pos = Location.absolute(div);
       asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
       asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
       pos = Location.relative(div);
@@ -409,4 +408,3 @@ UnitTest.asynctest('LocationTest', function() {
     });
   };
 });
-

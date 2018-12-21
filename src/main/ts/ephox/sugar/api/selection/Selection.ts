@@ -1,43 +1,42 @@
-import { Adt } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Adt, Struct } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
 import Situ from './Situ';
 
 // Consider adding a type for "element"
-var type = Adt.generate([
+const type = Adt.generate([
   { domRange: [ 'rng' ] },
   { relative: [ 'startSitu', 'finishSitu' ] },
   { exact: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-var range = Struct.immutable(
+const range = Struct.immutable(
   'start',
   'soffset',
   'finish',
   'foffset'
 );
 
-var exactFromRange = function (simRange) {
+const exactFromRange = function (simRange) {
   return type.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
 };
 
-var getStart = function (selection) {
+const getStart = function (selection) {
   return selection.match({
-    domRange: function (rng) {
+    domRange (rng) {
       return Element.fromDom(rng.startContainer);
     },
-    relative: function (startSitu, finishSitu) {
+    relative (startSitu, finishSitu) {
       return Situ.getStart(startSitu);
     },
-    exact: function (start, soffset, finish, foffset) {
+    exact (start, soffset, finish, foffset) {
       return start;
     }
   });
 };
 
-var getWin = function (selection) {
-  var start = getStart(selection);
+const getWin = function (selection) {
+  const start = getStart(selection);
 
   return Traverse.defaultView(start);
 };
@@ -46,13 +45,4 @@ const domRange = type.domRange;
 const relative = type.relative;
 const exact = type.exact;
 
-export {
-  domRange,
-  relative,
-  exact,
-
-  exactFromRange,
-  range,
-
-  getWin,
-};
+export { domRange, relative, exact, exactFromRange, range, getWin, };

@@ -6,19 +6,21 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import { document, console } from '@ephox/dom-globals';
 
-var container = Element.fromTag('div');
+/* tslint:disable:no-console */
 
-var instructions = Element.fromTag('p');
+const container = Element.fromTag('div');
+
+const instructions = Element.fromTag('p');
 Html.set(instructions, 'Clicking on the button will remove "width" from the blue rectangle. Clicking it again will do nothing.');
 Insert.append(container, instructions);
 
-var button = Element.fromTag('button');
+const button = Element.fromTag('button');
 Html.set(button, 'Click on me');
-var input = Element.fromTag('input');
+const input = Element.fromTag('input');
 
 InsertAll.append(container, [button, input]);
 
-var doc = Element.fromDom(document);
+const doc = Element.fromDom(document);
 DomEvent.bind(doc, 'click', function (event) {
   console.log('target: ', event.target().dom());
   console.log('x: ', event.x());
@@ -27,7 +29,7 @@ DomEvent.bind(doc, 'click', function (event) {
   Css.remove(div, 'width');
 });
 
-var div = Element.fromTag('div');
+const div = Element.fromTag('div');
 Css.setAll(div, {
   width: '100px',
   height: '300px',
@@ -36,5 +38,5 @@ Css.setAll(div, {
 
 Insert.append(container, div);
 
-var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+const ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
 Insert.append(ephoxUi, container);

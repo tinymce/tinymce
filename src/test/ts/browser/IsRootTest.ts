@@ -1,26 +1,25 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Fun, Option } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
 import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
 import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
-import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
 import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import Checkers from 'ephox/sugar/test/Checkers';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('IsRootTest', function() {
+UnitTest.test('IsRootTest', function () {
   TestPage.connect(); // description of structure is in TestPage
 
-  var isRoot = function (e) {
+  const isRoot = function (e) {
     return Compare.eq(TestPage.d1, e);
   };
 
-  var checkNone = Fun.curry(Checkers.checkOpt, Option.none());
+  const checkNone = Fun.curry(Checkers.checkOpt, Option.none());
 
   checkNone(SelectorFind.ancestor(TestPage.t6, 'li', isRoot));
   checkNone(SelectorFind.ancestor(TestPage.t6, 'ol,ul', isRoot));
@@ -64,4 +63,3 @@ UnitTest.test('IsRootTest', function() {
 
   Remove.remove(TestPage.container);
 });
-

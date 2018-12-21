@@ -7,8 +7,8 @@ import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('TogglerTest', function() {
-  var runCheck = function (toggler, check) {
+UnitTest.test('TogglerTest', function () {
+  const runCheck = function (toggler, check) {
     check(false);
     toggler.toggle();
     check(true);
@@ -37,38 +37,36 @@ UnitTest.test('TogglerTest', function() {
 
   // this is all due for a good refactoring
 
-  var checkClass = function (has) {
+  const checkClass = function (has) {
     assert.eq(has, Class.has(c, 'blob'));
   };
 
-  var c = Div();
+  let c = Div();
   runCheck(Class.toggler(c, 'blob'), checkClass);
   c = Div();
   Insert.append(Body.body(), c);
   runCheck(Class.toggler(c, 'blob'), checkClass);
   Remove.remove(c);
 
-
   // CSS toggles are silly - we should delete this and do it in a way that does not require detection
 
-  var checkDisplayBlockRemoved = function (has) {
+  const checkDisplayBlockRemoved = function (has) {
     // oh IE, you bastard
     // var isie = PlatformDetection.detect().browser.isIE();
     // var off = isie ? 'block' : undefined;
-    var v = has ? 'none' : 'block';
+    const v = has ? 'none' : 'block';
     assert.eq(v, Css.get(c, 'display'));
   };
 
   // behaviour when not connected and not specified - which the link dialog relies on
   c = Div();
-  var v = Visibility.displayToggler(c, 'block');
+  let vis = Visibility.displayToggler(c, 'block');
   Insert.append(Body.body(), c);
-  runCheck(v, checkDisplayBlockRemoved);
+  runCheck(vis, checkDisplayBlockRemoved);
   Remove.remove(c);
 
-
-  var checkDisplayBlockNone = function (has) {
-    var v = has ? 'block' : 'none';
+  const checkDisplayBlockNone = function (has) {
+    const v = has ? 'block' : 'none';
     assert.eq(v, Css.get(c, 'display'));
   };
 
@@ -80,22 +78,20 @@ UnitTest.test('TogglerTest', function() {
   runCheck(Visibility.displayToggler(c, 'block'), checkDisplayBlockNone);
   Remove.remove(c);
 
-
-  var checkVisibilityVisibleRemoved = function (has) {
-    var v = has ? 'hidden' : 'visible';
+  const checkVisibilityVisibleRemoved = function (has) {
+    const v = has ? 'hidden' : 'visible';
     assert.eq(v, Css.get(c, 'visibility'));
   };
 
   // behaviour when not connected and not specified
   c = Div();
-  v = Visibility.toggler(c);
+  vis = Visibility.toggler(c);
   Insert.append(Body.body(), c);
-  runCheck(v, checkVisibilityVisibleRemoved);
+  runCheck(vis, checkVisibilityVisibleRemoved);
   Remove.remove(c);
 
-
-  var checkVisibilityVisibleHidden = function (has) {
-    var v = has ? 'visible' : 'hidden';
+  const checkVisibilityVisibleHidden = function (has) {
+    const v = has ? 'visible' : 'hidden';
     assert.eq(v, Css.get(c, 'visibility'));
   };
 
@@ -107,4 +103,3 @@ UnitTest.test('TogglerTest', function() {
   runCheck(Visibility.toggler(c), checkVisibilityVisibleHidden);
   Remove.remove(c);
 });
-

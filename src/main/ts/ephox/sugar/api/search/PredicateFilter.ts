@@ -5,24 +5,24 @@ import Element from '../node/Element';
 
 // maybe TraverseWith, similar to traverse but with a predicate?
 
-var all = function (predicate: (e: Element) => boolean) {
+const all = function (predicate: (e: Element) => boolean) {
   return descendants(Body.body(), predicate);
 };
 
-var ancestors = function (scope: Element, predicate: (e: Element) => boolean, isRoot?: (e: Element) => boolean) {
+const ancestors = function (scope: Element, predicate: (e: Element) => boolean, isRoot?: (e: Element) => boolean) {
   return Arr.filter(Traverse.parents(scope, isRoot), predicate);
 };
 
-var siblings = function (scope: Element, predicate: (e: Element) => boolean) {
+const siblings = function (scope: Element, predicate: (e: Element) => boolean) {
   return Arr.filter(Traverse.siblings(scope), predicate);
 };
 
-var children = function (scope: Element, predicate: (e: Element) => boolean) {
+const children = function (scope: Element, predicate: (e: Element) => boolean) {
   return Arr.filter(Traverse.children(scope), predicate);
 };
 
-var descendants = function (scope: Element, predicate: (e: Element) => boolean) {
-  var result: Element[] = [];
+const descendants = function (scope: Element, predicate: (e: Element) => boolean) {
+  let result: Element[] = [];
 
   // Recurse.toArray() might help here
   Arr.each(Traverse.children(scope), function (x) {

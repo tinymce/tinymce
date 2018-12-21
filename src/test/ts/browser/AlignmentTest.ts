@@ -8,29 +8,28 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('AlignmentTest', function() {
-  var body = Body.body();
-  var createDirectionalP = function (direction) {
-    var divEl = EphoxElement('div');
-    var par = EphoxElement('p');
+UnitTest.test('AlignmentTest', function () {
+  const body = Body.body();
+  const createDirectionalP = function (direction) {
+    const divEl = EphoxElement('div');
+    const par = EphoxElement('p');
     Attr.setAll(divEl, {dir: direction});
     Insert.append(body, divEl);
     Insert.append(divEl, par);
     return par;
   };
 
-  var check = function (element, property, value, expected) {
-    var res = Alignment.hasAlignment(element, property, value);
+  const check = function (element, property, value, expected) {
+    const res = Alignment.hasAlignment(element, property, value);
     assert.eq(expected, res);
     Traverse.parent(element).each(Remove.remove);
   };
 
-  var rtlP = createDirectionalP('rtl');
+  const rtlP = createDirectionalP('rtl');
   check(rtlP, 'text-align', 'left', false);
-  var rtlIsRight = createDirectionalP('rtl');
+  const rtlIsRight = createDirectionalP('rtl');
   check(rtlIsRight, 'text-align', 'right', true);
 
   /* should never be checking alignment on a text node */
   check(Element.fromText('Bacon eatsum'), 'text-align', 'left', false);
 });
-

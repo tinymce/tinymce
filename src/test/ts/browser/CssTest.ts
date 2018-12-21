@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -8,18 +8,18 @@ import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CssTest', function() {
-  var runChecks = function (connected) {
-    var c = Div();
-    var m = MathElement();
-    if (connected)
+UnitTest.test('CssTest', function () {
+  const runChecks = function (connected) {
+    const c = Div();
+    const m = MathElement();
+    if (connected) {
       Insert.append(Body.body(), c);
+    }
 
     Insert.append(Body.body(), m);
 
-    var check = function (k, v1, v2) {
+    const check = function (k, v1, v2) {
       Css.set(c, k, v1);
       Css.set(m, k, v1); // Just checking that the element
       assert.eq(v1, Css.get(c, k));
@@ -33,12 +33,12 @@ UnitTest.test('CssTest', function() {
     Css.set(c, 'position', 'relative'); // so that z-index actually does something
     check('z-index', '-1', '2');
 
-    var c2 = Div();
+    const c2 = Div();
     Css.copy(c, c2);
     Css.copy(m, c2);
 
     // NOTE: Safari seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
-    if (PlatformDetection.detect().browser.isSafari()) Css.copy(c, c2);
+    if (PlatformDetection.detect().browser.isSafari()) { Css.copy(c, c2); }
 
     Css.get(m, 'display');
     Css.getRaw(m, 'bogus');
@@ -47,9 +47,10 @@ UnitTest.test('CssTest', function() {
     assert.eq('block', Css.get(c2, 'display'));
 
     // getRaw
-    var d = Div();
-    if (connected)
+    const d = Div();
+    if (connected) {
       Insert.append(Body.body(), d);
+    }
     assert.eq(true, Css.getRaw(d, 'bogus').isNone());
 
     assert.eq(true, Css.getRaw(d, 'display').isNone());
@@ -68,7 +69,7 @@ UnitTest.test('CssTest', function() {
     Css.remove(d, 'background-color');
 
     // getAllRaw
-    var bulkStyles = {
+    const bulkStyles = {
       'display': 'inline-block',
       'font-size': '12px',
       'background-color': 'rgb(12, 213, 12)'
@@ -89,20 +90,22 @@ UnitTest.test('CssTest', function() {
     assert.eq(false, Css.isValidValue('span', 'font-size', 'value'));
     assert.eq(true, Css.isValidValue('span', 'margin-top', '23px'));
 
-    var play = Div();
-    if (connected)
+    const play = Div();
+    if (connected) {
       Insert.append(Body.body(), play);
+    }
 
     // ensure preserve works correctly when there are no styles
     Css.preserve(play, function (e) {
       Css.set(e, 'left', '0px');
     });
-    if (!(Attr.get(play, 'style') === '' || Attr.get(play, 'style') === undefined))
+    if (!(Attr.get(play, 'style') === '' || Attr.get(play, 'style') === undefined)) {
       assert.fail('lack of styles should have been preserved, was "' + Attr.get(play, 'style') + '"');
+    }
 
     Css.setAll(play, {
-      left: '0px',
-      right: '0px',
+      'left': '0px',
+      'right': '0px',
       'font-size': '12px'
     });
     assert.eq(true, Css.getRaw(play, 'font-size').isSome());
@@ -113,10 +116,10 @@ UnitTest.test('CssTest', function() {
     assert.eq(true, Css.getRaw(play, 'font-size').isSome(), 'Font size should have been preserved');
 
     Css.setOptions(play, {
-      left: Option.none(),
-      right: Option.none(),
-      top: Option.some('0px'),
-      bottom: Option.some('0px'),
+      'left': Option.none(),
+      'right': Option.none(),
+      'top': Option.some('0px'),
+      'bottom': Option.some('0px'),
       'font-size': Option.none(),
       'font-family': Option.some('Arial')
     });
@@ -136,4 +139,3 @@ UnitTest.test('CssTest', function() {
   runChecks(true);
   runChecks(false);
 });
-

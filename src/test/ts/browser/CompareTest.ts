@@ -4,10 +4,10 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CompareTest', function() {
+UnitTest.test('CompareTest', function () {
   TestPage.connect(); // description of structure is in TestPage
 
-  var check = function (expected, e1, e2) {
+  const check = function (expected, e1, e2) {
     assert.eq(expected, Compare.eq(e1, e2));
   };
 
@@ -21,7 +21,7 @@ UnitTest.test('CompareTest', function() {
   assert.eq(true, Compare.member(TestPage.p1, [TestPage.t2, TestPage.p1]));
   assert.eq(false, Compare.member(TestPage.p1, [TestPage.t2]));
 
-  var checkIsEqualNode = function (expected, e1, e2) {
+  const checkIsEqualNode = function (expected, e1, e2) {
     assert.eq(expected, Compare.isEqualNode(e1, e2));
   };
 
@@ -93,4 +93,3 @@ UnitTest.test('CompareTest', function() {
   // Clean up test page
   Remove.remove(TestPage.container);
 });
-

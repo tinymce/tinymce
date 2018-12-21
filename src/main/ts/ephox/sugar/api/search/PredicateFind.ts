@@ -1,63 +1,62 @@
-import { Type } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import * as Body from '../node/Body';
-import * as Compare from '../dom/Compare';
-import Element from '../node/Element';
-import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import { Node as DomNode } from '@ephox/dom-globals';
+import { Arr, Fun, Option, Type } from '@ephox/katamari';
+import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
+import * as Compare from '../dom/Compare';
+import * as Body from '../node/Body';
+import Element from '../node/Element';
 
-var first = function (predicate: (e: Element) => boolean) {
+const first = function (predicate: (e: Element) => boolean) {
   return descendant(Body.body(), predicate);
 };
 
-var ancestor = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
-  var element: DomNode = scope.dom();
-  var stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
+const ancestor = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
+  let element: DomNode = scope.dom();
+  const stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
   while (element.parentNode) {
     element = element.parentNode;
-    var el = Element.fromDom(element);
+    const el = Element.fromDom(element);
 
-    if (predicate(el)) return Option.some(el);
-    else if (stop(el)) break;
+    if (predicate(el)) { return Option.some(el); } else if (stop(el)) { break; }
   }
   return Option.none<Element>();
 };
 
-var closest = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
+const closest = function (scope: Element, predicate: (e: Element) => boolean, isRoot?) {
   // This is required to avoid ClosestOrAncestor passing the predicate to itself
-  var is = function (scope: Element) {
-    return predicate(scope);
+  const is = function (s: Element) {
+    return predicate(s);
   };
   return ClosestOrAncestor(is, ancestor, scope, predicate, isRoot);
 };
 
-var sibling = function (scope, predicate: (e: Element) => boolean) {
-  var element: DomNode = scope.dom();
-  if (!element.parentNode) return Option.none<Element>();
+const sibling = function (scope, predicate: (e: Element) => boolean) {
+  const element: DomNode = scope.dom();
+  if (!element.parentNode) { return Option.none<Element>(); }
 
   return child(Element.fromDom(element.parentNode), function (x) {
     return !Compare.eq(scope, x) && predicate(x);
   });
 };
 
-var child = function (scope: Element, predicate: (e: Element) => boolean) {
-  var result = Arr.find(scope.dom().childNodes,
+const child = function (scope: Element, predicate: (e: Element) => boolean) {
+  const result = Arr.find(scope.dom().childNodes,
     Fun.compose(predicate, Element.fromDom));
   return result.map(Element.fromDom);
 };
 
-var descendant = function (scope: Element, predicate: (e: Element) => boolean) {
-  var descend = function (node: DomNode): Option<Element> {
-    for (var i = 0; i < node.childNodes.length; i++) {
-      if (predicate(Element.fromDom(node.childNodes[i])))
+const descendant = function (scope: Element, predicate: (e: Element) => boolean) {
+  const descend = function (node: DomNode): Option<Element> {
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < node.childNodes.length; i++) {
+      if (predicate(Element.fromDom(node.childNodes[i]))) {
         return Option.some(Element.fromDom(node.childNodes[i]));
+      }
 
-      var res = descend(node.childNodes[i]);
-      if (res.isSome())
+      const res = descend(node.childNodes[i]);
+      if (res.isSome()) {
         return res;
+      }
     }
 
     return Option.none<Element>();
@@ -66,11 +65,4 @@ var descendant = function (scope: Element, predicate: (e: Element) => boolean) {
   return descend(scope.dom());
 };
 
-export {
-  first,
-  ancestor,
-  closest,
-  sibling,
-  child,
-  descendant,
-};
+export { first, ancestor, closest, sibling, child, descendant, };

@@ -1,7 +1,6 @@
-import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Option } from '@ephox/katamari';
 import { window } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 const platform = PlatformDetection.detect();
 const isTouch: () => boolean = platform.deviceType.isTouch;
@@ -48,12 +47,4 @@ const isSmallAndroid = function () {
   return isSmallTouch() && isAndroid();
 };
 
-export {
-  isTouch,
-  choice,
-  isLarge,
-  isLargeTouch,
-  isSmallTouch,
-  isLargeDesktop,
-  isSmallAndroid,
-};
+export { isTouch, choice, isLarge, isLargeTouch, isSmallTouch, isLargeDesktop, isSmallAndroid, };

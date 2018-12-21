@@ -3,18 +3,18 @@ import AttributeProperty from 'ephox/sugar/api/properties/AttributeProperty';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('AttributePropertyTest', function() {
-  var attrName = 'custom';
-  var attrValue = 'value';
-  var init = AttributeProperty(attrName, attrValue);
+UnitTest.test('AttributePropertyTest', function () {
+  const attrName = 'custom';
+  const attrValue = 'value';
+  const init = AttributeProperty(attrName, attrValue);
 
-  var rtlEl = EphoxElement('div');
+  const rtlEl = EphoxElement('div');
   Attr.set(rtlEl, 'custom', 'rtl');
 
-  var ltrEl = EphoxElement('div');
+  const ltrEl = EphoxElement('div');
   Attr.set(ltrEl, 'custom', 'value');
 
-  var link = EphoxElement('a');
+  const link = EphoxElement('a');
   Attr.set(link, 'href', '#');
 
   assert.eq(false, init.is(link));
@@ -31,4 +31,3 @@ UnitTest.test('AttributePropertyTest', function() {
   init.remove(link);
   assert.eq(Attr.get(link, 'custom'), undefined);
 });
-

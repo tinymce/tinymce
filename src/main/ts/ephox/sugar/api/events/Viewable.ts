@@ -1,10 +1,9 @@
-import { Fun } from '@ephox/katamari';
-import { Throttler } from '@ephox/katamari';
+import { clearInterval, setInterval } from '@ephox/dom-globals';
+import { Fun, Throttler } from '@ephox/katamari';
 import { Window } from '@ephox/sand';
+import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
 import * as Visibility from '../view/Visibility';
-import { setInterval, clearInterval } from '@ephox/dom-globals';
-import Element from '../node/Element';
 
 // TypeScript does not include MutationObserver on the window object, and it's accessed that way for... reasons?
 declare const window: any;
@@ -16,19 +15,19 @@ declare const window: any;
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
 
-var poll = function (element: Element, f) {
-  var poller = setInterval(f, 500);
+const poll = function (element: Element, f) {
+  const poller = setInterval(f, 500);
 
-  var unbindPoll = function () {
+  const unbindPoll = function () {
     clearInterval(poller);
   };
   return unbindPoll;
 };
 
-var mutate = function (element: Element, f) {
-  var observer = new window.MutationObserver(f);
+const mutate = function (element: Element, f) {
+  const observer = new window.MutationObserver(f);
 
-  var unbindMutate = function () {
+  const unbindMutate = function () {
     observer.disconnect();
   };
 
@@ -40,27 +39,25 @@ var mutate = function (element: Element, f) {
 };
 
 // IE11 and above, not using numerosity so we can poll on IE10
-var wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
+const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-var onShow = function (element: Element, f) {
+const onShow = function (element: Element, f) {
   if (Visibility.isVisible(element)) {
     Window.requestAnimationFrame(f);
     return Fun.noop;
   } else {
     // these events might come in thick and fast, so throttle them
-    var throttler = Throttler.adaptable(function () {
+    const throttler = Throttler.adaptable(function () {
       if (Visibility.isVisible(element)) {
         unbind();
         Window.requestAnimationFrame(f);
       }
     }, 100);
 
-    var unbind = wait(element, throttler.throttle);
+    const unbind = wait(element, throttler.throttle);
 
     return unbind;
   }
 };
 
-export {
-  onShow
-};
+export { onShow };

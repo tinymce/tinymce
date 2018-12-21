@@ -7,33 +7,33 @@ import * as CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
 import * as Edge from 'ephox/sugar/api/selection/Edge';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Browser Test: CursorPositionTest', function() {
-  var container = Element.fromTag('div');
-  var child1 = Element.fromText('');
-  var child2 = Element.fromText(' ');
-  var child3 = Element.fromTag('span');
+UnitTest.test('Browser Test: CursorPositionTest', function () {
+  const container = Element.fromTag('div');
+  const child1 = Element.fromText('');
+  const child2 = Element.fromText(' ');
+  const child3 = Element.fromTag('span');
 
-  var child3a = Element.fromText('3a');
-  var child3b = Element.fromText('3b');
-  var child3c = Element.fromText('');
-  var child3d = Element.fromTag('br');
-  var child3e = Element.fromText('');
+  const child3a = Element.fromText('3a');
+  const child3b = Element.fromText('3b');
+  const child3c = Element.fromText('');
+  const child3d = Element.fromTag('br');
+  const child3e = Element.fromText('');
   InsertAll.append(child3, [ child3a, child3b, child3c, child3d, child3e ]);
 
-  var child4 = Element.fromTag('br');
-  var child5 = Element.fromText('');
+  const child4 = Element.fromTag('br');
+  const child5 = Element.fromText('');
 
   InsertAll.append(container, [ child1, child2, child3, child4, child5 ]);
 
-  var checkFirst = function (label, expected, root) {
-    var actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
+  const checkFirst = function (label, expected, root) {
+    const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
-  }
+  };
 
-  var checkLast = function (label, expected, root) {
-    var actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
+  const checkLast = function (label, expected, root) {
+    const actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
-  }
+  };
 
   checkFirst('First of container (should skip empty container)', child3a, container);
   checkFirst('First of span', child3a, child3);
@@ -56,4 +56,3 @@ UnitTest.test('Browser Test: CursorPositionTest', function() {
   // INVESTIGATE: Not sure if offset here should be 0 or 1.
   assert.eq(true, Edge.isAtRightEdge(container, child4, 0));
 });
-

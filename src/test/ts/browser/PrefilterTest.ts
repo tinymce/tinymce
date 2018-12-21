@@ -4,8 +4,8 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Browser Test: PrefilterTest', function() {
-  var root = Element.fromHtml(
+UnitTest.test('Browser Test: PrefilterTest', function () {
+  const root = Element.fromHtml(
     '<div>' +
       '<span>dog</span>' +
       '<br>' +
@@ -14,7 +14,7 @@ UnitTest.test('Browser Test: PrefilterTest', function() {
     '</div>'
   );
 
-  var toString = function (situ) {
+  const toString = function (situ) {
     return situ.fold(function (b) {
       return 'before(' + Html.getOuter(b) + ')';
     }, function (e, o) {
@@ -24,12 +24,11 @@ UnitTest.test('Browser Test: PrefilterTest', function() {
     });
   };
 
+  const check = function (label, expected, elementPath, offset) {
+    const element = Hierarchy.follow(root, elementPath).getOrDie('Test: ' + label + '. Could not find the element path within root: ' + elementPath);
+    const actual = Prefilter.beforeSpecial(element, offset);
 
-  var check = function (label, expected, elementPath, offset) {
-    var element = Hierarchy.follow(root, elementPath).getOrDie('Test: ' + label + '. Could not find the element path within root: ' + elementPath);
-    var actual = Prefilter.beforeSpecial(element, offset);
-
-    var actualS = toString(actual);
+    const actualS = toString(actual);
     assert.eq(expected, actualS, 'Test: ' + label + '. Was: ' + actualS + ', but expected: ' + expected);
   };
 
@@ -43,4 +42,3 @@ UnitTest.test('Browser Test: PrefilterTest', function() {
   check('div > span3, 0', 'on(<span>cat</span>, 0)', [ 3 ], 0);
   check('div > span3, 1', 'on(<span>cat</span>, 1)', [ 3 ], 1);
 });
-

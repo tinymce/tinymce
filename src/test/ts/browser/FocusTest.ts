@@ -7,11 +7,11 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FocusTest', function() {
-  var div = Element.fromTag('div');
+UnitTest.test('FocusTest', function () {
+  const div = Element.fromTag('div');
   Attr.set(div, 'tabindex', '-1');
 
-  var input = Element.fromTag('input');
+  const input = Element.fromTag('input');
 
   Insert.append(div, input);
   Insert.append(Body.body(), div);
@@ -31,4 +31,3 @@ UnitTest.test('FocusTest', function() {
 
   Remove.remove(div);
 });
-

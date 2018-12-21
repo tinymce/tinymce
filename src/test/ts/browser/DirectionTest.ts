@@ -6,35 +6,34 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('DirectionTest', function() {
-  var el = EphoxElement('div');
-  var body = Body.body();
+UnitTest.test('DirectionTest', function () {
+  const el = EphoxElement('div');
+  const body = Body.body();
 
-  var appendToDom = function (element) {
+  const appendToDom = function (element) {
     Insert.append(body, element);
   };
 
-  var assertDirection = function (element, expectedDirection) {
+  const assertDirection = function (element, expectedDirection) {
     appendToDom(element);
-    var direction = Direction.getDirection(element);
-    assert.eq(expectedDirection, direction);
+    const dir = Direction.getDirection(element);
+    assert.eq(expectedDirection, dir);
     Remove.remove(element);
   };
 
-  var assertOnDirection = function (element, isLeftReturnThis, isRightReturnThis, expectedOn) {
+  const assertOnDirection = function (element, isLeftReturnThis, isRightReturnThis, expectedOn) {
     appendToDom(element);
-    var onDirection = Direction.onDirection(isLeftReturnThis, isRightReturnThis);
+    const onDirection = Direction.onDirection(isLeftReturnThis, isRightReturnThis);
     assert.eq(expectedOn, onDirection(element));
     Remove.remove(element);
   };
 
-  var direction = Direction.getDirection(el);
+  const direction = Direction.getDirection(el);
   assertDirection(el, 'ltr');
   assertOnDirection(el, 'isLeft', 'isRight', 'isLeft');
 
-  var arabicElement = EphoxElement('div');
+  const arabicElement = EphoxElement('div');
   Attr.setAll(arabicElement, {lang: 'ar', dir: 'rtl'});
   assertDirection(arabicElement, 'rtl');
   assertOnDirection(arabicElement, 'isLeft', 'isRight', 'isRight');
 });
-

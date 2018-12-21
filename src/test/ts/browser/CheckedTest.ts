@@ -4,12 +4,12 @@ import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Value from 'ephox/sugar/api/properties/Value';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CheckedTest', function() {
-  var container = Element.fromTag('div');
+UnitTest.test('CheckedTest', function () {
+  const container = Element.fromTag('div');
 
-  var alpha = Element.fromHtml('<input type="radio" value="alpha"></input>');
-  var beta = Element.fromHtml('<input type="radio" value="beta"></input>');
-  var gamma = Element.fromHtml('<input type="radio" value="gamma"></input>');
+  const alpha = Element.fromHtml('<input type="radio" value="alpha"></input>');
+  const beta = Element.fromHtml('<input type="radio" value="beta"></input>');
+  const gamma = Element.fromHtml('<input type="radio" value="gamma"></input>');
 
   InsertAll.append(container, [ alpha, beta, gamma ]);
 
@@ -19,4 +19,3 @@ UnitTest.test('CheckedTest', function() {
   Checked.set(alpha, true);
   assert.eq('alpha', Value.get(Checked.find(container).getOrDie()));
 });
-

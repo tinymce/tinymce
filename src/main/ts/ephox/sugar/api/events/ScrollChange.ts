@@ -6,12 +6,13 @@ import Element from '../node/Element';
  * change. This acts as an intermediary between the scroll event, and the value for scroll
  * changing
  */
-var bind = function (doc: Element, handler) {
-  var lastScroll = Scroll.get(doc);
-  var scrollBinder = DomEvent.bind(doc, 'scroll', function (event) {
-    var scroll = Scroll.get(doc);
-    if( (scroll.top() !== lastScroll.top()) || (scroll.left() !== lastScroll.left()) )
+const bind = function (doc: Element, handler) {
+  let lastScroll = Scroll.get(doc);
+  const scrollBinder = DomEvent.bind(doc, 'scroll', function (event) {
+    const scroll = Scroll.get(doc);
+    if ( (scroll.top() !== lastScroll.top()) || (scroll.left() !== lastScroll.left()) ) {
       handler(scroll);
+    }
     lastScroll = scroll;
   });
 

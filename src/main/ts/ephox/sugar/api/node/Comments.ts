@@ -1,16 +1,15 @@
+import { document, Node, TreeWalker } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { NodeFilter } from '@ephox/sand';
-import { PlatformDetection } from '@ephox/sand';
+import { NodeFilter, PlatformDetection } from '@ephox/sand';
 import Element from './Element';
-import { document, TreeWalker, Node } from '@ephox/dom-globals';
 
-var regularGetNodes = function (texas: TreeWalker) {
-  var ret: Element[] = [];
-  while (texas.nextNode() !== null) ret.push(Element.fromDom(texas.currentNode));
+const regularGetNodes = function (texas: TreeWalker) {
+  const ret: Element[] = [];
+  while (texas.nextNode() !== null) { ret.push(Element.fromDom(texas.currentNode)); }
   return ret;
 };
 
-var ieGetNodes = function (texas: TreeWalker) {
+const ieGetNodes = function (texas: TreeWalker) {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {
@@ -21,15 +20,15 @@ var ieGetNodes = function (texas: TreeWalker) {
 };
 
 // I hate needing platform detection in Sugar, but the alternative is to always try/catch which will swallow coding errors as well
-var browser = PlatformDetection.detect().browser;
-var getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNodes;
+const browser = PlatformDetection.detect().browser;
+const getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNodes;
 
 // Weird, but oh well
-var noFilter = Fun.constant(Fun.constant(true));
+const noFilter = Fun.constant(Fun.constant(true));
 
-var find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
+const find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
 
-  var vmlFilter: any = filterOpt.fold(noFilter, function (filter) {
+  const vmlFilter: any = filterOpt.fold(noFilter, function (filter) {
     return function (comment: Node) {
       return filter(comment.nodeValue);
     };
@@ -39,11 +38,9 @@ var find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  var texas = document.createTreeWalker(node.dom() as Node, NodeFilter().SHOW_COMMENT, vmlFilter, false);
+  const texas = document.createTreeWalker(node.dom() as Node, NodeFilter().SHOW_COMMENT, vmlFilter, false);
 
   return getNodes(texas);
 };
 
-export {
-  find
-};
+export { find };

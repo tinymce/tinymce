@@ -1,21 +1,20 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Obj } from '@ephox/katamari';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CssTransfer', function() {
-  var alpha = function () {
-    var r = Div();
+UnitTest.test('CssTransfer', function () {
+  const alpha = function () {
+    const r = Div();
     Css.setAll(r, {
-      display: 'inline',
+      'display': 'inline',
       'background-color': 'blue'
     });
     return r;
   };
 
-  var beta = function () {
-    var r = Div();
+  const beta = function () {
+    const r = Div();
     Css.setAll(r, {
       display: 'block',
       border: '1px solid black'
@@ -23,37 +22,36 @@ UnitTest.test('CssTransfer', function() {
     return r;
   };
 
-  var gamma = function () {
-    var r = Div();
+  const gamma = function () {
+    const r = Div();
     Css.setAll(r, {
       'background-color': 'red'
     });
     return r;
   };
 
-
-  var check = function (expectedPresent, expectedAbsent, source, destination, styles) {
+  const check = function (expectedPresent, expectedAbsent, source, destination, styles) {
     Css.transfer(source, destination, styles);
     Arr.each(expectedAbsent, function (k) {
-      if (Css.getRaw(destination, k).isSome()) assert.fail('Result should not have style: ' + k);
+      if (Css.getRaw(destination, k).isSome()) { assert.fail('Result should not have style: ' + k); }
     });
 
     Obj.each(expectedPresent, function (v, k) {
-      var value = Css.getRaw(destination, k).getOrDie('Result should have style: ' + k);
+      const value = Css.getRaw(destination, k).getOrDie('Result should have style: ' + k);
       assert.eq(v, value);
     });
   };
 
   check({
-    display: 'block',
+    'display': 'block',
     'background-color': 'blue',
-    border: '1px solid black'
+    'border': '1px solid black'
   }, [ 'text-align' ], alpha(), beta(), [ 'display', 'background-color' ]);
 
   check({
-    display: 'block',
+    'display': 'block',
     'background-color': 'blue',
-    border: '1px solid black'
+    'border': '1px solid black'
   }, [ 'text-align' ], alpha(), beta(), [ 'background-color' ]);
 
   check({
@@ -62,7 +60,7 @@ UnitTest.test('CssTransfer', function() {
   }, [ 'background-color' ], alpha(), beta(), [ 'display' ]);
 
   check({
-    display: 'inline',
+    'display': 'inline',
     'background-color': 'red'
   }, [ ], alpha(), gamma(), [ 'display' ]);
 
@@ -71,14 +69,13 @@ UnitTest.test('CssTransfer', function() {
   }, [ 'display' ], alpha(), gamma(), [ ]);
 
   check({
-    display: 'block',
-    border: '1px solid black',
+    'display': 'block',
+    'border': '1px solid black',
     'background-color': 'red'
   }, [ ], beta(), gamma(), [ 'display', 'border', 'background-color' ]);
 
   check({
-    display: 'block',
+    'display': 'block',
     'background-color': 'red'
   }, [ 'border' ], beta(), gamma(), [ 'display', 'background-color' ]);
 });
-

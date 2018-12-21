@@ -7,14 +7,15 @@ import * as Monitors from 'ephox/sugar/impl/Monitors';
 import { UnitTest } from '@ephox/bedrock';
 import { setTimeout } from '@ephox/dom-globals';
 
-UnitTest.asynctest('ResizeRaceTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ResizeRaceTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var div = Element.fromTag('div');
+  const div = Element.fromTag('div');
   Insert.append(Body.body(), div);
 
-  var handler = function () { };
+  // tslint:disable-next-line:no-empty
+  const handler = function () {};
   Resize.bind(div, handler);
   Remove.remove(div);
   Resize.unbind(div, handler);
@@ -27,4 +28,3 @@ UnitTest.asynctest('ResizeRaceTest', function() {
     }
   }, 200); // assumes the resize code still uses 100
 });
-

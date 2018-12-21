@@ -3,8 +3,8 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ReplicationTest', function() {
-  var checkValues = function (expected, actual) {
+UnitTest.test('ReplicationTest', function () {
+  const checkValues = function (expected, actual) {
     assert.eq(expected.name, 'span');
     assert.eq(expected.attrs.href, actual.dom().getAttribute('href'));
     assert.eq(expected.attrs['data-color'], actual.dom().getAttribute('data-color'));
@@ -13,16 +13,16 @@ UnitTest.test('ReplicationTest', function() {
     assert.eq(expected.styles.padding, actual.dom().style.getPropertyValue('padding'));
   };
 
-  var checkCopy = function (expected, input) {
-    var initial = Element.fromHtml(input);
-    var actual = Replication.copy(initial, 'span');
+  const checkCopy = function (expected, input) {
+    const initial = Element.fromHtml(input);
+    const actual = Replication.copy(initial, 'span');
     checkValues(expected, actual);
   };
 
-  var checkMutate = function (expected, input) {
-    var initial = Element.fromHtml(input);
+  const checkMutate = function (expected, input) {
+    const initial = Element.fromHtml(input);
 
-    var actual = Replication.mutate(initial, 'span');
+    const actual = Replication.mutate(initial, 'span');
 
     // mutate destroys the original element
     assert.eq(0, Traverse.children(initial).length);
@@ -30,24 +30,23 @@ UnitTest.test('ReplicationTest', function() {
     checkValues(expected, actual);
   };
 
-  var check = function (expected, input) {
+  const check = function (expected, input) {
     checkCopy(expected, input);
     checkMutate(expected, input);
   };
 
-  var expected = {
+  const exp = {
     name: 'span',
     attrs: {
       'href': 'http://www.google.com',
       'data-color': 'red'
     },
     styles: {
-      'margin': '0px',
+      margin: '0px',
       padding: '0px'
     },
     innerHtml: 'Link'
   };
 
-  check(expected, '<a href="http://www.google.com" data-color="red" style="margin: 0; padding: 0;">Link</a>');
+  check(exp, '<a href="http://www.google.com" data-color="red" style="margin: 0; padding: 0;">Link</a>');
 });
-

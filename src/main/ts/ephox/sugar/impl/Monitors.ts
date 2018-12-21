@@ -1,11 +1,10 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import * as Compare from '../api/dom/Compare';
 import Element from '../api/node/Element';
 
 export interface Polling {
-  element: Element,
-  unbind: () => void
+  element: Element;
+  unbind: () => void;
 }
 
 /*
@@ -14,48 +13,44 @@ export interface Polling {
 
   This list is shared across the entire page, so be wary of memory leaks when using it.
  */
-var polls: Polling[] = [];
+const polls: Polling[] = [];
 
-var poll = function (element: Element, unbind: () => void): Polling {
+const poll = function (element: Element, unbind: () => void): Polling {
   return {
-    element: element,
-    unbind: unbind
+    element,
+    unbind
   };
 };
 
-var findPoller = function (element: Element) {
+const findPoller = function (element: Element) {
   return Arr.findIndex(polls, function (p) {
     return Compare.eq(p.element, element);
   }).getOr(-1);
 };
 
-var begin = function (element: Element, f: () => (() => void)) {
-  var index = findPoller(element);
+const begin = function (element: Element, f: () => (() => void)) {
+  const index = findPoller(element);
   if (index === -1) {
-    var unbind = f();
+    const unbind = f();
     polls.push(poll(element, unbind));
   }
 };
 
-var query = function (element: Element) {
+const query = function (element: Element) {
   // Used in tests to determine whether an element is still being monitored
-  var index = findPoller(element);
+  const index = findPoller(element);
   return index === -1 ? Option.none<Polling>() : Option.some(polls[index]);
 };
 
-var end = function (element: Element) {
-  var index = findPoller(element);
+const end = function (element: Element) {
+  const index = findPoller(element);
 
   // This function is called speculatively, so just do nothing if there is no monitor for the element
-  if (index === -1) return;
+  if (index === -1) { return; }
 
-  var poller = polls[index];
+  const poller = polls[index];
   polls.splice(index, 1);
   poller.unbind();
 };
 
-export {
-  begin,
-  query,
-  end,
-};
+export { begin, query, end, };

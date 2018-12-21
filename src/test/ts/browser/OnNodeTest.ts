@@ -2,15 +2,15 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as OnNode from 'ephox/sugar/api/properties/OnNode';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('OnNodeTest', function() {
-  var element = Element.fromTag('div');
+UnitTest.test('OnNodeTest', function () {
+  const element = Element.fromTag('div');
 
-  var addAlpha = OnNode.addClass('alpha');
-  var addBeta = OnNode.addClass('beta');
-  var removeAll = OnNode.removeClasses([ 'alpha', 'beta' ]);
-  var removeAlpha = OnNode.removeClass('alpha');
-  var hasAlpha = OnNode.hasClass('alpha');
-  var hasBeta = OnNode.hasClass('beta');
+  const addAlpha = OnNode.addClass('alpha');
+  const addBeta = OnNode.addClass('beta');
+  const removeAll = OnNode.removeClasses([ 'alpha', 'beta' ]);
+  const removeAlpha = OnNode.removeClass('alpha');
+  const hasAlpha = OnNode.hasClass('alpha');
+  const hasBeta = OnNode.hasClass('beta');
 
   assert.eq(false, hasAlpha(element));
   addAlpha(element);
@@ -26,4 +26,3 @@ UnitTest.test('OnNodeTest', function() {
   assert.eq(false, hasAlpha(element));
   assert.eq(false, hasBeta(element));
 });
-

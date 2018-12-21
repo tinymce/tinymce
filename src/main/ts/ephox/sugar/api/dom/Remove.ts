@@ -19,14 +19,16 @@ const empty = function (element: Element) {
 
 const remove = function (element: Element) {
   const dom: Node = element.dom();
-  if (dom.parentNode !== null)
+  if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
+  }
 };
 
 const unwrap = function (wrapper: Element) {
   const children = Traverse.children(wrapper);
-  if (children.length > 0)
+  if (children.length > 0) {
     InsertAll.before(wrapper, children);
+  }
   remove(wrapper);
 };
 

@@ -1,5 +1,6 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { window } from '@ephox/dom-globals';
+import { Arr, Obj } from '@ephox/katamari';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
@@ -8,22 +9,20 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Selection from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock';
-import { window } from '@ephox/dom-globals';
 
-UnitTest.test('Browser Test: SelectionTest', function() {
-  var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+UnitTest.test('Browser Test: SelectionTest', function () {
+  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
   InsertAll.append(Body.body(), [ p1, p2 ]);
 
-  var assertWithin = function (expected, outer) {
+  const assertWithin = function (expected, outer) {
     WindowSelection.setToElement(window, outer);
     WindowSelection.getExact(window).fold(function () {
       assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
     }, function (sel) {
       Obj.each(expected, function (num, tag) {
-        var actual = WindowSelection.findWithin(
+        const actual = WindowSelection.findWithin(
           window,
           Selection.exact(sel.start(), sel.soffset(), sel.finish(), sel.foffset()),
           tag
@@ -52,4 +51,3 @@ UnitTest.test('Browser Test: SelectionTest', function() {
   Remove.remove(p1);
   Remove.remove(p2);
 });
-

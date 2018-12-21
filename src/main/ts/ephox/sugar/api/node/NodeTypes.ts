@@ -1,4 +1,4 @@
-import { Node } from "@ephox/dom-globals";
+import { Node } from '@ephox/dom-globals';
 
 const ATTRIBUTE = Node.ATTRIBUTE_NODE;
 const CDATA_SECTION = Node.CDATA_SECTION_NODE;

@@ -8,13 +8,13 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('DocumentPositionTest', function() {
-  var container = Element.fromTag('div');
-  var p1 = Element.fromTag('p');
-  var p1t1 = Element.fromText('p1text');
-  var p1t2 = Element.fromText('p2text');
-  var p1s1 = Element.fromTag('span');
-  var p1s1t1 = Element.fromText('spantext');
+UnitTest.test('DocumentPositionTest', function () {
+  const container = Element.fromTag('div');
+  const p1 = Element.fromTag('p');
+  const p1t1 = Element.fromText('p1text');
+  const p1t2 = Element.fromText('p2text');
+  const p1s1 = Element.fromTag('span');
+  const p1s1t1 = Element.fromText('spantext');
 
   /* Note: this looks like
    * <div>
@@ -34,7 +34,7 @@ UnitTest.test('DocumentPositionTest', function() {
 
   Insert.append(Body.body(), container);
 
-  var check = function (expected, start, soffset, finish, foffset, msg) {
+  const check = function (expected, start, soffset, finish, foffset, msg) {
     assert.eq(expected, DocumentPosition.after(start, soffset, finish, foffset), msg);
   };
 
@@ -54,18 +54,18 @@ UnitTest.test('DocumentPositionTest', function() {
 
   // commonAncestorContainer tests
   (function () {
-    var div = Element.fromTag('div');
-    var p1 = Element.fromTag('p');
-    var p2 = Element.fromTag('p');
-    var p1text = Element.fromText('One');
-    var p1textb = Element.fromText(', two');
-    var p1span = Element.fromTag('span');
-    var p1span1 = Element.fromText('cat');
-    var p1span2 = Element.fromText(' dog ');
-    var p2br = Element.fromTag('br');
+    const div = Element.fromTag('div');
+    const p11 = Element.fromTag('p');
+    const p2 = Element.fromTag('p');
+    const p1text = Element.fromText('One');
+    const p1textb = Element.fromText(', two');
+    const p1span = Element.fromTag('span');
+    const p1span1 = Element.fromText('cat');
+    const p1span2 = Element.fromText(' dog ');
+    const p2br = Element.fromTag('br');
 
-    InsertAll.append(div, [ p1, p2 ]);
-    InsertAll.append(p1, [ p1text, p1textb, p1span ]);
+    InsertAll.append(div, [ p11, p2 ]);
+    InsertAll.append(p11, [ p1text, p1textb, p1span ]);
     InsertAll.append(p1span, [ p1span1, p1span2 ]);
     Insert.append(p2, p2br);
     /* div+-p1
@@ -79,16 +79,15 @@ UnitTest.test('DocumentPositionTest', function() {
     */
     assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 0, div, 0)),
       'lca(div,0,div,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 0, div, 0)) + ', expected: \'<div>...\'');
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p1, 0, p2, 0)),
-      'lca(p1,0,p2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1, 0, p2, 0)) + ', expected: \'<div>...\'');
+    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)),
+      'lca(p1,0,p2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)) + ', expected: \'<div>...\'');
     assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 1, div, 2)),
-      'lca(div,1,div,2)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div,1,div,2)) + ', expected: \'<div>...\'');
+      'lca(div,1,div,2)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 1, div, 2)) + ', expected: \'<div>...\'');
     assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)),
-      'lca(p1span1,0,p2br,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1,0,p2br,0)) + ', expected: \'<div>...\'');
-    assert.eq(true, Compare.eq(p1, DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)),
-      'lca(p1text,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1text,0,p1span2,0)) + ', expected: \'p1\': <p>One, two...');
+      'lca(p1span1,0,p2br,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)) + ', expected: \'<div>...\'');
+    assert.eq(true, Compare.eq(p11, DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)),
+      'lca(p1text,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)) + ', expected: \'p1\': <p>One, two...');
     assert.eq(true, Compare.eq(p1span, DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)),
-      'lca(p1span1,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1,0,p1span2,0)) + ', expected: \'p1span\': <span>cat dog </span>');
+      'lca(p1span1,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)) + ', expected: \'p1span\': <span>cat dog </span>');
   })();
 });
-
