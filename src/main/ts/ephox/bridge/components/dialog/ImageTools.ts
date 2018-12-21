@@ -6,7 +6,7 @@ import { Blob } from '@ephox/dom-globals';
 export interface ImageToolsState {
   blob: Blob;
   url: string;
-};
+}
 
 export interface ImageToolsApi extends FormComponentApi {
   type: 'imagetools';

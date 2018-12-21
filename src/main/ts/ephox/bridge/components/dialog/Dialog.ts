@@ -108,7 +108,7 @@ export interface Dialog<T> {
 }
 
 export const dialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
   FieldSchema.field(
     'name',
     'name',
@@ -119,7 +119,7 @@ export const dialogButtonSchema = ValueSchema.objOf([
   ),
   FieldSchema.strictString('text'),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedString('align', 'end'),
+  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
