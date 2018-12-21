@@ -1,0 +1,27 @@
+//
+// Checklist
+//
+
+.tox-checklist {
+  > li:not(.tox-checklist--hidden) {
+    list-style: none;
+    margin: .25em 0;
+    position: relative;
+
+    &::before {
+      background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../svg/checklist-unchecked.svg');
+      background-size: 100%;
+      content: '';
+      cursor: pointer;
+      height: 1em;
+      left: -1.5em;
+      position: absolute;
+      top: .125em;
+      width: 1em;
+    }
+  }
+
+  li:not(.tox-checklist--hidden).tox-checklist--checked::before {
+    background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../svg/checklist-checked.svg');
+  }
+}
