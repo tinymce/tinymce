@@ -12,7 +12,6 @@ import ErrorReporter from 'tinymce/core/ErrorReporter';
 const defaultPatterns = [
   { start: '*', end: '*', format: 'italic' },
   { start: '**', end: '**', format: 'bold' },
-  { start: '***', end: '***', format: ['bold', 'italic'] },
   { start: '#', format: 'h1' },
   { start: '##', format: 'h2' },
   { start: '###', format: 'h3' },
