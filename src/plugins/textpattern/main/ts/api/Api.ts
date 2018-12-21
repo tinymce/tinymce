@@ -6,7 +6,7 @@
  */
 
 import { Cell, Results, Arr } from '@ephox/katamari';
-import { PatternSet, createPatternSet, normalizePattern, RawPattern } from './Pattern';
+import { PatternSet, createPatternSet, normalizePattern, RawPattern, denormalizePattern } from './Pattern';
 
 const get = (patternsState: Cell<PatternSet>) => {
   const setPatterns = (newPatterns: RawPattern[]) => {
@@ -19,10 +19,9 @@ const get = (patternsState: Cell<PatternSet>) => {
   };
 
   const getPatterns = () => {
-    // TODO should probably denormalize here
     return [
-      ...patternsState.get().inlinePatterns,
-      ...patternsState.get().blockPatterns,
+      ...Arr.map(patternsState.get().inlinePatterns, denormalizePattern),
+      ...Arr.map(patternsState.get().blockPatterns, denormalizePattern),
     ];
   };
 

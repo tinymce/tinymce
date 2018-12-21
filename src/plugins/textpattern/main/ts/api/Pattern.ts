@@ -162,6 +162,41 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
   }
 };
 
+const denormalizePattern = (pattern: Pattern): RawPattern => {
+  if (pattern.type === 'block-command') {
+    return {
+      start: pattern.start,
+      cmd: pattern.cmd,
+      value: pattern.value
+    };
+  } else if (pattern.type === 'block-format') {
+    return {
+      start: pattern.start,
+      format: pattern.format
+    };
+  } else if (pattern.type === 'inline-command') {
+    if (pattern.cmd === 'mceInsertContent' && pattern.start === '') {
+      return {
+        start: pattern.end,
+        replacement: pattern.value,
+      };
+    } else {
+      return {
+        start: pattern.start,
+        end: pattern.end,
+        cmd: pattern.cmd,
+        value: pattern.value
+      };
+    }
+  } else if (pattern.type === 'inline-format') {
+    return {
+      start: pattern.start,
+      end: pattern.end,
+      format: pattern.format.length === 1 ? pattern.format[0] : pattern.format
+    };
+  }
+};
+
 const createPatternSet = (patterns: Pattern[]): PatternSet => {
   return {
     inlinePatterns: Arr.filter(patterns, isInlinePattern) as InlinePattern[],
@@ -171,5 +206,6 @@ const createPatternSet = (patterns: Pattern[]): PatternSet => {
 
 export {
   normalizePattern,
+  denormalizePattern,
   createPatternSet
 };
