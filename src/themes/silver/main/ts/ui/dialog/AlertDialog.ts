@@ -8,7 +8,7 @@
 import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
 export const setup = (extras) => {
   const sharedBackstage = extras.backstage.shared;
@@ -24,7 +24,8 @@ export const setup = (extras) => {
       renderFooterButton({
         name: 'close-alert',
         text: 'OK',
-        primary: true
+        primary: true,
+        icon: Option.none()
       }, 'cancel', sharedBackstage.providers)
     );
 
