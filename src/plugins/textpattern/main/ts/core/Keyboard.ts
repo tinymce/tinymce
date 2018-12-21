@@ -10,24 +10,34 @@ import VK from 'tinymce/core/api/util/VK';
 import KeyHandler from './KeyHandler';
 import { PatternSet } from '../api/Pattern';
 import { Cell } from '@ephox/katamari';
+import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 const setup = function (editor, patternsState: Cell<PatternSet>) {
   const charCodes = [',', '.', ';', ':', '!', '?'];
   const keyCodes = [32];
 
-  editor.on('keydown', function (e) {
+  editor.on('AddUndo', function (e) {
+    console.log('Adding an undo', e);
+  });
+
+  editor.on('keydown', function (e: EditorEvent<KeyboardEvent>) {
     if (e.keyCode === 13 && !VK.modifierPressed(e)) {
-      KeyHandler.handleEnter(editor, patternsState.get());
+      console.log('keydown on enter');
+      const patterns = patternsState.get();
+      if (KeyHandler.handleEnter(editor, patterns)) {
+        e.preventDefault();
+      }
     }
   }, true);
 
-  editor.on('keyup', function (e) {
+  editor.on('keyup', function (e: EditorEvent<KeyboardEvent>) {
     if (KeyHandler.checkKeyCode(keyCodes, e)) {
       KeyHandler.handleInlineKey(editor, patternsState.get());
     }
   });
 
-  editor.on('keypress', function (e) {
+  editor.on('keypress', function (e: EditorEvent<KeyboardEvent>) {
     if (KeyHandler.checkCharCode(charCodes, e)) {
       Delay.setEditorTimeout(editor, function () {
         KeyHandler.handleInlineKey(editor, patternsState.get());

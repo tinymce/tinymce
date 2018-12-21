@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
@@ -14,43 +14,55 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
+    const sAssertContentAndCursor = (contentWithCursor: string) => {
+      const content = contentWithCursor.replace('|', '');
+      return GeneralSteps.sequence([
+        Step.label('Check content', tinyApis.sAssertContent(content)),
+        Step.label('Insert cursor marker', Step.sync(() => editor.insertContent('|'))),
+        Step.label('Check cursor position', Step.sync(() => {
+          const editorContent = editor.getContent();
+          const normalizedEditorContent = editorContent.replace(/&nbsp;/g, ' ');
+          const normalizedContentWithCursor = contentWithCursor.replace(/<(([^> ]*)[^>]*)>&nbsp;\|<\/\2>/g, '<$1>|</$2>').replace(/&nbsp;/g, ' ');
+          Assertions.assertHtml('Checking cursor', normalizedContentWithCursor, normalizedEditorContent);
+        })),
+      ]);
+    };
+
     const steps = Utils.withTeardown([
       Logger.t('Apply replacement pattern on space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brb'),
-        tinyApis.sAssertContent('<p>be right back&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 14, [0, 0], 14)
+        sAssertContentAndCursor('<p>be right back&nbsp;|</p>'),
       ])),
       Logger.t('Apply replacement pattern on space with content before', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'Xbrb'),
-        tinyApis.sAssertContent('<p>Xbe right back&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 15, [0, 0], 15)
+        sAssertContentAndCursor('<p>Xbe right back&nbsp;|</p>'),
       ])),
-      Logger.t('Apply replacement pattern on space with content after', GeneralSteps.sequence([
+      Logger.t('Do not replace on pattern with content after', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brbX'),
-        tinyApis.sAssertContent('<p>be right backX&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 15, [0, 0], 15)
+        sAssertContentAndCursor('<p>brbX&nbsp;|</p>'),
       ])),
       Logger.t('Apply replacement pattern on enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'brb'),
-        tinyApis.sAssertContentStructure(Utils.blockStructHelper('p', 'be right back')),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+        sAssertContentAndCursor('<p>be right back</p><p>&nbsp;|</p>'),
       ])),
       Logger.t('Apply replacement pattern on enter with content before', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'Xbrb'),
-        tinyApis.sAssertContent('<p>Xbe right back</p><p>&nbsp;</p>'),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+        sAssertContentAndCursor('<p>Xbe right back</p><p>&nbsp;|</p>'),
       ])),
 
       Logger.t('Apply replacement pattern and inline pattern on space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*brb*'),
-        tinyApis.sAssertContent('<p><em>be right back</em>&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1)
+        sAssertContentAndCursor('<p><em>be right back</em>&nbsp;|</p>'),
       ])),
       Logger.t('Apply replacement pattern and block pattern on enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#brb'),
-        tinyApis.sAssertContent('<h1>be right back</h1><p>&nbsp;</p>'),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+        sAssertContentAndCursor('<h1>be right back</h1><p>&nbsp;|</p>'),
       ])),
+      Logger.t('Apply replacement pattern italic pattern and block pattern on enter', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#*brb*'),
+        sAssertContentAndCursor('<h1><em>be right back</em></h1><p>&nbsp;|</p>'),
+      ])),
+      Step.fail('test'),
     ], tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);

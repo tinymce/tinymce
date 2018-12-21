@@ -2,15 +2,15 @@ import { ApproxStructure, GeneralSteps, Keys, Logger } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndPressKey = function (key) {
-  return function (tinyApis, tinyActions, content) {
+  return function (tinyApis, tinyActions, content: string, offset = content.length) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + '</p>'),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
         [0, 0],
-        content.length
+        offset
       ),
-      tinyActions.sContentKeystroke(key, {})
+      tinyActions.sContentKeystroke(key, {}),
     ]));
   };
 };
@@ -54,7 +54,6 @@ const inlineBlockStructHelper = function (tag, content) {
           s.element(tag, {
             children: [
               s.text(str.is(content)),
-              s.anything()
             ]
           })
         ]

@@ -34,6 +34,7 @@ UnitTest.asynctest(
           Step.sync(function () {
             editor.fire('keydown', { keyCode: 13 });
           })
+          // FIXME why does this test assert nothing?
         ])
       ], tinyApis.sSetContent(''));
 

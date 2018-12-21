@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { createPatternSet, PatternSet } from './Pattern';
-import { Obj } from '@ephox/katamari';
+import { createPatternSet, PatternSet, normalizePattern } from './Pattern';
+import { Obj, Type, Results, Arr } from '@ephox/katamari';
+import ErrorReporter from 'tinymce/core/ErrorReporter';
 
 const defaultPatterns = [
   { start: '*', end: '*', format: 'italic' },
@@ -25,7 +26,18 @@ const defaultPatterns = [
 
 const getPatternSet = (editorSettings): PatternSet => {
   const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
-  return createPatternSet(patterns);
+  if (!Type.isArray(patterns)) {
+    ErrorReporter.initError('The setting textpattern_patterns should be an array');
+    return {
+      inlinePatterns: [],
+      blockPatterns: [],
+    };
+  }
+  const normalized = Results.partition(Arr.map(patterns, normalizePattern));
+  Arr.each(normalized.errors, (err) => {
+    ErrorReporter.initError(err.message, err.pattern);
+  });
+  return createPatternSet(normalized.values);
 };
 
 export {

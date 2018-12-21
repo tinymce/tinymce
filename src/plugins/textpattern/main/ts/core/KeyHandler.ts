@@ -7,18 +7,49 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { PatternSet } from '../api/Pattern';
-import { applyBlockPattern, applyInlinePatternEnter, applyInlinePatternSpace, applyReplacementPattern } from './PatternApplication';
+import { PatternSet, BlockPattern } from '../api/Pattern';
+import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
+import { findNestedInlinePatterns, findBlockPattern, textBefore } from './FindPatterns';
+import { Option } from '@ephox/katamari';
+import Zwsp from '../../../../../core/main/ts/text/Zwsp';
 
-const handleEnter = (editor: Editor, patternSet: PatternSet): void => {
-  applyReplacementPattern(editor, patternSet.replacementPatterns);
-  applyInlinePatternEnter(editor, patternSet.inlinePatterns);
-  applyBlockPattern(editor, patternSet.blockPatterns);
+const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
+  const areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
+  const block: Option<BlockPattern> = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
+  if (editor.selection.isCollapsed() && (areas.length > 0 || block.isSome())) {
+    editor.undoManager.add();
+    editor.undoManager.extra(
+      () => {
+        editor.undoManager.transact(() => editor.execCommand('mceInsertNewLine'));
+      },
+      () => {
+        // create a cursor position that we can move to avoid the inline formats
+        editor.insertContent(Zwsp.ZWSP);
+        applyInlinePatterns(editor, areas);
+        block.each((pattern) => applyBlockPattern(editor, pattern));
+        // find the node before the cursor position
+        const range = editor.selection.getRng();
+        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getParent(range.startContainer, editor.dom.isBlock));
+        editor.execCommand('mceInsertNewLine');
+        spot.each((s) => {
+          if (Zwsp.isZwsp(s.node.data.charAt(s.offset - 1))) {
+            s.node.deleteData(s.offset - 1, 1);
+          }
+        });
+      }
+    );
+    return true;
+  }
+  return false;
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  applyReplacementPattern(editor, patternSet.replacementPatterns);
-  applyInlinePatternSpace(editor, patternSet.inlinePatterns);
+  const areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), true);
+  if (areas.length > 0) {
+    editor.undoManager.transact(() => {
+      applyInlinePatterns(editor, areas);
+    });
+  }
 };
 
 const checkKeyEvent = (codes, event, predicate) => {

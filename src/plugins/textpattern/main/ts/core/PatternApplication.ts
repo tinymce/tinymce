@@ -6,184 +6,124 @@
  */
 
 import { Node, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from 'tinymce/core/dom/NodeType';
-import { BlockPattern, InlinePattern, ReplacementPattern } from '../api/Pattern';
-import { findInlinePattern, findPattern, findReplacementPattern, ReplacementMatch } from './FindPatterns';
-
-const setSelection = (editor: Editor, textNode: Text, offset: number): void => {
-  const newRng = editor.dom.createRng();
-  newRng.setStart(textNode, offset);
-  newRng.setEnd(textNode, offset);
-  editor.selection.setRng(newRng);
-};
-
-const splitContainer = (container: Text, pattern: InlinePattern, endOffset: number, startOffset: number) => {
-  // Split text node and remove start/end from text node
-  container = startOffset > 0 ? container.splitText(startOffset) : container;
-  container.splitText(endOffset - startOffset + pattern.end.length);
-  container.deleteData(0, pattern.start.length);
-  container.deleteData(container.data.length - pattern.end.length, pattern.end.length);
-
-  return container;
-};
-
-const splitAndApply = (editor: Editor, container: Text, found: {pattern: InlinePattern, startOffset: number, endOffset: number}, inline: boolean) => {
-  const formatArray = Tools.isArray(found.pattern.format) ? found.pattern.format : [found.pattern.format];
-  const validFormats = Tools.grep(formatArray, (formatName) => {
-    const format = editor.formatter.get(formatName);
-    return format && format[0].inline;
-  });
-
-  if (validFormats.length !== 0) {
-    editor.undoManager.transact(() => {
-      container = splitContainer(container, found.pattern, found.endOffset, found.startOffset);
-      // The splitContainer function above moves the selection range in Safari
-      // so we have to set it back to the next sibling, the nbsp behind the
-      // split text node, when applying inline formats.
-      if (inline) {
-        editor.selection.setCursorLocation(container.nextSibling, 1);
-      }
-      formatArray.forEach((format) => {
-        editor.formatter.apply(format, {}, container);
-      });
-    });
-
-    return container;
-  }
-};
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { BlockPattern } from '../api/Pattern';
+import { PatternArea } from './FindPatterns';
+import { resolvePath } from './PathRange';
+import { Strings, Arr } from '@ephox/katamari';
 
 // Handles inline formats like *abc* and **abc**
-const applyInlinePattern = (editor: Editor, patterns: InlinePattern[], inline: boolean): Option<Text> => {
-  const rng = editor.selection.getRng();
-  return Option.from(findInlinePattern(patterns, rng, inline)).map((foundPattern) => {
-    return splitAndApply(editor, rng.startContainer as Text, foundPattern, inline);
-  });
-};
+const applyInlinePatterns = (editor: Editor, areas: PatternArea[]) => {
+  const dom: DOMUtils = editor.dom;
+  const newMarker = () => dom.create('span', {'data-mce-type': 'bookmark'});
+  const markers = Arr.map(areas, () => ({ start: newMarker(), end: newMarker() }));
 
-const applyInlinePatternSpace = (editor: Editor, patterns: InlinePattern[]): void => {
-  applyInlinePattern(editor, patterns, true).each((wrappedTextNode) => {
-    // Move space after the newly formatted node
-    const lastChar = wrappedTextNode.data.slice(-1);
-    if (/[\u00a0 ]/.test(lastChar)) {
-      wrappedTextNode.deleteData(wrappedTextNode.data.length - 1, 1);
-      const lastCharNode = editor.dom.doc.createTextNode(lastChar);
-      editor.dom.insertAfter(lastCharNode, wrappedTextNode.parentNode);
-      setSelection(editor, lastCharNode, 1);
+  // store the cursor position
+  const cursor = editor.selection.getBookmark();
+  // add marks for the left and right sides of the ranges and delete the pattern start/end
+  for (let i = areas.length - 1; i >= 0; i--) {
+    // insert right side marker
+    const { pattern, range } = areas[i];
+    const { node: endNode, offset: endOffset } = resolvePath(dom.getRoot(), range.end).getOrDie('Failed to resolve range[' + i + '].end');
+    const textOutsideRange = endOffset === 0 ? endNode : endNode.splitText(endOffset);
+    textOutsideRange.parentNode.insertBefore(markers[i].end, textOutsideRange);
+    // delete the end pattern, note we can't do that if the pattern has no start (ie is a replacement pattern)
+    if (pattern.end.length > 0 && pattern.start.length !== 0) {
+      endNode.deleteData(endOffset - pattern.end.length, pattern.end.length);
     }
-  });
-};
-
-const applyInlinePatternEnter = (editor: Editor, patterns: InlinePattern[]): void => {
-  applyInlinePattern(editor, patterns, false).each((wrappedTextNode) => {
-    setSelection(editor, wrappedTextNode, wrappedTextNode.data.length);
-  });
+  }
+  for (let i = 0; i < areas.length; i++) {
+    // insert left side marker
+    const { pattern, range } = areas[i];
+    const { node: startNode, offset: startOffset } = resolvePath(dom.getRoot(), range.start).getOrDie('Failed to resolve range.start');
+    const textInsideRange = startOffset === 0 ? startNode : startNode.splitText(startOffset);
+    textInsideRange.parentNode.insertBefore(markers[i].start, textInsideRange);
+    // delete the start pattern
+    if (pattern.start.length > 0) {
+      textInsideRange.deleteData(0, pattern.start.length);
+    } else {
+      textInsideRange.deleteData(0, pattern.end.length);
+    }
+  }
+  // apply the patterns
+  for (let i = 0; i < areas.length; i++) {
+    const { pattern } = areas[i];
+    const { start, end } = markers[i];
+    const doc = start.ownerDocument;
+    const range = doc.createRange();
+    range.setStartAfter(start);
+    range.setEndBefore(end);
+    editor.selection.setRng(range);
+    if (pattern.type === 'inline-format') {
+      pattern.format.forEach((format) => {
+        editor.formatter.apply(format);
+      });
+    } else {
+      editor.execCommand(pattern.cmd, false, pattern.value);
+    }
+    // remove the markers
+    start.parentNode.removeChild(start);
+    end.parentNode.removeChild(end);
+  }
+  // return the selection
+  editor.selection.moveToBookmark(cursor);
 };
 
 // Handles block formats like ##abc or 1. abc
-const applyBlockPattern = (editor: Editor, patterns: BlockPattern[]): void => {
-
-  const selection = editor.selection;
+const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   const dom = editor.dom;
-
-  if (!selection.isCollapsed()) {
+  const rng = editor.selection.getRng();
+  const block = dom.getParent(rng.startContainer, dom.isBlock);
+  if (!block || !dom.is(block, 'p') || !NodeType.isElement(block)) {
     return;
   }
 
-  const textBlockElm = dom.getParent(selection.getStart(), 'p');
-  if (textBlockElm) {
-    const walker = new TreeWalker(textBlockElm, textBlockElm);
-    let node: Node;
-    let firstTextNode: Text;
-    while ((node = walker.next())) {
-      if (NodeType.isText(node)) {
-        firstTextNode = node;
-        break;
-      }
-    }
-
-    if (firstTextNode) {
-      const pattern = findPattern(patterns, firstTextNode.data);
-      if (!pattern) {
-        return;
-      }
-
-      const rng = selection.getRng();
-      const container = rng.startContainer;
-      let offset = rng.startOffset;
-
-      if (firstTextNode === container) {
-        offset = Math.max(0, offset - pattern.start.length);
-      }
-
-      if (Tools.trim(firstTextNode.data).length === pattern.start.length) {
-        return;
-      }
-
-      if (pattern.format) {
-        const format = editor.formatter.get(pattern.format);
-        if (format && format[0].block) {
-          firstTextNode.deleteData(0, pattern.start.length);
-          editor.formatter.apply(pattern.format, {}, firstTextNode);
-
-          rng.setStart(container, offset);
-          rng.collapse(true);
-          selection.setRng(rng);
-        }
-      }
-
-      if (pattern.cmd) {
-        editor.undoManager.transact(function () {
-          firstTextNode.deleteData(0, pattern.start.length);
-          editor.execCommand(pattern.cmd);
-        });
-      }
+  const walker = new TreeWalker(block, block);
+  let node: Node;
+  let firstTextNode: Text;
+  while ((node = walker.next())) {
+    if (NodeType.isText(node)) {
+      firstTextNode = node;
+      break;
     }
   }
-};
-
-const replaceData = (target: Text, match: ReplacementMatch) => {
-  target.deleteData(match.startOffset, match.pattern.start.length);
-  target.insertData(match.startOffset, match.pattern.replacement);
-};
-
-const replaceMiddle = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  const startOffset = editor.selection.getRng().startOffset;
-  replaceData(target, match);
-  const newOffset = startOffset - match.pattern.start.length + match.pattern.replacement.length;
-  setSelection(editor, target, newOffset);
-};
-
-const replaceEnd = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  replaceData(target, match);
-  setSelection(editor, target, target.data.length);
-};
-
-const replace = (editor: Editor, target: Text, match: ReplacementMatch) => {
-  if (match.startOffset < target.data.length) {
-    replaceMiddle(editor, target, match);
-  } else {
-    replaceEnd(editor, target, match);
+  if (!firstTextNode) {
+    return;
   }
-};
+  if (!Strings.startsWith(firstTextNode.data, pattern.start)) {
+    return;
+  }
+  if (Tools.trim(block.textContent).length === pattern.start.length) {
+    return;
+  }
 
-const applyReplacementPattern = (editor: Editor, patterns: ReplacementPattern[]) => {
-  const rng = editor.selection.getRng();
-  const container = rng.startContainer;
-
-  if (rng.collapsed && NodeType.isText(container)) {
-    findReplacementPattern(patterns, rng.startOffset, container.data).each((match) => {
-      replace(editor, container, match);
+  // add a marker to store the cursor position
+  const cursor = editor.selection.getBookmark();
+  if (pattern.type === 'block-format') {
+    const format = editor.formatter.get(pattern.format);
+    if (format && format[0].block) {
+      editor.undoManager.transact(function () {
+        firstTextNode.deleteData(0, pattern.start.length);
+        editor.selection.select(block);
+        editor.formatter.apply(pattern.format);
+      });
+    }
+  } else if (pattern.type === 'block-command') {
+    editor.undoManager.transact(function () {
+      firstTextNode.deleteData(0, pattern.start.length);
+      editor.selection.select(block);
+      editor.execCommand(pattern.cmd, false, pattern.value);
     });
   }
+  // return the selection
+  editor.selection.moveToBookmark(cursor);
 };
 
 export {
-  applyReplacementPattern,
-  applyInlinePatternSpace,
-  applyInlinePatternEnter,
+  applyInlinePatterns,
   applyBlockPattern
 };
