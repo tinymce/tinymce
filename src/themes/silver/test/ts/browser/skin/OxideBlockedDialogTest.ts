@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Cell } from '@ephox/katamari';
+import { Cell, Option } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
@@ -102,6 +102,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',
           text: 'Launch Dialog',
+          icon: Option.none(),
           onAction: () => {
             testDialogApi.set(ed.windowManager.open({
               title: 'Testing Blocking',
