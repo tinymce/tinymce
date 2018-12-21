@@ -38920,7 +38920,7 @@ define("tinymce/Editor", [
 			// TODO: ACC add the appropriate description on this.
 			var ifr = DOM.create('iframe', {
 				id: self.id + "_ifr",
-				//src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				//src: url || 'about:blank', // Workaround for HTTPS warning in IE6/7
 				frameBorder: '0',
 				allowTransparency: "true",
 				title: self.editorManager.translate(
@@ -38939,7 +38939,7 @@ define("tinymce/Editor", [
 				self.fire("load");
 			};
 
-			DOM.setAttrib(ifr, "src", url || 'javascript:""');
+			DOM.setAttrib(ifr, "src", url || 'about:blank');
 
 			self.contentAreaContainer = o.iframeContainer;
 			self.iframeElement = ifr;
@@ -46643,7 +46643,7 @@ define("tinymce/ui/Iframe", [
 			/*eslint no-script-url:0 */
 			return (
 				'<iframe id="' + self._id + '" class="' + self.classes + '" tabindex="-1" src="' +
-				(self.settings.url || "javascript:''") + '" frameborder="0"></iframe>'
+				(self.settings.url || "about:blank") + '" frameborder="0"></iframe>'
 			);
 		},
 
