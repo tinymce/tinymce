@@ -62,7 +62,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#*brb*'),
         sAssertContentAndCursor('<h1><em>be right back</em></h1><p>&nbsp;|</p>'),
       ])),
-      Step.fail('test'),
     ], tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);

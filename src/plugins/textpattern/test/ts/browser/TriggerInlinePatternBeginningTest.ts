@@ -27,14 +27,14 @@ UnitTest.asynctest(
           }),
           tinyApis.sAssertContent('<p>*</p><p>a*</p>')
         ]),
-        Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *a*', [
+        Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *b*', [
           tinyApis.sSetContent('<p><strong>a</strong>*b*</p>'),
           tinyApis.sFocus,
           tinyApis.sSetCursor([0, 1], 1),
           Step.sync(function () {
             editor.fire('keydown', { keyCode: 13 });
-          })
-          // FIXME why does this test assert nothing?
+          }),
+          tinyApis.sAssertContent('<p><strong>a</strong>*</p><p>b*</p>')
         ])
       ], tinyApis.sSetContent(''));
 

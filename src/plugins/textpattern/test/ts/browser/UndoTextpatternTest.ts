@@ -14,20 +14,29 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
-    const steps = Utils.withTeardown([
-      Log.stepsAsStep('TBA', 'TextPattern: inline italic then undo', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
-        tinyApis.sExecCommand('Undo'),
-        tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
-      ])],
+    const steps = Utils.withTeardown(
+      [
+        Log.stepsAsStep('TBA', 'TextPattern: inline italic then undo', [
+          Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
+          tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
+        ]),
+        Log.stepsAsStep('TBA', 'TextPattern: block italic then undo', [
+          Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '*a*'),
+          Utils.sNormalizeTextNodes(editor),
+          tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('em', 'a')),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>')
+        ]),
+      ],
       tinyApis.sSetContent('')
     );
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
-    plugins: 'textpattern',
-    toolbar: 'textpattern',
-    skin_url: '/project/js/tinymce/skins/oxide'
-  }, success, failure);
+      plugins: 'textpattern',
+      toolbar: 'textpattern',
+      skin_url: '/project/js/tinymce/skins/oxide'
+    }, success, failure);
 });

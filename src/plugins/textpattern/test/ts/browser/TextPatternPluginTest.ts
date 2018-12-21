@@ -17,10 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
-
-    const sNormalizeTextNodes = Step.label('Normalize text nodes', Step.sync(() => {
-      editor.getBody().normalize();
-    }));
+    const sNormalizeTextNodes = Utils.sNormalizeTextNodes(editor);
 
     const steps = Utils.withTeardown([
       Step.label('Space on ** without content does nothing', GeneralSteps.sequence([
