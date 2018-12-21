@@ -11,6 +11,7 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const defaultBlocks = (
   'Paragraph=p;' +
@@ -77,13 +78,13 @@ const getSpec = (editor): SelectSpec & { dataset } => {
   };
 };
 
-const createFormatSelect = (editor, backstage) => {
+const createFormatSelect = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   return createSelectButton(editor, backstage, spec.dataset, spec);
 };
 
 // FIX: Test this!
-const formatSelectMenu = (editor, backstage) => {
+const formatSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   return {

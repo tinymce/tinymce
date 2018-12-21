@@ -1,7 +1,8 @@
 // import { Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export default {
-  setup: (ed) => {
+  setup: (ed: Editor) => {
     ed.addButton('basic-button-1', {
       type: 'textbutton',
       text: 'basic-button-1',
@@ -87,7 +88,7 @@ export default {
       }
     });
 
-    ed.ui.registry.addMenuItem('menu-button-item-2', {
+    ed.ui.registry.addNestedMenuItem('menu-button-item-2', {
       text: 'menu-button-item-2',
       getSubmenuItems () {
         return [

@@ -6,8 +6,9 @@
  */
 
 import * as Dialog from './Dialog';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addButton('wordcount', {
     tooltip: 'Wordcount',
     icon: 'character-count',

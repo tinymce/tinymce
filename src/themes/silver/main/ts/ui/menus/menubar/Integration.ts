@@ -18,6 +18,7 @@ import { fontSelectMenu } from '../../core/complex/FontSelect';
 import { fontsizeSelectMenu } from '../../core/complex/FontsizeSelect';
 import { getRemovedMenuItems } from '../../../api/Settings';
 import ItemResponse from '../item/ItemResponse';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export interface MenuRegistry {
   menuItems: Record<string, any>;
@@ -103,7 +104,7 @@ const parseItemsString = (items: string): string[] => {
   return items;
 };
 
-const identifyMenus = (editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
+const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
   const rawMenuData = Merger.merge(defaultMenus, registry.menus);
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 

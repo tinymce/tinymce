@@ -7,6 +7,7 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from '../../../../../../core/main/ts/api/Editor';
+import { Toolbar } from '@ephox/bridge';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
@@ -28,7 +29,7 @@ const addFormatChangedListener = (editor: Editor, name: string, changed: (state:
   }
 };
 
-const postRenderFormatToggle = (editor: Editor, name: string) => (api) => {
+const postRenderFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
   addFormatChangedListener(editor, name, (state) => {
     api.setActive(state);
   });
@@ -36,7 +37,7 @@ const postRenderFormatToggle = (editor: Editor, name: string) => (api) => {
   return () => { };
 };
 
-const registerFormatButtons = (editor) => {
+const registerFormatButtons = (editor: Editor) => {
   Tools.each([
     {name: 'bold', text: 'Bold', icon: 'bold'},
     {name: 'italic', text: 'Italic', icon: 'italic'},
@@ -54,7 +55,7 @@ const registerFormatButtons = (editor) => {
   });
 };
 
-const registerCommandButtons = (editor) => {
+const registerCommandButtons = (editor: Editor) => {
   Tools.each([
     {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut'},
     {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy'},
@@ -74,7 +75,7 @@ const registerCommandButtons = (editor) => {
   });
 };
 
-const registerCommandToggleButtons = (editor) => {
+const registerCommandToggleButtons = (editor: Editor) => {
   Tools.each([
     {name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote'},
   ], (btn) => {
@@ -87,13 +88,13 @@ const registerCommandToggleButtons = (editor) => {
   });
 };
 
-const registerButtons = (editor) => {
+const registerButtons = (editor: Editor) => {
   registerFormatButtons(editor);
   registerCommandButtons(editor);
   registerCommandToggleButtons(editor);
 };
 
-const registerMenuItems = (editor) => {
+const registerMenuItems = (editor: Editor) => {
   Tools.each([
     {name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B'},
     {name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I'},
@@ -123,7 +124,7 @@ const registerMenuItems = (editor) => {
   });
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   registerButtons(editor);
   registerMenuItems(editor);
 };

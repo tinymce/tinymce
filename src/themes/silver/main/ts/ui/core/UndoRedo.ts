@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const toggleUndoRedoState = (api, editor, type) => {
+import { Editor } from 'tinymce/core/api/Editor';
+import { Menu } from '@ephox/bridge';
+
+const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {
   const checkState = () => {
     return editor.undoManager ? editor.undoManager[type]() : false;
   };
@@ -20,7 +23,7 @@ const toggleUndoRedoState = (api, editor, type) => {
   return () => editor.off('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', onUndoStateChange);
 };
 
-const registerMenuItems = (editor) => {
+const registerMenuItems = (editor: Editor) => {
   editor.ui.registry.addMenuItem('undo', {
     text: 'Undo',
     icon: 'undo',
@@ -38,7 +41,7 @@ const registerMenuItems = (editor) => {
   });
 };
 
-const registerButtons = (editor) => {
+const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('undo', {
     tooltip: 'Undo',
     icon: 'undo',
@@ -54,7 +57,7 @@ const registerButtons = (editor) => {
   });
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   registerMenuItems(editor);
   registerButtons(editor);
 };
