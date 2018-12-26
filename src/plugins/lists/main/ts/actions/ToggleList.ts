@@ -12,6 +12,10 @@ import NodeType from '../core/NodeType';
 import Selection from '../core/Selection';
 import { HTMLElement } from '@ephox/dom-globals';
 import { flattenListSelection } from './Indendation';
+import { fireListEvent } from '../api/Events';
+import { isCustomList } from '../core/Util';
+import { Editor } from 'tinymce/core/api/Editor';
+import { listToggleActionFromListName } from '../core/ListAction';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
@@ -217,12 +221,14 @@ const mergeWithAdjacentLists = function (dom, listBlock) {
   }
 };
 
-const updateList = function (dom, list, listName, detail) {
+const updateList = function (editor: Editor, list, listName, detail) {
   if (list.nodeName !== listName) {
-    const newList = dom.rename(list, listName);
-    updateListWithDetails(dom, newList, detail);
+    const newList = editor.dom.rename(list, listName);
+    updateListWithDetails(editor.dom, newList, detail);
+    fireListEvent(editor, listToggleActionFromListName(listName), newList);
   } else {
-    updateListWithDetails(dom, list, detail);
+    updateListWithDetails(editor.dom, list, detail);
+    fireListEvent(editor, listToggleActionFromListName(listName), list);
   }
 };
 
@@ -233,7 +239,7 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
     Tools.each([parentList].concat(lists), function (elm) {
-      updateList(editor.dom, elm, listName, detail);
+      updateList(editor, elm, listName, detail);
     });
 
     editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
@@ -244,22 +250,25 @@ const hasListStyleDetail = function (detail) {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList = function (editor, parentList, listName, detail) {
+const toggleSingleList =  function (editor, parentList, listName, detail) {
   if (parentList === editor.getBody()) {
     return;
   }
 
   if (parentList) {
-    if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
+    if (parentList.nodeName === listName && !hasListStyleDetail(detail) && !isCustomList(parentList)) {
       flattenListSelection(editor);
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
       updateListWithDetails(editor.dom, parentList, detail);
-      mergeWithAdjacentLists(editor.dom, editor.dom.rename(parentList, listName));
+      const newList = editor.dom.rename(parentList, listName);
+      mergeWithAdjacentLists(editor.dom, newList);
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      fireListEvent(editor, listToggleActionFromListName(listName), newList);
     }
   } else {
     applyList(editor, listName, detail);
+    fireListEvent(editor, listToggleActionFromListName(listName), parentList);
   }
 };
 

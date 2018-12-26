@@ -5,6 +5,7 @@ import { document } from '@ephox/dom-globals';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { Body, Element } from '@ephox/sugar';
+import { Menu } from '@ephox/bridge';
 
 const tableCellsApprox = (s, arr, selectedRows, selectedCols) => {
   const cells = [];
@@ -90,7 +91,7 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
               {
                 type: 'fancymenuitem',
                 fancytype: 'inserttable'
-              }
+              } as Menu.FancyMenuItemApi
             ]);
           }
         });

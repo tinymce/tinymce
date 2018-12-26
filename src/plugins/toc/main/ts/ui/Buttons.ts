@@ -7,8 +7,10 @@
 
 import Settings from '../api/Settings';
 import Toc from '../core/Toc';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Toolbar } from '@ephox/bridge';
 
-const toggleState = (editor) => (api) => {
+const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
   const toggleDisabledState = () => api.setDisabled(editor.readonly || !Toc.hasHeaders(editor));
 
   toggleDisabledState();
@@ -16,13 +18,13 @@ const toggleState = (editor) => (api) => {
   return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = (editor) => {
+const isToc = (editor: Editor) => {
   return (elm) => {
     return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
   };
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   editor.ui.registry.addButton('toc', {
     icon: 'toc',
     tooltip: 'Table of contents',

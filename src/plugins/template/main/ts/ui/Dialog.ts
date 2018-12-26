@@ -112,7 +112,7 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
     });
   };
 
-  const onChange = (templates) => (api, change) => {
+  const onChange = (templates) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {

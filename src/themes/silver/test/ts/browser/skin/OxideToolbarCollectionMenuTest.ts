@@ -18,6 +18,8 @@ import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { TestStore } from '../../module/AlloyTestUtils';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Menu } from '@ephox/bridge';
 
 UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
   Theme();
@@ -158,7 +160,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
       menubar: true,
       toolbar: 'toolbar-collection',
       base_url: '/project/js/tinymce',
-      setup: (ed) => {
+      setup: (ed: Editor) => {
         ed.ui.registry.addSplitButton('toolbar-collection', {
           type: 'splitbutton',
           columns: 3,
@@ -172,7 +174,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                   icon: 'fake-icon-name',
                   text: `${letter}-button`,
                   onAction: store.adder(`${letter}-onAction`)
-                };
+                } as Menu.ChoiceMenuItemApi;
               })
             );
           },

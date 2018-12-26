@@ -9,8 +9,9 @@ import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const setup = (editor, mothership, uiMothership) => {
+const setup = (editor: Editor, mothership, uiMothership) => {
   const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
     Arr.each([ mothership, uiMothership ], function (ship) {
       ship.broadcastOn([ Channels.dismissPopups() ], {

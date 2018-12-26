@@ -6,8 +6,9 @@
  */
 
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const addToEditor = (editor) => {
+const addToEditor = (editor: Editor) => {
   editor.ui.registry.addContextToolbar('textselection', {
     predicate: (node) => {
       return !editor.selection.isCollapsed();

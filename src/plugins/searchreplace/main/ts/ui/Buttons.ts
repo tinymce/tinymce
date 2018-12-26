@@ -6,14 +6,15 @@
  */
 
 import Dialog from './Dialog';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const showDialog = function (editor, currentIndexState) {
+const showDialog = function (editor: Editor, currentIndexState) {
   return function () {
     Dialog.open(editor, currentIndexState);
   };
 };
 
-const register = function (editor, currentIndexState) {
+const register = function (editor: Editor, currentIndexState) {
   editor.ui.registry.addMenuItem('searchreplace', {
     text: 'Find and replace',
     shortcut: 'Meta+F',

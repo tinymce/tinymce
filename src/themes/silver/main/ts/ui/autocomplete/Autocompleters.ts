@@ -8,6 +8,7 @@
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent } from '@ephox/bridge';
 import { Obj, Arr, Unique } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export interface AutocompleterDatabase {
   dataset: Record<string, InlineContent.Autocompleter>;
@@ -15,7 +16,7 @@ export interface AutocompleterDatabase {
   lookupByChar: (ch: string) => InlineContent.Autocompleter[];
 }
 
-const register = (editor): AutocompleterDatabase => {
+const register = (editor: Editor): AutocompleterDatabase => {
   const popups = editor.ui.registry.getAll().popups;
   const dataset = Obj.map(popups, (popup) => {
     return InlineContent.createAutocompleter(popup).fold(

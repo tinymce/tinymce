@@ -10,6 +10,7 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { AlloyTriggers } from '@ephox/alloy';
 import { createSelectButton, createMenuItems } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
@@ -86,13 +87,13 @@ const getSpec = (editor) => {
   };
 };
 
-const createFontsizeSelect = (editor, backstage) => {
+const createFontsizeSelect = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   return createSelectButton(editor, backstage, spec.dataset, spec);
 };
 
 // TODO: Test this!
-const fontsizeSelectMenu = (editor, backstage) => {
+const fontsizeSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   return {

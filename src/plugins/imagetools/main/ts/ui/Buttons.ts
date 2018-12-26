@@ -6,8 +6,9 @@
  */
 
 import Actions from '../core/Actions';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   editor.ui.registry.addButton('rotateleft', {
