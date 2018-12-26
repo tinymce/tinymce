@@ -94,7 +94,7 @@ export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFact
 
   const classes = [
     ...spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    ...spec.icon.isSome() ? ['tox-ibtn'] : []
+    ...spec.icon.isSome() ? ['tox-button--icon'] : []
   ];
 
   const dom = {

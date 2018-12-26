@@ -17,7 +17,7 @@ const renderIcon = (iconHtml) =>
     dom: {
       tag: 'span',
       innerHtml: iconHtml,
-      classes: [ ToolbarButtonClasses.IconWrap ]
+      classes: [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ]
     }
   });
 
