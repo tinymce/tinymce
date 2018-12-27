@@ -126,6 +126,8 @@
     }
   }
 
+  .tox-tbtn--disabled,
+  .tox-tbtn--disabled:hover,
   .tox-tbtn:disabled,
   .tox-tbtn:disabled:hover {
     background: @toolbar-button-disabled-background-color;
@@ -133,7 +135,7 @@
     color: @toolbar-button-disabled-text-color;
     cursor: not-allowed;
 
-    svg {
+    svg { /* stylelint-disable-line */
       fill: @toolbar-button-disabled-icon-color;
     }
   }
