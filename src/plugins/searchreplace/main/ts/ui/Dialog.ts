@@ -138,7 +138,7 @@ const open = function (editor: Editor, currentIndexState) {
         name: 'prev',
         text: 'Previous',
         align: 'end',
-        icon: 'chevron-left',
+        icon: 'arrow-left',
         disabled: true,
       },
       {
@@ -146,7 +146,7 @@ const open = function (editor: Editor, currentIndexState) {
         name: 'next',
         text: 'Next',
         align: 'end',
-        icon: 'chevron-right',
+        icon: 'arrow-right',
         disabled: true,
       }
     ],
