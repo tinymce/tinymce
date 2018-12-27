@@ -8,6 +8,7 @@ Version 5.0.0-beta-2 (TBD)
     Added a wordcount menu item, that defaults to appearing in the tools menu #TINY-2877
     Fixed the legacyoutput plugin to be compatible with TinyMCE 5.0 #TINY-2301
     Updated the build process to minify and generate ASCII only output for the emoticons database #TINY-2744
+    Fixed icons not showing correctly in the autocompleter popup #TINY-3029
 Version 5.0.0-beta-1 (2018-11-30)
     Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
     Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659

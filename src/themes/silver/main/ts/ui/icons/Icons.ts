@@ -17,8 +17,16 @@ const getDefault = (name: string): string => {
   return Option.from(defaultIcons[name]).getOr(fallbackIcon);
 };
 
+const getDefaultOr = (name: string, fallback: () => string) => {
+  return Option.from(defaultIcons[name]).getOrThunk(fallback);
+};
+
 const get = (name: string, icons: IconProvider): string => {
   return Option.from(icons()[name]).getOrThunk(() => getDefault(name));
+};
+
+const getOr = (name: string, icons: IconProvider, fallback: () => string) => {
+  return Option.from(icons()[name]).getOrThunk(() => getDefaultOr(name, fallback));
 };
 
 const getDefaultFirst = (names: string[]): string => {
@@ -31,5 +39,6 @@ const getFirst = (names: string[], icons: IconProvider): string => {
 
 export {
   getFirst,
+  getOr,
   get
 };
