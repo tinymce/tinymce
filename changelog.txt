@@ -1,4 +1,5 @@
 Version 5.0.0-beta-2 (TBD)
+    Fixed readonly mode not fully disabling editing content #TINY-2287
     Added icons instead of button text to improve Search and Replace dialog footer appearance #TINY-2654
     Added `tox-dialog__table` instead of `mce-table-striped` class to enhance Help dialog appearance #TINY-2360
     Added title attribute to iframes so, screen readers can announce iframe labels #TINY-2692
