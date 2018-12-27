@@ -1,6 +1,6 @@
 {
   "name": "@ephox/oxide",
-  "version": "1.0.94",
+  "version": "1.0.95",
   "description": "TinyMCE 5 Oxide skin",
   "scripts": {
     "test": "echo 'No tests hooked up yet'",
