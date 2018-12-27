@@ -83,10 +83,8 @@ export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage
 export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const translatedText = providersBackstage.translate(spec.text);
 
-  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
-  const components = icon.isSome() ? componentRenderPipeline([
-    icon
-  ]) : [];
+  const icon = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
+  const components = icon.isSome() ? componentRenderPipeline([ icon ]) : [];
 
   const innerHtml = icon.isSome() ? {} : {
     innerHtml: translatedText
@@ -94,7 +92,7 @@ export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFact
 
   const classes = [
     ...spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    ...spec.icon.isSome() ? ['tox-button--icon'] : []
+    ...icon.isSome() ? ['tox-button--icon'] : []
   ];
 
   const dom = {
