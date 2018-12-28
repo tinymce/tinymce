@@ -27,14 +27,22 @@ export interface ToolbarFoo {
 }
 
 export interface ToolbarGroupFoo {
+  title: Option<string>;
   items: AlloySpec[];
 }
 
 const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
+  const attributes = foo.title.fold(() => {
+    return {};
+  },
+  (title) => {
+    return { attributes: { title } };
+  });
   return AlloyToolbarGroup.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__group' ]
+      classes: ['tox-toolbar__group'],
+      ...attributes
     },
     components: [
       AlloyToolbarGroup.parts().items({})
@@ -46,8 +54,8 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
     },
 
     tgroupBehaviours: Behaviour.derive([
-      Tabstopping.config({ }),
-      Focusing.config({ })
+      Tabstopping.config({}),
+      Focusing.config({})
     ])
   });
 };
@@ -59,10 +67,10 @@ const renderToolbar = (foo: ToolbarFoo) => {
     uid: foo.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ]
+      classes: ['tox-toolbar']
     },
     components: [
-      AlloyToolbar.parts().groups({ })
+      AlloyToolbar.parts().groups({})
     ],
 
     toolbarBehaviours: Behaviour.derive([
