@@ -1,11 +1,12 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Result } from '@ephox/katamari';
+import { Id, Result, Option } from '@ephox/katamari';
 
 export interface ButtonApi {
   type: 'button';
   text: string;
   primary?: boolean;
   name?: string;
+  icon?: string;
 }
 
 export interface Button {
@@ -13,6 +14,7 @@ export interface Button {
   text: string;
   primary: boolean;
   name: string;
+  icon: Option<string>;
 }
 
 export const buttonFields = [
@@ -26,7 +28,8 @@ export const buttonFields = [
       return Id.generate('button-name');
     }),
     ValueSchema.string
-  )
+  ),
+  FieldSchema.optionString('icon')
 ];
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);

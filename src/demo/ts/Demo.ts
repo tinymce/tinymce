@@ -19,7 +19,9 @@ import { console } from '@ephox/dom-globals';
 import { getDemoRegistry } from './buttons/DemoRegistry';
 import { registerDemoContextMenus } from './menus/ContextMenuDemo';
 import { createWordcountDialog } from './dialogs/WordcountDialog';
+import { createAlertBannerDialog } from './dialogs/AlertBannerDialog';
 
+createAlertBannerDialog();
 createAnchorDialog();
 createCharmapDialog();
 createCodeDialog();

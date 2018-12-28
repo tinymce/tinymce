@@ -13,7 +13,9 @@ export interface UrlInput extends FormComponent {
   filetype: 'image' | 'media' | 'file';
 }
 
-export const urlInputFields = formComponentFields.concat([FieldSchema.defaulted('filetype', 'file')]);
+export const urlInputFields = formComponentFields.concat([
+  FieldSchema.defaultedStringEnum('filetype', 'file', ['image', 'media', 'file'])
+]);
 
 export const urlInputSchema = ValueSchema.objOf(urlInputFields);
 

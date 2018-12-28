@@ -1,5 +1,5 @@
-import { Result, Fun, Arr } from '@ephox/katamari';
-import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
+import { Result, Fun } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 export interface FancyMenuItemApi {
   type: 'fancymenuitem';
@@ -17,15 +17,9 @@ export interface FancyActionArgsMap {
   'inserttable': {numRows: Number, numColumns: Number};
 }
 
-const strictEnum = (key, values) => FieldSchema.field(key, key, FieldPresence.strict(), ValueSchema.valueOf((inValue) => {
-    return Arr.contains(values, inValue)
-    ? Result.value(inValue)
-    : Result.error(`Value was: "${inValue}". Must be one of [${Arr.map(values, (v) => `"${v}"`).join(', ')}]`);
-}));
-
 export const fancyMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
-  strictEnum('fancytype', ['inserttable']), // These will need to match the keys of FancyActionArgsMap above
+  FieldSchema.strictStringEnum('fancytype', ['inserttable']), // These will need to match the keys of FancyActionArgsMap above
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 

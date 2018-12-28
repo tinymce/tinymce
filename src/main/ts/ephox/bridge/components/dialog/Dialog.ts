@@ -4,7 +4,6 @@ import { BodyComponentApi } from './BodyComponent';
 import { InternalPanel, PanelApi, panelFields } from './Panel';
 import { InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
 
-
 export interface DialogButtonApi {
   type: 'submit' | 'cancel' | 'custom';
   name?: string;
@@ -12,6 +11,7 @@ export interface DialogButtonApi {
   align?: 'start' | 'end';
   primary?: boolean;
   disabled?: boolean;
+  icon?: string;
 }
 
 export type PanelApi = PanelApi;
@@ -89,6 +89,7 @@ export interface DialogButton {
   align: 'start' | 'end';
   primary: boolean;
   disabled: boolean;
+  icon: Option<string>;
 }
 
 export interface Dialog<T> {
@@ -107,7 +108,7 @@ export interface Dialog<T> {
 }
 
 export const dialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
   FieldSchema.field(
     'name',
     'name',
@@ -117,7 +118,8 @@ export const dialogButtonSchema = ValueSchema.objOf([
     ValueSchema.string
   ),
   FieldSchema.strictString('text'),
-  FieldSchema.defaultedString('align', 'end'),
+  FieldSchema.optionString('icon'),
+  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
