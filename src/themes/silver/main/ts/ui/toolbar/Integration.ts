@@ -162,8 +162,8 @@ const convertStringToolbar = (strToolbar) => {
 };
 
 // Toolbar settings
-// undefined or true = default
 // false = disabled
+// undefined or true = default
 // string = enabled with specified buttons and groups
 // string array = enabled with specified buttons and groups
 // object array = enabled with specified buttons, groups and group titles
@@ -171,18 +171,14 @@ const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroup[] =
   if (toolbarConfig.toolbar === false) {
     return [];
   } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
-    // return defaultToolbar;
     return removeUnusedDefaults(toolbarConfig.buttons, defaultToolbar);
-  } else if (Type.isString(toolbarConfig.toolbar) || (Type.isArray(toolbarConfig.toolbar) && Type.isString(toolbarConfig.toolbar[0]))) {
+  } else if (Type.isString(toolbarConfig.toolbar)) {
     return convertStringToolbar(toolbarConfig.toolbar);
-  } else if (Type.isArray(toolbarConfig.toolbar)) {
-
+  } else if (Type.isArray(toolbarConfig.toolbar) && Type.isString(toolbarConfig.toolbar[0])) {
+    return convertStringToolbar(toolbarConfig.toolbar.join(' | '));
   } else {
     return toolbarConfig.toolbar;
   }
-
-  // const toolbarArray = Type.isArray(toolbar()) ? toolbar() : [toolbar()];
-  // return toolbarArray.join(' | ');
 };
 
 const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): ToolbarGroupFoo[] {
