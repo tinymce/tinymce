@@ -1,6 +1,6 @@
 # Default icons for Oxide Theme
 
-Icons in TinyMCE 5 is loaded using icon packs through NPM packages. A icon pack is technically either `dist/js/TinymceIcons.js` or `dist/ts/Icons.ts`.
+Icons in TinyMCE 5 is loaded using icon packs through NPM packages. A icon pack is technically the `dist/js/TinymceIcons.js` icon file.
 
 Icons do not have a defined size and will use whatever size the SVG has. This makes it easy to create icons of different sizes.
 
@@ -17,7 +17,7 @@ Colors are applied using `fill` via CSS, so make sure to follow the steps under 
 The master icon document is a Sketch file located in `src/sketch/icons.sketch`.
 
 1. Duplicate an Artboard
-2. Rename the artboard, making sure to prefix the icon name with `icon-`. Icons should be named by their function, not what they depict, for example use `icon-brightness` instead of `icon-sun`.
+2. Rename the artboard. Icons should be named by their function, not what they depict, for example use `icon-brightness` instead of `icon-sun`.
 3. Design an icon. See designing an icon
 4. Use the Sketch plugin _Symbol organizer_ to have the icon be sorted alpahabetically and to generate the labels next to the icons. Read more below
 5. Export **only the updated icons**  to `src/svg/`
@@ -41,7 +41,7 @@ Use the following guidelines when designing icons:
 * Ideally the icon is only one Shape
 * A layer called `frame` is included to help rezising icons if needed. Make sure that layer is hidden before export
 * Make sure the fill color is set to `#000000` to be able to colorize the icon through CSS (black colors will be stripped out of the SVG code.
-* Expand all strokes to fills (or else the icon wont be colorized properly via CSS.
+* Expand all strokes to fills (or else the icon wont be colorized properly via CSS).
 
 ## Symbol organizer
 
