@@ -134,19 +134,15 @@
     padding: @pad-xs;
   }
 
-  .tox-collection--list .tox-collection__item--active {
-    background-color: @collection-list-item-active-background-color;
-    color: @collection-list-item-label-active-text-color;
-  }
-
+  // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
   .tox-collection--list .tox-collection__item--enabled {
     background-color: @collection-list-item-enabled-background-color;
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--toolbar .tox-collection__item--active {
-    background-color: @collection-toolbar-item-active-background-color;
-    color: @collection-toolbar-item-label-active-text-color;
+  .tox-collection--list .tox-collection__item--active {
+    background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--enabled {
@@ -154,14 +150,19 @@
     color: @collection-toolbar-item-label-enabled-text-color;
   }
 
-  .tox-collection--grid .tox-collection__item--active {
-    background-color: @collection-grid-item-active-background-color;
-    color: @collection-grid-item-label-active-text-color;
+  .tox-collection--toolbar .tox-collection__item--active {
+    background-color: @collection-toolbar-item-active-background-color;
+    color: @collection-toolbar-item-label-active-text-color;
   }
 
   .tox-collection--grid .tox-collection__item--enabled {
     background-color: @collection-grid-item-enabled-background-color;
     color: @collection-grid-item-label-enabled-text-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active {
+    background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
   }
 
   .tox-collection__item-icon {
