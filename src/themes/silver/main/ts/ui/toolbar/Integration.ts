@@ -24,14 +24,14 @@ import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { renderMenuButton } from '../menus/menubar/Integration';
 import { RenderUiConfig } from '../../Render';
-import { ToolbarGroupFoo } from './CommonToolbar';
+import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
   console.error(ValueSchema.formatError(error));
 };
 
-interface ToolbarGroup {
+interface ToolbarGroupSetting {
   name?: string;
   items: string[];
 }
@@ -142,8 +142,8 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
-const removeUnusedDefaults = (buttons, defaultGroups: ToolbarGroup[]) => {
-  const filteredItemGroups = Arr.map(defaultGroups, (group) => {
+const removeUnusedDefaults = (buttons) => {
+  const filteredItemGroups = Arr.map(defaultToolbar, (group) => {
     const items = Arr.filter(group.items, (subItem) => {
       return Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem);
     });
@@ -159,7 +159,6 @@ const convertStringToolbar = (strToolbar) => {
   const groupsStrings = strToolbar.split('|');
   return Arr.map(groupsStrings, (g) => {
     return {
-      title: Option.none(),
       items: g.trim().split(' ')
     };
   });
@@ -171,11 +170,11 @@ const convertStringToolbar = (strToolbar) => {
 // string = enabled with specified buttons and groups
 // string array = enabled with specified buttons and groups
 // object array = enabled with specified buttons, groups and group titles
-const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroup[] => {
+const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSetting[] => {
   if (toolbarConfig.toolbar === false) {
     return [];
   } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
-    return removeUnusedDefaults(toolbarConfig.buttons, defaultToolbar);
+    return removeUnusedDefaults(toolbarConfig.buttons);
   } else if (Type.isString(toolbarConfig.toolbar)) {
     return convertStringToolbar(toolbarConfig.toolbar);
   } else if (Type.isArray(toolbarConfig.toolbar) && Type.isString(toolbarConfig.toolbar[0])) {
@@ -185,7 +184,7 @@ const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroup[] =
   }
 };
 
-const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): ToolbarGroupFoo[] {
+const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): ToolbarGroup[] {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
