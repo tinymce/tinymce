@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Option, Strings } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
@@ -68,13 +69,13 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
     type,
-    text: 'Remove',
+    text: 'Remove color',
     icon: 'color-swatch-remove-color',
     value: 'remove'
   };
   const custom = {
     type,
-    text: 'Custom',
+    text: 'Custom color',
     icon: 'color-picker',
     value: 'custom'
   };
@@ -117,7 +118,16 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       tooltip,
       presets: 'color',
       icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
-      select: () => false,
+      select: (value) => {
+        const optCurrentRgb = Option.from(getCurrentColor(editor, format));
+        return optCurrentRgb.bind((currentRgb) => {
+          return RgbaColour.fromString(currentRgb).map((rgba) => {
+            const currentHex = HexColour.fromRgba(rgba).value();
+            // note: value = '#FFFFFF', currentHex = 'ffffff'
+            return Strings.contains(value.toLowerCase(), currentHex);
+          });
+        }).getOr(false);
+      },
       columns: getColorCols(editor),
       fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
       onAction: (splitButtonApi) => {
@@ -205,7 +215,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
 
 const register = (editor: Editor) => {
   registerCommands(editor);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Color');
+  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color');
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
