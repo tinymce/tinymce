@@ -99,7 +99,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
 
 // TODO: Maybe need aria-label
 const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
-  // TODO: TINY-3029 Work out a better way of dealing with custom icons
+  // TODO: TINY-3036 Work out a better way of dealing with custom icons
   const icon = info.iconContent.map((iconName) => fallbackIcon.fold(
     () => Icons.get(iconName, providersBackstage.icons),
     (fallback) => Icons.getOr(iconName, providersBackstage.icons, Fun.constant(fallback))
