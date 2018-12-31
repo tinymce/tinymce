@@ -34,10 +34,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
               title: Option.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
             },
             {
-              title: Option.none(), items: Arr.map([ 'four', 'five' ], makeButton)
+              title: Option.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
             },
             {
-              title: Option.none(), items: Arr.map([ 'six' ], makeButton)
+              title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
             }
           ]
         })
@@ -58,6 +58,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
               children: [
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.none()
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('one')
@@ -72,6 +75,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.is('group title')
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('four')
@@ -83,6 +89,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.is('another group title')
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('six')
