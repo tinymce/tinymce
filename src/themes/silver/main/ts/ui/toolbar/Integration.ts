@@ -36,7 +36,6 @@ interface ToolbarGroup {
   items: string[];
 }
 
-// const defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | permanentpen | addcomment';
 const defaultToolbar = [
   {
     name: 'history', items: [ 'undo', 'redo' ]
@@ -143,12 +142,17 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
-const removeUnusedDefaults = (buttons, defaultItems: ToolbarGroup[]) => {
-  return Arr.filter(defaultItems, (item) => {
-    return Arr.filter(item.items, (subItem) => {
+const removeUnusedDefaults = (buttons, defaultGroups: ToolbarGroup[]) => {
+  const filteredItemGroups = Arr.map(defaultGroups, (group) => {
+    const items = Arr.filter(group.items, (subItem) => {
       return Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem);
-    }).length > 0;
+    });
+    return {
+      name: group.name,
+      items
+    };
   });
+  return Arr.filter(filteredItemGroups, (group) => group.items.length > 0);
 };
 
 const convertStringToolbar = (strToolbar) => {
@@ -200,7 +204,7 @@ const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderU
       ).toArray();
     });
     return {
-      title: Option.from(group.name),
+      title: Option.from(editor.translate(group.name)),
       items
     };
   });

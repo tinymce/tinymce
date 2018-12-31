@@ -185,7 +185,7 @@ export default Sketcher.composite({
     },
     setToolbar(apis, comp, grps) {
       const groups = Arr.map(grps, function (grp) {
-        return renderToolbarGroup({ title: grp.title, items: grp.items });
+        return renderToolbarGroup(grp);
       });
 
       apis.setToolbar(comp, groups);
