@@ -79,9 +79,11 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
     uid: Id.generate('context-toolbar'),
     initGroups: [
       {
+        title: Option.none(),
         items: label.toArray().concat([ memInput.asSpec() ])
       },
       {
+        title: Option.none(),
         items: commands.asSpecs() as AlloySpec[]
       }
     ],

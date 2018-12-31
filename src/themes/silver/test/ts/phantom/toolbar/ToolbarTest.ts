@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
 
@@ -31,13 +31,13 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           cyclicKeying: true,
           initGroups: [
             {
-              items: Arr.map([ 'one', 'two', 'three' ], makeButton)
+              title: Option.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
             },
             {
-              items: Arr.map([ 'four', 'five' ], makeButton)
+              title: Option.none(), items: Arr.map([ 'four', 'five' ], makeButton)
             },
             {
-              items: Arr.map([ 'six' ], makeButton)
+              title: Option.none(), items: Arr.map([ 'six' ], makeButton)
             }
           ]
         })
@@ -116,10 +116,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           Step.sync(() => {
             const groups = Arr.map([
               {
-                items: Arr.map([ 'A', 'B' ], makeButton)
+                title: Option.none(), items: Arr.map([ 'A', 'B' ], makeButton)
               },
               {
-                items: Arr.map([ 'C' ], makeButton)
+                title: Option.none(), items: Arr.map([ 'C' ], makeButton)
               }
             ], renderToolbarGroup);
             Toolbar.setGroups(toolbar, groups);
