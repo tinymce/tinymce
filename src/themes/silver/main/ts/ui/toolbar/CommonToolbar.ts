@@ -41,7 +41,7 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
   return AlloyToolbarGroup.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__group'],
+      classes: [ 'tox-toolbar__group' ],
       ...attributes
     },
     components: [
@@ -54,8 +54,8 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
     },
 
     tgroupBehaviours: Behaviour.derive([
-      Tabstopping.config({}),
-      Focusing.config({})
+      Tabstopping.config({ }),
+      Focusing.config({ })
     ])
   });
 };
@@ -67,10 +67,10 @@ const renderToolbar = (foo: ToolbarFoo) => {
     uid: foo.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar']
+      classes: [ 'tox-toolbar' ]
     },
     components: [
-      AlloyToolbar.parts().groups({})
+      AlloyToolbar.parts().groups({ })
     ],
 
     toolbarBehaviours: Behaviour.derive([
