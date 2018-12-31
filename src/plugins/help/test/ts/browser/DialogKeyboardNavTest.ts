@@ -32,6 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Help: Open dialog', [
+        tinyApis.sFocus,
         tinyApis.sExecCommand('mceHelp')
       ]),
 
@@ -71,6 +72,6 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       plugins: 'help',
       toolbar: 'help',
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, success, failure);
 });

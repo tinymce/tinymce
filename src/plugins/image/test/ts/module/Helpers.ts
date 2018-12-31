@@ -28,7 +28,7 @@ export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
   alt: 'label.tox-label:contains("Image description") + input.tox-textfield',
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
-  height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
+  height: 'div.tox-form__controls-h-stack div label:contains("Height") + div > input.tox-textfield',
   caption: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
   classIndex: 'label.tox-label:contains("Class") + div.tox-selectfield select',
   images: 'label.tox-label:contains("Image list") + div.tox-selectfield select'
@@ -204,8 +204,7 @@ const silverSettings = {
   theme: 'silver',
   plugins: 'image',
   indent: false,
-  skin_url: '/project/js/tinymce/skins/oxide/',
-  content_css: '/project/js/tinymce/skins/oxide/content.min.css'
+  base_url: '/project/js/tinymce'
 };
 
 export {

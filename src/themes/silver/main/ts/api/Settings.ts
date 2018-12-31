@@ -21,7 +21,7 @@ const getSkinUrl = function (editor: Editor): string {
     if (skinUrl) {
       skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
     } else {
-      skinUrl = EditorManager.baseURL + '/skins/' + skinName;
+      skinUrl = EditorManager.baseURL + '/skins/ui/' + skinName;
     }
   }
 

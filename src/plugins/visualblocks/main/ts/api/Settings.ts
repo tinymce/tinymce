@@ -5,15 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const isEnabledByDefault = function (editor) {
-  return editor.getParam('visualblocks_default_state', false);
-};
+import { Editor } from 'tinymce/core/api/Editor';
 
-const getContentCss = function (editor) {
-  return editor.settings.visualblocks_content_css;
+const isEnabledByDefault = function (editor: Editor) {
+  return editor.getParam('visualblocks_default_state', false, 'boolean');
 };
 
 export default {
-  isEnabledByDefault,
-  getContentCss
+  isEnabledByDefault
 };

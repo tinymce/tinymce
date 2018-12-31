@@ -1,4 +1,5 @@
 import { prompt, document } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 
@@ -14,14 +15,14 @@ export default function () {
   document.body.appendChild(button);
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     toolbar: 'annotate-alpha',
     plugins: [ ],
 
     content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
         onAction() {
@@ -35,6 +36,7 @@ export default function () {
           editor.annotator.annotationChanged('alpha', (state, name, obj) => {
             btnApi.setDisabled(state);
           });
+          return () => {};
         }
       });
 

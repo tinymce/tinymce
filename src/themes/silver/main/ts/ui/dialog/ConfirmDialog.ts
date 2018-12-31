@@ -9,6 +9,7 @@ import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 import * as Dialogs from './Dialogs';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Option } from '@ephox/katamari';
 
 export interface ConfirmDialogSetup {
     backstage: UiFactoryBackstage;
@@ -28,13 +29,15 @@ export const setup = (extras: ConfirmDialogSetup) => {
         name: 'yes',
         text: 'Yes',
         primary: true,
+        icon: Option.none()
       }, 'submit', sharedBackstage.providers)
     );
 
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
-      primary: true
+      primary: true,
+      icon: Option.none()
     }, 'cancel', sharedBackstage.providers);
 
     const confirmDialog = GuiFactory.build(
@@ -44,7 +47,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
             closeDialog(false);
-          }),
+          }, sharedBackstage.providers),
           body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
           footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
             footerNo,

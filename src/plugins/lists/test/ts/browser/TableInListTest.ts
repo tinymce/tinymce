@@ -59,6 +59,6 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
     toolbar: 'bullist numlist indent outdent',
     indent: false,
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

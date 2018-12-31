@@ -63,7 +63,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
       ], onSuccess, onFailure);
     }, {
       toolbar: 'forecolor backcolor',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, success, failure);
   }
 );

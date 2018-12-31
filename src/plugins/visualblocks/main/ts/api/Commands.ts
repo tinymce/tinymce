@@ -6,8 +6,10 @@
  */
 
 import VisualBlocks from '../core/VisualBlocks';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const register = function (editor, pluginUrl, enabledState) {
+const register = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   editor.addCommand('mceVisualBlocks', function () {
     VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
   });

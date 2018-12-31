@@ -96,6 +96,6 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         });
       }, 500);
     },
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

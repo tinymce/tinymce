@@ -35,6 +35,6 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

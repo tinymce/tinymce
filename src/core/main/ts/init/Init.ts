@@ -14,14 +14,15 @@ import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
+import { appendContentCssFromSettings } from './ContentCss';
+import { Element } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 
-const initPlugin = function (editor, initializedPlugins, plugin) {
+const initPlugin = function (editor: Editor, initializedPlugins, plugin) {
   const Plugin = PluginManager.get(plugin);
-  let pluginUrl, pluginInstance;
 
-  pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
+  const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
     Tools.each(PluginManager.dependencies(plugin), function (dep) {
@@ -32,7 +33,7 @@ const initPlugin = function (editor, initializedPlugins, plugin) {
       return;
     }
 
-    pluginInstance = new Plugin(editor, pluginUrl, editor.$);
+    const pluginInstance = new Plugin(editor, pluginUrl, editor.$);
 
     editor.plugins[plugin] = pluginInstance;
 
@@ -43,12 +44,12 @@ const initPlugin = function (editor, initializedPlugins, plugin) {
   }
 };
 
-const trimLegacyPrefix = function (name) {
+const trimLegacyPrefix = function (name: string) {
   // Themes and plugins can be prefixed with - to prevent them from being lazy loaded
   return name.replace(/^\-/, '');
 };
 
-const initPlugins = function (editor) {
+const initPlugins = function (editor: Editor) {
   const initializedPlugins = [];
 
   Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
@@ -64,14 +65,13 @@ const initIcons = (editor: Editor) => {
   });
 };
 
-const initTheme = function (editor) {
-  let Theme;
+const initTheme = function (editor: Editor) {
   const theme = editor.settings.theme;
 
   if (Type.isString(theme)) {
     editor.settings.theme = trimLegacyPrefix(theme);
 
-    Theme = ThemeManager.get(theme);
+    const Theme = ThemeManager.get(theme);
     editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
     if (editor.theme.init) {
@@ -83,16 +83,14 @@ const initTheme = function (editor) {
   }
 };
 
-const renderFromLoadedTheme = function (editor) {
+const renderFromLoadedTheme = function (editor: Editor) {
   // Render UI
   return editor.theme.renderUI();
 };
 
-const renderFromThemeFunc = function (editor) {
-  let info;
+const renderFromThemeFunc = function (editor: Editor) {
   const elm = editor.getElement();
-
-  info = editor.settings.theme(editor, elm);
+  const info = editor.settings.theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
     info.editorContainer.id = info.editorContainer.id || editor.id + '_parent';
@@ -107,14 +105,14 @@ const renderFromThemeFunc = function (editor) {
   return info;
 };
 
-const createThemeFalseResult = function (element) {
+const createThemeFalseResult = function (element: Element) {
   return {
     editorContainer: element,
     iframeContainer: element
   };
 };
 
-const renderThemeFalseIframe = function (targetElement) {
+const renderThemeFalseIframe = function (targetElement: Element) {
   const iframeContainer = DOM.create('div');
 
   DOM.insertAfter(iframeContainer, targetElement);
@@ -122,12 +120,12 @@ const renderThemeFalseIframe = function (targetElement) {
   return createThemeFalseResult(iframeContainer);
 };
 
-const renderThemeFalse = function (editor) {
+const renderThemeFalse = function (editor: Editor) {
   const targetElement = editor.getElement();
   return editor.inline ? createThemeFalseResult(null) : renderThemeFalseIframe(targetElement);
 };
 
-const renderThemeUi = function (editor) {
+const renderThemeUi = function (editor: Editor) {
   const settings = editor.settings, elm = editor.getElement();
 
   editor.orgDisplay = elm.style.display;
@@ -141,24 +139,15 @@ const renderThemeUi = function (editor) {
   }
 };
 
-const init = function (editor) {
-  const settings = editor.settings;
-  let boxInfo;
-
+const init = function (editor: Editor) {
   editor.fire('ScriptsLoaded');
 
   initTheme(editor);
   initPlugins(editor);
   initIcons(editor);
-  boxInfo = renderThemeUi(editor);
+  const boxInfo = renderThemeUi(editor);
   editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
-
-  // Load specified content CSS last
-  if (settings.content_css) {
-    Tools.each(Tools.explode(settings.content_css), function (u) {
-      editor.contentCSS.push(editor.documentBaseURI.toAbsolute(u));
-    });
-  }
+  appendContentCssFromSettings(editor);
 
   // Content editable mode ends here
   if (editor.inline) {

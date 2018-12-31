@@ -507,6 +507,6 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
     disable_nodechange: true,
     indent: false,
     entities: 'raw',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

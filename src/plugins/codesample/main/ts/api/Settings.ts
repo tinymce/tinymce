@@ -5,15 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getContentCss = function (editor) {
-  return editor.settings.codesample_content_css;
-};
+import { Editor } from 'tinymce/core/api/Editor';
 
-const getLanguages = function (editor) {
+const getLanguages = function (editor: Editor) {
   return editor.settings.codesample_languages;
 };
 
 export default {
-  getContentCss,
   getLanguages,
 };

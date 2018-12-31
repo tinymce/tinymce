@@ -22,7 +22,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 
-const pClose = (onClose) => ModalDialog.parts().close(
+const pClose = (onClose, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
   Button.sketch({
     dom: {
@@ -30,7 +30,7 @@ const pClose = (onClose) => ModalDialog.parts().close(
       classes: [ 'tox-button', 'tox-button--icon', 'tox-button--naked' ],
       attributes: {
         'type': 'button',
-        'aria-label': 'Close'
+        'aria-label': providersBackstage.translate('Close')
       }
     },
     action: onClose,

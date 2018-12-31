@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
   Theme();
 
   const settings = {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   };
 
   const cAssertTextareaDisplayStyle = (expected) => Chain.op((editor: any) => {

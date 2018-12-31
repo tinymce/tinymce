@@ -22,10 +22,11 @@ import {
   createPartialMenuWithAlloyItems,
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
-import { Range } from '@ephox/dom-globals';
+import { Range, Text } from '@ephox/dom-globals';
 import ItemResponse from './ui/menus/item/ItemResponse';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
+const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const autocompleter = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -64,7 +65,8 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
         choices,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
-          getContext(nr, triggerChar, nr.startContainer.data, nr.startOffset).fold(
+          const textNode = nr.startContainer as Text; // TODO: Investigate if this is safe
+          getContext(nr, triggerChar, textNode.data, nr.startOffset).fold(
             () => console.error('Lost context. Cursor probably moved'),
             ({ rng }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {

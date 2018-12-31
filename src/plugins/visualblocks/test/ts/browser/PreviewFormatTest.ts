@@ -5,19 +5,10 @@ import { Class, Css, Element } from '@ephox/sugar';
 
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { StyleSheetLoader } from 'tinymce/core/dom/StyleSheetLoader';
-import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (success, failure) => {
-  const pluginCss = '/project/src/plugins/visualblocks/main/css/visualblocks.css';
-
   Theme();
   VisualBlocksPlugin();
-
-  const sWaitForPluginCss = (editor: Editor) => Step.async((next, die) => {
-    // The plugin can't leverage core functions to help, but tests can!
-    StyleSheetLoader(editor.getDoc()).load(pluginCss, next, die);
-  });
 
   const sWaitForVisualBlocks = function (editor) {
     return Waiter.sTryUntil('Wait for background css to be applied to first element', Step.sync(function () {
@@ -33,7 +24,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
     Pipeline.async({},
       Log.steps('TBA', 'VisualBlocks: Toggle on/off visualblocks and compute previews', [
         tinyApis.sExecCommand('mceVisualBlocks'),
-        sWaitForPluginCss(editor),
         sWaitForVisualBlocks(editor),
         Step.sync(function () {
           Assertions.assertEq('Visual blocks class should exist', true, Class.has(Element.fromDom(editor.getBody()), 'mce-visualblocks'));
@@ -50,7 +40,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
   }, {
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
-    visualblocks_content_css: pluginCss,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

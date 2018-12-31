@@ -200,7 +200,7 @@ UnitTest.asynctest(
       indent: false,
       plugins: '',
       toolbar: '',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, function () {
       success();
     }, failure);

@@ -44,7 +44,6 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
     insert_toolbar: 'quickimage media quicktable',
     selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
     inline: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
-
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

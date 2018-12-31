@@ -5,6 +5,7 @@ import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
 import { GuiSetup } from '../../../module/AlloyTestUtils';
+import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
 
@@ -19,7 +20,8 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
           name: 'test-button',
           text: 'ButtonText',
           disabled: false,
-          primary: true
+          primary: true,
+          icon: Option.none()
         }, store.adder('button.action'), providers)
       );
     },

@@ -210,6 +210,7 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
   }).wrap(function (match) {
     return editor.dom.create('span', {
       'class': 'mce-spellchecker-word',
+      'aria-invalid': 'spelling',
       'data-mce-bogus': 1,
       'data-mce-word': match.text
     });

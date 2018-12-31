@@ -31,6 +31,6 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
   }, {
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

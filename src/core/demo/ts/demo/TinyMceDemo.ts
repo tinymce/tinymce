@@ -17,7 +17,7 @@ export default function () {
     // images_upload_url: 'postAcceptor.php',
     // images_upload_base_path: 'base/path',
     // images_upload_credentials: true,
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     setup (ed) {
       ed.addButton('demoButton', {
         type: 'button',

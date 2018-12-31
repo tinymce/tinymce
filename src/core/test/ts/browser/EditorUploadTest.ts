@@ -365,6 +365,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

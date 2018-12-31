@@ -199,6 +199,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       theme: 'silver',
       plugins: 'image',
       indent: false,
-      skin_url: '/project/js/tinymce/skins/oxide/'
+      base_url: '/project/js/tinymce'
     }, success, failure);
 });

@@ -463,6 +463,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     extended_valid_elements: 'custom1,custom2,script[*]',
     entities: 'raw',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

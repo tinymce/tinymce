@@ -203,7 +203,7 @@ module.exports = function (grunt) {
             optimization: 2
         },
         files: {
-          'js/tinymce/skins/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
+          'js/tinymce/skins/ui/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
         }
       },
       'content-mobile': {
@@ -213,7 +213,7 @@ module.exports = function (grunt) {
             compress: true
         },
         files: {
-          'js/tinymce/skins/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
+          'js/tinymce/skins/ui/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
         }
       }
     },
@@ -247,7 +247,7 @@ module.exports = function (grunt) {
           }
         ]
       },
-      skins: {
+      'ui-skins': {
         files: [
           {
             expand: true,
@@ -258,30 +258,31 @@ module.exports = function (grunt) {
               '!*.json',
               '!*.md'
             ],
-            dest: 'js/tinymce/skins/oxide/fonts'
+            dest: 'js/tinymce/skins/ui/oxide/fonts'
           },
           {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/img',
             src: '**',
-            dest: 'js/tinymce/skins/oxide/img'
+            dest: 'js/tinymce/skins/ui/oxide/img'
           },
           {
             expand: true,
+            flatten: true,
             cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
             src: [
               '*.min.css',
               '*.min.css.map'
             ],
-            dest: 'js/tinymce/skins/oxide'
+            dest: 'js/tinymce/skins/ui/oxide'
           },
           {
             expand: true,
             flatten: true,
             cwd: 'src/skins/oxide/main/img',
             src: '**',
-            dest: 'js/tinymce/skins/oxide-dark/img'
+            dest: 'js/tinymce/skins/ui/oxide-dark/img'
           },
           {
             expand: true,
@@ -290,13 +291,18 @@ module.exports = function (grunt) {
               '*.min.css',
               '*.min.css.map'
             ],
-            dest: 'js/tinymce/skins/oxide-dark'
+            dest: 'js/tinymce/skins/ui/oxide-dark'
           }
         ]
       },
-      plugins: {
+      'content-skins': {
         files: [
-          { src: 'src/plugins/codesample/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
+          {
+            expand: true,
+            cwd: 'node_modules/@ephox/oxide/build/skins/content',
+            src: '**',
+            dest: 'js/tinymce/skins/content'
+          },
         ]
       },
       'emoticons-plugin': {
@@ -686,7 +692,8 @@ module.exports = function (grunt) {
         stopOnFailure: true,
         testfiles: [
           'src/**/test/ts/atomic/**/*Test.ts',
-          'src/**/test/ts/browser/**/*Test.ts'
+          'src/**/test/ts/browser/**/*Test.ts',
+          'src/**/test/ts/phantom/**/*Test.ts'
         ],
         customRoutes: 'src/core/test/json/routes.json'
       },
@@ -836,8 +843,8 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dev', [
-    // 'shell:tsc',
     'globals',
+    'shell:tsc',
     'rollup',
     'less',
     'copy'

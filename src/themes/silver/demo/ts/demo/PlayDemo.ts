@@ -1,4 +1,5 @@
 import ButtonSetupDemo from './ButtonSetupDemo';
+import { Editor } from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 
@@ -95,7 +96,7 @@ export default function () {
       // }
     ],
 
-    setup (ed) {
+    setup (ed: Editor) {
       ButtonSetupDemo.setup(ed);
 
       ed.on('skinLoaded', function () {

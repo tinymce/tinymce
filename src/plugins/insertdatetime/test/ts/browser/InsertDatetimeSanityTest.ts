@@ -37,7 +37,7 @@ UnitTest.asynctest(
       toolbar: 'insertdatetime',
       insertdatetime_element: true,
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, success, failure);
   }
 );

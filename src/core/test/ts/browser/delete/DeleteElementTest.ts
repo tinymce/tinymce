@@ -203,6 +203,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () 
   }, {
     add_unload_trigger: false,
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

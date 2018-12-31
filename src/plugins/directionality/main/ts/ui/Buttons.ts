@@ -6,6 +6,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const generateSelector = function (dir) {
   const selector = [];
@@ -17,7 +18,7 @@ const generateSelector = function (dir) {
   return selector.join(',');
 };
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addToggleButton('ltr', {
     tooltip: 'Left to right',
     icon: 'ltr',
