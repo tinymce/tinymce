@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
     viewBlock.update('<textarea class="tinymce"></textarea>');
     EditorManager.init({
       selector: 'textarea.tinymce',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       init_instance_callback (editor1) {
         LegacyUnit.equal(EditorManager.get().length, 1);
         LegacyUnit.equal(EditorManager.get(0) === EditorManager.activeEditor, true);
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
         // Re-init on same id
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
-          skin_url: '/project/js/tinymce/skins/oxide'
+          base_url: '/project/js/tinymce'
         });
 
         LegacyUnit.equal(EditorManager.get().length, 1);
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
     EditorManager.init({
       selector: 'textarea',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       language: langCode,
       language_url: langUrl,
       init_instance_callback (ed) {
@@ -104,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
     EditorManager.init({
       selector: 'textarea',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       init_instance_callback (editor1) {
         Delay.setTimeout(function () {
           // Destroy the editor by setting innerHTML common ajax pattern
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
           // Re-init the editor will have the same id
           EditorManager.init({
             selector: 'textarea',
-            skin_url: '/project/js/tinymce/skins/oxide',
+            base_url: '/project/js/tinymce',
             init_instance_callback (editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
@@ -154,7 +154,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
     LegacyUnit.strictEqual(PluginManager.urls.testplugin, 'http://custom.ephox.com/dir/testplugin');
 
     LegacyUnit.equal(new Editor('ed2', {
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       external_plugins: {
         plugina: '//domain/plugina2.js',
         pluginc: '//domain/pluginc.js'
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
     });
 
     LegacyUnit.equal(new Editor('ed3', {
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, EditorManager).settings.external_plugins, {
       plugina: '//domain/plugina.js',
       pluginb: '//domain/pluginb.js'
@@ -197,7 +197,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
       EditorManager.init({
         selector: invalidName + '.targetEditor',
-        skin_url: '/project/js/tinymce/skins/oxide',
+        base_url: '/project/js/tinymce',
         inline: true
       });
 

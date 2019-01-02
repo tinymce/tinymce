@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });

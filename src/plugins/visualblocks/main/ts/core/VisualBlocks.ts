@@ -6,14 +6,12 @@
  */
 
 import Events from '../api/Events';
-import Settings from '../api/Settings';
-import LoadCss from './LoadCss';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const toggleVisualBlocks = function (editor, pluginUrl, enabledState) {
+const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   const dom = editor.dom;
-  const contentCss = Settings.getContentCss(editor);
 
-  LoadCss.load(editor.getDoc(), contentCss ? contentCss : pluginUrl + '/css/visualblocks.css');
   dom.toggleClass(editor.getBody(), 'mce-visualblocks');
   enabledState.set(!enabledState.get());
 

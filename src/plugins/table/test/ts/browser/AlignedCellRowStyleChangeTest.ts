@@ -63,6 +63,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

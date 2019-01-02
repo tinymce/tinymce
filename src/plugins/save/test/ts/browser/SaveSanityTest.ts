@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, fail
   }, {
     plugins: 'save',
     toolbar: 'save',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     theme: 'silver'
   }, success, failure);
 });

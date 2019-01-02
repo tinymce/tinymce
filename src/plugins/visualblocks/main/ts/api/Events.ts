@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireVisualBlocks = function (editor, state) {
+import { Editor } from 'tinymce/core/api/Editor';
+
+const fireVisualBlocks = function (editor: Editor, state: boolean) {
   editor.fire('VisualBlocks', { state });
 };
 

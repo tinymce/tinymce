@@ -227,6 +227,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     indent: false,
     automatic_uploads: false,
     plugins: 'paste',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

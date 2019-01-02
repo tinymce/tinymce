@@ -7,6 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const isHidden = (elm) => {
   if (elm.nodeType === 1) {
@@ -22,7 +23,7 @@ const isHidden = (elm) => {
   return false;
 };
 
-const renderElementPath = (editor, settings) => {
+const renderElementPath = (editor: Editor, settings) => {
   if (!settings.delimiter) {
     settings.delimiter = '\u00BB';
   }

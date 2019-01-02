@@ -3,7 +3,7 @@ import { Behaviour, GuiFactory, ModalDialog, Positioning } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { ValueSchema } from '@ephox/boulder';
 import { Types, DialogManager } from '@ephox/bridge';
-import { Fun, Result } from '@ephox/katamari';
+import { Fun, Result, Option } from '@ephox/katamari';
 
 import { renderDialog } from '../../../../main/ts/ui/window/SilverDialog';
 import { GuiSetup } from '../../module/AlloyTestUtils';
@@ -29,7 +29,8 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             text: 'Cancel',
             align: 'end',
             primary: false,
-            disabled: false
+            disabled: false,
+            icon: Option.none()
           },
           {
             type: 'submit',
@@ -37,7 +38,8 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             text: 'Save',
             align: 'end',
             primary: true,
-            disabled: false
+            disabled: false,
+            icon: Option.none()
           }
         ],
         initialData: {},

@@ -7,8 +7,9 @@
 
 import Prism from './Prism';
 import Utils from '../util/Utils';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   const $ = editor.$;
 
   editor.on('PreProcess', function (e) {

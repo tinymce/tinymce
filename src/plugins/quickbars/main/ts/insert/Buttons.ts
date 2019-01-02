@@ -8,10 +8,9 @@
 import Actions from './Actions';
 import Conversions from './Conversions';
 import Picker from './Picker';
+import { Editor } from 'tinymce/core/api/Editor';
 
-// import { Editor } from 'tinymce/core/api/Editor';
-
-const setupButtons = function (editor) {
+const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quickimage', {
     icon: 'image',
     tooltip: 'Insert image',

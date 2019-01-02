@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     test_callback () {
     }
   }, success, failure);

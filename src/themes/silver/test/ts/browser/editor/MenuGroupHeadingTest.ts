@@ -56,7 +56,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
     },
     {
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       toolbar: 'styleselect',
       menubar: false,
       style_formats: [

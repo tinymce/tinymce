@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
   Theme();
 
   const settings = {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   };
 
   const cCreateEditor = Chain.mapper((_) => new Editor('editor', {}, EditorManager));

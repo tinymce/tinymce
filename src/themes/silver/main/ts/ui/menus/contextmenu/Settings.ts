@@ -22,7 +22,7 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
 };
 
 const getContextMenu = function (editor: Editor): string[] {
-  return getMenuItems(editor, 'contextmenu', 'link image imagetools table spellchecker');
+  return getMenuItems(editor, 'contextmenu', 'link image imagetools table spellchecker configurepermanentpen');
 };
 
 export default {

@@ -95,15 +95,14 @@ export default function () {
 
   tinymce.init({
     selector: 'textarea.tinymce',
-    codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css',
+    content_css: '../../../../js/tinymce/skins/content/default/content.css',
     theme: 'silver'
   });
 
   tinymce.init({
     selector: 'div.tinymce',
     inline: true,
-
-    codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css',
+    content_css: '../../../../js/tinymce/skins/content/default/content.css',
     theme: 'silver'
   });
 }

@@ -37,8 +37,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
-      plugins: 'textpattern',
-      toolbar: 'textpattern',
-      skin_url: '/project/js/tinymce/skins/oxide'
-    }, success, failure);
+    plugins: 'textpattern',
+    toolbar: 'textpattern',
+    base_url: '/project/js/tinymce'
+  }, success, failure);
 });

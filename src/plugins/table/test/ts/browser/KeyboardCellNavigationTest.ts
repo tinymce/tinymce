@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
     }, {
       plugins: 'table',
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       height: 300
     }, success, failure);
   }

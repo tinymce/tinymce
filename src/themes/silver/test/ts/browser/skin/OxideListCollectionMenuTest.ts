@@ -17,6 +17,8 @@ import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { GuiSetup, TestStore } from '../../module/AlloyTestUtils';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Menu } from '@ephox/bridge';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   Theme();
@@ -131,8 +133,8 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'list-button',
-      skin_url: '/project/js/tinymce/skins/oxide',
-      setup: (ed) => {
+      base_url: '/project/js/tinymce',
+      setup: (ed: Editor) => {
         ed.ui.registry.addMenuButton('list-button', {
           type: 'menubutton',
           fetch: (callback) => {
@@ -144,7 +146,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 shortcut: 'Ctrl+A',
                 icon: 'fake-icon-name',
                 onAction: store.adder('togglemenuitem.onAction')
-              },
+              } as Menu.ToggleMenuItemApi,
               {
                 type: 'nestedmenuitem',
                 text: 'Beta',
@@ -157,7 +159,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                     }
                   ];
                 }
-              },
+              } as Menu.NestedMenuItemApi,
               {
                 type: 'separator'
               },
@@ -166,7 +168,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                 text: 'Gamma',
                 shortcut: 'Ctrl+C',
                 icon: 'fake-icon-name'
-              },
+              } as Menu.MenuItemApi,
             ]);
           }
         });

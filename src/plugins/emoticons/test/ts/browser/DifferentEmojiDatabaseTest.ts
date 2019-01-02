@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       plugins: 'emoticons',
       toolbar: 'emoticons',
       theme: 'silver',
-      skin_url: '/project/js/tinymce/skins/oxide',
+      base_url: '/project/js/tinymce',
       emoticons_database_url: databaseUrl
     }, onStepSuccess, onStepFailure);
   });

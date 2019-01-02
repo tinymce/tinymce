@@ -62,6 +62,6 @@ UnitTest.asynctest('Browser Test: .PasteStylesTest', (success, failure) => {
     plugins: 'paste',
     toolbar: '',
     valid_styles: 'font-family,color',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

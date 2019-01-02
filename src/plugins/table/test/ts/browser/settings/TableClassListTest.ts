@@ -46,6 +46,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableClassListTest', (success,
   }, {
     plugins: 'table',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

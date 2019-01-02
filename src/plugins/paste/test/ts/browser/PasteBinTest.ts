@@ -43,7 +43,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
           add_unload_trigger: false,
           indent: false,
           plugins: 'paste',
-          skin_url: '/project/js/tinymce/skins/oxide',
+          base_url: '/project/js/tinymce',
           setup (editor) {
             editor.on('SkinLoaded', function () {
               setTimeout(function () {

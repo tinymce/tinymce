@@ -62,7 +62,7 @@ export default function () {
 
   tinymce.init({
     selector: 'textarea.tinymce',
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
     ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
@@ -74,7 +74,7 @@ export default function () {
   tinymce.init({
     selector: 'div.tinymce',
     inline: true,
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
     ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',

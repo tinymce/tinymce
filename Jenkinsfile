@@ -49,13 +49,13 @@ node("primary") {
           echo "Installing tools"
           extNpmInstall()
           if (isUnix()) {
-            sh "yarn grunt less"
+            sh "yarn grunt dev"
           } else {
-            bat "yarn grunt less"
+            bat "yarn grunt dev"
           }
 
 
-          echo "Platform: browser tests for " + permutation.name
+          echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
 
           // individual test timeout - 50 seconds. Ideally would only be 30 but resample URL tends to take a while, as do tests that run all languages
           def singleTimeout ="50000"
@@ -88,12 +88,12 @@ node("primary") {
             successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
           }
 
-          echo "Writing JUnit results for " + name
+          echo "Writing JUnit results for " + name + " on node: $NODE_NAME"
 
           step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
 
           if (!successfulTests) {
-            echo "Tests failed for " + name + " so passing failure as exit code"
+            echo "Tests failed for " + name + " so passing failure as exit code for node: $NODE_NAME"
             if (isUnix()) {
               sh "exit 1"
             } else {

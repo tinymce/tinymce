@@ -44,6 +44,6 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, fa
     theme: 'silver',
     plugins: 'anchor',
     toolbar: 'anchor',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

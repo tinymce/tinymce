@@ -63,6 +63,6 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

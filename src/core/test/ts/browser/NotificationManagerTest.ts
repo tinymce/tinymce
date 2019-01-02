@@ -112,6 +112,6 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     theme: 'silver',
     indent: false,
     entities: 'raw',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

@@ -6,13 +6,12 @@
  */
 
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Bindings from './core/Bindings';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('visualblocks', (editor: Editor, pluginUrl: string) => {
+PluginManager.add('visualblocks', (editor, pluginUrl) => {
   const enabledState = Cell(false);
 
   Commands.register(editor, pluginUrl, enabledState);

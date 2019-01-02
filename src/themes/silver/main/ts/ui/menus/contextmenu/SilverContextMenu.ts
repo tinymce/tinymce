@@ -101,7 +101,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
   return items;
 };
 
-const isNativeOverrideKeyEvent = function (editor, e) {
+const isNativeOverrideKeyEvent = function (editor: Editor, e) {
   return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
 };
 

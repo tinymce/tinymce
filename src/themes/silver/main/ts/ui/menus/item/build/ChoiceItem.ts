@@ -15,6 +15,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 import { Toggling, Disabling } from '@ephox/alloy';
 import ItemResponse from '../ItemResponse';
+import { renderCheckmark } from '../structure/ItemSlices';
 
 // TODO: Remove dupe between these
 const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
@@ -59,7 +60,11 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: useText ? spec.shortcut : Option.none(),
-    checkMark: Option.none(),
+
+    // useText essentially says that we have one column. In one column lists, we should show a tick
+    // The tick is controlled by the tickedClass (via css). It is always present
+    // but is hidden unless the tickedClass is present.
+    checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
     caret: Option.none(),
     value: spec.value
   }, providersBackstage);

@@ -43,6 +43,6 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
     theme: 'silver',
     plugins: 'preview',
     toolbar: 'preview',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

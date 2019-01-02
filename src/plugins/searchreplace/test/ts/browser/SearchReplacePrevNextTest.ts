@@ -28,24 +28,29 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
             UiFinder.cFindIn('button:contains("Find")'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]:contains("Next")'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]'),
           Chain.fromChains([
-            UiFinder.cFindIn('button:contains("Next")'),
+            UiFinder.cFindIn('button[title="Next"]'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled"]:contains("Previous")'),
+          UiFinder.cFindIn('button[title="Previous"]'),
+          UiFinder.cWaitFor('wait for prev button to be enabled', 'button[disabled!="disabled"]'),
           Chain.fromChains([
-            UiFinder.cFindIn('button:contains("Next")'),
+            UiFinder.cFindIn('button[title="Next"]'),
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for next button to be disabled', 'button[disabled="disabled"]:contains("Next")'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be disabled', 'button[disabled="disabled"]'),
           Chain.fromChains([
-            UiFinder.cFindIn('button:contains("Previous")'),
+            UiFinder.cFindIn('button[title="Previous"]'),
             Mouse.cClick,
             Mouse.cClick
           ]),
-          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]:contains("Previous")'),
-          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]:contains("Next")')
+          UiFinder.cFindIn('button[title="Previous"]'),
+          UiFinder.cWaitFor('wait for prev button to be disabled', 'button[disabled="disabled"]'),
+          UiFinder.cFindIn('button[title="Next"]'),
+          UiFinder.cWaitFor('wait for next button to be enabled', 'button[disabled!="disabled"]')
         ])
       ])
     ])
@@ -53,7 +58,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
 }, {
   plugins: 'searchreplace',
   toolbar: 'searchreplace',
-  skin_url: '/project/js/tinymce/skins/oxide',
+  base_url: '/project/js/tinymce',
   theme: 'silver'
 }, success, failure);
 });

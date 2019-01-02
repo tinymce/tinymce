@@ -30,7 +30,7 @@ export const handleError = (error) => {
   console.error(ValueSchema.formatError(error));
 };
 
-const defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent';
+const defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | permanentpen | addcomment';
 
 const renderFromBridge = <BI, BO>(bridgeBuilder: (i: BI) => Result<BO, ValueSchema.SchemaError<any>>, render: (o: BO, extras) => AlloySpec) => {
   return (spec, extras) => {
@@ -85,11 +85,11 @@ const types = {
     }
   ),
 
-  styleSelectButton: (editor, extras) => createStyleSelect(editor, extras.backstage),
-  fontsizeSelectButton: (editor, extras) => createFontsizeSelect(editor, extras.backstage),
-  fontSelectButton: (editor, extras) => createFontSelect(editor, extras.backstage),
-  formatButton: (editor, extras) => createFormatSelect(editor, extras.backstage),
-  alignMenuButton: (editor, extras) => createAlignSelect(editor, extras.backstage)
+  styleSelectButton: (editor: Editor, extras) => createStyleSelect(editor, extras.backstage),
+  fontsizeSelectButton: (editor: Editor, extras) => createFontsizeSelect(editor, extras.backstage),
+  fontSelectButton: (editor: Editor, extras) => createFontSelect(editor, extras.backstage),
+  formatButton: (editor: Editor, extras) => createFormatSelect(editor, extras.backstage),
+  alignMenuButton: (editor: Editor, extras) => createAlignSelect(editor, extras.backstage)
 };
 
 const extractFrom = function (spec: AddButtonSettings, extras): Option<SketchSpec> {

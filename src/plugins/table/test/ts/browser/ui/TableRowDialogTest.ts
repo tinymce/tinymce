@@ -228,7 +228,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
   }, {
     plugins: 'table',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     toolbar: 'tablerowprops',
     indent: false,
     valid_styles: {

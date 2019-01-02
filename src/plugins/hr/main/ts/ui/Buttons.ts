@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const register = function (editor) {
+import { Editor } from 'tinymce/core/api/Editor';
+
+const register = function (editor: Editor) {
   editor.ui.registry.addButton('hr', {
     icon: 'horizontal-rule',
     tooltip: 'Horizontal line',
@@ -15,8 +17,7 @@ const register = function (editor) {
   editor.ui.registry.addMenuItem('hr', {
     icon: 'horizontal-rule',
     text: 'Horizontal line',
-    onAction: () => editor.execCommand('InsertHorizontalRule'),
-    context: 'insert'
+    onAction: () => editor.execCommand('InsertHorizontalRule')
   });
 };
 

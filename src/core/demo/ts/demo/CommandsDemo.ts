@@ -99,7 +99,7 @@ export default function () {
   });
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     plugins: [
       'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',

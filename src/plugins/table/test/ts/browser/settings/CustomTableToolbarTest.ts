@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
   }, {
     plugins: 'table',
     table_toolbar: 'tableprops tabledelete',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

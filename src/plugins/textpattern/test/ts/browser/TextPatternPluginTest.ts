@@ -197,6 +197,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'textpattern',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

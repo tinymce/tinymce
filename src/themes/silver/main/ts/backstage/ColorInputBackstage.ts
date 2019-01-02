@@ -11,22 +11,24 @@ import Settings from '../ui/core/color/Settings';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 
+type ColorInputCallback = (valueOpt: Option<string>) => void;
+
 export interface UiFactoryBackstageForColorInput {
-  colorPicker: (callback: (valueOpt: Option<string>) => void, value) => void;
+  colorPicker: (callback: ColorInputCallback, value: string) => void;
   hasCustomColors: () => boolean;
   getColors: () => Menu.ChoiceMenuItemApi[];
 }
 
-const colorPicker = (editor) => (callback, value) => {
+const colorPicker = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
   const dialog = ColorSwatch.colorPickerDialog(editor);
   dialog(callback, value);
 };
 
-const hasCustomColors = (editor) => (): boolean => {
+const hasCustomColors = (editor: Editor) => (): boolean => {
   return Settings.hasCustomColors(editor);
 };
 
-const getColors = (editor) => (): Menu.ChoiceMenuItemApi[] => {
+const getColors = (editor: Editor) => (): Menu.ChoiceMenuItemApi[] => {
   return Settings.getColors(editor);
 };
 

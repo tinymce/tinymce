@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
     plugins: 'table',
     indent : false,
     theme : 'silver',
-    skin_url : '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure );
 });

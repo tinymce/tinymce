@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const toggleVisualAidState = (api, editor) => {
+import { Editor } from 'tinymce/core/api/Editor';
+import { Menu } from '@ephox/bridge';
+
+const toggleVisualAidState = (api: Menu.ToggleMenuItemInstanceApi, editor: Editor) => {
   api.setActive(editor.hasVisual);
 
   const onVisualAid = (e) => {
@@ -15,7 +18,7 @@ const toggleVisualAidState = (api, editor) => {
   return () => editor.off('VisualAid', onVisualAid);
 };
 
-const registerMenuItems = (editor) => {
+const registerMenuItems = (editor: Editor) => {
   editor.ui.registry.addToggleMenuItem('visualaid', {
     text: 'Visual aids',
     onSetup: (api) => toggleVisualAidState(api, editor),
@@ -25,7 +28,7 @@ const registerMenuItems = (editor) => {
   });
 };
 
-const registerToolbarButton = (editor) => {
+const registerToolbarButton = (editor: Editor) => {
   editor.ui.registry.addButton('visualaid', {
     tooltip: 'Visual aids',
     text: 'Visual aids',
@@ -33,7 +36,7 @@ const registerToolbarButton = (editor) => {
   });
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   registerToolbarButton(editor);
   registerMenuItems(editor);
 };

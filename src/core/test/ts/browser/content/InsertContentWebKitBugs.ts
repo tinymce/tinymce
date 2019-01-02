@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
   }, success, failure);
 });

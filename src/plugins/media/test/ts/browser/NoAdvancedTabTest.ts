@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
           media_alt_source: false,
           media_poster: false,
           theme: 'silver',
-          skin_url: '/project/js/tinymce/skins/oxide'
+          base_url: '/project/js/tinymce'
         }),
         [
           Chain.fromChains([
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
           plugins: ['media'],
           toolbar: 'media',
           theme: 'silver',
-          skin_url: '/project/js/tinymce/skins/oxide'
+          base_url: '/project/js/tinymce'
         }),
         [
           Chain.fromChains([

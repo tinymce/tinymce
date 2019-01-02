@@ -43,6 +43,6 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     noneditable_regexp: [/\{[^\}]+\}/g],
     plugins: 'noneditable',
     entities: 'raw',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

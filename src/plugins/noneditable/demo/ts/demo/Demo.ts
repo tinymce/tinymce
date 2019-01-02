@@ -16,7 +16,7 @@ tinymce.init({
   selector: 'div.tinymce',
   theme: 'silver',
   inline: true,
-  skin_url: '../../../../../js/tinymce/skins/oxide',
+  skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'noneditable code',
   toolbar: 'code',
   height: 600
@@ -25,7 +25,7 @@ tinymce.init({
 tinymce.init({
   selector: 'textarea.tinymce',
   theme: 'silver',
-  skin_url: '../../../../../js/tinymce/skins/oxide',
+  skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'noneditable code',
   toolbar: 'code',
   height: 600
