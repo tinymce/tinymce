@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
 import Settings from '../api/Settings';
 
@@ -48,6 +50,12 @@ const toggleScrolling = (editor: Editor, state: boolean) => {
   }
 };
 
+const getMargin = (dom: DOMUtils, elm: Element, pos: string, computed: boolean): number => {
+  const value = parseInt(dom.getStyle(elm, `margin-${pos}`, computed), 10);
+  // Margin maybe be an empty string, so in that case treat it as being 0
+  return isNaN(value) ? 0 : value;
+};
+
 /**
  * This method gets executed each time the editor needs to resize.
  */
@@ -69,8 +77,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the body element using CSS styles
-  const marginTop = parseInt(dom.getStyle(body, 'margin-top', true), 10);
-  const marginBottom = parseInt(dom.getStyle(body, 'margin-bottom', true), 10);
+  const marginTop = getMargin(dom, body, 'top', true);
+  const marginBottom = getMargin(dom, body, 'bottom', true);
   contentHeight = body.offsetHeight + marginTop + marginBottom;
 
   // Make sure we have a valid height
