@@ -11,6 +11,22 @@ import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
+const toStep = function <U extends any[]> (method: (...args: U) => void) {
+  return function <T> (...args: U) {
+    return Step.sync<T>(function () {
+      method.apply(undefined, args);
+    });
+  };
+};
+
+const toChain = function <B,C> (method: (label: string, expected: B, actual: C) => void) {
+  return function (label: string, expected: B) {
+    return Chain.op<C>(function(actual: C) {
+      method.call(undefined, label, expected, actual);
+    });
+  };
+};
+
 // Note, this requires changes to tunic
 const textError = function (label: string, expected: string, actual: string) {
   const err = new Error(label);
@@ -31,8 +47,18 @@ const assertHtml = function (label: string, expected: string, actual: string) {
   if (expected !== actual) throw textError(label, expected, actual);
 };
 
+const assertStructure = function (label: string, expected: StructAssert, container: Element) {
+  Logger.sync(label, function () {
+    expected.doAssert(container);
+  });
+};
+
 const assertHtmlStructure = function (label: string, expected: string, actual: string) {
   assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
+};
+
+const assertHtmlStructure2 = function (label: string, expected: string, actual: Element) {
+  assertStructure(label, ApproxStructure.fromHtml(expected), actual);
 };
 
 const assertPresence = function (label: string, expected: Record<string, number>, container: Element) {
@@ -40,20 +66,6 @@ const assertPresence = function (label: string, expected: Record<string, number>
     const actual = UiFinder.findAllIn(container, selector).length;
     assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
   });
-};
-
-const assertStructure = function (label: string, expected: StructAssert, container: Element) {
-  Logger.sync(label, function () {
-    expected.doAssert(container);
-  });
-};
-
-const toStep = function (method: Function) {
-  return function (...args: any[]) {
-    return Step.sync<any>(function () {
-      method.apply(undefined, args);
-    });
-  };
 };
 
 const assertDomEq = function (label: string, expected: Element, actual: Element) {
@@ -64,51 +76,17 @@ const assertDomEq = function (label: string, expected: Element, actual: Element)
   );
 };
 
-const sAssertEq = function <T, V>(label: string, a: V, b: V): Step<T,T> {
-  return Step.sync<T>(function () {
-    assertEq(label, a, b);
-  });
-};
+const sAssertEq: <T, V> (label: string, expected: V, actual: V) => Step<T, T> = toStep(assertEq);
+const sAssertHtml = toStep(assertHtml);
+const sAssertPresence = toStep(assertPresence);
+const sAssertStructure = toStep(assertStructure);
 
-const cAssertEq = function <T>(label: string, expected: T) {
-  return Chain.op(function (actual: T) {
-    assertEq(label, expected, actual);
-  });
-};
-
-const cAssertHtml = function (label: string, expected: string) {
-  return Chain.op(function (actual: string) {
-    assertHtml(label, expected, actual);
-  });
-};
-
-const cAssertDomEq = function (label: string, expected: Element) {
-  return Chain.op(function (actual: Element) {
-    assertDomEq(label, expected, actual);
-  });
-};
-
-const cAssertPresence = function (label: string, expected: Record<string,number>) {
-  return Chain.op(function(container: Element) {
-    assertPresence(label, expected, container);
-  });
-};
-
-const cAssertHtmlStructure = function(label: string, expected: string) {
-  return Chain.op(function(container: Element) {
-    assertStructure(label, ApproxStructure.fromHtml(expected), container);
-  });
-};
-
-const cAssertStructure = function(label: string, expected: StructAssert) {
-  return Chain.op(function (container: Element) {
-    assertStructure(label, expected, container);
-  });
-};
-
-const sAssertHtml: <T> (label: string, expected: string, actual: string) => Step<T, T> = toStep(assertHtml);
-const sAssertPresence: <T> (label: string, expected: Record<string, number>, container: Element) => Step<T, T> = toStep(assertPresence);
-const sAssertStructure: <T> (label: string, expected: StructAssert, container: Element) => Step<T, T> = toStep(assertStructure);
+const cAssertEq: <T> (label: string, expected: T) => Chain<T,T> = toChain(assertEq);
+const cAssertDomEq = toChain(assertDomEq);
+const cAssertHtml = toChain(assertHtml);
+const cAssertPresence = toChain(assertPresence);
+const cAssertHtmlStructure = toChain(assertHtmlStructure2);
+const cAssertStructure = toChain(assertStructure);
 
 export {
   assertEq,
