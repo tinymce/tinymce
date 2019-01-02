@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
+import { Node, Text, HTMLElement } from '@ephox/dom-globals';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -13,14 +13,44 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
 import { resolvePath, isElement, isText } from './PathRange';
-import { Strings, Arr } from '@ephox/katamari';
+import { Strings, Arr, Id } from '@ephox/katamari';
+
+// assumes start is not equal to end
+const isCollapsed = (start: Node, end: Node, root: HTMLElement) => {
+  const walker = new TreeWalker(start, root);
+  while (walker.next()) {
+    const node = walker.current();
+    if (isText(node) && node.data.length === 0) {
+      continue;
+    }
+    return node === end;
+  }
+  return false;
+};
 
 // Handles inline formats like *abc* and **abc**
 const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   const dom: DOMUtils = editor.dom;
-  const newMarker = () => dom.create('span', {'data-mce-type': 'bookmark'});
-  const markers = Arr.map(areas, () => ({ start: newMarker(), end: newMarker() }));
-
+  const newMarker = (id: string) => dom.create('span', {'data-mce-type': 'bookmark', 'id': id});
+  const markerRange = (ids: {start: string, end?: string}) => {
+    const range = dom.createRng();
+    const start = dom.select('#' + ids.start)[0];
+    const end = dom.select('#' + ids.end)[0];
+    range.setStartAfter(start);
+    if (!isCollapsed(start, end, dom.getRoot())) {
+      range.setEndBefore(end);
+    } else {
+      range.collapse(true);
+    }
+    return range;
+  };
+  const markerPrefix = Id.generate('mce_');
+  const markerIds = Arr.map(areas, (_area, i) => {
+    return {
+      start: markerPrefix + '_' + i + '_start',
+      end: markerPrefix + '_' + i + '_end',
+    };
+});
   // store the cursor position
   const cursor = editor.selection.getBookmark();
   // add marks for the left and right sides of the ranges and delete the pattern start/end
@@ -29,9 +59,8 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
     const { pattern, range } = areas[i];
     const { node: endNode, offset: endOffset } = resolvePath(dom.getRoot(), range.end).getOrDie('Failed to resolve range[' + i + '].end');
     const textOutsideRange = endOffset === 0 ? endNode : endNode.splitText(endOffset);
-    textOutsideRange.parentNode.insertBefore(markers[i].end, textOutsideRange);
-    // delete the end pattern, note we can't do that if the pattern has no start (ie is a replacement pattern)
-    if (pattern.end.length > 0 && pattern.start.length !== 0) {
+    textOutsideRange.parentNode.insertBefore(newMarker(markerIds[i].end), textOutsideRange);
+    if (pattern.start.length > 0) {
       endNode.deleteData(endOffset - pattern.end.length, pattern.end.length);
     }
   }
@@ -40,7 +69,7 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
     const { pattern, range } = areas[i];
     const { node: startNode, offset: startOffset } = resolvePath(dom.getRoot(), range.start).getOrDie('Failed to resolve range.start');
     const textInsideRange = startOffset === 0 ? startNode : startNode.splitText(startOffset);
-    textInsideRange.parentNode.insertBefore(markers[i].start, textInsideRange);
+    textInsideRange.parentNode.insertBefore(newMarker(markerIds[i].start), textInsideRange);
     // delete the start pattern
     if (pattern.start.length > 0) {
       textInsideRange.deleteData(0, pattern.start.length);
@@ -51,11 +80,7 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   // apply the patterns
   for (let i = 0; i < areas.length; i++) {
     const { pattern } = areas[i];
-    const { start, end } = markers[i];
-    const doc = start.ownerDocument;
-    const range = doc.createRange();
-    range.setStartAfter(start);
-    range.setEndBefore(end);
+    const range = markerRange(markerIds[i]);
     editor.selection.setRng(range);
     if (pattern.type === 'inline-format') {
       pattern.format.forEach((format) => {
@@ -65,8 +90,8 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
       editor.execCommand(pattern.cmd, false, pattern.value);
     }
     // remove the markers
-    start.parentNode.removeChild(start);
-    end.parentNode.removeChild(end);
+    dom.remove(markerIds[i].start);
+    dom.remove(markerIds[i].end);
   }
   // return the selection
   editor.selection.moveToBookmark(cursor);
