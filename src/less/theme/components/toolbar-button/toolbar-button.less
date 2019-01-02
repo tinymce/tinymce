@@ -135,7 +135,9 @@
     color: @toolbar-button-disabled-text-color;
     cursor: not-allowed;
 
-    svg { /* stylelint-disable-line */
+    // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
+    // since they need to be kept the same/use the same rules
+    svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-disabled-icon-color;
     }
   }
