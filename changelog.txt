@@ -1,4 +1,5 @@
 Version 5.0.0-beta-2 (TBD)
+    Added editor settings functionality to specify title attributes for toolbar groups #TINY-2690
     Added icons instead of button text to improve Search and Replace dialog footer appearance #TINY-2654
     Added `tox-dialog__table` instead of `mce-table-striped` class to enhance Help dialog appearance #TINY-2360
     Added title attribute to iframes so, screen readers can announce iframe labels #TINY-2692
