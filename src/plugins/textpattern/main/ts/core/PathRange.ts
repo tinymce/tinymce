@@ -1,11 +1,14 @@
-import { Node, Text } from '@ephox/dom-globals';
+import { Node, Text, HTMLElement } from '@ephox/dom-globals';
 import { Option, Arr } from '@ephox/katamari';
-import NodeType from 'tinymce/core/dom/NodeType';
+import { NodeTypes } from '@ephox/sugar';
 
 export interface PathRange {
   start: number[];
   end: number[];
 }
+
+const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeTypes.ELEMENT;
+const isText = (node: Node): node is Text => node.nodeType === NodeTypes.TEXT;
 
 const generatePath = (root: Node, node: Text, offset: number): Option<number[]> => {
   if (offset < 0 || offset > node.data.length) {
@@ -40,7 +43,7 @@ const resolvePath = (root: Node, path: number[]): Option<{node: Text, offset: nu
   return Arr.foldl(nodePath, (optNode: Option<Node>, index: number) => {
     return optNode.bind((node) => Option.from(node.childNodes[index]));
   }, Option.some(root)).bind((node) => {
-    if (NodeType.isText(node) && offset >= 0 && offset <= node.data.length) {
+    if (isText(node) && offset >= 0 && offset <= node.data.length) {
       return Option.some({node, offset});
     }
     return Option.none();
@@ -56,6 +59,8 @@ const resolvePathRange = (root: Node, range: PathRange) => {
 };
 
 export {
+  isElement,
+  isText,
   generatePath,
   generatePathRange,
   resolvePath,

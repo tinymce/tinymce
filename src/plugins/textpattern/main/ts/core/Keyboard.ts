@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Delay from 'tinymce/core/api/util/Delay';
-import VK from 'tinymce/core/api/util/VK';
-import KeyHandler from './KeyHandler';
-import { PatternSet } from '../api/Pattern';
+import { KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
-import { KeyboardEvent } from '@ephox/dom-globals';
+import Delay from 'tinymce/core/api/util/Delay';
+import VK from 'tinymce/core/api/util/VK';
+import { PatternSet } from '../api/Pattern';
+import KeyHandler from './KeyHandler';
 
 const setup = function (editor, patternsState: Cell<PatternSet>) {
   const charCodes = [',', '.', ';', ':', '!', '?'];

@@ -6,8 +6,19 @@
  */
 
 import { createPatternSet, PatternSet, normalizePattern } from './Pattern';
-import { Obj, Type, Results, Arr } from '@ephox/katamari';
-import ErrorReporter from 'tinymce/core/ErrorReporter';
+import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
+import { Console } from '@ephox/dom-globals';
+
+const error = function (...args: Parameters<Console['error']>) {
+  const console: Console = Global.console;
+  if (console) { // Skip test env
+    if (console.error) { // tslint:disable-line:no-console
+      console.error.apply(console, args); // tslint:disable-line:no-console
+    } else {
+      console.log.apply(console, args); // tslint:disable-line:no-console
+    }
+  }
+};
 
 const defaultPatterns = [
   { start: '*', end: '*', format: 'italic' },
@@ -26,16 +37,14 @@ const defaultPatterns = [
 const getPatternSet = (editorSettings): PatternSet => {
   const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
   if (!Type.isArray(patterns)) {
-    ErrorReporter.initError('The setting textpattern_patterns should be an array');
+    error('The setting textpattern_patterns should be an array');
     return {
       inlinePatterns: [],
       blockPatterns: [],
     };
   }
   const normalized = Results.partition(Arr.map(patterns, normalizePattern));
-  Arr.each(normalized.errors, (err) => {
-    ErrorReporter.initError(err.message, err.pattern);
-  });
+  Arr.each(normalized.errors, (err) => error(err.message, err.pattern));
   return createPatternSet(normalized.values);
 };
 

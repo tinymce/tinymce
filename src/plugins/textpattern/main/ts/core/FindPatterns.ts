@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Node, Text } from '@ephox/dom-globals';
-import { InlinePattern, Pattern, BlockPattern } from '../api/Pattern';
-import NodeType from 'tinymce/core/dom/NodeType';
+import { Node, Range, Text } from '@ephox/dom-globals';
 import { Option, Strings } from '@ephox/katamari';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import { PathRange, generatePathRange, resolvePathRange } from './PathRange';
-import Tools from '../../../../../core/main/ts/api/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
+import { BlockPattern, InlinePattern, Pattern } from '../api/Pattern';
+import { generatePathRange, isElement, isText, PathRange, resolvePathRange } from './PathRange';
 
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): P => {
@@ -84,17 +83,17 @@ const prevLeaf = (leaf: Node, root: Node): Option<Node> => {
 const textBefore = (node: Node, offset: number, block: Node): Option<Spot> => {
   // check we are at a leaf
   if (node.childNodes.length === 0) {
-    if (NodeType.isText(node) && offset > 0) {
+    if (isText(node) && offset > 0) {
       return Option.some({node, offset});
     } else {
       return prevLeaf(node, block).bind(
-        (leaf) => textBefore(leaf, NodeType.isText(leaf) ? leaf.length : 0, block));
+        (leaf) => textBefore(leaf, isText(leaf) ? leaf.length : 0, block));
     }
   } else {
     // convert node to leaf
     if (offset > 0) {
       const leaf = descLast(node.childNodes[offset - 1]);
-      return textBefore(leaf, NodeType.isText(leaf) ? leaf.length : 0, block);
+      return textBefore(leaf, isText(leaf) ? leaf.length : 0, block);
     } else {
       return textBefore(descFirst(node), 0, block);
     }
@@ -190,14 +189,14 @@ const findNestedInlinePatterns = (dom: DOMUtils, patterns: InlinePattern[], rng:
 const findBlockPattern = (dom: DOMUtils, patterns: BlockPattern[], rng: Range): Option<BlockPattern> => {
   const block = dom.getParent(rng.startContainer, dom.isBlock);
 
-  if (!(dom.is(block, 'p') && NodeType.isElement(block))) {
+  if (!(dom.is(block, 'p') && isElement(block))) {
     return Option.none();
   }
   const walker = new TreeWalker(block, block);
   let node: Node;
   let firstTextNode: Text;
   while ((node = walker.next())) {
-    if (NodeType.isText(node)) {
+    if (isText(node)) {
       firstTextNode = node;
       break;
     }
@@ -215,9 +214,4 @@ const findBlockPattern = (dom: DOMUtils, patterns: BlockPattern[], rng: Range): 
   return Option.some(pattern);
 };
 
-export {
-  textBefore,
-  findPattern,
-  findBlockPattern,
-  findNestedInlinePatterns,
-};
+export { textBefore, findPattern, findBlockPattern, findNestedInlinePatterns, };

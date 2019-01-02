@@ -9,11 +9,10 @@ import { Node, Text } from '@ephox/dom-globals';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from 'tinymce/core/dom/NodeType';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
-import { resolvePath } from './PathRange';
+import { resolvePath, isElement, isText } from './PathRange';
 import { Strings, Arr } from '@ephox/katamari';
 
 // Handles inline formats like *abc* and **abc**
@@ -78,7 +77,7 @@ const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
   const block = dom.getParent(rng.startContainer, dom.isBlock);
-  if (!block || !dom.is(block, 'p') || !NodeType.isElement(block)) {
+  if (!block || !dom.is(block, 'p') || !isElement(block)) {
     return;
   }
 
@@ -86,7 +85,7 @@ const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   let node: Node;
   let firstTextNode: Text;
   while ((node = walker.next())) {
-    if (NodeType.isText(node)) {
+    if (isText(node)) {
       firstTextNode = node;
       break;
     }

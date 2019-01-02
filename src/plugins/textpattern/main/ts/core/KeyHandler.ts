@@ -7,10 +7,10 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import Zwsp from 'tinymce/core/text/Zwsp';
 import { PatternSet } from '../api/Pattern';
 import { findBlockPattern, findNestedInlinePatterns, textBefore } from './FindPatterns';
 import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
+import { Unicode } from '@ephox/katamari';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   const inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
@@ -23,7 +23,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       },
       () => {
         // create a cursor position that we can move to avoid the inline formats
-        editor.insertContent(Zwsp.ZWSP);
+        editor.insertContent(Unicode.zeroWidth());
         applyInlinePatterns(editor, inlineAreas);
         blockArea.each((pattern) => applyBlockPattern(editor, pattern));
         // find the spot before the cursor position
@@ -32,7 +32,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         const spot = textBefore(range.startContainer, range.startOffset, block);
         editor.execCommand('mceInsertNewLine');
         spot.each((s) => {
-          if (Zwsp.isZwsp(s.node.data.charAt(s.offset - 1))) {
+          if (s.node.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
             s.node.deleteData(s.offset - 1, 1);
           }
         });
