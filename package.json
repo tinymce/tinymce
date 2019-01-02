@@ -1,6 +1,6 @@
 {
   "name": "@ephox/oxide-icons-default",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Default icons for TinyMCE Oxide Theme",
   "main": "dist/js/Main.js",
   "scripts": {
