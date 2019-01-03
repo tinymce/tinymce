@@ -277,7 +277,7 @@ const assertChildren = function (expectedChildren: Option<StructAssert[]>, actua
         }
     });
     if (children.peek().isSome()) {
-      assert.fail('More children then expected for ' + children.context());
+      assert.fail('More children than expected for ' + children.context());
     }
   });
 };
