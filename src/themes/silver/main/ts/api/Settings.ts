@@ -28,9 +28,8 @@ const getSkinUrl = function (editor: Editor): string {
   return skinUrl;
 };
 
-const isSkinDisabled = function (editor: Editor) {
-  return editor.settings.skin === false;
-};
+const isReadOnly = (editor): boolean => editor.getParam('readonly', false, 'boolean');
+const isSkinDisabled = (editor: Editor) => editor.getParam('skin') === false;
 
 const getHeightSetting = (editor): number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
 const getMinWidthSetting = (editor): Option<number> => Option.from(editor.settings.min_width).filter(Type.isNumber);
@@ -64,6 +63,7 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
 
 export {
   getSkinUrl,
+  isReadOnly,
   isSkinDisabled,
   getHeightSetting,
   getMinWidthSetting,

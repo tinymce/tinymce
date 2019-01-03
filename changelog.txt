@@ -1,4 +1,7 @@
 Version 5.0.0-beta-2 (TBD)
+    Fixed readonly mode not fully disabling editing content #TINY-2287
+    Updated the autocompleter to only show when it has matched items #TINY-2350
+    Added editor settings functionality to specify title attributes for toolbar groups #TINY-2690
     Added icons instead of button text to improve Search and Replace dialog footer appearance #TINY-2654
     Added `tox-dialog__table` instead of `mce-table-striped` class to enhance Help dialog appearance #TINY-2360
     Added title attribute to iframes so, screen readers can announce iframe labels #TINY-2692
@@ -8,6 +11,8 @@ Version 5.0.0-beta-2 (TBD)
     Added a wordcount menu item, that defaults to appearing in the tools menu #TINY-2877
     Fixed the legacyoutput plugin to be compatible with TinyMCE 5.0 #TINY-2301
     Updated the build process to minify and generate ASCII only output for the emoticons database #TINY-2744
+    Fixed icons not showing correctly in the autocompleter popup #TINY-3029
+    Fixed an issue where preview wouldn't show anything in Edge under certain circumstances #TINY-3035
     Fixed the height being incorrectly calculated for the autoresize plugin #TINY-2807
 Version 5.0.0-beta-1 (2018-11-30)
     Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
