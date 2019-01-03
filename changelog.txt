@@ -1,4 +1,5 @@
 Version 5.0.0-beta-2 (TBD)
+    Updated the font select dropdown logic to try to detect the system font stack and show "System Font" as the font name #TINY-2710
     Fixed readonly mode not fully disabling editing content #TINY-2287
     Updated the autocompleter to only show when it has matched items #TINY-2350
     Added editor settings functionality to specify title attributes for toolbar groups #TINY-2690
