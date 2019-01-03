@@ -125,7 +125,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
-      [SystemEvents.execute()]: [ 'toggling', 'alloy.base.behaviour' ]
+      [SystemEvents.execute()]: [ 'disabling', 'toggling', 'alloy.base.behaviour' ]
     },
 
     apis,

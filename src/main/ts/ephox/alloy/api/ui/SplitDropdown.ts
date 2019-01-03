@@ -64,7 +64,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
-      'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+      'alloy.execute': [ 'disabling', 'toggling', 'alloy.base.behaviour' ]
     },
 
     events: buttonEvents,
