@@ -1,8 +1,8 @@
-import { Obj } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 
 import * as Truncate from '../alien/Truncate';
-import { StructAssert } from '../assertions/ApproxStructures';
+import { StructAssert, elementQueue } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
 import * as ApproxStructure from './ApproxStructure';
 import { Chain } from './Chain';
@@ -49,7 +49,11 @@ const assertHtml = function (label: string, expected: string, actual: string) {
 
 const assertStructure = function (label: string, expected: StructAssert, container: Element) {
   Logger.sync(label, function () {
-    expected.doAssert(container);
+    if (expected.type === 'advanced') {
+      expected.doAssert(elementQueue([container], Option.none()));
+    } else {
+      expected.doAssert(container);
+    }
   });
 };
 

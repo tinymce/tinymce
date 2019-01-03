@@ -3,9 +3,7 @@ import { Element } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.asynctest('ApproxStructureTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
 
   const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
