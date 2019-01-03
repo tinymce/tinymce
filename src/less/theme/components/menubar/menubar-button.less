@@ -16,6 +16,11 @@
 @menubar-select-text-color: @toolbar-button-text-color;
 @menubar-select-text-transform: @toolbar-button-text-transform;
 
+@menubar-select-disabled-background-color: @toolbar-button-background-color;
+@menubar-select-disabled-border-color: @toolbar-button-background-color;
+@menubar-select-disabled-box-shadow: @toolbar-button-box-shadow;
+@menubar-select-disabled-text-color: fade(@toolbar-button-text-color, 50%);
+
 @menubar-select-hover-background-color: @toolbar-button-hover-background-color;
 @menubar-select-hover-box-shadow: @toolbar-button-hover-box-shadow;
 @menubar-select-hover-text-color: @toolbar-button-hover-text-color;
@@ -51,13 +56,21 @@
     width: auto;
   }
 
-  .tox-mbtn:hover {
+  .tox-mbtn[disabled] {
+    background-color: @menubar-select-disabled-background-color;
+    border-color: @menubar-select-disabled-border-color;
+    box-shadow: @menubar-select-disabled-box-shadow;
+    color: @menubar-select-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  .tox-mbtn:hover:not(:disabled) {
     background: @menubar-select-hover-background-color;
     box-shadow: @menubar-select-hover-box-shadow;
     color: @menubar-select-hover-text-color;
   }
 
-  .tox-mbtn:focus {
+  .tox-mbtn:focus:not(:disabled) {
     background: @menubar-select-focus-background-color;
     box-shadow: @menubar-select-focus-box-shadow;
     color: @menubar-select-text-color;
@@ -74,6 +87,10 @@
     cursor: default;
     font-weight: @menubar-select-font-weight;
     margin: 0 4px;
+  }
+
+  .tox-mbtn[disabled] .tox-mbtn__select-label {
+    cursor: not-allowed;
   }
 
   .tox-mbtn__select-chevron {

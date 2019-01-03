@@ -41,4 +41,13 @@
   .tox-split-button .tox-tbtn {
     margin: 0;
   }
+
+  .tox-split-button.tox-tbtn--disabled:hover,
+  .tox-split-button.tox-tbtn--disabled:focus,
+  .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
+  .tox-split-button.tox-tbtn--disabled .tox-tbtn:focus {
+    background: @toolbar-button-disabled-background-color;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+  }
 }
