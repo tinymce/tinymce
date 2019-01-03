@@ -95,7 +95,7 @@ const elementQueue = function(items: Element[], container: Option<Element>): Ele
   };
 };
 
-const element = function (tag: string, fields: ElementFields): StructAssertBasic {
+const element = function (tag: string, fields: ElementFields): StructAssert {
   const doAssert = function (actual: Element) {
     assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
@@ -118,7 +118,7 @@ const element = function (tag: string, fields: ElementFields): StructAssertBasic
   };
 };
 
-const text = function (s: StringAssert, combineSiblings = false): StructAssertAdv {
+const text = function (s: StringAssert, combineSiblings = false): StructAssert {
   const doAssert = function (queue: ElementQueue) {
     queue.take().fold(() => {
       assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
@@ -156,7 +156,7 @@ const applyAssert = function(structAssert: StructAssert, queue: ElementQueue) {
   }
 };
 
-const either = (structAsserts: StructAssert[]): StructAssertAdv => {
+const either = (structAsserts: StructAssert[]): StructAssert => {
   const doAssert = function (queue: ElementQueue) {
     const mark = queue.mark();
     for (let i = 0; i < structAsserts.length - 1; i++) {
@@ -177,7 +177,7 @@ const either = (structAsserts: StructAssert[]): StructAssertAdv => {
   };
 };
 
-const repeat = (min: number, max: number | true = min) => (structAssert: StructAssert): StructAssertAdv => {
+const repeat = (min: number, max: number | true = min) => (structAssert: StructAssert): StructAssert => {
   const doAssert = function (queue: ElementQueue) {
     let i = 0;
     for (; i < min; i++) {
