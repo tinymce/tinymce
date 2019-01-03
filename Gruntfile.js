@@ -141,11 +141,22 @@ module.exports = function (grunt) {
       })
     ),
 
+    unicode: {
+      'emoticons-plugin': {
+        files: [
+          {
+            src: 'src/plugins/emoticons/main/js/*.js',
+            dest: 'js/tinymce/plugins/emoticons/js/emojis.js'
+          }
+        ]
+      }
+    },
+
     uglify: Object.assign(
       {
         options: {
           output: {
-            ascii_only: true,
+            ascii_only: true
           },
           ie8: true
         },
@@ -157,8 +168,13 @@ module.exports = function (grunt) {
         }
       },
       gruntUtils.generate(plugins, 'plugin', (name) => {
+        var pluginExtras = {
+          emoticons: [ { src: 'js/tinymce/plugins/emoticons/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' } ]
+        };
         return {
-          files: [ { src: `js/tinymce/plugins/${name}/plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.min.js` } ]
+          files: [
+            { src: `js/tinymce/plugins/${name}/plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.min.js` }
+          ].concat(pluginExtras.hasOwnProperty(name) ? pluginExtras[name] : [])
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
@@ -303,17 +319,6 @@ module.exports = function (grunt) {
             src: '**',
             dest: 'js/tinymce/skins/content'
           },
-        ]
-      },
-      'emoticons-plugin': {
-        files: [
-          {
-            flatten: true,
-            expand: true,
-            cwd: 'src/plugins/emoticons/main/js',
-            src: '*.js',
-            dest: 'js/tinymce/plugins/emoticons/js'
-          }
         ]
       },
       'visualblocks-plugin': {
@@ -832,6 +837,7 @@ module.exports = function (grunt) {
     'tslint',
     'globals',
     'rollup',
+    'unicode',
     'uglify',
     'less',
     'copy',
@@ -846,6 +852,7 @@ module.exports = function (grunt) {
     'globals',
     'shell:tsc',
     'rollup',
+    'unicode',
     'less',
     'copy'
   ]);

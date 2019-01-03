@@ -19,22 +19,30 @@ import {
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 
-export interface ToolbarFoo {
+export interface Toolbar {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
-  initGroups: ToolbarGroupFoo[];
+  initGroups: ToolbarGroup[];
 }
 
-export interface ToolbarGroupFoo {
+export interface ToolbarGroup {
+  title: Option<string>;
   items: AlloySpec[];
 }
 
-const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
+const renderToolbarGroup = (foo: ToolbarGroup) => {
+  const attributes = foo.title.fold(() => {
+    return {};
+  },
+  (title) => {
+    return { attributes: { title } };
+  });
   return AlloyToolbarGroup.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__group' ]
+      classes: [ 'tox-toolbar__group' ],
+      ...attributes
     },
     components: [
       AlloyToolbarGroup.parts().items({})
@@ -52,7 +60,7 @@ const renderToolbarGroup = (foo: ToolbarGroupFoo) => {
   });
 };
 
-const renderToolbar = (foo: ToolbarFoo) => {
+const renderToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return AlloyToolbar.sketch({

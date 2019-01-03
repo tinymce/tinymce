@@ -89,36 +89,40 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       closeIfNecessary,
       (lookupInfo) => {
         lookupInfo.lookupData.then((lookupData) => {
-          // AP-246: Do not show the menu if combinedItems length is 0. Write a test also.
           const combinedItems = getCombinedItems(lookupInfo.triggerChar, lookupData);
 
-          const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
-          InlineView.showAt(
-            autocompleter,
-            {
-              anchor: 'selection',
-              root: Element.fromDom(editor.getBody()),
-              getSelection: () => {
-                return Option.some({
-                  start: () => Element.fromDom(lookupInfo.range.startContainer),
-                  soffset: () => lookupInfo.range.startOffset,
-                  finish: () => Element.fromDom(lookupInfo.range.endContainer),
-                  foffset: () => lookupInfo.range.endOffset
-                });
-              }
-            },
-            Menu.sketch(
-              createMenuFrom(
-                createPartialMenuWithAlloyItems('autocompleter-value', true, combinedItems, columns, 'normal'),
-                columns,
-                FocusMode.ContentFocus,
-                // Use the constant.
-                'normal'
+          // Only open the autocompleter if there are items to show
+          if (combinedItems.length > 0) {
+            const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
+            InlineView.showAt(
+              autocompleter,
+              {
+                anchor: 'selection',
+                root: Element.fromDom(editor.getBody()),
+                getSelection: () => {
+                  return Option.some({
+                    start: () => Element.fromDom(lookupInfo.range.startContainer),
+                    soffset: () => lookupInfo.range.startOffset,
+                    finish: () => Element.fromDom(lookupInfo.range.endContainer),
+                    foffset: () => lookupInfo.range.endOffset
+                  });
+                }
+              },
+              Menu.sketch(
+                createMenuFrom(
+                  createPartialMenuWithAlloyItems('autocompleter-value', true, combinedItems, columns, 'normal'),
+                  columns,
+                  FocusMode.ContentFocus,
+                  // Use the constant.
+                  'normal'
+                )
               )
-            )
-          );
+            );
 
-          InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+            InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+          } else {
+            closeIfNecessary();
+          }
         });
       }
     );

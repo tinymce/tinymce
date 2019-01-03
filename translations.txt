@@ -110,6 +110,9 @@ Border style              [style]               Table (better description than j
 
 Update                    <new>                 TOC
 
+Text color                [Color]               Color Swatch
+Remove color              [Remove]              Color Swatch
+Custom color              [Custom]              Color Swatch
 Color swatch              <new>                 Color Swatch
 Turquoise                 <new>                 Color Swatch
 Green                     <new>                 Color Swatch
@@ -141,6 +144,14 @@ Find (if searchreplace plugin activated)    <new>       Help shortcuts
 Save (if save plugin activated)             <new>       Help shortcuts
 Insert link (if link plugin activated)      <new>       Help shortcuts
 Open help dialog                            <new>       Help shortcuts
+
+history                   <new>                 Toolbar group names
+styles                    <new>                 Toolbar group names
+formatting                <new>                 Toolbar group names
+alignment                 <new>                 Toolbar group names
+indentation               <new>                 Toolbar group names
+permanent pen             <new>                 Toolbar group names
+comments                  <new>                 Toolbar group names
 
 
 No longer Used

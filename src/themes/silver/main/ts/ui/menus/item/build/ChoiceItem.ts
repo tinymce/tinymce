@@ -29,7 +29,7 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: 
     checkMark: Option.none(),
     caret: Option.none(),
     value: spec.value
-  }, providersBackstage);
+  }, providersBackstage, spec.icon);
 
   return renderCommonItem({
     data: buildData(spec),

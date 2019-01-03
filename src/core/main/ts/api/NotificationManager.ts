@@ -105,7 +105,9 @@ export default function (editor) {
       }
     });
 
-    editor.on('ResizeEditor ResizeWindow', function () {
+    // NodeChange is needed for inline mode and autoresize as the positioning is done
+    // from the bottom up, which changes when the content in the editor changes.
+    editor.on('ResizeEditor ResizeWindow NodeChange', function () {
       Delay.requestAnimationFrame(reposition);
     });
 
