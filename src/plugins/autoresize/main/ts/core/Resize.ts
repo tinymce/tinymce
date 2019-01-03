@@ -82,6 +82,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   contentHeight = body.offsetHeight + marginTop + marginBottom;
 
   // Make sure we have a valid height
+  // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
+  //       However using the latest supported browsers (IE 11 & Safari 11), the fallbacks were no longer needed and were removed.
   if (contentHeight < 0) {
     contentHeight = 0;
   }
