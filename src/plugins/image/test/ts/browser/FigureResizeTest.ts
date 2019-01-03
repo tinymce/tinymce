@@ -1,6 +1,6 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { ApiChains, Editor, TinyDom, UiChains } from '@ephox/mcagar';
+import { ApiChains, Editor as McEditor, TinyDom, UiChains } from '@ephox/mcagar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
 
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Image: resizing image in figure', [
-      Editor.cFromSettings({
+      McEditor.cFromSettings({
         theme: 'silver',
         plugins: 'image',
         toolbar: 'image',
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         NamedChain.direct('imgSize', Assertions.cAssertEq('asserting image size after resize', { w: '200px', h: '200px' }), '_'),
         NamedChain.output('editor')
       ]),
-      Editor.cRemove
+      McEditor.cRemove
     ])
   ], function () {
     success();

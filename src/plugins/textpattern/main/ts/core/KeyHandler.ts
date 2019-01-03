@@ -8,16 +8,16 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
-import { applyBlockPattern, applyInlinePatternEnter, applyInlinePatternSpace, applyReplacementPattern } from './PatternApplication';
+import { applyBlockPattern, applyInlinePatternEnter, applyInlinePatternSpace, applyReplacementPatternEnter, applyReplacementPatternSpace } from './PatternApplication';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): void => {
-  applyReplacementPattern(editor, patternSet.replacementPatterns);
+  applyReplacementPatternEnter(editor, patternSet.replacementPatterns);
   applyInlinePatternEnter(editor, patternSet.inlinePatterns);
   applyBlockPattern(editor, patternSet.blockPatterns);
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  applyReplacementPattern(editor, patternSet.replacementPatterns);
+  applyReplacementPatternSpace(editor, patternSet.replacementPatterns);
   applyInlinePatternSpace(editor, patternSet.inlinePatterns);
 };
 

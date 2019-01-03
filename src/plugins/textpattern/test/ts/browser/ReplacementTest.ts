@@ -15,48 +15,63 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
     const tinyActions = TinyActions(editor);
 
     const steps = Utils.withTeardown([
-      Logger.t('Apply replacement pattern on space', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brb'),
-        tinyApis.sAssertContent('<p>be right back&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 14, [0, 0], 14)
+      Logger.t('Apply html replacement pattern on space', GeneralSteps.sequence([
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'heading'),
+        tinyApis.sAssertContent('<h1>My Heading</h1>'),
+        tinyApis.sAssertSelection([0, 0], 10, [0, 0], 10)
       ])),
-      Logger.t('Apply replacement pattern on space with content before', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'Xbrb'),
-        tinyApis.sAssertContent('<p>Xbe right back&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 15, [0, 0], 15)
-      ])),
-      Logger.t('Apply replacement pattern on space with content after', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brbX'),
-        tinyApis.sAssertContent('<p>be right backX&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 0], 15, [0, 0], 15)
-      ])),
-      Logger.t('Apply replacement pattern on enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'brb'),
-        tinyApis.sAssertContentStructure(Utils.blockStructHelper('p', 'be right back')),
+      Logger.t('Apply html replacement pattern on enter', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'heading'),
+        tinyApis.sAssertContent('<h1>My Heading</h1><p>&nbsp;</p>'),
         tinyApis.sAssertSelection([1], 0, [1], 0)
       ])),
-      Logger.t('Apply replacement pattern on enter with content before', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, 'Xbrb'),
-        tinyApis.sAssertContent('<p>Xbe right back</p><p>&nbsp;</p>'),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+      Logger.t('Apply html replacement pattern on enter in middle of word', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>XheadingX</p>'),
+        tinyApis.sSetSelection([0, 0], 8, [0, 0], 8),
+        Utils.sPressEnter(tinyApis, tinyActions),
+        tinyApis.sAssertContent('<p>X</p><h1>My Heading</h1><p>&nbsp;</p><p>X</p>'),
+        tinyApis.sAssertSelection([2], 0, [2], 0)
+      ])),
+      Logger.t('Apply complex html replacement pattern on enter', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>complex pattern</p>'),
+        tinyApis.sSetSelection([0, 0], 15, [0, 0], 15),
+        Utils.sPressEnter(tinyApis, tinyActions),
+        tinyApis.sAssertContent('<h1>Text</h1><p>More text</p><p>&nbsp;</p>'),
       ])),
 
-      Logger.t('Apply replacement pattern and inline pattern on space', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*brb*'),
-        tinyApis.sAssertContent('<p><em>be right back</em>&nbsp;</p>'),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1)
+      Logger.t('Apply text replacement pattern on space', GeneralSteps.sequence([
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, 'brb'),
+        tinyApis.sAssertContent('<p>Be Right Back</p>'),
+        tinyApis.sAssertSelection([0, 0], 13, [0, 0], 13)
       ])),
-      Logger.t('Apply replacement pattern and block pattern on enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#brb'),
-        tinyApis.sAssertContent('<h1>be right back</h1><p>&nbsp;</p>'),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+      Logger.t('Apply text replacement pattern on space with content after', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>brbX</p>'),
+        tinyApis.sSetSelection([0, 0], 3, [0, 0], 3),
+        Utils.sPressSpace(tinyApis, tinyActions),
+        tinyApis.sAssertContent('<p>Be Right BackX</p>'),
+        tinyApis.sAssertSelection([0, 0], 14, [0, 0], 14)
+      ])),
+      Logger.t('Apply text replacement pattern on enter', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>brb</p>'),
+        tinyApis.sSetSelection([0, 0], 3, [0, 0], 3),
+        Utils.sPressEnter(tinyApis, tinyActions),
+        tinyApis.sAssertContent('<p>Be Right Back</p><p>&nbsp;</p>'),
+      ])),
+      Logger.t('Apply text replacement pattern on enter with content after', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>brbX</p>'),
+        tinyApis.sSetSelection([0, 0], 3, [0, 0], 3),
+        Utils.sPressEnter(tinyApis, tinyActions),
+        tinyApis.sAssertContent('<p>Be Right Back</p><p>X</p>'),
+        tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
       ])),
     ], tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     textpattern_patterns: [
-      { start: 'brb', replacement: 'be right back' },
+      { start: 'brb', replacement: 'Be Right Back' },
+      { start: 'heading', replacement: '<h1>My Heading</h1>' },
+      { start: 'complex pattern', replacement: '<h1>Text</h1><p>More text</p>' },
       { start: '*', end: '*', format: 'italic' },
       { start: '#', format: 'h1' }
     ],

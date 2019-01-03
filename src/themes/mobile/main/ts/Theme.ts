@@ -255,7 +255,10 @@ export const renderMobileTheme = function (editor) {
   return {
     getNotificationManagerImpl () {
       return {
-        open: Fun.identity,
+        open: Fun.constant({
+          progressBar: { value: Fun.noop},
+          close: Fun.noop
+        }),
         close: Fun.noop,
         reposition: Fun.noop,
         getArgs: Fun.identity
