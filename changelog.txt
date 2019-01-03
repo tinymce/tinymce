@@ -1,8 +1,20 @@
+Version 4.11.0
+
+Date 2019-01-03
+
+* adds ability for approx structure assertions to match on multiple nodes
+* adds new structure assertion methods: either, repeat, zeroOrOne, zeroOrMore, oneOrMore and theRest
+* changed text structure assertion to take a new optional parameter specifying if it should match on multiple text nodes
+
 Version 4.10.0
+
+Date 2018-12-18
 
 * Exposed Clicks.point on Mouse api.
 
 Version 4.9.0
+
+Date 2018-12-05
 
 * Added cExists and cNotExists to UiFinder.
 

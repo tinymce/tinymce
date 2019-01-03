@@ -7,7 +7,13 @@ import * as ApproxStructures from '../assertions/ApproxStructures';
 const structApi = {
   element: ApproxStructures.element,
   text: ApproxStructures.text,
-  anything: ApproxStructures.anything
+  anything: ApproxStructures.anything,
+  either: ApproxStructures.either,
+  repeat: ApproxStructures.repeat,
+  zeroOrOne: ApproxStructures.zeroOrOne,
+  zeroOrMore: ApproxStructures.zeroOrMore,
+  oneOrMore: ApproxStructures.oneOrMore,
+  theRest: ApproxStructures.theRest,
 };
 
 const strApi = {
@@ -54,7 +60,7 @@ const fromElement = function (node: Element): ApproxStructures.StructAssert {
       classes: toAssertableArr(Classes.get(node))
     });
   } else {
-    return ApproxStructures.text(ApproxComparisons.is(Node.value(node)));
+    return ApproxStructures.text(ApproxComparisons.is(Node.value(node)), true);
   }
 };
 
