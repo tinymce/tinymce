@@ -118,7 +118,7 @@ const element = function (tag: string, fields: ElementFields): StructAssertBasic
   };
 };
 
-const text = function (s: StringAssert, combineSiblings?: boolean): StructAssertAdv {
+const text = function (s: StringAssert, combineSiblings = false): StructAssertAdv {
   const doAssert = function (queue: ElementQueue) {
     queue.take().fold(() => {
       assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
