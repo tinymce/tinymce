@@ -34,6 +34,7 @@ import { renderLabel, renderIconFromPack } from '../button/ButtonSlices';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 export const updateMenuText = Id.generate('update-menu-text');
 
@@ -44,6 +45,7 @@ export interface UpdateMenuTextEvent extends CustomEvent {
 export interface BasketballFoo {
   text: Option<string>;
   icon: Option<string>;
+  disabled?: boolean;
   tooltip: Option<string>;
   role: Option<string>;
   fetch: (callback: (tdata: TieredData) => void) => void;
@@ -117,6 +119,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
 
       // TODO: Not quite working. Can still get the button focused.
       dropdownBehaviours: Behaviour.derive([
+        DisablingConfigs.button(spec.disabled),
         Unselecting.config({ }),
         Replacing.config({ }),
         AddEventsBehaviour.config('menubutton-update-display-text', [

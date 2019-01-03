@@ -292,6 +292,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (a, b, c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
+      DisablingConfigs.splitButton(false),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
