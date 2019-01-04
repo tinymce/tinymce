@@ -1,11 +1,10 @@
 import { Assertions, Chain, Cursors, Pipeline, Guard, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Id, Merger } from '@ephox/katamari';
-import { Attr, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar';
+import { Merger } from '@ephox/katamari';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { Element, Traverse } from '@ephox/sugar';
 
-import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', (success, failure) => {
   Plugin();
@@ -30,23 +29,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', (success, fa
 
   const cFromSettings = function (settings, html) {
     return Chain.control(
-      Chain.async(function (_, next, die) {
-        const randomId = Id.generate('tiny-loader');
-        settings = settings || {};
-        const target = Element.fromHtml(html);
-
-        Attr.set(target, 'id', randomId);
-        Insert.append(Element.fromDom(document.body), target);
-
-        EditorManager.init(Merger.merge(settings, {
-          selector: '#' + randomId,
-          init_instance_callback (editor) {
-            setTimeout(function () {
-              next(editor);
-            }, 0);
-          }
-        }));
-      }),
+      McEditor.cFromHtml(html, Merger.merge(settings, {
+        base_url: '/project/js/tinymce'
+      })),
       Guard.addLogging('Create editor with settings ' + settings)
     );
   };
@@ -70,11 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', (success, fa
   };
 
   const cRemove = Chain.control(
-    Chain.op(function (editor: any) {
-      const id = editor.id;
-      editor.remove();
-      Selectors.one('#' + id).each(Remove.remove);
-    }),
+    McEditor.cRemove,
     Guard.addLogging('Remove editor')
   );
 
@@ -94,7 +75,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', (success, fa
   };
 
   const settings = {
-    theme: false,
     inline: true,
     indent: false,
     plugins: 'table',

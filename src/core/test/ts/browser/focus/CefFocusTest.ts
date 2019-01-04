@@ -1,29 +1,21 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import ViewBlock from '../../module/test/ViewBlock';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { Element, Hierarchy } from '@ephox/sugar';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const viewBlock = ViewBlock();
-
+UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function (success, failure) {
   Theme();
 
-  const sCreateInlineEditors = function (html) {
-    return Step.async(function (done) {
-      viewBlock.update(html);
-
-      EditorManager.init({
+  const sCreateInlineEditor = function (html) {
+    return Chain.asStep({}, [
+      McEditor.cFromHtml(html, {
         selector: '.tinymce',
         inline: true,
         base_url: '/project/js/tinymce'
-      }).then(function () {
-        done();
-      });
-    });
+      })
+    ]);
   };
 
   const sAssertSelection = function (editorIndex, startPath, startOffset, endPath, endOffset) {
@@ -40,14 +32,17 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
     });
   };
 
-  const sRemoveEditors = Step.sync(function () {
-    EditorManager.remove();
-  });
+  const sRemoveEditors = Chain.asStep({}, [
+    Chain.injectThunked(() => EditorManager.get(1)),
+    McEditor.cRemove,
+    Chain.injectThunked(() => EditorManager.get(0)),
+    McEditor.cRemove
+  ]);
 
-  viewBlock.attach();
   Pipeline.async({}, [
     Logger.t('Focus editors', GeneralSteps.sequence([
-      sCreateInlineEditors('<div class="tinymce"><p contenteditable="false">a</p></div><div class="tinymce"><p contenteditable="false">b</p></div>'),
+      sCreateInlineEditor('<div class="tinymce"><p contenteditable="false">a</p></div>'),
+      sCreateInlineEditor('<div class="tinymce"><p contenteditable="false">b</p></div>'),
       Step.sync(function () {
         EditorManager.get(0).getBody().focus();
         EditorManager.get(1).getBody().focus();
@@ -63,7 +58,6 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
       sRemoveEditors
     ]))
   ], function () {
-    viewBlock.detach();
     success();
   }, failure);
 });
