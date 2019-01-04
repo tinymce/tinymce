@@ -1,4 +1,4 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndPressKey = function (key) {
@@ -36,10 +36,10 @@ const inlineStructHelper = function (tag, content) {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content))
+              s.text(str.is(content), true)
             ]
           }),
-          s.text(str.is('\u00A0'))
+          s.text(str.is('\u00A0'), true)
         ]
       })
     ]);
@@ -53,9 +53,10 @@ const inlineBlockStructHelper = function (tag, content) {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content)),
+              s.text(str.is(content), true),
             ]
-          })
+          }),
+          s.zeroOrOne(s.text(str.is(''), true))
         ]
       }),
       s.element('p', {})
@@ -68,7 +69,7 @@ const blockStructHelper = function (tag, content) {
     return bodyStruct([
       s.element(tag, {
         children: [
-          s.text(str.is(content))
+          s.text(str.is(content), true)
         ]
       }),
       s.element('p', {})
@@ -76,14 +77,9 @@ const blockStructHelper = function (tag, content) {
   });
 };
 
-const sNormalizeTextNodes = (editor) => Step.label('Normalize text nodes', Step.sync(() => {
-  editor.getBody().normalize();
-}));
-
 export default {
   sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
   sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
-  sNormalizeTextNodes,
   withTeardown,
   bodyStruct,
   inlineStructHelper,

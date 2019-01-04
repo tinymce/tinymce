@@ -24,7 +24,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
         ]),
         Log.stepsAsStep('TBA', 'TextPattern: block italic then undo', [
           Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '*a*'),
-          Utils.sNormalizeTextNodes(editor),
           tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('em', 'a')),
           tinyApis.sExecCommand('Undo'),
           tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>'),

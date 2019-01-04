@@ -17,7 +17,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
-    const sNormalizeTextNodes = Utils.sNormalizeTextNodes(editor);
 
     const steps = Utils.withTeardown([
       Step.label('Space on ** without content does nothing', GeneralSteps.sequence([
@@ -26,7 +25,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
-        sNormalizeTextNodes,
         Step.label('Check italic format was applied around the "a" and nbsp but excluded the trailing space',
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
@@ -34,10 +32,10 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
               children: [
                 s.element('em', {
                   children: [
-                    s.text(str.is('a\u00A0'))
+                    s.text(str.is('a\u00A0'), true)
                   ]
                 }),
-                s.text(str.is(' \u00A0')),
+                s.text(str.is(' \u00A0'), true),
               ]
             })
           ]);
@@ -45,17 +43,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-        sNormalizeTextNodes,
         Step.label('Check italic format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')))
       ])),
       Step.label('Bold format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
-        sNormalizeTextNodes,
         Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a'))),
       ])),
       Step.label('Bold/italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
-        sNormalizeTextNodes,
         Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
             s.element('p', {
@@ -64,12 +59,12 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                   children: [
                     s.element('strong', {
                       children: [
-                        s.text(str.is('a'))
+                        s.text(str.is('a'), true)
                       ]
                     })
                   ]
                 }),
-                s.text(str.is('\u00A0'))
+                s.text(str.is('\u00A0'), true)
               ]
             })
           ]);
@@ -77,17 +72,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Bold format on multiple words using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a b**'),
-        sNormalizeTextNodes,
         Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a b')))
       ])),
       Step.label('Bold format on single word using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**'),
-        sNormalizeTextNodes,
         Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
       ])),
       Step.label('Bold/italic format on single word using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '***a***'),
-        sNormalizeTextNodes,
         Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
             s.element('p', {
@@ -96,11 +88,12 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                   children: [
                     s.element('strong', {
                       children: [
-                        s.text(str.is('a')),
+                        s.text(str.is('a'), true),
                       ]
                     })
                   ]
-                })
+                }),
+                s.zeroOrOne(s.text(str.is(''), true))
               ]
             }),
             s.element('p', {})
@@ -109,42 +102,34 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('H1 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# a'),
-        sNormalizeTextNodes,
         Step.label('Check h1 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h1', ' a')))
       ])),
       Step.label('H2 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '## a'),
-        sNormalizeTextNodes,
         Step.label('Check h2 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h2', ' a')))
       ])),
       Step.label('H3 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '### a'),
-        sNormalizeTextNodes,
         Step.label('Check h3 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h3', ' a')))
       ])),
       Step.label('H4 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#### a'),
-        sNormalizeTextNodes,
         Step.label('Check h4 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h4', ' a')))
       ])),
       Step.label('H5 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '##### a'),
-        sNormalizeTextNodes,
         Step.label('Check h5 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h5', ' a')))
       ])),
       Step.label('H6 format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '###### a'),
-        sNormalizeTextNodes,
         Step.label('Check h6 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h6', ' a')))
       ])),
       Step.label('OL format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '1. a'),
-        sNormalizeTextNodes,
         tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
       ])),
       Step.label('UL format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* a'),
-        sNormalizeTextNodes,
         tinyApis.sAssertContentPresence({ ul: 1, li: 2 })
       ])),
       Step.label('enter with uncollapsed range does not insert list', GeneralSteps.sequence([
