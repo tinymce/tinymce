@@ -49,10 +49,7 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
     return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
       .bind(locationToCaretPosition(root))
       .bind(insertInlineBoundarySpaceOrNbsp(root, pos))
-      .fold(
-        () => insertSpaceOrNbspAtPosition(root, pos).map(setSelection(editor)).getOr(false),
-        setSelection(editor)
-      );
+      .exists(setSelection(editor));
   } else {
     return false;
   }

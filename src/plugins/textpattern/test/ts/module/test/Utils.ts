@@ -15,6 +15,15 @@ const sSetContentAndPressKey = function (key) {
   };
 };
 
+const sPressKey = (key) => {
+  return (tinyApis, tinyActions) => {
+    return GeneralSteps.sequence([
+      tinyApis.sFocus,
+      tinyActions.sContentKeystroke(key, {})
+    ]);
+  };
+};
+
 const withTeardown = function (steps, teardownStep) {
   return Arr.bind(steps, function (step) {
     return [step, teardownStep];
@@ -80,6 +89,8 @@ const blockStructHelper = function (tag, content) {
 export default {
   sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
   sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
+  sPressSpace: sPressKey(Keys.space()),
+  sPressEnter: sPressKey(Keys.enter()),
   withTeardown,
   bodyStruct,
   inlineStructHelper,
