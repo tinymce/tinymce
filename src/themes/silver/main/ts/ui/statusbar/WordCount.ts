@@ -19,11 +19,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
   return {
     dom: {
       tag: 'button',
-      classes: [ 'tox-statusbar__wordcount' ],
-      attributes: {
-        'aria-live': 'polite',
-        'title': 'word count'
-      }
+      classes: [ 'tox-statusbar__wordcount' ]
     },
     components: [ ],
     behaviours: Behaviour.derive([
