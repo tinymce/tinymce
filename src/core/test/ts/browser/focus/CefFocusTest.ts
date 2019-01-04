@@ -11,7 +11,6 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function (success,
   const sCreateInlineEditor = function (html) {
     return Chain.asStep({}, [
       McEditor.cFromHtml(html, {
-        selector: '.tinymce',
         inline: true,
         base_url: '/project/js/tinymce'
       })
