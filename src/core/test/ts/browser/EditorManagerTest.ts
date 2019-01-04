@@ -30,7 +30,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
     viewBlock.update('<textarea class="tinymce"></textarea>');
     EditorManager.init({
       selector: 'textarea.tinymce',
-      base_url: '/project/js/tinymce',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      content_css: '/project/js/tinymce/skins/content/default',
       init_instance_callback (editor1) {
         LegacyUnit.equal(EditorManager.get().length, 1);
         LegacyUnit.equal(EditorManager.get(0) === EditorManager.activeEditor, true);
@@ -54,7 +55,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
         // Re-init on same id
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
-          base_url: '/project/js/tinymce'
+          skin_url: '/project/js/tinymce/skins/ui/oxide',
+          content_css: '/project/js/tinymce/skins/content/default',
         });
 
         LegacyUnit.equal(EditorManager.get().length, 1);
@@ -84,7 +86,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
     EditorManager.init({
       selector: 'textarea',
-      base_url: '/project/js/tinymce',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      content_css: '/project/js/tinymce/skins/content/default',
       language: langCode,
       language_url: langUrl,
       init_instance_callback (ed) {
@@ -104,7 +107,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
     EditorManager.init({
       selector: 'textarea',
-      base_url: '/project/js/tinymce',
+      skin_url: '/project/js/tinymce/skins/ui/oxide',
+      content_css: '/project/js/tinymce/skins/content/default',
       init_instance_callback (editor1) {
         Delay.setTimeout(function () {
           // Destroy the editor by setting innerHTML common ajax pattern
@@ -113,7 +117,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
           // Re-init the editor will have the same id
           EditorManager.init({
             selector: 'textarea',
-            base_url: '/project/js/tinymce',
+            skin_url: '/project/js/tinymce/skins/ui/oxide',
+            content_css: '/project/js/tinymce/skins/content/default',
             init_instance_callback (editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
@@ -197,7 +202,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
 
       EditorManager.init({
         selector: invalidName + '.targetEditor',
-        base_url: '/project/js/tinymce',
+        skin_url: '/project/js/tinymce/skins/ui/oxide',
+        content_css: '/project/js/tinymce/skins/content/default',
         inline: true
       });
 
