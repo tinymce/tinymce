@@ -264,13 +264,29 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     setRng(rng);
   };
 
-  /**
-   * Returns the browsers internal selection object.
-   *
-   * @method getSel
-   * @return {Selection} Internal browser selection object.
-   */
-  const getSel = (): NativeSelection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): NativeSelection => {
+    let selectionRoot: any = win;
+    try {
+      // We need to return Shadow Root if target element is under Shadow DOM and not using iframe
+      if (!editor.iframeElement && editor.targetElm.matches && editor.targetElm.matches(':host *')) {
+        (function (target: any) {
+          while (target.parentNode) {
+            target = target.parentNode;
+          }
+          // If there is no parent node, but there is `host` property - we've just found Shadow Root,
+          // where we'll get selection. Note for Chrome the shadowRoot implements the DocumentOrShadowRoot mixin
+          // but in other browsers it is still implemented on the document
+          if (target.host) {
+            selectionRoot = target.getSelection ? target : win.document;
+          }
+        })(editor.targetElm);
+      }
+    } catch (err) {
+      // Nothing, even if `.matches` method is present - it doesn't mean that browsers understands ':host *' selector
+    }
+
+     return selectionRoot.getSelection ? selectionRoot.getSelection() : (<any> win.document).selection;
+  };
 
   /**
    * Returns the browsers internal range object.
