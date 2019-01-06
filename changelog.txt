@@ -13,6 +13,7 @@ Version 5.0.0-beta-2 (TBD)
     Updated the build process to minify and generate ASCII only output for the emoticons database #TINY-2744
     Fixed icons not showing correctly in the autocompleter popup #TINY-3029
     Fixed an issue where preview wouldn't show anything in Edge under certain circumstances #TINY-3035
+    Fixed the height being incorrectly calculated for the autoresize plugin #TINY-2807
 Version 5.0.0-beta-1 (2018-11-30)
     Changed the name of the "inlite" plugin to "quickbars" #TINY-2831
     Fixed an inline mode issue where the save plugin upon saving can cause content loss #TINY-2659
