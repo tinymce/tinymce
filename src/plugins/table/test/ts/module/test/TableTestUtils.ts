@@ -129,6 +129,27 @@ const cSplitCells = Chain.control(
   Guard.addLogging('Split cells')
 );
 
+const cInsertColumnBefore = Chain.control(
+  Chain.mapper((editor: any) => {
+    editor.execCommand('mceTableInsertColBefore');
+  }),
+  Guard.addLogging('Insert column before selected column')
+);
+
+const cInsertColumnAfter = Chain.control(
+  Chain.mapper((editor: any) => {
+    editor.execCommand('mceTableInsertColAfter');
+  }),
+  Guard.addLogging('Insert column after selected column')
+);
+
+const cDeleteColumn = Chain.control(
+  Chain.mapper((editor: any) => {
+    editor.execCommand('mceTableDeleteCol');
+  }),
+  Guard.addLogging('Delete column')
+);
+
 const cDragHandle = function (id, deltaH, deltaV) {
   return Chain.control(
     NamedChain.asChain([
@@ -288,5 +309,8 @@ export default {
   cMergeCells,
   cSplitCells,
   cDragHandle,
-  cGetWidth
+  cGetWidth,
+  cInsertColumnBefore,
+  cInsertColumnAfter,
+  cDeleteColumn
 };
