@@ -175,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
     );
   };
 
-  NamedChain.pipeline(Log.chains('TBA', 'Table: Resize table, merge and split cells, assert the table width does not change', [
+  NamedChain.pipeline(Log.chains('TBA', 'Table: Insert columns, erase column and assert the table width does not change', [
     NamedChain.write('editor', Editor.cFromSettings({
       plugins: 'table',
       width: 400,
