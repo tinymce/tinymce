@@ -82,7 +82,7 @@ var adjustWidthTo = function (table, list, direction) {
 
   var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
   if (newSizes.length > 0) {
-    tableSize.setElementWidth(table, total);
+    tableSize.setTableWidth(table, total);
   }
 };
 

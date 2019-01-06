@@ -244,7 +244,7 @@ export default <any> {
   insertColumnsBefore: RunOperation.run(insertColumnsBefore, RunOperation.onCells, resize, Fun.noop, Generators.modification),
   insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
   insertColumnsAfter: RunOperation.run(insertColumnsAfter, RunOperation.onCells, resize, Fun.noop, Generators.modification),
-  splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+  splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
   splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
   eraseColumns:  RunOperation.run(eraseColumns, RunOperation.onCells, resize, prune, Generators.modification),
   eraseRows:  RunOperation.run(eraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification),
@@ -253,7 +253,7 @@ export default <any> {
   makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th')),
   unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
   mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.merging),
-  unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, Fun.noop, Fun.noop, Generators.merging),
+  unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, resize, Fun.noop, Generators.merging),
   pasteCells: RunOperation.run(pasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification),
   pasteRowsBefore: RunOperation.run(pasteRowsBefore, RunOperation.onPasteRows, Fun.noop, Fun.noop, Generators.modification),
   pasteRowsAfter: RunOperation.run(pasteRowsAfter, RunOperation.onPasteRows, Fun.noop, Fun.noop, Generators.modification)
