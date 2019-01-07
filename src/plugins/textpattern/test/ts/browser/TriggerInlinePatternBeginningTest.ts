@@ -41,7 +41,6 @@ UnitTest.asynctest(
       Pipeline.async({}, steps, onSuccess, onFailure);
     }, {
       plugins: 'textpattern',
-      toolbar: 'textpattern',
       indent: false,
       base_url: '/project/js/tinymce'
     }, success, failure);

@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
 import { GuiSetup } from '../../module/AlloyTestUtils';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
 
@@ -31,13 +31,13 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           cyclicKeying: true,
           initGroups: [
             {
-              items: Arr.map([ 'one', 'two', 'three' ], makeButton)
+              title: Option.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
             },
             {
-              items: Arr.map([ 'four', 'five' ], makeButton)
+              title: Option.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
             },
             {
-              items: Arr.map([ 'six' ], makeButton)
+              title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
             }
           ]
         })
@@ -58,6 +58,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
               children: [
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.none()
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('one')
@@ -72,6 +75,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.is('group title')
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('four')
@@ -83,6 +89,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
                 }),
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar__group') ],
+                  attrs: {
+                    title: str.is('another group title')
+                  },
                   children: [
                     s.element('span', {
                       html: str.is('six')
@@ -116,10 +125,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           Step.sync(() => {
             const groups = Arr.map([
               {
-                items: Arr.map([ 'A', 'B' ], makeButton)
+                title: Option.none(), items: Arr.map([ 'A', 'B' ], makeButton)
               },
               {
-                items: Arr.map([ 'C' ], makeButton)
+                title: Option.none(), items: Arr.map([ 'C' ], makeButton)
               }
             ], renderToolbarGroup);
             Toolbar.setGroups(toolbar, groups);

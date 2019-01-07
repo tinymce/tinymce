@@ -1,13 +1,11 @@
 import { Assertions, Chain, Pipeline, Log, Guard } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Id, Merger, Obj } from '@ephox/katamari';
+import { Merger, Obj } from '@ephox/katamari';
+import { Editor as McEditor } from '@ephox/mcagar';
 
-import EditorManager from 'tinymce/core/api/EditorManager';
 import { PasteBin, getPasteBinParent } from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
-import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) => {
 
@@ -27,32 +25,14 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
     }
   ];
 
-  const viewBlock = ViewBlock();
-
   const cCreateEditorFromSettings = function (settings?, html?) {
     return Chain.control(
-      Chain.async(function (viewBlock: any, next, die) {
-        const randomId = Id.generate('tiny');
-        html = html || '<textarea></textarea>';
-
-        viewBlock.update(html);
-        viewBlock.get().firstChild.id = randomId;
-
-        EditorManager.init(Merger.merge(settings || {}, {
-          selector: '#' + randomId,
-          add_unload_trigger: false,
-          indent: false,
-          plugins: 'paste',
-          base_url: '/project/js/tinymce',
-          setup (editor) {
-            editor.on('SkinLoaded', function () {
-              setTimeout(function () {
-                next(editor);
-              }, 0);
-            });
-          }
-        }));
-      }),
+      McEditor.cFromHtml(html, Merger.merge(settings || {}, {
+        add_unload_trigger: false,
+        indent: false,
+        plugins: 'paste',
+        base_url: '/project/js/tinymce'
+      })),
       Guard.addLogging(`Create editor using settings ${settings}`)
     );
   };
@@ -66,9 +46,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
 
   const cRemoveEditor = function () {
     return Chain.control(
-      Chain.op(function (editor: any) {
-        editor.remove();
-      }),
+      McEditor.cRemove,
       Guard.addLogging('Remove Editor')
     );
   };
@@ -87,23 +65,20 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
     );
   };
 
-  viewBlock.attach();
-
   Pipeline.async({}, [
-    Chain.asStep(viewBlock, Log.chains('TBA', 'Paste: Create editor from settings and test nested and adjacent paste bins', [
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Create editor from settings and test nested and adjacent paste bins', [
       cCreateEditorFromSettings(),
       cAssertCases(cases),
       cRemoveEditor()
     ])),
 
     // TINY-1208/TINY-1209: same cases, but for inline editor
-    Chain.asStep(viewBlock, Log.chains('TBA', 'Paste: Create editor from html and test nested and adjacent paste bins', [
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Create editor from html and test nested and adjacent paste bins', [
       cCreateEditorFromHtml('<div>some text</div>', { inline: true }),
       cAssertCases(cases),
       cRemoveEditor()
     ]))
   ], function () {
-    viewBlock.detach();
     success();
   }, failure);
 });

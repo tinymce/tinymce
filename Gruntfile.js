@@ -752,6 +752,16 @@ module.exports = function (grunt) {
         customRoutes: 'src/core/test/json/routes.json',
         name: 'chrome-headless'
       },
+      'firefox-headless': {
+        browser: 'firefox-headless',
+        config: 'tsconfig.json',
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/test/json/routes.json',
+        name: 'firefox-headless'
+      },
       chrome: {
         browser: 'chrome',
         config: 'tsconfig.json',

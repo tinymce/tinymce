@@ -5,7 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
 import Settings from '../api/Settings';
 
@@ -16,7 +20,7 @@ import Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = function (editor) {
+const isFullscreen = (editor: Editor) => {
   return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 };
 
@@ -24,8 +28,8 @@ const isFullscreen = function (editor) {
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
  * the CSS files might load async.
  */
-const wait = function (editor, oldSize, times, interval, callback?) {
-  Delay.setEditorTimeout(editor, function () {
+const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: number, callback?: Function) => {
+  Delay.setEditorTimeout(editor, () => {
     resize(editor, oldSize);
 
     if (times--) {
@@ -36,7 +40,7 @@ const wait = function (editor, oldSize, times, interval, callback?) {
   }, interval);
 };
 
-const toggleScrolling = function (editor, state) {
+const toggleScrolling = (editor: Editor, state: boolean) => {
   const body = editor.getBody();
   if (body) {
     body.style.overflowY = state ? '' : 'hidden';
@@ -46,15 +50,20 @@ const toggleScrolling = function (editor, state) {
   }
 };
 
+const getMargin = (dom: DOMUtils, elm: Element, pos: string, computed: boolean): number => {
+  const value = parseInt(dom.getStyle(elm, `margin-${pos}`, computed), 10);
+  // Margin maybe be an empty string, so in that case treat it as being 0
+  return isNaN(value) ? 0 : value;
+};
+
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = function (editor, oldSize) {
-  let deltaSize, doc, body, resizeHeight, contentHeight;
-  let marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
+const resize = (editor: Editor, oldSize: Cell<number>) => {
+  let deltaSize, resizeHeight, contentHeight;
   const dom = editor.dom;
 
-  doc = editor.getDoc();
+  const doc = editor.getDoc();
   if (!doc) {
     return;
   }
@@ -64,35 +73,34 @@ const resize = function (editor, oldSize) {
     return;
   }
 
-  body = doc.body;
+  const body = doc.body;
   resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the body element using CSS styles
-  marginTop = dom.getStyle(body, 'margin-top', true);
-  marginBottom = dom.getStyle(body, 'margin-bottom', true);
-  paddingTop = dom.getStyle(body, 'padding-top', true);
-  paddingBottom = dom.getStyle(body, 'padding-bottom', true);
-  borderTop = dom.getStyle(body, 'border-top-width', true);
-  borderBottom = dom.getStyle(body, 'border-bottom-width', true);
-  contentHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +
-    parseInt(paddingTop, 10) + parseInt(paddingBottom, 10) +
-    parseInt(borderTop, 10) + parseInt(borderBottom, 10);
+  const marginTop = getMargin(dom, body, 'top', true);
+  const marginBottom = getMargin(dom, body, 'bottom', true);
+  contentHeight = body.offsetHeight + marginTop + marginBottom;
 
   // Make sure we have a valid height
-  if (isNaN(contentHeight) || contentHeight <= 0) {
-    // Get height differently depending on the browser used
-    // eslint-disable-next-line no-nested-ternary
-    contentHeight = Env.ie ? body.scrollHeight : (Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
+  // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
+  //       However using the latest supported browsers (IE 11 & Safari 11), the fallbacks were no longer needed and were removed.
+  if (contentHeight < 0) {
+    contentHeight = 0;
   }
 
+  // Determine the size of the chroming (menubar, toolbar, etc...)
+  const containerHeight = editor.getContainer().scrollHeight;
+  const contentAreaHeight = editor.getContentAreaContainer().scrollHeight;
+  const chromeHeight = containerHeight - contentAreaHeight;
+
   // Don't make it smaller than the minimum height
-  if (contentHeight > Settings.getAutoResizeMinHeight(editor)) {
-    resizeHeight = contentHeight;
+  if (contentHeight + chromeHeight > Settings.getAutoResizeMinHeight(editor)) {
+    resizeHeight = contentHeight + chromeHeight;
   }
 
   // If a maximum height has been defined don't exceed this height
   const maxHeight = Settings.getAutoResizeMaxHeight(editor);
-  if (maxHeight && contentHeight > maxHeight) {
+  if (maxHeight && resizeHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);
   } else {
@@ -102,10 +110,7 @@ const resize = function (editor, oldSize) {
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
     deltaSize = resizeHeight - oldSize.get();
-    const containerHeight = editor.getContainer().scrollHeight;
-    const contentAreaHeight = editor.contentAreaContainer.scrollHeight;
-    const chromeHeight = containerHeight - contentAreaHeight;
-    dom.setStyle(editor.getContainer(), 'height', resizeHeight + chromeHeight + 'px');
+    dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set(resizeHeight);
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
@@ -116,26 +121,19 @@ const resize = function (editor, oldSize) {
   }
 };
 
-const setup = function (editor, oldSize) {
-  editor.on('init', function () {
-    let overflowPadding, bottomMargin;
+const setup = (editor: Editor, oldSize: Cell<number>) => {
+  editor.on('init', () => {
+    const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
+    const bottomMargin = Settings.getAutoResizeBottomMargin(editor);
     const dom = editor.dom;
 
-    overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
-    bottomMargin = Settings.getAutoResizeBottomMargin(editor);
-
-    if (overflowPadding !== false) {
-      dom.setStyles(editor.getBody(), {
-        paddingLeft: overflowPadding,
-        paddingRight: overflowPadding
-      });
-    }
-
-    if (bottomMargin !== false) {
-      dom.setStyles(editor.getBody(), {
-        paddingBottom: bottomMargin
-      });
-    }
+    dom.setStyles(editor.getBody(), {
+      'paddingLeft': overflowPadding,
+      'paddingRight': overflowPadding,
+      'paddingBottom': bottomMargin,
+      // IE & Edge have a min height of 150px by default on the body, so override that
+      'min-height': 0
+    });
   });
 
   editor.on('nodechange setcontent keyup FullscreenStateChanged', function (e) {
@@ -143,9 +141,9 @@ const setup = function (editor, oldSize) {
   });
 
   if (Settings.shouldAutoResizeOnInit(editor)) {
-    editor.on('init', function () {
+    editor.on('init', () => {
       // Hit it 20 times in 100 ms intervals
-      wait(editor, oldSize, 20, 100, function () {
+      wait(editor, oldSize, 20, 100, () => {
         // Hit it 5 times in 1 sec intervals
         wait(editor, oldSize, 5, 1000);
       });

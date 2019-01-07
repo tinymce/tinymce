@@ -145,6 +145,14 @@ Save (if save plugin activated)             <new>       Help shortcuts
 Insert link (if link plugin activated)      <new>       Help shortcuts
 Open help dialog                            <new>       Help shortcuts
 
+history                   <new>                 Toolbar group names
+styles                    <new>                 Toolbar group names
+formatting                <new>                 Toolbar group names
+alignment                 <new>                 Toolbar group names
+indentation               <new>                 Toolbar group names
+permanent pen             <new>                 Toolbar group names
+comments                  <new>                 Toolbar group names
+
 
 No longer Used
 -----------------------------------------------------

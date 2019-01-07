@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, B
 import { expandable } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/MaxHeight';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Id, Merger, Option, Thunk } from '@ephox/katamari';
+import { Cell, Id, Merger, Option, Thunk } from '@ephox/katamari';
 import { Css, DomEvent, Element, Focus } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -106,7 +106,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras);
       return renderToolbar({
         uid: Id.generate('context-toolbar'),
-        initGroups: Arr.map(initGroups, (g) => ({ items: g })),
+        initGroups,
         onEscape: Option.none,
         cyclicKeying: true
       });

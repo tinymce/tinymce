@@ -8,8 +8,8 @@
 import NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
-import { isBackwards, isForwards, isInSameBlock, findNode } from './CaretUtils';
-import { Node } from '@ephox/dom-globals';
+import { isBackwards, isForwards, findNode } from './CaretUtils';
+import { Node, Element } from '@ephox/dom-globals';
 import { Fun, Arr } from '@ephox/katamari';
 import ArrUtils from '../util/ArrUtils';
 
@@ -97,25 +97,18 @@ const getCaretCandidatePosition = (direction: HDirection, node: Node): CaretPosi
   return CaretPosition.before(node);
 };
 
-// Jumps over BR elements <p>|<br></p><p>a</p> -> <p><br></p><p>|a</p>
-const isBrBeforeBlock = (node: Node, root: Node): boolean => {
-  let next;
+const moveForwardFromBr = (root: Element, nextNode: Node) => {
+  const nextSibling = nextNode.nextSibling;
 
-  if (!NodeType.isBr(node)) {
-    return false;
+  if (nextSibling && isCaretCandidate(nextSibling)) {
+    if (isText(nextSibling)) {
+      return CaretPosition(nextSibling, 0);
+    } else {
+      return CaretPosition.before(nextSibling);
+    }
+  } else {
+    return findCaretPosition(HDirection.Forwards, CaretPosition.after(nextNode), root);
   }
-
-  // Handles the case <p>a|<br><span contenteditable="false">b</span></p> -> <p>a<br>|<span contenteditable="false">b</span></p>
-  if (CaretCandidate.isAtomic(node.nextSibling)) {
-    return false;
-  }
-
-  next = findCaretPosition(HDirection.Forwards, CaretPosition.after(node), root);
-  if (!next) {
-    return false;
-  }
-
-  return !isInSameBlock(CaretPosition.before(node), CaretPosition.before(next), root);
 };
 
 const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
@@ -174,12 +167,8 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
     if (isForwards(direction) && offset < container.childNodes.length) {
       nextNode = nodeAtIndex(container, offset);
       if (isCaretCandidate(nextNode)) {
-        if (isBr(nextNode) && root.lastChild === nextNode) {
-          return null;
-        }
-
-        if (isBrBeforeBlock(nextNode, root)) {
-          return findCaretPosition(direction, CaretPosition.after(nextNode), root);
+        if (isBr(nextNode)) {
+          return moveForwardFromBr(root, nextNode);
         }
 
         if (!isAtomic(nextNode)) {

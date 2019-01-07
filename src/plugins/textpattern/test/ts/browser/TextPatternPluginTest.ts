@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**'),
         Step.label('Check ** was left unchanged', tinyApis.sAssertContent('<p>**&nbsp;</p>'))
       ])),
-      Step.label('Italic format on single word using space', GeneralSteps.sequence([
+      Step.label('Italic format on single word using space 1', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
         Step.label('Check italic format was applied around the "a" and nbsp but excluded the trailing space',
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
           ]);
         })))
       ])),
-      Step.label('Italic format on single word using space', GeneralSteps.sequence([
+      Step.label('Italic format on single word using space 2', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
         Step.label('Check italic format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')))
       ])),

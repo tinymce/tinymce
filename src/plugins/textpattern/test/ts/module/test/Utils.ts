@@ -1,7 +1,7 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
-const sSetContentAndPressKey = function (key) {
+const sSetContentAndFireKeystroke = function (key) {
   return function (tinyApis, tinyActions, content: string, offset = content.length) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + '</p>'),
@@ -12,6 +12,28 @@ const sSetContentAndPressKey = function (key) {
       ),
       tinyActions.sContentKeystroke(key, {}),
     ]));
+  };
+};
+
+const sSetContentAndPressSpace = (tinyApis, tinyActions, content: string, offset = content.length) => {
+  return Step.label(`Set content and press space`, GeneralSteps.sequence([
+    tinyApis.sSetContent('<p>' + content + '</p>'),
+    tinyApis.sFocus,
+    tinyApis.sSetCursor(
+      [0, 0],
+      offset
+    ),
+    tinyApis.sExecCommand('mceInsertContent', ' '),
+    tinyActions.sContentKeystroke(32, {}),
+  ]));
+};
+
+const sPressKey = (key) => {
+  return (tinyApis, tinyActions) => {
+    return GeneralSteps.sequence([
+      tinyApis.sFocus,
+      tinyActions.sContentKeystroke(key, {})
+    ]);
   };
 };
 
@@ -78,8 +100,10 @@ const blockStructHelper = function (tag, content) {
 };
 
 export default {
-  sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
-  sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
+  sSetContentAndPressSpace,
+  sSetContentAndPressEnter: sSetContentAndFireKeystroke(Keys.enter()),
+  sPressSpace: sPressKey(Keys.space()),
+  sPressEnter: sPressKey(Keys.enter()),
   withTeardown,
   bodyStruct,
   inlineStructHelper,

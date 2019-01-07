@@ -101,6 +101,8 @@ export default function () {
       { label: 'SplitButton', button: 'beta' },
       { label: 'StyleButton', button: 'styleselect' }
     ], ({ label, button }) => {
+      const groups = identifyButtons(mockEditor, { buttons, toolbar: button }, helpers.extras);
+      const buttonComponents = Arr.flatten(Arr.map(groups, (group) => group.items));
       return {
         dom: {
           tag: 'div',
@@ -134,7 +136,7 @@ export default function () {
                 'align-items': 'center'
               }
             },
-            components: Arr.flatten(identifyButtons(mockEditor, { buttons, toolbar: button }, helpers.extras))
+            components: buttonComponents
           }
         ]
       };

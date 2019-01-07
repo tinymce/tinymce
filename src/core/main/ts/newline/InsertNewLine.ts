@@ -9,8 +9,11 @@ import { Fun } from '@ephox/katamari';
 import InsertBlock from './InsertBlock';
 import InsertBr from './InsertBr';
 import NewLineAction from './NewLineAction';
+import { Editor } from '../api/Editor';
+import { EditorEvent } from '../api/dom/EventUtils';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
-const insert = function (editor, evt?) {
+const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   NewLineAction.getAction(editor, evt).fold(
     function () {
       InsertBr.insert(editor, evt);
