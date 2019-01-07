@@ -24,22 +24,28 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
-  const setPosition = function () {
-    Css.setAll(floatContainer.element(), {
-      position: 'absolute',
-      top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
-      left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
-    });
+  const setPosition = () => {
+    const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
+    if (!isDocked) {
+      // We need to update the toolbar location if the window has resized while the toolbar is position absolute
+      // Not sure if we should always set this, or if it's worth checking against the current position
+      Css.setAll(floatContainer.element(), {
+        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
+        left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
+      });
+    }
+    // Let docking handle fixed <-> absolute transitions, etc.
+    Docking.refresh(floatContainer);
   };
 
-  const show = function () {
+  const show = () => {
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     setPosition();
     Docking.refresh(floatContainer);
   };
 
-  const hide = function () {
+  const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
@@ -67,6 +73,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig, backstage)
     );
 
+    // initialise the toolbar - initial positioning, refresh docking, then show
+    Css.setAll(floatContainer.element(), {
+      position: 'absolute',
+      top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
+      left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
+    });
     setPosition();
     show();
 
@@ -85,7 +97,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-const getBehaviours = (editor) => {
+const getBehaviours = (editor: Editor) => {
   return [
     Docking.config({
       leftAttr: 'data-dock-left',
