@@ -1,10 +1,8 @@
-# TinyMCE 5 Beta
+# TinyMCE 5 Release Candidate
 
-Welcome to the Beta!
+Welcome to the Release Candidate!
 
-[Download the beta](https://devpreview.tiny.cloud/download/tinymce.zip)
-
-[Beta documentation](https://tiny.cloud/docs-preview/)
+[RC documentation](https://www.tiny.cloud/docs-beta/)
 
 [Log feedback](https://github.com/tinymce/tinymce/labels/5.x)
 
