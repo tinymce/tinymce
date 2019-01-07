@@ -6,7 +6,7 @@
  */
 
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
@@ -19,13 +19,22 @@ import ImageSize from './ImageSize';
 import * as Proxy from './Proxy';
 import { Editor } from 'tinymce/core/api/Editor';
 import { HTMLImageElement, Blob } from '@ephox/dom-globals';
+import { SelectorFind, Element } from '@ephox/sugar';
 
 let count = 0;
 
-const isEditableImage = function (editor: Editor, img) {
-  const selectorMatched = editor.dom.is(img, 'img:not([data-mce-object],[data-mce-placeholder])');
+const getEditableImage = function (editor: Editor, elem) {
+  const isImage = (imgNode) => editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
+  const isEditable = (imgNode) => isImage(imgNode) && (isLocalImage(editor, imgNode) || isCorsImage(editor, imgNode) || editor.settings.imagetools_proxy);
 
-  return selectorMatched && (isLocalImage(editor, img) || isCorsImage(editor, img) || editor.settings.imagetools_proxy);
+  const isFigure = editor.dom.is(elem, 'figure');
+  if (isFigure) {
+    const imgOpt = SelectorFind.child(Element.fromDom(elem), 'img');
+    return imgOpt.map((img) => {
+      return isEditable(img.dom()) ? Option.some(img.dom()) : Option.none();
+    });
+  }
+  return isEditable(elem) ? Option.some(elem) : Option.none();
 };
 
 const displayError = function (editor: Editor, error) {
@@ -222,7 +231,7 @@ const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, o
 export default {
   rotate,
   flip,
-  isEditableImage,
+  getEditableImage,
   cancelTimedUpload,
   findSelectedBlob,
   getSelectedImage,

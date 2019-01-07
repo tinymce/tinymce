@@ -89,12 +89,12 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   const originalSize = ImageSize.getNaturalImageSize(originalImg);
 
   const img = Actions.getSelectedImage(editor);
-  if (Actions.isEditableImage(editor, img)) {
+  Actions.getEditableImage(editor, img).each((_) => {
     Actions.findSelectedBlob(editor).then((blob) => {
       const state = createState(blob);
       editor.windowManager.open(getLoadedSpec(state));
     });
-  }
+  });
 };
 
 export default {
