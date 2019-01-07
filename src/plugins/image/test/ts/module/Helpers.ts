@@ -14,7 +14,7 @@ export type ImageDialogData = {
     width: string,
     height: string
   },
-  caption: string,
+  caption: boolean,
   classIndex: number, // because the DOM api is setSelectedIndex
 
   border: string,
@@ -63,7 +63,7 @@ const cSetFieldValue = (selector, value) => {
     Chain.op(Focus.focus),
     Chain.op((element) => {
       if (element.dom().type === 'checkbox') {
-        Checked.set(element, value === 'checked' || value);
+        Checked.set(element, value);
       } else if (Node.name(element) === 'select' && typeof value === 'number') {
         SelectTag.setSelected(element, value);
       } else {

@@ -25,7 +25,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
     },
     (doc, body, gui, component, store) => {
 
-      const sAssertCheckboxState = (label: string, expChecked: boolean, expIndeterminate: boolean) => {
+      const sAssertCheckboxState = (label: string, expChecked: boolean) => {
         return Logger.t(
           label,
           Chain.asStep(component.element(), [
@@ -33,13 +33,13 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
             Chain.op((input) => {
               const node = input.dom() as HTMLInputElement;
               Assertions.assertEq('Checking "checked" flag', expChecked, node.checked);
-              Assertions.assertEq('Checking "indeterminate" flag', expIndeterminate, node.indeterminate);
+              Assertions.assertEq('Checking "indeterminate" flag', false, node.indeterminate);
             })
           ])
         );
       };
 
-      const sSetCheckboxState = (state: string) => Step.sync(() => {
+      const sSetCheckboxState = (state: boolean) => Step.sync(() => {
         Representing.setValue(component, state);
       });
 
@@ -66,10 +66,6 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
                     s.element('span', {
                       classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked') ],
                       html: str.startsWith('<svg')
-                    }),
-                    s.element('span', {
-                      classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__indeterminate') ],
-                      html: str.startsWith('<svg')
                     })
                   ]
                 }),
@@ -83,17 +79,13 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
           component.element()
         ),
 
-        sAssertCheckboxState('Initial checkbox state', false, false),
-        sSetCheckboxState('checked'),
-        sAssertCheckboxState('initial > checked', true, false),
-        sSetCheckboxState('indeterminate'),
-        sAssertCheckboxState('checked > indeterminate (preserves checked state)', true, true),
-        sSetCheckboxState('unchecked'),
-        sAssertCheckboxState('indeterminate > unchecked', false, false),
-        sSetCheckboxState('indeterminate'),
-        sAssertCheckboxState('unchecked > indeterminate (preserves checked state)', false, true),
-        sSetCheckboxState('checked'),
-        sAssertCheckboxState('indeterminate > checked', true, false)
+        sAssertCheckboxState('Initial checkbox state', false),
+        sSetCheckboxState(true),
+        sAssertCheckboxState('initial > checked', true),
+        sSetCheckboxState(false),
+        sAssertCheckboxState('checked > unchecked', false),
+        sSetCheckboxState(true),
+        sAssertCheckboxState('unchecked > checked', true)
       ];
     },
     success,

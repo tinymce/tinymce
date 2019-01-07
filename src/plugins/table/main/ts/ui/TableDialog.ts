@@ -105,11 +105,11 @@ const onSubmitTableForm = (editor: Editor, tableElm, api: Types.Dialog.DialogIns
     // Toggle caption on/off
     captionElm = dom.select('caption', tableElm)[0];
 
-    if (captionElm && data.caption !== 'checked') {
+    if (captionElm && !data.caption) {
       dom.remove(captionElm);
     }
 
-    if (!captionElm && data.caption === 'checked') {
+    if (!captionElm && data.caption) {
       captionElm = dom.create('caption');
       captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
       tableElm.insertBefore(captionElm, tableElm.firstChild);

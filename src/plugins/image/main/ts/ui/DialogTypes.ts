@@ -67,7 +67,7 @@ export interface ImageDialogData {
     height: string;
   };
   classes: string;
-  caption: 'checked' | 'unchecked';
+  caption: boolean;
   style: string; // we don't expose style anywhere
   vspace: string;
   border: string;
