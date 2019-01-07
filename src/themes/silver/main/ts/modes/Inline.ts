@@ -25,7 +25,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadInlineSkin(editor);
 
   const setPosition = () => {
-    // called on nodeChange so do not explicitly set styles - let Docking handle it
+    const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
+    if (!isDocked) {
+      // We need to update the toolbar location if the window has resized while the toolbar is position absolute
+      // Not sure if we should always set this, or if it's worth checking against the current position
+      Css.setAll(floatContainer.element(), {
+        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
+        left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
+      });
+    }
+    // Let docking handle fixed <-> absolute transitions, etc.
     Docking.refresh(floatContainer);
   };
 
