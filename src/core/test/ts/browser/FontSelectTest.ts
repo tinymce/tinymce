@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
-import { Fun, Strings } from '@ephox/katamari';
+import { Arr, Fun, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -7,8 +7,13 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, failure) {
-
   Theme();
+
+  const systemFontStackVariants = [
+    '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Open Sans\', \'Helvetica Neue\', sans-serif;', // Oxide
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";', // Bootstrap
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;' // Wordpress
+  ];
 
   const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
     return Chain.asStep(Element.fromDom(document.body), [
@@ -65,6 +70,20 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         // the following should stay as 18px because there's no matching pt value in the font size select values
         sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '18px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ])),
+
+      Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
+        tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => {
+          return acc + '<p style="font-family: ' + font.replace(/"/g, '\'') + '"></p>';
+        }, '')),
+        tinyApis.sFocus,
+        ...Arr.bind(systemFontStackVariants, (_, idx) => {
+          return [
+            tinyApis.sSetCursor([idx, 0], 0),
+            tinyApis.sNodeChanged,
+            sAssertSelectBoxDisplayValue(editor, 'Fonts', 'System Font')
+          ];
+        })
       ]))
     ], onSuccess, onFailure);
   }, {
