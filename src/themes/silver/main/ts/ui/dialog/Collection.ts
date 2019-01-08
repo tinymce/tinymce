@@ -59,15 +59,21 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
         return `<span class="tox-collection__item-icon">${icon}</span>`;
       }).getOr('');
 
+      // Replacing the hyphens and underscores in collection items with spaces
+      // to ensure the screen readers pronounce the words correctly.
+      // This is only for aria purposes. Emoticon and Special Character names will still use _ and - for autocompletion.
       const mapItemName = {
         '_': ' ',
         ' - ': ' ',
         '-': ' '
       };
-      const ariaTitle = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
+
+      // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
+      // But if title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
+      const ariaLabel = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
       });
-      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaTitle}">${iconContent}${textContent}</div>`;
+      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
