@@ -1,3 +1,5 @@
+import { Node } from '@ephox/dom-globals';
+
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -17,11 +19,11 @@
  * } while (walker.next());
  */
 
-export default function (startNode, rootNode) {
+export default function (startNode: Node, rootNode: Node) {
   let node = startNode;
 
-  const findSibling = function (node, startName, siblingName, shallow) {
-    let sibling, parent;
+  const findSibling = function (node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow: boolean) {
+    let sibling: Node, parent: Node;
 
     if (node) {
       // Walk into nodes if it has a start
@@ -47,8 +49,8 @@ export default function (startNode, rootNode) {
     }
   };
 
-  const findPreviousNode = function (node, startName, siblingName, shallow) {
-    let sibling, parent, child;
+  const findPreviousNode = function (node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow: boolean) {
+    let sibling: Node, parent: Node, child: Node;
 
     if (node) {
       sibling = node[siblingName];
@@ -58,7 +60,7 @@ export default function (startNode, rootNode) {
 
       if (sibling) {
         if (!shallow) {
-          // Walk up the parents to look for siblings
+          // Walk down to the most distant child
           for (child = sibling[startName]; child; child = child[startName]) {
             if (!child[startName]) {
               return child;
