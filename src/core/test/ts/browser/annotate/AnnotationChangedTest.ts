@@ -246,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       sTestChanges
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {

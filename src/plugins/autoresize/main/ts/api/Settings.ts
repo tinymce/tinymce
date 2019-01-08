@@ -5,23 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getAutoResizeMinHeight = function (editor) {
-  return parseInt(editor.getParam('min_height', editor.getElement().offsetHeight, 'number'), 10);
+import { Editor } from 'tinymce/core/api/Editor';
+
+const getAutoResizeMinHeight = (editor: Editor): number => {
+  return editor.getParam('min_height', editor.getElement().offsetHeight, 'number');
 };
 
-const getAutoResizeMaxHeight = function (editor) {
-  return parseInt(editor.getParam('max_height', 0, 'number'), 10);
+const getAutoResizeMaxHeight = (editor: Editor): number => {
+  return editor.getParam('max_height', 0, 'number');
 };
 
-const getAutoResizeOverflowPadding = function (editor) {
+const getAutoResizeOverflowPadding = (editor: Editor): number => {
   return editor.getParam('autoresize_overflow_padding', 1, 'number');
 };
 
-const getAutoResizeBottomMargin = function (editor) {
+const getAutoResizeBottomMargin = (editor: Editor): number => {
   return editor.getParam('autoresize_bottom_margin', 50, 'number');
 };
 
-const shouldAutoResizeOnInit = function (editor) {
+const shouldAutoResizeOnInit = (editor: Editor): boolean => {
   return editor.getParam('autoresize_on_init', true, 'boolean');
 };
 

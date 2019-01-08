@@ -47,6 +47,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (su
     toolbar: 'charmap',
     charmap: [['A'.charCodeAt(0), 'A']],
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

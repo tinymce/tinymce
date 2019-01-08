@@ -19,6 +19,6 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, fa
   }, {
     plugins: 'print',
     toolbar: 'print',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

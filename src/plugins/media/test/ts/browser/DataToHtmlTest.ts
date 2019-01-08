@@ -75,6 +75,6 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
     plugins: ['media'],
     toolbar: 'media',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

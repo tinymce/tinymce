@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Resize from '../core/Resize';
 
-const register = function (editor, oldSize) {
-  editor.addCommand('mceAutoResize', function () {
+const register = (editor: Editor, oldSize: Cell<number>) => {
+  editor.addCommand('mceAutoResize', () => {
     Resize.resize(editor, oldSize);
   });
 };

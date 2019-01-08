@@ -110,6 +110,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
     indent: false,
     plugins: 'table',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

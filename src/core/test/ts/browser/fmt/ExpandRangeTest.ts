@@ -219,6 +219,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   }, {
     plugins: '',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

@@ -261,12 +261,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         // Toggle the pressed aria state component
         Attr.set(comp.element(), 'aria-pressed', state);
         // Toggle the inner button state, as that's the toggle component of the split button
-        SelectorFind.descendant(comp.element(), 'button').each((button) => {
+        SelectorFind.descendant(comp.element(), 'span').each((button) => {
           comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
         });
       },
       isActive: () => {
-        return SelectorFind.descendant(comp.element(), 'button').exists((button) => {
+        return SelectorFind.descendant(comp.element(), 'span').exists((button) => {
           return comp.getSystem().getByDom(button).exists(Toggling.isOn);
         });
       },
@@ -292,6 +292,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (a, b, c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
+      DisablingConfigs.splitButton(false),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),

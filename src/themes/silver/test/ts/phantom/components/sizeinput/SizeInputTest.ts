@@ -9,23 +9,6 @@ import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
-const fieldStructure = (s, str, arr, label) => {
-  return s.element('div', {
-    children: [
-      s.element('label', {
-        classes: [arr.has('tox-label')],
-        html: str.is(label)
-      }),
-      s.element('input', {
-        classes: [arr.has('tox-textfield')],
-        attrs: {
-          'data-alloy-tabstop': str.is('true')
-        }
-      })
-    ]
-  });
-};
-
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
@@ -79,10 +62,40 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                 s.element('div', {
                   classes: [arr.has('tox-form__controls-h-stack')],
                   children: [
-                    fieldStructure(s, str, arr, 'Width'),
-                    fieldStructure(s, str, arr, 'Height'),
-                    s.element('button', {
-                      classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
+                    s.element('div', {
+                      children: [
+                        s.element('label', {
+                          classes: [arr.has('tox-label')],
+                          html: str.is('Width')
+                        }),
+                        s.element('input', {
+                          classes: [arr.has('tox-textfield')],
+                          attrs: {
+                            'data-alloy-tabstop': str.is('true')
+                          }
+                        })
+                      ]
+                    }),
+                    s.element('div', {
+                      children: [
+                        s.element('label', {
+                          classes: [arr.has('tox-label')],
+                          html: str.is('Height')
+                        }),
+                        s.element('div', {
+                          children: [
+                            s.element('input', {
+                              classes: [arr.has('tox-textfield')],
+                              attrs: {
+                                'data-alloy-tabstop': str.is('true')
+                              }
+                            }),
+                            s.element('button', {
+                              classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
+                            })
+                          ]
+                        })
+                      ]
                     })
                   ]
                 })

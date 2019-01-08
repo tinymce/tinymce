@@ -28,28 +28,28 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest'
   const testingPrefix = Math.random().toString(36).substring(7);
   Pipeline.async({}, [
     Logger.t('should restore draft when empty with setting', Chain.asStep({}, [
-      McEditor.cFromSettings({ skin_url: '/project/js/tinymce/skins/oxide', plugins: 'autosave', autosave_prefix: testingPrefix }),
+      McEditor.cFromSettings({ base_url: '/project/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
       cAssertHasDraft(false),
       ApiChains.cSetContent('<p>X</p>'),
       cAddUndoLevel,
       cStoreDraft,
       cAssertHasDraft(true),
       McEditor.cRemove,
-      McEditor.cFromSettings({ autosave_restore_when_empty: true, skin_url: '/project/js/tinymce/skins/oxide', plugins: 'autosave', autosave_prefix: testingPrefix }),
+      McEditor.cFromSettings({ autosave_restore_when_empty: true, base_url: '/project/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
       cAssertHasDraft(true),
       ApiChains.cAssertContent('<p>X</p>'),
       cRemoveDraft,
       McEditor.cRemove
     ])),
     Logger.t('shouldn\'t restore draft when empty without setting', Chain.asStep({}, [
-      McEditor.cFromSettings({ skin_url: '/project/js/tinymce/skins/oxide', plugins: 'autosave', autosave_prefix: testingPrefix }),
+      McEditor.cFromSettings({ base_url: '/project/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
       cAssertHasDraft(false),
       ApiChains.cSetContent('<p>X</p>'),
       cAddUndoLevel,
       cStoreDraft,
       cAssertHasDraft(true),
       McEditor.cRemove,
-      McEditor.cFromSettings({ skin_url: '/project/js/tinymce/skins/oxide', plugins: 'autosave', autosave_prefix: testingPrefix }),
+      McEditor.cFromSettings({ base_url: '/project/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
       cAssertHasDraft(true),
       ApiChains.cAssertContent(''),
       cRemoveDraft,

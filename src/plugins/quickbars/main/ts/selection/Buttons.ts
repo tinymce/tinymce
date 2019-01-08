@@ -6,8 +6,9 @@
  */
 
 import Actions from './Actions';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const setupButtons = (editor) => {
+const setupButtons = (editor: Editor) => {
   const formatBlock = function (name: string) {
     return function () {
       Actions.formatBlock(editor, name);

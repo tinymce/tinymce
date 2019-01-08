@@ -4,7 +4,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { EditorMode, getMode, setMode } from 'tinymce/core/Mode';
 import { Editor } from 'tinymce/core/api/Editor';
-// import {  Class, Element } from '@ephox/sugar';
+import {  Class, Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
@@ -17,9 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
 
   const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => {
     return Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : 'doesn\'t have') + ' class ' + cls, Step.sync(() => {
-      // TODO FIXME DISABLED-TEST AP-471 TINY-2287
-      // Reason: readonly mode does not add a class to the body yet
-      // Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
+      Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
     }));
   };
 
@@ -43,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     readonly: true
   }, success, failure);
 });

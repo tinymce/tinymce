@@ -12,8 +12,16 @@
 
       </textarea>
     </div>
+
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
     <script>demos.AnnotationsDemo();</script>
+
+
+    <br><br>
+    <p>Test api, select some text (collapse or ranged) then paste api below to add annotation</p>
+    <textarea>
+      tinymce.activeEditor.annotator.annotate('alpha', {'author': 'Its Me'});
+    </textarea>
   </body>
 </html>

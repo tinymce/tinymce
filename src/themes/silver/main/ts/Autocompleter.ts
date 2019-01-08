@@ -22,10 +22,11 @@ import {
   createPartialMenuWithAlloyItems,
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
-import { Range } from '@ephox/dom-globals';
+import { Range, Text } from '@ephox/dom-globals';
 import ItemResponse from './ui/menus/item/ItemResponse';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
+const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const autocompleter = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -64,7 +65,8 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
         choices,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
-          getContext(nr, triggerChar, nr.startContainer.data, nr.startOffset).fold(
+          const textNode = nr.startContainer as Text; // TODO: Investigate if this is safe
+          getContext(nr, triggerChar, textNode.data, nr.startOffset).fold(
             () => console.error('Lost context. Cursor probably moved'),
             ({ rng }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
@@ -87,36 +89,40 @@ const register = (editor, sharedBackstage: UiFactoryBackstageShared) => {
       closeIfNecessary,
       (lookupInfo) => {
         lookupInfo.lookupData.then((lookupData) => {
-          // AP-246: Do not show the menu if combinedItems length is 0. Write a test also.
           const combinedItems = getCombinedItems(lookupInfo.triggerChar, lookupData);
 
-          const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
-          InlineView.showAt(
-            autocompleter,
-            {
-              anchor: 'selection',
-              root: Element.fromDom(editor.getBody()),
-              getSelection: () => {
-                return Option.some({
-                  start: () => Element.fromDom(lookupInfo.range.startContainer),
-                  soffset: () => lookupInfo.range.startOffset,
-                  finish: () => Element.fromDom(lookupInfo.range.endContainer),
-                  foffset: () => lookupInfo.range.endOffset
-                });
-              }
-            },
-            Menu.sketch(
-              createMenuFrom(
-                createPartialMenuWithAlloyItems('autocompleter-value', true, combinedItems, columns, 'normal'),
-                columns,
-                FocusMode.ContentFocus,
-                // Use the constant.
-                'normal'
+          // Only open the autocompleter if there are items to show
+          if (combinedItems.length > 0) {
+            const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
+            InlineView.showAt(
+              autocompleter,
+              {
+                anchor: 'selection',
+                root: Element.fromDom(editor.getBody()),
+                getSelection: () => {
+                  return Option.some({
+                    start: () => Element.fromDom(lookupInfo.range.startContainer),
+                    soffset: () => lookupInfo.range.startOffset,
+                    finish: () => Element.fromDom(lookupInfo.range.endContainer),
+                    foffset: () => lookupInfo.range.endOffset
+                  });
+                }
+              },
+              Menu.sketch(
+                createMenuFrom(
+                  createPartialMenuWithAlloyItems('autocompleter-value', true, combinedItems, columns, 'normal'),
+                  columns,
+                  FocusMode.ContentFocus,
+                  // Use the constant.
+                  'normal'
+                )
               )
-            )
-          );
+            );
 
-          InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+            InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+          } else {
+            closeIfNecessary();
+          }
         });
       }
     );

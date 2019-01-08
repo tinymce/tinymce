@@ -59,6 +59,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
   }, {
     plugins: 'visualchars',
     toolbar: 'visualchars',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

@@ -5,10 +5,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success, failure) => {
   Theme();
 
   const sSetup = function (tinyApis, html, elementPath, offset) {
@@ -206,6 +203,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       sTestEnterAtEndOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

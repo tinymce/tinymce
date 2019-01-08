@@ -11,6 +11,7 @@ import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleForm
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const getSpec = (editor): SelectSpec => {
   const isSelectedFor = (format) => {
@@ -69,13 +70,13 @@ const getSpec = (editor): SelectSpec => {
   } as SelectSpec;
 };
 
-const createStyleSelect = (editor, backstage) => {
+const createStyleSelect = (editor: Editor, backstage) => {
   // FIX: Not right.
   const data = backstage.styleselect;
   return createSelectButton(editor, backstage, data, getSpec(editor));
 };
 
-const styleSelectMenu = (editor, backstage) => {
+const styleSelectMenu = (editor: Editor, backstage) => {
   const data = backstage.styleselect;
   const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
   return {

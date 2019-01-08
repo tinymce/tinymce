@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
       importcss_groups: pluginSettings.importcss_groups,
       importcss_selector_converter: pluginSettings.importcss_selector_converter,
       importcss_exclusive: pluginSettings.importcss_exclusive,
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, () => onStepSuccess(), onStepFailure);
   });
 

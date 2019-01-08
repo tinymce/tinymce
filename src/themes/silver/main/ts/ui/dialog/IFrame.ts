@@ -8,7 +8,7 @@
 import { Behaviour, Focusing, Tabstopping, FormField } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
-import { Cell, Merger, Option } from '@ephox/katamari';
+import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr } from '@ephox/sugar';
 
@@ -17,7 +17,7 @@ import NavigableObject from '../general/NavigableObject';
 import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-const platformNeedsSandboxing = !PlatformDetection.detect().browser.isIE();
+const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
 interface IFrameSourcing {
   getValue: (frame: AlloyComponent) => string;
@@ -36,8 +36,9 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       if (!isSandbox) {
         Attr.set(frameComponent.element(), 'src', 'javascript:\'\'');
         // IE 6-11 doesn't support data uris on iframeComponents
+        // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
-        // TODO: Use sandbox if future versions of IE supports iframeComponents with data: uris.
+        // TODO: Use sandbox if future versions of IE/Edge supports iframeComponents with data: uris.
         const doc = frameComponent.element().dom().contentWindow.document;
 
         doc.open();
@@ -55,9 +56,10 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
 const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
-  const sandboxAttrs = isSandbox ? {
-    sandbox: 'allow-scripts'
-  } : { };
+  const attributes = {
+    ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
+    ...isSandbox ? { sandbox : 'allow-scripts' } : { }
+  };
 
   const sourcing = getDynamicSource(isSandbox);
 
@@ -70,9 +72,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
         uid: newSpec.uid,
         dom: {
           tag: 'iframe',
-          attributes: Merger.deepMerge(
-            sandboxAttrs
-          )
+          attributes
         },
         behaviours: Behaviour.derive([
           Tabstopping.config({ }),

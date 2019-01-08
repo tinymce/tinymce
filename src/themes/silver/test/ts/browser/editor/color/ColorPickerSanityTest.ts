@@ -12,8 +12,10 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   // mutation is yummy
   let currentColor = '';
 
-  const setColor = (hex) => {
-    currentColor = hex;
+  const setColor = (hexOpt) => {
+    hexOpt.each((hex) => {
+      currentColor = hex;
+    });
   };
 
   const dialogSelector = 'div[role="dialog"]';
@@ -22,7 +24,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
   const sAssertColor = function (expected) {
     return Logger.t('Asserting color', Step.sync(function () {
-      Assertions.assertEq('Asserting language dropdown is ' + expected, expected, currentColor);
+      Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
     }));
   };
 
@@ -91,6 +93,6 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     plugins: '',
     theme: 'silver',
     toolbar: '',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

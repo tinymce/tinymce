@@ -37,53 +37,6 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
 
   const ratioEvent = Id.generate('ratio-event');
 
-  const renderFormFieldSpec = (pField, pLabel) => {
-    return {
-      dom: {
-        tag: 'div'
-      },
-      components: [pLabel, pField]
-    };
-  };
-
-  const renderDimensionField = function (isfield1, fieldlabel) {
-    const pField = AlloyFormField.parts().field({
-      factory: AlloyInput,
-      inputClasses: ['tox-textfield'],
-      inputBehaviours: Behaviour.derive([
-        Tabstopping.config({}),
-        AddEventsBehaviour.config('size-input-events', [
-          AlloyEvents.run(NativeEvents.focusin(), function (component, simulatedEvent) {
-            AlloyTriggers.emitWith(component, ratioEvent, { isField1: isfield1 });
-          }),
-          AlloyEvents.run(NativeEvents.change(), function (component, simulatedEvent) {
-            AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
-          })
-        ])
-      ]),
-      selectOnFocus: false
-    });
-
-    const pLabel = (label: string) => {
-      return AlloyFormField.parts().label({
-        dom: {
-          tag: 'label',
-          classes: ['tox-label'],
-          innerHtml: providersBackstage.translate(label)
-        }
-      });
-    };
-    return renderFormFieldSpec(pField, pLabel(fieldlabel));
-  };
-
-  const pField1 = AlloyFormCoupledInputs.parts().field1(
-    renderDimensionField(true, 'Width')
-  );
-
-  const pField2 = AlloyFormCoupledInputs.parts().field2(
-    renderDimensionField(false, 'Height')
-  );
-
   const pLock = AlloyFormCoupledInputs.parts().lock({
     dom: {
       tag: 'button',
@@ -113,24 +66,70 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     ])
   });
 
+  const formGroup = (components) => {
+    return {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-form__group' ]
+      },
+      components
+    };
+  };
+
+  const getFieldPart = (isField1) => AlloyFormField.parts().field({
+    factory: AlloyInput,
+    inputClasses: ['tox-textfield'],
+    inputBehaviours: Behaviour.derive([
+      Tabstopping.config({}),
+      AddEventsBehaviour.config('size-input-events', [
+        AlloyEvents.run(NativeEvents.focusin(), function (component, simulatedEvent) {
+          AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
+        }),
+        AlloyEvents.run(NativeEvents.change(), function (component, simulatedEvent) {
+          AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
+        })
+      ])
+    ]),
+    selectOnFocus: false
+  });
+
+  const getLabelPart = (label: string) => {
+    return AlloyFormField.parts().label({
+      dom: {
+        tag: 'label',
+        classes: ['tox-label'],
+        innerHtml: providersBackstage.translate(label)
+      }
+    });
+  };
+
+  const widthField = AlloyFormCoupledInputs.parts().field1(
+    formGroup([ getLabelPart('Width'), getFieldPart(true) ])
+  );
+
+  const hStack = (components) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-form__controls-h-stack' ]
+    },
+    components
+  });
+
+  const heightField = AlloyFormCoupledInputs.parts().field2(
+    formGroup([ getLabelPart('Height'), hStack([ getFieldPart(false), pLock ]) ])
+  );
+
   return AlloyFormCoupledInputs.sketch({
     dom: {
       tag: 'div',
       classes: ['tox-form__group']
     },
     components: [
-      {
-        dom: {
-          tag: 'div',
-          classes: ['tox-form__controls-h-stack']
-        },
-        components: [
-          // NOTE: Form coupled inputs to the FormField.sketch themselves.
-          pField1,
-          pField2,
-          pLock
-        ]
-      }
+      hStack([
+        // NOTE: Form coupled inputs to the FormField.sketch themselves.
+        widthField,
+        heightField
+      ])
     ],
     field1Name: 'width',
     field2Name: 'height',

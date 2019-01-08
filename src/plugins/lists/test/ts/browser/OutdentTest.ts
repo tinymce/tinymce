@@ -379,6 +379,29 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
     );
   });
 
+  suite.test('Outdenting an item should not affect its attributes', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+        '<li style="color: red;" class="xyz">a' +
+          '<ul>' +
+            '<li style="color: blue;">b</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul ul li', 0);
+    LegacyUnit.execCommand(editor, 'Outdent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+        '<li style="color: red;" class="xyz">a</li>' +
+        '<li style="color: blue;">b</li>' +
+      '</ul>'
+    );
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Outdent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
@@ -396,6 +419,6 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

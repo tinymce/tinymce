@@ -7,7 +7,7 @@
 
 import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Merger } from '@ephox/katamari';
+import { Arr, Obj, Merger, Option } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { formatSelectMenu } from '../../core/complex/FormatSelect';
 import { styleSelectMenu } from '../../core/complex/StyleSelect';
@@ -18,6 +18,7 @@ import { fontSelectMenu } from '../../core/complex/FontSelect';
 import { fontsizeSelectMenu } from '../../core/complex/FontsizeSelect';
 import { getRemovedMenuItems } from '../../../api/Settings';
 import ItemResponse from '../item/ItemResponse';
+import { Editor } from 'tinymce/core/api/Editor';
 
 export interface MenuRegistry {
   menuItems: Record<string, any>;
@@ -28,17 +29,17 @@ export interface MenuRegistry {
 const defaultMenubar = 'file edit view insert format tools table help';
 
 const defaultMenus = {
-  file: { title: 'File', items: 'newdocument restoredraft | preview | print' },
-  edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-  view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
-  insert: { title: 'Insert', items: 'image link media pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime' },
-  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | permanentpen | removeformat' },
+  file: { title: 'File', items: 'newdocument restoredraft | preview | print | deleteallconversations' },
+  edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+  view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
+  insert: { title: 'Insert', items: 'image link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime' },
+  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | removeformat' },
   tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
   table: { title: 'Table', items: 'inserttable tableprops deletetable row column cell' }, // TODO
   help: { title: 'Help', items: 'help' }
 };
 
-export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: string): SketchSpec => {
+export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
 
   return renderCommonDropdown({
     text: spec.text,
@@ -103,7 +104,7 @@ const parseItemsString = (items: string): string[] => {
   return items;
 };
 
-const identifyMenus = (editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
+const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
   const rawMenuData = Merger.merge(defaultMenus, registry.menus);
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 

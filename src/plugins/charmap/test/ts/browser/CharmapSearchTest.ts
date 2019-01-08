@@ -35,6 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),
+        FocusTools.sTryOnSelector('Focus should start on', doc, '[role="tab"]'), // TODO: Remove duped startup of these tests
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
         FocusTools.sSetActiveValue(doc, 'euro'),
@@ -69,6 +70,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
     plugins: 'charmap',
     toolbar: 'charmap',
     theme: 'silver',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

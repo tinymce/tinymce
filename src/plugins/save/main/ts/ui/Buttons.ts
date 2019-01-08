@@ -6,8 +6,9 @@
  */
 
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const stateToggle = function (editor) {
+const stateToggle = function (editor: Editor) {
   return function (api) {
     const handler = () => {
       api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
@@ -18,7 +19,7 @@ const stateToggle = function (editor) {
   };
 };
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   editor.ui.registry.addButton('save', {
     icon: 'save',
     tooltip: 'Save',

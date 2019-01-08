@@ -50,6 +50,6 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
   }, {
     plugins: 'tabfocus',
     tabfocus_elements: 'tempinput1',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

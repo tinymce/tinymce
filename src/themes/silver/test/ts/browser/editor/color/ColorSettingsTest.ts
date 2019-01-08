@@ -89,7 +89,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   }, {
       plugins: '',
       toolbar: 'forecolor backcolor',
-      skin_url: '/project/js/tinymce/skins/oxide/',
+      base_url: '/project/js/tinymce',
       color_map: colorSettings
     }, success, failure);
 }

@@ -10,7 +10,6 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
-
   TextpatternPlugin();
   Theme();
 
@@ -21,12 +20,12 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
     const steps = Utils.withTeardown([
       Log.stepsAsStep('TBA', 'TextPattern: space on ** without content does nothing', [
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**'),
-        tinyApis.sAssertContent('<p>**&nbsp;</p>')
+        tinyApis.sAssertContent('<p>**</p>')
       ]),
-      Log.stepsAsStep('TBA', 'TextPattern: Italic format on single word using space', [
-        tinyApis.sSetContent('<p>*a&nbsp; *</p>'),
+      Log.stepsAsStep('TBA', 'TextPattern: Italic format on single word using space 1', [
+        tinyApis.sSetContent('<p>*a&nbsp; *&nbsp;</p>'),
         tinyApis.sFocus,
-        tinyApis.sSetCursor([0, 0], 5),
+        tinyApis.sSetCursor([0, 0], 6),
         tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
@@ -37,24 +36,25 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                     s.text(str.is('a'))
                   ]
                 }),
-                s.text(str.is('\u00A0')),
+                s.text(str.is('\u00a0')),
                 s.text(str.is(' ')),
-                s.text(str.is('\u00A0'))
+                s.text(str.is('\u00a0'))
               ]
             })
           ]);
         }))
       ]),
-      Log.stepsAsStep('TBA', 'TextPattern: Italic format on single word using space', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a'))
+      Log.stepsAsStep('TBA', 'TextPattern: Italic format on single word using space 2', [
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*\u00a0'),
+        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
+        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1)
       ]),
       Log.stepsAsStep('TBA', 'TextPattern: Bold format on single word using space', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**\u00a0'),
         tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a'))
       ]),
       Log.stepsAsStep('TBA', 'TextPattern: Bold/italic format on single word using space', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***\u00a0'),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
             s.element('p', {
@@ -68,14 +68,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                     })
                   ]
                 }),
-                s.text(str.is('\u00A0'))
+                s.text(str.is('\u00a0'))
               ]
             })
           ]);
         }))
       ]),
       Log.stepsAsStep('TBA', 'TextPattern: Bold format on multiple words using space', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a b**'),
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a b**\u00a0'),
         tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a b'))
       ]),
       Log.stepsAsStep('TBA', 'TextPattern: Bold format on single word using enter', [
@@ -186,6 +186,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'textpattern',
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

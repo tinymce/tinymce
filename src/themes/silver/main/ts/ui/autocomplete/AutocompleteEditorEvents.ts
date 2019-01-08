@@ -32,12 +32,12 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
       return api.getView().bind(Highlighting.getHighlighted);
     };
 
-    if (api.isActive()) {
-      // Pressing <backspace> updates the autocompleter
-      if (e.which === 8) {
-        api.onKeypress.throttle(e);
-      }
+    // Pressing <backspace> updates the autocompleter
+    if (e.which === 8) {
+      api.onKeypress.throttle(e);
+    }
 
+    if (api.isActive()) {
       // Pressing <esc> closes the autocompleter
       if (e.which === 27) {
         api.closeIfNecessary();

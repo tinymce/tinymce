@@ -81,7 +81,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           providers: detail.providers
         },
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-        'menuitem'
+        Option.some('menuitem')
       );
     });
 

@@ -67,6 +67,6 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });

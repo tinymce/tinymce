@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', functio
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
     indent: false
   }, success, failure);
 });

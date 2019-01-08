@@ -50,7 +50,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'link',
       toolbar: 'bold unlink',
-      skin_url: '/project/js/tinymce/skins/oxide'
+      base_url: '/project/js/tinymce'
     }, success, failure);
   }
 );

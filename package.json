@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   },
-  "version": "5.0.0-beta-1-build.1",
+  "version": "5.0.0-rc-1-build.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -56,6 +56,7 @@
     "grunt-replace": "^1.0.1",
     "grunt-shell": "^2.1.0",
     "grunt-tslint": "^5.0.1",
+    "grunt-unicode": "^0.1.4",
     "grunt-webpack": "^3.1.2",
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "^4.0.0",

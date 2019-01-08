@@ -1,49 +1,30 @@
 import { Assertions, Chain, Guard, Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Id, Merger, Obj } from '@ephox/katamari';
+import { Merger, Obj } from '@ephox/katamari';
+import { Editor as McEditor } from '@ephox/mcagar';
 
-import EditorManager from 'tinymce/core/api/EditorManager';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import MockDataTransfer from '../module/test/MockDataTransfer';
-import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, failure) => {
-
-  const viewBlock = ViewBlock();
+  Theme();
+  PastePlugin();
 
   const cCreateEditorFromSettings = function (settings, html?) {
     return Chain.control(
-      Chain.async(function (viewBlock: any, next, die) {
-        const randomId = Id.generate('tiny-');
-        html = html || '<textarea></textarea>';
-
-        viewBlock.update(html);
-        viewBlock.get().firstChild.id = randomId;
-
-        EditorManager.init(Merger.merge(settings, {
-          selector: '#' + randomId,
-          skin_url: '/project/js/tinymce/skins/oxide',
-          indent: false,
-          setup (editor) {
-            editor.on('SkinLoaded', function () {
-              setTimeout(function () {
-                next(editor);
-              }, 0);
-            });
-          }
-        }));
-      }),
+      McEditor.cFromSettings(Merger.merge(settings, {
+        base_url: '/project/js/tinymce',
+        indent: false
+      })),
       Guard.addLogging(`Create editor from ${settings}`)
     );
   };
 
   const cRemoveEditor = function () {
     return Chain.control(
-      Chain.op(function (editor: any) {
-        editor.remove();
-      }),
+      McEditor.cRemove,
       Guard.addLogging('Remove editor')
     );
   };
@@ -123,13 +104,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
   const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
   const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
-  Theme();
-  PastePlugin();
-
-  viewBlock.attach();
-
   Pipeline.async({}, [
-    Chain.asStep(viewBlock, Log.chains('TBA', 'Paste: Assert forced_root_block <p></p> is added to the pasted data', [
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block <p></p> is added to the pasted data', [
       cCreateEditorFromSettings({
         plugins: 'paste',
         forced_root_block: 'p' // default
@@ -137,7 +113,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
       cAssertClipboardPaste(expectedWithRootBlock, pasteData),
       cRemoveEditor()
     ])),
-    Chain.asStep(viewBlock, Log.chains('TBA', 'Paste: Assert forced_root_block <p class="attr"></p> is added to the pasted data', [
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block <p class="attr"></p> is added to the pasted data', [
       cCreateEditorFromSettings({
         plugins: 'paste',
         forced_root_block: 'p',
@@ -148,7 +124,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
       cAssertClipboardPaste(expectedWithRootBlockAndAttrs, pasteData),
       cRemoveEditor()
     ])),
-    Chain.asStep(viewBlock, Log.chains('TBA', 'Paste: Assert forced_root_block is not added to the pasted data', [
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block is not added to the pasted data', [
       cCreateEditorFromSettings({
         plugins: 'paste',
         forced_root_block: false
@@ -157,7 +133,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
       cRemoveEditor()
     ]))
   ], function () {
-    viewBlock.detach();
     success();
   }, failure);
 });

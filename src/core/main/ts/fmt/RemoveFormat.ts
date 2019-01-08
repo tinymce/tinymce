@@ -20,6 +20,8 @@ import { Editor } from 'tinymce/core/api/Editor';
 import SplitRange from 'tinymce/core/selection/SplitRange';
 import { Node } from '@ephox/dom-globals';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Element, Traverse, InsertAll, Insert } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
 import Settings from '../api/Settings';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
@@ -28,6 +30,10 @@ const isEq = FormatUtils.isEq;
 
 const isTableCell = function (node) {
   return /^(TH|TD)$/.test(node.nodeName);
+};
+
+const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => {
+  return dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 };
 
 const getContainer = function (ed, rng, start?) {
@@ -68,20 +74,21 @@ const wrap = function (dom, node, name, attrs?) {
   return wrapper;
 };
 
-const wrapWithSiblings = (dom: DOMUtils, startNode: Node, name: string, next: boolean, attrs?) => {
-  const direction = (next ? 'next' : 'previous') + 'Sibling';
-  const wrapper = dom.create(name, attrs);
-  startNode.parentNode.insertBefore(wrapper, startNode);
+const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string, attrs?): Node => {
+  const start = Element.fromDom(node);
+  const wrapper = Element.fromDom(dom.create(name, attrs));
+  const siblings = next ? Traverse.nextSiblings(start) : Traverse.prevSiblings(start);
 
-  const nodesToWrap = [startNode];
-  let currNode = startNode;
-  while ((currNode) = currNode[direction]) {
-    nodesToWrap.push(currNode);
+  InsertAll.append(wrapper, siblings);
+  if (next) {
+    Insert.before(start, wrapper);
+    Insert.prepend(wrapper, start);
+  } else {
+    Insert.after(start, wrapper);
+    Insert.append(wrapper, start);
   }
 
-  nodesToWrap.forEach((node) => wrapper.appendChild(node));
-
-  return wrapper;
+  return wrapper.dom();
 };
 
 /**
@@ -474,10 +481,19 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
           endContainer = endContainer.firstChild || endContainer;
         }
 
-        if (dom.isChildOf(startContainer, endContainer) && startContainer !== endContainer && !dom.isBlock(endContainer) && !isTableCell(startContainer) && !isTableCell(endContainer)) {
-          const wrappedContent = wrapWithSiblings(dom, startContainer, 'span', true, { 'id': '_start', 'data-mce-type': 'bookmark' });
-          splitToFormatRoot(wrappedContent);
-          startContainer = unwrap(true);
+        // Wrap and split if nested
+        if (isChildOfInlineParent(dom, startContainer, endContainer)) {
+          const marker = Option.from(startContainer.firstChild).getOr(startContainer);
+          splitToFormatRoot(wrapWithSiblings(dom, marker, true, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' }));
+          unwrap(true);
+          return;
+        }
+
+        // Wrap and split if nested
+        if (isChildOfInlineParent(dom, endContainer, startContainer)) {
+          const marker = Option.from(endContainer.lastChild).getOr(endContainer);
+          splitToFormatRoot(wrapWithSiblings(dom, marker, false, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' }));
+          unwrap(false);
           return;
         }
 

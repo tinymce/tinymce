@@ -9,8 +9,9 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   const formats = Settings.getFormats(editor);
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 

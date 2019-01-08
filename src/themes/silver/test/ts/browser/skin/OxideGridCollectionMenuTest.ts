@@ -20,6 +20,8 @@ import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
 import { GuiSetup, TestStore } from '../../module/AlloyTestUtils';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Menu } from '@ephox/bridge';
 
 UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
   Theme();
@@ -88,8 +90,8 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'grid-button',
-      skin_url: '/project/js/tinymce/skins/oxide',
-      setup: (ed) => {
+      base_url: '/project/js/tinymce',
+      setup: (ed: Editor) => {
         ed.ui.registry.addSplitButton('grid-button', {
           type: 'splitbutton',
           columns: 'auto',
@@ -101,7 +103,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
                   value: num,
                   text: num,
                   icon: 'fake-icon-name'
-                };
+                } as Menu.ChoiceMenuItemApi;
               })
             );
           },

@@ -11,6 +11,7 @@ Warn                      <new>
 Valid                     <new>
 To open the popup, press Shift+Enter <new>
 Rich Text Area. Press ALT-0 for help. <new>
+System Font               <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
@@ -105,11 +106,15 @@ Show caption              [Caption]             Insert image/media
 Error: Form submit field collision.   <new>     Save
 Error: No form element found.         <new>     Save
 
-Border width              <new>                 Table (better description than just 'border')
-Border style              <new>                 Table (better description than just 'style')
+Border width              [border]              Table (better description than just 'border')
+Border style              [style]               Table (better description than just 'style')
 
 Update                    <new>                 TOC
 
+Text color                [Color]               Color Swatch
+Remove color              [Remove]              Color Swatch
+Custom color              [Custom]              Color Swatch
+Color swatch              <new>                 Color Swatch
 Turquoise                 <new>                 Color Swatch
 Green                     <new>                 Color Swatch
 Blue                      <new>                 Color Swatch
@@ -133,21 +138,53 @@ Dark Gray                 <new>                 Color Swatch
 Black                     <new>                 Color Swatch
 White                     <new>                 Color Swatch
 
+Color Picker              [Color]               Color Picker
+
 Switch to or from fullscreen mode           <new>       Help shortcuts
 Find (if searchreplace plugin activated)    <new>       Help shortcuts
 Save (if save plugin activated)             <new>       Help shortcuts
 Insert link (if link plugin activated)      <new>       Help shortcuts
 Open help dialog                            <new>       Help shortcuts
 
+history                   <new>                 Toolbar group names
+styles                    <new>                 Toolbar group names
+formatting                <new>                 Toolbar group names
+alignment                 <new>                 Toolbar group names
+indentation               <new>                 Toolbar group names
+permanent pen             <new>                 Toolbar group names
+comments                  <new>                 Toolbar group names
+
 
 No longer Used
 -----------------------------------------------------
+Color               (Color Picker dialog)
+Prev                (searchreplace)
+Whole words         (Searchreplace)
+Find and replace    (Searchreplace)
+
+Media               (media)
+Alternative source  (media)
+Poster              (media)
+Link                (Link)
+Insert Link         (Link)
+Target              (Link)
+None                (Link)
+
+Spellcheck          (Spellchecker)
+Font Family
+
+Special characters  (Charmap)
 
 
+Caption             (Insert image/media)
+Insert template     (Template)
 
+Anchor              (Anchor)
 
+border              (Table)
+style               (style)
 
-
+Document Properties   (Fullpage)
 
 Items that are translated but may look like english
 -----------------------------------------------------

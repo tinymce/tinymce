@@ -7,6 +7,8 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from '../core/NodeType';
+import { Editor } from 'tinymce/core/api/Editor';
+import { isCustomList } from '../core/Util';
 
 const findIndex = function (list, predicate) {
   for (let index = 0; index < list.length; index++) {
@@ -19,13 +21,13 @@ const findIndex = function (list, predicate) {
   return -1;
 };
 
-const listState = function (editor, listName) {
+const listState = function (editor: Editor, listName) {
   return function (buttonApi) {
     const nodeChangeHandler = (e) => {
       const tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
       const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
       const lists = Tools.grep(parents, NodeType.isListNode);
-      buttonApi.setActive(lists.length > 0 && lists[0].nodeName === listName);
+      buttonApi.setActive(lists.length > 0 && lists[0].nodeName === listName && !isCustomList(lists[0]));
     };
 
     editor.on('NodeChange', nodeChangeHandler);
@@ -34,7 +36,7 @@ const listState = function (editor, listName) {
   };
 };
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   const hasPlugin = function (editor, plugin) {
     const plugins = editor.settings.plugins ? editor.settings.plugins : '';
     return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;

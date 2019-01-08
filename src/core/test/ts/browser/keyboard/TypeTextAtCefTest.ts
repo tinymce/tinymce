@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/js/tinymce/skins/oxide'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });

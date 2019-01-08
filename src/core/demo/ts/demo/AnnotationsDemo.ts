@@ -1,5 +1,5 @@
-import { Editor } from 'tinymce/core/api/Editor';
 import { prompt, document } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 
@@ -15,50 +15,43 @@ export default function () {
   document.body.appendChild(button);
 
   tinymce.init({
-    skin_url: '../../../../js/tinymce/skins/oxide',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     toolbar: 'annotate-alpha',
     plugins: [ ],
 
     content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
-    setup: (ed: Editor) => {
-      ed.addButton('annotate-alpha', {
+    setup: (editor: Editor) => {
+      editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
-        onclick: () => {
+        onAction() {
           const comment = prompt('Comment with?');
-          ed.annotator.annotate('alpha', {
+          editor.annotator.annotate('alpha', {
             comment
           });
-          ed.focus();
+          editor.focus();
         },
-
-        onpostrender: (ctrl) => {
-          const button = ctrl.control;
-          ed.on('init', () => {
-            ed.annotator.annotationChanged('alpha', (state, name, obj) => {
-              if (! state) {
-                button.active(false);
-              } else {
-                button.active(true);
-              }
-            });
+        onSetup (btnApi) {
+          editor.annotator.annotationChanged('alpha', (state, name, obj) => {
+            btnApi.setDisabled(state);
           });
+          return () => {};
         }
       });
 
-      ed.on('init', () => {
-        ed.annotator.register('alpha', {
+      editor.on('init', () => {
+        editor.annotator.register('alpha', {
           persistent: true,
           decorate: (uid, data) => {
             return {
               attributes: {
-                'data-mce-comment': data.comment
+                'data-mce-comment': data.comment ? data.comment : '',
+                'data-mce-author': data.author ? data.author : 'anonymous'
               }
             };
           }
         });
-
       });
     },
 

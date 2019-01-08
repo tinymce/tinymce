@@ -1,32 +1,17 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Focus, Hierarchy, Element } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import EditorFocus from 'tinymce/core/focus/EditorFocus';
-import ViewBlock from '../../module/test/ViewBlock';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { Editor as McEditor } from '@ephox/mcagar';
+import { Focus, Hierarchy, Element } from '@ephox/sugar';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const viewBlock = ViewBlock();
-
+UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (success, failure) {
   Theme();
 
   const cCreateInlineEditor = function (html) {
-    return Chain.async(function (viewBlock: any, next, die) {
-      viewBlock.update(html);
-
-      EditorManager.init({
-        selector: '.tinymce-editor',
-        inline: true,
-        skin_url: '/project/js/tinymce/skins/oxide',
-        setup (editor) {
-          editor.on('SkinLoaded', function () {
-            next(editor);
-          });
-        }
-      });
+    return McEditor.cFromHtml(html, {
+      inline: true,
+      base_url: '/project/js/tinymce'
     });
   };
 
@@ -75,49 +60,43 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
     });
   };
 
-  const cRemoveEditor = Chain.op(function (editor: any) {
-    editor.remove();
-  });
-
-  viewBlock.attach();
   Pipeline.async({}, [
     Logger.t('Focus editor', GeneralSteps.sequence([
-      Logger.t('Focus editor initialized on a table', Chain.asStep(viewBlock, [
+      Logger.t('Focus editor initialized on a table', Chain.asStep({}, [
         cCreateInlineEditor('<table class="tinymce-editor"><tbody><tr><td>a</td></tr></tbody></table>'),
         cFocusEditor,
         cAssertSelection([0, 0, 0, 0], 0, [0, 0, 0, 0], 0),
-        cRemoveEditor
+        McEditor.cRemove
       ])),
-      Logger.t('Focus editor initialized on a div with p', Chain.asStep(viewBlock, [
+      Logger.t('Focus editor initialized on a div with p', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><p>a</p></div>'),
         cFocusEditor,
         cAssertSelection([0, 0], 0, [0, 0], 0),
-        cRemoveEditor
+        McEditor.cRemove
       ])),
-      Logger.t('Focus editor initialized on a list', Chain.asStep(viewBlock, [
+      Logger.t('Focus editor initialized on a list', Chain.asStep({}, [
         cCreateInlineEditor('<ul class="tinymce-editor"><li>a</li></ul>'),
         cFocusEditor,
         cAssertSelection([0, 0], 0, [0, 0], 0),
-        cRemoveEditor
+        McEditor.cRemove
       ]))
     ])),
     Logger.t('hasFocus', GeneralSteps.sequence([
-      Logger.t('Focus on normal paragraph', Chain.asStep(viewBlock, [
+      Logger.t('Focus on normal paragraph', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><p>a</p></div>'),
         cFocusEditor,
         cAssertHasFocus([]),
-        cRemoveEditor
+        McEditor.cRemove
       ])),
-      Logger.t('Focus on cE=true inside a cE=false', Chain.asStep(viewBlock, [
+      Logger.t('Focus on cE=true inside a cE=false', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><div contenteditable="false">a<div contenteditable="true">b</div></div></div>'),
         cSetSelection([0, 1, 0], 0, [0, 1, 0], 0),
         cFocusElement([0, 1]),
         cAssertHasFocus([0, 1]),
-        cRemoveEditor
+        McEditor.cRemove
       ]))
     ]))
   ], function () {
-    viewBlock.detach();
     success();
   }, failure);
 });

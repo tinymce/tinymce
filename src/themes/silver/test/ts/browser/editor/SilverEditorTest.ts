@@ -7,6 +7,7 @@ import { Element, Body } from '@ephox/sugar';
 import Theme from '../../../../../silver/main/ts/Theme';
 import { document } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
@@ -110,7 +111,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                 s.element('div', {
                                   classes: [ arr.has('tox-split-button') ],
                                   children: [
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn') ],
                                       children: [
                                         s.element('span', {
@@ -119,7 +120,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                         })
                                       ]
                                     }),
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
@@ -141,7 +142,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                 s.element('div', {
                                   classes: [ arr.has('tox-split-button') ],
                                   children: [
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn') ],
                                       children: [
                                         s.element('span', {
@@ -151,7 +152,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                                         })
                                       ]
                                     }),
-                                    s.element('button', {
+                                    s.element('span', {
                                       classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                       children: [
                                         s.element('svg', { })
@@ -276,7 +277,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
               Chain.asStep(container, [
                 UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('button', {
+                  return s.element('span', {
                     classes: [ arr.not('tox-tbtn--enabled') ]
                   });
                 }))
@@ -290,7 +291,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
               Chain.asStep(container, [
                 UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
                 Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => {
-                  return s.element('button', {
+                  return s.element('span', {
                     classes: [ arr.has('tox-tbtn--enabled') ]
                   });
                 }))
@@ -306,8 +307,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       menu: {
         menutest: { title: 'test', items: 'x1'}
       },
-      skin_url: '/project/js/tinymce/skins/oxide',
-      setup: (ed) => {
+      base_url: '/project/js/tinymce',
+      setup: (ed: Editor) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',
           icon: 'cut',
@@ -343,10 +344,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 }
               }
             ]);
-          },
-          onAction: () => { },
-          onItemAction: () => {
-            console.log('dropdown1.itemAction');
           }
         });
 
@@ -362,10 +359,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 }
               }
             ]);
-          },
-          onAction: () => { },
-          onItemAction: () => {
-            console.log('dropdown1.itemAction');
           }
         });
 

@@ -1,8 +1,11 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
+import { PlatformDetection } from '@ephox/sand';
+
+const browser = PlatformDetection.detect().browser;
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, failure) => {
   Theme();
@@ -10,6 +13,12 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
   const sFireInsert = (editor: Editor) => {
     return Step.sync(() => {
       editor.fire('input', { isComposing: false });
+    });
+  };
+
+  const sFireKeyPress = (editor: Editor) => {
+    return Step.sync(() => {
+      editor.fire('keypress');
     });
   };
 
@@ -119,10 +128,19 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
             tinyApis.sAssertContent('<p>a b c d</p>')
           ]))
         ])),
+
+        Logger.t('Insert in text on IE using keypress', GeneralSteps.sequence(browser.isIE() ? [
+          tinyApis.sFocus,
+          tinyApis.sSetContent('<p>a&nbsp;b</p>'),
+          tinyApis.sSetCursor([0, 0], 3),
+          sFireKeyPress(editor),
+          Waiter.sTryUntil('', tinyApis.sAssertContent('<p>a b</p>'), 10, 1000),
+          tinyApis.sAssertSelection([0, 0], 3, [0, 0], 3),
+        ] : []))
       ]))
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide',
+    base_url: '/project/js/tinymce',
   }, success, failure);
 });
