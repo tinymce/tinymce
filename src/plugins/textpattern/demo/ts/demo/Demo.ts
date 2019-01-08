@@ -19,7 +19,8 @@ tinymce.init({
   { start: '* ', cmd: 'InsertUnorderedList' },
   { start: '- ', cmd: 'InsertUnorderedList' },
   { start: 'brb', replacement: 'be right back'},
-  { start: 'irl', replacement: 'in real life'}
+  { start: 'irl', replacement: 'in real life'},
+  { start: 'heading', replacement: '<h1>My heading</h1>' }
   ]
 });
 
