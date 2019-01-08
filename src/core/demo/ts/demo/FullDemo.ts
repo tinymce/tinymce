@@ -28,7 +28,6 @@ export default function () {
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
     selector: 'textarea',
-    language: 'ta_IN',
     // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },
