@@ -17,7 +17,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
   Pipeline.async({},
     Log.steps('TBA', 'SearchReplace: Test Prev and Next buttons become enabled and disabled at right places when multiple matches exist', [
       tinyApis.sSetContent('<p>fish fish fish</p>'),
-      tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace..."]'),
+      tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
       Chain.asStep({}, [
         Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
           Chain.fromChains([
