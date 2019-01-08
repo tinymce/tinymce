@@ -35,6 +35,7 @@ gulp.task('lint', function() {
 gulp.task('less', function() {
   return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
+      relativeUrls: true,
       plugins: [autoprefix, exportLessVariablesToJson]
     }).on('error', function(err) {
       console.error(err.message);
