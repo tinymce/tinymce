@@ -16,14 +16,14 @@ const showDialog = function (editor: Editor, currentIndexState) {
 
 const register = function (editor: Editor, currentIndexState) {
   editor.ui.registry.addMenuItem('searchreplace', {
-    text: 'Find and replace',
+    text: 'Find and replace...',
     shortcut: 'Meta+F',
     onAction: showDialog(editor, currentIndexState),
     icon: 'search'
   });
 
   editor.ui.registry.addButton('searchreplace', {
-    tooltip: 'Find and replace...',
+    tooltip: 'Find and replace',
     onAction: showDialog(editor, currentIndexState),
     icon: 'search'
   });

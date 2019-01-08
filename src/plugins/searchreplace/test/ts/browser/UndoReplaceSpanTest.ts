@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
     Pipeline.async({},
       Log.steps('TBA', 'SearchReplace: replace one of three found, undo and redo and assert there is no matcher spans in editor', [
         tinyApis.sSetContent('<p>cats cats cats</p>'),
-        tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace..."]'),
+        tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
         Chain.asStep({}, [
           Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
             Chain.fromChains([

@@ -11,6 +11,7 @@ Warn                      <new>
 Valid                     <new>
 To open the popup, press Shift+Enter <new>
 Rich Text Area. Press ALT-0 for help. <new>
+System Font               <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
