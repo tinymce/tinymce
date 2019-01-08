@@ -19,7 +19,6 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         renderSizeInput({
           type: 'sizeinput',
           name: 'dimensions',
-          colspan: Option.none(),
           label: Option.some('size'),
           constrain: true
         }, providers)

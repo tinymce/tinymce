@@ -19,8 +19,7 @@ const open = function (editor: Editor) {
       items: [
         {
           type: 'textarea',
-          name: 'code',
-          flex: true,
+          name: 'code'
         }
       ]
     },

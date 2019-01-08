@@ -64,10 +64,7 @@ export default () => {
     type: 'iframe',
     name: 'iframe',
     label: Option.some('Iframe'),
-    // TODO: Implement
-    colspan: Option.none(),
-    sandboxed: true,
-    flex: false
+    sandboxed: true
   }, sharedBackstage.providers);
 
   const inputSpec = renderInput({
@@ -83,7 +80,6 @@ export default () => {
     name: 'textarea',
     label: Option.some('Gamma'),
     placeholder: Option.none(),
-    flex: true,
     validation: Option.some({
       validator: (s) => s === 'so bad' ? 'So bad' : true
     })
@@ -259,22 +255,18 @@ export default () => {
   const colorInputSpec = renderColorInput({
     type: 'colorinput',
     name: 'colorinput-demo',
-    colspan: Option.none(),
     label: Option.some('Color input label')
   }, sharedBackstage, fakecolorinputBackstage);
 
   const colorPickerSpec = renderColorPicker({
     type: 'colorpicker',
     name: 'colorpicker-demo',
-    colspan: Option.none(),
     label: Option.some('Color picker label')
   });
 
   const dropzoneSpec = renderDropZone({
     type: 'dropzone',
-    flex: false,
     name: 'dropzone-demo',
-    colspan: Option.none(),
     label: Option.some('Dropzone label')
   }, sharedBackstage.providers);
 
@@ -282,7 +274,6 @@ export default () => {
     type: 'selectbox',
     name: 'selectbox-demo',
     size: 1,
-    colspan: Option.none(),
     label: Option.some('Select one from'),
     items: [
       { value: 'one', text: 'One' },
@@ -294,7 +285,6 @@ export default () => {
     type: 'selectbox',
     name: 'selectbox-demo',
     size: 6,
-    colspan: Option.none(),
     label: Option.some('Select one from'),
     items: [
       { value: 'one', text: 'One' },
@@ -311,13 +301,11 @@ export default () => {
     type: 'sizeinput',
     name: 'sizeinput-demo',
     label: Option.some('kustom fixed ratio'),
-    colspan: Option.none(),
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
     type: 'urlinput',
     name: 'blah',
-    colspan: Option.none(),
     label: Option.some('Url'),
     filetype: 'image' // 'image' || 'media'
   }, helpers.extras.backstage.shared, helpers.extras.backstage.urlinput);
@@ -387,7 +375,6 @@ export default () => {
       columns: 1,
       name: 'collection',
       label: Option.some('Collection: '),
-      colspan: Option.none()
     }, sharedBackstage.providers)
   );
 
