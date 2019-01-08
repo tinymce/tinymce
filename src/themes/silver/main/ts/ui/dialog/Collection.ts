@@ -68,8 +68,9 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
         '-': ' '
       };
 
+      // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
-      // But if title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
+      // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
       const ariaLabel = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
       });
