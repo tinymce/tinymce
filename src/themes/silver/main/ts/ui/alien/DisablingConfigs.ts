@@ -16,7 +16,13 @@ const button = (disabled: boolean) => Disabling.config({
   disabled
 });
 
+const splitButton = (disabled: boolean) => Disabling.config({
+  disabled,
+  disableClass: 'tox-tbtn--disabled'
+});
+
 export const DisablingConfigs = {
   item,
-  button
+  button,
+  splitButton
 };

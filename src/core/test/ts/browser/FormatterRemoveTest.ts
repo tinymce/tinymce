@@ -406,12 +406,28 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function () {
     LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p><span class="mce-item-internal">abc</span></p>');
   });
 
-  suite.test('Remove format bug 1', function (editor) {
+  suite.test('Remove format of nested elements at start', function (editor) {
     editor.setContent('<p><b><i>ab</i>c</b></p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 1, 'i', 2);
     editor.formatter.remove('format');
     LegacyUnit.equal(editor.getContent(editor), '<p><b><i>a</i></b><i>b</i><b>c</b></p>');
+  });
+
+  suite.test('Remove format of nested elements at end', function (editor) {
+    editor.setContent('<p><b>a<i>bc</i></b></p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(editor.getContent(editor), '<p><b>a</b><i>b</i><b><i>c</i></b></p>');
+  });
+
+  suite.test('Remove format of nested elements at end with text after ', function (editor) {
+    editor.setContent('<p><b>a<i>bc</i></b>d</p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'i', 0, 'i', 2);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(editor.getContent(editor), '<p><b>a</b><i>bc</i>d</p>');
   });
 
   suite.test('Remove format bug 2', function (editor) {

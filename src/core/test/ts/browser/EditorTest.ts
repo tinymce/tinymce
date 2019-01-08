@@ -1,4 +1,4 @@
-import { Pipeline } from '@ephox/agar';
+import { Pipeline, UiFinder } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
@@ -7,6 +7,7 @@ import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
+import { Body, Attr } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
   const success = arguments[arguments.length - 2];
@@ -363,6 +364,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
   suite.test('setMode', function (editor) {
     let clickCount = 0;
 
+    const isDisabled = (selector) => {
+      const elm = UiFinder.findIn(Body.body(), selector);
+      return elm.forall((elm) => Attr.has(elm, 'disabled'));
+    };
+
     editor.on('click', function () {
       clickCount++;
     });
@@ -371,23 +377,13 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     LegacyUnit.equal(clickCount, 1);
 
     editor.setMode('readonly');
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // TODO FIXME DISABLED-TEST AP-471 TINY-2287
-    // Disable reason:
-    // 1. editor.theme.panel has been removed in Tiny 5
-    // 2. Buttons are not getting set to disabled when in readonly mode
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // LegacyUnit.equal(editor.theme.panel.find('button:last')[2].disabled(), true);
+    LegacyUnit.equal(isDisabled('.tox-editor-container button:last'), true);
     editor.dom.fire(editor.getBody(), 'click');
     LegacyUnit.equal(clickCount, 1);
 
     editor.setMode('design');
     editor.dom.fire(editor.getBody(), 'click');
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // TODO FIXME DISABLED-TEST AP-471 TINY-2287
-    // Disable reason: see above
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // LegacyUnit.equal(editor.theme.panel.find('button:last')[2].disabled(), false);
+    LegacyUnit.equal(isDisabled('.tox-editor-container button:last'), false);
     LegacyUnit.equal(clickCount, 2);
   });
 

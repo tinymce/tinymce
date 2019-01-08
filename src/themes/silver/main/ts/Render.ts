@@ -116,7 +116,6 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  // TODO TINY-1659
   const partToolbar: ConfiguredPart = OuterContainer.parts().toolbar({
     dom: {
       tag: 'div',
@@ -159,7 +158,7 @@ const setup = (editor: Editor): RenderInfo => {
   const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
   const hasMenubar = isMenubarEnabled(editor);
 
-  // We need the statusbar to be seperate to everything else so resizing works properly
+  // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
     hasToolbar ? [ partToolbar ] : [ ],

@@ -17,7 +17,7 @@ import NavigableObject from '../general/NavigableObject';
 import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-const platformNeedsSandboxing = !PlatformDetection.detect().browser.isIE();
+const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
 interface IFrameSourcing {
   getValue: (frame: AlloyComponent) => string;
@@ -36,8 +36,9 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       if (!isSandbox) {
         Attr.set(frameComponent.element(), 'src', 'javascript:\'\'');
         // IE 6-11 doesn't support data uris on iframeComponents
+        // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
-        // TODO: Use sandbox if future versions of IE supports iframeComponents with data: uris.
+        // TODO: Use sandbox if future versions of IE/Edge supports iframeComponents with data: uris.
         const doc = frameComponent.element().dom().contentWindow.document;
 
         doc.open();
@@ -87,9 +88,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
     factory: { sketch: factory }
   });
 
-  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-
-  return renderFormFieldWith(pLabel, pField, extraClasses);
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched']);
 };
 
 export {

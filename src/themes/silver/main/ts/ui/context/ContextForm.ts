@@ -11,8 +11,7 @@ import {
   Behaviour,
   Input,
   Keying,
-  Memento,
-  SimpleSpec
+  Memento
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
@@ -23,23 +22,9 @@ import { generate } from './ContextFormButtons';
 
 const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFactoryBackstageProviders) => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
-  const inputId = Id.generate('context-form-field');
-
-  const label: Option<SimpleSpec> = ctx.label.map((label) => ({
-    dom: {
-      tag: 'label',
-      classes: [ 'tox-toolbar-label' ],
-      attributes: {
-        for: inputId
-      },
-      innerHtml: providersBackstage.translate(label)
-    }
-  }));
-
-  // Only add the ID if a label is present.
   const inputAttributes = ctx.label.fold(
     () => ({ }),
-    (_) => ({ id: inputId })
+    (label) => ({ 'aria-label': label })
   );
 
   const memInput = Memento.record(
@@ -79,9 +64,11 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
     uid: Id.generate('context-toolbar'),
     initGroups: [
       {
-        items: label.toArray().concat([ memInput.asSpec() ])
+        title: Option.none(),
+        items: [ memInput.asSpec() ]
       },
       {
+        title: Option.none(),
         items: commands.asSpecs() as AlloySpec[]
       }
     ],

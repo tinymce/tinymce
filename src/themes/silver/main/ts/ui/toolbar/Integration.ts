@@ -24,13 +24,41 @@ import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { renderMenuButton } from '../menus/menubar/Integration';
 import { RenderUiConfig } from '../../Render';
+import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
   console.error(ValueSchema.formatError(error));
 };
 
-const defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | permanentpen | addcomment';
+interface ToolbarGroupSetting {
+  name?: string;
+  items: string[];
+}
+
+const defaultToolbar = [
+  {
+    name: 'history', items: [ 'undo', 'redo' ]
+  },
+  {
+    name: 'styles', items: [ 'styleselect' ]
+  },
+  {
+    name: 'formatting', items: [ 'bold', 'italic']
+  },
+  {
+    name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+  },
+  {
+    name: 'indentation', items: [ 'outdent', 'indent' ]
+  },
+  {
+    name: 'permanent pen', items: [ 'permanentpen' ]
+  },
+  {
+    name: 'comments', items: [ 'addcomment' ]
+  }
+];
 
 const renderFromBridge = <BI, BO>(bridgeBuilder: (i: BI) => Result<BO, ValueSchema.SchemaError<any>>, render: (o: BO, extras) => AlloySpec) => {
   return (spec, extras) => {
@@ -114,34 +142,53 @@ const bespokeButtons = {
   align: types.alignMenuButton
 };
 
-const removeUnusedDefaults = (buttons, defaultItems: string) => {
-  return Arr.filter(defaultItems.split(/[, ]/), (item) => {
-    return item === '|' || Obj.has(buttons, item) || Obj.has(bespokeButtons as any, item);
-  }).join(' ');
+const removeUnusedDefaults = (buttons) => {
+  const filteredItemGroups = Arr.map(defaultToolbar, (group) => {
+    const items = Arr.filter(group.items, (subItem) => {
+      return Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem);
+    });
+    return {
+      name: group.name,
+      items
+    };
+  });
+  return Arr.filter(filteredItemGroups, (group) => group.items.length > 0);
 };
 
-const createToolbar = (toolbarConfig: Partial<RenderUiConfig>) => {
-  const toolbar = () => {
-    if (toolbarConfig.toolbar === false) {
-      return '';
-    } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
-      return removeUnusedDefaults(toolbarConfig.buttons, defaultToolbar);
-    } else {
-      return toolbarConfig.toolbar;
-    }
-  };
-
-  const toolbarArray = Type.isArray(toolbar()) ? toolbar() :  [ toolbar() ];
-  return toolbarArray.join(' | ');
+const convertStringToolbar = (strToolbar) => {
+  const groupsStrings = strToolbar.split('|');
+  return Arr.map(groupsStrings, (g) => {
+    return {
+      items: g.trim().split(' ')
+    };
+  });
 };
 
-const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): SketchSpec[][] {
-  const toolbar = createToolbar(toolbarConfig);
-  const groupsStrings = toolbar.split('|');
-  const toolbarGroups = Arr.map(groupsStrings, (g) => g.trim().split(' '));
+// Toolbar settings
+// false = disabled
+// undefined or true = default
+// string = enabled with specified buttons and groups
+// string array = enabled with specified buttons and groups
+// object array = enabled with specified buttons, groups and group titles
+const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSetting[] => {
+  if (toolbarConfig.toolbar === false) {
+    return [];
+  } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
+    return removeUnusedDefaults(toolbarConfig.buttons);
+  } else if (Type.isString(toolbarConfig.toolbar)) {
+    return convertStringToolbar(toolbarConfig.toolbar);
+  } else if (Type.isArray(toolbarConfig.toolbar) && Type.isString(toolbarConfig.toolbar[0])) {
+    return convertStringToolbar(toolbarConfig.toolbar.join(' | '));
+  } else {
+    return toolbarConfig.toolbar;
+  }
+};
+
+const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): ToolbarGroup[] {
+  const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
-    return Arr.bind(group, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] :  Objects.readOptFrom(toolbarConfig.buttons, toolbarItem.toLowerCase()).fold(
+    const items = Arr.bind(group.items, (toolbarItem) => {
+      return toolbarItem.trim().length === 0 ? [] : Objects.readOptFrom(toolbarConfig.buttons, toolbarItem.toLowerCase()).fold(
         () => {
           return Objects.readOptFrom<(spec: Editor, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
             return r(editor, extras);
@@ -155,10 +202,14 @@ const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderU
         }
       ).toArray();
     });
+    return {
+      title: Option.from(editor.translate(group.name)),
+      items
+    };
   });
 
   return Arr.filter(groups, (group) => {
-    return group.length > 0;
+    return group.items.length > 0;
   });
 };
 

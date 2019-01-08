@@ -6,7 +6,6 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (success, failure) => {
-
   Theme();
   TextpatternPlugin();
 
@@ -16,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
 
     const steps = Utils.withTeardown([
       Log.stepsAsStep('TBA', 'TextPattern: inline italic then undo', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*\u00a0'),
         tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
         tinyApis.sExecCommand('Undo'),
         tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
