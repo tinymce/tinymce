@@ -4,18 +4,15 @@ import { FormComponent, FormComponentApi, formComponentFields } from './FormComp
 
 export interface TextAreaApi extends FormComponentApi {
   type: 'textarea';
-  flex?: boolean;
   placeholder?: string;
 }
 
 export interface TextArea extends FormComponent {
   type: 'textarea';
-  flex: boolean;
   placeholder?: Option<string>;
 }
 
 export const textAreaFields = formComponentFields.concat([
-  FieldSchema.defaulted('flex', false),
   FieldSchema.optionString('placeholder')
 ]);
 
