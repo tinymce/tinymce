@@ -13,6 +13,16 @@ import Tools from 'tinymce/core/api/util/Tools';
 import { BlockPattern, InlinePattern, Pattern } from '../api/Pattern';
 import { generatePathRange, isElement, isText, PathRange, resolvePathRange } from './PathRange';
 
+export interface Spot {
+  node: Text;
+  offset: number;
+}
+
+export interface InlinePatternMatch {
+  pattern: InlinePattern;
+  range: PathRange;
+}
+
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): P => {
   for (let i = 0; i < patterns.length; i++) {
@@ -29,75 +39,25 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): P => {
   }
 };
 
-interface Spot {
-  node: Text;
-  offset: number;
-}
-
-export interface InlinePatternMatch {
-  pattern: InlinePattern;
-  range: PathRange;
-}
-
-const descFirst = (node: Node): Node => {
-  if (node === null) {
-    throw new Error('Can not descFirst on null node!');
-  }
-  let current = node;
-  while (current.firstChild) {
-    current = current.firstChild;
-  }
-  return current;
-};
-
-const descLast = (node: Node): Node => {
-  if (node === null) {
-    throw new Error('Can not descLast on null node!');
-  }
-  let current = node;
-  while (current.lastChild) {
-    current = current.lastChild;
-  }
-  return current;
-};
-
-const prevLeaf = (leaf: Node, root: Node): Option<Node> => {
-  if (leaf === root) {
-    return Option.none();
-  }
-  let current = leaf;
-  while (true) {
-    if (current.previousSibling) {
-      return Option.some(descLast(current.previousSibling));
-    } else {
-      const parent = current.parentNode;
-      if (parent === null || parent === root) {
-        return Option.none();
-      } else {
-        current = parent;
-      }
-    }
-  }
-};
-
 const textBefore = (node: Node, offset: number, block: Node): Option<Spot> => {
-  // check we are at a leaf
-  if (node.childNodes.length === 0) {
-    if (isText(node) && offset > 0) {
-      return Option.some({node, offset});
-    } else {
-      return prevLeaf(node, block).bind(
-        (leaf) => textBefore(leaf, isText(leaf) ? leaf.length : 0, block));
-    }
+  if (isText(node) && offset > 0) {
+    return Option.some({node, offset});
+  }
+  let startNode: Node;
+  if (offset > 0) {
+    startNode = node.childNodes[offset - 1];
   } else {
-    // convert node to leaf
-    if (offset > 0) {
-      const leaf = descLast(node.childNodes[offset - 1]);
-      return textBefore(leaf, isText(leaf) ? leaf.length : 0, block);
-    } else {
-      return textBefore(descFirst(node), 0, block);
+    for (let current = node; current && current !== block && !startNode; current = current.parentNode) {
+      startNode = current.previousSibling;
     }
   }
+  const tw = new TreeWalker(startNode, block);
+  for (let current = tw.current(); current; current = tw.prev()) {
+    if (isText(current) && current.length > 0) {
+      return Option.some({node: current, offset: current.length});
+    }
+  }
+  return Option.none();
 };
 
 const findInlinePatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Text, offset: number, block: Node, requireGap = false): Option<Spot> => {
