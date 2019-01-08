@@ -1,4 +1,5 @@
 Version 5.0.0-rc-2 (TBD)
+    Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Fixed "Find and replace" not showing in the "Edit" menu by default #TINY-3061
 Version 5.0.0-rc-1 (2019-01-08)
     Updated the font select dropdown logic to try to detect the system font stack and show "System Font" as the font name #TINY-2710
