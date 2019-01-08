@@ -16,10 +16,8 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
       return GuiFactory.build(
         renderDropZone({
           type: 'dropzone',
-          flex: false,
           name: 'drop1',
           label: Option.some('Dropzone Label'),
-          colspan: Option.none()
         }, providers)
       );
     },
