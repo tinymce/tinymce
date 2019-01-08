@@ -84,11 +84,19 @@ const link = function (editor, attachState) {
       const selectedElm = editor.selection.getNode();
       const anchorElm = getAnchorElement(editor, selectedElm);
 
+      const getClass = (data, anchorElm) => {
+        return data.class ?
+          data.class :
+          anchorElm && anchorElm.className ?
+            anchorElm.className :
+            null;
+      };
+
       const linkAttrs = {
         href: data.href,
         target: data.target ? data.target : null,
         rel: data.rel ? data.rel : null,
-        class: data.class ? data.class : null,
+        class: getClass(data, anchorElm),
         title: data.title ? data.title : null
       };
 
