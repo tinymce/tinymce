@@ -29,8 +29,6 @@ import * as Icons from '../icons/Icons';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent } from '../general/FormEvents';
 
-type CheckboxState = boolean;
-
 export interface CheckboxFoo {
   label: string;
   name: string;
@@ -40,11 +38,11 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
   const repBehaviour = Representing.config({
     store: {
       mode: 'manual',
-      getValue: (comp: AlloyComponent): CheckboxState => {
+      getValue: (comp: AlloyComponent): boolean => {
         const el = comp.element().dom() as HTMLInputElement;
         return el.checked;
       },
-      setValue: (comp: AlloyComponent, value: CheckboxState) => {
+      setValue: (comp: AlloyComponent, value: boolean) => {
         const el = comp.element().dom() as HTMLInputElement;
         el.checked = value;
       }
