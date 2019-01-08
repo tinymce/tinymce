@@ -1,5 +1,6 @@
 Version 5.0.0-rc-2 (TBD)
     Fixed "Find and replace" not showing in the "Edit" menu by default #TINY-3061
+    Updated the textpattern plugin to properly support nested patterns and to allow running a command with a value for a pattern with a start and an end #TINY-2991
 Version 5.0.0-rc-1 (2019-01-08)
     Updated the font select dropdown logic to try to detect the system font stack and show "System Font" as the font name #TINY-2710
     Fixed readonly mode not fully disabling editing content #TINY-2287
