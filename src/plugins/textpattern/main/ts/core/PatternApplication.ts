@@ -13,7 +13,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
 import { resolvePath, isElement, isText } from './PathRange';
-import { Strings, Arr, Id } from '@ephox/katamari';
+import { Strings, Arr, Id, Option, Options } from '@ephox/katamari';
 
 // assumes start is not equal to end
 const isCollapsed = (start: Node, end: Node, root: HTMLElement) => {
@@ -33,16 +33,18 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   const dom: DOMUtils = editor.dom;
   const newMarker = (id: string) => dom.create('span', {'data-mce-type': 'bookmark', 'id': id});
   const markerRange = (ids: {start: string, end?: string}) => {
-    const range = dom.createRng();
-    const start = dom.select('#' + ids.start)[0];
-    const end = dom.select('#' + ids.end)[0];
-    range.setStartAfter(start);
-    if (!isCollapsed(start, end, dom.getRoot())) {
-      range.setEndBefore(end);
-    } else {
-      range.collapse(true);
-    }
-    return range;
+    const start = Option.from(dom.select('#' + ids.start)[0]);
+    const end = Option.from(dom.select('#' + ids.end)[0]);
+    return Options.lift(start, end, (start, end) => {
+      const range = dom.createRng();
+      range.setStartAfter(start);
+      if (!isCollapsed(start, end, dom.getRoot())) {
+        range.setEndBefore(end);
+      } else {
+        range.collapse(true);
+      }
+      return range;
+    });
   };
   const markerPrefix = Id.generate('mce_');
   const markerIds = Arr.map(areas, (_area, i) => {
@@ -80,15 +82,17 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   // apply the patterns
   for (let i = 0; i < areas.length; i++) {
     const { pattern } = areas[i];
-    const range = markerRange(markerIds[i]);
-    editor.selection.setRng(range);
-    if (pattern.type === 'inline-format') {
-      pattern.format.forEach((format) => {
-        editor.formatter.apply(format);
-      });
-    } else {
-      editor.execCommand(pattern.cmd, false, pattern.value);
-    }
+    const optRange = markerRange(markerIds[i]);
+    optRange.each((range) => {
+      editor.selection.setRng(range);
+      if (pattern.type === 'inline-format') {
+        pattern.format.forEach((format) => {
+          editor.formatter.apply(format);
+        });
+      } else {
+        editor.execCommand(pattern.cmd, false, pattern.value);
+      }
+    });
     // remove the markers
     dom.remove(markerIds[i].start);
     dom.remove(markerIds[i].end);
