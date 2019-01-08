@@ -1,6 +1,5 @@
-Version 5.0.0-beta-2 (TBD)
-    Updated Emoticons and Charmap dialogs to be screen reader accessible #TINY-2693
 Version 5.0.0-rc-2 (TBD)
+    Updated Emoticons and Charmap dialogs to be screen reader accessible #TINY-2693
     Fixed "Find and replace" not showing in the "Edit" menu by default #TINY-3061
 Version 5.0.0-rc-1 (2019-01-08)
     Updated the font select dropdown logic to try to detect the system font stack and show "System Font" as the font name #TINY-2710

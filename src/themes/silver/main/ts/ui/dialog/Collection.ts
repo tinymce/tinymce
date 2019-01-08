@@ -73,7 +73,7 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
       const ariaLabel = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
       });
-      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
+      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
