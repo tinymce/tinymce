@@ -74,7 +74,8 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
       Keying.config({
         mode: 'special',
         onEnter: toggleCheckboxHandler,
-        onSpace: toggleCheckboxHandler
+        onSpace: toggleCheckboxHandler,
+        stopSpaceKeyup: true
       }),
       AddEventsBehaviour.config('checkbox-events', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
