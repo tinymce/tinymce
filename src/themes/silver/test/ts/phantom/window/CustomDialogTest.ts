@@ -160,7 +160,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             { value: 'c', icon: 'c' },
             { value: 'd', icon: 'd' }
           ],
-          'f5-checkbox': 'checked',
+          'f5-checkbox': true,
           'nested-input': 'nested-input',
           'nested-nested-input': 'nested-nested-input'
         },

@@ -56,7 +56,7 @@ const open = function (editor: Editor, currentIndexState) {
       updateButtonStates(api);
       return;
     }
-    const count = Actions.find(editor, currentIndexState, data.findtext, checkToBool(data.matchcase), checkToBool(data.wholewords));
+    const count = Actions.find(editor, currentIndexState, data.findtext, data.matchcase, data.wholewords);
     if (!count) {
       notFoundAlert(api);
     }
@@ -188,10 +188,6 @@ const open = function (editor: Editor, currentIndexState) {
       editor.undoManager.add();
     }
   });
-};
-
-const checkToBool = (value: string): boolean => {
-  return value === 'checked';
 };
 
 export default {

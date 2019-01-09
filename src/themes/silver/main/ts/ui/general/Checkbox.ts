@@ -29,8 +29,6 @@ import * as Icons from '../icons/Icons';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent } from '../general/FormEvents';
 
-type CheckboxState = 'checked' | 'unchecked' | 'indeterminate';
-
 export interface CheckboxFoo {
   label: string;
   name: string;
@@ -40,25 +38,13 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
   const repBehaviour = Representing.config({
     store: {
       mode: 'manual',
-      getValue: (comp: AlloyComponent): CheckboxState => {
+      getValue: (comp: AlloyComponent): boolean => {
         const el = comp.element().dom() as HTMLInputElement;
-        return el.indeterminate ? 'indeterminate' : el.checked ? 'checked' : 'unchecked';
+        return el.checked;
       },
-      setValue: (comp: AlloyComponent, value: CheckboxState) => {
+      setValue: (comp: AlloyComponent, value: boolean) => {
         const el = comp.element().dom() as HTMLInputElement;
-        switch (value) {
-          case 'indeterminate':
-            el.indeterminate = true;
-            break;
-          case 'checked':
-            el.checked = true;
-            el.indeterminate = false;
-            break;
-          default:
-            el.checked = false;
-            el.indeterminate = false;
-            break;
-        }
+        el.checked = value;
       }
     }
   });
@@ -86,7 +72,8 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
       Keying.config({
         mode: 'special',
         onEnter: toggleCheckboxHandler,
-        onSpace: toggleCheckboxHandler
+        onSpace: toggleCheckboxHandler,
+        stopSpaceKeyup: true
       }),
       AddEventsBehaviour.config('checkbox-events', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
@@ -107,10 +94,8 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
     ])
   });
 
-  const makeIcon = (className: CheckboxState) => {
-    const iconName = className === 'checked' ? 'selected' :
-        className === 'unchecked' ? 'unselected' :
-        'indeterminate';
+  const makeIcon = (className: string) => {
+    const iconName = className === 'checked' ? 'selected' : 'unselected';
     return {
       dom: {
         tag: 'span',
@@ -124,13 +109,11 @@ export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBa
     {
       dom: {
         tag: 'div',
-        classes: ['tox-checkbox__icons'],
-
+        classes: ['tox-checkbox__icons']
       },
       components: [
         makeIcon('checked'),
-        makeIcon('unchecked'),
-        makeIcon('indeterminate'),
+        makeIcon('unchecked')
       ]
     }
   );
