@@ -34,7 +34,6 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             renderUrlInput({
               type: 'urlinput',
               label: Option.some('UrlInput label'),
-              colspan: Option.none(),
               name: 'col1',
               filetype: 'file'
             }, {

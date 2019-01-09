@@ -163,7 +163,5 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
     factory: { sketch: renderField }
   });
 
-  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-
-  return renderFormFieldWith(pLabel, pField, extraClasses);
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched']);
 };

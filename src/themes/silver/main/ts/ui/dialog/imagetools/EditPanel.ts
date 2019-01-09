@@ -126,7 +126,6 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     renderSizeInput({
       name: 'size',
       label: none,
-      colspan: none,
       type: 'sizeinput',
       constrain: true
     }, providersBackstage)

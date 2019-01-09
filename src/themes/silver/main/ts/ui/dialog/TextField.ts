@@ -121,7 +121,6 @@ export interface InputFoo extends BaseTextFieldFoo {
 // tslint:disable-next-line:no-empty-interface
 export interface TextareaFoo extends BaseTextFieldFoo {
   name: string;
-  flex: boolean;
 }
 
 const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
@@ -142,7 +141,7 @@ const renderTextarea = (spec: TextareaFoo, providersBackstage: UiFactoryBackstag
     multiline: true,
     label: spec.label,
     placeholder: spec.placeholder,
-    flex: spec.flex,
+    flex: true,
     classname: 'tox-textarea',
     validation: Option.none(),
   }, providersBackstage);

@@ -22,7 +22,6 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
           name: 'selector',
           size: 1,
           label: Option.some('selector'),
-          colspan: Option.none(),
           items: [
             { value: 'one', text: 'One' },
             { value: 'two', text: 'Two' },

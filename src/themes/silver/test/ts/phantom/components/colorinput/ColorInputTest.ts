@@ -45,7 +45,6 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
               type: 'colorinput',
               name: 'alpha',
               label: Option.some('test-color-input'),
-              colspan: Option.none()
              }, {
                interpreter: (x) => x,
                getSink: () => {
