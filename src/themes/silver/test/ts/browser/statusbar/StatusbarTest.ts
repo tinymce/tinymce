@@ -23,7 +23,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               s.element('div', { children: [ s.text(str.is('strong')) ] })
             ]
           }),
-          s.element('span', {
+          s.element('button', {
             classes: [ arr.has('tox-statusbar__wordcount')],
             children: [ s.text(str.is('2 words')) ]
           }),

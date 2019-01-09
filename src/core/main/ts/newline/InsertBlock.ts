@@ -215,7 +215,7 @@ const addBrToBlockIfNeeded = function (dom, block) {
   }
 };
 
-const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
+const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   let tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
   let newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -357,7 +357,8 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
   container = rng.startContainer;
   offset = rng.startOffset;
   newBlockName = Settings.getForcedRootBlock(editor);
-  shiftKey = evt.shiftKey;
+  shiftKey = !!(evt && evt.shiftKey);
+  const ctrlKey = !!(evt && evt.ctrlKey);
 
   // Resolve node index
   if (NodeType.isElement(container) && container.hasChildNodes()) {
@@ -395,7 +396,7 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
   containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
-  if (containerBlockName === 'LI' && !evt.ctrlKey) {
+  if (containerBlockName === 'LI' && !ctrlKey) {
     parentBlock = containerBlock;
     containerBlock = containerBlock.parentNode;
     parentBlockName = containerBlockName;

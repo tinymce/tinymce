@@ -68,7 +68,7 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
     height: image.height
   },
   classes: image.class,
-  caption: image.caption ? 'checked' : 'unchecked',
+  caption: image.caption,
   style: image.style,
   vspace: image.vspace,
   border: image.border,
@@ -85,7 +85,7 @@ const toImageData = (data: ImageDialogData): ImageData => ({
   height: data.dimensions.height,
   class: data.classes,
   style: data.style,
-  caption: data.caption === 'checked',
+  caption: data.caption,
   hspace: data.hspace,
   vspace: data.vspace,
   border: data.border,

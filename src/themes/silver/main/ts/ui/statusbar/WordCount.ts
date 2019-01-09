@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Replacing, GuiFactory, SimpleSpec, Behaviour, Representing, AddEventsBehaviour, AlloyEvents, NativeEvents } from '@ephox/alloy';
+import { Replacing, GuiFactory, SimpleSpec, Behaviour, Representing, AddEventsBehaviour, AlloyEvents, NativeEvents, Focusing, Tabstopping } from '@ephox/alloy';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -18,11 +18,15 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
   const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]])) ]);
   return {
     dom: {
-      tag: 'span',
+      // The tag for word count was changed to 'button' as Jaws does not read out spans.
+      // Word count is just a toggle and changes modes between words and characters.
+      tag: 'button',
       classes: [ 'tox-statusbar__wordcount' ]
     },
     components: [ ],
     behaviours: Behaviour.derive([
+      Tabstopping.config({ }),
+      Focusing.config({ }),
       Replacing.config({ }),
       Representing.config({
         store: {
