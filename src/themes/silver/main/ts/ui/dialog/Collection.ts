@@ -59,7 +59,22 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
         return `<span class="tox-collection__item-icon">${icon}</span>`;
       }).getOr('');
 
-      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}">${iconContent}${textContent}</div>`;
+      // Replacing the hyphens and underscores in collection items with spaces
+      // to ensure the screen readers pronounce the words correctly.
+      // This is only for aria purposes. Emoticon and Special Character names will still use _ and - for autocompletion.
+      const mapItemName = {
+        '_': ' ',
+        ' - ': ' ',
+        '-': ' '
+      };
+
+      // Title attribute is added here to provide tooltips which might be helpful to sighted users.
+      // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
+      // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
+      const ariaLabel = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
+        return mapItemName[match];
+      });
+      return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];

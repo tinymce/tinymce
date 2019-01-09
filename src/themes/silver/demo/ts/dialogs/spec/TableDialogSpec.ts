@@ -44,7 +44,6 @@ export default {
                 name: 'align',
                 type: 'selectbox',
                 label: 'Alignment',
-                colspan: 2,
                 items: [
                   {
                     text: 'none',
