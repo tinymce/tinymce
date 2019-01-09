@@ -99,7 +99,10 @@ const renderElementPath = (editor: Editor, settings) => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-statusbar__path' ]
+      classes: [ 'tox-statusbar__path' ],
+      attributes: {
+        role: 'navigation'
+      }
     },
     behaviours: Behaviour.derive([
       Keying.config({
