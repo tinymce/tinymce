@@ -245,8 +245,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
     return {
-      isDisabled: () => true,
-      setDisabled: () => {},
+      isDisabled: () => Disabling.isDisabled(comp),
+      setDisabled: (state) => state ? Disabling.disable(comp) : Disabling.enable(comp),
       setIconFill: (id, value) => {
         SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
           Attr.set(underlinePath, 'fill', value);
