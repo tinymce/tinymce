@@ -42,9 +42,6 @@ const setup = function (editor: Editor) {
       handleEnterKeyEvent(editor, event);
     }
   });
-  editor.addCommand('mceInsertNewLine', (ui: boolean, value: EditorEvent<KeyboardEvent>) => {
-    InsertNewLine.insert(editor, value);
-  });
 };
 
 export default {
