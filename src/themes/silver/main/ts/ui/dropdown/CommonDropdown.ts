@@ -86,22 +86,27 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
 
   const role = spec.role.fold(() => ({ }), (role) => ({ role }));
 
+  const tooltipAttributes = spec.tooltip.fold(
+    () => ({}),
+    (tooltip) => {
+      const translatedTooltip = sharedBackstage.providers.translate(tooltip);
+      return {
+        'title': translatedTooltip, // TODO: tooltips AP-213
+        'aria-label': translatedTooltip
+      };
+    }
+  );
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
       ...role,
       dom: {
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
-        attributes: spec.tooltip.fold(
-          () => ({}),
-          (tooltip) => {
-            const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-            return {
-              'title': translatedTooltip, // TODO: tooltips AP-213
-              'aria-label': translatedTooltip
-            };
-          }
-        )
+        attributes: {
+          type: 'button',
+          ...tooltipAttributes
+        }
       },
       components: componentRenderPipeline([
         spec.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons)),
