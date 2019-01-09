@@ -13,7 +13,7 @@ import { Editor } from '../api/Editor';
 import { EditorEvent } from '../api/dom/EventUtils';
 import { KeyboardEvent } from '@ephox/dom-globals';
 
-const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
+const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   NewLineAction.getAction(editor, evt).fold(
     function () {
       InsertBr.insert(editor, evt);

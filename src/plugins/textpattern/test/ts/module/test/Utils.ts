@@ -1,27 +1,31 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
-const sSetContentAndPressKey = function (key) {
-  return function (tinyApis, tinyActions, content) {
+const sSetContentAndFireKeystroke = function (key) {
+  return function (tinyApis, tinyActions, content: string, offset = content.length) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + '</p>'),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
         [0, 0],
-        content.length
+        offset
       ),
-      tinyActions.sContentKeystroke(key, {})
+      tinyActions.sContentKeystroke(key, {}),
     ]));
   };
 };
 
-const sPressKey = (key) => {
-  return (tinyApis, tinyActions) => {
-    return GeneralSteps.sequence([
-      tinyApis.sFocus,
-      tinyActions.sContentKeystroke(key, {})
-    ]);
-  };
+const sSetContentAndPressSpace = (tinyApis, tinyActions, content: string, offset = content.length) => {
+  return Step.label(`Set content and press space`, GeneralSteps.sequence([
+    tinyApis.sSetContent('<p>' + content + '</p>'),
+    tinyApis.sFocus,
+    tinyApis.sSetCursor(
+      [0, 0],
+      offset
+    ),
+    tinyApis.sExecCommand('mceInsertContent', ' '),
+    tinyActions.sContentKeystroke(32, {}),
+  ]));
 };
 
 const withTeardown = function (steps, teardownStep) {
@@ -45,10 +49,10 @@ const inlineStructHelper = function (tag, content) {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content))
+              s.text(str.is(content), true)
             ]
           }),
-          s.text(str.is('\u00A0'))
+          s.text(str.is('\u00A0'), true)
         ]
       })
     ]);
@@ -62,10 +66,10 @@ const inlineBlockStructHelper = function (tag, content) {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content)),
-              s.anything()
+              s.text(str.is(content), true),
             ]
-          })
+          }),
+          s.zeroOrOne(s.text(str.is(''), true))
         ]
       }),
       s.element('p', {})
@@ -78,7 +82,7 @@ const blockStructHelper = function (tag, content) {
     return bodyStruct([
       s.element(tag, {
         children: [
-          s.text(str.is(content))
+          s.text(str.is(content), true)
         ]
       }),
       s.element('p', {})
@@ -87,10 +91,8 @@ const blockStructHelper = function (tag, content) {
 };
 
 export default {
-  sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
-  sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
-  sPressSpace: sPressKey(Keys.space()),
-  sPressEnter: sPressKey(Keys.enter()),
+  sSetContentAndPressSpace,
+  sSetContentAndPressEnter: sSetContentAndFireKeystroke(Keys.enter()),
   withTeardown,
   bodyStruct,
   inlineStructHelper,
