@@ -39,9 +39,8 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const label = I18n.translate(['Powered by {0}', 'Tiny']);
-
   const renderBranding = (): SimpleSpec => {
+    const label = I18n.translate(['Powered by {0}', 'Tiny']);
     const linkHtml = `<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1" aria-label="${label}">Tiny</a>`;
     const html = I18n.translate(['Powered by {0}', linkHtml]);
     return {

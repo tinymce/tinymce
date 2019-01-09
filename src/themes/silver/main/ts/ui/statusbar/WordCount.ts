@@ -18,6 +18,8 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
   const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]])) ]);
   return {
     dom: {
+      // The tag for word count was changed to 'button' as Jaws does not read out spans.
+      // Word count is just a toggle and changes modes between words and characters.
       tag: 'button',
       classes: [ 'tox-statusbar__wordcount' ]
     },
