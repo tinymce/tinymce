@@ -1,11 +1,11 @@
-import { Node } from '@ephox/dom-globals';
-
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
+import { Node } from '@ephox/dom-globals';
 
 /**
  * TreeWalker class enables you to walk the DOM in a linear manner.
