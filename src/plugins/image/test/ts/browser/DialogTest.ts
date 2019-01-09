@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure) => {
 
   SilverTheme();
   Plugin();
@@ -140,6 +140,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     plugins: 'image',
     toolbar: 'image',
     indent: false,
-    skin_url: '/project/js/tinymce/skins/oxide/'
+    base_url: '/project/js/tinymce'
   }, success, failure);
 });
