@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
             Assertions.assertEq('Extracts height', '30px', tableData.height);
             Assertions.assertEq('Extracts cellspacing', '1', tableData.cellspacing);
             Assertions.assertEq('Extracts cellpadding', '2', tableData.cellpadding);
-            Assertions.assertEq('Extracts caption', 'checked', tableData.caption);
+            Assertions.assertEq('Extracts caption', true, tableData.caption);
             Assertions.assertEq('Extracts align', 'center', tableData.align);
 
           })

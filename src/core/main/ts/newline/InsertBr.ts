@@ -51,7 +51,7 @@ const moveSelectionToBr = function (dom, selection: Selection, brElm, extraBr) {
   selection.setRng(rng);
 };
 
-const insertBrAtCaret = function (editor, evt) {
+const insertBrAtCaret = function (editor, evt?) {
   // We load the current event in from EnterKey.js when appropriate to heed
   // certain event-specific variations such as ctrl-enter in a list
   const selection: Selection = editor.selection, dom = editor.dom;
@@ -83,7 +83,7 @@ const insertBrAtCaret = function (editor, evt) {
   const containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
-  const isControlKey = evt && evt.ctrlKey;
+  const isControlKey = !!(evt && evt.ctrlKey);
   if (containerBlockName === 'LI' && !isControlKey) {
     parentBlock = containerBlock;
   }

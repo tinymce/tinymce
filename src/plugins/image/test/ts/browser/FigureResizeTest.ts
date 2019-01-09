@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
             width: '100px',
             height: '100px',
           },
-          caption: 'checked'
+          caption: true
         }),
         Guard.tryUntil('Waiting for fill active dialog', 100, 5000)
       ),

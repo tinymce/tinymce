@@ -188,8 +188,7 @@ export default () => {
       renderBodyPanel({
         items: [
           { type: 'checkbox', name: 'checked', label: 'Checked' },
-          { type: 'checkbox', name: 'unchecked', label: 'Unchecked' },
-          { type: 'checkbox', name: 'indeterminate', label: 'Indeterminate' }
+          { type: 'checkbox', name: 'unchecked', label: 'Unchecked' }
         ]
       }, {
         shared: sharedBackstage
@@ -207,9 +206,8 @@ export default () => {
         AlloyEvents.runOnAttached((component) => {
           const body = memBodyPanel.get(component);
           Representing.setValue(body, {
-            checked: 'checked',
-            unchecked: 'unchecked',
-            indeterminate: 'indeterminate'
+            checked: true,
+            unchecked: false
           });
         })
       ])

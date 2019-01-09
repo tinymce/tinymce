@@ -6,6 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (success, failure) => {
+
   Theme();
   TextpatternPlugin();
 
@@ -13,20 +14,29 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (s
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
-    const steps = Utils.withTeardown([
-      Log.stepsAsStep('TBA', 'TextPattern: inline italic then undo', [
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*\u00a0'),
-        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
-        tinyApis.sExecCommand('Undo'),
-        tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
-      ])],
+    const steps = Utils.withTeardown(
+      [
+        Log.stepsAsStep('TBA', 'TextPattern: inline italic then undo', [
+          Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
+          tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
+        ]),
+        Log.stepsAsStep('TBA', 'TextPattern: block italic then undo', [
+          Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '*a*'),
+          tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('em', 'a')),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*</p>\n<p>&nbsp;</p>'),
+          tinyApis.sExecCommand('Undo'),
+          tinyApis.sAssertContent('<p>*a*</p>'),
+        ]),
+      ],
       tinyApis.sSetContent('')
     );
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'textpattern',
-    toolbar: 'textpattern',
     base_url: '/project/js/tinymce'
   }, success, failure);
 });

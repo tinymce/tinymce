@@ -140,7 +140,10 @@ const renderSidebar = (spec) => {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-sidebar']
+      classes: ['tox-sidebar'],
+      attributes: {
+        role: 'complementary'
+      }
     },
     components: [
       {

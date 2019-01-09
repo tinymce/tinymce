@@ -18,6 +18,7 @@ import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import { HTMLElement } from '@ephox/dom-globals';
+import InsertNewLine from '../newline/InsertNewLine';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -446,6 +447,10 @@ export default function (editor: Editor) {
       selection.setContent('tiny_mce_marker');
       const content = editor.getContent() as string;
       editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
+    },
+
+    'mceInsertNewLine' (command, ui, value) {
+      InsertNewLine.insert(editor, value);
     },
 
     'mceToggleFormat' (command, ui, value) {

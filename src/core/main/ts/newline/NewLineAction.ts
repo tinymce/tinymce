@@ -75,7 +75,7 @@ const match = function (predicates, action) {
   };
 };
 
-const getAction = function (editor, evt) {
+const getAction = function (editor, evt?) {
   return LazyEvaluator.evaluateUntil([
     match([shouldBlockNewLine], newLineAction.none()),
     match([inSummaryBlock()], newLineAction.br()),
@@ -90,7 +90,7 @@ const getAction = function (editor, evt) {
     match([inBrContext], newLineAction.br()),
     match([isBrMode(false), hasShiftKey], newLineAction.br()),
     match([canInsertIntoEditableRoot], newLineAction.block())
-  ], [editor, evt.shiftKey]).getOr(newLineAction.none());
+  ], [editor, !!(evt && evt.shiftKey)]).getOr(newLineAction.none());
 };
 
 export default {
