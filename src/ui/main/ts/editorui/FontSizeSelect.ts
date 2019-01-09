@@ -63,7 +63,7 @@ const getFontSizeItems = function (editor) {
   const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
   const fontsizeFormats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
-  return Tools.map(fontsizeFormats.split(' '), function (item) {
+  return Tools.map(fontsizeFormats.split(' ').filter(row => !!row), function (item) {
     let text = item, value = item;
     // Allow text=value font sizes.
     const values = item.split('=');
