@@ -9,15 +9,16 @@
 // Menubar
 //
 
-@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-border-color}'/%3E%3C/svg%3E") 0 0 @menubar-background-color;
 @menubar-background-color: @background-color;
+@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-row-separator-color}'/%3E%3C/svg%3E") 0 0 @menubar-background-color;
 @menubar-border-color: @border-color;
 @menubar-border-radius: 0;
-@menubar-spacing: 0;
 @menubar-padding: 0 @toolbar-group-padding-x;
+@menubar-row-separator-color: @menubar-border-color;
+@menubar-spacing: 0;
 
 // private variables
-@_menubar-border-color: escape('@{menubar-border-color}');
+@_menubar-row-separator-color: escape('@{menubar-row-separator-color}');
 @_menubar-height: @toolbar-button-height + @toolbar-button-spacing-y + @toolbar-button-spacing-y + 1px;
 @_menubar-divider-height: @_menubar-height - 1px;
 
