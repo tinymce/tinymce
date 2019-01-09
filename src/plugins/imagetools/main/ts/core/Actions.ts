@@ -23,13 +23,20 @@ import { SelectorFind, Element } from '@ephox/sugar';
 
 let count = 0;
 
+const getFigureImg = (elem) => {
+  return SelectorFind.child(Element.fromDom(elem), 'img');
+};
+
+const isFigure = (editor: Editor, elem) => {
+  return editor.dom.is(elem, 'figure');
+};
+
 const getEditableImage = function (editor: Editor, elem) {
   const isImage = (imgNode) => editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
   const isEditable = (imgNode) => isImage(imgNode) && (isLocalImage(editor, imgNode) || isCorsImage(editor, imgNode) || editor.settings.imagetools_proxy);
 
-  const isFigure = editor.dom.is(elem, 'figure');
-  if (isFigure) {
-    const imgOpt = SelectorFind.child(Element.fromDom(elem), 'img');
+  if (isFigure(editor, elem)) {
+    const imgOpt = getFigureImg(elem);
     return imgOpt.map((img) => {
       return isEditable(img.dom()) ? Option.some(img.dom()) : Option.none();
     });
@@ -44,8 +51,13 @@ const displayError = function (editor: Editor, error) {
   });
 };
 
-const getSelectedImage = function (editor: Editor) {
-  return editor.selection.getNode() as HTMLImageElement;
+const getSelectedImage = (editor: Editor): Option<Element> => {
+  const elem = editor.selection.getNode();
+  if (isFigure(editor, elem)) {
+    return getFigureImg(elem);
+  } else {
+    return Option.some(Element.fromDom(elem));
+  }
 };
 
 const extractFilename = function (editor: Editor, url) {
@@ -93,12 +105,17 @@ const imageToBlob = function (editor: Editor, img: HTMLImageElement) {
 
 const findSelectedBlob = function (editor: Editor) {
   let blobInfo;
-  blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage(editor).src);
-  if (blobInfo) {
-    return Promise.resolve(blobInfo.blob());
-  }
+  const imgOpt = getSelectedImage(editor);
+  return imgOpt.fold(() => {
+    return Promise.reject();
+  }, (img) => {
+    blobInfo = editor.editorUpload.blobCache.getByUri(img.dom().src);
+    if (blobInfo) {
+      return Promise.resolve(blobInfo.blob());
+    }
 
-  return imageToBlob(editor, getSelectedImage(editor));
+    return imageToBlob(editor, img.dom());
+  });
 };
 
 const startTimedUpload = function (editor: Editor, imageUploadTimerState) {
@@ -118,7 +135,7 @@ const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, ima
     let uri, name, blobCache, blobInfo, selectedImage;
 
     blobCache = editor.editorUpload.blobCache;
-    selectedImage = getSelectedImage(editor);
+    selectedImage = getSelectedImage(editor).getOrDie('Could not update selected image').dom();
     uri = selectedImage.src;
 
     if (Settings.shouldReuseFilename(editor)) {
@@ -187,8 +204,13 @@ const selectedImageOperation = function (editor: Editor, imageUploadTimerState, 
 
 const rotate = function (editor: Editor, imageUploadTimerState, angle) {
   return function () {
-    const size = ImageSize.getImageSize(getSelectedImage(editor));
-    const flippedSize = size ? {w: size.h, h: size.w} : null;
+    const imgOpt = getSelectedImage(editor);
+    const flippedSize = imgOpt.fold(() => {
+      return null;
+    }, (img) => {
+      const size = ImageSize.getImageSize(img.dom());
+      return size ? {w: size.h, h: size.w} : null;
+    });
 
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
       return ImageTransformations.rotate(imageResult, angle);
