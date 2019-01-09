@@ -41,7 +41,7 @@ UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse 
           width: '100',
           height: '200'
         },
-        caption: 'checked'
+        caption: true
       }),
       cSubmitDialog(),
       cAssertCleanHtml('Checking output', (() => {
