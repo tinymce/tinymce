@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
 import * as Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -13,7 +12,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 const register = function (editor: Editor) {
   editor.ui.registry.addContextToolbar('imagetools', {
     items: Settings.getToolbarItems(editor),
-    predicate: Fun.curry(Actions.isEditableImage, editor),
+    predicate: (elem) => Actions.getEditableImage(editor, elem).isSome(),
     position: 'node',
     scope: 'node'
   });
