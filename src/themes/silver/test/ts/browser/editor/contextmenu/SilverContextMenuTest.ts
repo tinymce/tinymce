@@ -4,13 +4,17 @@ import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
 import { Element, Replication, SelectorFilter, Remove, Html } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
+import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
+  LinkPlugin();
   ImagePlugin();
+  ImageToolsPlugin();
   TablePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
