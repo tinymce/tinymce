@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
   },
-  "version": "5.0.0-rc-1-build.10",
+  "version": "5.0.0-rc-1-build.11",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
