@@ -14,18 +14,19 @@ export interface CharItem {
   text: string;
 }
 
-const charMatches = (charCode: number, name: string, pattern: string): boolean => {
-  if (Strings.contains(String.fromCharCode(charCode), pattern)) {
+const charMatches = (charCode: number, name: string, lowerCasePattern: string): boolean => {
+  if (Strings.contains(String.fromCharCode(charCode).toLowerCase(), lowerCasePattern)) {
     return true;
   } else {
-    return Strings.contains(name.toLowerCase(), pattern.toLowerCase()) || Strings.contains(name.toLowerCase().replace(/\s+/g, ''), pattern.toLowerCase());
+    return Strings.contains(name.toLowerCase(), lowerCasePattern) || Strings.contains(name.toLowerCase().replace(/\s+/g, ''), lowerCasePattern);
   }
 };
 
 const scan = (group: CharMap, pattern: string): CharItem[] => {
   const matches: [number, string][] = [];
+  const lowerCasePattern = pattern.toLowerCase();
   Arr.each(group.characters, (g) => {
-    if (charMatches(g[0], g[1], pattern)) {
+    if (charMatches(g[0], g[1], lowerCasePattern)) {
       matches.push(g);
     }
   });
