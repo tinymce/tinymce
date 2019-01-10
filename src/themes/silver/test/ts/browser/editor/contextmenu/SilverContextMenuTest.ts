@@ -3,15 +3,13 @@ import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
 import { Element, Replication, SelectorFilter, Remove, Html } from '@ephox/sugar';
 
-import ImagePlugin from 'src/plugins/image/main/ts/Plugin';
-import LinkPlugin from 'src/plugins/link/main/ts/Plugin';
-import TablePlugin from 'src/plugins/table/main/ts/Plugin';
-import SilverTheme from 'src/themes/silver/main/ts/Theme';
+import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
-  LinkPlugin();
   ImagePlugin();
   TablePlugin();
 
