@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
+import { CharMap } from './CharMap';
 
 export interface CharItem {
   value: string;
@@ -13,10 +14,18 @@ export interface CharItem {
   text: string;
 }
 
-const scan = (group: { characters: [number, string][] }, pattern: string): CharItem[] => {
+const charMatches = (charCode: number, name: string, pattern: string): boolean => {
+  if (Strings.contains(String.fromCharCode(charCode), pattern)) {
+    return true;
+  } else {
+    return Strings.contains(name.toLowerCase(), pattern.toLowerCase()) || Strings.contains(name.toLowerCase().replace(/\s+/g, ''), pattern.toLowerCase());
+  }
+};
+
+const scan = (group: CharMap, pattern: string): CharItem[] => {
   const matches: [number, string][] = [];
   Arr.each(group.characters, (g) => {
-    if (String.fromCharCode(g[0]).indexOf(pattern) > -1 || g[1].indexOf(pattern) > -1) {
+    if (charMatches(g[0], g[1], pattern)) {
       matches.push(g);
     }
   });

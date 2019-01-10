@@ -45,7 +45,7 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
     Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
-      const items = Scan.scan(f, pattern.toLowerCase());
+      const items = Scan.scan(f, pattern);
       dialogApi.setData({
         results: items
       });
