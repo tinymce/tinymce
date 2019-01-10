@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 # [4.6.8] - 2019-01-10
 ### Changed
- - Dropdowns now add the type="button" attribute, if the tag is a button
+ - Dropdowns now default the type attribute to "button" when the dom tag is a button
 
 # [4.6.2] - 2018-12-12
 ### Fixed
