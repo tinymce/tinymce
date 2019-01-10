@@ -103,19 +103,14 @@ const imageToBlob = function (editor: Editor, img: HTMLImageElement) {
   return BlobConversions.imageToBlob(img);
 };
 
-const findSelectedBlob = function (editor: Editor) {
+const findBlob = function (editor: Editor, img) {
   let blobInfo;
-  const imgOpt = getSelectedImage(editor);
-  return imgOpt.fold(() => {
-    return Promise.reject();
-  }, (img) => {
-    blobInfo = editor.editorUpload.blobCache.getByUri(img.dom().src);
-    if (blobInfo) {
-      return Promise.resolve(blobInfo.blob());
-    }
+  blobInfo = editor.editorUpload.blobCache.getByUri(img.src);
+  if (blobInfo) {
+    return Promise.resolve(blobInfo.blob());
+  }
 
-    return imageToBlob(editor, img.dom());
-  });
+  return imageToBlob(editor, img);
 };
 
 const startTimedUpload = function (editor: Editor, imageUploadTimerState) {
@@ -130,12 +125,11 @@ const cancelTimedUpload = function (imageUploadTimerState) {
   clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, size?) {
+const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, selectedImage, size?) {
   return ir.toBlob().then(function (blob) {
-    let uri, name, blobCache, blobInfo, selectedImage;
+    let uri, name, blobCache, blobInfo;
 
     blobCache = editor.editorUpload.blobCache;
-    selectedImage = getSelectedImage(editor).getOrDie('Could not update selected image').dom();
     uri = selectedImage.src;
 
     if (Settings.shouldReuseFilename(editor)) {
@@ -190,15 +184,20 @@ const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, ima
 
 const selectedImageOperation = function (editor: Editor, imageUploadTimerState, fn, size?) {
   return function () {
-    return editor._scanForImages().
-      then(Fun.curry(findSelectedBlob, editor)).
-      then(ResultConversions.blobToImageResult).
-      then(fn).
-      then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, size);
-      }, function (error) {
-        displayError(editor, error);
-      });
+    const imgOpt = getSelectedImage(editor);
+    return imgOpt.fold(() => {
+      displayError(editor, 'Could not find selected image');
+    }, (img) => {
+      return editor._scanForImages().
+        then(() => findBlob(editor, img.dom())).
+        then(ResultConversions.blobToImageResult).
+        then(fn).
+        then(function (imageResult) {
+          return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
+        }, function (error) {
+          displayError(editor, error);
+        });
+    });
   };
 };
 
@@ -209,7 +208,7 @@ const rotate = function (editor: Editor, imageUploadTimerState, angle) {
       return null;
     }, (img) => {
       const size = ImageSize.getImageSize(img.dom());
-      return size ? {w: size.h, h: size.w} : null;
+      return size ? { w: size.h, h: size.w } : null;
     });
 
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
@@ -243,7 +242,7 @@ const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, o
       }).
       then(ResultConversions.blobToImageResult).
       then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, true, imageUploadTimerState);
+        return updateSelectedImage(editor, imageResult, true, imageUploadTimerState, img);
       }, function () {
         // Close dialog
       });
@@ -255,7 +254,7 @@ export default {
   flip,
   getEditableImage,
   cancelTimedUpload,
-  findSelectedBlob,
+  findBlob,
   getSelectedImage,
   handleDialogBlob
 };
