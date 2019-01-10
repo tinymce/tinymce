@@ -6,7 +6,7 @@
  */
 
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
