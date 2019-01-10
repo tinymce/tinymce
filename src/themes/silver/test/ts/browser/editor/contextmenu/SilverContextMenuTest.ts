@@ -1,6 +1,6 @@
-import { Chain, Keyboard, Keys, Log, Mouse, Pipeline, UnitTest, FocusTools, NamedChain, Assertions, GeneralSteps, Waiter, UiFinder } from '@ephox/agar';
+import { Chain, Keyboard, Keys, Log, Pipeline, UnitTest, FocusTools, NamedChain, Assertions, GeneralSteps, Waiter, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi, TinyDom, UiChains } from '@ephox/mcagar';
 import { Element, Replication, SelectorFilter, Remove, Html } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -41,8 +41,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
-        tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        Mouse.cClickOn('.tox-button:contains("Cancel")')
+        UiChains.cCloseDialog('div[role="dialog"]')
       ]),
       Waiter.sTryUntil(
         'Wait for dialog to close',

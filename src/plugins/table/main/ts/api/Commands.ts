@@ -30,17 +30,16 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
       const cursor = Element.fromText('');
       Insert.after(table, cursor);
       Remove.remove(table);
-      // TODO TINY-3077: Needs an else to handle the case where the editor is not empty.
-      // The elementpath does not change from table elements to elements of
-      // the content at current cursor position when the editor is not empty.
       if (editor.dom.isEmpty(editor.getBody())) {
         editor.setContent('');
         editor.selection.setCursorLocation();
+      } else {
+        const rng = editor.dom.createRng();
+        rng.setStart(cursor.dom(), 0);
+        rng.setEnd(cursor.dom(), 0);
+        editor.selection.setRng(rng);
+        editor.nodeChanged();
       }
-      const rng = editor.dom.createRng();
-      rng.setStart(cursor.dom(), 0);
-      rng.setEnd(cursor.dom(), 0);
-      editor.selection.setRng(rng);
     });
   };
 
