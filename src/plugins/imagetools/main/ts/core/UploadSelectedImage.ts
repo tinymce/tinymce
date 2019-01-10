@@ -21,7 +21,7 @@ const setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
     }
 
     // Set up the lastSelectedImage
-    Actions.getEditableImage(editor, e.element).each((img) => lastSelectedImageState.set(img));
+    Actions.getEditableImage(editor, e.element).each(lastSelectedImageState.set);
   });
 };
 
