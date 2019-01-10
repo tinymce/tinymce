@@ -104,7 +104,6 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
-          type: 'button',
           ...tooltipAttributes
         }
       },
