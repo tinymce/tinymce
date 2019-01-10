@@ -49,9 +49,9 @@ node("primary") {
           echo "Installing tools"
           extNpmInstall()
           if (isUnix()) {
-            sh "yarn grunt dev"
+            sh "yarn grunt clean dev"
           } else {
-            bat "yarn grunt dev"
+            bat "yarn grunt clean dev"
           }
 
 
