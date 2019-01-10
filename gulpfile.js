@@ -14,7 +14,7 @@ var rename = require('gulp-rename');
 const runBackstopCommand = require('./tools/tasks/run_backstop');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
-var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin/less-variables.json'});
+var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin-tool/less-variables.json'});
 
 //
 // Lint less files using stylelint
@@ -80,18 +80,18 @@ gulp.task('copyFilesA', function() {
 });
 
 gulp.task('copyFilesB', function() {
-  return gulp.src(['./src/demo/skin/*.less', './src/demo/skin/*.css', './src/demo/skin/*.js'])
-    .pipe(gulp.dest('./build/skin'));
+  return gulp.src(['./src/demo/skin-tool/*.less', './src/demo/skin-tool/*.css', './src/demo/skin-tool/*.js'])
+    .pipe(gulp.dest('./build/skin-tool'));
 });
 
 gulp.task('copyFilesC', function() {
   return gulp.src(['./src/less/theme/**'])
-    .pipe(gulp.dest('./build/skin/theme/'));
+    .pipe(gulp.dest('./build/skin-tool/theme/'));
 });
 
 gulp.task('copyFilesD', function() {
-  return gulp.src(['./src/demo/editors/*.js'])
-    .pipe(gulp.dest('./build/editors/'));
+  return gulp.src(['./src/demo/editor-demos/*.js'])
+    .pipe(gulp.dest('./build/editor-demos/'));
 });
 
 //
