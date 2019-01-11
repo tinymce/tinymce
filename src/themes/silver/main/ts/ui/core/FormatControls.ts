@@ -12,10 +12,13 @@ import VisualAid from './VisualAid';
 import ColorSwatch from './color/ColorSwatch';
 import { Editor } from 'tinymce/core/api/Editor';
 import IndentOutdent from './IndentOutdent';
+import ComplexControls from './ComplexControls';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   Align.register(editor);
   SimpleControls.register(editor);
+  ComplexControls.setup(editor, backstage);
   UndoRedo.register(editor);
   ColorSwatch.register(editor);
   VisualAid.register(editor);

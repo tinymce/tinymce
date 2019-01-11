@@ -15,7 +15,6 @@ import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../item/ItemResponse';
 import * as NestedMenus from '../menu/NestedMenus';
 import { MenubarItemSpec } from './SilverMenubar';
-import initBespokes from '../../core/complex/InitBespokeSelects';
 
 export interface MenuRegistry {
   menuItems: Record<string, any>;
@@ -91,8 +90,6 @@ const parseItemsString = (items: string): string[] => {
 };
 
 const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
-  initBespokes(editor, backstage);
-
   const rawMenuData = Merger.merge(defaultMenus, registry.menus);
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
