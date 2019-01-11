@@ -1,0 +1,36 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Color
+//
+
+.tox-color-input {
+  display: flex;
+  input {
+    border-radius: 3px 0px 0px 3px;
+    display: flex;
+    border-right: 0;
+  }
+
+  span {
+    border-radius: 0 3px 3px 0;
+    box-sizing: border-box;
+    border-left: 0;
+    border-color: @border-color;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none;
+    box-sizing: border-box;
+    display: flex;
+    width: 35px;
+
+    &:focus {
+      border-color: @input-button-focus-border-color;
+    }
+  }
+}
