@@ -1,10 +1,11 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Focus, Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   const success = arguments[arguments.length - 2];
@@ -19,6 +20,29 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
 
       EditorManager.init({
         selector: '.tinymce-editor',
+        inline: true,
+        skin_url: '/project/js/tinymce/skins/lightgray',
+        setup (editor) {
+          editor.on('SkinLoaded', function () {
+            next(editor);
+          });
+        }
+      });
+    });
+  };
+
+  const cCreateInlineShadowEditor = function (html) {
+    return Chain.async(function (viewBlock: any, next, die) {
+      viewBlock.update('<div id="shadow-host"></div>');
+      let target = viewBlock.get().firstElementChild;
+      if (target.attachShadow) {
+        const shadow = target.attachShadow({mode: 'open'});
+        DOMUtils.DOM.setHTML(shadow, html);
+        target = shadow.firstElementChild;
+      }
+
+      EditorManager.init({
+        target,
         inline: true,
         skin_url: '/project/js/tinymce/skins/lightgray',
         setup (editor) {
@@ -71,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
     return Chain.op(function (editor: any) {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
-      Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active().getOrDie());
+      Assertions.assertDomEq('Should be the expected activeElement', element, EditorFocus.composedActive().getOrDie());
     });
   };
 
@@ -114,7 +138,13 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
         cFocusElement([0, 1]),
         cAssertHasFocus([0, 1]),
         cRemoveEditor
-      ]))
+      ])),
+      Logger.t('Focus on normal paragraph in shadow root editor', Chain.asStep(viewBlock, [
+        cCreateInlineShadowEditor('<div class="tinymce-editor"><p>a</p></div>'),
+        cFocusEditor,
+        cAssertHasFocus([]),
+        cRemoveEditor
+      ])),
     ]))
   ], function () {
     viewBlock.detach();

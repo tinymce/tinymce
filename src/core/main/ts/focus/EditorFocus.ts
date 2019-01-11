@@ -6,7 +6,7 @@
  */
 
 import { Option } from '@ephox/katamari';
-import { Compare, Focus, Element } from '@ephox/sugar';
+import { Compare, Focus, Element, Traverse } from '@ephox/sugar';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';
@@ -15,7 +15,7 @@ import SelectionBookmark from '../selection/SelectionBookmark';
 import { Selection } from '../api/dom/Selection';
 import { CaretPosition } from '../caret/CaretPosition';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Node, Range } from '@ephox/dom-globals';
+import { Node, Range, document } from '@ephox/dom-globals';
 
 const getContentEditableHost = (editor: Editor, node: Node) => {
   return editor.dom.getParent(node, function (node) {
@@ -62,8 +62,38 @@ const focusBody = (body) => {
   }
 };
 
+const composedActive = function (_doc?) {
+  const doc = _doc !== undefined ? _doc.dom() : document;
+  let node = doc.activeElement;
+  while (node && node.shadowRoot) {
+    if (node.shadowRoot.activeElement) {
+      node = node.shadowRoot.activeElement;
+    } else {
+      break;
+    }
+  }
+  return Option.from(node).map(Element.fromDom);
+};
+
+const hasComposedFocus = function (element: Element) {
+  const doc = Traverse.owner(element);
+  const node = composedActive(doc).getOrNull();
+  return node ? element.dom() === node.dom() : false;
+};
+
+/**
+ * Return the descendant element that has focus.
+ * Use instead of SelectorFind.descendant(container, ':focus')
+ *  because the :focus selector relies on keyboard focus.
+ */
+const composedSearch = function (element: Element) {
+  return composedActive(Traverse.owner(element)).filter(function (e: any) {
+    return element.dom().contains(e.dom());
+  });
+};
+
 const hasElementFocus = (elm): boolean => {
-  return Focus.hasFocus(elm) || Focus.search(elm).isSome();
+  return hasComposedFocus(elm) || composedSearch(elm).isSome();
 };
 
 const hasIframeFocus = (editor: Editor): boolean => {
@@ -132,5 +162,6 @@ const focus = (editor: Editor, skipFocus: boolean) => {
 
 export default {
   focus,
-  hasFocus
+  hasFocus,
+  composedActive
 };
