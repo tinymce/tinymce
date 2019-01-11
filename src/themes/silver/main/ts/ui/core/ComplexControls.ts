@@ -5,11 +5,11 @@ import { formatSelectMenu } from './complex/FormatSelect';
 import { fontsizeSelectMenu } from './complex/FontsizeSelect';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
+const register = (editor: Editor, backstage: UiFactoryBackstage) => {
   fontSelectMenu(editor, backstage);
   styleSelectMenu(editor, backstage);
   formatSelectMenu(editor, backstage);
   fontsizeSelectMenu(editor, backstage);
 };
 
-export default { setup };
+export default { register };
