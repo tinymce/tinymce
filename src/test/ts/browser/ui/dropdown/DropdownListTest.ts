@@ -129,7 +129,8 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           return s.element('button', {
             attrs: {
               'aria-expanded': str.is('false'),
-              'aria-haspopup': str.is('true')
+              'aria-haspopup': str.is('true'),
+              'type': str.is('button')
             }
           });
         }),

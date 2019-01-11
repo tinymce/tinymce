@@ -1,4 +1,5 @@
-import { Fun, Merger, Option } from '@ephox/katamari';
+import { Objects } from '@ephox/boulder';
+import { Fun, Option } from '@ephox/katamari';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -11,7 +12,6 @@ import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
 import { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
-import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
@@ -22,6 +22,12 @@ import * as Sketcher from './Sketcher';
 import * as SystemEvents from '../events/SystemEvents';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
+  const lookupAttr = (attr: string): Option<string> => {
+    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
+      return Objects.readOptFrom<string>(attrs, attr);
+    });
+  };
+
   const switchToMenu = (sandbox) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
       TieredMenu.tieredMenu.highlightPrimary(tmenu);
@@ -56,17 +62,6 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     AlloyTriggers.emitExecute(comp);
     return Option.some(true);
   };
-
-  const attributes = detail.role.fold(() => {
-    return {
-      'aria-haspopup': 'true'
-    };
-  }, (role) => {
-    return {
-      'role': role,
-      'aria-haspopup': 'true'
-    };
-  });
 
   return {
     uid: detail.uid,
@@ -131,7 +126,11 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     apis,
 
     domModification: {
-      attributes
+      attributes: {
+        'aria-haspopup': 'true',
+        ...detail.role.fold(() => ({}), (role) => ({ role })),
+        ...detail.dom.tag === 'button' ? { type: lookupAttr('type').getOr('button') } : {}
+      }
     }
   };
 };

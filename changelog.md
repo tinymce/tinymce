@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.6.8] - 2019-01-10
+### Changed
+ - Dropdowns now default the type attribute to "button" when the dom tag is a button
+
 # [4.6.2] - 2018-12-12
 ### Fixed
  - SplitButtons now use span elements for their buttons for accessibility
