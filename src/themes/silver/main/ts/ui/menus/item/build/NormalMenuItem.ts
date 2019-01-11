@@ -9,7 +9,7 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Option, Obj } from '@ephox/katamari';
 
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
@@ -31,7 +31,8 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     ariaLabel: spec.text,
     caret: Option.none(),
     checkMark: Option.none(),
-    shortcutContent: spec.shortcut
+    shortcutContent: spec.shortcut,
+    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
   }, providersBackstage);
 
   return renderCommonItem({

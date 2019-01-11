@@ -67,13 +67,14 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
-        (d) => {
-          // If item.meta exists, this isn't just a togglemenuitem
-          return Option.from(item.meta).fold(
-            () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)),
-            (_) => handleMeta(item.meta, d, () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)))
-          );
-        }
+        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage))
+        // (d) => {
+        //   // If item.meta exists, this isn't just a togglemenuitem
+        //   return Option.from(item.meta).fold(
+        //     () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)),
+        //     (_) => handleMeta(item.meta, d, () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)))
+        //   );
+        // }
       );
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(

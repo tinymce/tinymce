@@ -2,7 +2,7 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Option, Obj } from '@ephox/katamari';
 
 import { renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
@@ -26,7 +26,8 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     ariaLabel: spec.text,
     caret: Option.some(caret),
     checkMark: Option.none(),
-    shortcutContent: spec.shortcut
+    shortcutContent: spec.shortcut,
+    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
   }, providersBackstage);
 
   return renderCommonItem({

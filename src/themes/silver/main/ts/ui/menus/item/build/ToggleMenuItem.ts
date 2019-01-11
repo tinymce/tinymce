@@ -9,7 +9,7 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling, Toggling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
-import { Merger, Option } from '@ephox/katamari';
+import { Merger, Option, Obj } from '@ephox/katamari';
 
 import * as ItemClasses from '../ItemClasses';
 import { buildData, renderCommonItem } from './CommonMenuItem';
@@ -36,7 +36,8 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
     caret: Option.none(),
     shortcutContent: spec.shortcut,
-    presets: 'normal'
+    presets: 'normal',
+    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
   }, providersBackstage);
 
   return Merger.deepMerge(

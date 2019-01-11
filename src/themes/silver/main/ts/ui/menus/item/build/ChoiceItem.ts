@@ -8,7 +8,7 @@
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { InlineContent, Menu, Types } from '@ephox/bridge';
-import { Option, Merger } from '@ephox/katamari';
+import { Option, Merger, Obj } from '@ephox/katamari';
 
 import * as ItemClasses from '../ItemClasses';
 import { renderItemStructure } from '../structure/ItemStructure';
@@ -28,7 +28,8 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: 
     shortcutContent: Option.none(),
     checkMark: Option.none(),
     caret: Option.none(),
-    value: spec.value
+    value: spec.value,
+    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
   }, providersBackstage, spec.icon);
 
   return renderCommonItem({
@@ -66,7 +67,8 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     // but is hidden unless the tickedClass is present.
     checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
     caret: Option.none(),
-    value: spec.value
+    value: spec.value,
+    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
   }, providersBackstage);
 
   return Merger.deepMerge(

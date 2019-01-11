@@ -5,16 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
-import { AlloySpec, RawDomSchema, DomFactory } from '@ephox/alloy';
-import { Option, Merger } from '@ephox/katamari';
-
-import { StyleStructureMeta } from './StyleStructure';
-import * as ItemClasses from '../ItemClasses';
-import { renderText, renderShortcut, renderIcon } from './ItemSlices';
-import * as Icons from '../../../icons/Icons';
+import { AlloySpec, DomFactory, GuiFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
+import { Merger, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import * as Icons from '../../../icons/Icons';
+import * as ItemClasses from '../ItemClasses';
+import { renderIcon, renderShortcut, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -30,7 +28,7 @@ export interface ItemStructureSpec {
   checkMark: Option<AlloySpec>;
   caret: Option<AlloySpec>;
   value?: string;
-  meta?: StyleStructureMeta;
+  meta?: Record<string, any>;
 }
 
 interface NormalItemSpec {
@@ -97,6 +95,31 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
   return menuItem;
 };
 
+const renderStyledText = (tag: string, styleAttr: string, text: string): AlloySpec => {
+  return DomFactory.simple('span', [ ItemClasses.textClass ], [
+    {
+      dom: {
+        tag,
+        attributes: { style: styleAttr  }
+      },
+      components: [ GuiFactory.text(text) ]
+    }
+  ]);
+};
+
+const renderStyleStructure = (info: NormalItemSpec, meta): ItemStructure => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ]
+    },
+    optComponents: [
+      info.checkMark,
+      info.textContent.map((text) => renderStyledText(meta.tag, meta.styleAttr, text)),
+    ]
+  };
+};
+
 // TODO: Maybe need aria-label
 const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
@@ -104,10 +127,12 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
-    return renderNormalItemStructure(info, icon);
+    // For now, we assume meta is only used for styleitems. If it's used for other things, make this smarter!
+    return Option.from(info.meta).fold(
+      () => renderNormalItemStructure(info, icon),
+      (meta) => renderStyleStructure(info, meta)
+    );
   }
 };
 
-export {
-  renderItemStructure
-};
+export { renderItemStructure };

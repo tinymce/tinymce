@@ -81,7 +81,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         active: rawItem.isSelected(),
         disabled,
         onAction: spec.onAction(rawItem),
-        ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
+        ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: preview as any }))
       } as Menu.ToggleMenuItemApi;
     }
   };
