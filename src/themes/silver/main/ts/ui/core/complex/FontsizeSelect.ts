@@ -96,11 +96,11 @@ const createFontsizeSelect = (editor: Editor, backstage) => {
 const fontsizeSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
-  return {
+  editor.ui.registry.addNestedMenuItem('fontsizes', {
     type: 'nestedmenuitem',
     text: 'Font Sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
-  };
+  });
 };
 
 export {

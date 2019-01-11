@@ -79,11 +79,11 @@ const createStyleSelect = (editor: Editor, backstage) => {
 const styleSelectMenu = (editor: Editor, backstage) => {
   const data = backstage.styleselect;
   const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
-  return {
+  editor.ui.registry.addNestedMenuItem('formats', {
     type: 'nestedmenuitem',
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
-  };
+  });
 };
 
 export { createStyleSelect, styleSelectMenu };

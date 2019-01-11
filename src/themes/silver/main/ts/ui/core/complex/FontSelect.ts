@@ -127,11 +127,11 @@ const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
-  return {
+  editor.ui.registry.addNestedMenuItem('fontformats', {
     type: 'nestedmenuitem',
     text: backstage.shared.providers.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
-  };
+  });
 };
 
 export { createFontSelect, fontSelectMenu };

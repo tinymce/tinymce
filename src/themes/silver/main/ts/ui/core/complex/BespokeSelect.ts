@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
-import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import * as NestedMenus from '../../menus/menu/NestedMenus';
-import { SingleMenuItemApi } from '../../menus/menu/SingleMenu';
-import * as FormatRegister from './utils/FormatRegister';
-import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { BasicSelectDataset, AdvancedSelectDataset } from './SelectDatasets';
 import { AlloyComponent } from '@ephox/alloy';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Menu } from '@ephox/bridge';
+import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
+import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
+import * as NestedMenus from '../../menus/menu/NestedMenus';
+import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
+import { AdvancedSelectDataset, BasicSelectDataset } from './SelectDatasets';
+import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
   tag: string;
@@ -60,7 +60,7 @@ export interface SelectData {
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): SingleMenuItemApi => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): NestedMenuItemContents => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return {
@@ -75,34 +75,18 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
       } as Menu.NestedMenuItemApi;
     } else {
-      return rawItem.getStylePreview().fold(
-        () => {
-          return {
-            type: 'togglemenuitem',
-            text: translatedText,
-            active: rawItem.isSelected(),
-            disabled,
-            onAction: spec.onAction(rawItem),
-          } as SingleMenuItemApi;
-        },
-        (preview) => {
-          return {
-            type: 'styleitem',
-            item: {
-              type: 'togglemenuitem',
-              text: translatedText,
-              disabled,
-              active: rawItem.isSelected(),
-              onAction: spec.onAction(rawItem),
-              meta: preview as any
-            } as Menu.ToggleMenuItemApi
-          } as SingleMenuItemApi;
-        }
-      );
+      return {
+        type: 'togglemenuitem',
+        text: translatedText,
+        active: rawItem.isSelected(),
+        disabled,
+        onAction: spec.onAction(rawItem),
+        ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: preview as any }))
+      } as Menu.ToggleMenuItemApi;
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): SingleMenuItemApi[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting

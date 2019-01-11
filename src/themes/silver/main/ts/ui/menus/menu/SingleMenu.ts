@@ -57,21 +57,17 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
         (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
       );
 
-    case 'styleitem': {
-      if (item.item.type === 'menuitem') {
-        return BridgeMenu.createMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
-      } else if (item.item.type === 'togglemenuitem') {
-        return BridgeMenu.createToggleMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
-      } else {
-        console.error('Unsupported style item delegate', item.item);
-        return Option.none();
-      }
-    }
-
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage))
+        (d) => {
+          // If item.meta exists, this is a styleitem.
+          // If we ever start using meta for other things, make this smarter!
+          return Option.from(item.meta).fold(
+            () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)),
+            (_) => Option.some(MenuItems.style(d, itemResponse, providersBackstage))
+          );
+        }
       );
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(

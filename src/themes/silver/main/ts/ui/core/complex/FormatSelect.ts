@@ -87,11 +87,11 @@ const createFormatSelect = (editor: Editor, backstage) => {
 const formatSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
-  return {
+  editor.ui.registry.addNestedMenuItem('blockformats', {
     type: 'nestedmenuitem',
     text: 'Blocks',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
-  };
+  });
 };
 
 export { createFormatSelect, formatSelectMenu };
