@@ -41,6 +41,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
+        tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
         UiChains.cCloseDialog('div[role="dialog"]')
       ]),
       Waiter.sTryUntil(
