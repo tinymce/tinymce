@@ -11,7 +11,7 @@ import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemType
 import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
 import { ValueSchema } from '@ephox/boulder';
 import { Menu as BridgeMenu, Types, InlineContent } from '@ephox/bridge';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Option, Options, Obj } from '@ephox/katamari';
 
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -44,6 +44,13 @@ const hasIcon = (item) => item.icon !== undefined;
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
 const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
+  const handleMeta = (meta, spec, fallback: () => Option<ItemSpec>) => {
+    if (Obj.has(meta, 'style')) {
+      return Option.some(MenuItems.style(spec, itemResponse, providersBackstage));
+    }
+    return fallback();
+  };
+
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
@@ -61,11 +68,10 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
         (d) => {
-          // If item.meta exists, this is a styleitem.
-          // If we ever start using meta for other things, make this smarter!
+          // If item.meta exists, this isn't just a togglemenuitem
           return Option.from(item.meta).fold(
             () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)),
-            (_) => Option.some(MenuItems.style(d, itemResponse, providersBackstage))
+            (_) => handleMeta(item.meta, d, () => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage)))
           );
         }
       );

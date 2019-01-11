@@ -19,7 +19,7 @@ import ItemResponse from '../ItemResponse';
 const renderStyleItem = (spec: Menu.ToggleMenuItem | Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
   const checkMark = spec.type === 'togglemenuitem' && spec.active ? renderCheckmark(providersBackstage.icons) : renderIcon('');
 
-  const structure = renderStyleStructure(spec.text, spec.meta as any, checkMark);
+  const structure = renderStyleStructure(spec.text, spec.meta.style as any, checkMark);
 
   return Merger.deepMerge(
     renderCommonItem({
