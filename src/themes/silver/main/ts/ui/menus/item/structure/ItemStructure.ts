@@ -7,7 +7,7 @@
 
 import { AlloySpec, DomFactory, GuiFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Merger, Option } from '@ephox/katamari';
+import { Merger, Option, Obj } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
@@ -107,7 +107,7 @@ const renderStyledText = (tag: string, styleAttr: string, text: string): AlloySp
   ]);
 };
 
-const renderStyleStructure = (info: NormalItemSpec, meta): ItemStructure => {
+const renderStyleStructure = (info: NormalItemSpec, styles): ItemStructure => {
   return {
     dom: {
       tag: 'div',
@@ -115,7 +115,7 @@ const renderStyleStructure = (info: NormalItemSpec, meta): ItemStructure => {
     },
     optComponents: [
       info.checkMark,
-      info.textContent.map((text) => renderStyledText(meta.tag, meta.styleAttr, text)),
+      info.textContent.map((text) => renderStyledText(styles.tag, styles.styleAttr, text)),
     ]
   };
 };
@@ -127,10 +127,14 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
-    // For now, we assume meta is only used for styleitems. If it's used for other things, make this smarter!
     return Option.from(info.meta).fold(
       () => renderNormalItemStructure(info, icon),
-      (meta) => renderStyleStructure(info, meta)
+      (meta) => {
+        if (Obj.has(meta, 'style')) {
+          return renderStyleStructure(info, meta.style);
+        }
+        return renderNormalItemStructure(info, icon);
+      }
     );
   }
 };
