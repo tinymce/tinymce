@@ -100,7 +100,7 @@ const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => {
 const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (Separator | FormatReference | NestedFormatting)[] => {
   const result = mapFormats(userFormats);
 
-  const registerFormats = (customFormats: {name: string, format: AllowedFormat}[]) => {
+  const registerFormats = (customFormats: {name: string, format: StyleFormat}[]) => {
     Arr.each(customFormats, (fmt) => {
       // Only register the custom format with the editor, if it's not already registered
       if (!editor.formatter.has(fmt.name)) {

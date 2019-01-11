@@ -10,6 +10,7 @@ import { Document, HTMLElement, Window } from '@ephox/dom-globals';
 import { Annotator } from 'tinymce/core/api/Annotator';
 import { Selection } from 'tinymce/core/api/dom/Selection';
 import Schema from 'tinymce/core/api/html/Schema';
+import { Formatter } from 'tinymce/core/api/Formatter';
 import { UndoManager } from 'tinymce/core/api/UndoManager';
 import * as EditorContent from 'tinymce/core/content/EditorContent';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
@@ -85,7 +86,7 @@ export interface Editor {
   editorManager: any;
   editorUpload: any;
   eventRoot?: HTMLElement;
-  formatter: any;
+  formatter: Formatter;
   formElement: HTMLElement;
   formEventDelegate: any;
   hasHiddenInput: boolean;

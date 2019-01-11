@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 import DefaultFormats from './DefaultFormats';
-import { Format } from '../api/fmt/Format';
+import { Format, Formats } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 
 export default function (editor) {
-  const formats: Record<string, Format> = {};
+  const formats: Record<string, Format[]> = {};
 
-  const get = (name: string) => {
+  const get = (name?: string): Formats | Format[] => {
     return name ? formats[name] : formats;
   };
 
-  const has = (name: string) => {
+  const has = (name: string): boolean => {
     return Obj.has(formats, name);
   };
 
-  const register = function (name, format?) {
+  const register = function (name: string | Formats, format?: Format | Format[]) {
     if (name) {
       if (typeof name !== 'string') {
         Tools.each(name, function (format, name) {
@@ -29,7 +29,9 @@ export default function (editor) {
         });
       } else {
         // Force format into array and add it to internal collection
-        format = format.length ? format : [format];
+        if (!Type.isArray(format)) {
+         format = [format];
+        }
 
         Tools.each(format, function (format) {
           // Set deep to false by default on selector formats this to avoid removing

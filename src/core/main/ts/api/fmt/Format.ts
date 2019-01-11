@@ -7,41 +7,66 @@
 
 import { Node } from '@ephox/dom-globals';
 
-export type Format = BlockFormat | InlineFormat | SelectorFormat;
+export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
+export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
+export type Format = ApplyFormat | RemoveFormat;
+export type Formats = Record<string, Format | Format[]>;
+
+export type FormatVars = Record<string, any>;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
 export interface CommonFormat<T> {
-  classes?: string;
-  styles?: Record<string, string>;
-  attributes?: Record<string, string>;
-  remove?: 'none' | 'empty' | 'all';
-  remove_similar?: boolean;
-  preview?: string | boolean;
   ceFalseOverride?: boolean;
+  classes?: string | string[];
   collapsed?: boolean;
-  deep?: boolean;
   exact?: boolean;
   expand?: boolean;
   links?: boolean;
-  split?: boolean;
-  toggle?: boolean;
-  wrapper?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
-  onformat?: (node: Node, fmt: T, vars?: object) => void;
+  onformat?: (node: Node, fmt: T, vars?: FormatVars) => void;
+  remove_similar?: boolean;
 }
 
-export interface BlockFormat extends CommonFormat<BlockFormat> {
+export interface CommonApplyFormat<T> extends CommonFormat<T> {
+  attributes?: Record<string, string | ((vars?: FormatVars) => string)>;
+  preview?: string | boolean;
+  styles?: Record<string, string>;
+  toggle?: boolean;
+  wrapper?: boolean;
+}
+
+export interface BlockFormat extends CommonApplyFormat<BlockFormat> {
   block: string;
   block_expand?: boolean;
 }
 
-export interface InlineFormat extends CommonFormat<InlineFormat> {
+export interface InlineFormat extends CommonApplyFormat<InlineFormat> {
   inline: string;
   clear_child_styles?: boolean;
 }
 
-export interface SelectorFormat extends CommonFormat<SelectorFormat> {
+export interface SelectorFormat extends CommonApplyFormat<SelectorFormat> {
   selector: string;
   defaultBlock?: string;
   inherit?: boolean;
+}
+
+export interface CommonRemoveFormat<T> extends CommonFormat<T> {
+  remove?: 'none' | 'empty' | 'all';
+  attributes?: string[];
+  styles?: string[];
+  split?: boolean;
+  deep?: boolean;
+}
+
+export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
+  block: string;
+}
+
+export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
+  inline: string;
+}
+
+export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {
+  selector: string;
 }
