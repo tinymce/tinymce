@@ -325,6 +325,27 @@ const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
 const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
 const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
 
+const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
+  while ((caretPosition = walkFn(caretPosition))) {
+    if (caretPosition.isVisible()) {
+      return caretPosition;
+    }
+  }
+
+  return caretPosition;
+};
+
+const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean => {
+  const inSameBlock = isInSameBlock(from, to);
+
+  // Handle bogus BR <p>abc|<br></p>
+  if (!inSameBlock && NodeType.isBr(from.getNode())) {
+    return true;
+  }
+
+  return inSameBlock;
+};
+
 export {
   isForwards,
   isBackwards,
@@ -333,6 +354,7 @@ export {
   getParentBlock,
   isInSameBlock,
   isInSameEditingHost,
+  isMoveInsideSameBlock,
   isBeforeContentEditableFalse,
   isAfterContentEditableFalse,
   isBeforeTable,
@@ -343,5 +365,6 @@ export {
   getRelativeCefElm,
   getNormalizedRangeEndPoint,
   getElementFromPosition,
-  getElementFromPrevPosition
+  getElementFromPrevPosition,
+  getVisualCaretPosition
 };

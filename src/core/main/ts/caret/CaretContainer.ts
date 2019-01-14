@@ -102,12 +102,22 @@ const appendInline = (node: Node): Node => {
 
 const isBeforeInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  return pos && NodeType.isText(container) && container.data.charAt(pos.offset()) === Zwsp.ZWSP;
+  if (!pos || !NodeType.isText(container)) {
+    return false;
+  }
+
+  // The text nodes may not be normalized, so check the current node and the previous one
+  return container.data.charAt(pos.offset()) === Zwsp.ZWSP || pos.isAtStart() && isCaretContainerInline(container.previousSibling);
 };
 
 const isAfterInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  return pos && NodeType.isText(container) && container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
+  if (!pos || !NodeType.isText(container)) {
+    return false;
+  }
+
+  // The text nodes may not be normalized, so check the current node and the next one
+  return container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP || pos.isAtEnd() && isCaretContainerInline(container.nextSibling);
 };
 
 const createBogusBr = (): Element => {

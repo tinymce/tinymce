@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
   });
 
   suite.test('from index text node over comment', function () {
-    setupHtml('abcd<!-- x -->abcd');
+    setupHtml('abcd<!-- x -->efgh');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot().firstChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(getRoot().firstChild, 4));
@@ -87,13 +87,13 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
   });
 
   suite.test('from text to text across elements', function () {
-    setupHtml('<p>abc</p><p>abc</p>');
+    setupHtml('<p>abc</p><p>def</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), findTextPos('p:last', 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('p:last', 0)), findTextPos('p:first', 3));
   });
 
   suite.test('from text to text across elements with siblings', function () {
-    setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>abc</p>');
+    setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>def</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild, 0)), findTextPos('p:first', 3));
   });

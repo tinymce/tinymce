@@ -152,9 +152,22 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function () {
     LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)), true);
     LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)), false);
   });
+  suite.test('isBeforeInline 2', function () {
+    setupHtml('a');
+    viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
+    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)), true);
+    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)), false);
+  });
 
   suite.test('isAfterInline', function () {
     setupHtml(Zwsp.ZWSP + 'a');
+    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)), true);
+    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)), false);
+  });
+
+  suite.test('isAfterInline 2', function () {
+    setupHtml('a');
+    viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
     LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)), true);
     LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)), false);
   });
