@@ -99,6 +99,8 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     '</tbody>' +
     '</table>';
 
+    // Using a different table to test merge cells as selection using keydown (shift + arrow keys) does not work on Edge for some reason.
+    // TODO: Investigate why selection does not work on Edge.
     const mergeTableHtml = '<table style = "width: 100%;">' +
     '<tbody>' +
       '<tr>' +
