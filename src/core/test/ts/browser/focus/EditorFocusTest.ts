@@ -62,12 +62,6 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
 
   Pipeline.async({}, [
     Logger.t('Focus editor', GeneralSteps.sequence([
-      Logger.t('Focus editor initialized on a table', Chain.asStep({}, [
-        cCreateInlineEditor('<table class="tinymce-editor"><tbody><tr><td>a</td></tr></tbody></table>'),
-        cFocusEditor,
-        cAssertSelection([0, 0, 0, 0], 0, [0, 0, 0, 0], 0),
-        McEditor.cRemove
-      ])),
       Logger.t('Focus editor initialized on a div with p', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><p>a</p></div>'),
         cFocusEditor,
