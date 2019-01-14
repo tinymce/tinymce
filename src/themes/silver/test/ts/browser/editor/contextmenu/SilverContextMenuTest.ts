@@ -9,6 +9,7 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -99,6 +100,19 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     '</tbody>' +
     '</table>';
 
+    const mergeTableHtml = '<table style = "width: 100%;">' +
+    '<tbody>' +
+      '<tr>' +
+        '<td>a1</td>' +
+        '<td>a2</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td>b1</td>' +
+        '<td>b2</td>' +
+      '</tr>' +
+    '</tbody>' +
+    '</table>';
+
     const imgSrc = '../img/dogleft.jpg';
 
     const imageInTableHtml = '<table style = "width: 100%;">' +
@@ -124,7 +138,14 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       Assertions.assertHtmlStructure(label, `<body>${expectedHtml}</body>`, `<body>${actualHtml}</body>`);
     }))]);
 
-    Pipeline.async({}, [
+    const platform = PlatformDetection.detect();
+
+    // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
+    // a link is placed at the end of block elements there is no way to move the caret behind the link.
+    const sAssertRemoveLinkHtmlStructure = platform.browser.isFirefox() ? sAssertHtmlStructure('Assert remove link', '<p>Tiny<br></p>') :
+      sAssertHtmlStructure('Assert remove link', '<p>Tiny</p>');
+
+    Pipeline.async({}, (platform.browser.isIE() || platform.browser.isEdge()) ? [] : [
       tinyApis.sFocus,
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
@@ -148,7 +169,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sOpenContextMenu('a'),
         sPressDownArrowKey,
         sPressEnterKey,
-        sAssertHtmlStructure('Assert remove link', '<p>Tiny</p>')
+        sAssertRemoveLinkHtmlStructure
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on a table', [
         tinyApis.sSetContent(tableHtml),
@@ -169,6 +190,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sWaitForAndCloseDialog,
       ]),
       Log.stepsAsStep('TBA', 'Test cell context menus on a table', [
+        tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),
         sPressDownArrowKey,
         Keyboard.sKeydown(doc, Keys.right(), {}),
@@ -181,16 +203,18 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertFocusOnItem('Cell Properties', '.tox-collection__item:contains("Cell properties")'),
         sPressEnterKey,
         sWaitForAndCloseDialog,
+        tinyApis.sSetContent(mergeTableHtml),
         sSelectCells,
         sSelectCellContextMenu,
         sPressEnterKey,
-        sAssertHtmlStructure('Assert Merge Cells', '<table><tbody><tr><td rowspan="2"><br></td><td><br></td></tr><tr><td><br></td></tr></tbody></table>'),
+        sAssertHtmlStructure('Assert Merge Cells', '<table><tbody><tr><td>a1<br />b1<br /></td><td>a2</td></tr><tr><td>b2</td></tr></tbody></table>'),
         sSelectCellContextMenu,
         sPressDownArrowKey,
         sPressEnterKey,
-        sAssertHtmlStructure('Assert Split Cell', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>')
+        sAssertHtmlStructure('Assert Split Cell', '<table><tbody><tr><td>a1<br />b1<br /></td><td>a2</td></tr><tr><td><br /></td><td>b2</td></tr></tbody></table>')
       ]),
       Log.stepsAsStep('TBA', 'Test row context menus on a table', [
+        tinyApis.sSetContent(tableHtml),
         sSelectRowContextMenu('Insert Row Before', '.tox-collection__item:contains("Insert row before")', 0),
         sAssertHtmlStructure('Assert Insert Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
         sSelectRowContextMenu('Insert Row After', '.tox-collection__item:contains("Insert row after")', 1),
@@ -208,6 +232,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertHtmlStructure('Assert Paste Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>')
       ]),
       Log.stepsAsStep('TBA', 'Test delete table context menu', [
+        tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),
         sRepeatKeyDown(5),
         sPressEnterKey,
