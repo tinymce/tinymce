@@ -74,7 +74,6 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'input',
       'contextmenu',
       'change',
-      'paste',
       'transitionend',
       // Test the drag events
       'drag',
@@ -97,6 +96,19 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       });
     }
   );
+
+  const onPaste = DomEvent.bind(container, 'paste', (event: SugarEvent) => {
+    tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
+      if (tapStopped) { event.kill(); }
+    });
+
+    const stopped = settings.triggerEvent('paste', event);
+    if (stopped) { event.kill(); }
+
+    setTimeout(() => {
+      settings.triggerEvent(SystemEvents.postPaste(), event)
+    }, 0);
+  });
 
   const onKeydown = DomEvent.bind(container, 'keydown', (event) => {
     // Prevent default of backspace when not in input fields.
@@ -132,6 +144,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     onKeydown.unbind();
     onFocusIn.unbind();
     onFocusOut.unbind();
+    onPaste.unbind();
   };
 
   return {

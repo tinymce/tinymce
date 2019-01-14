@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.6.11] - 2019-01-10
+### Added
+ - Added `postPaste` event to SystemEvents.
+
 # [4.6.8] - 2019-01-10
 ### Changed
  - Dropdowns now default the type attribute to "button" when the dom tag is a button
