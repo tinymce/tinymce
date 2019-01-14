@@ -13,7 +13,7 @@ import {
   Behaviour,
   Keying,
   Tabstopping,
-  Toolbar as AlloyToolbar,
+  SplitToolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
   Focusing,
 } from '@ephox/alloy';
@@ -69,11 +69,40 @@ const renderToolbar = (foo: Toolbar) => {
       tag: 'div',
       classes: [ 'tox-toolbar' ]
     },
+    parts: {
+      // This already knows it is a toolbar group
+      'overflow-group': renderToolbarGroup({
+        title: Option.none(),
+        items: [ ]
+      }),
+      'overflow-button': {
+        dom: {
+          tag: 'button',
+          classes: [ 'example-more-button' ]
+        }
+      }
+    },
     components: [
-      AlloyToolbar.parts().groups({ })
+      AlloyToolbar.parts().primary({
+        dom: {
+          tag: 'div',
+          classes: [ 'example-primary-toolbar' ]
+        }
+      }),
+      AlloyToolbar.parts().overflow({
+        dom: {
+          tag: 'div',
+          classes: [ 'example-overflow-toolbar' ]
+        }
+      })
     ],
-
-    toolbarBehaviours: Behaviour.derive([
+    markers: {
+      openClass: 'example-overflow-open',
+      closedClass: 'example-overflow-closed',
+      growingClass: 'example-overflow-growing',
+      shrinkingClass: 'example-overflow-shrinking'
+    },
+    splitToolbarBehaviours: Behaviour.derive([
       Keying.config({
         // Tabs between groups
         mode: modeName,
