@@ -15,6 +15,9 @@ import BoundaryLocation from '../keyboard/BoundaryLocation';
 import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
 import { Selection } from '../api/dom/Selection';
+import { HTMLElement } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
+import { rangeInsertNode } from '../selection/RangeInsertNode';
 
 // Walks the parent block to the right and look for BR elements
 const hasRightSideContent = function (schema, container, parentBlock) {
@@ -54,9 +57,11 @@ const moveSelectionToBr = function (dom, selection: Selection, brElm, extraBr) {
 const insertBrAtCaret = function (editor, evt) {
   // We load the current event in from EnterKey.js when appropriate to heed
   // certain event-specific variations such as ctrl-enter in a list
-  const selection: Selection = editor.selection, dom = editor.dom;
-  let brElm, extraBr;
+  const selection: Selection = editor.selection;
+  const dom: DOMUtils = editor.dom;
   const rng = selection.getRng();
+  let brElm: HTMLElement;
+  let extraBr: boolean;
 
   NormalizeRange.normalize(dom, rng).each(function (normRng) {
     rng.setStart(normRng.startContainer, normRng.startOffset);
@@ -100,7 +105,7 @@ const insertBrAtCaret = function (editor, evt) {
   }
 
   brElm = dom.create('br');
-  rng.insertNode(brElm);
+  rangeInsertNode(dom, rng, brElm);
 
   scrollToBr(dom, selection, brElm);
   moveSelectionToBr(dom, selection, brElm, extraBr);

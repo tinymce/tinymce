@@ -1,8 +1,9 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
   const success = arguments[arguments.length - 2];
@@ -13,6 +14,12 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
   const sInsertBr = function (editor) {
     return Step.sync(function () {
       InsertBr.insert(editor);
+    });
+  };
+
+  const sAppendTextNode = (editor: Editor, selector: string, text: string) => {
+    return Step.sync(() => {
+      editor.dom.select(selector)[0].appendChild(editor.dom.doc.createTextNode(text));
     });
   };
 
@@ -56,6 +63,31 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
           sInsertBr(editor),
           tinyApis.sAssertSelection([0], 3, [0], 3),
           tinyApis.sAssertContent('<p>a<a href="#">b</a><br /><br /></p>')
+        ])),
+        Logger.t('Insert br between two text nodes', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetRawContent('<p></p>'),
+          sAppendTextNode(editor, 'p', 'a'),
+          sAppendTextNode(editor, 'p', 'b'),
+          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sNodeChanged,
+          sInsertBr(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('a')),
+                      s.element('br', {}),
+                      s.text(str.is('b'))
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0], 2, [0], 2),
         ]))
       ])),
       Logger.t('Enter inside inline boundary code', GeneralSteps.sequence([
