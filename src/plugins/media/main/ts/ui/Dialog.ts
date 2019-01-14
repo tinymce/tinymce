@@ -159,12 +159,10 @@ const showDialog = function (editor: Editor) {
   };
 
   const handleSource1 = (api) => {
-    Delay.requestAnimationFrame(() => {
-      const serviceData = getSourceData(api);
-      Service.getEmbedHtml(editor, serviceData)
-        .then(addEmbedHtml(win, editor))
-        .catch(handleError(editor));
-    });
+    const serviceData = getSourceData(api);
+    Service.getEmbedHtml(editor, serviceData)
+      .then(addEmbedHtml(win, editor))
+      .catch(handleError(editor));
   };
 
   const handleEmbed = (api) => {
