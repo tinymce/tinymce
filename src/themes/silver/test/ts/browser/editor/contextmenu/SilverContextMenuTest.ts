@@ -201,7 +201,9 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressDownArrowKey,
         sAssertFocusOnItem('Cell Properties', '.tox-collection__item:contains("Cell properties")'),
         sPressEnterKey,
-        sWaitForAndCloseDialog,
+        sWaitForAndCloseDialog
+      ]),
+      Log.stepsAsStep('TBA', 'Test merge cells and split cell context menu options on a table', [
         tinyApis.sSetContent(mergeTableHtml),
         sSelectCellContextMenu,
         sPressEnterKey,
