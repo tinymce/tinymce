@@ -1,4 +1,4 @@
-import { Chain, Keyboard, Keys, Log, Pipeline, UnitTest, FocusTools, NamedChain, Assertions, GeneralSteps, Waiter, UiFinder, Step } from '@ephox/agar';
+import { Chain, Keyboard, Keys, Log, Pipeline, UnitTest, FocusTools, NamedChain, Assertions, GeneralSteps, Waiter, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi, TinyDom, UiChains } from '@ephox/mcagar';
 import { Element, Replication, SelectorFilter, Remove, Html } from '@ephox/sugar';
@@ -40,6 +40,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       );
     };
 
+    // Wait for dialog to open and close dialog
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
         tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
@@ -53,7 +54,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
 
-    const sRepeatKeyDown = (index) => {
+    const sRepeatDownArrowKey = (index) => {
       const pressDown = [];
       for (let i = 0; i < index; i++) {
         pressDown.push(sPressDownArrowKey);
@@ -63,15 +64,13 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
 
-    const sSelectCells = Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.down(), { shift: true });
-
     // 'index' points to the context menuitems while 'subindex' points to the sub menuitems
     const sSelectContextMenu = (label, selector, index, subindex) => {
       return GeneralSteps.sequence([
         sOpenContextMenu('td'),
-        sRepeatKeyDown(subindex),
+        sRepeatDownArrowKey(subindex),
         Keyboard.sKeydown(doc, Keys.right(), {}),
-        sRepeatKeyDown(index),
+        sRepeatDownArrowKey(index),
         sAssertFocusOnItem(label, selector),
         sPressEnterKey
       ]);
@@ -103,11 +102,11 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const mergeTableHtml = '<table style = "width: 100%;">' +
     '<tbody>' +
       '<tr>' +
-        '<td>a1</td>' +
+        '<td data-mce-selected="1" data-mce-first-selected="1">a1</td>' +
         '<td>a2</td>' +
       '</tr>' +
       '<tr>' +
-        '<td>b1</td>' +
+        '<td data-mce-selected="1" data-mce-last-selected="1">b1</td>' +
         '<td>b2</td>' +
       '</tr>' +
     '</tbody>' +
@@ -204,8 +203,6 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressEnterKey,
         sWaitForAndCloseDialog,
         tinyApis.sSetContent(mergeTableHtml),
-        sSelectCells,
-        Step.wait(500),
         sSelectCellContextMenu,
         sPressEnterKey,
         sAssertHtmlStructure('Assert Merge Cells', '<table><tbody><tr><td>a1<br />b1<br /></td><td>a2</td></tr><tr><td>b2</td></tr></tbody></table>'),
@@ -218,24 +215,31 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         tinyApis.sSetContent(tableHtml),
         sSelectRowContextMenu('Insert Row Before', '.tox-collection__item:contains("Insert row before")', 0),
         sAssertHtmlStructure('Assert Insert Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectRowContextMenu('Insert Row After', '.tox-collection__item:contains("Insert row after")', 1),
         sAssertHtmlStructure('Assert Insert Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectRowContextMenu('Delete Row', '.tox-collection__item:contains("Delete row")', 2),
         sAssertHtmlStructure('Assert Row Deleted', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectRowContextMenu('Row Properties', '.tox-collection__item:contains("Row properties")', 3),
         sWaitForAndCloseDialog,
+
         sSelectRowContextMenu('Cut Row', '.tox-collection__item:contains("Cut row")', 4),
         sAssertHtmlStructure('Assert Row Deleted', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectRowContextMenu('Copy Row', '.tox-collection__item:contains("Copy row")', 5),
+
         sSelectRowContextMenu('Paste Row Before', '.tox-collection__item:contains("Paste row before")', 6),
         sAssertHtmlStructure('Assert Paste Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectRowContextMenu('Paste Row After', '.tox-collection__item:contains("Paste row after")', 7),
         sAssertHtmlStructure('Assert Paste Row', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>')
       ]),
       Log.stepsAsStep('TBA', 'Test delete table context menu', [
         tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),
-        sRepeatKeyDown(5),
+        sRepeatDownArrowKey(5),
         sPressEnterKey,
         sAssertHtmlStructure('Assert table is deleted', '<p><br></p>')
       ]),
@@ -243,8 +247,10 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         tinyApis.sSetContent(tableHtml),
         sSelectColumnContextMenu('Insert Column Before', '.tox-collection__item:contains("Insert column before")', 0),
         sAssertHtmlStructure('Assert Insert Column', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectColumnContextMenu('Insert Column After', '.tox-collection__item:contains("Insert column after")', 1),
         sAssertHtmlStructure('Assert Insert Column', '<table><tbody><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
+
         sSelectColumnContextMenu('Delete Column', '.tox-collection__item:contains("Delete column")', 2),
         sAssertHtmlStructure('Assert Column Deleted', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
       ]),
@@ -266,11 +272,11 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
-        sRepeatKeyDown(2),
+        sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog,
         sOpenContextMenu('img'),
-        sRepeatKeyDown(2),
+        sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog
       ]),
