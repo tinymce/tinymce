@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Replacing, GuiFactory, SimpleSpec, Behaviour, Representing, AddEventsBehaviour, AlloyEvents, NativeEvents, Focusing, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, NativeEvents, Replacing, Representing, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -16,7 +16,7 @@ const enum WordCountMode {
 
 export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]])) ]);
-  return {
+  return Button.sketch({
     dom: {
       // The tag for word count was changed to 'button' as Jaws does not read out spans.
       // Word count is just a toggle and changes modes between words and characters.
@@ -24,9 +24,8 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
       classes: [ 'tox-statusbar__wordcount' ]
     },
     components: [ ],
-    behaviours: Behaviour.derive([
+    buttonBehaviours: Behaviour.derive([
       Tabstopping.config({ }),
-      Focusing.config({ }),
       Replacing.config({ }),
       Representing.config({
         store: {
@@ -52,6 +51,9 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
           });
         })
       ])
-    ])
-  };
+    ]),
+    eventOrder: {
+      [NativeEvents.click()]: [ 'wordcount-events', 'alloy.base.behaviour' ]
+    }
+  });
 };

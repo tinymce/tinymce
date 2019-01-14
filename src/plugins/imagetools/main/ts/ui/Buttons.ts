@@ -41,9 +41,11 @@ const register = function (editor: Editor) {
     onAction: cmd('mceEditImage'),
     onSetup: (buttonApi) => {
       const setDisabled = () => {
-        const element = Actions.getSelectedImage(editor);
-        const disabled = !Actions.isEditableImage(editor, element);
-        buttonApi.setDisabled(disabled);
+        const elementOpt = Actions.getSelectedImage(editor);
+        elementOpt.each((element) => {
+          const disabled = Actions.getEditableImage(editor, element.dom()).isNone();
+          buttonApi.setDisabled(disabled);
+        });
       };
 
       editor.on('NodeChange', setDisabled);
@@ -63,11 +65,13 @@ const register = function (editor: Editor) {
   editor.ui.registry.addContextMenu('imagetools', {
     update: (element) => {
       // since there's no menu item available, this has to be it's own thing
-      return !Actions.isEditableImage(editor, element) ? [] : [{
-        text: 'Edit image',
-        icon: 'edit-image',
-        onAction: cmd('mceEditImage')
-      }];
+      return Actions.getEditableImage(editor, element).fold(() => [], (_) => {
+        return [{
+          text: 'Edit image',
+          icon: 'edit-image',
+          onAction: cmd('mceEditImage')
+        }];
+      });
     }
   });
 };
