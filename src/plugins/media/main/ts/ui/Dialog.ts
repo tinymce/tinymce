@@ -15,7 +15,6 @@ import Service from '../core/Service';
 import Size from '../core/Size';
 import UpdateHtml from '../core/UpdateHtml';
 import { Types } from '@ephox/bridge';
-import Delay from 'tinymce/core/api/util/Delay';
 
 type DialogData = {
   source1: string;

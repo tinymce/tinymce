@@ -18,6 +18,7 @@ import {
   Representing,
   SketchSpec,
   Tabstopping,
+  SystemEvents,
 } from '@ephox/alloy';
 import {
   BehaviourConfigDetail,
@@ -48,7 +49,7 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
       AlloyEvents.run(NativeEvents.input(), (component, _) => {
         AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name } );
       }),
-      AlloyEvents.run(NativeEvents.paste(), (component, _) => {
+      AlloyEvents.run(SystemEvents.postPaste(), (component, _) => {
         AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name } );
       })
     ]),
