@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
@@ -88,6 +88,6 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
