@@ -8,7 +8,7 @@
 import { Disabling, Toggling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { InlineContent, Menu, Types } from '@ephox/bridge';
-import { Merger, Obj, Option } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';

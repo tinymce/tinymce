@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Arr } from '@ephox/katamari';
-import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { AlloyTriggers } from '@ephox/alloy';
-import { createSelectButton, createMenuItems } from './BespokeSelect';
-import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createMenuItems, createSelectButton } from './BespokeSelect';
+import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
@@ -97,13 +97,9 @@ const fontsizeSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   editor.ui.registry.addNestedMenuItem('fontsizes', {
-    type: 'nestedmenuitem',
     text: 'Font Sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 
-export {
-  createFontsizeSelect,
-  fontsizeSelectMenu
-};
+export { createFontsizeSelect, fontsizeSelectMenu };

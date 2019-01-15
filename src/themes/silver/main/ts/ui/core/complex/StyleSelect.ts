@@ -7,11 +7,11 @@
 
 import { AlloyTriggers } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
-import { Editor } from 'tinymce/core/api/Editor';
 
 const getSpec = (editor): SelectSpec => {
   const isSelectedFor = (format) => {
@@ -80,7 +80,6 @@ const styleSelectMenu = (editor: Editor, backstage) => {
   const data = backstage.styleselect;
   const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('formats', {
-    type: 'nestedmenuitem',
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

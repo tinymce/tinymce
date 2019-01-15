@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, DomFactory, GuiFactory, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Merger, Option, Obj, Fun } from '@ephox/katamari';
+import { Fun, Merger, Obj, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import { renderIcon, renderShortcut, renderText, renderStyledText } from './ItemSlices';
+import { renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;

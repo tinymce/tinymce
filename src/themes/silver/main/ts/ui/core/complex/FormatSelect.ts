@@ -7,11 +7,11 @@
 
 import { AlloyTriggers } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
-import { findNearest } from './utils/FormatDetection';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
-import { Editor } from 'tinymce/core/api/Editor';
+import { findNearest } from './utils/FormatDetection';
 
 const defaultBlocks = (
   'Paragraph=p;' +
@@ -88,7 +88,6 @@ const formatSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   editor.ui.registry.addNestedMenuItem('blockformats', {
-    type: 'nestedmenuitem',
     text: 'Blocks',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
