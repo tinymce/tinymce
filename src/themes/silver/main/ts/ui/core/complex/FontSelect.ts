@@ -108,6 +108,7 @@ const getSpec = (editor) => {
 
   return {
     tooltip: 'Fonts',
+    icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
     onAction,

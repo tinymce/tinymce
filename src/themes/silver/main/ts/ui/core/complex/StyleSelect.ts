@@ -61,6 +61,7 @@ const getSpec = (editor): SelectSpec => {
 
   return {
     tooltip: 'Formats',
+    icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
     onAction,

@@ -77,6 +77,7 @@ const getSpec = (editor) => {
 
   return {
     tooltip: 'Font Sizes',
+    icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
     onAction,

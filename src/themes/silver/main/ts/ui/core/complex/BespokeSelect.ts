@@ -36,6 +36,7 @@ export interface FormatItem {
 
 export interface SelectSpec {
   tooltip: string;
+  icon: Option<string>;
   // This is used for determining if an item gets a tick in the menu
   isSelectedFor: FormatRegister.IsSelectedForType;
   // This is used for rendering individual items with styles
@@ -129,8 +130,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
   return renderCommonDropdown(
     {
-      text: Option.some(''),
-      icon: Option.none(),
+      text: spec.icon.isSome() ? Option.none() : Option.some(''),
+      icon: spec.icon,
       tooltip: Option.from(spec.tooltip),
       role: Option.none(),
       fetch: items.getFetch(backstage, getStyleItems),
@@ -138,7 +139,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       onDetach: spec.nodeChangeHandler.map((f) => (comp) => editor.off('nodeChange', f(comp))).getOr(() => { }),
       columns: 1,
       presets: 'normal',
-      classes: [ 'bespoke' ]
+      classes: spec.icon.isSome() ? [] : [ 'bespoke' ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared

@@ -68,6 +68,7 @@ const getSpec = (editor): SelectSpec & { dataset } => {
 
   return {
     tooltip: 'Blocks',
+    icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
     onAction,

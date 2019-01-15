@@ -44,7 +44,7 @@ export const defaultStyleFormats: AllowedFormat[] = [
   },
 
   {
-    title: 'Alignment', items: [
+    title: 'Align', items: [
       { title: 'Left', icon: 'align-left', format: 'alignleft' },
       { title: 'Center', icon: 'align-center', format: 'aligncenter' },
       { title: 'Right', icon: 'align-right', format: 'alignright' },

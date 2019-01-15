@@ -5,15 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
-
-import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
-import { Editor } from 'tinymce/core/api/Editor';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 const alignMenuItems = [
   { title: 'Left', icon: 'align-left', format: 'alignleft'},
@@ -47,9 +46,9 @@ const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
     return () => {
       const match = getMatchingValue();
-      const text = match.fold(() => 'Align', (item) => item.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text: backstage.shared.providers.translate(text)
+      const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
+      AlloyTriggers.emitWith(comp, updateMenuIcon, {
+        icon: `align-${alignment}`
       });
     };
   });
@@ -58,6 +57,7 @@ const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
 
   return createSelectButton(editor, backstage, dataset, {
     tooltip: 'Align',
+    icon: Option.some('align-left'),
     isSelectedFor,
     getPreviewFor,
     onAction,
