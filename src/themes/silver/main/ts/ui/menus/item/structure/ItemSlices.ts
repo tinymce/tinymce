@@ -27,6 +27,27 @@ const renderText = (text: string): AlloySpec => ({
   components: [ GuiFactory.text(I18n.translate(text)) ]
 });
 
+interface StyleProps {
+  tag: string;
+  styleAttr: string;
+}
+
+const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
+  dom: {
+    tag: 'span',
+    classes: [ ItemClasses.textClass ],
+  },
+  components: [
+    {
+      dom: {
+        tag: style.tag,
+        attributes: { style: style.styleAttr  }
+      },
+      components: [ GuiFactory.text(I18n.translate(text)) ]
+    }
+  ]
+});
+
 const renderShortcut = (shortcut: string): AlloySpec => ({
   dom: {
     tag: 'span',
@@ -54,6 +75,7 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
 export {
   renderIcon,
   renderText,
+  renderStyledText,
   renderShortcut,
   renderCheckmark,
   renderSubmenuCaret
