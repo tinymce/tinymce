@@ -130,6 +130,8 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
     return Option.from(info.meta).fold(
       () => renderNormalItemStructure(info, icon),
       (meta) => {
+        // Style items and autocompleter both have meta. Need to branch on style
+        // This should probably be more stable...
         if (Obj.has(meta, 'style')) {
           return renderStyleStructure(info, meta.style);
         }
