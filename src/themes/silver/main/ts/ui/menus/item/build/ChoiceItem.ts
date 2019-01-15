@@ -65,8 +65,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     // but is hidden unless the tickedClass is present.
     checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
     caret: Option.none(),
-    value: spec.value,
-    ...spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {}
+    value: spec.value
   }, providersBackstage);
 
   return Merger.deepMerge(

@@ -76,6 +76,9 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
       } as Menu.NestedMenuItemApi;
     } else {
       return {
+        // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
+        // See ToggleMenuItem and ItemStructure for how it's handled.
+        // If this type ever changes, we'll need to change that too
         type: 'togglemenuitem',
         text: translatedText,
         active: rawItem.isSelected(),
