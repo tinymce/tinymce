@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
-import { Element, Insert, Remove, Replication } from '@ephox/sugar';
+import { Element, Insert, Replication, Remove } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
@@ -25,15 +25,21 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = function () {
     const cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-    const table = TableLookup.table(cell, isRoot);
-    table.filter(Fun.not(isRoot)).each(function (table) {
+    const tableOpt = TableLookup.table(cell, isRoot);
+    tableOpt.filter(Fun.not(isRoot)).each(function (table) {
       const cursor = Element.fromText('');
       Insert.after(table, cursor);
       Remove.remove(table);
-      const rng = editor.dom.createRng();
-      rng.setStart(cursor.dom(), 0);
-      rng.setEnd(cursor.dom(), 0);
-      editor.selection.setRng(rng);
+      if (editor.dom.isEmpty(editor.getBody())) {
+        editor.setContent('');
+        editor.selection.setCursorLocation();
+      } else {
+        const rng = editor.dom.createRng();
+        rng.setStart(cursor.dom(), 0);
+        rng.setEnd(cursor.dom(), 0);
+        editor.selection.setRng(rng);
+        editor.nodeChanged();
+      }
     });
   };
 

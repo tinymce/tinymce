@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, GuiFactory, InlineView } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, InlineView, Behaviour, AddEventsBehaviour, AlloyEvents, SystemEvents, Sandboxing } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
@@ -112,8 +112,17 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
         tag: 'div',
       },
       lazySink,
-      onEscape: () => editor.focus()
-    })
+      onEscape: () => editor.focus(),
+      fireDismissalEventInstead: { },
+      inlineBehaviours: Behaviour.derive([
+        AddEventsBehaviour.config('dismissContextMenu', [
+          AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
+            Sandboxing.close(comp);
+            editor.focus();
+          })
+        ])
+      ])
+    }),
   );
 
   editor.on('contextmenu', (e) => {
