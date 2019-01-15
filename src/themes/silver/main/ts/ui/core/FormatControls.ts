@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Align from './Align';
+import AlignmentButtons from './AlignmentButtons';
 import SimpleControls from './SimpleControls';
 import UndoRedo from './UndoRedo';
 import VisualAid from './VisualAid';
@@ -16,7 +16,7 @@ import ComplexControls from './ComplexControls';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
-  Align.register(editor);
+  AlignmentButtons.register(editor);
   SimpleControls.register(editor);
   ComplexControls.register(editor, backstage);
   UndoRedo.register(editor);

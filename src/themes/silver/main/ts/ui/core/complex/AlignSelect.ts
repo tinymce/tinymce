@@ -10,7 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -21,7 +21,7 @@ const alignMenuItems = [
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
 ];
 
-const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
+const getSpec = (editor: Editor) => {
   const getMatchingValue = (): Option<Partial<FormatItem>> => {
     return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
   };
@@ -55,16 +55,31 @@ const createAlignSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
-  return createSelectButton(editor, backstage, dataset, {
+  return {
     tooltip: 'Align',
     icon: Option.some('align-left'),
     isSelectedFor,
     getPreviewFor,
     onAction,
     nodeChangeHandler,
+    dataset,
     shouldHide: false,
     isInvalid: (item) => !editor.formatter.canApply(item.format)
+  };
+};
+
+const createAlignSelect = (editor, backstage) => {
+  const spec = getSpec(editor);
+  return createSelectButton(editor, backstage, spec.dataset, spec);
+};
+
+const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+  const spec = getSpec(editor);
+  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  editor.ui.registry.addNestedMenuItem('align', {
+    text: backstage.shared.providers.translate('Align'),
+    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 
-export { createAlignSelect };
+export { createAlignSelect, alignSelectMenu };
