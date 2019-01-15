@@ -25,7 +25,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
   const scan = (dialogApi, category: string) => {
     const dialogData = dialogApi.getData();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName].toLowerCase(), category === ALL_CATEGORY ? Option.some(50) : Option.none());
+    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(50) : Option.none());
     dialogApi.setData({
       results
     });
