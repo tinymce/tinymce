@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
@@ -15,6 +16,7 @@ import Preview from '../fmt/Preview';
 import RemoveFormat from '../fmt/RemoveFormat';
 import ToggleFormat from '../fmt/ToggleFormat';
 import FormatShortcuts from '../keyboard/FormatShortcuts';
+import { Format, Formats, FormatVars } from './fmt/Format';
 
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
@@ -30,6 +32,30 @@ import FormatShortcuts from '../keyboard/FormatShortcuts';
  *
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
+
+// TODO: Figure out why we need a range like object, instead of an actual range (see ExpandRange.ts)
+interface RangeLikeObject {
+  startContainer: Node;
+  startOffset: number;
+  endContainer: Node;
+  endOffset: number;
+}
+
+export interface Formatter {
+  get: (name?: string) => Formats | Format[];
+  has: (name: string) => boolean;
+  register: (name: string | Formats, format?: Format[] | Format) => void;
+  unregister: (name: string) => Formats;
+  apply: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
+  remove: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean) => void;
+  toggle: (name: string, vars?: FormatVars, node?: Node) => void;
+  match: (name: string, vars?: FormatVars, node?: Node) => boolean;
+  matchAll: (names: string[], vars?: FormatVars) => Format[];
+  matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
+  canApply: (name: string) => boolean;
+  formatChanged: (names: string, callback: (state: boolean, data: { node: Node, format: Format, parents: any }) => void, similar?: boolean) => void;
+  getCssText: (format: string | Format) => string;
+}
 
 export default function (editor) {
   const formats = FormatRegistry(editor);

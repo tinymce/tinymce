@@ -16,7 +16,7 @@ const toggleFormat = (editor: Editor, fmt: string) => {
 };
 
 const addFormatChangedListener = (editor: Editor, name: string, changed: (state: boolean, name: string) => void) => {
-  const handler = (state) => {
+  const handler = (state: boolean) => {
     changed(state, name);
   };
 
