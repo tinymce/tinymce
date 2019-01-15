@@ -39,7 +39,7 @@ UnitTest.test('DialogChanges', () => {
         {
           quickbars_selection_toolbar: true
         },
-        'bold forecolor italic | form:link-form h2 h3 blockquote'
+        'bold italic | form:link-form h2 h3 blockquote'
       );
 
       test('getTextSelectionToolbarItems: testing for undefined should fallback to defaults',
@@ -47,7 +47,7 @@ UnitTest.test('DialogChanges', () => {
         {
           // intentionally blank undefined
         },
-        'bold forecolor italic | form:link-form h2 h3 blockquote'
+        'bold italic | form:link-form h2 h3 blockquote'
       );
 
       test('getTextSelectionToolbarItems: testing for custom config string',
