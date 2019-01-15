@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/modern/Theme';
@@ -86,6 +86,29 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
           tinyApis.sAssertSelection([0, 1, 2], 0, [0, 1, 2], 0),
           tinyApis.sAssertContent('<p>a<code>b<br /></code>c</p>')
         ]))
+      ])),
+      Logger.t('Insert br after text', GeneralSteps.sequence([
+        tinyApis.sFocus,
+        tinyApis.sSetRawContent('<p>a</p>'),
+        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sNodeChanged,
+        sInsertBr(editor),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('br', {}),
+                    s.element('br', {})
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([0], 2, [0], 2),
       ]))
     ], onSuccess, onFailure);
   }, {

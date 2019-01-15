@@ -43,14 +43,6 @@ const isRngInRoot = function (root) {
   };
 };
 
-// var dumpRng = function (rng) {
-//   console.log('start', rng.start().dom());
-//   console.log('soffset', rng.soffset());
-//   console.log('finish', rng.finish().dom());
-//   console.log('foffset', rng.foffset());
-//   return rng;
-// };
-
 const shouldStore = function (editor) {
   return editor.inline === true || browser.isIE();
 };
