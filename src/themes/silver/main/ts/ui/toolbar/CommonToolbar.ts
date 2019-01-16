@@ -31,6 +31,31 @@ export interface ToolbarGroup {
   items: AlloySpec[];
 }
 
+const toolbarGroup = (foo: ToolbarGroup) => {
+  const attributes = foo.title.fold(() => {
+    return {};
+  },
+  (title) => {
+    return { attributes: { title } };
+  });
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'demo-alloy-toolbar-group' ],
+      ...attributes
+    },
+
+    components: [
+      AlloyToolbarGroup.parts().items({ })
+    ],
+
+    items: foo.items,
+    markers: {
+      itemSelector: '.demo-alloy-toolbar-item'
+    }
+  };
+};
+
 const renderToolbarGroup = (foo: ToolbarGroup) => {
   const attributes = foo.title.fold(() => {
     return {};
@@ -71,7 +96,7 @@ const renderToolbar = (foo: Toolbar) => {
     },
     parts: {
       // This already knows it is a toolbar group
-      'overflow-group': renderToolbarGroup({
+      'overflow-group': toolbarGroup({
         title: Option.none(),
         items: [ ]
       }),
