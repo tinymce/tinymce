@@ -5,17 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling, Toggling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
-import { Merger, Option, Obj } from '@ephox/katamari';
-
+import { Merger, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
-import { buildData, renderCommonItem } from './CommonMenuItem';
-import { renderItemStructure } from '../structure/ItemStructure';
-import { renderCheckmark } from '../structure/ItemSlices';
 import ItemResponse from '../ItemResponse';
+import { renderCheckmark } from '../structure/ItemSlices';
+import { renderItemStructure } from '../structure/ItemStructure';
+import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
@@ -62,6 +61,4 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
   );
 };
 
-export {
-  renderToggleMenuItem
-};
+export { renderToggleMenuItem };
