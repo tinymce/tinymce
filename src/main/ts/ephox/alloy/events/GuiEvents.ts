@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Node, Traverse, Element, Attr, SelectorExists } from '@ephox/sugar';
 
@@ -9,7 +9,7 @@ import * as TapEvent from './TapEvent';
 
 import { SugarEvent, SugarListener } from '../alien/TypeDefinitions';
 import { EventFormat } from '../events/SimulatedEvent';
-import { setTimeout, KeyboardEvent } from '@ephox/dom-globals';
+import { setTimeout, KeyboardEvent, clearTimeout } from '@ephox/dom-globals';
 
 const isDangerous = (event: SugarEvent): boolean => {
   // Will trigger the Back button in the browser
@@ -74,7 +74,6 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'input',
       'contextmenu',
       'change',
-      'paste',
       'transitionend',
       // Test the drag events
       'drag',
@@ -97,6 +96,18 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       });
     }
   );
+  let pasteTimeout = Cell(Option.none<number>());
+  const onPaste = DomEvent.bind(container, 'paste', (event: SugarEvent) => {
+    tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
+      if (tapStopped) { event.kill(); }
+    });
+
+    const stopped = settings.triggerEvent('paste', event);
+    if (stopped) { event.kill(); }
+    pasteTimeout.set(Option.some(setTimeout(() => {
+      settings.triggerEvent(SystemEvents.postPaste(), event)
+    }, 0)));
+  });
 
   const onKeydown = DomEvent.bind(container, 'keydown', (event) => {
     // Prevent default of backspace when not in input fields.
@@ -113,6 +124,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     if (stopped) { event.kill(); }
   });
 
+  let focusoutTimeout = Cell(Option.none<number>())
   const onFocusOut = bindBlur(container, (event: SugarEvent) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) { event.kill(); }
@@ -120,9 +132,9 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
     // It allows the active element to change before firing the blur that we will listen to
     // for things like closing popups
-    setTimeout(() => {
+    focusoutTimeout.set(Option.some(setTimeout(() => {
       settings.triggerEvent(SystemEvents.postBlur(), event);
-    }, 0);
+    }, 0)));
   });
 
   const unbind = (): void => {
@@ -132,6 +144,9 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     onKeydown.unbind();
     onFocusIn.unbind();
     onFocusOut.unbind();
+    onPaste.unbind();
+    pasteTimeout.get().each(clearTimeout);
+    focusoutTimeout.get().each(clearTimeout);
   };
 
   return {

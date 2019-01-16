@@ -16,6 +16,9 @@ const focus = Fun.constant('alloy.focus');
 // allows the handler to know what was the focused element, and what is now.
 const postBlur = Fun.constant('alloy.blur.post');
 
+// This event is fired a small amount of time after the paste event has fired.
+const postPaste = Fun.constant('alloy.paste.post');
+
 // This event is fired by gui.broadcast*. It is defined by 'receivers'
 const receive = Fun.constant('alloy.receive');
 
@@ -82,6 +85,7 @@ export {
 
   focus,
   postBlur,
+  postPaste,
   receive,
   execute,
   focusItem,
