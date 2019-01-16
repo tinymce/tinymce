@@ -22,7 +22,8 @@ import {
   SketchSpec,
   Tabstopping,
   Typeahead as AlloyTypeahead,
-  AlloyComponent
+  AlloyComponent,
+  SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
@@ -160,7 +161,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
               AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
               updateHistory(comp);
             }),
-            AlloyEvents.run(NativeEvents.paste(), (comp) => {
+            AlloyEvents.run(SystemEvents.postPaste(), (comp) => {
               AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
               updateHistory(comp);
             })
