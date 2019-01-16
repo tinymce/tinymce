@@ -13,7 +13,8 @@ import {
   Behaviour,
   Keying,
   Tabstopping,
-  SplitToolbar as AlloyToolbar,
+  SplitToolbar as SplitAlloyToolbar,
+  Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
   Focusing,
 } from '@ephox/alloy';
@@ -41,7 +42,7 @@ const toolbarGroup = (foo: ToolbarGroup) => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'demo-alloy-toolbar-group' ],
+      classes: [ 'tox-toolbar__group' ],
       ...attributes
     },
 
@@ -51,7 +52,8 @@ const toolbarGroup = (foo: ToolbarGroup) => {
 
     items: foo.items,
     markers: {
-      itemSelector: '.demo-alloy-toolbar-item'
+      // nav within a group breaks if disabled buttons are first in their group so skip them
+      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     }
   };
 };
@@ -85,14 +87,14 @@ const renderToolbarGroup = (foo: ToolbarGroup) => {
   });
 };
 
-const renderToolbar = (foo: Toolbar) => {
+const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
-  return AlloyToolbar.sketch({
+  return SplitAlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ]
+      classes: [ 'tox-toolbar-overlord' ]
     },
     parts: {
       // This already knows it is a toolbar group
@@ -103,21 +105,22 @@ const renderToolbar = (foo: Toolbar) => {
       'overflow-button': {
         dom: {
           tag: 'button',
-          classes: [ 'example-more-button' ]
+          classes: [ 'example-more-button' ],
+          innerHtml: 'More...'
         }
       }
     },
     components: [
-      AlloyToolbar.parts().primary({
+      SplitAlloyToolbar.parts().primary({
         dom: {
           tag: 'div',
-          classes: [ 'example-primary-toolbar' ]
+          classes: [ 'tox-toolbar-primary' ]
         }
       }),
-      AlloyToolbar.parts().overflow({
+      SplitAlloyToolbar.parts().overflow({
         dom: {
           tag: 'div',
-          classes: [ 'example-overflow-toolbar' ]
+          classes: [ 'tox-toolbar-overflow' ]
         }
       })
     ],
@@ -144,7 +147,38 @@ const renderToolbar = (foo: Toolbar) => {
   });
 };
 
+const renderToolbar = (foo: Toolbar) => {
+  const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
+
+  return AlloyToolbar.sketch({
+    uid: foo.uid,
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-toolbar' ]
+    },
+    components: [
+      AlloyToolbar.parts().groups({ })
+    ],
+
+    toolbarBehaviours: Behaviour.derive([
+      Keying.config({
+        // Tabs between groups
+        mode: modeName,
+        onEscape: foo.onEscape,
+        selector: '.tox-toolbar__group'
+      }),
+      AddEventsBehaviour.config('toolbar-events', [
+        AlloyEvents.runOnAttached(function (component) {
+          const groups = Arr.map(foo.initGroups, renderToolbarGroup);
+          AlloyToolbar.setGroups(component, groups);
+        })
+      ])
+    ])
+  });
+};
+
 export {
   renderToolbarGroup,
-  renderToolbar
+  renderToolbar,
+  renderMoreToolbar
 };

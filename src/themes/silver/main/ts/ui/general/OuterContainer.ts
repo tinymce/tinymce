@@ -22,7 +22,7 @@ import { SidebarConfig } from 'tinymce/core/api/Editor';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import { Sidebar } from '../sidebar/Sidebar';
-import { renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
+import { renderMoreToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -117,7 +117,7 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      return renderToolbar({
+      return renderMoreToolbar({
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
