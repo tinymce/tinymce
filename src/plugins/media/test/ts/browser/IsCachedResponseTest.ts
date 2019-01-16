@@ -34,7 +34,8 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
             tinyUi.cWaitForPopup('wait for media dialog', 'div[role="dialog"]'), [
               Chain.fromChains([
                 Utils.cSetSourceInput(tinyUi, 'test'),
-                Utils.cFakeEvent('paste')
+                Utils.cFakeEvent('paste'),
+                Chain.wait(0) // wait is needed because paste is triggered async
               ]),
               Chain.runStepsOnValue(() => [ Utils.sAssertEmbedData(tinyUi, '<div>x</div>') ]),
               Chain.fromChains([
