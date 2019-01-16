@@ -32,6 +32,15 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'bc'),
         tinyApis.sAssertSelection([0, 1], 3, [0, 1], 3),
         tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc</p>')
+      ])),
+      Logger.t('Type between cef inline elements', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>'),
+        tinyApis.sSelect('p', [3]),
+        tinyActions.sContentKeystroke(Keys.left(), {}),
+        tinyActions.sContentKeystroke(Keys.left(), {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'bc'),
+        tinyApis.sAssertSelection([0, 1], 3, [0, 1], 3),
+        tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>')
       ]))
     ], onSuccess, onFailure);
   }, {
