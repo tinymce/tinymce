@@ -6,10 +6,10 @@
  */
 
 import Tools from '../api/util/Tools';
-import { Format } from 'tinymce/core/api/fmt/Format';
+import { Formats } from 'tinymce/core/api/fmt/Format';
 
 const get = function (dom) {
-  const formats = {
+  const formats: Formats = {
     valigntop: [
       { selector: 'td,th', styles: { verticalAlign: 'top' } }
     ],
@@ -183,7 +183,7 @@ const get = function (dom) {
       { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true },
       { selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true }
     ]
-  } as Record<string, Format | Format[]>;
+  };
 
   Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), function (name) {
     formats[name] = { block: name, remove: 'all' };

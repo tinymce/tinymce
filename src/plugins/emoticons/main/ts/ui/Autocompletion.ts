@@ -23,7 +23,7 @@ const init = (editor: Editor, database: EmojiDatabase): void => {
     fetch: (pattern, maxResults) => {
       return database.waitForLoad().then(() => {
         const candidates = database.listAll();
-        return emojisFrom(candidates, pattern.toLowerCase(), Option.some(maxResults));
+        return emojisFrom(candidates, pattern, Option.some(maxResults));
       });
     },
     onAction: (autocompleteApi, rng, value) => {

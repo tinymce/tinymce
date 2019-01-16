@@ -7,6 +7,7 @@ Version 5.0.0-rc-2 (TBD)
     Removed unnecessary 'flex' and unused 'colspan' properties from the new dialog APIs #TINY-2973
     Changed checkboxes to use a boolean for its state, instead of a string #TINY-2848
     Fixed dropdown buttons missing the 'type' attribute, which could cause forms to be incorrectly submitted #TINY-2826
+    Fixed emoticon and charmap search not returning expected results in certain cases #TINY-3084
 Version 5.0.0-rc-1 (2019-01-08)
     Updated the font select dropdown logic to try to detect the system font stack and show "System Font" as the font name #TINY-2710
     Fixed readonly mode not fully disabling editing content #TINY-2287
