@@ -101,7 +101,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
 
   // Style items and autocompleter both have meta. Need to branch on style
-  // This should probably be more stable...
+  // This could probably be more stable...
   const textRender: (text: string) => AlloySpec = Option.from(info.meta).fold(
     () => renderText,
     (meta) => {

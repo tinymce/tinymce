@@ -30,10 +30,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
   };
 
   // BespokeSelects use meta to pass through styling information. Bespokes should only
-  // be togglemenuitems hence this is only here.
-  // If meta is {} things might break so check it exists and has keys before passing it through
-  const meta = spec.meta && Obj.keys(spec.meta).length > 0 ? { meta: spec.meta } : {};
-
+  // be togglemenuitems hence meta is only passed through in this MenuItem.
   const structure = renderItemStructure({
     iconContent: Option.none(),
     textContent: spec.text,
@@ -42,7 +39,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     caret: Option.none(),
     shortcutContent: spec.shortcut,
     presets: 'normal',
-    ...meta
+    meta: spec.meta
   }, providersBackstage);
 
   return Merger.deepMerge(
