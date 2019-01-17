@@ -12,10 +12,7 @@
 @menu-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @menu-border-color: @border-color;
 @menu-border-radius: @panel-border-radius;
-@menu-border-style: solid;
-@menu-border-width: 1px;
 @menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
-@menu-text-color: @text-color;
 
 @menu-item-collection-list-padding: 0;
 @menu-item-collection-toolbar-padding: @pad-xs;
@@ -24,12 +21,9 @@
 .tox {
   .tox-menu {
     background-color: @menu-background-color;
-    border-color: @menu-border-color;
+    border: 1px solid @menu-border-color;
     border-radius: @menu-border-radius;
-    border-style: @menu-border-style;
-    border-width: @menu-border-width;
     box-shadow: @menu-box-shadow;
-    color: @menu-text-color;
     display: inline-block;
     overflow: hidden;
     vertical-align: top;
