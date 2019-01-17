@@ -21,6 +21,11 @@ let themes = [
   'silver'
 ];
 
+let oxideUiSkinMap = {
+  'dark': 'oxide-dark',
+  'default': 'oxide'
+};
+
 module.exports = function (grunt) {
   var packageData = grunt.file.readJSON('package.json');
   var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
@@ -275,41 +280,21 @@ module.exports = function (grunt) {
               '!*.md'
             ],
             dest: 'js/tinymce/skins/ui/oxide/fonts'
-          },
-          {
-            expand: true,
-            flatten: true,
-            cwd: 'src/skins/oxide/main/img',
-            src: '**',
-            dest: 'js/tinymce/skins/ui/oxide/img'
-          },
-          {
-            expand: true,
-            flatten: true,
-            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-default',
-            src: [
-              '*.min.css',
-              '*.min.css.map'
-            ],
-            dest: 'js/tinymce/skins/ui/oxide'
-          },
-          {
-            expand: true,
-            flatten: true,
-            cwd: 'src/skins/oxide/main/img',
-            src: '**',
-            dest: 'js/tinymce/skins/ui/oxide-dark/img'
-          },
-          {
-            expand: true,
-            cwd: 'node_modules/@ephox/oxide/build/skins/oxide-dark',
-            src: [
-              '*.min.css',
-              '*.min.css.map'
-            ],
-            dest: 'js/tinymce/skins/ui/oxide-dark'
           }
-        ]
+        ].concat(gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
+          return [
+            {
+              expand: true,
+              flatten: true,
+              cwd: 'node_modules/@ephox/oxide/build/skins/ui/' + name,
+              src: [
+                '*.min.css',
+                '*.min.css.map'
+              ],
+              dest: 'js/tinymce/skins/ui/' + mappedName
+            }
+          ];
+        }))
       },
       'content-skins': {
         files: [
