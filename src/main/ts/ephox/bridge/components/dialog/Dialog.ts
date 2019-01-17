@@ -75,11 +75,6 @@ export interface DialogApi<T extends DialogData> {
 
   // Gets fired the dialog changes tab
   onTabChange?: DialogTabChangeHandler<T>;
-
-  // Allows a dialog to lazily load resources and resolve when ready. The intention is to show a spinner
-  // or loading indicator while resources are loading.
-  // TODO: Investigate body (optionally) being a Promise, as the client code is quite ulgy with this method.
-  readyWhen?: Promise<void>;
 }
 
 export interface DialogButton {
@@ -104,7 +99,6 @@ export interface Dialog<T> {
   onClose: DialogCloseHandler;
   onCancel: DialogCancelHandler<T>;
   onTabChange: DialogTabChangeHandler<T>;
-  readyWhen: Option<Promise<void>>;
 }
 
 export const dialogButtonSchema = ValueSchema.objOf([
@@ -139,7 +133,6 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onClose', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
   FieldSchema.defaulted('onTabChange', Fun.noop),
-  FieldSchema.option('readyWhen')
 ]);
 
 export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => {
