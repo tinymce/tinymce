@@ -130,7 +130,7 @@ export const create = (): InlitePanel => {
     }
 
     if (result) {
-      const delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
+      const delta = UiContainer.getUiContainerDelta(editor.settings.ui_container).getOr({ x: 0, y: 0 });
       const transposedPanelRect = { x: result.rect.x - delta.x, y: result.rect.y - delta.y, w: result.rect.w, h: result.rect.h };
       currentRect = targetRect;
       movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, transposedPanelRect));
