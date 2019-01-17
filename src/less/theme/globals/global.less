@@ -9,16 +9,17 @@
 // Global styling
 //
 
-@tinymce-container-padding: 0;
+@tinymce-border-color: @border-color;
+@tinymce-border-radius: 0;
 
 .tox-tinymce {
-  border: 0;
+  border: 1px solid @tinymce-border-color;
+  border-radius: @tinymce-border-radius;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   font-family: @font-stack-base;
   overflow: hidden;
-  padding: @tinymce-container-padding;
   visibility: inherit !important;
 }
 

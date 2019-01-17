@@ -11,11 +11,7 @@
 
 @toolbar-background-color: @background-color;
 @toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") 0 0 @toolbar-background-color;
-@toolbar-border-color: @border-color;
-@toolbar-border-radius: 0;
-@toolbar-padding: 0;
 @toolbar-row-separator-color: @toolbar-group-separator-color;
-@toolbar-spacing: 0;
 
 // private variables
 @_toolbar-row-separator-color: escape('@{toolbar-row-separator-color}');
@@ -26,20 +22,15 @@
   .tox-toolbar {
     background: @toolbar-background;
     background-color: @toolbar-background-color;
-    border: 1px solid @toolbar-border-color;
-    border-bottom-width: 0;
-    border-radius: @toolbar-border-radius;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    margin: 0 0 @toolbar-spacing 0;
-    padding: @toolbar-padding;
+    padding: 0;
   }
 
   .tox-pop .tox-toolbar {
     border-width: 0;
-    margin-bottom: -1px;
   }
 
   .tox-toolbar--no-divider {
@@ -48,7 +39,7 @@
 
   // Remove double borders
   .tox-menubar + .tox-toolbar {
-    margin-top: -1px;
+
   }
 
   // Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
