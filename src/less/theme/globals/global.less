@@ -10,12 +10,14 @@
 //
 
 @tinymce-border-color: @border-color;
-@tinymce-border-radius: 0;
+@tinymce-border-radius: 10px;
+@tinymce-box-shadow: none;
 
 .tox-tinymce {
   border: 1px solid @tinymce-border-color;
   border-radius: @tinymce-border-radius;
   box-sizing: border-box;
+  box-shadow: @tinymce-box-shadow;
   display: flex;
   flex-direction: column;
   font-family: @font-stack-base;
@@ -29,6 +31,12 @@
   flex: 1 1 auto;
   flex-direction: column;
   overflow: hidden;
+
+  > *:first-child {
+    // !important required because we don't know
+    // if menubar, toolbar or edit area comes first
+    border-top: none !important;
+  }
 }
 
 .tox-tinymce-aux {
