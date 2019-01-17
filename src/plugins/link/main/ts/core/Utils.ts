@@ -35,7 +35,7 @@ const toggleTargetRules = function (rel, isUnsafe) {
   };
 
   newRel = isUnsafe ? addTargetRules(newRel) : removeTargetRules(newRel);
-  return newRel.length ? toString(newRel) : null;
+  return newRel.length ? toString(newRel) : '';
 };
 
 const trimCaretContainers = function (text) {
