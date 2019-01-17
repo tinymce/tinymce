@@ -5,17 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Align from './Align';
+import AlignmentButtons from './AlignmentButtons';
 import SimpleControls from './SimpleControls';
 import UndoRedo from './UndoRedo';
 import VisualAid from './VisualAid';
 import ColorSwatch from './color/ColorSwatch';
 import { Editor } from 'tinymce/core/api/Editor';
 import IndentOutdent from './IndentOutdent';
+import ComplexControls from './ComplexControls';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-const setup = (editor: Editor) => {
-  Align.register(editor);
+const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
+  AlignmentButtons.register(editor);
   SimpleControls.register(editor);
+  ComplexControls.register(editor, backstage);
   UndoRedo.register(editor);
   ColorSwatch.register(editor);
   VisualAid.register(editor);

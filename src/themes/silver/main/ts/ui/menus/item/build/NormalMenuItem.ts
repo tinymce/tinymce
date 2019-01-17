@@ -5,15 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { Disabling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
-
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import ItemResponse from '../ItemResponse';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
-import ItemResponse from '../ItemResponse';
 
 // Note, this does not create a valid SketchSpec.
 const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {

@@ -30,19 +30,24 @@ import { Future, Id, Merger, Option, Arr } from '@ephox/katamari';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { renderLabel, renderIconFromPack } from '../button/ButtonSlices';
+import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 export const updateMenuText = Id.generate('update-menu-text');
+export const updateMenuIcon = Id.generate('update-menu-icon');
 
 export interface UpdateMenuTextEvent extends CustomEvent {
   text: () => string;
 }
 
-export interface BasketballFoo {
+export interface UpdateMenuIconEvent extends CustomEvent {
+  icon: () => string;
+}
+
+export interface CommonDropdownSpec {
   text: Option<string>;
   icon: Option<string>;
   disabled?: boolean;
@@ -56,9 +61,10 @@ export interface BasketballFoo {
   classes: string[];
 }
 // TODO: Use renderCommonStructure here.
-const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+const renderCommonDropdown = (spec: CommonDropdownSpec, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
 
   const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers)));
+  const optMemDisplayIcon = spec.icon.map((iconName) => Memento.record(renderReplacableIconFromPack(iconName, sharedBackstage.providers.icons)));
 
   /*
    * The desired behaviour here is:
@@ -108,7 +114,7 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
         }
       },
       components: componentRenderPipeline([
-        spec.icon.map((iconName) => renderIconFromPack(iconName, sharedBackstage.providers.icons)),
+        optMemDisplayIcon.map((mem) => mem.asSpec()),
         optMemDisplayText.map((mem) => mem.asSpec()),
         Option.some({
           dom: {
@@ -132,6 +138,11 @@ const renderCommonDropdown = (spec: BasketballFoo, prefix: string, sharedBacksta
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
               Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event().text())) ] );
+            });
+          }),
+          AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
+            optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+              Replacing.set(displayIcon, [ renderReplacableIconFromPack(se.event().icon(), sharedBackstage.providers.icons) ] );
             });
           })
         ])

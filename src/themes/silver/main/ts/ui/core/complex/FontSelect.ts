@@ -6,12 +6,12 @@
  */
 
 import { AlloyTriggers } from '@ephox/alloy';
-import { Option, Arr } from '@ephox/katamari';
-import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createSelectButton, createMenuItems } from './BespokeSelect';
-import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createMenuItems, createSelectButton } from './BespokeSelect';
+import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
   'Arial=arial,helvetica,sans-serif;' +
@@ -108,6 +108,7 @@ const getSpec = (editor) => {
 
   return {
     tooltip: 'Fonts',
+    icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
     onAction,
@@ -127,11 +128,10 @@ const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
-  return {
-    type: 'nestedmenuitem',
+  editor.ui.registry.addNestedMenuItem('fontformats', {
     text: backstage.shared.providers.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
-  };
+  });
 };
 
 export { createFontSelect, fontSelectMenu };

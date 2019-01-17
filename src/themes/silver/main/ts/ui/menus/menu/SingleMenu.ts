@@ -5,21 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { AlloyEvents, FocusManagers, Keying, TieredMenu } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
 import { ValueSchema } from '@ephox/boulder';
-import { Menu as BridgeMenu, Types, InlineContent } from '@ephox/bridge';
+import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
-
+import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
+import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { components as menuComponents, dom as menuDom, markers as getMenuMarkers } from './MenuParts';
-import { forSwatch, forCollection, forToolbar } from './MenuStructures';
-import ItemResponse from '../item/ItemResponse';
+import { forCollection, forSwatch, forToolbar } from './MenuStructures';
 
 export type ItemChoiceActionHandler = (value: string) => void;
 
@@ -32,13 +31,8 @@ export const handleError = (error) => {
   return Option.none();
 };
 
-export interface InternalStyleMenuItemApi {
-  type: 'styleitem';
-  item: BridgeMenu.ToggleMenuItemApi | BridgeMenu.MenuItemApi;
-}
-
 export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
-  BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | InternalStyleMenuItemApi | BridgeMenu.FancyMenuItemApi;
+  BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
 const hasIcon = (item) => item.icon !== undefined;
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
@@ -56,17 +50,6 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
         handleError,
         (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
       );
-
-    case 'styleitem': {
-      if (item.item.type === 'menuitem') {
-        return BridgeMenu.createMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
-      } else if (item.item.type === 'togglemenuitem') {
-        return BridgeMenu.createToggleMenuItem(item.item).fold(handleError, (d) => Option.some(MenuItems.style(d, itemResponse, providersBackstage)));
-      } else {
-        console.error('Unsupported style item delegate', item.item);
-        return Option.none();
-      }
-    }
 
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(

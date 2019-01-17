@@ -18,7 +18,7 @@ import WindowManager from './ui/dialog/WindowManager';
 ThemeManager.add('silver', (editor: Editor) => {
   const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
 
-  FormatControls.setup(editor);
+  FormatControls.setup(editor, backstage);
 
   Debugging.registerInspector(Id.generate('silver-demo'), mothership);
   Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
