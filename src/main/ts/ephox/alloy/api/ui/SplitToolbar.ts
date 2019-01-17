@@ -1,4 +1,4 @@
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr, Merger, Option, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 import { SketchSpec } from '../../api/component/SpecTypes';
 
@@ -6,6 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Overflows from '../../toolbar/Overflows';
 import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
+import { Positioning } from '../behaviour/Positioning';
 import { Replacing } from '../behaviour/Replacing';
 import { Sliding } from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';
@@ -16,13 +17,18 @@ import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { LazySink } from '../component/CommonTypes';
+import * as Layout from '../../positioning/layout/Layout';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
   Toolbar.setGroups(bar, bGroups);
 };
 
+let visible = false;
+
 const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
+  const lazySink: () => ReturnType<LazySink> = () => detail.lazySink.getOrDie()(toolbar);
   const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
   const primary = ps.primary();
   const overflow = ps.overflow();
@@ -42,8 +48,26 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
       Button.sketch({
         ...externals['overflow-button'](),
         action (button) {
-          // This used to look up the overflow again ... we may need to do that.
-          Sliding.toggleGrow(ps.overflow());
+          if (detail.floating === true) {
+            if (visible) {
+              visible = false;
+              Css.set(overflow.element(), 'visibility', 'hidden');
+            } else {
+              Css.remove(overflow.element(), 'visibility');
+              Positioning.position(lazySink().getOrDie(), {
+                anchor: 'hotspot',
+                hotspot: primary,
+                layouts: {
+                  onLtr: Fun.constant([ Layout.south ]),
+                  onRtl : Fun.constant([ Layout.south ])
+                }
+              }, overflow);
+              visible = true;
+            }
+          } else {
+            // This used to look up the overflow again ... we may need to do that.
+            Sliding.toggleGrow(ps.overflow());
+          }
         }
       })
     ]
@@ -72,6 +96,8 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
 
   Css.remove(primary.element(), 'visibility');
   Css.reflow(primary.element());
+
+  Sliding.refresh(ps.overflow());
 
 };
 

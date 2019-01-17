@@ -5,6 +5,7 @@ import { Element } from '@ephox/sugar';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
   config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
+  refresh?: (component: AlloyComponent) => void;
   grow?: (component: AlloyComponent) => void;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;

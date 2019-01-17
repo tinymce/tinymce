@@ -18,7 +18,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 const toolbarSchema = [
-  FieldSchema.strict('dom')
+  FieldSchema.option('lazySink'),
+  FieldSchema.strict('dom'),
+  FieldSchema.defaultedBoolean('floating', false)
 ];
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
