@@ -13,7 +13,7 @@
 @swatch-picker-button-icon-height: 24px;
 @swatch-picker-button-icon-width: 24px;
 @swatch-remove-color-stroke-color: #e74c3c;
-@swatch-outline-color: rgba(127, 127, 127, .3) inset;
+@swatch-outline-color: rgba(127, 127, 127, .3);
 
 .tox {
   .tox-toolbar .tox-swatches {
@@ -31,13 +31,15 @@
 
     &:hover,
     &:focus {
-      box-shadow: 0 0 0 1px @swatch-outline-color;
+      box-shadow: 0 0 0 1px @swatch-outline-color inset;
       transform: scale(.8);
     }
   }
 
   .tox-swatch--remove {
-    //
+    align-items: center;
+    display: flex;
+    justify-content: center;
 
     svg {
       stroke: @swatch-remove-color-stroke-color;
@@ -64,10 +66,6 @@
 
     &:hover {
       background: @toolbar-button-hover-background-color;
-    }
-
-    &:active > svg {
-      transform: translateY(1px);
     }
   }
 }
