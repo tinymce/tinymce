@@ -10,14 +10,17 @@
 //
 
 @statusbar-border-radius: 0;
+@statusbar-background-color: @background-color;
 @statusbar-height: 18px;
 @statusbar-padding-x: @pad-sm;
+@statusbar-outer-border-color: @border-color;
+@statusbar-separator-border-color: @border-color;
 
 .tox {
   .tox-statusbar {
     align-items: center;
-    background-color: @background-color;
-    border-color: @border-color;
+    background-color: @statusbar-background-color;
+    border-color: @statusbar-separator-border-color @statusbar-outer-border-color @statusbar-outer-border-color @statusbar-outer-border-color;
     border-radius: @statusbar-border-radius;
     border-style: solid;
     border-width: 1px;
