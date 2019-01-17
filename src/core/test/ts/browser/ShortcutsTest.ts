@@ -54,6 +54,19 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function () {
     assertShortcut('ctrl+shift+d', { ctrlKey: true, shiftKey: true, keyCode: 68 }, true);
     assertShortcut('ctrl+shift+alt+d', { ctrlKey: true, shiftKey: true, altKey: true, keyCode: 68 }, true);
     assertShortcut('ctrl+221', { ctrlKey: true, keyCode: 221 }, true);
+
+    assertShortcut('f1', { keyCode: 112}, true);
+    assertShortcut('f2', { keyCode: 113}, true);
+    assertShortcut('f3', { keyCode: 114}, true);
+    assertShortcut('f4', { keyCode: 115}, true);
+    assertShortcut('f5', { keyCode: 116}, true);
+    assertShortcut('f6', { keyCode: 117}, true);
+    assertShortcut('f7', { keyCode: 118}, true);
+    assertShortcut('f8', { keyCode: 119}, true);
+    assertShortcut('f9', { keyCode: 120}, true);
+    assertShortcut('f10', { keyCode: 121}, true);
+    assertShortcut('f11', { keyCode: 122}, true);
+    assertShortcut('f12', { keyCode: 123}, true);
   });
 
   suite.test('Remove', function (editor) {
