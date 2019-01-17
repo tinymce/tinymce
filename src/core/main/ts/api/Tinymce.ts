@@ -38,7 +38,6 @@ import Schema from './html/Schema';
 import HtmlSerializer from './html/Serializer';
 import { Styles } from './html/Styles';
 import Writer from './html/Writer';
-import Factory from './ui/Factory';
 import Class from './util/Class';
 import Color from './util/Color';
 import Delay from './util/Delay';
@@ -108,10 +107,6 @@ const publicApi = {
     DomParser,
     Writer,
     Serializer: HtmlSerializer
-  },
-
-  ui: {
-    Factory
   },
 
   Env,
