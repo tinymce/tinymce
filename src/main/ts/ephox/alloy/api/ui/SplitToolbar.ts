@@ -19,6 +19,9 @@ import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../.
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { LazySink } from '../component/CommonTypes';
 import * as Layout from '../../positioning/layout/Layout';
+import { Coupling } from '../behaviour/Coupling';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import { Toggling } from '../behaviour/Toggling';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
@@ -28,14 +31,16 @@ const setStoredGroups = (bar, storedGroups) => {
 let visible = false;
 
 const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
-  const lazySink: () => ReturnType<LazySink> = () => detail.lazySink.getOrDie()(toolbar);
-  const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
-  const primary = ps.primary();
-  const overflow = ps.overflow();
+  const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
+  // const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
+  // const primary = ps.primary();
+  const overflow = AlloyParts.getPart(toolbar, detail, 'overflow').getOrThunk(() => { console.log('here'); return detail.overflow().getOrDie('required overflow through getOverflow')});
+  console.log('b', overflow);
 
   // Set the primary toolbar to have visibilty hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
 
+  console.log('c', overflow);
   // Clear the overflow toolbar
   Toolbar.setGroups(overflow, [ ]);
 
@@ -54,19 +59,10 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
               Css.set(overflow.element(), 'visibility', 'hidden');
             } else {
               Css.remove(overflow.element(), 'visibility');
-              Positioning.position(lazySink().getOrDie(), {
-                anchor: 'hotspot',
-                hotspot: primary,
-                layouts: {
-                  onLtr: Fun.constant([ Layout.south ]),
-                  onRtl : Fun.constant([ Layout.south ])
-                }
-              }, overflow);
-              visible = true;
             }
           } else {
             // This used to look up the overflow again ... we may need to do that.
-            Sliding.toggleGrow(ps.overflow());
+            Sliding.toggleGrow(overflow);
           }
         }
       })
@@ -97,7 +93,9 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   Css.remove(primary.element(), 'visibility');
   Css.reflow(primary.element());
 
-  Sliding.refresh(ps.overflow());
+  if (overflow.hasConfigured(Sliding)) {
+    Sliding.refresh(overflow);
+  }
 
 };
 

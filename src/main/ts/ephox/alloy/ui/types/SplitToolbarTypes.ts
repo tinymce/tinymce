@@ -14,7 +14,7 @@ export interface SplitToolbarDetail extends CompositeSketchDetail {
   floating: boolean;
   components: AlloySpec[ ];
   splitToolbarBehaviours: SketchBehaviours;
-  lazySink: Option<LazySink>;
+  overflow: () => Option<AlloyComponent>;
 
   builtGroups: Cell<AlloyComponent[]>;
   markers: {
@@ -31,7 +31,7 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
   floating?: boolean;
   components?: AlloySpec[];
   splitToolbarBehaviours?: AlloyBehaviourRecord;
-  lazySink?: LazySink;
+  overflow?: () => Option<AlloyComponent>;
 
   markers: {
     closedClass: string;
