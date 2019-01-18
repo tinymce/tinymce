@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { Sidebar } from '@ephox/bridge';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Traverse } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UiSidebarApi } from '../../../../../../core/main/ts/api/Editor';
 import { TestStore } from '../../module/AlloyTestUtils';
 
 interface EventLog {
@@ -80,37 +80,38 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
     base_url: '/project/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
     setup (editor) {
-      const logEvent = (name: string) => (api: UiSidebarApi) => {
+      const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
         const index = Traverse.findIndex(Element.fromDom(api.element())).getOr(-1);
         const entry: EventLog = {name, index};
         store.adder(entry)();
       };
-      const handleRender = (eventName: string) => (api: UiSidebarApi) => {
+      const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
         api.element().appendChild(Element.fromHtml('<div style="width: 200px; background: red;"></div>').dom());
         logEvent(eventName)(api);
+        return () => {};
       };
-      editor.addSidebar('mysidebar1', {
+      editor.ui.registry.addSidebar('mysidebar1', {
         tooltip: 'My sidebar 1',
         icon: 'bold',
-        onrender: handleRender('mysidebar1:render'),
-        onshow: logEvent('mysidebar1:show'),
-        onhide: logEvent('mysidebar1:hide')
+        onSetup: handleSetup('mysidebar1:render'),
+        onShow: logEvent('mysidebar1:show'),
+        onHide: logEvent('mysidebar1:hide')
       });
 
-      editor.addSidebar('mysidebar2', {
+      editor.ui.registry.addSidebar('mysidebar2', {
         tooltip: 'My sidebar 2',
         icon: 'italic',
-        onrender: handleRender('mysidebar2:render'),
-        onshow: logEvent('mysidebar2:show'),
-        onhide: logEvent('mysidebar2:hide')
+        onSetup: handleSetup('mysidebar2:render'),
+        onShow: logEvent('mysidebar2:show'),
+        onHide: logEvent('mysidebar2:hide')
       });
 
-      editor.addSidebar('mysidebar3', {
+      editor.ui.registry.addSidebar('mysidebar3', {
         tooltip: 'My sidebar 3',
         icon: 'comment',
-        onrender: handleRender('mysidebar3:render'),
-        onshow: logEvent('mysidebar3:show'),
-        onhide: logEvent('mysidebar3:hide')
+        onSetup: handleSetup('mysidebar3:render'),
+        onShow: logEvent('mysidebar3:show'),
+        onHide: logEvent('mysidebar3:hide')
       });
     },
   }, success, failure);

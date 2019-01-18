@@ -29,7 +29,6 @@ import Env from './Env';
 import Shortcuts from './Shortcuts';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import Sidebar from '../ui/Sidebar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
 
@@ -113,7 +112,6 @@ export interface Editor {
   serializer: any;
   settings: EditorSettings;
   shortcuts: any;
-  sidebars?: SidebarConfig[];
   startContent: string;
   suffix: string;
   targetElm: HTMLElement;
@@ -134,7 +132,6 @@ export interface Editor {
   addQueryStateHandler(name: string, callback, scope?: object): void;
   addQueryValueHandler(name: string, callback, scope?: object): void;
   addShortcut(pattern: string, desc: string, cmdFunc, scope?: object): void;
-  addSidebar(name: string, settings: SidebarSettings): void;
   addVisual(elm?): void;
   bindPendingEventDelegates(): void;
   convertURL(url: string, name: string, elm?): string;
@@ -183,24 +180,6 @@ export interface Editor {
 
 export interface Ui {
   registry: Registry.Registry;
-}
-
-export interface SidebarSettings {
-  tooltip: string;
-  icon: string;
-  image?: string;
-  onshow?(api: UiSidebarApi): void;
-  onrender?(api: UiSidebarApi): void;
-  onhide?(api: UiSidebarApi): void;
-}
-
-export interface UiSidebarApi {
-  element(): HTMLElement;
-}
-
-export interface SidebarConfig {
-  name: string;
-  settings: SidebarSettings;
 }
 
 // Shorten these names
@@ -336,6 +315,7 @@ export const Editor = function (id, settings, editorManager) {
   }
 
   const registry = Registry.create();
+
   /**
    * Editor ui components
    *
@@ -481,30 +461,10 @@ Editor.prototype = {
   },
 
   /**
-   * Adds a sidebar for the editor instance.
-   *
-   * @method addSidebar
-   * @param {String} name Sidebar name to add.
-   * @param {Object} settings Settings object with icon, onshow etc.
-   * @example
-   * // Adds a custom sidebar that when clicked warns the panel element
-   * tinymce.init({
-   *    ...
-   *    setup: function(ed) {
-   *       ed.addSidebar('example', {
-   *          tooltip: 'My sidebar',
-   *          icon: 'my-side-bar',
-   *          onshow: function(api) {
-   *             console.log(api.element());
-   *          }
-   *       });
-   *    }
-   * });
+   * No longer supported, use editor.ui.registry.addSidebar instead
    */
-  addSidebar (name: string, settings: SidebarSettings) {
-    return Sidebar.add(this, name, settings);
-    // tslint:disable:no-console
-    // console.error('editor.addSidebar is deprecated in tinymce 5x, use editor.ui.registry.addSidebar instead');
+  addSidebar () {
+    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
   },
 
   /**

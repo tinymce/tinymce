@@ -3,18 +3,16 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 export default {
   setup: (ed: Editor) => {
-    ed.addButton('basic-button-1', {
-      type: 'textbutton',
+    ed.ui.registry.addButton('basic-button-1', {
       text: 'basic-button-1',
       onAction () {
         console.log('basic-button-1 click');
       }
     });
 
-    ed.addButton('basic-button-2', {
-      type: 'iconbutton',
+    ed.ui.registry.addButton('basic-button-2', {
       icon: 'basic-icon',
-      ariaLabel: 'aria-label-icon-button',
+      text: 'aria-label-icon-button',
       onAction () {
         console.log('basic-button-2 click, basic-icon');
       }
@@ -39,7 +37,7 @@ export default {
     //   }
     // });
 
-    ed.addButton('dialog-button', {
+    ed.ui.registry.addButton('dialog-button', {
       type: 'button',
       text: 'Launch Dialog',
       onAction () {
