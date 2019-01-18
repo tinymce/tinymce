@@ -113,13 +113,17 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
     const sTestRels = Log.stepsAsStep('TBA', 'Link: Checking rel generation',
       [
         tinyApis.sSetSetting('rel_list', [
+          { value: '', text: 'None' },
           { value: 'just one', text: 'Just One' }
         ]),
         Step.sync(() => {
           const rels = RelOptions.getRels(editor, Option.some('initial-target'));
           Assertions.assertEq(
             'Checking rel_list output',
-            [ { value: 'just one', text: 'Just One' } ],
+            [
+              { value: '', text: 'None' },
+              { value: 'just one', text: 'Just One' }
+            ],
             rels.getOr([ ])
           );
         })
