@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.7.0] - 2019-01-18
+### Added
+ - Added more flexible tooltip behaviour.
+
 # [4.6.11] - 2019-01-10
 ### Added
  - Added `postPaste` event to SystemEvents.
