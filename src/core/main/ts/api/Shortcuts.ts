@@ -22,9 +22,18 @@ import Env from './Env';
 const each = Tools.each, explode = Tools.explode;
 
 const keyCodeLookup = {
+  f1: 112,
+  f2: 113,
+  f3: 114,
+  f4: 115,
+  f5: 116,
+  f6: 117,
+  f7: 118,
+  f8: 119,
   f9: 120,
   f10: 121,
-  f11: 122
+  f11: 122,
+  f12: 123
 };
 
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');

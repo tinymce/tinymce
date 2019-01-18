@@ -8,6 +8,7 @@
 import BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
 import BlockRangeDelete from '../delete/BlockRangeDelete';
 import CefDelete from '../delete/CefDelete';
+import CefBoundaryDelete from '../delete/CefBoundaryDelete';
 import InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
 import InlineFormatDelete from '../delete/InlineFormatDelete';
 import TableDelete from '../delete/TableDelete';
@@ -22,6 +23,8 @@ const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt:
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, false) },
+    { keyCode: VK.DELETE, action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, false) },
