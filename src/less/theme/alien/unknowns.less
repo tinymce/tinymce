@@ -37,24 +37,6 @@
     cursor: pointer;
   }
 
-  // We decided in the Tiny Drive styles to not have styling on error textfields and just have a validation
-  // message below the text field. But the classes could be useful to keep. I've replaced the below
-  // declarations with `.tox-form__group--error` in form/layout.less. So please remove the below declaraions
-  // from the code and replace with the above ones and delete this when done /FD
-  //
-  .tox-textbox-field-invalid input,
-  .tox-textbox-field-invalid textarea {
-    outline: 1px solid red;
-  }
-
-  // This has been replaced with .tox-menu__item--state-active. I've made the below class
-  // bright red to highlight all occurances. Also, active state is indicated by a checkbox.
-  // (this probably needs discussion). Please remove this block when done. /FD
-  .tox-menu__item.tox-selected-item {
-    background-color: red;
-    color: white;
-  }
-
   .tox-menu__item:hover:not(.tox-selected-item) {
     background-color: inherit !important;
     color: inherit !important;
