@@ -65,7 +65,7 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, 
   }
 
   if (rangeIsInContainerBlock) {
-    return CefUtils.renderRangeCaret(editor, caretPosition.toRange(), true);
+    return CefUtils.renderRangeCaret(editor, nextCaretPosition.toRange(), true);
   }
 
   return null;
