@@ -154,8 +154,12 @@ tinymce.PluginManager.add('autosave', function(editor) {
 			removeDraft();
 		});
 	}
-
-	window.onbeforeunload = tinymce._beforeUnloadHandler;
+	
+	var refFunc = window.onbeforeunload || function(){};
+	window.onbeforeunload = function(e){ 
+		tinymce._beforeUnloadHandler(e);
+		refFunc(e);
+	};
 
 	this.hasDraft = hasDraft;
 	this.storeDraft = storeDraft;
