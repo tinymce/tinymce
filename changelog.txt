@@ -1,4 +1,4 @@
-Version 5.0.0-rc-2 (TBD)
+Version 5.0.0-rc-2 (2019-01-22)
     Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Added screen reader accessibility for sidebar and statusbar #TINY-2699
     Updated Emoticons and Charmap dialogs to be screen reader accessible #TINY-2693
