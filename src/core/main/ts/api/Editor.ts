@@ -525,7 +525,7 @@ Editor.prototype = {
 
   addButton (name: string, settings: Partial<AddButtonSettings>) {
     // tslint:disable:no-console
-    console.error('editor.addButton is deprecated in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
+    console.error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
   },
 
   /**
@@ -582,7 +582,7 @@ Editor.prototype = {
    */
   addMenuItem (name: string, settings: AddMenuItem) {
     // tslint:disable:no-console
-    console.error('editor.addMenuItem is deprecated in tinymce 5x, use editor.ui.registry.addMenuItem instead');
+    console.error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
   },
 
   /**
@@ -594,7 +594,7 @@ Editor.prototype = {
    */
   addContextToolbar (predicate: (any) => boolean | string, items: string) {
     // tslint:disable:no-console
-    console.error('editor.addContextToolbar is deprecated in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
+    console.error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   },
 
   /**
