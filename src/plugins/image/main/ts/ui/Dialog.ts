@@ -314,7 +314,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
     const tabPanel: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
-      tabs: Arr.flatten<any>([
+      tabs: Arr.flatten([
         [MainTab.makeTab(info)],
         info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
         info.hasUploadUrl || info.hasUploadHandler ? [UploadTab.makeTab(info)] : []
