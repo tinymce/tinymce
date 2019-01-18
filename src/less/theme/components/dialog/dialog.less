@@ -74,6 +74,8 @@
     border-style: @dialog-border-style;
     border-width: @dialog-border-width;
     box-shadow: @dialog-box-shadow;
+    display: flex;
+    flex-direction: column;
     max-height: 100%;
     max-width: 480px;
     overflow: hidden;
@@ -129,6 +131,8 @@
   .tox-dialog__body {
     color: @dialog-body-text-color;
     display: flex;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
     font-size: @dialog-body-font-size;
     font-style: @dialog-body-font-style;
     font-weight: @dialog-body-font-weight;
@@ -161,7 +165,9 @@
   }
 
   .tox-dialog__body-content {
+    display: flex;
     flex: 1;
+    flex-direction: column;
     -ms-flex-preferred-size: auto;
     max-height: 650px; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
@@ -186,6 +192,7 @@
   }
 
   .tox-dialog--width-lg {
+    height: 650px; // The height property is required to flex the textarea within large dialogs to fit to parent
     max-width: 1200px;
   }
 
@@ -272,5 +279,12 @@
       padding-bottom: @pad-sm;
       padding-top: @pad-sm;
     }
+  }
+
+  // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
+  .tox-dialog__popups {
+    position: absolute;
+    width: 100%;
+    z-index: @z-index-dialogs;
   }
 }
