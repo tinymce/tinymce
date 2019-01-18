@@ -1,4 +1,4 @@
-import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions } from '@ephox/agar';
+import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions, UiControls } from '@ephox/agar';
 import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Type, Obj } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
@@ -175,6 +175,18 @@ const sClearHistory = Step.sync(() => {
   localStorage.removeItem('tinymce-url-history');
 });
 
+const sSetHtmlSelectValue = (group: string, newValue) => Logger.t('Set html select value', Chain.asStep({ }, [
+  cFindInDialog('label:contains("' + group + '") + .tox-selectfield select'),
+  UiControls.cSetValue(newValue),
+  cFireEvent('change')
+]));
+
+const sSetInputFieldValue = (group: string, newValue: string) => Logger.t('Set input field value', Chain.asStep({ }, [
+  cFindInDialog('label:contains("' + group + '") + input'),
+  UiControls.cSetValue(newValue),
+  cFireEvent('input')
+]));
+
 export const TestLinkUi = {
   sAssertContentPresence,
   sOpenLinkDialog,
@@ -191,5 +203,7 @@ export const TestLinkUi = {
   sClickConfirmNo,
   sInsertLink,
   fireEvent,
-  sClearHistory
+  sClearHistory,
+  sSetHtmlSelectValue,
+  sSetInputFieldValue
 };

@@ -33,18 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 
-    const sSetHtmlSelectValue = (group: string, newValue) => Logger.t('Set html select value', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("' + group + '") + .tox-selectfield select'),
-      UiControls.cSetValue(newValue),
-      TestLinkUi.cFireEvent('change')
-    ]));
-
-    const sSetInputFieldValue = (group: string, newValue: string) => Logger.t('Set input field value', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("' + group + '") + input'),
-      UiControls.cSetValue(newValue),
-      TestLinkUi.cFireEvent('input')
-    ]));
-
     const sAssertInputValue = (expected: string, group: string) => Logger.t('Assert input value', Chain.asStep({ }, [
       TestLinkUi.cFindInDialog('label:contains("' + group + '") + input'),
       UiControls.cGetValue,
@@ -66,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     const testChangingAnchorValue = Log.stepsAsStep('TBA', 'Link: Switching anchor changes the href and text', [
       tinyApis.sSetContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>'),
       TestLinkUi.sOpenLinkDialog,
-      sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'anchor2',
@@ -74,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         anchor: '#anchor2',
         target: ''
       }),
-      sSetHtmlSelectValue('Anchor', '#anchor1'),
+      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor1'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor1',
         text: 'anchor1',
@@ -84,8 +72,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       }),
 
       // Change the text ...so text won't change, but href will still
-      sSetInputFieldValue('Text to display', 'Other text'),
-      sSetHtmlSelectValue('Anchor', '#anchor2'),
+      TestLinkUi.sSetInputFieldValue('Text to display', 'Other text'),
+      TestLinkUi.sSetHtmlSelectValue('Anchor', '#anchor2'),
       TestLinkUi.sAssertDialogContents({
         href: '#anchor2',
         text: 'Other text',
