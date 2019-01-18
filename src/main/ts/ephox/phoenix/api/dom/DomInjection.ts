@@ -7,6 +7,6 @@ var atStartOf = function (element, offset, injection) {
   Injection.atStartOf(universe, element, offset, injection);
 };
 
-export default <any> {
+export default {
   atStartOf: atStartOf
 };

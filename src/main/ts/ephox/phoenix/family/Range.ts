@@ -36,6 +36,6 @@ var range = function (universe, item1, delta1, item2, delta2) {
   });
 };
 
-export default <any> {
+export default {
   range: range
 };

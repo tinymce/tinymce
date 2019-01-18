@@ -26,7 +26,7 @@ var spans = function (universe, base, baseOffset, end, endOffset, exclusions) {
   return SpanWrap.spans(universe, base, baseOffset, end, endOffset, exclusions);
 };
 
-export default <any> {
+export default {
   nu: nu,
   wrapWith: wrapWith,
   wrapper: wrapper,

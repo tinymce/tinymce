@@ -20,7 +20,7 @@ var accumulate = function (rest, parent, item) {
 };
 
 var inspect = function (universe, rest, item) {
-  // Conditions: 
+  // Conditions:
   // 1. There is nothing in the current list ... start a current list with item (nextlist)
   // 2. The item is the right sibling of the last thing on the current list ... accumulate into current list. (accumulate)
   // 3. Otherwise ... close off current, and start a new current with item (nextlist)
@@ -47,6 +47,6 @@ var textnodes = function (universe, items) {
   return result.current.length > 0 ? result.groups.concat({ parent: result.parent, children: result.current }) : result.groups;
 };
 
-export default <any> {
+export default {
   textnodes: textnodes
 };

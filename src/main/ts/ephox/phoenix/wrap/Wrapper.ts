@@ -56,13 +56,13 @@ var leaves = function (universe, base, baseOffset, end, endOffset, nu) {
 };
 
 /*
- * Returns a list of spans (reusing where possible) that wrap the text nodes within the range 
+ * Returns a list of spans (reusing where possible) that wrap the text nodes within the range
  */
 var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu) {
   var start = Navigation.toLeaf(universe, base, baseOffset);
   var finish = Navigation.toLeaf(universe, end, endOffset);
   var nodes = Split.range(universe, start.element(), start.offset(), finish.element(), finish.offset());
-  
+
   var groups = Contiguous.textnodes(universe, nodes);
 
   var canReuse = function (group) {
@@ -89,7 +89,7 @@ var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu)
   });
 };
 
-export default <any> {
+export default {
   wrapWith: wrapWith,
   wrapper: wrapper,
   leaves: leaves,

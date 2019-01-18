@@ -98,6 +98,6 @@ var spans = function (universe, start, soffset, finish, foffset, _exclusions) {
   return wrapper(universe, start, soffset, finish, foffset, exclusions);
 };
 
-export default <any> {
+export default {
   spans: spans
 };

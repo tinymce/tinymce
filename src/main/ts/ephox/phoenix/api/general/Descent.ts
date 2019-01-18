@@ -12,7 +12,7 @@ var freefallRtl = function (universe, element) {
   return Navigation.freefallRtl(universe, element);
 };
 
-export default <any> {
+export default {
   toLeaf: toLeaf,
   freefallLtr: freefallLtr,
   freefallRtl: freefallRtl

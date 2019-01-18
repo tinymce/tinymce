@@ -16,6 +16,6 @@ var find = function (universe, parent, offset, optimise) {
   });
 };
 
-export default <any> {
+export default {
   find: find
 };

@@ -9,7 +9,7 @@ var group = function (universe, items, optimise) {
   return Group.group(universe, items, optimise);
 };
 
-export default <any> {
+export default {
   range: range,
   group: group
 };

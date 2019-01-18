@@ -18,7 +18,7 @@ var right = function (universe, item, predicate, isRoot) {
   return hone(universe, item, predicate, Walker.sidestep, Walkers.right(), isRoot);
 };
 
-export default <any> {
+export default {
   left: left,
   right: right
 };

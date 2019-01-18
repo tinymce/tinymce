@@ -6,7 +6,7 @@ var range = Struct.immutable('element', 'start', 'finish');
 var points = Struct.immutable('begin', 'end');
 var text = Struct.immutable('element', 'text');
 
-export default <any> {
+export default {
   point: point,
   delta: delta,
   range: range,

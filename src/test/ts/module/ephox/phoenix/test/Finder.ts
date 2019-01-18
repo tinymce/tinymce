@@ -10,7 +10,7 @@ var getAll = function (universe, ids) {
   });
 };
 
-export default <any> {
+export default {
   get: get,
   getAll: getAll
 };

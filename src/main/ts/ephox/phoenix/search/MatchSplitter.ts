@@ -35,6 +35,6 @@ var separate = function (universe, list, matches) {
   return Arr.map(matches, collate);
 };
 
-export default <any> {
+export default {
   separate: separate
 };

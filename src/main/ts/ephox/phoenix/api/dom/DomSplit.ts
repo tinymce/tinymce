@@ -23,7 +23,7 @@ var position = function (target) {
   return Split.position(universe, target);
 };
 
-export default <any> {
+export default {
   split: split,
   splitByPair: splitByPair,
   range: range,

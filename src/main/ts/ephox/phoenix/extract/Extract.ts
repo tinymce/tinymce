@@ -80,7 +80,7 @@ var extractTo = function (universe, child, offset, pred, optimise) {
   });
 };
 
-export default <any> {
+export default {
   typed: typed,
   items: items,
   extractTo: extractTo,

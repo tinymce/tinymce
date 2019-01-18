@@ -30,6 +30,6 @@ var subdivide = function (universe, item, positions) {
   return [ Spot.range(item, 0, pieces[0].length) ].concat(others);
 };
 
-export default <any> {
+export default {
   subdivide: subdivide
 };

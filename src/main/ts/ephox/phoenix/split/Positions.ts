@@ -1,6 +1,6 @@
 import SplitPosition from '../api/data/SplitPosition';
 
-/* 
+/*
  * Categorise a split of a text node as: none, start, middle, or end
  */
 var determine = function (target) {
@@ -19,6 +19,6 @@ var determine = function (target) {
   });
 };
 
-export default <any> {
+export default {
   determine: determine
 };

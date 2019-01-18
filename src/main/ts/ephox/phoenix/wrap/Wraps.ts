@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 
 
-export default <any> function (universe, item) {
+export default function (universe, item) {
   var wrap = function (contents) {
     universe.insert().append(item, contents);
   };

@@ -58,7 +58,7 @@ var cata = function (subject, onBoundary, onEmpty, onText) {
   return subject.fold(onBoundary, onEmpty, onText);
 };
 
-export default <any> {
+export default {
   text: text,
   boundary: boundary,
   empty: empty,
