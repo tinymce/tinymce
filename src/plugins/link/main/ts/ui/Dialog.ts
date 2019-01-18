@@ -25,11 +25,11 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
   // Merge in the initial state and any changed state
   const resultData = {
     href: data.url.value,
-    text: data.text !== undefined ? data.text : text.getOr(undefined),
-    target: data.target !== undefined ? data.target : info.anchor.target.getOr(undefined),
-    rel: data.rel !== undefined ? data.rel : info.anchor.rel.getOr(undefined),
-    class: data.classz !== undefined ? data.classz : info.anchor.linkClass.getOr(undefined),
-    title: data.title !== undefined ? data.title : info.anchor.title.getOr(undefined),
+    text: Option.from(data.text).or(text).getOr(undefined),
+    target: Option.from(data.target).or(info.anchor.target).getOr(undefined),
+    rel: Option.from(data.rel).or(info.anchor.rel).getOr(undefined),
+    class: Option.from(data.classz).or(info.anchor.linkClass).getOr(undefined),
+    title: Option.from(data.title).or(info.anchor.title).getOr(undefined),
   };
 
   const attachState = {
