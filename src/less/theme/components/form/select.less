@@ -19,8 +19,13 @@
     padding-right: @pad-lg;
   }
 
+  // Hide OS rendered chevrons
   .tox-selectfield select::-ms-expand {
     display: none;
+  }
+
+  .tox-selectfield select:focus {
+    border-color: @select-focus-border-color;
   }
 
   .tox-selectfield svg {
