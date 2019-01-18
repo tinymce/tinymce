@@ -316,7 +316,7 @@ EditorManager = {
 
     invalidInlineTargets = Tools.makeMap(
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
-      'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu',
+      'colgroup option table tbody tfoot thead tr th td script noscript style textarea video audio iframe object menu',
       ' '
     );
 
