@@ -223,8 +223,8 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 export const CaretWalker = (root: Node): CaretWalker => {
   return {
     /**
-     * Returns the next logical caret position from the specificed input
-     * caretPoisiton or null if there isn't any more positions left for example
+     * Returns the next logical caret position from the specified input
+     * caretPosition or null if there isn't any more positions left for example
      * at the end specified root element.
      *
      * @method next
@@ -236,8 +236,8 @@ export const CaretWalker = (root: Node): CaretWalker => {
     },
 
     /**
-     * Returns the previous logical caret position from the specificed input
-     * caretPoisiton or null if there isn't any more positions left for example
+     * Returns the previous logical caret position from the specified input
+     * caretPosition or null if there isn't any more positions left for example
      * at the end specified root element.
      *
      * @method prev

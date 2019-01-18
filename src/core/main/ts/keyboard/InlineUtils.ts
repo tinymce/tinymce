@@ -46,6 +46,10 @@ const isAtZwsp = function (pos: CaretPosition) {
 };
 
 const normalizePosition = function (forward: boolean, pos: CaretPosition) {
+  if (!pos) {
+    return pos;
+  }
+
   const container = pos.container(), offset = pos.offset();
 
   if (forward) {
