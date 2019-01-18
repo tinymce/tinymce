@@ -44,6 +44,8 @@
 @dialog-body-text-transform: normal;
 @dialog-body-text-align: left;
 
+@dialog-table-border-color: @border-color;
+
 .tox {
   .tox-dialog-wrap {
     align-items: center;
@@ -251,17 +253,13 @@
     thead {
       th {
         font-weight: @font-weight-bold;
-        padding-top: @pad-sm;
-      }
-
-      tr {
-        border-bottom: none;
+        padding-bottom: @pad-sm;
       }
     }
 
     tbody {
       tr {
-        border-bottom: @dialog-border-width @dialog-border-style @dialog-border-color;
+        border-bottom: 1px solid @dialog-table-border-color;
       }
 
       tr:last-child {
