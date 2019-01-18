@@ -17,6 +17,7 @@ import { Selection } from '../api/dom/Selection';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
 import { Text, Range, Node, Element } from '@ephox/dom-globals';
+import { rangeInsertNode } from '../selection/RangeInsertNode';
 
 type TrimFn = (s: string) => string;
 
@@ -70,12 +71,6 @@ const getLocation = function (trim: TrimFn, selection: Selection, normalized: bo
   }
 
   return bookmark;
-};
-
-const trimEmptyTextNode = function (node: Node) {
-  if (NodeType.isText(node) && node.data.length === 0) {
-    node.parentNode.removeChild(node);
-  }
 };
 
 const findIndex = function (dom: DOMUtils, name: string, element: Element) {
@@ -206,16 +201,13 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   if (!collapsed) {
     rng2.collapse(false);
     const endBookmarkNode = createBookmarkSpan(dom, id + '_end', filled);
-    rng2.insertNode(endBookmarkNode);
-    trimEmptyTextNode(endBookmarkNode.nextSibling);
+    rangeInsertNode(dom, rng2, endBookmarkNode);
   }
 
   rng = normalizeTableCellSelection(rng);
   rng.collapse(true);
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
-  rng.insertNode(startBookmarkNode);
-  trimEmptyTextNode(startBookmarkNode.previousSibling);
-  trimEmptyTextNode(startBookmarkNode.nextSibling);
+  rangeInsertNode(dom, rng, startBookmarkNode);
 
   selection.moveToBookmark({ id, keep: 1 });
 
