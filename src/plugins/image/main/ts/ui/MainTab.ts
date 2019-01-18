@@ -81,7 +81,6 @@ const makeItems = function (info: ImageDialogInfo) {
 const makeTab = function (info: ImageDialogInfo) {
   return {
     title: 'General',
-    type: 'form',
     items: makeItems(info)
   };
 };
