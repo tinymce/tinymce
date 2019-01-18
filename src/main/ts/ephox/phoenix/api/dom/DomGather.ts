@@ -23,7 +23,7 @@ var walkers = function () {
   return Gather.walkers();
 };
 
-var walk = function (item, mode, direction, _rules) {
+var walk = function (item, mode, direction, _rules?) {
   return Gather.walk(universe, item, mode, direction, _rules);
 };
 

@@ -30,7 +30,7 @@ var walkers = function () {
   };
 };
 
-var walk = function (universe, item, mode, direction, _rules) {
+var walk = function (universe, item, mode, direction, _rules?) {
   return Walker.go(universe, item, mode, direction, _rules);
 };
 
