@@ -121,7 +121,8 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-toolbar' ]
     },
-
+    getSink: lazySink,
+    backstage,
     onEscape() {
       editor.focus();
     }

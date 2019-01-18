@@ -124,14 +124,17 @@ const partToolbar = Composite.partType.optional({
           return Option.some(true);
         },
         cyclicKeying: false,
-        initGroups: []
+        initGroups: [],
+        getSink: spec.getSink,
+        backstage: spec.backstage
       });
     }
   },
   name: 'toolbar',
   schema: [
     FieldSchema.strict('dom'),
-    FieldSchema.strict('onEscape')
+    FieldSchema.strict('onEscape'),
+    FieldSchema.strict('getSink')
   ]
 });
 

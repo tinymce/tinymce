@@ -17,14 +17,21 @@ import {
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
   Focusing,
+  Container,
+  GuiFactory,
+  Attachment,
+  Memento,
+  Positioning
 } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Result } from '@ephox/katamari';
 
 export interface Toolbar {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
+  getSink: () => Result<AlloyComponent, Error>;
+  backstage: any; // TODO: Fucking fix me
 }
 
 export interface ToolbarGroup {
@@ -90,12 +97,44 @@ const renderToolbarGroup = (foo: ToolbarGroup) => {
 const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
+  const memOverflow = Memento.record(
+    AlloyToolbar.sketch({
+      dom: {
+        tag: 'div',
+        styles: {
+          'background-color': 'blue'
+        }
+      }
+    })
+  );
+
+  const getOverflow = () => {
+    return foo.getSink().toOption().map((sink) => {
+      return memOverflow.getOpt(sink).fold(
+        () => {
+          // overflow isn't there yet ... so add it, and return the built thing
+          const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
+          Attachment.attach(sink, builtoverFlow);
+          Positioning.position(sink, foo.backstage.shared.anchors.banner(), builtoverFlow);
+          return builtoverFlow;
+        },
+        (overflow) => {
+          // you have the build thing, so just return it
+          Positioning.position(sink, foo.backstage.shared.anchors.banner(), overflow);
+          return overflow;
+        }
+      );
+    });
+  };
+
   return SplitAlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
+    floating: true,
+    overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': toolbarGroup({
@@ -117,12 +156,12 @@ const renderMoreToolbar = (foo: Toolbar) => {
           classes: [ 'tox-toolbar-primary' ]
         }
       }),
-      SplitAlloyToolbar.parts().overflow({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-toolbar-overflow' ]
-        }
-      })
+      // SplitAlloyToolbar.parts().overflow({
+      //   dom: {
+      //     tag: 'div',
+      //     classes: [ 'tox-toolbar-overflow' ]
+      //   }
+      // })
     ],
     markers: {
       openClass: 'example-overflow-open',

@@ -16,9 +16,12 @@
     .tox .tox-toolbar-overflow.example-overflow-closed {
       visibility: hidden;
     }
-
-    .tox .tox-toolbar-overflow.example-overflow-open {
+    .tox .tox-toolbar-overflow {
       display: flex;
+      flex-wrap: wrap;
+    }
+    .tox .tox-toolbar-overflow .tox-toolbar__group {
+      flex-wrap: nowrap;
     }
   </style>
 </head>

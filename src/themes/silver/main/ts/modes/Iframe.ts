@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Disabling } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
 import { Body, Element, Selectors } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
@@ -76,6 +76,13 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   editor.addQueryValueHandler('ToggleSidebar', () => {
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
+  });
+
+  const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+  toolbar.each((tbar) => {
+    window.addEventListener('resize', () => {
+      SplitToolbar.refresh(tbar);
+    });
   });
 
   return {
