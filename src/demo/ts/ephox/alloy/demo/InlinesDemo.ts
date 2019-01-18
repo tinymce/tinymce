@@ -4,6 +4,7 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
@@ -55,10 +56,45 @@ export default (): void => {
       data: {
         value: v,
         meta: {
-          text: t,
+          'text': t,
           'item-class': c
         }
-      }
+      },
+
+      itemBehaviours: Behaviour.derive([
+        Tooltipping.config({
+          lazySink,
+          tooltipDom: {
+            tag: 'div',
+            styles: {
+              background: '#cadbee',
+              padding: '3em'
+            }
+          },
+          tooltipComponents: [
+            GuiFactory.text(t)
+          ],
+          anchor: (comp) => ({
+            anchor: 'submenu',
+            item: comp
+          }),
+          onShow: (component, tooltip) => {
+            setTimeout(() => {
+              Tooltipping.setComponents(component, [
+                {
+                  dom: {
+                    tag: 'div',
+                    innerHtml: 'This lazy loaded'
+                  }
+                }
+              ]);
+            }, 2000);
+          },
+          onHide: (component, tooltip) => {
+
+          }
+        })
+      ])
     };
   };
 

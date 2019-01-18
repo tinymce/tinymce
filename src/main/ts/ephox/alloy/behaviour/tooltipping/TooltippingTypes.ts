@@ -1,12 +1,14 @@
-import { BehaviourConfigSpec, BehaviourConfigDetail, AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Result, Option } from '@ephox/katamari';
-import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import { Option } from '@ephox/katamari';
+import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec } from '../../api/behaviour/Behaviour';
 import { LazySink } from '../../api/component/CommonTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
-  hideAllExclusive(comp: AlloyComponent): void;
+  hideAllExclusive: (comp: AlloyComponent) => void;
+  setComponents: (comp: AlloyComponent, specs: AlloySpec[]) => void;
 }
 
 export interface TooltippingConfig extends BehaviourConfigDetail {
@@ -15,6 +17,9 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   tooltipComponents: AlloySpec[];
   exclusive: boolean;
   delay: number;
+  anchor: (comp: AlloyComponent) => AnchorSpec;
+  onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onHide: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingConfigSpec extends BehaviourConfigSpec {
@@ -23,6 +28,9 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   tooltipComponents?: AlloySpec[];
   exclusive?: boolean;
   delay?: number;
+  anchor?: (comp: AlloyComponent) => AnchorSpec;
+  onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingState extends BehaviourState {
