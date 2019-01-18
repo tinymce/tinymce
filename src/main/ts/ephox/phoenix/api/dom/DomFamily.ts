@@ -11,7 +11,7 @@ var group = function (elements, optimise) {
   return Family.group(universe, elements, optimise);
 };
 
-export default <any> {
+export default {
   range: range,
   group: group
 };

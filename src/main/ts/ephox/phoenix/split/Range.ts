@@ -36,6 +36,6 @@ var nodes = function (universe, base, baseOffset, end, endOffset) {
   return f(universe, base, baseOffset, end, endOffset);
 };
 
-export default <any> {
+export default {
   nodes: nodes
 };

@@ -59,7 +59,7 @@ var safeToken = function (universe, elements, token, optimise) {
   return run(universe, elements, [pattern], optimise);
 };
 
-export default <any> {
+export default {
   safeWords: safeWords,
   safeToken: safeToken,
   run: run

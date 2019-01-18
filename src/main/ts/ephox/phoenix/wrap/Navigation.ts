@@ -69,7 +69,7 @@ var freefallRtl = function (universe, element) {
   return children.length > 0 ? freefallRtl(universe, children[children.length - 1]) : Spot.point(candidate, toEnd(universe, candidate));
 };
 
-export default <any> {
+export default {
   toLast: toLast,
   toLeaf: toLeaf,
   toLower: toLower,

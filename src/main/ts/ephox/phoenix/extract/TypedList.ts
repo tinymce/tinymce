@@ -35,7 +35,7 @@ var justText = function (parray) {
   });
 };
 
-export default <any> {
+export default {
   count: count,
   dropUntil: dropUntil,
   gen: gen,

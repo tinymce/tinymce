@@ -31,7 +31,7 @@ var folder = function (fold, label) {
   };
 };
 
-export default <any> {
+export default {
   none: none,
   start: start,
   middle: middle,

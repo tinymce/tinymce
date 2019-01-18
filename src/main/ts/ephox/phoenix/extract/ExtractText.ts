@@ -16,6 +16,6 @@ var from = function (universe, item, optimise) {
   }).join('');
 };
 
-export default <any> {
+export default {
   from: from
 };

@@ -6,7 +6,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 
 
-export default <any> function () {
+export default function () {
 
   var container = Element.fromTag('div');
   var div1 = Element.fromTag('div');

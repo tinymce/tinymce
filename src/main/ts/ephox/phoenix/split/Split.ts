@@ -56,7 +56,7 @@ var splitByPair = function (universe, item, start, end) {
   return start === 0 ? item : middle;
 };
 
-export default <any> {
+export default {
   split: split,
   splitByPair: splitByPair
 };

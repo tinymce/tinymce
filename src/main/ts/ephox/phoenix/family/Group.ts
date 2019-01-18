@@ -7,7 +7,7 @@ import { Splitting } from '@ephox/polaris';
 /**
  * Return an array of arrays split by boundaries (exclude) or empty tags (include).
  */
-var group = function (universe, items, optimise) {
+var group = function (universe, items, optimise?) {
   var extractions = Arr.bind(items, function (item) {
     return Extract.from(universe, item, optimise);
   });
@@ -27,6 +27,6 @@ var group = function (universe, items, optimise) {
   return Arr.filter(segments, function (x) { return x.length > 0; });
 };
 
-export default <any> {
-  group: group
+export default {
+  group
 };

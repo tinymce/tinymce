@@ -27,7 +27,7 @@ var toText = function (element, optimise) {
   return Extract.toText(universe, element, optimise);
 };
 
-export default <any> {
+export default {
   extract: extract,
   extractTo: extractTo,
   all: all,

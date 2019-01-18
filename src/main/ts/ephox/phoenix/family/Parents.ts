@@ -14,6 +14,6 @@ var common = function (universe, item1, item2) {
   });
 };
 
-export default <any> {
+export default {
   common: common
 };

@@ -30,7 +30,7 @@ var text = function (item) {
   return item.text;
 };
 
-export default <any> {
+export default {
   typeditem: typeditem,
   typeditems: typeditems,
   ids: ids,

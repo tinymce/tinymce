@@ -23,7 +23,7 @@ var position = function (universe, target) {
   return Positions.determine(target);
 };
 
-export default <any> {
+export default {
   split: split,
   splitByPair: splitByPair,
   range: range,

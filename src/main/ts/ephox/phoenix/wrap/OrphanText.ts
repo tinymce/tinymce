@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 // Textnodes cannot be children of these tags
 var textBlacklist = [ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ];
 
-export default <any> function (universe) {
+export default function (universe) {
   var domUtils = universe.property();
   var validateParent = function (node, blacklist) {
     return domUtils.parent(node).map(domUtils.name).map(function (name) {

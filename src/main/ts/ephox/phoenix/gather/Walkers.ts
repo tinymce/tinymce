@@ -30,7 +30,7 @@ var right = function () {
   };
 };
 
-export default <any> {
+export default {
   left: left,
   right: right
 };

@@ -17,7 +17,7 @@ var freefallRtl = function (element) {
   return Descent.freefallRtl(universe, element);
 };
 
-export default <any> {
+export default {
   toLeaf: toLeaf,
   freefallLtr: freefallLtr,
   freefallRtl: freefallRtl

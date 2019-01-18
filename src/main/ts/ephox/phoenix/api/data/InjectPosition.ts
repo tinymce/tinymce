@@ -37,7 +37,7 @@ var folder = function (fold, label) {
   };
 };
 
-export default <any> {
+export default {
   before: before,
   after: after,
   rest: rest,
