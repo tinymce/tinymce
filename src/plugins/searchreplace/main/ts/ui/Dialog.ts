@@ -74,8 +74,8 @@ const open = function (editor: Editor, currentIndexState) {
   const initialData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: 'unchecked',
-    wholewords: 'unchecked'
+    matchcase: false,
+    wholewords: false
   };
   editor.windowManager.open({
     title: 'Find and Replace',
