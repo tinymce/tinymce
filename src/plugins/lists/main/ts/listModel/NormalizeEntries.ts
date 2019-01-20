@@ -8,34 +8,31 @@
 import { Entry } from './Entry';
 import { Arr, Merger, Option } from '@ephox/katamari';
 
-const assimilateEntry = (adherent: Entry, source: Entry): void => {
-  adherent.listType = source.listType;
-  adherent.listAttributes = Merger.merge({}, source.listAttributes);
+const cloneListProperties = (target: Entry, source: Entry): void => {
+  target.listType = source.listType;
+  target.listAttributes = Merger.merge({}, source.listAttributes);
 };
 
-const normalizeShallow = (outline: Array<Option<Entry>>, entry: Entry): Array<Option<Entry>> => {
-  const matchingEntryDepth = entry.depth - 1;
-  outline[matchingEntryDepth].each((matchingEntry) => assimilateEntry(entry, matchingEntry));
-
-  const newOutline = outline.slice(0, matchingEntryDepth);
-  newOutline.push(Option.some(entry));
-  return newOutline;
-};
-
-const normalizeDeep = (outline: Array<Option<Entry>>, entry: Entry): Array<Option<Entry>> => {
-  const newOutline = outline.slice(0);
-  const diff = entry.depth - outline.length;
-  for (let i = 1; i < diff; i++) {
-    newOutline.push(Option.none());
+// Closest entry above in the same list
+const previousSiblingEntry = (entries: Entry[], start: number): Option<Entry> => {
+  const depth = entries[start].depth;
+  for (let i = start - 1; i >= 0; i--) {
+    if (entries[i].depth === depth) {
+      return Option.some(entries[i]);
+    }
+    if (entries[i].depth < depth) {
+      break;
+    }
   }
-  newOutline.push(Option.some(entry));
-  return newOutline;
+  return Option.none();
 };
 
 const normalizeEntries = (entries: Entry[]): void => {
-  Arr.foldl(entries, (outline: Array<Option<Entry>>, entry) => {
-    return entry.depth > outline.length ? normalizeDeep(outline, entry) : normalizeShallow(outline, entry);
-  }, []);
+  Arr.each(entries, (entry, i) => {
+    previousSiblingEntry(entries, i).each((matchingEntry) => {
+      cloneListProperties(entry, matchingEntry);
+    });
+  });
 };
 
 export {

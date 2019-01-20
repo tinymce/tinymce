@@ -9,18 +9,18 @@ import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import Selection from '../core/Selection';
-import TextBlock from '../core/TextBlock';
 import { composeList } from './ComposeList';
 import { Entry, isIndented, isSelected } from './Entry';
-import { indentEntry, IndentValue } from './Indentation';
+import { indentEntry, Indentation } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
-import { EntrySet, ItemTuple, parseLists } from './ParseLists';
+import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
+import { createTextBlock } from '../core/TextBlock';
 
 const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   return Arr.map(entries, (entry) => {
     const content = Fragment.fromElements(entry.content);
-    return Element.fromDom(TextBlock.createNewTextBlock(editor, content.dom()));
+    return Element.fromDom(createTextBlock(editor, content.dom()));
   });
 };
 
@@ -36,11 +36,11 @@ const composeEntries = (editor, entries: Entry[]): Element[] => {
   });
 };
 
-const indentSelectedEntries = (entries: Entry[], indentation: IndentValue): void => {
+const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
   Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
 };
 
-const getItemSelection = (editor: Editor): Option<ItemTuple> => {
+const getItemSelection = (editor: Editor): Option<ItemSelection> => {
   const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
 
   return Options.liftN([
@@ -49,10 +49,10 @@ const getItemSelection = (editor: Editor): Option<ItemTuple> => {
   ], (start, end) => ({ start, end }));
 };
 
-const listsIndentation = (editor: Editor, lists: Element[], indentation: IndentValue) => {
-  const parsedLists: EntrySet[] = parseLists(lists, getItemSelection(editor));
+const listsIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
+  const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
-  Arr.each(parsedLists, (entrySet) => {
+  Arr.each(entrySets, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
     InsertAll.before(entrySet.sourceList, composeEntries(editor, entrySet.entries));
     Remove.remove(entrySet.sourceList);
