@@ -24,8 +24,8 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
       return Log.stepsAsStep('TBA', `ImageTools: ${message}`, [
         ImageUtils.sLoadImage(editor, url),
         tinyApis.sSelect('img', []),
-        // imgOps.sExecToolbar('Flip horizontally'), // TODO: When we have context toolbars back
-        // imgOps.sExecToolbar('Rotate clockwise'),
+        imgOps.sExecToolbar('Flip horizontally'),
+        imgOps.sExecToolbar('Rotate clockwise'),
         imgOps.sExecDialog('Invert'),
         imgOps.sExecDialog('Crop'),
         imgOps.sExecDialog('Resize'),

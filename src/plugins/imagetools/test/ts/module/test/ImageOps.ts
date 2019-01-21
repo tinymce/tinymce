@@ -117,8 +117,7 @@ export default function (editor) {
       Pipeline.async({}, [
         Chain.asStep(imgEl, [
           Mouse.cClick,
-          // ui.cWaitForPopup('wait for Imagetools toolbar', 'div[aria-label="Inline toolbar"][role="dialog"]'), TODO: Add this back when context menus come back
-          ui.cWaitForUi('wait for toolbar', '.tox-toolbar'),
+          ui.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'),
           execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
         ]),
         sWaitForUrlChange(imgEl, origUrl)
@@ -130,6 +129,7 @@ export default function (editor) {
 
   return {
     sExecToolbar: Fun.curry(sExec, true),
-    sExecDialog: Fun.curry(sExec, false)
+    sExecDialog: Fun.curry(sExec, false),
+    cClickToolbarButton
   };
 }
