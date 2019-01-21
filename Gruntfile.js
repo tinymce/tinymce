@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
-      tsc: { command: 'node ./node_modules/typescript/bin/tsc' }
+      tsc: { command: 'npx tsc' }
     },
 
     tslint: {
@@ -820,11 +820,11 @@ module.exports = function (grunt) {
     grunt.file.write('js/tinymce/tinymce.min.js', header + grunt.file.read('js/tinymce/tinymce.min.js'));
   });
 
-  require('load-grunt-tasks')(grunt);
+  require('load-grunt-tasks')(grunt, {
+    requireResolution: true,
+    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag', 'rollup']
+  });
   grunt.loadTasks('tools/tasks');
-  grunt.loadNpmTasks('@ephox/bedrock');
-  grunt.loadNpmTasks('@ephox/swag');
-  grunt.loadNpmTasks('grunt-tslint');
 
   grunt.registerTask('prod', [
     // 'validateVersion',
