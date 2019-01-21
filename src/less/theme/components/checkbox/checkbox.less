@@ -36,7 +36,10 @@
   }
 
   .tox-checkbox__icons {
+    border-radius: @checkbox-focus-border-radius;
+    box-shadow: @checkbox-unfocused-box-shadow;
     height: @textfield-line-height;
+    padding: calc(@button-padding-y - @button-border-width);
     width: @textfield-line-height;
 
     .tox-checkbox-icon__unchecked svg {
