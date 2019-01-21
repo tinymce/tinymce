@@ -9,29 +9,19 @@
 // Toolbar group
 //
 
-@toolbar-group-background-color: transparent;
-@toolbar-group-border: none;
-@toolbar-group-border-radius: 0;
 @toolbar-group-padding-x: 4px;
-@toolbar-group-separator-color: @toolbar-border-color;
-@toolbar-group-separator-width: 1px;
-@toolbar-group-spacing-x: 0;
-@toolbar-group-spacing-y: 0;
+@toolbar-group-separator-color: @border-color;
 
 .tox {
   .tox-toolbar__group {
     align-items: center;
-    background: @toolbar-group-background-color;
-    border: @toolbar-group-border;
-    border-radius: @toolbar-group-border-radius;
     display: flex;
     flex-wrap: wrap;
-    margin: 0 @toolbar-group-spacing-x @toolbar-group-spacing-y 0;
     padding: 0 @toolbar-group-padding-x;
   }
 
   .tox-toolbar__group:not(:last-of-type) {
-    border-right: @toolbar-group-separator-width solid @toolbar-group-separator-color;
+    border-right: 1px solid @toolbar-group-separator-color;
   }
 
   // Align toolbar group to the right

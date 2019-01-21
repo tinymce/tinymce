@@ -9,16 +9,19 @@
 // Global styling
 //
 
-@tinymce-container-padding: 0;
+@tinymce-border-color: @border-color;
+@tinymce-border-radius: 10px;
+@tinymce-box-shadow: none;
 
 .tox-tinymce {
-  border: 0;
+  border: 1px solid @tinymce-border-color;
+  border-radius: @tinymce-border-radius;
+  box-shadow: @tinymce-box-shadow;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   font-family: @font-stack-base;
   overflow: hidden;
-  padding: @tinymce-container-padding;
   visibility: inherit !important;
 }
 
@@ -28,6 +31,12 @@
   flex: 1 1 auto;
   flex-direction: column;
   overflow: hidden;
+
+  > *:first-child {
+    // !important required because we don't know
+    // if menubar, toolbar or edit area comes first
+    border-top: none !important;
+  }
 }
 
 .tox-tinymce-aux {

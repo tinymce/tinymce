@@ -14,9 +14,12 @@
 @tooltip-border-radius: @panel-border-radius;
 @tooltip-box-shadow: 0 2px 4px fade(@color-black, 30%);
 @tooltip-font-size: @font-size-sm;
+@tooltip-font-weight: @font-weight-normal;
+@tooltip-font-style: normal;
 @tooltip-padding-x: @pad-sm;
 @tooltip-padding-y: @pad-xs;
 @tooltip-text-color: contrast(@tooltip-background-color, @color-black, fade(@color-white, 75%));
+@tooltip-text-transform: normal;
 
 .tox {
   .tox-tooltip {
@@ -31,7 +34,10 @@
     box-shadow: @tooltip-box-shadow;
     color: @tooltip-text-color;
     font-size: @tooltip-font-size;
+    font-style: @tooltip-font-style;
+    font-weight: @tooltip-font-weight;
     padding: @tooltip-padding-y @tooltip-padding-x;
+    text-transform: @tooltip-text-transform;
   }
 
   .tox-tooltip__arrow {
