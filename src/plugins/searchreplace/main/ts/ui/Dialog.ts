@@ -12,32 +12,39 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
 
+export interface DialogData {
+  findtext: string;
+  replacetext: string;
+  matchcase: boolean;
+  wholewords: boolean;
+}
+
 const open = function (editor: Editor, currentIndexState) {
   let last: any = {}, selectedText: string;
   editor.undoManager.add();
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
+  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
     const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const disableAll = function (api: Types.Dialog.DialogInstanceApi<typeof initialData>, disable: boolean) {
+  const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
+  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
     editor.windowManager.alert('Could not find the specified string.', function () {
       api.focus('findtext');
     });
   }
 
-  const doSubmit = (api: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
+  const doSubmit = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
 
     if (!data.findtext.length) {
@@ -71,13 +78,13 @@ const open = function (editor: Editor, currentIndexState) {
     };
   };
 
-  const initialData = {
+  const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: 'unchecked',
-    wholewords: 'unchecked'
+    matchcase: false,
+    wholewords: false
   };
-  editor.windowManager.open({
+  editor.windowManager.open<DialogData>({
     title: 'Find and Replace',
     size: 'normal',
     body: {

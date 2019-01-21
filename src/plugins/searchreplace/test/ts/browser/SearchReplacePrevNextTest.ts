@@ -5,6 +5,8 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as Utils from '../module/test/Utils';
+
 UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', (success, failure) => {
 
 Theme();
@@ -17,7 +19,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
   Pipeline.async({},
     Log.steps('TBA', 'SearchReplace: Test Prev and Next buttons become enabled and disabled at right places when multiple matches exist', [
       tinyApis.sSetContent('<p>fish fish fish</p>'),
-      tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
+      Utils.sOpenDialog(tinyUi),
       Chain.asStep({}, [
         Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
           Chain.fromChains([
