@@ -84,7 +84,7 @@ const open = function (editor: Editor, currentIndexState) {
     matchcase: false,
     wholewords: false
   };
-  editor.windowManager.open({
+  editor.windowManager.open<DialogData>({
     title: 'Find and Replace',
     size: 'normal',
     body: {
@@ -158,7 +158,7 @@ const open = function (editor: Editor, currentIndexState) {
       }
     ],
     initialData,
-    onAction: (api: Types.Dialog.DialogInstanceApi<DialogData>, details) => {
+    onAction: (api, details) => {
       const data = api.getData();
       switch (details.name) {
         case 'find':
