@@ -30,6 +30,9 @@ const addFormatChangedListener = (editor: Editor, name: string, changed: (state:
 };
 
 const postRenderFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+  // Set the initial state
+  api.setActive(editor.formatter.match(name));
+
   addFormatChangedListener(editor, name, (state) => {
     api.setActive(state);
   });
