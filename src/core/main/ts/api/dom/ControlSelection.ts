@@ -120,7 +120,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   );
 
   const isImage = function (elm) {
-    return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
+    return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.mce-image'));
   };
 
   const isEventOnImageOutsideRange = function (evt, range) {
@@ -137,7 +137,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const getResizeTarget = function (elm) {
-    return editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
+    return editor.dom.is(elm, 'figure.mce-image') ? elm.querySelector('img') : elm;
   };
 
   const isResizable = function (elm) {
@@ -148,7 +148,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     if (typeof selector !== 'string') {
-      selector = 'table,img,figure.image,div';
+      selector = 'table,img,figure.mce-image,div';
     }
 
     if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -435,7 +435,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     });
 
     controlElm = e.type === 'mousedown' ? e.target : selection.getNode();
-    controlElm = dom.$(controlElm).closest('table,img,figure.image,hr')[0];
+    controlElm = dom.$(controlElm).closest('table,img,figure.mce-image,hr')[0];
 
     if (isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();
