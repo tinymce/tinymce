@@ -202,7 +202,7 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   setAttrib(image, 'alt', data.alt);
 
   if (data.caption) {
-    const figure = DOM.create('figure', { class: 'image' });
+    const figure = DOM.create('figure', { class: 'mce-image' });
 
     figure.appendChild(image);
     figure.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
