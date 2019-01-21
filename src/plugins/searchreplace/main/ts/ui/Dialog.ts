@@ -25,20 +25,20 @@ const open = function (editor: Editor, currentIndexState) {
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
+  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
     const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const disableAll = function (api: Types.Dialog.DialogInstanceApi<typeof initialData>, disable: boolean) {
+  const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<typeof initialData>) {
+  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
     editor.windowManager.alert('Could not find the specified string.', function () {
       api.focus('findtext');
     });
