@@ -1,24 +1,24 @@
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as SystemEvents from '../../api/events/SystemEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { Arr } from '@ephox/katamari';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
 import { Positioning } from '../../api/behaviour/Positioning';
-import * as Attachment from '../../api/system/Attachment';
-import { StreamingConfig } from '../../behaviour/streaming/StreamingTypes';
-import { EventFormat, CustomEvent, ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
+import { Replacing } from '../../api/behaviour/Replacing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
+import * as SystemEvents from '../../api/events/SystemEvents';
+import * as Attachment from '../../api/system/Attachment';
+import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
-import { Arr, Id, Fun } from '@ephox/katamari';
-
-import * as Layout from '../../positioning/layout/Layout';
-
-import { ExclusivityChannel, ShowTooltipEvent, HideTooltipEvent } from './TooltippingCommunication';
+import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
+import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
 const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
-  const hide = () => {
+  const hide = (comp: AlloyComponent) => {
     state.getTooltip().each((p) => {
       Attachment.detach(p);
+      tooltipConfig.onHide(comp, p);
       state.clearTooltip();
     });
     state.clearTimer();
@@ -38,19 +38,17 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           AlloyEvents.run(NativeEvents.mouseout(), (_) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
           })
+        ]),
+
+        behaviours: Behaviour.derive([
+          Replacing.config({ })
         ])
       });
 
       state.setTooltip(popup);
       Attachment.attach(sink, popup);
-      Positioning.position(sink, {
-        anchor: 'hotspot',
-        hotspot: comp,
-        layouts: {
-          onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
-          onRtl : Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
-        }
-      }, popup);
+      tooltipConfig.onShow(comp, popup);
+      Positioning.position(sink, tooltipConfig.anchor(comp), popup);
     }
   };
 
@@ -59,7 +57,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       // TODO: Think about the types for this, or find a better way for this
       // to rely on receiving.
       const receivingData = <any> message as ReceivingInternalEvent;
-      if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(); }
+      if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
     }),
 
     AlloyEvents.run(NativeEvents.focusin(), (comp) => {
@@ -78,7 +76,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
 
     AlloyEvents.run(HideTooltipEvent, (comp) => {
       state.resetTimer(() => {
-        hide();
+        hide(comp);
       }, tooltipConfig.delay);
     }),
     AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
@@ -89,12 +87,10 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     }),
 
     AlloyEvents.runOnDetached((comp) => {
-      hide();
+      hide(comp);
     })
   ]);
 
 };
 
-export {
-  events
-};
+export { events };

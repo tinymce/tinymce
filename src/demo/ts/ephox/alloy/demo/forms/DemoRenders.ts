@@ -16,7 +16,8 @@ const demoItem = ValueSchema.objOf([
       FieldSchema.defaulted('meta-demo-content', { })
     ])
   ]),
-  FieldSchema.strict('type')
+  FieldSchema.strict('type'),
+  FieldSchema.defaulted('itemBehaviours', { })
 ]);
 
 const demoWidgetItem = ValueSchema.objOf([
@@ -76,6 +77,7 @@ const demoSeparatorRender = (spec): SeparatorItemSpec => {
 };
 
 const item = (itemSpec): ItemSpec => {
+  console.log('itemSpec', itemSpec);
   if (itemSpec.type === 'widget') {
     return widgetItem(itemSpec);
   } else if (itemSpec.type === 'separator') {
@@ -92,7 +94,8 @@ const item = (itemSpec): ItemSpec => {
     type: spec.type,
     data: spec.data,
     dom: DomFactory.fromHtml('<div class="demo-alloy-item">' + html + '</div>'),
-    components: [ ]
+    components: [ ],
+    itemBehaviours: spec.itemBehaviours
   };
 };
 
