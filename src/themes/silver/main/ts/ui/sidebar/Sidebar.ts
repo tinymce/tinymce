@@ -37,8 +37,8 @@ export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
 const setup = (editor: Editor) => {
   const { sidebars } = editor.ui.registry.getAll();
 
-  // Register and setup each sidebar
-  Arr.map(Obj.keys(sidebars), (name) => {
+  // Setup each registered sidebar
+  Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
     const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
     editor.ui.registry.addToggleButton(name, {
@@ -56,8 +56,6 @@ const setup = (editor: Editor) => {
         };
       }
     });
-
-    return { name, spec };
   });
 };
 
