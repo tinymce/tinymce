@@ -4,8 +4,8 @@ import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
 import 'tinymce/themes/silver/Theme';
-import { Element } from '../../../../../../node_modules/@ephox/sugar';
-import { document } from '../../../../../../node_modules/@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success, failure) => {
 

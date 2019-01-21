@@ -74,6 +74,5 @@
     "src/themes/*/src/test/ts",
     "src/core/dist/globals/tinymce/core/",
     "src/core/dist/globals/**/*.ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
   ]
 }
