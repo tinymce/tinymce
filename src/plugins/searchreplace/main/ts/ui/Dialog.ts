@@ -12,6 +12,13 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
 
+export interface DialogData {
+  findtext: string;
+  replacetext: string;
+  matchcase: boolean;
+  wholewords: boolean;
+}
+
 const open = function (editor: Editor, currentIndexState) {
   let last: any = {}, selectedText: string;
   editor.undoManager.add();
@@ -37,7 +44,7 @@ const open = function (editor: Editor, currentIndexState) {
     });
   }
 
-  const doSubmit = (api: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
+  const doSubmit = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
 
     if (!data.findtext.length) {
@@ -71,7 +78,7 @@ const open = function (editor: Editor, currentIndexState) {
     };
   };
 
-  const initialData = {
+  const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
     matchcase: false,
@@ -151,7 +158,7 @@ const open = function (editor: Editor, currentIndexState) {
       }
     ],
     initialData,
-    onAction: (api, details) => {
+    onAction: (api: Types.Dialog.DialogInstanceApi<DialogData>, details) => {
       const data = api.getData();
       switch (details.name) {
         case 'find':
