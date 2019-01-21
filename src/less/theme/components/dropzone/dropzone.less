@@ -14,6 +14,8 @@
 .tox {
   .tox-dropzone-container {
     display: flex;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
   }
 
   .tox-dropzone {
@@ -25,11 +27,13 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    justify-content: center;
     min-height: 100px;
     padding: 10px;
   }
 
   .tox-dropzone p {
-    margin: 0;
+    color: @text-color-muted;
+    margin: 0 0 @pad-md 0;
   }
 }

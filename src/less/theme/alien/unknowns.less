@@ -20,7 +20,7 @@
 
 .tox {
 
-  // Please give an exanple where this is used. /FD
+  // TODO: Please give an exanple where this is used. /FD
   .tox-dialog-loading::before {
     background-color: rgba(0, 0, 0, .5);
     content: "";
@@ -30,132 +30,31 @@
     z-index: @z-index-loading;
   }
 
-  // I assume cursor:pointer should be applied to .tox-dialog__body-nav-item in dialog.less
+  // TODO: I assume cursor:pointer should be applied to .tox-dialog__body-nav-item in dialog.less
   // and all .tox-tab instances removed. If correct, please perform the changes and delete
   // the below declaration and this comment. /FD
   .tox-tab {
     cursor: pointer;
   }
 
-  // We decided in the Tiny Drive styles to not have styling on error textfields and just have a validation
-  // message below the text field. But the classes could be useful to keep. I've replaced the below
-  // declarations with `.tox-form__group--error` in form/layout.less. So please remove the below declaraions
-  // from the code and replace with the above ones and delete this when done /FD
-  //
-  .tox-textbox-field-invalid input,
-  .tox-textbox-field-invalid textarea {
-    outline: 1px solid red;
-  }
-
-  // This has been replaced with .tox-menu__item--state-active. I've made the below class
-  // bright red to highlight all occurances. Also, active state is indicated by a checkbox.
-  // (this probably needs discussion). Please remove this block when done. /FD
-  .tox-menu__item.tox-selected-item {
-    background-color: red;
-    color: white;
-  }
-
-  .tox-menu__item:hover:not(.tox-selected-item) {
-    background-color: inherit !important;
-    color: inherit !important;
-  }
-
-  // Fredrik will redo this as a component later. Please keep this declarations here until then /FD
-  .tox-lock.tox-locked .tox-lock-icon__unlock,
-  .tox-lock:not(.tox-locked) .tox-lock-icon__lock {
-    display: none;
-  }
-
-  // Content JS should never be styled. the *__content-js is supposed to be a hook for javascript, not for styling. //FD
+  // TODO: Content JS should never be styled. the *__content-js is supposed
+  // to be a hook for javascript, not for styling. //FD
   .tox-dialog__content-js {
     display: flex;
     flex: 1;
     -ms-flex-preferred-size: auto;
   }
 
-  .tox-dialog {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .tox-dialog__body {
-    display: flex;
-    flex: 1;
-    -ms-flex-preferred-size: auto;
-  }
-
-  .tox-dialog__body-content {
-    display: flex;
-    flex: 1;
-    -ms-flex-preferred-size: auto;
-    flex-direction: column;
-  }
-
-  .tox-dialog--width-lg {
-    // The height property is required to flex the textarea within large dialogs to fit to parent
-    height: 650px;
-  }
-
-  .tox-dropzone-container {
-    display: flex;
-    flex: 1;
-    -ms-flex-preferred-size: auto;
-  }
-
-  .tox-dropzone {
-    justify-content: center;
-  }
-
-  .tox-dropzone p {
-    color: @text-color-muted;
-    margin-bottom: 1em;
-  }
-
-  // This is required to make popups in a dialog appear over other dialog (urlinput, colorinput etc)
-  .tox-dialog__popups {
-    position: absolute;
-    width: 100%;
-    z-index: @z-index-dialogs;
-  }
-
-  // This is so that the focus outline on the checkbox does not move the checkbox
-  .tox-checkbox__icons {
-    border-radius: @checkbox-focus-border-radius;
-    box-shadow: @checkbox-unfocused-box-shadow;
-    padding: calc(@button-padding-y - @button-border-width);
-  }
-
+  // TODO: How is this used? This rule quite drastically changes
+  // a components behavior from the outside and needs rewriting
+  // for maintainability.
   .tox-dialog__body-content .tox-collection {
     display: flex;
     flex: 1;
     -ms-flex-preferred-size: auto;
   }
 
-  .tox-form__group--collection {
-    display: flex;
-  }
-
-  // cap the width of the autocompleter for horizontal cases e.g. emoji picker
-  .tox-autocompleter {
-    max-width: 25em;
-  }
-
-  .tox-autocompleter .tox-menu {
-    max-width: 25em;
-  }
-
-  .tox-selectfield select:focus {
-    border-color: @select-focus-border-color;
-  }
-
-  .tox-tbtn--bespoke .tox-tbtn__select-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 7em;
-  }
-
-  // restore some default styles for the help dialog
+  // TODO: Restore some default styles for the help dialog
   ul {
     display: block;
     list-style-type: disc;
@@ -171,6 +70,7 @@
     color: #2276d2;
   }
 
+  // TODO: Investigate how the two rules below is used
   .tox-image-tools-edit-panel {
     height: 60px;
   }

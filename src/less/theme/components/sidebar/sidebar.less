@@ -5,9 +5,11 @@
 // For commercial licenses see https://www.tiny.cloud/
 //
 
-.tox {
-  /* stylelint-disable */
+//
+// Sidebar
+//
 
+.tox {
   .tox-sidebar-wrap {
     display: flex;
     flex-direction: row;
@@ -16,7 +18,7 @@
     // min-height: auto, and the sidebar-wrap will grow in height as soon
     // as the sidebar contents does. This happens even if the sidebar contents has
     // overflow: auto.
-    min-height: 0px;
+    min-height: 0;
   }
 
   .tox-sidebar {
@@ -50,6 +52,4 @@
   .tox-sidebar--sliding-shrinking {
     transition: width .5s ease, opacity .5s ease;
   }
-
-  /* stylelint-enable */
 }
