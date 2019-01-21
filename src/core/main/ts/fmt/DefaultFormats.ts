@@ -23,9 +23,9 @@ const get = function (dom) {
 
     alignleft: [
       {
-        selector: 'figure.image',
+        selector: 'figure.mce-image',
         collapsed: false,
-        classes: 'align-left',
+        classes: 'mce-align-left',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
@@ -59,9 +59,9 @@ const get = function (dom) {
         defaultBlock: 'div'
       },
       {
-        selector: 'figure.image',
+        selector: 'figure.mce-image',
         collapsed: false,
-        classes: 'align-center',
+        classes: 'mce-align-center',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
@@ -88,9 +88,9 @@ const get = function (dom) {
 
     alignright: [
       {
-        selector: 'figure.image',
+        selector: 'figure.mce-image',
         collapsed: false,
-        classes: 'align-right',
+        classes: 'mce-align-right',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
