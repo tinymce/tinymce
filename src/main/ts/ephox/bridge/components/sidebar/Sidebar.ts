@@ -9,7 +9,6 @@ export interface SidebarInstanceApi {
 export interface SidebarApi {
   icon?: string;
   tooltip?: string;
-  image?: string;
   onShow?: (api: SidebarInstanceApi) => void;
   onSetup?: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide?: (api: SidebarInstanceApi) => void;
@@ -18,7 +17,6 @@ export interface SidebarApi {
 export interface Sidebar {
   icon: Option<string>;
   tooltip: Option<string>;
-  image: Option<string>;
   onShow: (api: SidebarInstanceApi) => void;
   onSetup: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide: (api: SidebarInstanceApi) => void;
@@ -27,7 +25,6 @@ export interface Sidebar {
 export const sidebarSchema = ValueSchema.objOf([
   FieldSchema.optionString('icon'),
   FieldSchema.optionString('tooltip'),
-  FieldSchema.optionString('label'),
   FieldSchema.defaultedFunction('onShow', Fun.noop),
   FieldSchema.defaultedFunction('onHide', Fun.noop),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
