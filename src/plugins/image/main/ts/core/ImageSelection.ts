@@ -19,7 +19,7 @@ const normalizeCss = (editor: Editor, cssText: string): string => {
 
 const getSelectedImage = (editor: Editor): HTMLElement => {
   const imgElm = editor.selection.getNode() as HTMLElement;
-  const figureElm = editor.dom.getParent(imgElm, 'figure.image') as HTMLElement;
+  const figureElm = editor.dom.getParent(imgElm, 'figure.mce-image') as HTMLElement;
 
   if (figureElm) {
     return editor.dom.select('img', figureElm)[0];
@@ -78,7 +78,7 @@ const syncSrcAttr = (editor: Editor, image: HTMLElement) => {
 
 const deleteImage = (editor: Editor, image: HTMLElement) => {
   if (image) {
-    const elm = editor.dom.is(image.parentNode, 'figure.image') ? image.parentNode : image;
+    const elm = editor.dom.is(image.parentNode, 'figure.mce-image') ? image.parentNode : image;
 
     editor.dom.remove(elm);
     editor.focus();
