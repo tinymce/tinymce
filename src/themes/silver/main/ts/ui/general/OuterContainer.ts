@@ -39,7 +39,7 @@ export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterCont
 
 interface OuterContainerApis {
   getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
-  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig[]) => void;
+  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.

@@ -58,7 +58,7 @@ export interface RenderUiConfig {
   menus;
   menubar;
   toolbar;
-  sidebar: Sidebar.SidebarConfig[];
+  sidebar: Sidebar.SidebarConfig;
 }
 
 export interface RenderArgs {
@@ -272,11 +272,11 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
-    const sidebar = Sidebar.setup(editor);
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
+    Sidebar.setup(editor);
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars } = editor.ui.registry.getAll();
+    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
     const rawUiConfig: RenderUiConfig = {
       menuItems,
       buttons,
@@ -287,7 +287,7 @@ const setup = (editor: Editor): RenderInfo => {
       toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
-      sidebar
+      sidebar: sidebars
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });

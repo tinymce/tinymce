@@ -32,16 +32,13 @@ import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 import { ValueSchema } from '@ephox/boulder';
 
-export interface SidebarConfig {
-  name: string;
-  spec: BridgeSidebar.SidebarApi;
-}
+export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
 
-const setup = (editor: Editor): SidebarConfig[] => {
+const setup = (editor: Editor) => {
   const { sidebars } = editor.ui.registry.getAll();
 
   // Register and setup each sidebar
-  return Arr.map(Obj.keys(sidebars), (name): SidebarConfig => {
+  Arr.map(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
     const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
     editor.ui.registry.addToggleButton(name, {
@@ -72,11 +69,12 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => {
   };
 };
 
-const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig[]) => {
-  const specs = Arr.map(panelConfigs, (config) => {
-    const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(config.spec));
+const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig) => {
+  const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
+    const spec = panelConfigs[name];
+    const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
     return {
-      name: config.name,
+      name,
       getApi,
       onSetup: bridged.onSetup,
       onShow: bridged.onShow,
@@ -110,7 +108,7 @@ const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig[]) =>
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig[]) => SlotContainer.sketch((parts) => {
+const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => {
   return {
     dom: {
       tag: 'div',
@@ -123,7 +121,7 @@ const makeSidebar = (panelConfigs: SidebarConfig[]) => SlotContainer.sketch((par
   };
 });
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig[]) => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
   const optSlider = Composing.getCurrent(sidebar);
   optSlider.each((slider) => Replacing.set(slider, [makeSidebar(panelConfigs)]));
 };
