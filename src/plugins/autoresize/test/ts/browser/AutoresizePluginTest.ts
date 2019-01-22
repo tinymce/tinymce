@@ -14,14 +14,14 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
 
   const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
-      const editorHeight = editor.getContainer().clientHeight;
+      const editorHeight = editor.getContainer().offsetHeight;
       RawAssertions.assertEq(`should be above: ${editorHeight}>=${minHeight}`, true, editorHeight >= minHeight);
     }));
   };
 
   const sAssertEditorHeightBelow = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is below ${minHeight}`, Step.sync(() => {
-      const editorHeight = editor.getContainer().clientHeight;
+      const editorHeight = editor.getContainer().offsetHeight;
       RawAssertions.assertEq(`should be below: ${editorHeight}<=${minHeight}`, true, editorHeight <= minHeight);
     }));
   };
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
   // Default the diff to 37, as the default margins in oxide is 16px (top & bottom) and then add another 5px just for some leniency
   const sAssertEditorContentApproxHeight = (editor: Editor, height: number, diff: number = 37) => {
     return Logger.t(`Assert editor content height is approx ${height}`, Step.sync(() => {
-      const editorContentHeight = editor.getContentAreaContainer().clientHeight;
+      const editorContentHeight = editor.getContentAreaContainer().offsetHeight;
       RawAssertions.assertEq(`should be approx (within ${diff}px): ${editorContentHeight}~=${height}`, true, Math.abs(editorContentHeight - height) < diff);
     }));
   };
