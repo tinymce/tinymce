@@ -173,6 +173,7 @@ const cDragHandle = function (id, deltaH, deltaV) {
 
 const cGetWidth = Chain.control(
   Chain.mapper(function (input: any) {
+    console.log(input);
     const editor = input.editor;
     const elm = input.element.dom();
     const rawWidth = editor.dom.getStyle(elm, 'width');

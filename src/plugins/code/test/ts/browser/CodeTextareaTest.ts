@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
     const tinyUi = TinyUi(editor);
 
     const cOpenDialog = Chain.fromChains([
-      Chain.mapper(() => {
+      Chain.op(() => {
         return editor.execCommand('mceCodeEditor');
       }),
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),

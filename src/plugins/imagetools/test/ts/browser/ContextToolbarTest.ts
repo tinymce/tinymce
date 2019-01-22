@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import ImageUtils from '../module/test/ImageUtils';
 import ImageOps from '../module/test/ImageOps';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
   Theme();
   Plugin();
 
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
       return GeneralSteps.sequence([
         ImageUtils.sLoadImage(editor, source, {width: 800, height: 600}),
         tinyApis.sSelect('img', []),
-        tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]'),
+        tinyUi.sWaitForUi('Wait for image context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]'),
       ]);
     };
 
