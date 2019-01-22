@@ -81,10 +81,11 @@
     flex-direction: column;
     -ms-flex-preferred-size: auto;
 
+    // Any styles that use `.tox-form__group--stretched` should only contain rules for flex or more generally the layout.
+    // Behavioural styles (such as `white-space`) belong in the specific component styles
     .tox-textarea {
       flex: 1;
       -ms-flex-preferred-size: auto;
-      resize: none;
     }
 
     .tox-navobj {
