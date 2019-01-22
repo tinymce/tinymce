@@ -45,14 +45,14 @@ gulp.task('TinymceIcons', function () {
 gulp.task('IconsTs', function () {
   var populated = gulp.src('./src/templates/Icons.ts').pipe(svgJsInjector());
   return eventStream.merge(
-    populated.pipe(ts({ module: 'commonjs' })).pipe(rename('IconsCjs.js')),
-    populated.pipe(ts({ module: 'es2015', "declaration": true }))
+    populated.pipe(ts({ module: 'commonjs', "lib": ["es2015"] })).pipe(rename('IconsCjs.js')),
+    populated.pipe(ts({ module: 'es2015', "declaration": true, "lib": ["es2015"] }))
   ).pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('Main', function () {
   return gulp.src('./src/templates/Main.ts')
-    .pipe(ts({ module: 'es2015', "declaration": true }))
+    .pipe(ts({ module: 'es2015', "declaration": true, "lib": ["es2015"] }))
     .pipe(gulp.dest('dist/js'));
 });
 
