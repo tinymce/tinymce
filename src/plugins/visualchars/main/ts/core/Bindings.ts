@@ -10,10 +10,9 @@ import Settings from '../api/Settings';
 import Actions from './Actions';
 
 const setup = (editor: Editor, toggleState) => {
-  // should be false when enabled, so toggling will change it to true
-  const valueForToggling = !Settings.isEnabledByDefault(editor);
-
   editor.on('init', () => {
+    // should be false when enabled, so toggling will change it to true
+    const valueForToggling = !Settings.isEnabledByDefault(editor);
     toggleState.set(valueForToggling);
     Actions.toggleVisualChars(editor, toggleState);
   });
