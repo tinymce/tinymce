@@ -23,6 +23,13 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     }));
   };
 
+  const sAssertUploadFilenameMatches = function (matchRegex) {
+    return Logger.t('Assert uploaded filename', Step.sync(function () {
+      const blobInfo = uploadHandlerState.get().blobInfo;
+      RawAssertions.assertEq(`File name ${blobInfo.filename()} should match ${matchRegex}`, true, matchRegex.test(blobInfo.filename()));
+    }));
+  };
+
   const sAssertUri = function (expected) {
     return Logger.t('ImageTools: Assert uri', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
@@ -44,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
         ImageUtils.sWaitForBlobImage(editor),
         ImageUtils.sUploadImages(editor),
         uploadHandlerState.sWaitForState,
-        sAssertUploadFilename('imagetools0.jpg')
+        sAssertUploadFilenameMatches(/imagetools\d+\.jpg/)
       ]),
       Log.stepsAsStep('TBA', 'ImageTools: test reuse filename', [
         uploadHandlerState.sResetState,
