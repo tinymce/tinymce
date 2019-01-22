@@ -18,15 +18,21 @@ const register = (editor: Editor) => {
   ];
 
   const onSetup = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    const handler = (state: boolean) => {
+      api.setActive(state);
+    };
+
     if (editor.formatter) {
-      editor.formatter.formatChanged(item.name, api.setActive);
+      api.setActive(editor.formatter.match(item.name));
+      editor.formatter.formatChanged(item.name, handler);
     } else {
       editor.on('init', () => {
-        editor.formatter.formatChanged(item.name, api.setActive);
+        api.setActive(editor.formatter.match(item.name));
+        editor.formatter.formatChanged(item.name, handler);
       });
     }
 
-    return () => {};
+    return () => { };
   };
 
   Tools.each(alignToolbarButtons, (item) => {

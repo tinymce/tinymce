@@ -15,24 +15,20 @@ const toggleFormat = (editor: Editor, fmt: string) => {
   };
 };
 
-const addFormatChangedListener = (editor: Editor, name: string, changed: (state: boolean, name: string) => void) => {
+const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
   const handler = (state: boolean) => {
-    changed(state, name);
+    api.setActive(state);
   };
 
   if (editor.formatter) {
+    api.setActive(editor.formatter.match(name));
     editor.formatter.formatChanged(name, handler);
   } else {
     editor.on('init', () => {
+      api.setActive(editor.formatter.match(name));
       editor.formatter.formatChanged(name, handler);
     });
   }
-};
-
-const postRenderFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  addFormatChangedListener(editor, name, (state) => {
-    api.setActive(state);
-  });
 
   return () => { };
 };
@@ -49,7 +45,7 @@ const registerFormatButtons = (editor: Editor) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
-      onSetup: postRenderFormatToggle(editor, btn.name),
+      onSetup: onSetupFormatToggle(editor, btn.name),
       onAction: toggleFormat(editor, btn.name)
     });
   });
@@ -83,7 +79,7 @@ const registerCommandToggleButtons = (editor: Editor) => {
       tooltip: btn.text,
       icon: btn.icon,
       onAction: () => editor.execCommand(btn.action),
-      onSetup: postRenderFormatToggle(editor, btn.name)
+      onSetup: onSetupFormatToggle(editor, btn.name)
     });
   });
 };
