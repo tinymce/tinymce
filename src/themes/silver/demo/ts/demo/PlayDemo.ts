@@ -124,7 +124,6 @@ export default function () {
       ed.ui.registry.addSidebar('example', {
         tooltip: 'My sidebar',
         icon: 'my-side-bar',
-        image: 'http://www.google.com/google.jpg',
         onShow: (api) => {
           console.log(api.element());
         },
