@@ -18,6 +18,9 @@ const register = (editor: Editor) => {
   ];
 
   const onSetup = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    // Set the initial state
+    api.setActive(editor.formatter.match(item.name));
+
     if (editor.formatter) {
       editor.formatter.formatChanged(item.name, api.setActive);
     } else {
