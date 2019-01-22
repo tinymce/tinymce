@@ -9,6 +9,7 @@ import { ToggleMenuItemApi } from '../components/menu/ToggleMenuItem';
 import { ContextMenuApi } from '../components/menu/ContextMenu';
 import { ContextToolbarApi, ContextFormApi } from '../components/toolbar/ContextToolbar';
 import { AutocompleterApi } from '../components/content/Autocompleter';
+import { SidebarApi } from '../components/sidebar/Sidebar';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
@@ -26,6 +27,7 @@ export interface Registry {
   addContextForm: (name: string, spec: ContextFormApi) => void;
   addIcon: (name: string, svgData: string) => void;
   addAutocompleter: (name: string, spec: AutocompleterApi) => void;
+  addSidebar: (name: string, spec: SidebarApi) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
@@ -34,6 +36,7 @@ export interface Registry {
     contextMenus: Record<string, ContextMenuApi>;
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
     icons: Record<string, string>;
+    sidebars: Record<string, SidebarApi>;
   };
 }
 
@@ -44,6 +47,7 @@ export const create = (): Registry => {
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
+  const sidebars: Record<string, SidebarApi> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = Merger.merge({ type }, spec);
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
@@ -59,6 +63,7 @@ export const create = (): Registry => {
     addContextMenu: add(contextMenus, 'contextmenu'),
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
     addContextForm: add(contextToolbars, 'contextform'),
+    addSidebar: add(sidebars, 'sidebar'),
     addIcon,
 
     getAll: () => ({
@@ -72,7 +77,8 @@ export const create = (): Registry => {
       popups,
       contextMenus,
 
-      contextToolbars
+      contextToolbars,
+      sidebars
     })
   };
 };
