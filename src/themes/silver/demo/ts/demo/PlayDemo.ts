@@ -121,18 +121,18 @@ export default function () {
         }
       });
 
-      ed.addSidebar('example', {
+      ed.ui.registry.addSidebar('example', {
         tooltip: 'My sidebar',
         icon: 'my-side-bar',
-        image: 'http://www.google.com/google.jpg',
-        onshow: (api) => {
+        onShow: (api) => {
           console.log(api.element());
         },
-        onhide: (api) => {
+        onHide: (api) => {
           console.log(api.element());
         },
-        onrender: (api) => {
+        onSetup: (api) => {
           console.log(api.element());
+          return () => {};
         }
       });
       ed.ui.registry.addContextToolbar('custom', {

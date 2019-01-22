@@ -52,7 +52,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setSidebar(
       uiComponents.outerContainer,
-      editor.sidebars || []
+      rawUiConfig.sidebar
     );
 
     // Force an update of the ui components disabled states if in readonly mode

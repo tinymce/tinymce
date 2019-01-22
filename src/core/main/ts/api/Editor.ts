@@ -29,7 +29,6 @@ import Env from './Env';
 import Shortcuts from './Shortcuts';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import Sidebar from '../ui/Sidebar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
 
@@ -113,7 +112,6 @@ export interface Editor {
   serializer: any;
   settings: EditorSettings;
   shortcuts: any;
-  sidebars?: SidebarConfig[];
   startContent: string;
   suffix: string;
   targetElm: HTMLElement;
@@ -130,14 +128,10 @@ export interface Editor {
   _selectionOverrides: SelectionOverrides;
   _skinLoaded: boolean;
 
-  addButton(name: string, settings): void;
   addCommand(name: string, callback, scope?: object): void;
-  addContextToolbar(predicate, items): void;
-  addMenuItem(name: string, settings): void;
   addQueryStateHandler(name: string, callback, scope?: object): void;
   addQueryValueHandler(name: string, callback, scope?: object): void;
   addShortcut(pattern: string, desc: string, cmdFunc, scope?: object): void;
-  addSidebar(name: string, settings: SidebarSettings): void;
   addVisual(elm?): void;
   bindPendingEventDelegates(): void;
   convertURL(url: string, name: string, elm?): string;
@@ -186,46 +180,6 @@ export interface Editor {
 
 export interface Ui {
   registry: Registry.Registry;
-}
-
-export interface AddButtonSettings {
-  active?: boolean;
-  text?: string;
-  cmd?: string;
-  stateSelector?: string[];
-  icon?: string;
-  tooltip?: string;
-  title?: string;
-  type?: string;
-  ariaLabel?: string;
-  onclick?(): void;
-  action?(): void;
-  onAction?(): void;
-}
-
-export interface AddMenuItem {
-  cmd?: string;
-  text: string;
-  context: string;
-  onclick(): void;
-}
-
-export interface SidebarSettings {
-  tooltip: string;
-  icon: string;
-  image?: string;
-  onshow?(api: UiSidebarApi): void;
-  onrender?(api: UiSidebarApi): void;
-  onhide?(api: UiSidebarApi): void;
-}
-
-export interface UiSidebarApi {
-  element(): HTMLElement;
-}
-
-export interface SidebarConfig {
-  name: string;
-  settings: SidebarSettings;
 }
 
 // Shorten these names
@@ -361,6 +315,7 @@ export const Editor = function (id, settings, editorManager) {
   }
 
   const registry = Registry.create();
+
   /**
    * Editor ui components
    *
@@ -499,102 +454,31 @@ Editor.prototype = {
   },
 
   /**
-   * Adds a button that later gets created by the theme in the editors toolbars.
-   *
-   * @method addButton
-   * @param {String} name Button name to add.
-   * @param {Object} settings Settings object with title, cmd etc.
-   * @example
-   * // Adds a custom button to the editor that inserts contents when clicked
-   * tinymce.init({
-   *    ...
-   *
-   *    toolbar: 'example'
-   *
-   *    setup: function(ed) {
-   *       ed.addButton('example', {
-   *          title: 'My title',
-   *          image: '../js/tinymce/plugins/example/img/example.gif',
-   *          onclick: function() {
-   *             ed.insertContent('Hello world!!');
-   *          }
-   *       });
-   *    }
-   * });
+   * No longer supported, use editor.ui.registry.addButton instead
    */
-
-  addButton (name: string, settings: Partial<AddButtonSettings>) {
-    // tslint:disable:no-console
-    console.error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
+  addButton () {
+    throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
   },
 
   /**
-   * Adds a sidebar for the editor instance.
-   *
-   * @method addSidebar
-   * @param {String} name Sidebar name to add.
-   * @param {Object} settings Settings object with icon, onshow etc.
-   * @example
-   * // Adds a custom sidebar that when clicked warns the panel element
-   * tinymce.init({
-   *    ...
-   *    setup: function(ed) {
-   *       ed.addSidebar('example', {
-   *          tooltip: 'My sidebar',
-   *          icon: 'my-side-bar',
-   *          onshow: function(api) {
-   *             console.log(api.element());
-   *          }
-   *       });
-   *    }
-   * });
+   * No longer supported, use editor.ui.registry.addSidebar instead
    */
-  addSidebar (name: string, settings: SidebarSettings) {
-    return Sidebar.add(this, name, settings);
-    // tslint:disable:no-console
-    // console.error('editor.addSidebar is deprecated in tinymce 5x, use editor.ui.registry.addSidebar instead');
+  addSidebar () {
+    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
   },
 
   /**
-   * Adds a menu item to be used in the menus of the theme. There might be multiple instances
-   * of this menu item for example it might be used in the main menus of the theme but also in
-   * the context menu so make sure that it's self contained and supports multiple instances.
-   *
-   * @method addMenuItem
-   * @param {String} name Menu item name to add.
-   * @param {Object} settings Settings object with title, cmd etc.
-   * @example
-   * // Adds a custom menu item to the editor that inserts contents when clicked
-   * // The context option allows you to add the menu item to an existing default menu
-   * tinymce.init({
-   *    ...
-   *
-   *    setup: function(ed) {
-   *       ed.addMenuItem('example', {
-   *          text: 'My menu item',
-   *          context: 'tools',
-   *          onclick: function() {
-   *             ed.insertContent('Hello world!!');
-   *          }
-   *       });
-   *    }
-   * });
+   * No longer supported, use editor.ui.registry.addMenuItem instead
    */
-  addMenuItem (name: string, settings: AddMenuItem) {
-    // tslint:disable:no-console
-    console.error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
+  addMenuItem () {
+    throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
   },
 
   /**
-   * Adds a contextual toolbar to be rendered when the selector matches.
-   *
-   * @method addContextToolbar
-   * @param {function/string} predicate Predicate that needs to return true if provided strings get converted into CSS predicates.
-   * @param {String} items String comma separated with items to add to the context toolbar.
+   * No longer supported, use editor.ui.registry.addContextMenu instead
    */
-  addContextToolbar (predicate: (any) => boolean | string, items: string) {
-    // tslint:disable:no-console
-    console.error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
+  addContextToolbar () {
+    throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   },
 
   /**

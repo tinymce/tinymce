@@ -21,48 +21,83 @@ import {
 } from '@ephox/alloy';
 import { SlotContainer } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/ui/SlotContainer';
 import { SlotContainerParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SlotContainerTypes';
+import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Id, Option } from '@ephox/katamari';
+import { Arr, Id, Option, Obj, Cell, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
-import { SidebarConfig, UiSidebarApi } from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
+import { ValueSchema } from '@ephox/boulder';
 
-const api = function (comp: AlloyComponent): UiSidebarApi {
+export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
+
+const setup = (editor: Editor) => {
+  const { sidebars } = editor.ui.registry.getAll();
+
+  // Setup each registered sidebar
+  Arr.each(Obj.keys(sidebars), (name) => {
+    const spec = sidebars[name];
+    const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
+    editor.ui.registry.addToggleButton(name, {
+      icon: spec.icon,
+      tooltip: spec.tooltip,
+      onAction: (buttonApi) => {
+        editor.execCommand('ToggleSidebar', false, name);
+        buttonApi.setActive(isActive());
+      },
+      onSetup: (buttonApi) => {
+        const handleToggle = () => buttonApi.setActive(isActive());
+        editor.on('ToggleSidebar', handleToggle);
+        return () => {
+          editor.off('ToggleSidebar', handleToggle);
+        };
+      }
+    });
+  });
+};
+
+const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => {
   return {
-    element(): HTMLElement {
+    element: (): HTMLElement => {
       return comp.element().dom();
     }
   };
 };
 
-const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig[]) => {
-  return Arr.map(panelConfigs, (config) => {
-    const name = config.name;
-    const settings = config.settings;
-    return parts.slot(
+const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig) => {
+  const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
+    const spec = panelConfigs[name];
+    const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
+    return {
       name,
+      getApi,
+      onSetup: bridged.onSetup,
+      onShow: bridged.onShow,
+      onHide: bridged.onHide
+    };
+  });
+
+  return Arr.map(specs, (spec) => {
+    const editorOffCell = Cell(Fun.noop);
+    return parts.slot(
+      spec.name,
       {
         dom: {
           tag: 'div',
           classes: ['tox-sidebar__pane']
         },
         behaviours: SimpleBehaviours.unnamedEvents([
-          AlloyEvents.runOnAttached((sidepanel) => {
-            if (settings.onrender) {
-              settings.onrender(api(sidepanel));
-            }
-          }),
+          onControlAttached(spec, editorOffCell),
+          onControlDetached(spec, editorOffCell),
           AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(SystemEvents.slotVisibility(), (sidepanel, se) => {
             const data = se.event();
-            const optSidePanelConfig = Arr.find(panelConfigs, (config) => config.name === data.name());
-            optSidePanelConfig.each((sidePanelConfig) => {
-              const settings = sidePanelConfig.settings;
-              const handler = data.visible() ? settings.onshow : settings.onhide;
-              if (handler) {
-                handler(api(sidepanel));
-              }
+            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name());
+            optSidePanelSpec.each((sidePanelSpec) => {
+              const handler = data.visible() ? sidePanelSpec.onShow : sidePanelSpec.onHide;
+              handler(sidePanelSpec.getApi(sidepanel));
             });
           })
         ])
@@ -71,7 +106,7 @@ const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig[]) =>
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig[]) => SlotContainer.sketch((parts) => {
+const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => {
   return {
     dom: {
       tag: 'div',
@@ -84,7 +119,7 @@ const makeSidebar = (panelConfigs: SidebarConfig[]) => SlotContainer.sketch((par
   };
 });
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig[]) => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
   const optSlider = Composing.getCurrent(sidebar);
   optSlider.each((slider) => Replacing.set(slider, [makeSidebar(panelConfigs)]));
 };
@@ -204,9 +239,10 @@ const renderSidebar = (spec) => {
   };
 };
 
-export const Sidebar = {
+export {
   setSidebar,
   toggleSidebar,
   whichSidebar,
   renderSidebar,
+  setup
 };

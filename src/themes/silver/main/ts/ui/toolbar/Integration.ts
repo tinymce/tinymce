@@ -9,7 +9,7 @@ import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { Objects, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option, Result, Type, Obj } from '@ephox/katamari';
-import { AddButtonSettings, Editor } from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 import {
   renderSplitButton,
@@ -120,8 +120,8 @@ const types = {
   alignMenuButton: (editor: Editor, extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = function (spec: AddButtonSettings, extras): Option<SketchSpec> {
-  return Objects.readOptFrom<(spec: AddButtonSettings, extras) => SketchSpec>(types, spec.type).fold(
+const extractFrom = function (spec, extras): Option<SketchSpec> {
+  return Objects.readOptFrom<(spec, extras) => SketchSpec>(types, spec.type).fold(
     () => {
       console.error('skipping button defined by', spec);
       return Option.none();

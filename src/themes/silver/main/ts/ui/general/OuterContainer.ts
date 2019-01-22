@@ -18,10 +18,9 @@ import {
 import { ConfiguredBehaviour } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
-import { SidebarConfig } from 'tinymce/core/api/Editor';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
-import { Sidebar } from '../sidebar/Sidebar';
+import * as Sidebar from '../sidebar/Sidebar';
 import { renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
@@ -40,7 +39,7 @@ export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterCont
 
 interface OuterContainerApis {
   getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
-  setSidebar: (comp: AlloyComponent, panelConfigs: SidebarConfig[]) => void;
+  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.

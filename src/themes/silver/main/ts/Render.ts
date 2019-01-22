@@ -13,7 +13,7 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor, SidebarConfig } from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
@@ -25,6 +25,7 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import * as Sidebar from './ui/sidebar/Sidebar';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -57,7 +58,7 @@ export interface RenderUiConfig {
   menus;
   menubar;
   toolbar;
-  sidebar: SidebarConfig[];
+  sidebar: Sidebar.SidebarConfig;
 }
 
 export interface RenderArgs {
@@ -272,9 +273,10 @@ const setup = (editor: Editor): RenderInfo => {
 
   const renderUI = function (): ModeRenderInfo {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
+    Sidebar.setup(editor);
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars } = editor.ui.registry.getAll();
+    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
     const rawUiConfig: RenderUiConfig = {
       menuItems,
       buttons,
@@ -285,7 +287,7 @@ const setup = (editor: Editor): RenderInfo => {
       toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
 
       // Apollo, not implemented yet
-      sidebar: editor.sidebars ? editor.sidebars : []
+      sidebar: sidebars
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
@@ -293,7 +295,7 @@ const setup = (editor: Editor): RenderInfo => {
     const elm = editor.getElement();
     const height = setEditorSize(elm);
 
-    const uiComponents: RenderUiComponents = {mothership, uiMothership, outerContainer};
+    const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
     const args: RenderArgs = { targetNode: elm, height };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
