@@ -32,7 +32,8 @@ const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
   'Wingdings=wingdings,zapf dingbats';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
-const systemStackFonts = [ '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
+// Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
+const systemStackFonts = [ '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
 
 const isSystemFontStack = (fontFamily: string): boolean => {
   // The system font stack will be similar to the following. (Note: each has minor variants)
