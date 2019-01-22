@@ -1,3 +1,5 @@
+Version 4.5.10 (2018-10-19)
+  Changed the contextual toolbar shortcut to Ctrl+F9 since an Edge shortcut interfered with the previous one.
 Version 4.5.9 (2018-08-02)
   Fixed a bug where Edge 17 wouldn't be able to select images or tables.
 Version 4.5.8 (2017-10-05)
