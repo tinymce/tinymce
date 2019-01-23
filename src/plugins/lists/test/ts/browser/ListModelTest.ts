@@ -6,11 +6,11 @@ import { Element } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 import { composeList } from '../../../main/ts/listModel/ComposeList';
 import { Entry } from '../../../main/ts/listModel/Entry';
-import { ListType } from '../../../main/ts/listModel/ListType';
 import { normalizeEntries } from '../../../main/ts/listModel/NormalizeEntries';
 import { parseLists } from '../../../main/ts/listModel/ParseLists';
+import { ListType } from 'tinymce/plugins/lists/listModel/Util';
 
-UnitTest.test('ListModelTest', () => {
+UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   const arbitratyContent = Jsc.bless({
     generator: Arbitraries.content('inline').generator.map((el) => [el])
   });

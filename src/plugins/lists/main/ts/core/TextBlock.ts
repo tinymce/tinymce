@@ -5,28 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import NodeType from './NodeType';
-import { DocumentFragment } from '@ephox/dom-globals';
+import { DocumentFragment, Node } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const DOM = DOMUtils.DOM;
-
-const createNewTextBlock = function (editor, contentNode, blockName?): DocumentFragment {
-  let node, textBlock;
-  const fragment = DOM.createFragment();
-  let hasContentNode;
+const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
+  const dom = editor.dom;
   const blockElements = editor.schema.getBlockElements();
+  const fragment = dom.createFragment();
+  let node, textBlock, blockName, hasContentNode;
 
   if (editor.settings.forced_root_block) {
-    blockName = blockName || editor.settings.forced_root_block;
+    blockName = editor.settings.forced_root_block;
   }
 
   if (blockName) {
-    textBlock = DOM.create(blockName);
+    textBlock = dom.create(blockName);
 
     if (textBlock.tagName === editor.settings.forced_root_block) {
-      DOM.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
+      dom.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
     }
 
     if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
@@ -48,7 +46,7 @@ const createNewTextBlock = function (editor, contentNode, blockName?): DocumentF
       } else {
         if (blockName) {
           if (!textBlock) {
-            textBlock = DOM.create(blockName);
+            textBlock = dom.create(blockName);
             fragment.appendChild(textBlock);
           }
 
@@ -61,17 +59,17 @@ const createNewTextBlock = function (editor, contentNode, blockName?): DocumentF
   }
 
   if (!editor.settings.forced_root_block) {
-    fragment.appendChild(DOM.create('br'));
+    fragment.appendChild(dom.create('br'));
   } else {
     // BR is needed in empty blocks on non IE browsers
     if (!hasContentNode && (!Env.ie || Env.ie > 10)) {
-      textBlock.appendChild(DOM.create('br', { 'data-mce-bogus': '1' }));
+      textBlock.appendChild(dom.create('br', { 'data-mce-bogus': '1' }));
     }
   }
 
   return fragment;
 };
 
-export default {
-  createNewTextBlock
+export {
+  createTextBlock
 };
