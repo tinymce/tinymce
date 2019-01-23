@@ -22,7 +22,6 @@
     "@ephox/dragster": "latest",
     "@ephox/echo": "latest",
     "@ephox/katamari": "latest",
-    "@ephox/agar": "latest",
     "@ephox/porkbun": "latest",
     "@ephox/robin": "latest",
     "@ephox/sugar": "latest"
@@ -31,6 +30,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/sand": "latest",
     "awesome-typescript-loader": "^3.4.1",
