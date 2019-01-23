@@ -77,6 +77,13 @@ const setupDemo = () => {
             hotspot: sink
           };
         },
+        toolbarOverflow: () => {
+          // NOTE: Non-sensical
+          return {
+            anchor: 'hotspot',
+            hotspot: sink
+          };
+        },
         banner: () => {
           // NOTE: Non-sensical
           return {

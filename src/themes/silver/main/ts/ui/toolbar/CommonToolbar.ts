@@ -17,13 +17,13 @@ import {
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
   Focusing,
-  Container,
   GuiFactory,
   Attachment,
   Memento,
   Positioning
 } from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface Toolbar {
   uid: string;
@@ -31,7 +31,7 @@ export interface Toolbar {
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
   getSink: () => Result<AlloyComponent, Error>;
-  backstage: any; // TODO: Fucking fix me
+  backstage: UiFactoryBackstage;
 }
 
 export interface ToolbarGroup {
@@ -101,9 +101,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
     AlloyToolbar.sketch({
       dom: {
         tag: 'div',
-        styles: {
-          'background-color': 'blue'
-        }
+        classes: ['tox-toolbar-overflow']
       }
     })
   );
@@ -115,12 +113,12 @@ const renderMoreToolbar = (foo: Toolbar) => {
           // overflow isn't there yet ... so add it, and return the built thing
           const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
           Attachment.attach(sink, builtoverFlow);
-          Positioning.position(sink, foo.backstage.shared.anchors.banner(), builtoverFlow);
+          Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
           return builtoverFlow;
         },
         (overflow) => {
           // you have the build thing, so just return it
-          Positioning.position(sink, foo.backstage.shared.anchors.banner(), overflow);
+          Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), overflow);
           return overflow;
         }
       );
