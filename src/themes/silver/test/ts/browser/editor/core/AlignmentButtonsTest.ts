@@ -5,13 +5,18 @@ import { Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import { cExtractOnlyOne } from '../../../module/UiChainUtils';
 
+import Theme from 'tinymce/themes/silver/Theme';
+
 UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) => {
+  Theme();
+
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Testing toolbar: toolbar alignment buttons', [
       NamedChain.asChain([
         NamedChain.writeValue('body', Body.body()),
         NamedChain.write('editor', McEditor.cFromSettings({
           toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
+          theme: 'silver',
           base_url: '/project/js/tinymce'
         })),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
