@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
-import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import * as NestedMenus from '../../menus/menu/NestedMenus';
-import { SingleMenuItemApi } from '../../menus/menu/SingleMenu';
-import * as FormatRegister from './utils/FormatRegister';
-import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { BasicSelectDataset, AdvancedSelectDataset } from './SelectDatasets';
 import { AlloyComponent } from '@ephox/alloy';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Menu } from '@ephox/bridge';
+import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
+import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
+import * as NestedMenus from '../../menus/menu/NestedMenus';
+import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
+import { AdvancedSelectDataset, BasicSelectDataset } from './SelectDatasets';
+import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
   tag: string;
@@ -36,6 +36,7 @@ export interface FormatItem {
 
 export interface SelectSpec {
   tooltip: string;
+  icon: Option<string>;
   // This is used for determining if an item gets a tick in the menu
   isSelectedFor: FormatRegister.IsSelectedForType;
   // This is used for rendering individual items with styles
@@ -60,7 +61,7 @@ export interface SelectData {
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): SingleMenuItemApi => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): NestedMenuItemContents => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return {
@@ -75,34 +76,21 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
       } as Menu.NestedMenuItemApi;
     } else {
-      return rawItem.getStylePreview().fold(
-        () => {
-          return {
-            type: 'togglemenuitem',
-            text: translatedText,
-            active: rawItem.isSelected(),
-            disabled,
-            onAction: spec.onAction(rawItem),
-          } as SingleMenuItemApi;
-        },
-        (preview) => {
-          return {
-            type: 'styleitem',
-            item: {
-              type: 'togglemenuitem',
-              text: translatedText,
-              disabled,
-              active: rawItem.isSelected(),
-              onAction: spec.onAction(rawItem),
-              meta: preview as any
-            } as Menu.ToggleMenuItemApi
-          } as SingleMenuItemApi;
-        }
-      );
+      return {
+        // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
+        // See ToggleMenuItem and ItemStructure for how it's handled.
+        // If this type ever changes, we'll need to change that too
+        type: 'togglemenuitem',
+        text: translatedText,
+        active: rawItem.isSelected(),
+        disabled,
+        onAction: spec.onAction(rawItem),
+        ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
+      } as Menu.ToggleMenuItemApi;
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): SingleMenuItemApi[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
@@ -142,8 +130,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
   return renderCommonDropdown(
     {
-      text: Option.some(''),
-      icon: Option.none(),
+      text: spec.icon.isSome() ? Option.none() : Option.some(''),
+      icon: spec.icon,
       tooltip: Option.from(spec.tooltip),
       role: Option.none(),
       fetch: items.getFetch(backstage, getStyleItems),
@@ -151,7 +139,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       onDetach: spec.nodeChangeHandler.map((f) => (comp) => editor.off('nodeChange', f(comp))).getOr(() => { }),
       columns: 1,
       presets: 'normal',
-      classes: [ 'bespoke' ]
+      classes: spec.icon.isSome() ? [] : [ 'bespoke' ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared

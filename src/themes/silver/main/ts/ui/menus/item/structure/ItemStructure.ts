@@ -5,16 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
-import { AlloySpec, RawDomSchema, DomFactory } from '@ephox/alloy';
-import { Option, Merger } from '@ephox/katamari';
-
-import { StyleStructureMeta } from './StyleStructure';
-import * as ItemClasses from '../ItemClasses';
-import { renderText, renderShortcut, renderIcon } from './ItemSlices';
-import * as Icons from '../../../icons/Icons';
+import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
+import { Fun, Merger, Obj, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import * as Icons from '../../../icons/Icons';
+import * as ItemClasses from '../ItemClasses';
+import { renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -30,7 +28,7 @@ export interface ItemStructureSpec {
   checkMark: Option<AlloySpec>;
   caret: Option<AlloySpec>;
   value?: string;
-  meta?: StyleStructureMeta;
+  meta?: Record<string, any>;
 }
 
 interface NormalItemSpec {
@@ -67,7 +65,7 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 };
 
 // TODO: Maybe need aria-label
-const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): ItemStructure => {
+const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, textRender: (text: string) => AlloySpec): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
   const leftIcon = info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon));
   const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => {
@@ -89,7 +87,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
     dom,
     optComponents: [
       leftIcon,
-      info.textContent.map(renderText),
+      info.textContent.map(textRender),
       info.shortcutContent.map(renderShortcut),
       info.caret
     ]
@@ -101,13 +99,21 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>): 
 const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
   const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
+
+  // Style items and autocompleter both have meta. Need to branch on style
+  // This could probably be more stable...
+  const textRender: (text: string) => AlloySpec = Option.from(info.meta).fold(
+    () => renderText,
+    (meta) => {
+      return Obj.has(meta, 'style') ? Fun.curry(renderStyledText, meta.style) : renderText;
+    }
+  );
+
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
-    return renderNormalItemStructure(info, icon);
+    return renderNormalItemStructure(info, icon, textRender);
   }
 };
 
-export {
-  renderItemStructure
-};
+export { renderItemStructure };

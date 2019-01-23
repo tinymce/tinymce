@@ -37,7 +37,6 @@
       "tinymce.core.api.PluginManager",
       "tinymce.core.api.Shortcuts",
       "tinymce.core.api.ThemeManager",
-      "tinymce.core.api.ui.Factory",
       "tinymce.core.api.UndoManager",
       "tinymce.core.api.util.Class",
       "tinymce.core.api.util.Color",

@@ -7,18 +7,14 @@
 
 import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Merger, Option } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { formatSelectMenu } from '../../core/complex/FormatSelect';
-import { styleSelectMenu } from '../../core/complex/StyleSelect';
+import { getRemovedMenuItems } from '../../../api/Settings';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
+import ItemResponse from '../item/ItemResponse';
 import * as NestedMenus from '../menu/NestedMenus';
 import { MenubarItemSpec } from './SilverMenubar';
-import { fontSelectMenu } from '../../core/complex/FontSelect';
-import { fontsizeSelectMenu } from '../../core/complex/FontsizeSelect';
-import { getRemovedMenuItems } from '../../../api/Settings';
-import ItemResponse from '../item/ItemResponse';
-import { Editor } from 'tinymce/core/api/Editor';
 
 export interface MenuRegistry {
   menuItems: Record<string, any>;
@@ -64,14 +60,7 @@ export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string
   sharedBackstage);
 };
 
-const bespokeItems = {
-  formats: styleSelectMenu,
-  blockformats: formatSelectMenu,
-  fontformats: fontSelectMenu,
-  fontsizes: fontsizeSelectMenu
-};
-
-const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, editor, backstage: UiFactoryBackstage): MenubarItemSpec => {
+const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, editor): MenubarItemSpec => {
   const removedMenuItems = getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,
@@ -86,10 +75,6 @@ const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, ed
         }];
       } else if (registry.menuItems[i]) {
         return [ registry.menuItems[i] ];
-      } else if (bespokeItems[i]) {
-        return [
-          bespokeItems[i](editor, backstage)
-        ];
       } else {
         return [ ];
       }
@@ -118,7 +103,7 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFact
 
   const menus: MenubarItemSpec[] = Arr.map(validMenus, (menuName) => {
     const menuData = rawMenuData[menuName];
-    return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor, backstage);
+    return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor);
   });
 
   return Arr.filter(menus, (menu) => menu.getItems().length > 0);

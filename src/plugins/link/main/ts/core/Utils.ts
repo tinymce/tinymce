@@ -35,7 +35,7 @@ const toggleTargetRules = function (rel, isUnsafe) {
   };
 
   newRel = isUnsafe ? addTargetRules(newRel) : removeTargetRules(newRel);
-  return newRel.length ? toString(newRel) : null;
+  return newRel.length ? toString(newRel) : '';
 };
 
 const trimCaretContainers = function (text) {
@@ -84,30 +84,17 @@ const link = function (editor, attachState) {
       const selectedElm = editor.selection.getNode();
       const anchorElm = getAnchorElement(editor, selectedElm);
 
-      const getClass = (data, anchorElm) => {
-        const clazz = data.class ?
-        data.class :
-        anchorElm && anchorElm.className ?
-          anchorElm.className :
-          null;
-        return clazz ? { class: clazz} : { };
-      };
-
-      const target = data.target ? { target: data.target } : { };
-      const rel = data.rel ? { rel: data.rel } : { };
-      const clazz = getClass(data, anchorElm);
-      const title = data.title ? { title: data.title } : { };
-
       const linkAttrs = {
         href: data.href,
-        ...target,
-        ...rel,
-        ...clazz,
-        ...title
+        target: data.target ? data.target : null,
+        rel: data.rel ? data.rel : null,
+        class: data.class ? data.class : null,
+        title: data.title ? data.title : null
       };
 
       if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-        linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
+        const newRel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
+        linkAttrs.rel = newRel ? newRel : null;
       }
 
       if (data.href === attachState.href) {

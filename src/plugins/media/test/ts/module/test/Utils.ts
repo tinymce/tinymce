@@ -70,7 +70,8 @@ const sSetValueAndTrigger = (selector, value, event) => (ui) => {
       cFindInDialog(selector)(ui),      // get the element
       Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
       cSetValueOn(selector, value)(ui), // change the value
-      cFakeEvent(event)                 // fire [change, input etc]
+      cFakeEvent(event),                 // fire [change, input etc],
+      Chain.wait(0) // Wait needed as paste event is triggered async
     ])
   ]));
 };

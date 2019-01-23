@@ -5,31 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu, Toolbar } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const toggleFormat = (editor: Editor, fmt: string) => {
-  return () => {
-    editor.execCommand('mceToggleFormat', false, fmt);
-  };
-};
-
 const register = (editor: Editor) => {
-  const defaultAlignIcon = 'align-left';
-  const alignMenuItems = [
-    { type: 'menuitem', text: 'Left', icon: 'align-left', onAction: toggleFormat(editor, 'alignleft') },
-    { type: 'menuitem', text: 'Center', icon: 'align-center', onAction: toggleFormat(editor, 'aligncenter') },
-    { type: 'menuitem', text: 'Right', icon: 'align-right', onAction: toggleFormat(editor, 'alignright') },
-    { type: 'menuitem', text: 'Justify', icon: 'align-justify', onAction: toggleFormat(editor, 'alignjustify') }
-  ] as Menu.MenuItemApi[];
-
-  editor.ui.registry.addNestedMenuItem('align', {
-    text: 'Align',
-    icon: defaultAlignIcon,
-    getSubmenuItems: () => alignMenuItems
-  });
-
   const alignToolbarButtons = [
     { name: 'alignleft', text: 'Align left', cmd: 'JustifyLeft', icon: 'align-left' },
     { name: 'aligncenter', text: 'Align center', cmd: 'JustifyCenter', icon: 'align-center' },
@@ -38,15 +18,21 @@ const register = (editor: Editor) => {
   ];
 
   const onSetup = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    const handler = (state: boolean) => {
+      api.setActive(state);
+    };
+
     if (editor.formatter) {
-      editor.formatter.formatChanged(item.name, api.setActive);
+      api.setActive(editor.formatter.match(item.name));
+      editor.formatter.formatChanged(item.name, handler);
     } else {
       editor.on('init', () => {
-        editor.formatter.formatChanged(item.name, api.setActive);
+        api.setActive(editor.formatter.match(item.name));
+        editor.formatter.formatChanged(item.name, handler);
       });
     }
 
-    return () => {};
+    return () => { };
   };
 
   Tools.each(alignToolbarButtons, (item) => {

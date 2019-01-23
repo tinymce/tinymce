@@ -22,13 +22,14 @@ import { Types } from '@ephox/bridge';
 const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
+  // Merge in the initial state and any changed state
   const resultData = {
     href: data.url.value,
-    text: data.text ? data.text : text.getOr(undefined),
-    target: data.target ? data.target : undefined,
-    rel: data.rel ? data.rel : undefined,
-    class: data.classz ? data.classz : undefined,
-    title: data.title ? data.title : undefined,
+    text: Option.from(data.text).or(text).getOr(undefined),
+    target: Option.from(data.target).or(info.anchor.target).getOr(undefined),
+    rel: Option.from(data.rel).or(info.anchor.rel).getOr(undefined),
+    class: Option.from(data.classz).or(info.anchor.linkClass).getOr(undefined),
+    title: Option.from(data.title).or(info.anchor.title).getOr(undefined),
   };
 
   const attachState = {
@@ -65,27 +66,27 @@ const collectData = (editor): Future<LinkDialogInfo> => {
   return DialogInfo.collect(editor, settings, anchorNode);
 };
 
-const getInitialData = (settings: LinkDialogInfo): LinkDialogData => ({
+const getInitialData = (info: LinkDialogInfo): LinkDialogData => ({
   url: {
-    value: settings.anchor.url.getOr(''),
+    value: info.anchor.url.getOr(''),
     meta: {
       attach: () => { },
-      text: settings.anchor.url.fold(
+      text: info.anchor.url.fold(
         () => '',
-        () => settings.anchor.text.getOr('')
+        () => info.anchor.text.getOr('')
       ),
       original: {
-        value: settings.anchor.url.getOr(''),
+        value: info.anchor.url.getOr(''),
       }
     }
   },
-  text: settings.anchor.text.getOr(''),
-  title: settings.anchor.title.getOr(''),
-  anchor: settings.anchor.url.getOr(''),
-  link: settings.anchor.url.getOr(''),
-  rel: settings.anchor.rel.getOr(''),
-  target: settings.anchor.target.getOr(''),
-  classz: settings.anchor.linkClass.getOr('')
+  text: info.anchor.text.getOr(''),
+  title: info.anchor.title.getOr(''),
+  anchor: info.anchor.url.getOr(''),
+  link: info.anchor.url.getOr(''),
+  rel: info.anchor.rel.getOr(''),
+  target: info.anchor.target.getOr(''),
+  classz: info.anchor.linkClass.getOr('')
 });
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<LinkDialogData> => {

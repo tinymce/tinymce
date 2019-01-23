@@ -14,7 +14,18 @@ let prefixes = (obj, mappings) => {
   return Object.assign(obj, objMappings);
 };
 
+let flatMap = (obj, f) => {
+  return Object.keys(obj)
+    .map(function (key) {
+      return f(key, obj[key]);
+    })
+    .reduce(function (acc, item) {
+      return acc.concat(item);
+    }, []);
+};
+
 module.exports = {
   generate,
-  prefixes
+  prefixes,
+  flatMap
 };

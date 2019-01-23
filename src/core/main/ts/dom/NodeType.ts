@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Comment, Document, Element, Node, HTMLElement } from '@ephox/dom-globals';
+import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment } from '@ephox/dom-globals';
 
 const isNodeType = function (type) {
   return function (node: Node) {
@@ -96,6 +96,7 @@ const hasContentEditableState = function (value: string) {
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
+const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
 const isBr = matchNodeNames('br') as (node: Node) => node is Element;
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
@@ -105,6 +106,7 @@ export default {
   isElement,
   isComment,
   isDocument,
+  isDocumentFragment,
   isBr,
   isContentEditableTrue,
   isContentEditableFalse,

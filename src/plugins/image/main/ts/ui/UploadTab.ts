@@ -6,18 +6,18 @@
  */
 
 import { ImageDialogInfo } from './DialogTypes';
+import { Types } from '@ephox/bridge';
 
 const makeTab = function (info: ImageDialogInfo) {
+  const items: Types.Dialog.BodyComponentApi[] = [
+    {
+      type: 'dropzone',
+      name: 'fileinput'
+    }
+  ];
   return {
     title: 'Upload',
-    type: 'form',
-    items: [
-      {
-        type: 'dropzone',
-        name: 'fileinput',
-        flex: true
-      }
-    ]
+    items
   };
 };
 

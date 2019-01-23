@@ -5,24 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Replacing } from '@ephox/alloy';
+import { Behaviour, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon, IconProvider } from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconHtml) =>
+const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec =>
   ({
     dom: {
       tag: 'span',
       innerHtml: iconHtml,
       classes: [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ]
-    }
+    },
+    ...behaviours
   });
 
-const renderIconFromPack = (iconName, iconsProvider: IconProvider) => {
-  return renderIcon(getIcon(iconName, iconsProvider));
+const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => {
+  return renderIcon(getIcon(iconName, iconsProvider), { });
+};
+
+const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => {
+  return renderIcon(getIcon(iconName, iconsProvider), {
+    behaviours: Behaviour.derive([
+      Replacing.config({ })
+    ])
+  });
 };
 
 const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
@@ -38,5 +47,6 @@ const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage
 
 export {
   renderIconFromPack,
+  renderReplacableIconFromPack,
   renderLabel
 };

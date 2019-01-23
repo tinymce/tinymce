@@ -6,19 +6,22 @@ declare let tinymce: any;
 export default function () {
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
-    ed.addSidebar(name, {
+    ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
-      onrender: (api) => {
-        console.log('onrender ' + name);
+      onSetup: (api) => {
+        console.log('onSetup ' + name);
         const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
+        return () => {
+          api.element().removeChild(box.dom());
+        };
       },
-      onshow: (api) => {
-        console.log('onshow ' + name);
+      onShow: (api) => {
+        console.log('onShow ' + name);
       },
-      onhide: (api) => {
-        console.log('onhide ' + name);
+      onHide: (api) => {
+        console.log('onHide ' + name);
       },
     });
   };

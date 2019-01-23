@@ -5,17 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { Disabling, Toggling } from '@ephox/alloy';
 import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { InlineContent, Menu, Types } from '@ephox/bridge';
-import { Option, Merger } from '@ephox/katamari';
-
+import { Merger, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
-import { renderItemStructure } from '../structure/ItemStructure';
-import { buildData, renderCommonItem } from './CommonMenuItem';
-import { Toggling, Disabling } from '@ephox/alloy';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
+import { renderItemStructure } from '../structure/ItemStructure';
+import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // TODO: Remove dupe between these
 const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
