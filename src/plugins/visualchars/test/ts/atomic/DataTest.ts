@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', function () {
   RawAssertions.assertEq(
-    'should return correst selector',
+    'should return correct selector',
     'span.mce-a,span.mce-b',
     Data.charMapToSelector({ a: 'a', b: 'b' })
   );

@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
-import { ListType } from './ListType';
+import { Element, Traverse, Replication, Attr, Node } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
+import { hasLastChildList, ListType } from './Util';
 
 /*
 General workflow: Parse lists to entries -> Manipulate entries -> Compose entries to lists
@@ -32,10 +33,35 @@ export interface Entry {
   itemAttributes: Record<string, any>;
 }
 
-export const isIndented = (entry: Entry) => {
+const isIndented = (entry: Entry) => {
   return entry.depth > 0;
 };
 
-export const isSelected = (entry: Entry) => {
+const isSelected = (entry: Entry) => {
   return entry.isSelected;
+};
+
+const cloneItemContent = (li: Element): Element[] => {
+  const children = Traverse.children(li);
+  const content = hasLastChildList(li) ? children.slice(0, -1) : children;
+  return Arr.map(content, Replication.deep);
+};
+
+const createEntry = (li: Element, depth: number, isSelected: boolean): Option<Entry> => {
+  return Traverse.parent(li).map((list) => {
+    return {
+      depth,
+      isSelected,
+      content: cloneItemContent(li),
+      itemAttributes: Attr.clone(li),
+      listAttributes: Attr.clone(list),
+      listType: Node.name(list) as ListType
+    };
+  });
+};
+
+export {
+  createEntry,
+  isIndented,
+  isSelected
 };
