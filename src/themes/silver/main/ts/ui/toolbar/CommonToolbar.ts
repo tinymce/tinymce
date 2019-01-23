@@ -107,15 +107,15 @@ const renderMoreToolbar = (foo: Toolbar) => {
   );
 
   const getOverflow = () => {
-    return foo.getSink().toOption().map((sink) => {
-      return memOverflow.getOpt(sink).fold(
-        () => {
-          // overflow isn't there yet ... so add it, and return the built thing
-          const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
-          Attachment.attach(sink, builtoverFlow);
-          Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
-          return builtoverFlow;
-        },
+    return foo.getSink().toOption().bind((sink) => {
+      return memOverflow.getOpt(sink).map(
+        // () => {
+        //   // overflow isn't there yet ... so add it, and return the built thing
+        //   const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
+        //   Attachment.attach(sink, builtoverFlow);
+        //   Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
+        //   return builtoverFlow;
+        // },
         (overflow) => {
           // you have the build thing, so just return it
           Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), overflow);
@@ -178,6 +178,21 @@ const renderMoreToolbar = (foo: Toolbar) => {
         AlloyEvents.runOnAttached(function (component) {
           const groups = Arr.map(foo.initGroups, renderToolbarGroup);
           AlloyToolbar.setGroups(component, groups);
+        }),
+        AlloyEvents.run('alloy.toolbar.toggle', (toolbar, se) => {
+          console.log('huh it did it');
+          foo.getSink().toOption().each((sink) => {
+            memOverflow.getOpt(sink).fold(() => {
+              // overflow isn't there yet ... so add it, and return the built thing
+              const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
+              Attachment.attach(sink, builtoverFlow);
+              Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
+              SplitAlloyToolbar.refresh(toolbar);
+              // return builtoverFlow;
+            }, (builtOverflow) => {
+              Attachment.detach(builtOverflow);
+            });
+          });
         })
       ])
     ])
