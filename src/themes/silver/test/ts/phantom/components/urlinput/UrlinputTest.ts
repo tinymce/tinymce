@@ -126,14 +126,12 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header2') })
                         ]
                       })
@@ -144,7 +142,6 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     children: [
                       s.element('div', {
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('&lt;top&gt;') })
                         ]
                       })
@@ -187,14 +184,12 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header2') })
                         ]
                       })
