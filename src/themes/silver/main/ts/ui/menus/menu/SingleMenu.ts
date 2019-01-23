@@ -35,20 +35,22 @@ export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuIt
   BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
 const hasIcon = (item) => item.icon !== undefined;
+const hasCheckbox = (item) => item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
+const menuHasCheckboxes = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasCheckbox);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemSpec> => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'togglemenuitem':
@@ -169,10 +171,10 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
 };
 
 export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
-  const hasIcons = menuHasIcons(items);
+  const hasIcons = menuHasIcons(items) || menuHasCheckboxes(items);
   const alloyItems = Options.cat<ItemSpec>(
     Arr.map(items, (item) => {
-      return createMenuItemFromBridge(item, itemResponse, providersBackstage);
+      return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
     })
   );
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');
