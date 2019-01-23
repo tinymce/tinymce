@@ -34,13 +34,11 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
   // const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
   // const primary = ps.primary();
-  const overflow = AlloyParts.getPart(toolbar, detail, 'overflow').getOrThunk(() => { console.log('here'); return detail.overflow().getOrDie('required overflow through getOverflow')});
-  console.log('b', overflow);
+  const overflow = AlloyParts.getPart(toolbar, detail, 'overflow').getOrThunk(() => detail.overflow().getOrDie('required overflow through getOverflow'));
 
   // Set the primary toolbar to have visibilty hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
 
-  console.log('c', overflow);
   // Clear the overflow toolbar
   Toolbar.setGroups(overflow, [ ]);
 
@@ -55,11 +53,11 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
         action (button) {
           if (detail.floating === true) {
             if (visible) {
-              visible = false;
               Css.set(overflow.element(), 'visibility', 'hidden');
             } else {
               Css.remove(overflow.element(), 'visibility');
             }
+            visible = !visible;
           } else {
             // This used to look up the overflow again ... we may need to do that.
             Sliding.toggleGrow(overflow);
