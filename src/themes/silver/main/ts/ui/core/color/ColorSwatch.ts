@@ -110,14 +110,14 @@ const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (call
   );
 };
 
-const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColour: string) => {
-  const setIconFillAndStroke = (pathId, colour) => {
-    splitButtonApi.setIconFill(pathId, colour);
-    splitButtonApi.setIconStroke(pathId, colour);
+const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
+  const setIconFillAndStroke = (pathId, color) => {
+    splitButtonApi.setIconFill(pathId, color);
+    splitButtonApi.setIconStroke(pathId, color);
   };
 
   const id = name === 'forecolor' ? 'tox-icon-text-color__color' : 'tox-icon-highlight-bg-color__color';
-  setIconFillAndStroke(id, newColour);
+  setIconFillAndStroke(id, newColor);
 };
 
 const registerTextColorButton = (editor: Editor, name: string, format: string, tooltip: string, lastColor: Cell<string>) => {
