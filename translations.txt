@@ -98,6 +98,7 @@ Previous                  [Prev]                Searchreplace
 
 Insert template...        [Insert template]     Template
 
+Word count                [Wordcount]           WordCount
 Characters                <new>                 WordCount
 Characters (no spaces)    <new>                 WordCount
 
@@ -175,6 +176,7 @@ Font Family
 
 Special characters  (Charmap)
 
+Wordcount           (WordCount)
 
 Caption             (Insert image/media)
 Insert template     (Template)
