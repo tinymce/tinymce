@@ -12,6 +12,7 @@
 @form-group-vertical-spacing: @pad-xs;
 @form-group-horizontal-spacing: @pad-xs;
 @form-grid-horizontal-gap: @pad-sm;
+@form-group-error-text-color: @color-error;
 
 .tox {
   .tox-form {
@@ -29,7 +30,7 @@
 
   // Modifier for validation error
   .tox-form__group--error {
-    //
+    color: @form-group-error-text-color;
   }
 
   .tox-form__group--collection {
