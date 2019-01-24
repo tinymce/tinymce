@@ -32,7 +32,7 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
   if (hasDictionarySupport) {
     items.push({ type: 'separator' });
     items.push({
-      text: 'Add to Dictionary',
+      text: 'Add to dictionary',
       onAction: () => {
         Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, word, spans);
       }
