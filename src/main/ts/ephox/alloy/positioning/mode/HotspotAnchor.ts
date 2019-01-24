@@ -17,7 +17,7 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
   return Option.some(
     NuAnchor({
       anchorBox: anchorBox,
-      bubble: anchorInfo.bubble.getOrThunk(() => Bubble.fallback()),
+      bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: { },
       layouts: layouts,
       placer: Option.none()
