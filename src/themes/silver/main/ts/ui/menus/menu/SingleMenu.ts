@@ -34,10 +34,8 @@ export const handleError = (error) => {
 export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
   BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
-const hasIcon = (item) => item.icon !== undefined;
-const hasCheckbox = (item) => item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
+const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
-const menuHasCheckboxes = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasCheckbox);
 
 const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemSpec> => {
   switch (item.type) {
@@ -171,7 +169,7 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
 };
 
 export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
-  const hasIcons = menuHasIcons(items) || menuHasCheckboxes(items);
+  const hasIcons = menuHasIcons(items);
   const alloyItems = Options.cat<ItemSpec>(
     Arr.map(items, (item) => {
       return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
