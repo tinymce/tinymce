@@ -187,6 +187,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     const labelPart = Slider.parts().label({
       dom: {
         tag: 'label',
+        classes: ['tox-label'],
         innerHtml: providersBackstage.translate(label)
       }
     });
