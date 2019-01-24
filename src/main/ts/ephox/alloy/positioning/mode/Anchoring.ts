@@ -78,10 +78,12 @@ export interface NodeAnchor extends AnchorDetail<NodeAnchor>, HasLayoutAnchor {
 export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'hotspot';
   hotspot: AlloyComponent;
+  bubble?: Bubble;
 }
 
 export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnchor {
   hotspot: AlloyComponent;
+  bubble: Option<Bubble>;
 }
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
