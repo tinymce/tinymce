@@ -27,8 +27,10 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
       }
     });
   });
+
   const hasDictionarySupport = lastSuggestionsState.get().hasDictionarySupport;
   if (hasDictionarySupport) {
+    items.push({ type: 'separator' });
     items.push({
       text: 'Add to Dictionary',
       onAction: () => {
@@ -38,6 +40,9 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
   }
 
   items.push.apply(items, [
+    {
+      type: 'separator'
+    },
     {
       text: 'Ignore',
       onAction: () => {
