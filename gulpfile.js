@@ -12,6 +12,8 @@ var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 const runBackstopCommand = require('./tools/tasks/run_backstop');
+const fs = require('fs');
+const path = require('path');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
 var exportLessVariablesToJson = new variablesOutput({filename: 'build/skin-tool/less-variables.json'});
@@ -103,6 +105,17 @@ gulp.task('setupIconManager', function() {
     .pipe(gulp.dest('./build'));
 });
 
+const getDirs = (p) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory());
+gulp.task('buildSkinSwitcher', (done) => {
+  const uiSkins = getDirs('./build/skins/ui');
+  const contentSkins = getDirs('./build/skins/content');
+  const data = `uiSkins = ${JSON.stringify(uiSkins)}, contentSkins = ${JSON.stringify(contentSkins)}`;
+  const html = fs.readFileSync('./build/index.html', 'utf8');
+  fs.writeFileSync('./build/index.html', html.replace('/** ADD_DATA */', data));
+
+  done();
+});
+
 gulp.task('copyFiles', gulp.series('copyFilesA', 'copyFilesB', 'copyFilesC', 'copyFilesD', 'setupIconManager'));
 
 //
@@ -116,7 +129,7 @@ gulp.task('serve', function() {
   });
 
   gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesC', 'less', 'minify-css'));
-  gulp.watch('./src/demo/**/*.html', gulp.series('buildHtml', 'copyFiles'));
+  gulp.watch('./src/demo/**/*.html', gulp.series('buildHtml', 'copyFiles', 'buildSkinSwitcher'));
   gulp.watch(['./src/demo/**/*.css', './src/demo/**/*.js'], gulp.series('buildHtml', 'copyFiles'));
   gulp.watch('./build/**/*.*').on('change', browserSync.reload);
 });
@@ -173,5 +186,5 @@ gulp.task('clean', gulp.series('cleanBuild', 'cleanTmp'));
 //
 // Build project and watch LESS file changes
 //
-gulp.task('build', gulp.series('clean', 'buildHtml', 'lint', 'less', 'minify-css', 'copyFiles', 'setupIconManager'));
+gulp.task('build', gulp.series('clean', 'buildHtml', 'lint', 'less', 'minify-css', 'copyFiles', 'setupIconManager', 'buildSkinSwitcher'));
 gulp.task('default', gulp.series('build', 'serve'));
