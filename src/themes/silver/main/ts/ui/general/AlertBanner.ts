@@ -32,25 +32,33 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
       {
         dom: {
           tag: 'div',
+          classes: [ 'tox-notification__icon' ]
+        },
+        components: [
+          Button.sketch({
+            dom: {
+              tag: 'button',
+              classes: [ 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
+              innerHtml: Icons.get(spec.icon, providersBackstage.icons),
+              attributes: {
+                title: providersBackstage.translate(spec.actionLabel)
+              }
+            },
+            // TODO: aria label this button!
+            action: (comp) => {
+              AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url });
+            }
+          })
+        ]
+      },
+      {
+        dom: {
+          tag: 'div',
           classes: [ 'tox-notification__body'],
           // TODO: AP-247: Escape this text so that it can't contain script tags
           innerHtml: providersBackstage.translate(spec.text)
         }
-      },
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          classes: ['tox-notification__right-icon', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
-          innerHtml: Icons.get(spec.icon, providersBackstage.icons),
-          attributes: {
-            title: providersBackstage.translate(spec.actionLabel)
-          }
-        },
-        // TODO: aria label this button!
-        action: (comp) => {
-          AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url });
-        }
-      })
+      }
     ]
   });
 };
