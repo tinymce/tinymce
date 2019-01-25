@@ -14,7 +14,7 @@ const reportFocusShifting = (component: AlloyComponent, prevFocus: Option<Elemen
       newFocus
     });
   }
-}
+};
 
 export interface FocusManager {
   get: (component: AlloyComponent) => Option<Element>;

@@ -156,7 +156,7 @@ const stopper = function <T extends EventFormat>(name): AlloyEventKeyAndHandler<
 
 const runOnSource = function <T extends EventFormat>(name: string, f: EventRunHandler<T>): AlloyEventKeyAndHandler<T> {
   return runOnSourceName(name)(f);
-}
+};
 
 const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
 const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());

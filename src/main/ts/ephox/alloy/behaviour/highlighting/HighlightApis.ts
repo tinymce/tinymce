@@ -5,32 +5,42 @@ import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
+import * as SystemEvents from '../../api/events/SystemEvents';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
-const dehighlightAll = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void => {
+// THIS IS NOT API YET
+const dehighlightAllExcept = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, skip: AlloyComponent[]): void => {
   const highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass);
   Arr.each(highlighted, (h) => {
-    Class.remove(h, hConfig.highlightClass);
-    component.getSystem().getByDom(h).each((target) => {
-      hConfig.onDehighlight(component, target);
-    });
+    if (!Arr.exists(skip, (skipComp) => skipComp.element() === h)) {
+      Class.remove(h, hConfig.highlightClass);
+      component.getSystem().getByDom(h).each((target) => {
+        hConfig.onDehighlight(component, target);
+        AlloyTriggers.emit(target, SystemEvents.dehighlight());
+      });
+    }
   });
 };
 
-const dehighlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
-  const wasHighlighted = isHighlighted(component, hConfig, hState, target);
-  Class.remove(target.element(), hConfig.highlightClass);
+const dehighlightAll = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void => dehighlightAllExcept(component, hConfig, hState, []);
 
-  // Only fire the event if it was highlighted.
-  if (wasHighlighted) { hConfig.onDehighlight(component, target); }
+const dehighlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
+  // Only act if it was highlighted.
+  if (isHighlighted(component, hConfig, hState, target)) {
+    Class.remove(target.element(), hConfig.highlightClass);
+    hConfig.onDehighlight(component, target);
+    AlloyTriggers.emit(target, SystemEvents.dehighlight());
+  }
 };
 
 const highlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
-  const wasHighlighted = isHighlighted(component, hConfig, hState, target);
-  dehighlightAll(component, hConfig, hState);
-  Class.add(target.element(), hConfig.highlightClass);
+  dehighlightAllExcept(component, hConfig, hState, [target]);
 
-  // TODO: Check whether this should always fire
-  if (! wasHighlighted) { hConfig.onHighlight(component, target); }
+  if (! isHighlighted(component, hConfig, hState, target)) {
+    Class.add(target.element(), hConfig.highlightClass);
+    hConfig.onHighlight(component, target);
+    AlloyTriggers.emit(target, SystemEvents.highlight());
+  }
 };
 
 const highlightFirst = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void => {

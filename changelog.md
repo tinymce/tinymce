@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.8.0] - 2019-01-18
+### Added
+- New events for highlight and dehighlight
+
+### Changed
+- Tooltips can now follow highlights by setting the mode to 'follow-highlight'
+
+### Fixed
+- Listed additional events in the event ordering
+- Ensured that a highlighted item will not be first dehighlighted
+
 # [4.7.3] - 2019-01-24
 ### Added
  - Added bubble support for hotspot anchors
