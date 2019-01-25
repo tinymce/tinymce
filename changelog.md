@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Listed additional events in the event ordering
 - Ensured that a highlighted item will not be first dehighlighted
 
+# [4.7.3] - 2019-01-24
+### Added
+ - Added bubble support for hotspot anchors
+
 # [4.7.0] - 2019-01-18
 ### Added
  - Added more flexible tooltip behaviour.

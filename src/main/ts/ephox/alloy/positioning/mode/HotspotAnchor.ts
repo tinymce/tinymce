@@ -17,7 +17,7 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
   return Option.some(
     NuAnchor({
       anchorBox: anchorBox,
-      bubble: Bubble.fallback(),
+      bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: { },
       layouts: layouts,
       placer: Option.none()
@@ -27,6 +27,7 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
 
 export default [
   FieldSchema.strict('hotspot'),
+  FieldSchema.option('bubble'),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];
