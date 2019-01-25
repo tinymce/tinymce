@@ -11,7 +11,7 @@ import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuType
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';
@@ -148,13 +148,13 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
   );
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemSpec[] => {
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
         handleError,
         (d: InlineContent.AutocompleterItem) => Option.some(
-          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, providersBackstage)
+          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, sharedBackstage)
         )
       );
     })

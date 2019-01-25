@@ -78,7 +78,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         },
         columns,
         ItemResponse.BUBBLE_TO_SANDBOX,
-        sharedBackstage.providers
+        sharedBackstage
       );
     });
   };
