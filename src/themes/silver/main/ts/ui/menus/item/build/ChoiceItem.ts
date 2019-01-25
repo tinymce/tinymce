@@ -28,7 +28,7 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: 
     checkMark: Option.none(),
     caret: Option.none(),
     value: spec.value
-  }, providersBackstage, spec.icon);
+  }, providersBackstage, true, spec.icon);
 
   return renderCommonItem({
     data: buildData(spec),
@@ -66,7 +66,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
     caret: Option.none(),
     value: spec.value
-  }, providersBackstage);
+  }, providersBackstage, true);
 
   return Merger.deepMerge(
     renderCommonItem({

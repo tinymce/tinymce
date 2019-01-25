@@ -15,7 +15,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemSpec => {
   const getApi = (component): Menu.MenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
@@ -31,7 +31,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     caret: Option.none(),
     checkMark: Option.none(),
     shortcutContent: spec.shortcut
-  }, providersBackstage);
+  }, providersBackstage, renderIcons);
 
   return renderCommonItem({
     data: buildData(spec),

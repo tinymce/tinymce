@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       const tinyUi = TinyUi(editor);
 
-      const sAssertMenu = (label: string, expected) => {
+      const sAssertMenu = (label: string, expected, hasIcons) => {
         return Chain.asStep(Body.body(), [
           UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
           Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => {
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
                     return s.element('div', {
                       classes: [ arr.has('tox-collection__item') ],
                       children: [
-                        s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
+                        ...hasIcons ? [ s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}) ] : [ ],
                         s.element('span', exp.submenu ? {
                           classes: [ arr.has('tox-collection__item-label') ],
                           html: str.is(exp.html)
@@ -39,9 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
                             s.element(exp.tag, { html: str.is(exp.html) })
                           ]
                         })
-                      ].concat(exp.submenu ? [
-                        s.anything()
-                      ] : [ ])
+                      ].concat(exp.submenu ? [ s.anything() ] : [ ])
                     });
                   })
                 })
@@ -57,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       Pipeline.async({}, [
         sOpenStyleMenu,
-        sAssertMenu('Checking stuff', assertions.menuContents)
+        sAssertMenu('Checking stuff', assertions.menuContents, assertions.menuHasIcons)
       ].concat(assertions.choice.map((c) => [
           Assertions.sAssertPresence(
             `${c} should NOT be present before clicking`,
@@ -101,6 +99,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'p', html: 'p.other', submenu: false },
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('h1.red')
         },
         {
@@ -121,6 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { html: 'Blocks', submenu: true },
             { html: 'Align', submenu: true }
           ],
+          menuHasIcons: false,
           choice: Option.none()
         },
         {
@@ -144,6 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'p', html: 'p.other', submenu: false },
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.none()
         },
         {
@@ -170,6 +171,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'h3', html: 'h3.advanced', submenu: false },
             { tag: 'h4', html: 'h4.advanced', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.none()
         },
         {
@@ -193,6 +195,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'p', html: 'p.other', submenu: false },
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.none()
         },
         {
@@ -210,6 +213,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           menuContents: [
             { tag: 'h1', html: 'h1.red', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('h1.red')
         },
         {
@@ -229,6 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'p', html: 'p.other', submenu: false },
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('p.other')
         },
         {
@@ -249,6 +254,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           menuContents: [
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('span.inline')
         },
         {
@@ -268,6 +274,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'h2', html: 'h2.advanced', submenu: false },
             { tag: 'h3', html: 'h3.advanced', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('h2.advanced')
         },
         {
@@ -292,6 +299,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'h3', html: 'h3.advanced', submenu: false },
             { tag: 'h4', html: 'h4.advanced', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('h2.advanced')
         },
         {
@@ -318,6 +326,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'h3', html: 'h3.advanced', submenu: false },
             { tag: 'h4', html: 'h4.advanced', submenu: false }
           ],
+          menuHasIcons: true,
           choice: Option.some('h2.advanced')
         },
         {
@@ -341,6 +350,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { html: 'Other', submenu: true },
             { html: 'Advanced', submenu: true }
           ],
+          menuHasIcons: false,
           choice: Option.none()
         },
         {

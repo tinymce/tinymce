@@ -18,6 +18,9 @@ const register = function (editor: Editor) {
   editor.ui.registry.addSplitButton('insertdatetime', {
     icon: 'insert-time',
     tooltip: 'Insert date/time',
+    select: (value) => {
+      return value === defaultFormat.get();
+    },
     fetch: (done) => {
       done(Tools.map(formats, (format) => ({type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format})));
     },

@@ -39,7 +39,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     shortcutContent: spec.shortcut,
     presets: 'normal',
     meta: spec.meta
-  }, providersBackstage);
+  }, providersBackstage, true);
 
   return Merger.deepMerge(
     renderCommonItem({
