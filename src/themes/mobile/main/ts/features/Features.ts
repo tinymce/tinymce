@@ -63,7 +63,7 @@ const setup = function (realm, editor) {
   const bold = stateCommandSketch('bold');
   const italic = stateCommandSketch('italic');
   const underline = stateCommandSketch('underline');
-  const removeformat = commandSketch('removeformat');
+  const removeformat = commandSketch('remove-formatting');
 
   const link = function () {
     return LinkButton.sketch(realm, editor);
@@ -118,7 +118,7 @@ const setup = function (realm, editor) {
           Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
         ])
       })
-    ]));
+    ]), editor);
   };
 
   const feature = function (prereq, sketch) {

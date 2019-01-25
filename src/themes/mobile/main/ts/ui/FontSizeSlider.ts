@@ -42,7 +42,7 @@ const sketch = function (realm, editor): SketchSpec {
 
   return ToolbarWidgets.button(realm, 'font-size', function () {
     return makeItems(spec);
-  });
+  }, editor);
 };
 
 export {

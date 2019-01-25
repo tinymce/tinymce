@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import { Compare, Element, Node, PredicateFind } from '@ephox/sugar';
 
-import * as UiDomFactory from '../util/UiDomFactory';
+import Buttons from '../ui/Buttons';
 import SizeSlider from './SizeSlider';
 import * as ToolbarWidgets from './ToolbarWidgets';
 import { SketchSpec } from '@ephox/alloy';
@@ -45,11 +45,11 @@ const sketch = function (realm, editor): SketchSpec {
 
   return ToolbarWidgets.button(realm, 'heading', function () {
     return [
-      UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-heading ${prefix}-icon"></span>'),
+      Buttons.getToolbarIconButton('small-heading', editor),
       makeSlider(spec),
-      UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-heading ${prefix}-icon"></span>')
+      Buttons.getToolbarIconButton('small-heading', editor)
     ];
-  });
+  }, editor);
 };
 
 export {

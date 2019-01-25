@@ -29,7 +29,7 @@ export default function () {
     insertContent (data) {
       store.adder({ method: 'insertContent', data })();
     },
-    execCommand (name, ui, args) {
+    execCommand (name, args) {
       store.adder({ method: 'execCommand', data: Objects.wrap(name, args) })();
     },
     dom: {
@@ -38,7 +38,16 @@ export default function () {
       },
       encode: Fun.identity
     },
-    focus: Fun.noop
+    focus: Fun.noop,
+    ui: {
+      registry: {
+        getAll: () => {
+          return {
+            icons: {}
+          };
+        }
+      }
+    }
   };
 
   return {

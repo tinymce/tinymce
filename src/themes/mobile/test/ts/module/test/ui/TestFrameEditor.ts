@@ -60,6 +60,15 @@ export default function () {
         WindowSelection.setExact(win, elem, 0, elem, 0);
         return Option.none();
       });
+    },
+    ui: {
+      registry: {
+        getAll: () => {
+          return {
+            icons: {}
+          };
+        }
+      }
     }
   };
 
