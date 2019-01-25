@@ -1,4 +1,5 @@
 Version 5.0.0-rc-3 (TBA)
+    Changed Tiny 5 mobile skin to look more uniform with desktop #TINY-2650
     Fixed image tools not having any padding between the label and slider #TINY-3220
     Blacklisted table, th and td as inline editor target #TINY-717
     Fixed context toolbar toggle buttons not showing the correct state #TINY-3022

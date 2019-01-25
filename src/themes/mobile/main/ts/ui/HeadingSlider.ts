@@ -47,7 +47,7 @@ const sketch = function (realm, editor): SketchSpec {
     return [
       Buttons.getToolbarIconButton('small-heading', editor),
       makeSlider(spec),
-      Buttons.getToolbarIconButton('small-heading', editor)
+      Buttons.getToolbarIconButton('large-heading', editor)
     ];
   }, editor);
 };

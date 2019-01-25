@@ -29,7 +29,7 @@ export default function () {
     insertContent (data) {
       store.adder({ method: 'insertContent', data })();
     },
-    execCommand (name, args) {
+    execCommand (name, ui, args) {
       store.adder({ method: 'execCommand', data: Objects.wrap(name, args) })();
     },
     dom: {

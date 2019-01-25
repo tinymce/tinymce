@@ -63,7 +63,7 @@ const setup = function (realm, editor) {
   const bold = stateCommandSketch('bold');
   const italic = stateCommandSketch('italic');
   const underline = stateCommandSketch('underline');
-  const removeformat = commandSketch('remove-formatting');
+  const removeformat = commandSketch('removeformat');
 
   const link = function () {
     return LinkButton.sketch(realm, editor);
