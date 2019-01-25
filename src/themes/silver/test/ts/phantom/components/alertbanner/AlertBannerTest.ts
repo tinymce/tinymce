@@ -43,13 +43,16 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
               ],
               children: [
                 s.element('div', {
+                  classes: [ arr.has('tox-notification__icon') ],
+                  children: [
+                    s.element('button', {
+                      html: str.is('provided-for-help')
+                    })
+                  ]
+                }),
+                s.element('div', {
                   classes: [ arr.has('tox-notification__body') ],
                   html: str.is('I am a banner')
-                }),
-
-                s.element('button', {
-                  classes: [ arr.has('tox-notification__right-icon') ],
-                  html: str.is('provided-for-help')
                 }),
               ]
             });

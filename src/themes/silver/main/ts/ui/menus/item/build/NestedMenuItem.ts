@@ -9,7 +9,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemSpec => {
   const caret = renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component): Menu.NestedMenuItemInstanceApi => {
     return {
@@ -26,7 +26,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     caret: Option.some(caret),
     checkMark: Option.none(),
     shortcutContent: spec.shortcut
-  }, providersBackstage);
+  }, providersBackstage, renderIcons);
 
   return renderCommonItem({
     data: buildData(spec),

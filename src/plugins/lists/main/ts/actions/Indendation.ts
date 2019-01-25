@@ -6,67 +6,48 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Compare, Element, Replication, Traverse } from '@ephox/sugar';
+import { Element} from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Indentation } from '../listModel/Indentation';
+import { listsIndentation } from '../listModel/ListsIndendation';
+import { dlIndentation } from '../core/DlIndentation';
 import Range from '../core/Range';
 import Selection from '../core/Selection';
-import SplitList from '../core/SplitList';
-import { IndentValue } from '../listModel/Indentation';
-import { listsIndentation } from '../listModel/ListsIndendation';
 
-const outdentDlItem = (editor: Editor, item: Element): void => {
-  if (Compare.is(item, 'DD')) {
-    Replication.mutate(item, 'DT');
-  } else if (Compare.is(item, 'DT')) {
-    Traverse.parent(item).each((dl) => SplitList.splitList(editor, dl.dom(), item.dom()));
-  }
-};
-
-const indentDlItem = (item: Element): void => {
-  if (Compare.is(item, 'DT')) {
-    Replication.mutate(item, 'DD');
-  }
-};
-
-const dlIndentation = (editor: Editor, indentation: IndentValue, dlItems: Element[]) => {
-  if (indentation === IndentValue.Indent) {
-    Arr.each(dlItems, indentDlItem);
-  } else {
-    Arr.each(dlItems, (item) => outdentDlItem(editor, item));
-  }
-};
-
-const selectionIndentation = (editor: Editor, indentation: IndentValue) => {
-  const dlItems = Arr.map(Selection.getSelectedDlItems(editor), Element.fromDom);
+const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
   const lists = Arr.map(Selection.getSelectedListRoots(editor), Element.fromDom);
+  const dlItems = Arr.map(Selection.getSelectedDlItems(editor), Element.fromDom);
+  let isHandled = false;
 
-  if (dlItems.length || lists.length) {
+  if (lists.length || dlItems.length) {
     const bookmark = editor.selection.getBookmark();
 
+    listsIndentation(editor, lists, indentation);
     dlIndentation(editor, indentation, dlItems);
-
-    listsIndentation(
-      editor,
-      lists,
-      indentation
-    );
 
     editor.selection.moveToBookmark(bookmark);
     editor.selection.setRng(Range.normalizeRange(editor.selection.getRng()));
     editor.nodeChanged();
+    isHandled = true;
   }
+
+  return isHandled;
 };
 
-const indentListSelection = (editor: Editor) => {
-  selectionIndentation(editor, IndentValue.Indent);
+const indentListSelection = (editor: Editor): boolean => {
+  return selectionIndentation(editor, Indentation.Indent);
 };
 
-const outdentListSelection = (editor: Editor) => {
-  selectionIndentation(editor, IndentValue.Outdent);
+const outdentListSelection = (editor: Editor): boolean => {
+  return selectionIndentation(editor, Indentation.Outdent);
 };
 
-const flattenListSelection = (editor: Editor) => {
-  selectionIndentation(editor, IndentValue.Flatten);
+const flattenListSelection = (editor: Editor): boolean => {
+  return selectionIndentation(editor, Indentation.Flatten);
 };
 
-export { indentListSelection, outdentListSelection, flattenListSelection };
+export {
+  indentListSelection,
+  outdentListSelection,
+  flattenListSelection
+};
