@@ -60,6 +60,12 @@ const pluginLoadError = function (editor, url) {
   displayError(editor, pluginUrlToMessage(editor, url));
 };
 
+const pluginInitError = function (editor, name, err) {
+  const message = 'Failed to initialize plugin: ' + name;
+  initError(message, err);
+  displayError(editor, message);
+};
+
 const initError = function (message, ...x: any[]) {
   const console = window.console;
   if (console) { // Skip test env
@@ -73,6 +79,7 @@ const initError = function (message, ...x: any[]) {
 
 export default {
   pluginLoadError,
+  pluginInitError,
   uploadError,
   displayError,
   initError
