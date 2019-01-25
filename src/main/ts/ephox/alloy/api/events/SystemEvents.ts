@@ -81,6 +81,9 @@ export interface AlloyDismissTabEvent extends CustomEvent {
 const changeTab = Fun.constant('alloy.change.tab');
 const dismissTab = Fun.constant('alloy.dismiss.tab');
 
+const highlight = Fun.constant('alloy.highlight');
+const dehighlight = Fun.constant('alloy.dehighlight');
+
 export {
 
   focus,
@@ -106,5 +109,8 @@ export {
   changeTab,
   dismissTab,
 
-  slotVisibility
+  slotVisibility,
+
+  highlight,
+  dehighlight,
 };

@@ -10,6 +10,7 @@ export default [
   FieldSchema.defaulted('exclusive', true),
   FieldSchema.defaulted('tooltipComponents', []),
   FieldSchema.defaulted('delay', 300),
+  FieldSchema.defaultedStringEnum('mode', 'normal', ['normal', 'follow-highlight']),
   FieldSchema.defaulted('anchor', (comp: AlloyComponent) => ({
     anchor: 'hotspot',
     hotspot: comp,

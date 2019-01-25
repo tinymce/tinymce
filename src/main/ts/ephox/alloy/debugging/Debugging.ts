@@ -23,7 +23,7 @@ enum EventConfiguration {
   STOP,
   NORMAL,
   LOGGING
-};
+}
 
 const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 
@@ -88,7 +88,7 @@ const processEvent = (eventName: string, initialTarget: Element, f: EventProcess
       // Does not even run the function to trigger event and listen to handlers
       return true;
   }
-}
+};
 
 // Ignore these files in the error stack
 const path = [
@@ -177,7 +177,7 @@ const getOrInitConnection = () => {
           });
         }).orThunk(() => {
           return Option.some({
-            'error': 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
+            error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
           });
         });
       },
