@@ -10,13 +10,13 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   editor.ui.registry.addButton('wordcount', {
-    tooltip: 'Wordcount',
+    tooltip: 'Word count',
     icon: 'character-count',
     onAction: () => Dialog.open(editor)
   });
 
   editor.ui.registry.addMenuItem('wordcount', {
-    text: 'Wordcount',
+    text: 'Word count',
     icon: 'character-count',
     onAction: () => Dialog.open(editor)
   });

@@ -4,6 +4,7 @@ Version 5.0.0-rc-3 (TBA)
     Fixed context toolbar toggle buttons not showing the correct state #TINY-3022
     Fixed missing separators in the spellchecker context menu between the suggestions and actions #TINY-3217
     Fixed notification icon positioning in alert banners #TINY-2196
+    Fixed a typo in the word count plugin name #TINY-3062
 Version 5.0.0-rc-2 (2019-01-22)
     Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Added screen reader accessibility for sidebar and statusbar #TINY-2699

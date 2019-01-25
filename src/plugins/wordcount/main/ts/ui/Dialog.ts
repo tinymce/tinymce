@@ -12,7 +12,7 @@ const open = (editor: Editor) => {
   const documentCount = getEditorWordcount(editor);
   const selectionCount = getSelectionWordcount(editor);
   editor.windowManager.open({
-    title: 'Wordcount',
+    title: 'Word Count',
     body: {
       type: 'panel',
       items: [
