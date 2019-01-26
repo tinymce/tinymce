@@ -573,6 +573,49 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function () {
     });
   });
 
+  suite.test('invalidClasses', function () {
+    let schema;
+
+    schema = Schema({ invalid_classes: 'classA,classB' });
+    LegacyUnit.deepEqual(schema.getInvalidClasses(), {
+      '*': {
+        classA: {},
+        classB: {}
+      }
+    });
+
+    schema = Schema({ invalid_classes: 'classA classB' });
+    LegacyUnit.deepEqual(schema.getInvalidClasses(), {
+      '*': {
+        classA: {},
+        classB: {}
+      }
+    });
+
+    schema = Schema({
+      invalid_classes: {
+        '*': 'classA classB',
+        'a': 'classC classD'
+      }
+    });
+    LegacyUnit.deepEqual(schema.getInvalidClasses(), {
+      '*': {
+        classA: {},
+        classB: {}
+      },
+
+      'a': {
+        classC: {},
+        classD: {}
+      },
+
+      'A': {
+        classC: {},
+        classD: {}
+      }
+    });
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

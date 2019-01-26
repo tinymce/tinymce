@@ -171,11 +171,12 @@ const register = (parser, settings: any): void => {
     });
   }
 
-  if (settings.validate && schema.getValidClasses()) {
+  if (settings.validate && (schema.getValidClasses() || schema.getInvalidClasses())) {
     parser.addAttributeFilter('class', function (nodes) {
       let i = nodes.length, node, classList, ci, className, classValue;
       const validClasses = schema.getValidClasses();
-      let validClassesMap, valid;
+      const invalidClasses = schema.getInvalidClasses();
+      let validClassesMap, invalidClassesMap, valid;
 
       while (i--) {
         node = nodes[i];
@@ -186,14 +187,30 @@ const register = (parser, settings: any): void => {
           className = classList[ci];
           valid = false;
 
-          validClassesMap = validClasses['*'];
-          if (validClassesMap && validClassesMap[className]) {
+          if (validClasses) {
+            validClassesMap = validClasses['*'];
+            if (validClassesMap && validClassesMap[className]) {
+              valid = true;
+            }
+
+            validClassesMap = validClasses[node.name];
+            if (!valid && validClassesMap && validClassesMap[className]) {
+              valid = true;
+            }
+          } else {
             valid = true;
           }
 
-          validClassesMap = validClasses[node.name];
-          if (!valid && validClassesMap && validClassesMap[className]) {
-            valid = true;
+          if (valid && invalidClasses) {
+            invalidClassesMap = invalidClasses['*'];
+            if (invalidClassesMap && invalidClassesMap[className]) {
+              valid = false;
+            }
+
+            invalidClassesMap = invalidClasses[node.name];
+            if (valid && invalidClassesMap && invalidClassesMap[className]) {
+              valid = false;
+            }
           }
 
           if (valid) {

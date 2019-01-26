@@ -626,6 +626,48 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
     LegacyUnit.equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB classC">a</strong></p>');
   });
 
+  suite.test('Invalid classes', function () {
+    let parser, root;
+    const schema = Schema({ invalid_classes: 'classA classB' });
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<p class="classA classB classC">a</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="classC">a</p>');
+  });
+
+  suite.test('Invalid classes multiple elements', function () {
+    let parser, root;
+    const schema = Schema({ invalid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="classC"><strong class="classD">a</strong></p>');
+  });
+
+  suite.test('Global invalid classes take precedence', function () {
+    let parser, root;
+    const schema = Schema({
+      valid_classes: { strong: 'classA classB' },
+      invalid_classes: { '*': 'classA' }
+    });
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p><strong class="classB">a</strong></p>');
+  });
+
+  suite.test('Element invalid classes take precedence', function () {
+    let parser, root;
+    const schema = Schema({
+      valid_classes: { '*': 'classA classB' },
+      invalid_classes: { strong: 'classA' }
+    });
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p class="classA classB"><strong class="classB">a</strong></p>');
+  });
+
   suite.test('Pad empty list blocks', function () {
     let parser, root;
     const schema = Schema();
