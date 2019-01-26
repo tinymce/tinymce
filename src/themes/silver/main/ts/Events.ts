@@ -65,6 +65,12 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     });
   });
 
+  const onWindowResize = DomEvent.bind(Element.fromDom(window), 'resize', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastEvent(SystemEvents.windowResize(), evt);
+    });
+  });
+
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
     editor.off('mousedown', onContentMousedown);
@@ -76,6 +82,7 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     onMouseup.unbind();
 
     onWindowScroll.unbind();
+    onWindowResize.unbind();
   });
 
   editor.on('detach', () => {
