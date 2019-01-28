@@ -5,6 +5,8 @@ import Regexes from './Regexes';
 import Search from './Search';
 import Splitting from './Splitting';
 import Strings from './Strings';
+import Words from './Words';
+import { WordOptions } from '../words/Words';
 
 export {
   Arrays,
@@ -13,5 +15,7 @@ export {
   Regexes,
   Search,
   Splitting,
-  Strings
+  Strings,
+  Words,
+  WordOptions
 };
