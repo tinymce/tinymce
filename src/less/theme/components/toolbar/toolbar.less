@@ -10,14 +10,16 @@
 //
 
 @toolbar-background-color: @background-color;
-@toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") 0 0 @toolbar-background-color;
+@toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") left 0 top @toolbar-padding-y @toolbar-background-color;
 @toolbar-row-separator-color: @toolbar-group-separator-color;
 @toolbar-separator-color: @border-color;
+@toolbar-padding-y: 0; // Note that a positive value doesn't work with toolbar collapsing into multiple rows. Will cause issues with the toolbar row separator
+@toolbar-padding-x: 0;
 
 // private variables
 @_toolbar-row-separator-color: escape('@{toolbar-row-separator-color}');
 @_toolbar-divider-height: @_toolbar-height - 1px;
-@_toolbar-height: @toolbar-button-height + @toolbar-button-spacing-y + @toolbar-button-spacing-y + 1px;
+@_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
 
 .tox {
   .tox-toolbar {
@@ -29,7 +31,7 @@
     flex-shrink: 0;
     flex-wrap: wrap;
     margin-bottom: -1px;
-    padding: 0;
+    padding: @toolbar-padding-y @toolbar-padding-x;
   }
 
   .tox-pop .tox-toolbar {
