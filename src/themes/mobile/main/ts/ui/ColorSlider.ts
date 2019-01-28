@@ -111,9 +111,9 @@ const sketch = function (realm, editor) {
     }
   };
 
-  return ToolbarWidgets.button(realm, 'color', function () {
+  return ToolbarWidgets.button(realm, 'color-levels', function () {
     return makeItems(spec);
-  });
+  }, editor);
 };
 
 export default {

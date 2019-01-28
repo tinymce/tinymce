@@ -18,9 +18,7 @@ import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
 
-UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
@@ -194,7 +192,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
 
   Pipeline.async({}, detection.browser.isChrome() ? [
     GuiSetup.mAddStyles(doc, [
-      '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }',
+      '.tinymce-mobile-toolbar-button:before { content: "LINK"; background: black; color: white; }',
       // Speeds up tests.
       '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
     ]),

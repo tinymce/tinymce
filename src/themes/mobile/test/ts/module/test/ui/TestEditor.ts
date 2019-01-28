@@ -38,7 +38,16 @@ export default function () {
       },
       encode: Fun.identity
     },
-    focus: Fun.noop
+    focus: Fun.noop,
+    ui: {
+      registry: {
+        getAll: () => {
+          return {
+            icons: {}
+          };
+        }
+      }
+    }
   };
 
   return {
