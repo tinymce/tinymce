@@ -44,8 +44,6 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
 
   // TODO: Make this potentially a single menu also
   return futureData.map((tdata) => {
-    // tslint:disable-next-line:no-console
-    console.log(tdata);
     return tdata.fold(
       () => Option.none(),
       (data) => {
