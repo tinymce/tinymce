@@ -6,7 +6,6 @@
  */
 
 import { Disabling, Toggling, Tooltipping, GuiFactory, Behaviour } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { InlineContent, Menu, Types } from '@ephox/bridge';
 import { Merger, Option, Obj } from '@ephox/katamari';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../../backstage/Backstage';
@@ -50,7 +49,7 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
 };
 
 // TODO: Remove dupe between these
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemSpec => {
+const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
 
   const structure = renderItemStructure({
     presets,
@@ -74,7 +73,7 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: 
   }, structure, itemResponse);
 };
 
-const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
     return {
       setActive: (state) => {

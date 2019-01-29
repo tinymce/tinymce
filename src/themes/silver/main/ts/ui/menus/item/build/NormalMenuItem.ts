@@ -6,7 +6,6 @@
  */
 
 import { Disabling } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -15,7 +14,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemSpec => {
+const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true) => {
   const getApi = (component): Menu.MenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),

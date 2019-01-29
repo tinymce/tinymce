@@ -6,7 +6,6 @@
  */
 
 import { AlloySpec, Menu as AlloyMenu, RawDomSchema } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => {
@@ -69,7 +68,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items: ItemSpec[], isSeparator: (a: ItemSpec, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items, isSeparator: (a, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {
@@ -101,7 +100,7 @@ const preprocessCollection = (items: ItemSpec[], isSeparator: (a: ItemSpec, inde
   });
 };
 
-const forCollection = (columns: number | 'auto', initItems: ItemSpec[], hasIcons: boolean = true) => {
+const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
@@ -110,7 +109,7 @@ const forCollection = (columns: number | 'auto', initItems: ItemSpec[], hasIcons
     components: [
       // TODO: Clean up code and test atomically
       AlloyMenu.parts().items({
-        preprocess: (items: ItemSpec[]) => {
+        preprocess: (items) => {
           if (columns !== 'auto' && columns > 1) {
             return chunk<AlloySpec>({
               tag: 'div',

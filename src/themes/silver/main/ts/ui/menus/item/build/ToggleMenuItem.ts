@@ -6,7 +6,6 @@
  */
 
 import { Disabling, Toggling } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 import { Merger, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -16,7 +15,7 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
     return {
       setActive: (state) => {

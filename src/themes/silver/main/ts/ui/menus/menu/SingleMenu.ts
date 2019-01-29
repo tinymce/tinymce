@@ -6,7 +6,6 @@
  */
 
 import { AlloyEvents, FocusManagers, Keying, TieredMenu } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
@@ -37,7 +36,7 @@ export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuIt
 const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true) => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
@@ -74,7 +73,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items: ItemSpec[], columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuSpec> => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuSpec> => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {
@@ -133,7 +132,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
   };
 };
 
-export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders) => {
   return Options.cat(
     Arr.map(items, (item) => {
       if (item.type === 'choiceitem') {
@@ -148,7 +147,7 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
   );
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemSpec[] => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
@@ -170,7 +169,7 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
 
 export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
   const hasIcons = menuHasIcons(items);
-  const alloyItems = Options.cat<ItemSpec>(
+  const alloyItems = Options.cat(
     Arr.map(items, (item) => {
       return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
     })
