@@ -53,7 +53,7 @@ export interface CommonDropdownSpec {
   disabled?: boolean;
   tooltip: Option<string>;
   role: Option<string>;
-  fetch: (callback: (tdata: TieredData) => void) => void;
+  fetch: (callback: (tdata: Option<TieredData>) => void) => void;
   onAttach: (comp: AlloyComponent) => void;
   onDetach: (comp: AlloyComponent) => void;
   columns: Types.ColumnTypes;

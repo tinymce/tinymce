@@ -24,7 +24,7 @@ import {
   SystemEvents,
 } from '@ephox/alloy';
 import { BehaviourConfigDetail, BehaviourConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
-import { PartialMenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
+import { PartialMenuSpec, TieredData } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
@@ -204,11 +204,11 @@ interface ChoiceFetcher {
 }
 
 const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => {
-  return (comp: AlloyComponent) => {
+  return (comp: AlloyComponent): Future<Option<TieredData>> => {
     return Future.nu((callback) => {
       return spec.fetch(callback);
     }).map((items) => {
-      return createTieredDataFrom(
+      return Option.from(createTieredDataFrom(
         Merger.deepMerge(
           createPartialChoiceMenu(
             Id.generate('menu-value'),
@@ -233,7 +233,7 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
             ])
           } as PartialMenuSpec
         )
-      );
+      ));
     });
   };
 };

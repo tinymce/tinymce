@@ -47,7 +47,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setMenubar(
       uiComponents.outerContainer,
-      identifyMenus(editor, rawUiConfig, backstage)
+      identifyMenus(editor, rawUiConfig)
     );
 
     OuterContainer.setSidebar(
