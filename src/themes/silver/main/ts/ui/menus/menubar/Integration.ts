@@ -108,7 +108,8 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[
 
   return Arr.filter(menus, (menu) => {
     // Filter out menus that have no items, or only separators
-    return menu.getItems().length > 0 && Arr.exists(menu.getItems(), (item) => item.type !== 'separator');
+    const isNotSeparator = (item) => item.type !== 'separator';
+    return menu.getItems().length > 0 && Arr.exists(menu.getItems(), isNotSeparator);
   });
 };
 
