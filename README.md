@@ -1,7 +1,7 @@
 # TinyMCE Oxide skin tools
 This project contains the default skins as well as tools and files needed to build your own skin for TinyMCE.
 
-Visit the [TinyMCE documentation](https://www.tiny.cloud/docs-beta/advanced/creating-a-skin/) for instruction on how to create and build skins for TinyMCE.
+Visit the [TinyMCE documentation](https://www.tiny.cloud/docs/advanced/creating-a-skin/) for instruction on how to create and build skins for TinyMCE.
 
 ## Building the skins
 The build process uses [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/). Make sure you have both installed before you continue.
