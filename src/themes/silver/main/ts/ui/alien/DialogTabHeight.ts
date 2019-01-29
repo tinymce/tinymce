@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection } from '@ephox/alloy';
 import { document, window } from '@ephox/dom-globals';
-import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { Css, Element, Focus, SelectorFind } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
@@ -67,13 +67,6 @@ const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight
 const setMode = (allTabs) => {
   const smartTabHeight = (() => {
     const maxTabHeight = Cell<Option<number>>(Option.none());
-    const resizeTabviewHeight = Throttler.last((comp: AlloyComponent) => {
-      SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
-        Css.set(tabview, 'visibility', 'hidden');
-        updateTabviewHeight(comp.element(), tabview, maxTabHeight);
-        Css.remove(tabview, 'visibility');
-      });
-    }, 50);
 
     const extraEvents = [
       AlloyEvents.runOnAttached((comp) => {
@@ -103,11 +96,10 @@ const setMode = (allTabs) => {
           });
         });
       }),
-      AlloyEvents.runOnDetached(() => {
-        resizeTabviewHeight.cancel();
-      }),
       AlloyEvents.run(SystemEvents.windowResize(), (comp) => {
-        resizeTabviewHeight.throttle(comp);
+        SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
+          updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+        });
       }),
       AlloyEvents.run(formResizeEvent, (comp, se) => {
         SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {

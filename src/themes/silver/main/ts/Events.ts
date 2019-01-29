@@ -49,13 +49,13 @@ const setup = (editor: Editor, mothership, uiMothership) => {
   editor.on('touchstart', onContentMousedown);
 
   const onContentMouseup = function (raw) {
-  if (raw.button === 0) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
-      ship.broadcastOn([ Channels.mouseReleased() ], {
-        target: Element.fromDom(raw.target)
+    if (raw.button === 0) {
+      Arr.each([ mothership, uiMothership ], function (ship) {
+        ship.broadcastOn([ Channels.mouseReleased() ], {
+          target: Element.fromDom(raw.target)
+        });
       });
-    });
-  }
+    }
   };
   editor.on('mouseup', onContentMouseup);
 
@@ -65,24 +65,25 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     });
   });
 
-  const onWindowResize = DomEvent.bind(Element.fromDom(window), 'resize', (evt) => {
+  const onWindowResize = (evt) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(SystemEvents.windowResize(), evt);
     });
-  });
+  };
+  editor.on('ResizeWindow', onWindowResize);
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
     editor.off('mousedown', onContentMousedown);
     editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
+    editor.off('ResizeWindow', onWindowResize);
 
     onMousedown.unbind();
     onTouchstart.unbind();
     onMouseup.unbind();
 
     onWindowScroll.unbind();
-    onWindowResize.unbind();
   });
 
   editor.on('detach', () => {
