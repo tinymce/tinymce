@@ -1,12 +1,16 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
+import TestProviders from '../../../module/TestProviders';
+import { Fun } from '@ephox/katamari';
+
 UnitTest.asynctest('Ui Label component Test', (success, failure) => {
-  const helpers = setupDemo();
-  const sharedBackstage = helpers.extras.backstage.shared;
+  const sharedBackstage = {
+    providers: TestProviders,
+    interpreter: Fun.identity
+  };
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -49,10 +53,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
         )
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

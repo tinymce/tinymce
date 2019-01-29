@@ -2,7 +2,7 @@ import { Keyboard, FocusTools, Keys } from '@ephox/agar';
 import { GuiFactory, Behaviour, AddEventsBehaviour, AlloyEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
-import { renderCheckbox } from '../../../../../main/ts/ui/general/Checkbox';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import I18n from 'tinymce/core/api/util/I18n';
 

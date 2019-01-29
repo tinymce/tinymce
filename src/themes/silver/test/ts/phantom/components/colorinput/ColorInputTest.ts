@@ -15,7 +15,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
 import { SelectorFind, Traverse } from '@ephox/sugar';
 
-import { renderColorInput } from '../../../../../main/ts/ui/dialog/ColorInput';
+import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 import I18n from 'tinymce/core/api/util/I18n';
 
 const choiceItem: 'choiceitem' = 'choiceitem';

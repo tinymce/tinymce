@@ -2,15 +2,13 @@ import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from 
 import { GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
-import { renderSizeInput } from '../../../../../main/ts/ui/dialog/SizeInput';
+import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -20,7 +18,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           name: 'dimensions',
           label: Option.some('size'),
           constrain: true
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -125,10 +123,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         sAssertDimensions('300px', '100px')
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });
