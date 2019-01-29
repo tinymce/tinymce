@@ -12,6 +12,7 @@
 @form-group-vertical-spacing: @pad-xs;
 @form-group-horizontal-spacing: @pad-xs;
 @form-grid-horizontal-gap: @pad-sm;
+@form-group-error-text-color: @color-error;
 
 .tox {
   .tox-form {
@@ -29,7 +30,7 @@
 
   // Modifier for validation error
   .tox-form__group--error {
-    //
+    color: @form-group-error-text-color;
   }
 
   .tox-form__group--collection {
@@ -81,11 +82,11 @@
     flex-direction: column;
     -ms-flex-preferred-size: auto;
 
+    // Any styles that use `.tox-form__group--stretched` should only contain rules for flex or more generally the layout.
+    // Behavioural styles (such as `white-space`) belong in the specific component styles
     .tox-textarea {
       flex: 1;
       -ms-flex-preferred-size: auto;
-      resize: none;
-      white-space: normal;
     }
 
     .tox-navobj {

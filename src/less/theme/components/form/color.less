@@ -9,28 +9,29 @@
 // Color
 //
 
-.tox-color-input {
-  display: flex;
-
-  input {
-    border-radius: 3px 0 0 3px;
-    border-right: 0;
+.tox {
+  .tox-color-input {
     display: flex;
-  }
 
-  span {
-    border-color: @border-color;
-    border-left: 0;
-    border-radius: 0 3px 3px 0;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: none;
-    box-sizing: border-box;
-    display: flex;
-    width: 35px;
+    .tox-textfield {
+      border-radius: 3px 0 0 3px;
+      display: flex;
+    }
 
-    &:focus {
-      border-color: @input-button-focus-border-color;
+    span {
+      border-color: rgba(red(@color-black), green(@color-black), blue(@color-black), .2);
+      border-radius: 0 3px 3px 0;
+      border-style: solid;
+      border-width: 1px 1px 1px 0;
+      box-shadow: none;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: flex;
+      width: 35px;
+
+      &:focus {
+        border-color: @input-button-focus-border-color;
+      }
     }
   }
 }
