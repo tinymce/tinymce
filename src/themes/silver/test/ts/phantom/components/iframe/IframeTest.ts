@@ -3,7 +3,7 @@ import { AlloyComponent, Composing, GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderIFrame } from '../../../../../main/ts/ui/dialog/IFrame';
 import { GuiSetup } from '../../../module/AlloyTestUtils';

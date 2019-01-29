@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@eph
 import { AlloyTriggers, Composing, GuiFactory, Representing } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderDropZone } from '../../../../../main/ts/ui/dialog/Dropzone';
 import { GuiSetup } from '../../../module/AlloyTestUtils';

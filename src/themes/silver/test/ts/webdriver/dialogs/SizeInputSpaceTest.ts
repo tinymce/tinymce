@@ -5,7 +5,7 @@ import { Option } from '@ephox/katamari';
 
 import { renderSizeInput } from '../../../../main/ts/ui/dialog/SizeInput';
 import { GuiSetup } from '../../module/AlloyTestUtils';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
   const helpers = setupDemo();
