@@ -76,17 +76,19 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const mapFetch = (comp: AlloyComponent) => (tdata: TieredData): TieredData => {
-    const menus = Obj.values(tdata.menus);
-    const items = Arr.bind(menus, (menu) => {
-      return <NormalItemSpec[]> Arr.filter(menu.items, (item) => item.type === 'item');
-    });
+  const mapFetch = (comp: AlloyComponent) => (tdata: Option<TieredData>): Option<TieredData> => {
+    return tdata.map((data) => {
+      const menus = Obj.values(data.menus);
+      const items = Arr.bind(menus, (menu) => {
+        return <NormalItemSpec[]> Arr.filter(menu.items, (item) => item.type === 'item');
+      });
 
-    const repState = Representing.getState(comp) as DatasetRepresentingState;
-    repState.update(
-      Arr.map(items, (item) => item.data)
-    );
-    return tdata;
+      const repState = Representing.getState(comp) as DatasetRepresentingState;
+      repState.update(
+        Arr.map(items, (item) => item.data)
+      );
+      return data;
+    });
   };
 
   const behaviours = [

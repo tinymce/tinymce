@@ -1,4 +1,4 @@
-import { Arr, Future, Obj, Result } from '@ephox/katamari';
+import { Arr, Future, Obj, Result, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -144,7 +144,7 @@ export default (): void => {
         });
 
         return Future.pure(menu).map((m) => {
-          return TieredMenu.singleData('demo.2.menu', menu);
+          return Option.from(TieredMenu.singleData('demo.2.menu', menu));
         });
       }
     })
@@ -197,7 +197,7 @@ export default (): void => {
             });
 
             return Future.pure(menu).map((m) => {
-              return TieredMenu.singleData('demo.2.menu', menu);
+              return Option.from(TieredMenu.singleData('demo.2.menu', menu));
             });
           }
         })
@@ -256,7 +256,7 @@ export default (): void => {
             columns: 2,
             rows: 2
           });
-          return TieredMenu.singleData('grid-list', menu);
+          return Option.from(TieredMenu.singleData('grid-list', menu));
         });
       },
 
@@ -318,7 +318,7 @@ export default (): void => {
             value: 'demo.4.menu',
             items
           });
-          return TieredMenu.singleData('basic-list', menu);
+          return Option.from(TieredMenu.singleData('basic-list', menu));
         });
       },
       onExecute (sandbox, item, itemValue) {
@@ -475,7 +475,7 @@ export default (): void => {
         });
 
         return future.map((f) => {
-          return TieredMenu.tieredData(f.primary, f.menus, f.expansions);
+          return Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions));
         });
       }
     })

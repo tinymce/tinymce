@@ -32,71 +32,79 @@ const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyCom
   });
 };
 
-const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component) => {
+const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component): Future<Option<TieredData>> => {
   const fetcher = detail.fetch;
   return fetcher(component).map(mapFetch);
 };
 
-const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, anchor: HotspotAnchorSpec, component, sandbox, externals, highlightOnOpen: HighlightOnOpen) => {
-  const futureData = fetch(detail, mapFetch, component);
+const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, anchor: HotspotAnchorSpec, component, sandbox, externals, highlightOnOpen: HighlightOnOpen): Future<Option<any>> => {
+  const futureData: Future<Option<TieredData>> = fetch(detail, mapFetch, component);
 
   const getLazySink = getSink(component, detail);
 
   // TODO: Make this potentially a single menu also
-  return futureData.map((data) => {
-    return TieredMenu.sketch({
-      ...externals.menu(),
+  return futureData.map((tdata) => {
+    // tslint:disable-next-line:no-console
+    console.log(tdata);
+    return tdata.fold(
+      () => Option.none(),
+      (data) => {
+        return Option.from(TieredMenu.sketch({
+          ...externals.menu(),
 
-      uid: Tagger.generate(''),
-      data,
+          uid: Tagger.generate(''),
+          data,
 
-      highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
+          highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-      onOpenMenu (tmenu, menu) {
-        const sink = getLazySink().getOrDie();
-        Positioning.position(sink, anchor, menu);
-        Sandboxing.decloak(sandbox);
-      },
+          onOpenMenu (tmenu, menu) {
+            const sink = getLazySink().getOrDie();
+            Positioning.position(sink, anchor, menu);
+            Sandboxing.decloak(sandbox);
+          },
 
-      onOpenSubmenu (tmenu, item, submenu) {
-        const sink = getLazySink().getOrDie();
-        Positioning.position(sink, {
-          anchor: 'submenu',
-          item
-        }, submenu);
-        Sandboxing.decloak(sandbox);
+          onOpenSubmenu (tmenu, item, submenu) {
+            const sink = getLazySink().getOrDie();
+            Positioning.position(sink, {
+              anchor: 'submenu',
+              item
+            }, submenu);
+            Sandboxing.decloak(sandbox);
 
-      },
-      onEscape () {
-        // Focus the triggering component after escaping the menu
-        Focusing.focus(component);
-        Sandboxing.close(sandbox);
-        return Option.some(true);
-      }
-    });
-  });
-
+          },
+          onEscape () {
+            // Focus the triggering component after escaping the menu
+            Focusing.focus(component);
+            Sandboxing.close(sandbox);
+            return Option.some(true);
+          }
+        }));
+      });
+    }
+  );
 };
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
+const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
   const anchor = getAnchor(detail, hotspot);
   const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
-  return processed.map((data) => {
-    Sandboxing.cloak(sandbox);
-    Sandboxing.open(sandbox, data);
-    onOpenSync(sandbox);
+  return processed.map((tdata) => {
+    tdata.map((data) => {
+      Sandboxing.cloak(sandbox);
+      Sandboxing.open(sandbox, data);
+      onOpenSync(sandbox);
+    });
     return sandbox;
   });
 };
 
-const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, component, sandbox, _externals, _onOpenSync, _highlightOnOpen: HighlightOnOpen) => {
+const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component, sandbox, _externals, _onOpenSync, _highlightOnOpen: HighlightOnOpen) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: TieredData) => TieredData, hotspot: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
