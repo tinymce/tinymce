@@ -15,6 +15,8 @@ import NormalizeLists from './NormalizeLists';
 import Range from './Range';
 import Selection from './Selection';
 import { flattenListSelection } from '../actions/Indendation';
+import { Arr } from '@ephox/katamari';
+import { Element, Compare } from '@ephox/sugar';
 
 const findNextCaretContainer = function (editor, rng, isForward, root) {
   let node = rng.startContainer;
@@ -111,11 +113,17 @@ const mergeLiElements = function (dom, fromElm, toElm) {
     toElm.appendChild(listNode);
   }
 
+  const contains = Compare.contains(Element.fromDom(toElm), Element.fromDom(fromElm));
+
+  const nestedLists = contains ? dom.getParents(fromElm, NodeType.isListNode, toElm) : [];
+
   dom.remove(fromElm);
 
-  if (NodeType.isEmpty(dom, ul) && ul !== dom.getRoot()) {
-    dom.remove(ul);
-  }
+  Arr.each(nestedLists, (list) => {
+    if (NodeType.isEmpty(dom, list) && list !== dom.getRoot()) {
+      dom.remove(list);
+    }
+  });
 };
 
 const mergeIntoEmptyLi = function (editor, fromLi, toLi) {

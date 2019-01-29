@@ -839,6 +839,62 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', function () {
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  suite.test('Backspace from indented list', function (editor) {
+    editor.getBody().innerHTML = (
+      '<ol>' +
+        '<li>a' +
+          '<ol>' +
+            '<li style="list-style-type: none;">' +
+              '<ol>' +
+                '<li>b</li>' +
+              '</ol>' +
+            '</li>' +
+          '</ol>' +
+        '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ol li ol li ol li:nth-child(1)', 0);
+    editor.plugins.lists.backspaceDelete();
+
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<ol>' +
+        '<li>ab</li>' +
+      '</ol>'
+    );
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  suite.test('Delete into indented list', function (editor) {
+    editor.getBody().innerHTML = (
+      '<ol>' +
+        '<li>a' +
+          '<ol>' +
+            '<li style="list-style-type: none;">' +
+              '<ol>' +
+                '<li>b</li>' +
+              '</ol>' +
+            '</li>' +
+          '</ol>' +
+        '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ol li:nth-child(1)', 1);
+    editor.plugins.lists.backspaceDelete(true);
+
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<ol>' +
+        '<li>ab</li>' +
+      '</ol>'
+    );
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
