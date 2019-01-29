@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -111,7 +111,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return TieredMenu.singleData('test', menu);
+            return Option.from(TieredMenu.singleData('test', menu));
           });
         }
       })

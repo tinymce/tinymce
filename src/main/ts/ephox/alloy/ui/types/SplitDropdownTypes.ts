@@ -36,7 +36,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<TieredData>;
+  fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
   toggleClass: string;
   matchWidth?: boolean;
   useMinWidth?: boolean;

@@ -94,7 +94,7 @@ export default (): void => {
         });
 
         return Future.pure(
-          TieredMenu.singleData('name', wMenu)
+          Option.from(TieredMenu.singleData('name', wMenu))
         );
       },
       lazySink,
