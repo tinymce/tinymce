@@ -5,7 +5,6 @@
   "main": "dist/js/Main.js",
   "scripts": {
     "build": "gulp",
-    "start": "gulp",
     "prepublishOnly": "gulp"
   },
   "keywords": [
