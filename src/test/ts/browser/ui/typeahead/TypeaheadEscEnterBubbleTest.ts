@@ -1,6 +1,6 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -44,10 +44,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
                 { type: 'item', data: { value: '2', meta: { text: '2' } } }
               ];
 
-              return Future.pure(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
+              return Future.pure(Option.from(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
                 value: 'blah',
                 items: Arr.map(items, TestDropdownMenu.renderItem)
-              })))
+              }))));
             },
 
             lazySink (c) {

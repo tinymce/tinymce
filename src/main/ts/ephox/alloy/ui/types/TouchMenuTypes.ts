@@ -61,7 +61,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
   role?: string;
 
-  lazySink?: LazySink,
+  lazySink?: LazySink;
 
   fetch: (comp: AlloyComponent) => Future<ItemSpec[]>;
   matchWidth?: boolean;

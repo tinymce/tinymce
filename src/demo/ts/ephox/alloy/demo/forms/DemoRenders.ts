@@ -77,7 +77,6 @@ const demoSeparatorRender = (spec): SeparatorItemSpec => {
 };
 
 const item = (itemSpec): ItemSpec => {
-  console.log('itemSpec', itemSpec);
   if (itemSpec.type === 'widget') {
     return widgetItem(itemSpec);
   } else if (itemSpec.type === 'separator') {

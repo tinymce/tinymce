@@ -1,6 +1,6 @@
 import { FocusTools, Logger, UiControls, GeneralSteps, Step, UiFinder, Keyboard, Keys, Mouse } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result, Strings } from '@ephox/katamari';
+import { Arr, Future, Result, Strings, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -59,7 +59,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return TieredMenu.singleData('blah.overall', menu);
+                return Option.from(TieredMenu.singleData('blah.overall', menu));
               });
             },
 

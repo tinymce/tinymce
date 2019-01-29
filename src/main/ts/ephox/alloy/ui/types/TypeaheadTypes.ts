@@ -47,7 +47,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<TieredData>;
+  fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];

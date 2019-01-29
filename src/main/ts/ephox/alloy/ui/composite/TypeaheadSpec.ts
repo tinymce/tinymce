@@ -32,7 +32,7 @@ import { console } from '@ephox/dom-globals'
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 interface ItemExecuteEvent extends CustomEvent {
-  item: () => AlloyComponent
+  item: () => AlloyComponent;
 }
 
 // TODO: Fix this.
