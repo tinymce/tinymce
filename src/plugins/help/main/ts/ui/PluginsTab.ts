@@ -19,6 +19,7 @@ export interface PluginUrlType {
 const tab = (editor: Editor) => {
   const availablePlugins = () => {
     const premiumPlugins = [
+      // TODO: Add other premium plugins such as permanent pen when they are included in the website
       'Accessibility Checker',
       'Advanced Code Editor',
       'Tiny Comments',
