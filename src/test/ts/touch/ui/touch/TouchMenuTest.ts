@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future } from '@ephox/katamari';
+import { Arr, Future, Option } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -83,10 +83,10 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
 
         fetch () {
           return Future.pure(
-            Arr.map([
+            Option.from(Arr.map([
               { type: 'item', data: { value: 'dog', meta: { text: 'Dog' } } },
               { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' } } }
-            ], munge)
+            ], munge))
           );
         },
 
