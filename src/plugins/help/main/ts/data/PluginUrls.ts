@@ -47,7 +47,17 @@ const urls = [
   { key: 'toc', name: 'Table of Contents' },
   { key: 'visualblocks', name: 'Visual Blocks' },
   { key: 'visualchars', name: 'Visual Characters' },
-  { key: 'wordcount', name: 'Word Count' }
+  { key: 'wordcount', name: 'Word Count' },
+  // TODO: Add other premium plugins such as permanent pen when they are included in the website
+  { key: 'advcode', name: 'Advanced Code Editor*'},
+  { key: 'formatpainter', name: 'Format Painter*'},
+  { key: 'powerpaste', name: 'PowerPaste*'},
+  { key: 'tinydrive', name: 'Tiny Drive*'},
+  { key: 'tinymcespellchecker', name: 'Spell Checker Pro*'},
+  { key: 'a11ychecker', name: 'Accessibility Checker*'},
+  { key: 'linkchecker', name: 'Link Checker*'},
+  { key: 'mentions', name: 'Mentions*'},
+  { key: 'mediaembed', name: 'Enhanced Media Embed*'}
 ];
 
 export default {

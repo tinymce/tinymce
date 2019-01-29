@@ -19,12 +19,18 @@ export interface PluginUrlType {
 const tab = (editor: Editor) => {
   const availablePlugins = () => {
     const premiumPlugins = [
-      'PowerPaste',
-      'Spell Checker Pro',
+      // TODO: Add other premium plugins such as permanent pen when they are included in the website
       'Accessibility Checker',
       'Advanced Code Editor',
+      'Tiny Comments',
+      'Tiny Drive',
       'Enhanced Media Embed',
-      'Link Checker'
+      'Format Painter',
+      'Link Checker',
+      'Mentions',
+      'MoxieManager',
+      'PowerPaste',
+      'Spell Checker Pro'
     ];
 
     const premiumPluginList = Arr.map(premiumPlugins, (plugin) => {
@@ -35,8 +41,9 @@ const tab = (editor: Editor) => {
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
       '<ul>' +
       premiumPluginList +
-      '</ul><br />' +
-      '<p style="float: right;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></p>' +
+      '<br />' +
+      '<li style="list-style: none;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></li>' +
+      '</ul>' +
       '</div>';
   };
 
