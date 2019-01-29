@@ -3,8 +3,8 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import LinkPlugin from 'src/plugins/link/main/ts/Plugin';
-import SilverTheme from 'src/themes/silver/main/ts/Theme';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failure) => {
