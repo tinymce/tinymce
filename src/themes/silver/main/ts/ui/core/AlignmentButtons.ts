@@ -44,7 +44,7 @@ const register = (editor: Editor) => {
     });
   });
 
-  const alignNoneToolbarButton = { name: 'alignnone', text: 'No alignment', cmd: 'JustifyNone', icon: 'align-justify' };
+  const alignNoneToolbarButton = { name: 'alignnone', text: 'No alignment', cmd: 'JustifyNone', icon: 'align-none' };
   editor.ui.registry.addButton(alignNoneToolbarButton.name, {
     tooltip: alignNoneToolbarButton.text,
     onAction: () => editor.execCommand(alignNoneToolbarButton.cmd),
