@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
 import { GuiSetup } from '../../../module/AlloyTestUtils';

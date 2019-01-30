@@ -11,7 +11,7 @@ import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuType
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';
@@ -34,21 +34,21 @@ export const handleError = (error) => {
 export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
   BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
-const hasIcon = (item) => item.icon !== undefined;
+const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemSpec> => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'togglemenuitem':
@@ -148,13 +148,13 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
   );
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemSpec[] => {
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
         handleError,
         (d: InlineContent.AutocompleterItem) => Option.some(
-          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, providersBackstage)
+          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, sharedBackstage)
         )
       );
     })
@@ -172,7 +172,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   const hasIcons = menuHasIcons(items);
   const alloyItems = Options.cat<ItemSpec>(
     Arr.map(items, (item) => {
-      return createMenuItemFromBridge(item, itemResponse, providersBackstage);
+      return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
     })
   );
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');

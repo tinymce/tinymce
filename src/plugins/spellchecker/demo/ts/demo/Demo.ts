@@ -18,7 +18,7 @@ tinymce.init({
       for (let i = 0; i < words.length; i++) {
         suggestions[words[i]] = ['First', 'Second'];
       }
-      tinymce.activeEditor.plugins.spellchecker.markErrors(suggestions);
+      tinymce.activeEditor.plugins.spellchecker.markErrors({ words: suggestions, dictionary: [ ] });
     }
   },
   height: 600

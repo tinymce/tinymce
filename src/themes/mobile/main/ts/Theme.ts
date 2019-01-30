@@ -199,7 +199,7 @@ export const renderMobileTheme = function (editor) {
           Buttons.forToolbar('back', function (/* btn */) {
             editor.selection.collapse();
             realm.exit();
-          }, { })
+          }, { }, editor)
         ]
       };
 
@@ -209,7 +209,7 @@ export const renderMobileTheme = function (editor) {
         items: [
           Buttons.forToolbar('readonly-back', function (/* btn */) {
             setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
-          }, {})
+          }, {}, editor)
         ]
       };
 

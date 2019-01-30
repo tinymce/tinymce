@@ -65,9 +65,9 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 };
 
 // TODO: Maybe need aria-label
-const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, textRender: (text: string) => AlloySpec): ItemStructure => {
+const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
-  const leftIcon = info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon));
+  const leftIcon = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
   const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => {
     return {
       attributes: {
@@ -96,7 +96,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, t
 };
 
 // TODO: Maybe need aria-label
-const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
+const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
   const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
 
@@ -112,7 +112,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon);
   } else {
-    return renderNormalItemStructure(info, icon, textRender);
+    return renderNormalItemStructure(info, icon, renderIcons, textRender);
   }
 };
 

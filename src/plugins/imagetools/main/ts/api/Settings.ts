@@ -8,7 +8,7 @@
 import { Editor } from 'tinymce/core/api/Editor';
 
 const getToolbarItems = (editor: Editor): string => {
-  return editor.getParam('imagetools_toolbar', 'rotateleft rotateright flipv fliph crop editimage imageoptions');
+  return editor.getParam('imagetools_toolbar', 'rotateleft rotateright flipv fliph editimage imageoptions');
 };
 
 const getProxyUrl = (editor: Editor): string => editor.getParam('imagetools_proxy');

@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from 
 import { GuiFactory, NativeEvents } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderSizeInput } from '../../../../../main/ts/ui/dialog/SizeInput';
 import { GuiSetup } from '../../../module/AlloyTestUtils';

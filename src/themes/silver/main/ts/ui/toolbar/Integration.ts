@@ -193,7 +193,8 @@ const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderU
           return Objects.readOptFrom<(spec: Editor, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
             return r(editor, extras);
           }).orThunk(() => {
-            console.error('No representation for toolbarItem: ' + toolbarItem);
+            // TODO: Add back after TINY-3232 is implemented
+            // console.error('No representation for toolbarItem: ' + toolbarItem);
             return Option.none();
           });
         },

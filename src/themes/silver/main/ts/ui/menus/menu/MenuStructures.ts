@@ -101,7 +101,7 @@ const preprocessCollection = (items: ItemSpec[], isSeparator: (a: ItemSpec, inde
   });
 };
 
-const forCollection = (columns: number | 'auto', initItems: ItemSpec[]) => {
+const forCollection = (columns: number | 'auto', initItems: ItemSpec[], hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
