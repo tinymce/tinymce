@@ -13,6 +13,7 @@
 `Search`: Provides utility functions for dealing with searching strings.
 `Splitting`: Provides utility functions for splitting strings.
 `Strings`: Provides utility functions for dealing with strings.
+`Words`: Provides functionality parsing text to words.
 # Tests
 `polaris` uses `bolt` to run atomic tests.
 ## Running Tests
