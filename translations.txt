@@ -12,6 +12,10 @@ Valid                     <new>
 To open the popup, press Shift+Enter <new>
 Rich Text Area. Press ALT-0 for help. <new>
 System Font               <new>
+Failed to upload image: {0}             <new>
+Failed to load plugin: {0} from url {1} <new>
+Failed to load plugin url: {0}          <new>
+Failed to initialize plugin: {0}        <new>
 
 example                   <new>                 Anchor
 Anchor...                 [Anchor]              Anchor
