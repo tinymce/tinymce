@@ -22,9 +22,9 @@ import {
   SplitDropdown as AlloySplitDropdown,
   Toggling,
   SystemEvents,
+  TieredData,
+  TieredMenuTypes,
 } from '@ephox/alloy';
-import { BehaviourConfigDetail, BehaviourConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
-import { PartialMenuSpec, TieredData } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
@@ -46,7 +46,7 @@ import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/
 import ItemResponse from '../../menus/item/ItemResponse';
 
 interface Specialisation<T> {
-  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>;
+  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any>>;
   getApi: (comp: AlloyComponent) => T;
   onSetup: (api: T) => OnDestroy<T>;
 }
@@ -86,7 +86,7 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<any, any>[]>, providersBackstage: UiFactoryBackstageProviders) => {
   return {
     dom: {
       tag: 'button',
@@ -231,7 +231,7 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
                 });
               })
             ])
-          } as PartialMenuSpec
+          } as TieredMenuTypes.PartialMenuSpec
         )
       ));
     });
