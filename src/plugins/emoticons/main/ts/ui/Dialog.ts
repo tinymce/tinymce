@@ -112,7 +112,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
         buttons: [
           {
             type: 'cancel',
-            text: 'Close'
+            text: 'Close',
+            primary: true
           }
         ],
         initialData: {
