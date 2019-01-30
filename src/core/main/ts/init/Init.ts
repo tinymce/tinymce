@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import DOMUtils from '../api/dom/DOMUtils';
 import { Editor } from '../api/Editor';
 import { IconManager } from '../api/IconManager';
 import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
+import DOMUtils from '../api/dom/DOMUtils';
 import Tools from '../api/util/Tools';
+import ErrorReporter from '../ErrorReporter';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
 import { appendContentCssFromSettings } from './ContentCss';
-import { Element } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 
@@ -33,13 +34,17 @@ const initPlugin = function (editor: Editor, initializedPlugins, plugin) {
       return;
     }
 
-    const pluginInstance = new Plugin(editor, pluginUrl, editor.$);
+    try {
+      const pluginInstance = new Plugin(editor, pluginUrl, editor.$);
 
-    editor.plugins[plugin] = pluginInstance;
+      editor.plugins[plugin] = pluginInstance;
 
-    if (pluginInstance.init) {
-      pluginInstance.init(editor, pluginUrl);
-      initializedPlugins.push(plugin);
+      if (pluginInstance.init) {
+        pluginInstance.init(editor, pluginUrl);
+        initializedPlugins.push(plugin);
+      }
+    } catch (e) {
+      ErrorReporter.pluginInitError(editor, plugin, e);
     }
   }
 };
