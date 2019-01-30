@@ -18,7 +18,8 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "latest"
+    "@ephox/katamari": "latest",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",
