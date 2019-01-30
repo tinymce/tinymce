@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.8.3] - 2019-01-29
+### Added
+- Added the windowResize system event
+
 # [4.8.0] - 2019-01-18
 ### Added
 - New events for highlight and dehighlight
