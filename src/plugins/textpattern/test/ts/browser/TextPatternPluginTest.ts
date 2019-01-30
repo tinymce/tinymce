@@ -20,6 +20,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
+    // TODO TINY-3258 renable this test when issues with Chrome 72 are sorted out
+    const browserSpecificTests = !detection.browser.isChrome() ? [
+      Step.label('test inline and block at the same time', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
+        tinyApis.sAssertContentPresence({ ul: 1, li: 2, strong: 1 })
+      ]))
+    ] : [];
+
     const steps = Utils.withTeardown([
       Step.label('Space on ** without content does nothing', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**'),
@@ -148,14 +156,10 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
-      // TODO TINY-3258 renable this test when issues with Chrome 72 are sorted out
-      ...detection.browser.isChrome() ? [] : [
-        Step.label('test inline and block at the same time', GeneralSteps.sequence([
-          Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
-          tinyApis.sAssertContentPresence({ ul: 1, li: 2, strong: 1 })
-        ]))
-      ],
       Step.label('getPatterns/setPatterns', Step.sync(function () {
+        // Store the original patterns
+        const origPatterns = editor.plugins.textpattern.getPatterns();
+
         editor.plugins.textpattern.setPatterns([
             { start: '#', format: 'h1' },
             { start: '##', format: 'h2' },
@@ -180,9 +184,12 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
               start: '#'
             }
           ]
-          );
+        );
+
+        // Restore the original patterns
+        editor.plugins.textpattern.setPatterns(origPatterns);
       }))
-    ], tinyApis.sSetContent(''));
+    ].concat(browserSpecificTests), tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
