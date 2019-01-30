@@ -763,6 +763,16 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     testBogusSaxParse('a<b data-mce-bogus="all"></b><b>c</b>', 'a<b>c</b>', { start: 1, end: 1, text: 2 });
   });
 
+  suite.test('remove bogus elements even if not part of valid_elements', () => {
+    const schema = Schema({ valid_elements: 'p,span,' });
+    const writer = Writer();
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+    parser.parse('<p>a <div data-mce-bogus="all">&nbsp;<span contenteditable="false">X</span>&nbsp;</div>b</p>');
+    LegacyUnit.equal(writer.getContent(), '<p>a b</p>');
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1, text: 2 });
+  });
+
   suite.test('findEndTag', function () {
     const testFindEndTag = function (html, startIndex, expectedIndex) {
       LegacyUnit.equal(SaxParser.findEndTag(schema, html, startIndex), expectedIndex);
