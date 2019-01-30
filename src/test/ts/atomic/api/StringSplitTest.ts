@@ -1,9 +1,9 @@
 import Strings from 'ephox/polaris/api/Strings';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Strings.splits', function() {
-  var check = function (expected, input, points) {
-    var actual = Strings.splits(input, points);
+UnitTest.test('api.Strings.splits', function () {
+  const check = function (expected, input, points) {
+    const actual = Strings.splits(input, points);
     assert.eq(expected, actual);
   };
 
@@ -14,4 +14,3 @@ UnitTest.test('api.Strings.splits', function() {
   check([ 'a', 'b', 'c' ], 'abc', [ 0, 1, 2, 3 ]);
   check([ 'ab', 'cdef', 'ghi' ], 'abcdefghi', [ 2, 6 ]);
 });
-

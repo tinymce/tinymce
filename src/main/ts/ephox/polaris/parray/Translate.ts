@@ -1,9 +1,7 @@
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Merger, Fun } from '@ephox/katamari';
 
 /** Adjust a PositionArray positions by an offset */
-var translate = function (parray, offset) {
+const translate = function (parray, offset) {
   return Arr.map(parray, function (unit) {
     return Merger.merge(unit, {
       start: Fun.constant(unit.start() + offset),
@@ -13,5 +11,5 @@ var translate = function (parray, offset) {
 };
 
 export default <any> {
-  translate: translate
+  translate
 };

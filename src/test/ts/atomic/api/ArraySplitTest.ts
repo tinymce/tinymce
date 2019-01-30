@@ -3,9 +3,9 @@ import Arrays from 'ephox/polaris/api/Arrays';
 import Splitting from 'ephox/polaris/api/Splitting';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Arrays.splitby', function() {
-  var check = function (expected, input, pred) {
-    var actual = Arrays.splitby(input, pred);
+UnitTest.test('api.Arrays.splitby', function () {
+  const check = function (expected, input, pred) {
+    const actual = Arrays.splitby(input, pred);
     assert.eq(expected, actual);
   };
 
@@ -16,14 +16,18 @@ UnitTest.test('api.Arrays.splitby', function() {
     return x === '|';
   });
 
-  var predicate = function (value) {
-    if (value === 'x') return Splitting.excludeWithout(value);
-    else if (value === '.') return Splitting.excludeWith(value);
-    else return Splitting.include(value);
+  const predicate = function (value) {
+    if (value === 'x') {
+      return Splitting.excludeWithout(value);
+    } else if (value === '.') {
+      return Splitting.excludeWith(value);
+    } else {
+      return Splitting.include(value);
+    }
   };
 
-  var checkAdv = function (expected, input) {
-    var actual = Arrays.splitbyAdv(input, predicate);
+  const checkAdv = function (expected, input) {
+    const actual = Arrays.splitbyAdv(input, predicate);
     assert.eq(expected, actual);
   };
 
@@ -37,4 +41,3 @@ UnitTest.test('api.Arrays.splitby', function() {
     [ 'g' ]
   ], [ 'x', 'x', '.', 'x', '.', 'a', 'b', 'x', 'x', 'd', 'e', 'f', '.', 'g' ]);
 });
-

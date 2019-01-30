@@ -1,5 +1,4 @@
-import { Unicode } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Unicode, Fun } from '@ephox/katamari';
 
 // \w is a word character
 // \' is an apostrophe
@@ -9,9 +8,9 @@ import { Fun } from '@ephox/katamari';
 // \u00C0 - \u00FF are various language characters (Latin-1)
 // \u0100 - \u017F are various language characters (Latin Extended-A)
 // \u2018 and \u2019 are the smart quote characters
-var chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
-var wordbreak = '[^' + chars + ']';
-var wordchar = '[' + chars + ']';
+const chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
+const wordbreak = '[^' + chars + ']';
+const wordchar = '[' + chars + ']';
 
 export default <any> {
   chars: Fun.constant(chars),

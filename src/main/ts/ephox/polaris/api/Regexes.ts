@@ -1,4 +1,4 @@
-var link = function () {
+const link = function () {
  /*
     The RegEx parses the following components (https://www.rfc-editor.org/rfc/rfc3986.txt):
 
@@ -56,7 +56,7 @@ var link = function () {
   return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~=%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
 };
 
-var autolink = function () {
+const autolink = function () {
   /*
    * Takes the link regex, and makes two additions:
    *
@@ -66,20 +66,22 @@ var autolink = function () {
    * We may need to inline the link regex if this refactoring technique causes performance issues; we're assuming browsers can optimise the above regex but not this style.
    * TBIO calls this method every time space or enter is pressed.
    */
-  var linksource = link().source;
+  const linksource = link().source;
   return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?#^${}(),]*', 'g');
 };
 
-var tokens = function (value, parameters) {
+const tokens = function (value, parameters) {
   return value.replace(/\{(\d+)\}/g, function (match, contents, offset, s) {
-    var index = parseInt(contents, 10);
-    if (parameters[index] === undefined) throw 'No value for token: ' + match + ' in translation: ' + value;
+    const index = parseInt(contents, 10);
+    if (parameters[index] === undefined) {
+      throw new Error('No value for token: ' + match + ' in translation: ' + value);
+    }
     return parameters[index];
   });
 };
 
 export default <any> {
-  tokens: tokens,
-  link: link,
-  autolink: autolink
+  tokens,
+  link,
+  autolink
 };

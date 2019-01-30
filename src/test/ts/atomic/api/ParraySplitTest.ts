@@ -3,15 +3,15 @@ import Strings from 'ephox/polaris/api/Strings';
 import Parrays from 'ephox/polaris/test/Parrays';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.PositionArray.splits', function() {
-  var subdivide = function (unit, positions) {
-    var tokens = Strings.splits(unit.item(), positions);
+UnitTest.test('api.PositionArray.splits', function () {
+  const subdivide = function (unit, positions) {
+    const tokens = Strings.splits(unit.item(), positions);
     return Parrays.make(tokens);
   };
 
-  var check = function (expected, input, positions) {
-    var parray = Parrays.make(input);
-    var actual = PositionArray.splits(parray, positions, subdivide);
+  const check = function (expected, input, positions) {
+    const parray = Parrays.make(input);
+    const actual = PositionArray.splits(parray, positions, subdivide);
     assert.eq(expected, Parrays.dump(actual));
   };
 
@@ -30,4 +30,3 @@ UnitTest.test('api.PositionArray.splits', function() {
     '13->14@ o'
   ], [ 'hallo', 'hallobalo' ], [ 1, 2, 3, 6, 9, 11, 13 ]);
 });
-

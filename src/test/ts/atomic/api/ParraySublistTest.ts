@@ -2,10 +2,10 @@ import PositionArray from 'ephox/polaris/api/PositionArray';
 import Parrays from 'ephox/polaris/test/Parrays';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.PositionArray.sublist', function() {
-  var check = function (expected, input, start, finish) {
-    var parray = Parrays.make(input);
-    var actual = PositionArray.sublist(parray, start, finish);
+UnitTest.test('api.PositionArray.sublist', function () {
+  const check = function (expected, input, start, finish) {
+    const parray = Parrays.make(input);
+    const actual = PositionArray.sublist(parray, start, finish);
     assert.eq(expected, Parrays.dump(actual));
   };
 
@@ -34,4 +34,3 @@ UnitTest.test('api.PositionArray.sublist', function() {
 
   check([], [ 'this', 'is', 'it' ], 4, 9);
 });
-

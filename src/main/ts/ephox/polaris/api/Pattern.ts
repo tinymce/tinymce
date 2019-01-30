@@ -3,50 +3,50 @@ import Custom from '../pattern/Custom';
 import Safe from '../pattern/Safe';
 import Unsafe from '../pattern/Unsafe';
 
-var safeword = function (input) {
+const safeword = function (input) {
   return Safe.word(input);
 };
 
-var safetoken = function (input) {
+const safetoken = function (input) {
   return Safe.token(input);
 };
 
-var custom = function (input, prefix, suffix, flags) {
+const custom = function (input, prefix, suffix, flags) {
   return Custom(input, prefix, suffix, flags);
 };
 
-var unsafeword = function (input) {
+const unsafeword = function (input) {
   return Unsafe.word(input);
 };
 
-var unsafetoken = function (input) {
+const unsafetoken = function (input) {
   return Unsafe.token(input);
 };
 
-var sanitise = function (input) {
+const sanitise = function (input) {
   return Safe.sanitise(input);
 };
 
-var chars = function () {
+const chars = function () {
   return Chars.chars();
 };
 
-var wordbreak = function () {
+const wordbreak = function () {
   return Chars.wordbreak();
 };
 
-var wordchar = function () {
+const wordchar = function () {
   return Chars.wordchar();
 };
 
 export default <any> {
-  safeword: safeword,
-  safetoken: safetoken,
-  custom: custom,
-  unsafeword: unsafeword,
-  unsafetoken: unsafetoken,
-  sanitise: sanitise,
-  chars: chars,
-  wordbreak: wordbreak,
-  wordchar: wordchar
+  safeword,
+  safetoken,
+  custom,
+  unsafeword,
+  unsafetoken,
+  sanitise,
+  chars,
+  wordbreak,
+  wordchar
 };

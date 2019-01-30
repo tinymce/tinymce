@@ -1,13 +1,16 @@
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Merger } from '@ephox/katamari';
 import Find from './Find';
 
-var sort = function (array) {
-  var r = Array.prototype.slice.call(array, 0);
+const sort = function (array) {
+  const r = Array.prototype.slice.call(array, 0);
   r.sort(function (a, b) {
-    if (a.start() < b.start()) return -1;
-    else if (b.start() < a.start()) return 1;
-    else return 0;
+    if (a.start() < b.start()) {
+      return -1;
+    } else if (b.start() < a.start()) {
+      return 1;
+    } else {
+      return 0;
+    }
   });
   return r;
 };
@@ -17,9 +20,9 @@ var sort = function (array) {
  *
  * Then sort the result by start point.
  */
-var search = function (text, targets) {
-  var unsorted = Arr.bind(targets, function (t) {
-    var results = Find.all(text, t.pattern());
+const search = function (text, targets) {
+  const unsorted = Arr.bind(targets, function (t) {
+    const results = Find.all(text, t.pattern());
     return Arr.map(results, function (r) {
       return Merger.merge(t, {
         start: r.start,
@@ -32,5 +35,5 @@ var search = function (text, targets) {
 };
 
 export default <any> {
-  search: search
+  search
 };

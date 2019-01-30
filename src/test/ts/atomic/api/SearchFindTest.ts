@@ -1,14 +1,12 @@
-import { Unicode } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Struct, Unicode } from '@ephox/katamari';
 import Pattern from 'ephox/polaris/api/Pattern';
 import Search from 'ephox/polaris/api/Search';
 import Safe from 'ephox/polaris/pattern/Safe';
-import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Search.findall (using api.Pattern)', function() {
-  var checkAll = function (expected, input, pattern) {
-    var actual = Search.findall(input, pattern);
+UnitTest.test('api.Search.findall (using api.Pattern)', function () {
+  const checkAll = function (expected, input, pattern) {
+    const actual = Search.findall(input, pattern);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
       assert.eq(exp[0], actual[i].start());
@@ -16,8 +14,8 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function() {
     });
   };
 
-  var checkMany = function (expected, text, targets) {
-    var actual = Search.findmany(text, targets);
+  const checkMany = function (expected, text, targets) {
+    const actual = Search.findmany(text, targets);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
       assert.eq(exp[0], actual[i].start());
@@ -47,11 +45,11 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function() {
 
   checkAll([['this '.length, 'this e'.length + Unicode.zeroWidth().length + 'nds'.length]], 'this e' + Unicode.zeroWidth() + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth() + 'nds'));
 
-  var prefix = Safe.sanitise('[');
-  var suffix = Safe.sanitise(']');
+  const prefix = Safe.sanitise('[');
+  const suffix = Safe.sanitise(']');
   checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));
 
-  var testData = Struct.immutable('pattern', 'name');
+  const testData = Struct.immutable('pattern', 'name');
   checkMany([], '', []);
   checkMany([
     [1, 3, 'alpha']
@@ -70,4 +68,3 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function() {
     testData(Pattern.safeword('not-there'), 'delta')
   ]);
 });
-
