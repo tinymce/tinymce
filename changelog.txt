@@ -1,4 +1,5 @@
 Version 5.0.0-rc-3 (TBA)
+    Fixed an issue where tab panel heights weren't sizing properly on smaller screens and weren't updating on resize #TINY-3242
     Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
     Changed Tiny 5 mobile skin to look more uniform with desktop #TINY-2650
     Fixed image tools not having any padding between the label and slider #TINY-3220
