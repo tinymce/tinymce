@@ -1,4 +1,4 @@
-import 'tinymce/themes/silverasdasd/Theme';
+import 'tinymce/themes/silver/Theme';
 
 import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';

@@ -1,4 +1,4 @@
-import '../../../../../silver/main/ts/Theme';
+import 'tinymce/themes/silver/Theme';
 
 import { FocusTools, Keyboard, Keys, Pipeline, Step, UiFinder, Log, Chain, Assertions, ApproxStructure, Waiter, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';

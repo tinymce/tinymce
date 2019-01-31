@@ -1,4 +1,4 @@
-import '../../../../../silver/main/ts/Theme';
+import 'tinymce/themes/silver/Theme';
 
 import { Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
