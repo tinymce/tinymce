@@ -18,9 +18,9 @@ import {
   SystemEvents,
   Tabstopping,
   Focusing,
+  SlotContainer,
+  SlotContainerTypes,
 } from '@ephox/alloy';
-import { SlotContainer } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/ui/SlotContainer';
-import { SlotContainerParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SlotContainerTypes';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Id, Option, Obj, Cell, Fun } from '@ephox/katamari';
@@ -67,7 +67,7 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => {
   };
 };
 
-const makePanels = (parts: SlotContainerParts, panelConfigs: SidebarConfig) => {
+const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
   const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
     const spec = panelConfigs[name];
     const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));

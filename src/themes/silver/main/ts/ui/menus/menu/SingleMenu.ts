@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, FocusManagers, Keying, TieredMenu } from '@ephox/alloy';
-import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
+import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
@@ -73,7 +72,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuSpec> => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {
@@ -160,14 +159,14 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterItemAp
   );
 };
 
-export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
   const alloyItems = Options.cat(
     Arr.map(items, (item) => {
@@ -177,11 +176,11 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: Partial<MenuSpec>) => {
+export const createTieredDataFrom = (partialMenu: Partial<MenuTypes.MenuSpec>) => {
   return TieredMenu.singleData(partialMenu.value, partialMenu);
 };
 
-export const createMenuFrom = (partialMenu: Partial<MenuSpec>, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuSpec  => {
+export const createMenuFrom = (partialMenu: Partial<MenuTypes.MenuSpec>, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 
   const movement = deriveMenuMovement(columns, presets);
