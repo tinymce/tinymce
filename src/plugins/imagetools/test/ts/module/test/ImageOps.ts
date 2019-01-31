@@ -64,7 +64,8 @@ export default function (editor) {
           cClickToolbarButton(label),
           cInteractWithUi,
           cClickButton('Apply'),
-          cClickButton('Save')
+          cClickButton('Save'),
+          cWaitForDialogClose()
         ])
       ]),
       Guard.addLogging(`Execute ${label} command from dialog`)
@@ -75,6 +76,13 @@ export default function (editor) {
     return Chain.control(
       UiFinder.cWaitForState(label, selector, Fun.constant(true)),
       Guard.addLogging('Wait for UI')
+    );
+  };
+
+  const cWaitForDialogClose = () => {
+    return Chain.control(
+      UiFinder.cNotExists('[role="dialog"]'),
+      Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
     );
   };
 
