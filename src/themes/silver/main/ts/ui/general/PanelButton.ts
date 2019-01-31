@@ -57,7 +57,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
       return Future.nu((callback) => {
         return spec.fetch(callback);
       }).map((items) => {
-        return createTieredDataFrom(
+        return Option.from(createTieredDataFrom(
           Merger.deepMerge(
             createPartialChoiceMenu(
               Id.generate('menu-value'),
@@ -76,7 +76,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
               movement: deriveMenuMovement(5, 'color')
             }
           )
-        );
+        ));
       });
     },
 
