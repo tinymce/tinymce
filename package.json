@@ -48,6 +48,7 @@
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-less": "2.0.0",
     "grunt-contrib-uglify": "4.0.0",

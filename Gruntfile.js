@@ -161,6 +161,7 @@ module.exports = function (grunt) {
       {
         options: {
           output: {
+            comments: 'all',
             ascii_only: true
           },
           ie8: true
@@ -238,6 +239,42 @@ module.exports = function (grunt) {
         }
       }
     },
+
+    concat: Object.assign({
+        options: {
+          process: function(content) {
+            return content.
+              replace(/@@version@@/g, BUILD_VERSION).
+              replace(/@@releaseDate@@/g, packageData.date);
+          }
+        },
+        core: {
+          src: [
+            'src/core/text/license-header.js',
+            'js/tinymce/tinymce.js'
+          ],
+          dest: 'js/tinymce/tinymce.js'
+        }
+      },
+      gruntUtils.generate(plugins, 'plugin', function (name) {
+        return {
+          src: [
+            'src/core/text/license-header.js',
+            `js/tinymce/plugins/${name}/plugin.js`
+          ],
+          dest: `js/tinymce/plugins/${name}/plugin.js`
+        };
+      }),
+      gruntUtils.generate(themes, 'theme', function (name) {
+        return {
+          src: [
+            'src/core/text/license-header.js',
+            `js/tinymce/themes/${name}/theme.js`
+          ],
+          dest: `js/tinymce/themes/${name}/theme.js`
+        };
+      })
+    ),
 
     copy: {
       core: {
@@ -381,6 +418,13 @@ module.exports = function (grunt) {
           pathFilter: function (zipFilePath) {
             return zipFilePath.replace('js/tinymce/', 'dist/');
           },
+          onBeforeConcat: function (destPath, chunks) {
+            // Strip the license from each file and prepend the license, so it only appears once
+            var license = grunt.file.read('src/core/text/license-header.js').replace(/@@version@@/g, BUILD_VERSION).replace(/@@releaseDate@@/g, packageData.date);
+            return [license].concat(chunks.map(function (chunk) {
+              return chunk.replace(license, '').trim();
+            }));
+          },
           excludes: [
             'js/**/config',
             'js/**/scratch',
@@ -414,7 +458,7 @@ module.exports = function (grunt) {
               dest: [
                 'js/tinymce/tinymce.min.js'
               ]
-            }
+            },
           ],
           to: 'tmp/tinymce_<%= pkg.version %>_cdn.zip'
         },
@@ -745,12 +789,6 @@ module.exports = function (grunt) {
     grunt.file.write('tmp/version.txt', BUILD_VERSION);
   });
 
-  grunt.registerTask('build-headers', 'Appends build headers to js files', function () {
-    var header = '// ' + packageData.version + ' (' + packageData.date + ')\n';
-    grunt.file.write('js/tinymce/tinymce.js', header + grunt.file.read('js/tinymce/tinymce.js'));
-    grunt.file.write('js/tinymce/tinymce.min.js', header + grunt.file.read('js/tinymce/tinymce.min.js'));
-  });
-
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag', 'rollup']
@@ -764,10 +802,10 @@ module.exports = function (grunt) {
     'globals',
     'rollup',
     'unicode',
+    'concat',
     'uglify',
     'less',
     'copy',
-    'build-headers',
     'clean:release',
     'moxiezip',
     'nugetpack',
