@@ -4,14 +4,6 @@ import { Element } from '@ephox/sugar';
 
 // TODO move these to the correct village
 
-// TODO move this generic into Katamari Adt
-// All Alloy and Boulder adts extend this generic interface
-export interface AdtInterface {
-  fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
-  match: <T>(branches: { [k: string]: (...x: any[]) => T }) => T;
-  log: (label: string) => string;
-}
-
 // Sugar Dom
 
 export interface SugarListener {

@@ -23,3 +23,7 @@ export interface PositioningConfig extends Behaviour.BehaviourConfigDetail {
   useFixed: boolean;
   getBounds: Option<() => Bounds>; // TODO: Strengthen types
 }
+
+export {
+  AnchorSpec
+}

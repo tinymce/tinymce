@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
+import { Merger, Adt } from '@ephox/katamari';
 import {
   CompositeSketchDetail,
   CompositeSketchSpec,
@@ -7,7 +7,6 @@ import {
   SingleSketchSpec,
 } from '../../api/ui/Sketcher';
 
-import { AdtInterface } from '../../alien/TypeDefinitions';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
@@ -16,13 +15,13 @@ import * as SpecSchema from '../../spec/SpecSchema';
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
 
-const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
+const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: Adt[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
   const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
   return factory(detail, specWithUid);
 };
 
-const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
+const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: Adt[], partTypes: Adt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
 
   // Identify any information required for external parts

@@ -1,10 +1,10 @@
 import { Struct } from '@ephox/katamari';
 
-import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 import { AnchorBox } from '../../positioning/layout/Layout';
 import * as Origins from './Origins';
 import { window } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
+import { OriginAdt } from './Origins';
 
 /*
  * Smooths over the difference between passing an element anchor (which requires an origin to determine the box) and passing a box.
