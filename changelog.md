@@ -6,10 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.9] - 2019-01-31
+# [4.9.1] - 2019-01-31
 ### Added
 - Exported additional types used in TinyMCE 5
-- GuiSetup and TestStore are now available under a "TestHelpers" export, very useful for testing Alloy projects
+- GuiSetup and TestStore are now available under a "TestHelpers" export, very useful for testing projects that use Alloy UI
 
 # [4.8.5] - 2019-01-31
 ### Changed
