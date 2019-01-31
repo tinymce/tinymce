@@ -46,11 +46,15 @@ const isValidLegacyKey = function (id) {
 };
 
 const globalEventDelegate = function (e) {
+  const type = e.type;
   each(EditorManager.get(), function (editor) {
-    if (e.type === 'scroll') {
-      editor.fire('ScrollWindow', e);
-    } else {
-      editor.fire('ResizeWindow', e);
+    switch (type) {
+      case 'scroll':
+        editor.fire('ScrollWindow', e);
+        break;
+      case 'resize':
+        editor.fire('ResizeWindow', e);
+        break;
     }
   });
 };

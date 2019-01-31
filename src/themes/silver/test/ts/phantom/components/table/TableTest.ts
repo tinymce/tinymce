@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
-import GuiSetup from 'src/themes/mobile/test/ts/module/test/GuiSetup';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
+import GuiSetup from 'tinymce/themes/mobile/test/GuiSetup';
 import { GuiFactory } from '@ephox/alloy';
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
 import { Assertions, ApproxStructure } from '@ephox/agar';

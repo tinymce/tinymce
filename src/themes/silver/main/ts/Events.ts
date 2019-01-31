@@ -6,7 +6,7 @@
  */
 
 import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
-import { document, window } from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -49,33 +49,41 @@ const setup = (editor: Editor, mothership, uiMothership) => {
   editor.on('touchstart', onContentMousedown);
 
   const onContentMouseup = function (raw) {
-  if (raw.button === 0) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
-      ship.broadcastOn([ Channels.mouseReleased() ], {
-        target: Element.fromDom(raw.target)
+    if (raw.button === 0) {
+      Arr.each([ mothership, uiMothership ], function (ship) {
+        ship.broadcastOn([ Channels.mouseReleased() ], {
+          target: Element.fromDom(raw.target)
+        });
       });
-    });
-  }
+    }
   };
   editor.on('mouseup', onContentMouseup);
 
-  const onWindowScroll = DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
+  const onWindowScroll = (evt) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(SystemEvents.windowScroll(), evt);
     });
-  });
+  };
+  editor.on('ScrollWindow', onWindowScroll);
+
+  const onWindowResize = (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastEvent(SystemEvents.windowResize(), evt);
+    });
+  };
+  editor.on('ResizeWindow', onWindowResize);
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
     editor.off('mousedown', onContentMousedown);
     editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
+    editor.off('ResizeWindow', onWindowResize);
+    editor.off('ScrollWindow', onWindowScroll);
 
     onMousedown.unbind();
     onTouchstart.unbind();
     onMouseup.unbind();
-
-    onWindowScroll.unbind();
   });
 
   editor.on('detach', () => {

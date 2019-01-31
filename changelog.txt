@@ -1,4 +1,6 @@
 Version 5.0.0-rc-3 (TBA)
+    Fixed an issue where tab panel heights weren't sizing properly on smaller screens and weren't updating on resize #TINY-3242
+    Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
     Changed Tiny 5 mobile skin to look more uniform with desktop #TINY-2650
     Fixed image tools not having any padding between the label and slider #TINY-3220
     Blacklisted table, th and td as inline editor target #TINY-717
@@ -6,6 +8,7 @@ Version 5.0.0-rc-3 (TBA)
     Fixed missing separators in the spellchecker context menu between the suggestions and actions #TINY-3217
     Fixed notification icon positioning in alert banners #TINY-2196
     Fixed a typo in the word count plugin name #TINY-3062
+    Fixed charmap and emoticons dialogs not having a primary button #TINY-3233
 Version 5.0.0-rc-2 (2019-01-22)
     Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Added screen reader accessibility for sidebar and statusbar #TINY-2699

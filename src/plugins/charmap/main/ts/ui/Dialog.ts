@@ -74,7 +74,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
       {
         type: 'cancel',
         name: 'close',
-        text: 'Close'
+        text: 'Close',
+        primary: true
       }
     ],
     initialData,
