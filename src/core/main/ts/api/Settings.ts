@@ -148,7 +148,7 @@ const getContentCss = (editor: Editor): string[] => {
     return Arr.map(contentCss.split(','), Strings.trim);
   } else if (Type.isArray(contentCss)) {
     return contentCss;
-  } else if (contentCss === false) {
+  } else if (contentCss === false || editor.inline) {
     return [];
   } else {
     return ['default'];
