@@ -1,9 +1,8 @@
 import { Keyboard, FocusTools, Keys } from '@ephox/agar';
-import { GuiFactory, Behaviour, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
+import { GuiFactory, Behaviour, AddEventsBehaviour, AlloyEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
 import { renderCheckbox } from '../../../../../main/ts/ui/general/Checkbox';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -14,7 +13,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
     translate: I18n.translate
   };
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         {

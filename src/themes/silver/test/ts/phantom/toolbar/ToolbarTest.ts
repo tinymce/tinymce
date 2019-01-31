@@ -1,8 +1,7 @@
-import { AlloyComponent, GuiFactory, Behaviour, Focusing, Keying, Toolbar } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, Behaviour, Focusing, Keying, Toolbar, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
 import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
 import { Arr, Option } from '@ephox/katamari';
 
@@ -22,7 +21,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     };
   };
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderToolbar({
@@ -45,7 +44,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     },
     (doc, body, gui, toolbar: AlloyComponent, store) => {
       return [
-        GuiSetup.mAddStyles(doc, [
+        TestHelpers.GuiSetup.mAddStyles(doc, [
           '.tox-toolbar { padding: 0.3em; background: blue; display: flex; flex-direction: row;}',
           '.tox-toolbar__group { background: black; color: white; display: flex; margin: 0.2em; }',
           '.test-toolbar-item { margin: 0.2em; padding: 0.2em; display: flex; }'
@@ -148,7 +147,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           ])
         ),
 
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ];
     },
     success,

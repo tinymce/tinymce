@@ -18,14 +18,14 @@ import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
-import Theme from '../../../../../silver/main/ts/Theme';
-import { GuiSetup, TestStore } from '../../module/AlloyTestUtils';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Editor } from 'tinymce/core/api/Editor';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
@@ -55,7 +55,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
         'Check structure of color swatch',
         [
           // Give a visual indication of focus
-          GuiSetup.mAddStyles(doc, [
+          TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { transform: scale(0.8) }'
           ]),
 
@@ -118,7 +118,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
           Keyboard.sKeydown(doc, Keys.right(), { }),
           sFocusOnColor('black'),
 
-          GuiSetup.mRemoveStyles
+          TestHelpers.GuiSetup.mRemoveStyles
         ]
       ), onSuccess, onFailure);
     },

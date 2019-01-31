@@ -1,7 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
 import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
-import GuiSetup from 'tinymce/themes/mobile/test/GuiSetup';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
 import { Assertions, ApproxStructure } from '@ephox/agar';
 
@@ -9,7 +8,7 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderTable({

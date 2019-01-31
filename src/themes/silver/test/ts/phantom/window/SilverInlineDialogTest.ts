@@ -4,17 +4,16 @@ import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { TestStore, GuiSetup } from '../../module/AlloyTestUtils';
 import { document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Types } from '@ephox/bridge';
-import { Channels } from '@ephox/alloy';
+import { Channels, TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   const helpers = setupDemo();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
@@ -68,7 +67,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   ]);
 
   Pipeline.async({}, [
-    GuiSetup.mAddStyles(Element.fromDom(document), [
+    TestHelpers.GuiSetup.mAddStyles(Element.fromDom(document), [
       '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
     ]),
     sTestOpen({ inline: 'magic' }),
@@ -119,7 +118,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       'After broadcasting dismiss, dialog should be removed',
       UiFinder.sNotExists(Body.body(), '[role="dialog"]')
     ),
-    GuiSetup.mRemoveStyles
+    TestHelpers.GuiSetup.mRemoveStyles
   ], () => {
     helpers.destroy();
     success();

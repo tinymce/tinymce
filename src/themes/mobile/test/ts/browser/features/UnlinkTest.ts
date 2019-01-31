@@ -2,13 +2,11 @@ import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Traverse } from '@ephox/sugar';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
+import { TestHelpers } from '@ephox/alloy';
 
-UnitTest.asynctest('Browser Test: features.UnlinkTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failure) {
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
   const body = Body.body();
@@ -50,7 +48,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function () {
       };
 
       Pipeline.async({}, [
-        GuiSetup.mAddStyles(Traverse.owner(body), [
+        TestHelpers.GuiSetup.mAddStyles(Traverse.owner(body), [
           '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
           '.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected { background: #cadbee; }',
           '.tinymce-mobile-icon-unlink:before { content: "UNLINK"; }',
@@ -77,7 +75,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function () {
         // Tinymce moves the cursor after an unlink, so return the selection to the same spot
         apis.sSetSelection([ 0, 1 ], 'for'.length, [ 0, 1 ], 'for'.length),
         sCheckLink('link should be removed', false),
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }
   );

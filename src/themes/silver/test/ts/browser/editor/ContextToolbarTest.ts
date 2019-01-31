@@ -1,15 +1,14 @@
-import '../../../../../silver/main/ts/Theme';
+import 'tinymce/themes/silverasdasd/Theme';
 
 import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
-
-import { TestStore } from '../../module/AlloyTestUtils';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
