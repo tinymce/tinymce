@@ -52,6 +52,9 @@ const systemInit = Fun.constant('alloy.system.init');
 // Fired when the window scrolls
 const windowScroll = Fun.constant('alloy.system.scroll');
 
+// Fired when the window resizes
+const windowResize = Fun.constant('alloy.system.resize');
+
 const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
@@ -99,6 +102,7 @@ export {
   systemInit,
   typeaheadCancel,
   windowScroll,
+  windowResize,
 
   dismissRequested,
   focusShifted,
