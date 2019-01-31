@@ -109,6 +109,19 @@ const findEndTagIndex = function (schema, html, startIndex) {
   return index;
 };
 
+const checkBogusAttribute = (regExp: RegExp, attrString: string) => {
+  const matches = regExp.exec(attrString);
+
+  if (matches) {
+    const name = matches[1];
+    const value = matches[2];
+
+    return typeof name === 'string' && name.toLowerCase() === 'data-mce-bogus' ? value : null;
+  } else {
+    return null;
+  }
+};
+
 /**
  * Constructs a new SaxParser instance.
  *
@@ -312,6 +325,18 @@ export function SaxParser(settings, schema = Schema()) {
         // Is self closing tag for example an <li> after an open <li>
         if (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value) {
           processEndTag(value);
+        }
+
+        // Always invalidate element if it's marked as bogus
+        const bogusValue = checkBogusAttribute(attrRegExp, matches[8]);
+        if (bogusValue !== null) {
+          if (bogusValue === 'all') {
+            index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
+            tokenRegExp.lastIndex = index;
+            continue;
+          }
+
+          isValidElement = false;
         }
 
         // Validate element
