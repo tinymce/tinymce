@@ -85,11 +85,19 @@ const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option
   const anchor = getAnchor(detail, hotspot);
   const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
   return processed.map((tdata) => {
-    tdata.map((data) => {
-      Sandboxing.cloak(sandbox);
-      Sandboxing.open(sandbox, data);
-      onOpenSync(sandbox);
-    });
+    // If we have data, display a menu. Else, close the menu if it was open
+    tdata.fold(
+      () => {
+        if (Sandboxing.isOpen(sandbox)) {
+          Sandboxing.close(sandbox);
+        }
+      },
+      (data) => {
+        Sandboxing.cloak(sandbox);
+        Sandboxing.open(sandbox, data);
+        onOpenSync(sandbox);
+      }
+    );
     return sandbox;
   });
 };
