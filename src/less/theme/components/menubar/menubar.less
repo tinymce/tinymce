@@ -10,13 +10,13 @@
 //
 
 @menubar-background-color: @background-color;
-@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-row-separator-color}'/%3E%3C/svg%3E") 0 0 @menubar-background-color;
-@menubar-padding: 0 @toolbar-group-padding-x;
+@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-row-separator-color}'/%3E%3C/svg%3E") left 0 top 0 @menubar-background-color;
+@menubar-padding-x: @toolbar-group-padding-x;
 @menubar-row-separator-color: @border-color;
 
 // private variables
 @_menubar-row-separator-color: escape('@{menubar-row-separator-color}');
-@_menubar-height: @toolbar-button-height + @toolbar-button-spacing-y + @toolbar-button-spacing-y + 1px;
+@_menubar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@menubar-select-spacing-y * 2) + 1px;
 @_menubar-divider-height: @_menubar-height - 1px;
 
 .tox {
@@ -28,6 +28,6 @@
     flex-shrink: 0;
     flex-wrap: wrap;
     margin-bottom: -1px;
-    padding: @menubar-padding;
+    padding: 0 @menubar-padding-x;
   }
 }
