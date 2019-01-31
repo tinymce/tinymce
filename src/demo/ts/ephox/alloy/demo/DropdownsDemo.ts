@@ -94,7 +94,7 @@ export default (): void => {
         });
 
         return Future.pure(
-          Option.from(TieredMenu.singleData('name', wMenu))
+          Option.some(TieredMenu.singleData('name', wMenu))
         );
       },
       lazySink,
@@ -144,7 +144,7 @@ export default (): void => {
         });
 
         return Future.pure(menu).map((m) => {
-          return Option.from(TieredMenu.singleData('demo.2.menu', menu));
+          return Option.some(TieredMenu.singleData('demo.2.menu', menu));
         });
       }
     })
@@ -197,7 +197,7 @@ export default (): void => {
             });
 
             return Future.pure(menu).map((m) => {
-              return Option.from(TieredMenu.singleData('demo.2.menu', menu));
+              return Option.some(TieredMenu.singleData('demo.2.menu', menu));
             });
           }
         })
@@ -256,7 +256,7 @@ export default (): void => {
             columns: 2,
             rows: 2
           });
-          return Option.from(TieredMenu.singleData('grid-list', menu));
+          return Option.some(TieredMenu.singleData('grid-list', menu));
         });
       },
 
@@ -318,7 +318,7 @@ export default (): void => {
             value: 'demo.4.menu',
             items
           });
-          return Option.from(TieredMenu.singleData('basic-list', menu));
+          return Option.some(TieredMenu.singleData('basic-list', menu));
         });
       },
       onExecute (sandbox, item, itemValue) {

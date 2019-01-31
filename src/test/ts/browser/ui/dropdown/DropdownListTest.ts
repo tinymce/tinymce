@@ -90,7 +90,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return Option.from(TieredMenu.singleData('test', menu));
+            return Option.some(TieredMenu.singleData('test', menu));
           });
         }
       })

@@ -33,7 +33,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
           value: Id.generate('single-menu-value'),
           items: Arr.map(items, TestDropdownMenu.renderItem)
         });
-        return Option.from(TieredMenu.singleData('overlord', menu));
+        return Option.some(TieredMenu.singleData('overlord', menu));
       });
     };
 

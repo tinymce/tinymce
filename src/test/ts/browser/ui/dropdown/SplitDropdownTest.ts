@@ -111,7 +111,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return Option.from(TieredMenu.singleData('test', menu));
+            return Option.some(TieredMenu.singleData('test', menu));
           });
         }
       })

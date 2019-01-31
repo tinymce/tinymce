@@ -44,42 +44,39 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
 
   // TODO: Make this potentially a single menu also
   return futureData.map((tdata) => {
-    return tdata.fold(
-      () => Option.none(),
-      (data) => {
-        return Option.from(TieredMenu.sketch({
-          ...externals.menu(),
+    return tdata.bind((data) => {
+      return Option.from(TieredMenu.sketch({
+        ...externals.menu(),
 
-          uid: Tagger.generate(''),
-          data,
+        uid: Tagger.generate(''),
+        data,
 
-          highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
+        highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-          onOpenMenu (tmenu, menu) {
-            const sink = getLazySink().getOrDie();
-            Positioning.position(sink, anchor, menu);
-            Sandboxing.decloak(sandbox);
-          },
+        onOpenMenu (tmenu, menu) {
+          const sink = getLazySink().getOrDie();
+          Positioning.position(sink, anchor, menu);
+          Sandboxing.decloak(sandbox);
+        },
 
-          onOpenSubmenu (tmenu, item, submenu) {
-            const sink = getLazySink().getOrDie();
-            Positioning.position(sink, {
-              anchor: 'submenu',
-              item
-            }, submenu);
-            Sandboxing.decloak(sandbox);
+        onOpenSubmenu (tmenu, item, submenu) {
+          const sink = getLazySink().getOrDie();
+          Positioning.position(sink, {
+            anchor: 'submenu',
+            item
+          }, submenu);
+          Sandboxing.decloak(sandbox);
 
-          },
-          onEscape () {
-            // Focus the triggering component after escaping the menu
-            Focusing.focus(component);
-            Sandboxing.close(sandbox);
-            return Option.some(true);
-          }
-        }));
-      });
-    }
-  );
+        },
+        onEscape () {
+          // Focus the triggering component after escaping the menu
+          Focusing.focus(component);
+          Sandboxing.close(sandbox);
+          return Option.some(true);
+        }
+      }));
+    });
+  });
 };
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future

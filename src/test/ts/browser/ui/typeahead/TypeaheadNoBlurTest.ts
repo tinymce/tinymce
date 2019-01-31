@@ -53,7 +53,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.from(TieredMenu.singleData('blah.overall', menu));
+                return Option.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 

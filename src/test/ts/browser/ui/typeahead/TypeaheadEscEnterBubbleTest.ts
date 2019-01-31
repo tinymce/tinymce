@@ -44,7 +44,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
                 { type: 'item', data: { value: '2', meta: { text: '2' } } }
               ];
 
-              return Future.pure(Option.from(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
+              return Future.pure(Option.some(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
                 value: 'blah',
                 items: Arr.map(items, TestDropdownMenu.renderItem)
               }))));

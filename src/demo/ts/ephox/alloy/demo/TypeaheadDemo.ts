@@ -127,7 +127,7 @@ export default (): void => {
             value: 'blah.value',
             items: Arr.map(items, DemoRenders.item)
           });
-          return Option.from(TieredMenu.singleData('blah', menu));
+          return Option.some(TieredMenu.singleData('blah', menu));
         });
       },
       onExecute (sandbox, item, itemValue) {
