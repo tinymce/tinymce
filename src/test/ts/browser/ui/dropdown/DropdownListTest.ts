@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -90,7 +90,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return TieredMenu.singleData('test', menu);
+            return Option.some(TieredMenu.singleData('test', menu));
           });
         }
       })

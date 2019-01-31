@@ -234,7 +234,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
                       value: 'inline-view-test',
                       items: Arr.map(f, TestDropdownMenu.renderItem)
                     });
-                    return TieredMenu.singleData('test', menu);
+                    return Option.some(TieredMenu.singleData('test', menu));
                   });
                 }
               })

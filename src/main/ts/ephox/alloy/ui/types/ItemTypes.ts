@@ -11,7 +11,7 @@ export interface ItemDataTuple {
   value: string;
   meta?: {
     text?: string;
-  }
+  };
 }
 
 export type ItemSpec = WidgetItemSpec | SeparatorItemSpec | NormalItemSpec;
@@ -84,5 +84,5 @@ export interface ItemDetail {
 }
 
 export interface ItemBuilder<B extends ItemDetail> {
-  builder:(buildInfo: B) => AlloySpec;
+  builder: (buildInfo: B) => AlloySpec;
 }

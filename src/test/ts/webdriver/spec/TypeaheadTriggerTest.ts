@@ -1,6 +1,6 @@
 import { FocusTools, Keyboard, Keys, RealKeys, UiControls } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -52,7 +52,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return TieredMenu.singleData('blah.overall', menu);
+                return Option.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 

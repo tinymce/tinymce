@@ -21,7 +21,7 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoRenders from './forms/DemoRenders';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
-import { document, console } from '@ephox/dom-globals';
+import { document, console, setTimeout } from '@ephox/dom-globals';
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 
 // tslint:disable:no-console

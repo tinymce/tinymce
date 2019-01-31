@@ -1,4 +1,4 @@
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -44,10 +44,10 @@ export default (): void => {
             return Result.value(sink);
           },
           fetch () {
-            return Future.pure(Arr.map([
+            return Future.pure(Option.from(Arr.map([
               { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
               { type: 'item', data: { value: 'beta', meta: { text: 'Beta'} } }
-            ], DemoRenders.orb));
+            ], DemoRenders.orb)));
           },
           onExecute (component, menuComp, item, data) {
             console.log('selected', data.value);
