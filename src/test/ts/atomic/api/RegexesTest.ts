@@ -1,10 +1,10 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Obj } from '@ephox/katamari';
 import Regexes from 'ephox/polaris/api/Regexes';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('RegexesTest', function() {
-  var ephoxCases = [
+// tslint:disable no-console
+UnitTest.test('RegexesTest', function () {
+  const ephoxCases = [
     'www.google.com.au',
     'www.google.com.au:80',
     'maurizio@ephox.com',
@@ -17,15 +17,15 @@ UnitTest.test('RegexesTest', function() {
     'http://link/',
     'https://www.google.com.au/search?espv=2&q=hello+world&oq=hello+world&gs_l=serp.3..0l10.12435.15279.0.15482.13.9.0.3.3.0.241.1121.0j1j4.5.0.msedr...0...1c.1.64.serp..5.8.1125.GLORIzEXy3Y',
     'https://icmobile4.rtp.raleigh.ibm.com/files/app#/file/d0f8ed3e-f6d2-4577-8989-fa21ac332a20',
-    "https://www.google.com.aa/test.htm?$-_.+!*'()test,test;test:test@=&",
-    "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&'()*+,;=:%40:80%2f::::::@e#-.~_!$&'()*+,;=:%40:80%2f::::::@e",
+    'https://www.google.com.aa/test.htm?$-_.+!*\'()test,test;test:test@=&',
+    'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&\'()*+,;=:%40:80%2f::::::@e#-.~_!$&\'()*+,;=:%40:80%2f::::::@e',
     'http://xn--domain.com',
     'www.google.ca/index.htm?id=/bla/bla',
     'https://www.amazon.com.au/gp/product/B0798R2WXG/ref=s9_acsd_top_hd_bw_b5QhTfX_c_x_w?pf_rd_m=ANEGB3WVEVKZB&pf_rd_s=merchandised-search-4&pf_rd_r=KF6SD7C0M69MKF2FR9CC&pf_rd_t=101&pf_rd_p=8ad3bdba-b846-5350-9c00-72c2cb7191dd&pf_rd_i=4975211051'
   ];
 
   // More cases, http://formvalidation.io/validators/uri/
-  var mathiasBynens = [
+  const mathiasBynens = [
     'http://foo.com/blah_blah',
     'http://foo.com/blah_blah/',
     'http://foo.com/blah_blah_(wikipedia)',
@@ -49,7 +49,7 @@ UnitTest.test('RegexesTest', function() {
     'http://j.mp',
     'ftp://foo.bar/baz',
     'http://foo.bar/?q=Test%20URL-encoded%20stuff',
-    "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com",
+    'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com',
     'http://1337.net',
     'http://a.b-c.de',
     'http://223.255.255.254'
@@ -66,9 +66,9 @@ UnitTest.test('RegexesTest', function() {
     // 'http://☺.damowmow.com/',
   ];
 
-  var trueCases = ephoxCases.concat(mathiasBynens);
+  const trueCases = ephoxCases.concat(mathiasBynens);
 
-  var ephoxFalseCases = [
+  const ephoxFalseCases = [
     'I am not a link',
     '#hashtag',
     '@mention',
@@ -85,7 +85,7 @@ UnitTest.test('RegexesTest', function() {
     'asdf:one'
   ];
 
-  var mathiasBynensFalse = [
+  const mathiasBynensFalse = [
     'http://',
     'http://foo.bar?q=Spaces should be encoded',
     'http:// shouldfail.com',
@@ -104,7 +104,6 @@ UnitTest.test('RegexesTest', function() {
     '///a',
     '///',
     'http:///a'
-
 
     // TODO: requires more lookbehind assertions and much permutations.
     // 'http://.',
@@ -129,25 +128,27 @@ UnitTest.test('RegexesTest', function() {
     // 'http://10.1.1.1'
   ];
 
-  var falseCases = ephoxFalseCases.concat(mathiasBynensFalse);
+  const falseCases = ephoxFalseCases.concat(mathiasBynensFalse);
 
   Arr.each(trueCases, function (cs) {
-    var matched = Regexes.link().exec(cs);
+    const matched = Regexes.link().exec(cs);
     assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
     if (matched.length > 1) {
       console.log('matched groups:');
-      Arr.each(matched, function (s, i) { console.log(i, s); });
+      Arr.each(matched, function (s, i) {
+        console.log(i, s);
+      });
       assert.fail('link regex must not capture any groups');
     }
   });
 
   Arr.each(falseCases, function (cs) {
-    var match = Regexes.link().test(cs);
-    var asserter = match === false ? match : (cs === cs.match(Regexes.link())[0]);
+    const match = Regexes.link().test(cs);
+    const asserter = match === false ? match : (cs === cs.match(Regexes.link())[0]);
     assert.eq(false, asserter, 'expected false but was true: ' + cs);
   });
 
-  var autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
+  const autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
     'http://google.com\\': 'http://google.com',
     // 'http://google.com-': 'http://google.com', // TODO: change Regexes so domain cant end in '-'
     'http://google.com_': 'http://google.com',
@@ -221,13 +222,12 @@ UnitTest.test('RegexesTest', function() {
 
   // remember don't inline the module function execution, JS regexes have state!
   Obj.each(autolinks, function (v, k) {
-    var match = Regexes.autolink().test(k);
+    const match = Regexes.autolink().test(k);
     if (match) {
-      var url = Regexes.autolink().exec(k)[1];
+      const url = Regexes.autolink().exec(k)[1];
       assert.eq(true, v === url, 'expected ' + v + ' but was "' + url + '"');
     } else {
       assert.fail('expected ' + v + ' but did not match "' + k + '"');
     }
   });
 });
-

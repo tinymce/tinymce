@@ -1,22 +1,21 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
 /**
  * Generate a PositionArray
  *
  * xs:     list of thing
  * f:      thing -> Optional unit
- * _start: sets the start position to search at
+ * start: sets the start position to search at
  */
-var make = function (xs, f, _start) {
+const make = function (xs, f, start) {
 
-  var init = {
-    len: _start !== undefined ? _start : 0,
+  const init = {
+    len: start !== undefined ? start : 0,
     list: []
   };
 
-  var r = Arr.foldl(xs, function (b, a) {
-    var value = f(a, b.len);
+  const r = Arr.foldl(xs, function (b, a) {
+    const value = f(a, b.len);
     return value.fold(Fun.constant(b), function (v) {
       return {
         len: v.finish(),
@@ -29,5 +28,5 @@ var make = function (xs, f, _start) {
 };
 
 export default <any> {
-  make: make
+  make
 };

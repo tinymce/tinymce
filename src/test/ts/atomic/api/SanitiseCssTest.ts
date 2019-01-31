@@ -1,9 +1,9 @@
 import Sanitise from 'ephox/polaris/string/Sanitise';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Sanitise.css', function() {
-  var check = function (expected, input) {
-    var actual = Sanitise.css(input);
+UnitTest.test('api.Sanitise.css', function () {
+  const check = function (expected, input) {
+    const actual = Sanitise.css(input);
     assert.eq(expected, actual);
   };
 
@@ -13,4 +13,3 @@ UnitTest.test('api.Sanitise.css', function() {
   check('e_bogus', '_bogus');
   check('a-big-long-string', 'a big long string');
 });
-

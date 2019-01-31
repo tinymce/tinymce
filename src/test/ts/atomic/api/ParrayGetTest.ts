@@ -3,10 +3,10 @@ import PositionArray from 'ephox/polaris/api/PositionArray';
 import Parrays from 'ephox/polaris/test/Parrays';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.PositionArray.get', function() {
-  var check = function (expected, input, offset) {
-    var parray = Parrays.make(input);
-    var actual = PositionArray.get(parray, offset);
+UnitTest.test('api.PositionArray.get', function () {
+  const check = function (expected, input, offset) {
+    const parray = Parrays.make(input);
+    const actual = PositionArray.get(parray, offset);
     expected.fold(function () {
       assert.eq(true, actual.isNone());
     }, function (v) {
@@ -22,4 +22,3 @@ UnitTest.test('api.PositionArray.get', function() {
   check(Option.some('tomorrow'), ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'thiswasacattodayandto'.length);
   check(Option.none(),           ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'thiswasacattodayandtomorrow-'.length);
 });
-

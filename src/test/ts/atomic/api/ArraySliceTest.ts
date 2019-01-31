@@ -1,13 +1,13 @@
 import Arrays from 'ephox/polaris/api/Arrays';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Arrays.sliceby', function() {
-  var check = function (expected, input, pred) {
-    var actual = Arrays.sliceby(input, pred);
+UnitTest.test('api.Arrays.sliceby', function () {
+  const check = function (expected, input, pred) {
+    const actual = Arrays.sliceby(input, pred);
     assert.eq(expected, actual);
   };
 
-  var is = function (value) {
+  const is = function (value) {
     return function (x) {
       return x === value;
     };
@@ -18,4 +18,3 @@ UnitTest.test('api.Arrays.sliceby', function() {
   check([ 1 ], [ 1, 2 ], is(2));
   check([ 1, 2, 3 ], [1, 2, 3, 4 ], is(4));
 });
-
