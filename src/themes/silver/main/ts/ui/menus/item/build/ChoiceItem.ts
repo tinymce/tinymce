@@ -22,7 +22,7 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 
 // Use meta to pass through special information about the tooltip
 // (yes this is horrible but it is not yet public API)
-const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] => {
   return Obj.get(meta, 'tooltipWorker').map((tooltipWorker: TooltipWorker) => {
     return [
       Tooltipping.config({

@@ -46,7 +46,7 @@ import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/
 import ItemResponse from '../../menus/item/ItemResponse';
 
 interface Specialisation<T> {
-  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any>>;
+  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   onSetup: (api: T) => OnDestroy<T>;
 }
@@ -86,7 +86,7 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<any, any>[]>, providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
   return {
     dom: {
       tag: 'button',

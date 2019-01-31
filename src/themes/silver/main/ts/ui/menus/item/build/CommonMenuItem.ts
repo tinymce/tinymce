@@ -33,7 +33,7 @@ export interface CommonMenuItemSpec<T> {
   onSetup: (itemApi: T) => OnDestroy<T>;
   triggersSubmenu: boolean;
   disabled: boolean;
-  itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any>>;
+  itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   data: ItemDataOutput;
 }
