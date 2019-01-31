@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, Toggling, Tooltipping, GuiFactory, Behaviour } from '@ephox/alloy';
+import { Disabling, Toggling, Tooltipping, GuiFactory, Behaviour, ItemTypes } from '@ephox/alloy';
 import { InlineContent, Menu, Types } from '@ephox/bridge';
 import { Merger, Option, Obj } from '@ephox/katamari';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../../backstage/Backstage';
@@ -49,7 +49,7 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
 };
 
 // TODO: Remove dupe between these
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
+const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemTypes.ItemSpec => {
 
   const structure = renderItemStructure({
     presets,

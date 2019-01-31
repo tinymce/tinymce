@@ -1,4 +1,4 @@
-import { Disabling } from '@ephox/alloy';
+import { Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -8,7 +8,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true) => {
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const caret = renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component): Menu.NestedMenuItemInstanceApi => {
     return {

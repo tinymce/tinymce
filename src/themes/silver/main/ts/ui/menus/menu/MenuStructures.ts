@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Menu as AlloyMenu, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, Menu as AlloyMenu, RawDomSchema, ItemTypes } from '@ephox/alloy';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => {
@@ -68,7 +68,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items, isSeparator: (a, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {

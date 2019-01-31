@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes } from '@ephox/alloy';
+import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes, ItemTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
@@ -35,7 +35,7 @@ export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuIt
 const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true) => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(

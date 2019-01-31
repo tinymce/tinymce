@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling } from '@ephox/alloy';
+import { Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -14,7 +14,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true) => {
+const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const getApi = (component): Menu.MenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
