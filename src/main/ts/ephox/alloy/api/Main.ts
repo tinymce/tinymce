@@ -26,7 +26,7 @@ import { Dragging } from './behaviour/Dragging';
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
-import { Keying } from './behaviour/Keying';
+import { Keying, KeyingConfigSpec } from './behaviour/Keying';
 import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
 import { Receiving } from './behaviour/Receiving';
@@ -90,6 +90,7 @@ import { Menu } from './ui/Menu';
 import { ModalDialog } from './ui/ModalDialog';
 import * as Sketcher from './ui/Sketcher';
 import { Slider } from './ui/Slider';
+import { SlotContainer } from './ui/SlotContainer';
 import { SplitDropdown } from './ui/SplitDropdown';
 import { SplitToolbar } from './ui/SplitToolbar';
 import { Tabbar } from './ui/Tabbar';
@@ -98,6 +99,7 @@ import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
 import { TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
 import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
+import * as MenuTypes from '../ui/types/MenuTypes';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
@@ -117,6 +119,9 @@ import * as Bubble from '../positioning/layout/Bubble';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import { LazySink } from './component/CommonTypes';
 import { FocusInsideModes } from '../keying/KeyingModeTypes';
+import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
+import * as SliderTypes from '../ui/types/SliderTypes';
+import * as FormTypes from '../ui/types/FormTypes';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -135,6 +140,7 @@ export {
   Highlighting,
   Invalidating,
   Keying,
+  KeyingConfigSpec,
   Pinching,
   Positioning,
   Receiving,
@@ -190,6 +196,7 @@ export {
   ModalDialog,
   Sketcher,
   Slider,
+  SlotContainer,
   SplitDropdown,
   SplitToolbar,
   Tabbar,
@@ -238,6 +245,10 @@ export {
 
   // types
   TieredMenuTypes,
+  MenuTypes,
+  SlotContainerTypes,
+  SliderTypes,
+  FormTypes,
   AnchorSpec,
   NodeAnchorSpec,
   MakeshiftAnchorSpec,
