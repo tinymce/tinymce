@@ -1,5 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { StructAssert } from '@ephox/agar/lib/main/ts/ephox/agar/assertions/ApproxStructures';
+import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, UiFinder, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
