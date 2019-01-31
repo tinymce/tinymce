@@ -1,3 +1,12 @@
+Version 4.9.3 (2019-01-31)
+    Added a visualchars_defaul_state setting to the Visualchars Plugin. Patch contributed by mat3e.
+    Fixed a bug where scrolling on a page with more than one editor would cause a ResizeWindow event to fire. #TINY-3247
+    Fixed a bug where if a plugin threw an error during initialisation the whole editor would fail to load. #TINY-3243
+    Fixed a bug where getContent would include bogus elements when valid_elements setting was set up in a specific way. #TINY-3213
+    Fixed a bug where only a few function key names could be used when creating keyboard shortcuts. #TINY-3146
+    Fixed a bug where it wasn't possible to enter spaces into an editor after pressing shift+enter. #TINY-3099
+    Fixed a bug where no caret would be rendered after backspacing to a contenteditable false element. #TINY-2998
+    Fixed a bug where deletion to/from indented lists would leave list fragments in the editor. #TINY-2981
 Version 4.9.2 (2018-12-17)
     Fixed a bug with pressing the space key on IE 11 would result in nbsp characters being inserted between words at the end of a block. #TINY-2996
     Fixed a bug where character composition using quote and space on US International keyboards would produce a space instead of a quote. #TINY-2999
