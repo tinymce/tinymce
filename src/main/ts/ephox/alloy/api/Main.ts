@@ -71,6 +71,7 @@ import * as Channels from './messages/Channels';
 import * as Attachment from './system/Attachment';
 import * as ForeignGui from './system/ForeignGui';
 import * as Gui from './system/Gui';
+import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
 import { Button } from './ui/Button';
 import { Container } from './ui/Container';
 import { DataField } from './ui/DataField';
@@ -113,6 +114,7 @@ import {
 
 import * as Layout from '../positioning/layout/Layout';
 import * as Bubble from '../positioning/layout/Bubble';
+import * as MaxHeight from '../positioning/layout/MaxHeight';
 import { LazySink } from './component/CommonTypes';
 import { FocusInsideModes } from '../keying/KeyingModeTypes';
 
@@ -169,6 +171,7 @@ export {
   Attachment,
   ForeignGui,
   Gui,
+  ItemTypes,
   Button,
   Container,
   DataField,
@@ -230,6 +233,7 @@ export {
   // layout
   Layout,
   Bubble,
+  MaxHeight,
   LazySink,
 
   // types
