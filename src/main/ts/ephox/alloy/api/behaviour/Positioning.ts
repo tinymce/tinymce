@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActivePosition from '../../behaviour/positioning/ActivePosition';
 import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
-import { PositioningBehaviour, AnchorSpec } from '../../behaviour/positioning/PositioningTypes';
+import { PositioningBehaviour } from '../../behaviour/positioning/PositioningTypes';
 
 const Positioning = Behaviour.create({
   fields: PositionSchema,
@@ -12,6 +12,5 @@ const Positioning = Behaviour.create({
 }) as PositioningBehaviour;
 
 export {
-  Positioning,
-  AnchorSpec
+  Positioning
 };
