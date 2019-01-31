@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Focusing, Tabstopping, FormField } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
+import { Behaviour, Focusing, Tabstopping, FormField, AlloyComponent } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';

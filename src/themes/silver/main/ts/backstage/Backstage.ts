@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Layout, Bubble } from '@ephox/alloy';
-import { AnchorSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/mode/Anchoring';
+import { AlloyComponent, AlloySpec, Layout, Bubble, AnchorSpec } from '@ephox/alloy';
 import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';

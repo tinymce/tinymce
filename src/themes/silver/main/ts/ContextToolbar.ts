@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning } from '@ephox/alloy';
-import { expandable } from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/MaxHeight';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning, MaxHeight } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Cell, Id, Merger, Option, Thunk } from '@ephox/katamari';
@@ -137,7 +136,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const anchorOverrides = {
-    maxHeightFunction: expandable()
+    maxHeightFunction: MaxHeight.expandable()
   };
 
   const lineAnchorSpec = {

@@ -6,8 +6,7 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { WidgetItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
-import { ItemWidget, AlloyEvents, NativeEvents, Behaviour, AddEventsBehaviour, GuiFactory, Memento, Toggling, AlloyTriggers, Keying, Focusing, CustomEvent, AlloyComponent, AlloySpec, Replacing, SystemEvents } from '@ephox/alloy';
+import { ItemWidget, AlloyEvents, NativeEvents, Behaviour, AddEventsBehaviour, GuiFactory, Memento, Toggling, AlloyTriggers, Keying, Focusing, CustomEvent, AlloyComponent, AlloySpec, Replacing, SystemEvents, ItemTypes } from '@ephox/alloy';
 import { Id, Arr } from '@ephox/katamari';
 
 const cellOverEvent = Id.generate('cell-over');
@@ -70,7 +69,7 @@ const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): WidgetItemSpec {
+export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');

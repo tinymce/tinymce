@@ -15,9 +15,10 @@ import { bodyChannel } from './DialogChannels';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { Types } from '@ephox/bridge';
 
-export interface WindowBodyFoo {
-  body: Types.Dialog.PanelApi | Types.Dialog.TabPanelApi;
-}
+// TypeScript allows some pretty weird stuff.
+type WindowBodyFoo = {
+  body: Types.Dialog.Dialog<unknown>['body']
+};
 
 const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpec => {
   const renderComponents = (incoming: WindowBodyFoo) => {
