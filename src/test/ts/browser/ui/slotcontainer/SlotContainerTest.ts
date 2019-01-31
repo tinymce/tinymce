@@ -5,7 +5,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SlotContainerTest', (success, failure) => {
 

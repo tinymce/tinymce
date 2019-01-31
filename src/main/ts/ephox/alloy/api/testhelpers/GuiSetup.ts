@@ -2,10 +2,10 @@ import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TestStore from './TestStore';
-import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
-import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
+import * as Attachment from '../system/Attachment';
+import * as Gui from '../system/Gui';
 import { document, console } from '@ephox/dom-globals';
-import { AlloyComponent } from '../../../../../../main/ts/ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../component/ComponentApi';
 
 const setup = (createComponent, f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store) => Array<Step<any, any>>, success, failure) => {
   const store = TestStore();

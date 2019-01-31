@@ -8,7 +8,7 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {

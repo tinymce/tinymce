@@ -9,7 +9,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Class } from '@ephox/sugar';

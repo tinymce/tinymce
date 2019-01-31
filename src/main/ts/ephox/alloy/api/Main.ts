@@ -123,8 +123,18 @@ import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
 
+
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
+
+// Test code - should eventually move to a separate project
+import * as GuiSetup from './testhelpers/GuiSetup';
+import TestStore from './testhelpers/TestStore';
+
+const TestHelpers = {
+  GuiSetup,
+  TestStore
+};
 
 // TODO: naughty non API's being exported
 // Type Def Exports
@@ -256,5 +266,7 @@ export {
   HotspotAnchorSpec,
   SubmenuAnchorSpec,
 
-  FocusInsideModes
+  FocusInsideModes,
+
+  TestHelpers
 };

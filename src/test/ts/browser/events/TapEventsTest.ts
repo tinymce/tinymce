@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
-import TestStore from 'ephox/alloy/test/TestStore';
+import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison

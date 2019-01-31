@@ -4,7 +4,7 @@ import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
 import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
 import * as EventHandler from 'ephox/alloy/construct/EventHandler';
 import * as ResultAssertions from 'ephox/alloy/test/ResultAssertions';
-import TestStore from 'ephox/alloy/test/TestStore';
+import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 
 UnitTest.test('ComponentEventsTest', () => {
   const behaviour = Struct.immutable('name', 'handlers');
