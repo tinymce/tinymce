@@ -1,5 +1,4 @@
 import { Adt } from '@ephox/katamari';
-import { AdtInterface } from '../alien/AdtDefinition';
 import { ValueValidator, Processor } from '../core/ValueProcessor';
 import { FieldPresenceAdt } from '../api/FieldPresence';
 
@@ -11,14 +10,14 @@ export type ChoiceOfTypeProcessor = (key: string, branches: { [key: string]: Fie
 export type ThunkTypeProcessor = (description: string) => any;
 export type FuncTypeProcessor = (args: string[], schema: Processor) => any;
 
-export interface TypeProcessorAdt extends AdtInterface {
+export interface TypeProcessorAdt extends Adt {
   fold<T>(SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor): T;
 }
 
 export type OnFieldFieldProcessor = (name: string, presence: FieldPresenceAdt, type: Processor) => any;
 export type StateFieldProcessor = (name: string) => any;
 
-export interface FieldProcessorAdt extends AdtInterface {
+export interface FieldProcessorAdt extends Adt {
   fold<T>(OnFieldFieldProcessor, StateFieldProcessor): T;
 }
 

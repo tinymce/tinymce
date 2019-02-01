@@ -7,7 +7,6 @@ import { fieldAdt, TypeProcessorAdt, FieldProcessorAdt, typeAdt } from '../forma
 import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
-import { AdtInterface } from '../alien/AdtDefinition';
 import { SimpleResult } from '../alien/SimpleResult';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
@@ -23,7 +22,7 @@ export interface Processor {
 export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
 export type StateValueProcessor = <T>(okey: string, instantiator) => T;
 
-export interface ValueProcessorAdt extends AdtInterface {
+export interface ValueProcessorAdt extends Adt {
   fold: (FieldValueProcessor, StateValueProcessor) => any;
 }
 

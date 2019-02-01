@@ -1,12 +1,11 @@
 import { Adt, Fun } from '@ephox/katamari';
-import { AdtInterface } from '../alien/AdtDefinition';
 
 export type StrictField = () => any;
 export type DefaultedThunkField = (fallbackThunk: (any) => any) => any;
 export type AsOptionField = () => any;
 export type AsDefaultedOptionThunkField = (fallbackThunk: (any) => any) => any;
 export type MergeWithThunkField = (baseThunk: (any) => {any}) => any;
-export interface FieldPresenceAdt extends AdtInterface {
+export interface FieldPresenceAdt extends Adt {
   // TODO: extend the correct fold type
   fold<T>(StrictField, DefaultedThunkField, AsOptionField, AsDefaultedOptionThunkField, MergeWithThunkField): T;
 }
