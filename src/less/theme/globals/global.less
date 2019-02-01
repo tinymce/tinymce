@@ -11,16 +11,17 @@
 
 @tinymce-border-color: @border-color;
 @tinymce-border-radius: 0;
+@tinymce-border-width: 1px;
 @tinymce-box-shadow: none;
 
 .tox-tinymce {
-  border: 1px solid @tinymce-border-color;
+  border: @tinymce-border-width solid @tinymce-border-color;
   border-radius: @tinymce-border-radius;
   box-shadow: @tinymce-box-shadow;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  font-family: @font-stack-base;
+  font-family: @font-stack;
   overflow: hidden;
   visibility: inherit !important;
 }
@@ -40,7 +41,7 @@
 }
 
 .tox-tinymce-aux {
-  font-family: @font-stack-base;
+  font-family: @font-stack;
 }
 
 // Reset focus states
