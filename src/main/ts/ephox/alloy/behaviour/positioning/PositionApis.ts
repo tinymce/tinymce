@@ -7,13 +7,12 @@ import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
 import { window } from '@ephox/dom-globals';
 import { Bounds, box } from '../../alien/Boxes';
-import { Option } from '@ephox/katamari';
+import { Option, Adt } from '@ephox/katamari';
 
-export interface OriginAdt extends AdtInterface { }
+export interface OriginAdt extends Adt { }
 
 const getFixedOrigin = (): OriginAdt => {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);

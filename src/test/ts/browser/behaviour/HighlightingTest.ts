@@ -7,7 +7,7 @@ import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {

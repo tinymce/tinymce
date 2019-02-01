@@ -5,7 +5,7 @@ import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { window } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';

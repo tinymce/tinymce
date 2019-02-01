@@ -1,8 +1,8 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { SugarPosition, AdtInterface } from './TypeDefinitions';
+import { SugarPosition } from './TypeDefinitions';
 
-export interface CssPositionAdt extends AdtInterface { }
+export interface CssPositionAdt extends Adt { }
 
 const adt: {
   screen: (point: SugarPosition) => CssPositionAdt;

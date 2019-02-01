@@ -1,7 +1,6 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
-import { AdtInterface } from '../alien/TypeDefinitions';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 export type PartType = (p: PartialSpec) => PartTypeAdt;
@@ -27,7 +26,7 @@ export type required<T> = Option<T>;
 export type external<T> = Option<T>;
 export type optional<T> = Option<T>;
 export type group<T> = Option<T>;
-export interface PartTypeAdt extends AdtInterface {
+export interface PartTypeAdt extends Adt {
   fold<T>(required, external, optional, group);
 }
 

@@ -4,7 +4,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 
 UnitTest.asynctest('StreamingTest', (success, failure) => {

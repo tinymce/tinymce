@@ -4,7 +4,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Composing } from 'ephox/alloy/api/behaviour/Composing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) => {
 

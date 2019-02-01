@@ -8,7 +8,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SandboxingTest', (success, failure) => {

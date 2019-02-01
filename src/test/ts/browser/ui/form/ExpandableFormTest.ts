@@ -13,7 +13,7 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as TestForm from 'ephox/alloy/test/form/TestForm';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 

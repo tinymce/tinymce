@@ -12,7 +12,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {

@@ -6,9 +6,8 @@ import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout
 import { Bubble } from '../../positioning/layout/Bubble';
 import { Bounds } from '../../alien/Boxes';
 import { SpotInfo } from '../../positioning/view/SpotInfo';
-import { AdtInterface } from '../../alien/TypeDefinitions';
 
-export interface BounderAttemptAdt extends AdtInterface {
+export interface BounderAttemptAdt extends Adt {
 }
 
 const adt: {

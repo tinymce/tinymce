@@ -8,7 +8,7 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) => {

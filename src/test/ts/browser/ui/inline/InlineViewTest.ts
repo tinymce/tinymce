@@ -8,7 +8,7 @@ import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import { Html, Css, Compare } from '@ephox/sugar';
