@@ -18,6 +18,7 @@ import {
   Representing,
   SketchSpec,
   Tabstopping,
+  Disabling
 } from '@ephox/alloy';
 import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
@@ -146,6 +147,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
       });
     },
     coupledFieldBehaviours: Behaviour.derive([
+      Disabling.config({ }),
       AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
           const isField1 = simulatedEvent.event().isField1();
