@@ -1,17 +1,16 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@ephox/agar';
-import { AlloyTriggers, Composing, GuiFactory, Representing } from '@ephox/alloy';
+import { AlloyTriggers, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderDropZone } from '../../../../../main/ts/ui/dialog/Dropzone';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 UnitTest.asynctest('Dropzone component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderDropZone({

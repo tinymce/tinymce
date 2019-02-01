@@ -1,12 +1,11 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
 import { renderHtmlPanel } from '../../../../../main/ts/ui/general/HtmlPanel';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderHtmlPanel({

@@ -15,12 +15,12 @@ import {
   DomFactory,
   ModalDialog,
   Tabstopping,
+  AlloyComponent,
 } from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 
 const pClose = (onClose, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches

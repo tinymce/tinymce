@@ -4,10 +4,10 @@ import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { TestStore } from '../../module/AlloyTestUtils';
 import { document } from '@ephox/dom-globals';
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
   const helpers = setupDemo();
@@ -15,7 +15,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
 
   const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   const sTestOpen = Chain.asStep({ }, [
     Chain.mapper((_) => {

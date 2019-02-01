@@ -4,9 +4,9 @@ import { Body, Element, Attr } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import { document } from '@ephox/dom-globals';
 import { Result, Fun } from '@ephox/katamari';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   const helpers = setupDemo();
@@ -49,12 +49,12 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
     );
 
   Pipeline.async({}, [
-    GuiSetup.mAddStyles(Element.fromDom(document), [
+    TestHelpers.GuiSetup.mAddStyles(Element.fromDom(document), [
       '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
     ]),
     sTestDialogLabelled({ inline: 'toolbar' }),
     sTestDialogLabelled({ inline: 'not-inline!!' }),
-    GuiSetup.mRemoveStyles
+    TestHelpers.GuiSetup.mRemoveStyles
   ], () => {
     helpers.destroy();
     success();

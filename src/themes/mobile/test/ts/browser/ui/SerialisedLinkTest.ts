@@ -2,7 +2,7 @@ import {
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
     Pipeline, Step, UiFinder
 } from '@ephox/agar';
-import { Attachment } from '@ephox/alloy';
+import { Attachment, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
@@ -12,7 +12,6 @@ import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
@@ -191,7 +190,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
   };
 
   Pipeline.async({}, detection.browser.isChrome() ? [
-    GuiSetup.mAddStyles(doc, [
+    TestHelpers.GuiSetup.mAddStyles(doc, [
       '.tinymce-mobile-toolbar-button:before { content: "LINK"; background: black; color: white; }',
       // Speeds up tests.
       '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'

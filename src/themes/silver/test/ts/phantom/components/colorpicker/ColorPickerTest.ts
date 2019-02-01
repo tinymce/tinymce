@@ -1,14 +1,13 @@
 import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 
 import { renderColorPicker } from '../../../../../main/ts/ui/dialog/ColorPicker';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderColorPicker({

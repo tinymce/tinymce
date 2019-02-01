@@ -49,12 +49,12 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openModalDialog = (config, closeWindow) => {
+  const openModalDialog = (config/*: Types.Dialog.DialogApi<T>*/, closeWindow) => {
     const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
 
-      const dialogInit = {
+      const dialogInit: DialogManager.DialogInit<T> = {
         dataValidator,
         initialData,
         internalDialog: contents

@@ -1,11 +1,11 @@
 import { Step } from '@ephox/agar';
 import { Objects } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
-
-import TestStore from '../TestStore';
+import { TestHelpers } from '@ephox/alloy';
 
 export default function () {
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
+
 
   const editorState = {
     start: Cell(null),

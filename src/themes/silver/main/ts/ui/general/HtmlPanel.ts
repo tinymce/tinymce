@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SketchSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/SpecTypes';
-import { Container as AlloyContainer, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
+import { Container as AlloyContainer, Behaviour, Tabstopping, Focusing, SketchSpec } from '@ephox/alloy';
 
 export interface HtmlPanelFoo {
   type: 'htmlpanel';

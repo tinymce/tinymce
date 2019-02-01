@@ -12,7 +12,7 @@ import {
   UiFinder,
   Waiter,
 } from '@ephox/agar';
-import * as GuiSetup from '@ephox/alloy/lib/test/ts/module/ephox/alloy/test/GuiSetup';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
@@ -20,6 +20,8 @@ import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
+
+const GuiSetup = TestHelpers.GuiSetup;
 
 UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
   const helpers = setupDemo();

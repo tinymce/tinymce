@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Menu } from '@ephox/bridge';
 
 import * as ItemClasses from '../ItemClasses';
+import { ItemTypes } from '@ephox/alloy';
 
-const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemSpec => {
+const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemTypes.ItemSpec => {
   const innerHtml = spec.text.fold(
     () => ({ }),
     (text) => ({ innerHtml: text })

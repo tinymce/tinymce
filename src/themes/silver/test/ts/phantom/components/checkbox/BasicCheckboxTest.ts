@@ -1,10 +1,9 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
-import { GuiFactory, Representing } from '@ephox/alloy';
+import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { HTMLInputElement } from '@ephox/dom-globals';
 
 import { renderCheckbox } from '../../../../../main/ts/ui/general/Checkbox';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
@@ -14,7 +13,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
     translate: I18n.translate
   };
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderCheckbox({

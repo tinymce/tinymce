@@ -14,8 +14,8 @@ import {
   Sketcher,
   Toolbar as AlloyToolbar,
   UiSketcher,
+  Behaviour,
 } from '@ephox/alloy';
-import { ConfiguredBehaviour } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
 
@@ -26,13 +26,13 @@ import { renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
   components: AlloySpec[];
-  behaviours: Record<string, ConfiguredBehaviour<any, any>>;
+  behaviours: Record<string, Behaviour.ConfiguredBehaviour<any, any>>;
 }
 
 export interface OuterContainerSketchDetail extends Sketcher.CompositeSketchDetail {
   dom: RawDomSchema;
   uid: string;
-  behaviours: Record<string, ConfiguredBehaviour<any, any>>;
+  behaviours: Record<string, Behaviour.ConfiguredBehaviour<any, any>>;
 }
 export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec, OuterContainerSketchDetail>, OuterContainerApis {
 }

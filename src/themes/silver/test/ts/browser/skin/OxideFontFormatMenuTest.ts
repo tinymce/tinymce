@@ -18,8 +18,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import { PlatformDetection } from '@ephox/sand';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
   const isIE = PlatformDetection.detect().browser.isIE();
@@ -33,7 +33,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
 
       Pipeline.async({}, [
         Log.step('TBA', 'Check structure of font format', GeneralSteps.sequence([
-          Step.label('Add styles to the editor', GuiSetup.mAddStyles(doc, [
+          Step.label('Add styles to the editor', TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }',
             '.tox-collection__item-label > * { margin: 0px; }'
           ])),
@@ -209,7 +209,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
           Step.label('Check focus is on "Sub heading"', FocusTools.sTryOnSelector('Focus should be on Sub heading', doc, '.tox-collection__item:contains(Sub heading)')),
           Step.label('Press down arrow (3rd time)', Keyboard.sKeydown(doc, Keys.down(), {})),
           Step.label('Check focus is on "Paragraph"', FocusTools.sTryOnSelector('Focus should be on Paragraph', doc, '.tox-collection__item:contains(Paragraph)')),
-          Step.label('Remove styles', GuiSetup.mRemoveStyles)
+          Step.label('Remove styles', TestHelpers.GuiSetup.mRemoveStyles)
         ]))
       ], onSuccess, onFailure);
     },
