@@ -286,7 +286,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               flatten: true,
-              cwd: 'node_modules/@ephox/oxide/build/skins/ui/' + name,
+              cwd: 'node_modules/@tinymce/oxide/build/skins/ui/' + name,
               src: [
                 '*.min.css',
                 '*.min.css.map'
@@ -300,7 +300,7 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: 'node_modules/@ephox/oxide/build/skins/content',
+            cwd: 'node_modules/@tinymce/oxide/build/skins/content',
             src: '**',
             dest: 'js/tinymce/skins/content'
           },
@@ -696,15 +696,6 @@ module.exports = function (grunt) {
         ],
         customRoutes: 'src/core/test/json/routes.json'
       },
-      apollo: {
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/plugins/*/test/ts/browser/**/AG_*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'apollo-tests'
-      },
       silver: {
         config: 'tsconfig.json',
         testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts'],
@@ -726,66 +717,6 @@ module.exports = function (grunt) {
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
-      },
-      'chrome-headless': {
-        browser: 'chrome-headless',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'chrome-headless'
-      },
-      'firefox-headless': {
-        browser: 'firefox-headless',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'firefox-headless'
-      },
-      chrome: {
-        browser: 'chrome',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'chrome'
-      },
-      firefox: {
-        browser: 'firefox',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'firefox'
-      },
-      MicrosoftEdge: {
-        browser: 'MicrosoftEdge',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'MicrosoftEdge'
-      },
-      ie: {
-        browser: 'ie',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'ie'
       },
       silver: {
         browser: 'phantomjs',

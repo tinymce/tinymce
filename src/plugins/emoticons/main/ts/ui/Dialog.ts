@@ -19,13 +19,13 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   const initialState = {
     pattern: '',
-    results: emojisFrom(database.listAll(), '', Option.some(50))
+    results: emojisFrom(database.listAll(), '', Option.some(300))
   };
 
   const scan = (dialogApi, category: string) => {
     const dialogData = dialogApi.getData();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(50) : Option.none());
+    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(300) : Option.none());
     dialogApi.setData({
       results
     });
@@ -47,7 +47,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
   const resultsField: Types.Dialog.BodyComponentApi = {
     type: 'collection',
     name: 'results',
-    columns: 'auto'
+    // TODO TINY-3229 implement collection columns properly
+    // columns: 'auto'
   };
 
   const getInitialState = (): Types.Dialog.DialogApi<typeof initialState> => {

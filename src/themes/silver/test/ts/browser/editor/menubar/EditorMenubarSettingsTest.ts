@@ -21,7 +21,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
         classes: [ arr.has('tox-menubar') ],
-        children: Arr.map([ 'File', 'Edit', 'View', 'Insert', 'Format', 'Tools' ], (x) =>
+        children: Arr.map([ 'File', 'Edit', 'View', 'Format' ], (x) =>
           s.element('button', {
             children: [
               s.element('span', {

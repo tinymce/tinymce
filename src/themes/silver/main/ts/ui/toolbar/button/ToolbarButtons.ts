@@ -22,9 +22,9 @@ import {
   SplitDropdown as AlloySplitDropdown,
   Toggling,
   SystemEvents,
+  TieredData,
+  TieredMenuTypes,
 } from '@ephox/alloy';
-import { BehaviourConfigDetail, BehaviourConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
-import { PartialMenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/TieredMenuTypes';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
@@ -46,7 +46,7 @@ import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/
 import ItemResponse from '../../menus/item/ItemResponse';
 
 interface Specialisation<T> {
-  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>;
+  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   onSetup: (api: T) => OnDestroy<T>;
 }
@@ -86,7 +86,7 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
   return {
     dom: {
       tag: 'button',
@@ -204,11 +204,11 @@ interface ChoiceFetcher {
 }
 
 const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => {
-  return (comp: AlloyComponent) => {
+  return (comp: AlloyComponent): Future<Option<TieredData>> => {
     return Future.nu((callback) => {
       return spec.fetch(callback);
     }).map((items) => {
-      return createTieredDataFrom(
+      return Option.from(createTieredDataFrom(
         Merger.deepMerge(
           createPartialChoiceMenu(
             Id.generate('menu-value'),
@@ -231,9 +231,9 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
                 });
               })
             ])
-          } as PartialMenuSpec
+          } as TieredMenuTypes.PartialMenuSpec
         )
-      );
+      ));
     });
   };
 };

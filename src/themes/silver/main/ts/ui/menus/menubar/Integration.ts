@@ -9,7 +9,7 @@ import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { getRemovedMenuItems } from '../../../api/Settings';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../item/ItemResponse';
@@ -89,7 +89,7 @@ const parseItemsString = (items: string): string[] => {
   return items;
 };
 
-const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFactoryBackstage): MenubarItemSpec[] => {
+const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[] => {
   const rawMenuData = Merger.merge(defaultMenus, registry.menus);
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
@@ -106,7 +106,11 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry, backstage: UiFact
     return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor);
   });
 
-  return Arr.filter(menus, (menu) => menu.getItems().length > 0);
+  return Arr.filter(menus, (menu) => {
+    // Filter out menus that have no items, or only separators
+    const isNotSeparator = (item) => item.type !== 'separator';
+    return menu.getItems().length > 0 && Arr.exists(menu.getItems(), isNotSeparator);
+  });
 };
 
 export { identifyMenus };
