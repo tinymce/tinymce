@@ -6,7 +6,7 @@
  */
 
 import { Option, Options } from '@ephox/katamari';
-import { getAll as getAllOxide } from '@ephox/oxide-icons-default';
+import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 
 export type IconProvider = () => Record<string, string>;
 

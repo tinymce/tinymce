@@ -286,7 +286,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               flatten: true,
-              cwd: 'node_modules/@ephox/oxide/build/skins/ui/' + name,
+              cwd: 'node_modules/@tinymce/oxide/build/skins/ui/' + name,
               src: [
                 '*.min.css',
                 '*.min.css.map'
@@ -300,7 +300,7 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: 'node_modules/@ephox/oxide/build/skins/content',
+            cwd: 'node_modules/@tinymce/oxide/build/skins/content',
             src: '**',
             dest: 'js/tinymce/skins/content'
           },
