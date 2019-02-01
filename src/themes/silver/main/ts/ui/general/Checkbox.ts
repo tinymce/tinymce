@@ -19,8 +19,8 @@ import {
   Tabstopping,
   Unselecting,
   Keying,
+  AlloyComponent,
 } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 

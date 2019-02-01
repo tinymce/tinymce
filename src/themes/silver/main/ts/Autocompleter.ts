@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { GuiFactory, InlineView, Menu, Highlighting } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
+import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
 import { Arr, Option, Options, Throttler, Thunk } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -55,7 +54,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     return Autocompleters.register(editor);
   });
 
-  const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemSpec[] => {
+  const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
     const columns = Options.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
 
     return Arr.bind(matches, (match) => {

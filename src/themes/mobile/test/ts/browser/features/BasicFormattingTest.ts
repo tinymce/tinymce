@@ -2,14 +2,12 @@ import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Traverse } from '@ephox/sugar';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
 import { PlatformDetection } from '@ephox/sand';
+import { TestHelpers } from '@ephox/alloy';
 
-UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (success, failure) {
   const browser = PlatformDetection.detect().browser;
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
@@ -68,7 +66,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function () {
       };
 
       Pipeline.async({}, browser.isIE() || browser.isEdge() ? [] : [
-        GuiSetup.mAddStyles(Traverse.owner(body), [
+        TestHelpers.GuiSetup.mAddStyles(Traverse.owner(body), [
           '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
           '.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected { background: #cadbee; }',
           '.tinymce-mobile-icon-bold:before { content: "BOLD"; }',
@@ -80,7 +78,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function () {
         sTestFormatter('strong', 'strong', 'bold'),
         sTestFormatter('em', 'em', 'italic'),
         sTestFormatter('span style="text-decoration: underline;"', 'span', 'underline'),
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }
   );

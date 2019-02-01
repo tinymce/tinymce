@@ -6,8 +6,7 @@
  */
 
 import { Merger, Fun } from '@ephox/katamari';
-import { Toggling, Disabling, Representing, Replacing } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
+import { Toggling, Disabling, Representing, Replacing, AlloyComponent } from '@ephox/alloy';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.
 

@@ -1,16 +1,14 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
-
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 
 UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   const helpers = setupDemo();
   const sharedBackstage = helpers.extras.backstage.shared;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderLabel({

@@ -16,14 +16,14 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import { GuiSetup, TestStore } from '../../module/AlloyTestUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
@@ -32,7 +32,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
       Pipeline.async({ }, Logger.ts(
         'Check structure of list collection',
         [
-          GuiSetup.mAddStyles(doc, [
+          TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
           Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
@@ -125,7 +125,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
           FocusTools.sTryOnSelector('Focus should be on Beta', doc, '.tox-collection__item:contains(Beta)'),
           Keyboard.sKeydown(doc, Keys.down(), { }),
           FocusTools.sTryOnSelector('Focus should be on Gamma', doc, '.tox-collection__item:contains(Gamma)'),
-          GuiSetup.mRemoveStyles
+          TestHelpers.GuiSetup.mRemoveStyles
         ]
       ), onSuccess, onFailure);
     },

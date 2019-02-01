@@ -6,7 +6,7 @@ import { Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { GuiSetup } from '../../module/AlloyTestUtils';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
   const helpers = setupDemo();
@@ -20,7 +20,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
 
   const tests =
     isPhantomJs ? [ ] : [
-      GuiSetup.mAddStyles(doc, [
+      TestHelpers.GuiSetup.mAddStyles(doc, [
         '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
 
         ':focus { outline: 3px solid green; !important; }',

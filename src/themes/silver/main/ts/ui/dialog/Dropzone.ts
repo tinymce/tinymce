@@ -21,9 +21,8 @@ import {
   SugarEvent,
   Tabstopping,
   Toggling,
+  AlloyComponent,
 } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
-import { EventRunHandler } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/events/AlloyEvents';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -44,12 +43,12 @@ const filterByExtension = function (files: FileList) {
 export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   // TODO: Consider moving to alloy
-  const stopper: EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
+  const stopper: AlloyEvents.EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
     se.stop();
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (actions: Array<EventRunHandler<SugarEvent>>): EventRunHandler<SugarEvent> => {
+  const sequence = (actions: Array<AlloyEvents.EventRunHandler<SugarEvent>>): AlloyEvents.EventRunHandler<SugarEvent> => {
     return (comp, se) => {
       Arr.each(actions, (a) => {
         a(comp, se);
@@ -57,7 +56,7 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
     };
   };
 
-  const onDrop: EventRunHandler<SugarEvent> = (comp, se) => {
+  const onDrop: AlloyEvents.EventRunHandler<SugarEvent> = (comp, se) => {
     if (! Disabling.isDisabled(comp)) {
       const transferEvent = se.event().raw() as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);

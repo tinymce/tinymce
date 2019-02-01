@@ -1,12 +1,11 @@
 // TODO: Expose properly through alloy.
 import { ApproxStructure, Assertions, Logger, Step, Waiter } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import Promise from '../../../../../../../core/main/ts/api/util/Promise';
 
@@ -14,7 +13,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   const resolveInit = Cell(false);
   const customEditorValue = Cell('zztop');
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderCustomEditor({

@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Traverse } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { TestStore } from '../../module/AlloyTestUtils';
+import { TestHelpers } from '@ephox/alloy';
 
 interface EventLog {
   name: string;
@@ -12,7 +12,7 @@ interface EventLog {
 }
 
 UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', function (success, failure) {
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

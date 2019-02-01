@@ -18,9 +18,9 @@ import {
   Representing,
   SketchSpec,
   Tabstopping,
-  Disabling
+  Disabling,
+  AlloyComponent
 } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';

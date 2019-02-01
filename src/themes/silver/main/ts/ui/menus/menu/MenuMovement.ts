@@ -5,27 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyingConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Keying';
-import {
-  FlatgridConfigSpec,
-  MatrixConfigSpec,
-  MenuConfigSpec,
-} from '@ephox/alloy/lib/main/ts/ephox/alloy/keying/KeyingModeTypes';
-import {
-  MenuGridMovementSpec,
-  MenuMatrixMovementSpec,
-  MenuMovementSpec,
-  MenuNormalMovementSpec,
-} from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
 import { Types } from '@ephox/bridge';
 
 import { markers as getMenuMarkers } from './MenuParts';
 import { selectableClass, colorClass } from '../item/ItemClasses';
+import { MenuTypes, KeyingConfigSpec } from '@ephox/alloy';
 
-export const deriveMenuMovement = (columns: number | 'auto', presets: Types.PresetTypes): MenuMovementSpec => {
+export const deriveMenuMovement = (columns: number | 'auto', presets: Types.PresetTypes): MenuTypes.MenuMovementSpec => {
   const menuMarkers = getMenuMarkers(presets);
   if (columns === 1) {
-    return { mode: 'menu', moveOnTab: true } as MenuNormalMovementSpec;
+    return { mode: 'menu', moveOnTab: true } as MenuTypes.MenuNormalMovementSpec;
   } else if (columns === 'auto') {
     return {
       mode: 'grid',
@@ -34,13 +23,13 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Types.Pres
         numColumns: 1,
         numRows: 1
       }
-    } as MenuGridMovementSpec;
+    } as MenuTypes.MenuGridMovementSpec;
   } else {
     const rowClass = presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
     return {
       mode: 'matrix',
       rowSelector: '.' + rowClass
-    } as MenuMatrixMovementSpec;
+    } as MenuTypes.MenuMatrixMovementSpec;
   }
 };
 
@@ -50,7 +39,7 @@ export const deriveCollectionMovement = (columns: number | 'auto', presets: Type
       mode: 'menu',
       moveOnTab: false,
       selector: '.tox-collection__item'
-    } as MenuConfigSpec;
+    };
   } else if (columns === 'auto') {
     return {
       mode: 'flatgrid',
@@ -59,7 +48,7 @@ export const deriveCollectionMovement = (columns: number | 'auto', presets: Type
         numColumns: 1,
         numRows: 1
       }
-    } as FlatgridConfigSpec;
+    };
   } else {
     return {
       mode: 'matrix',
@@ -68,6 +57,6 @@ export const deriveCollectionMovement = (columns: number | 'auto', presets: Type
         cell: presets === 'color' ? `.${colorClass}` : `.${selectableClass}`
       }
 
-    } as MatrixConfigSpec;
+    };
   }
 };

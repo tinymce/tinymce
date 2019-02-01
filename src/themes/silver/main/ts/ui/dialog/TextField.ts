@@ -20,11 +20,6 @@ import {
   Tabstopping,
   SystemEvents,
 } from '@ephox/alloy';
-import {
-  BehaviourConfigDetail,
-  BehaviourConfigSpec,
-  NamedConfiguredBehaviour,
-} from '@ephox/alloy/lib/main/ts/ephox/alloy/api/behaviour/Behaviour';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
@@ -81,7 +76,7 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
     ),
     inputClasses: [spec.classname],
     inputBehaviours: Behaviour.derive(
-      Arr.flatten<NamedConfiguredBehaviour<BehaviourConfigSpec, BehaviourConfigDetail>>([
+      Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
         baseInputBehaviours,
         validatingBehaviours
       ])

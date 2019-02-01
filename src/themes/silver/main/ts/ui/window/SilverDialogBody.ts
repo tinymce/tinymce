@@ -6,8 +6,6 @@
  */
 
 import { AlloySpec, Behaviour, ModalDialog, Reflecting } from '@ephox/alloy';
-import { InternalPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Panel';
-import { InternalTabPanel } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/TabPanel';
 import { Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -15,10 +13,12 @@ import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
 import { bodyChannel } from './DialogChannels';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Types } from '@ephox/bridge';
 
-export interface WindowBodyFoo {
-  body: InternalPanel | InternalTabPanel;
-}
+// TypeScript allows some pretty weird stuff.
+type WindowBodyFoo = {
+  body: Types.Dialog.Dialog<unknown>['body']
+};
 
 const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpec => {
   const renderComponents = (incoming: WindowBodyFoo) => {

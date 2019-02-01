@@ -6,7 +6,6 @@
  */
 
 import { MementoRecord, Representing, AlloyComponent } from '@ephox/alloy';
-import { RepresentingConfigSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/behaviour/representing/RepresentingTypes';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { Element, Html, Value } from '@ephox/sugar';
@@ -52,7 +51,7 @@ const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => 
           }
         };
       }).getOr({ } as any)
-    ) as RepresentingConfigSpec
+    )
   );
 };
 

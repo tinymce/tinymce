@@ -6,7 +6,7 @@ import { Body, Value } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
-import { TestStore } from '../../module/AlloyTestUtils';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   const helpers = setupDemo();
@@ -14,7 +14,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
 
   const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   const dialogA: Types.Dialog.DialogApi<any> = {
     title: 'DialogA',

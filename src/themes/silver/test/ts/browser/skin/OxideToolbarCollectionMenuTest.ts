@@ -16,15 +16,15 @@ import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
-import Theme from '../../../../../silver/main/ts/Theme';
-import { TestStore } from '../../module/AlloyTestUtils';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {

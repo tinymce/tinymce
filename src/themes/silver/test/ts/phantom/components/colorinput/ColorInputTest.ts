@@ -9,13 +9,13 @@ import {
   NativeEvents,
   Positioning,
   Representing,
+  TestHelpers,
 } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
 import { SelectorFind, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from '../../../../../main/ts/ui/dialog/ColorInput';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
@@ -32,7 +32,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
     ])
   });
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       const me = GuiFactory.build(
         Container.sketch({
@@ -135,7 +135,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
       };
 
       return [
-        GuiSetup.mAddStyles(doc, [
+        TestHelpers.GuiSetup.mAddStyles(doc, [
           '.tox-textbox-field-invalid input { outline: 2px solid red; }'
         ]),
         Assertions.sAssertStructure(
@@ -232,7 +232,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
           UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
         ]),
 
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ];
     },
     success,

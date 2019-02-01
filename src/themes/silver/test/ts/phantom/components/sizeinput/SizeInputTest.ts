@@ -1,11 +1,10 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from '@ephox/agar';
-import { GuiFactory, NativeEvents } from '@ephox/alloy';
+import { GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderSizeInput } from '../../../../../main/ts/ui/dialog/SizeInput';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
@@ -13,7 +12,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderSizeInput({
