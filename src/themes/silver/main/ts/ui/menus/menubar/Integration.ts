@@ -65,16 +65,17 @@ const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, ed
   return {
     text: menu.title,
     getItems: () => Arr.bind(menu.items, (i) => {
-      if (i.trim().length === 0) {
+      const itemName = i.toLowerCase();
+      if (itemName.trim().length === 0) {
         return [ ];
-      } else if (Arr.exists(removedMenuItems, (removedMenuItem) => removedMenuItem === i)) {
+      } else if (Arr.exists(removedMenuItems, (removedMenuItem) => removedMenuItem === itemName)) {
         return [ ];
-      } else if (i === 'separator' || i === '|') {
+      } else if (itemName === 'separator' || itemName === '|') {
         return [{
           type: 'separator'
         }];
-      } else if (registry.menuItems[i]) {
-        return [ registry.menuItems[i] ];
+      } else if (registry.menuItems[itemName]) {
+        return [ registry.menuItems[itemName] ];
       } else {
         return [ ];
       }
