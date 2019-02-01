@@ -23,7 +23,7 @@
   "devDependencies": {
     "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
-    "@ephox/oxide-icons-default": "latest",
+    "@tinymce/oxide-icons-default": "latest",
     "backstopjs": "^3.8.5",
     "browser-sync": "^2.24.4",
     "event-stream": "^3.3.4",
