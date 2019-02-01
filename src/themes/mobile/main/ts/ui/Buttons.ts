@@ -11,7 +11,7 @@ import { Merger, Option } from '@ephox/katamari';
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
-import { getAll } from '@ephox/oxide-icons-default';
+import { getAll } from '@tinymce/oxide-icons-default';
 
 const forToolbarCommand = function (editor, command) {
   return forToolbar(command, function () {
