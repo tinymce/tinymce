@@ -3,6 +3,7 @@
   "version": "4.9.1",
   "description": "Ui Framework",
   "dependencies": {
+    "@ephox/agar": "latest",
     "@ephox/boulder": "latest",
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
@@ -22,7 +23,6 @@
     "LICENSE.txt"
   ],
   "devDependencies": {
-    "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^5.0.0",
     "grunt": "^1.0.3",
