@@ -6,7 +6,6 @@ import { TestHelpers } from '@ephox/alloy';
 export default function () {
   const store = TestHelpers.TestStore();
 
-
   const editorState = {
     start: Cell(null),
     content: Cell('')

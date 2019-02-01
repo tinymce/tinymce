@@ -4,7 +4,6 @@ import { UnitTest } from '@ephox/bedrock';
 import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
-
 UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   const helpers = setupDemo();
   const sharedBackstage = helpers.extras.backstage.shared;
