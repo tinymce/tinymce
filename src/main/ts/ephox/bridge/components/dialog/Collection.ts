@@ -5,7 +5,8 @@ import { FormComponent, FormComponentApi, formComponentFields } from './FormComp
 
 export interface CollectionApi extends FormComponentApi {
   type: 'collection';
-  columns?: number | 'auto';
+  // TODO TINY-3229 implement collection columns properly
+  // columns?: number | 'auto';
 }
 
 export interface Collection extends FormComponent {
@@ -14,7 +15,7 @@ export interface Collection extends FormComponent {
 }
 
 export const collectionFields: FieldProcessorAdt[] = formComponentFields.concat([
-  FieldSchema.defaulted('columns', 1)
+  FieldSchema.defaulted('columns', 'auto')
 ]);
 
 export const collectionSchema = ValueSchema.objOf(collectionFields);
