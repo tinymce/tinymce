@@ -7,6 +7,7 @@ var browserSync = require('browser-sync').create();
 var variablesOutput = require('less-plugin-variables-output');
 var concat = require('gulp-concat');
 var fileinclude = require('gulp-file-include');
+var header = require('gulp-header');
 var shell = require('gulp-shell');
 var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
@@ -55,6 +56,7 @@ gulp.task('minify-css', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
+    .pipe(header(fs.readFileSync('src/text/license-header.css', 'utf8')))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'));

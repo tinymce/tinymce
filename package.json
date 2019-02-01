@@ -32,6 +32,7 @@
     "gulp-clean-css": "^3.10.0",
     "gulp-concat": "^2.6.1",
     "gulp-file-include": "^2.0.1",
+    "gulp-header": "^2.0.7",
     "gulp-less": "^3.5.0",
     "gulp-rename": "^1.4.0",
     "gulp-shell": "^0.6.5",
