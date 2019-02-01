@@ -128,13 +128,7 @@ type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
 
 // Test code - should eventually move to a separate project
-import * as GuiSetup from './testhelpers/GuiSetup';
-import TestStore from './testhelpers/TestStore';
-
-const TestHelpers = {
-  GuiSetup,
-  TestStore
-};
+import TestHelpers from './testhelpers/TestHelpers';
 
 // TODO: naughty non API's being exported
 // Type Def Exports
