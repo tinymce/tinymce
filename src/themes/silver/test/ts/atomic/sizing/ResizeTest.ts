@@ -14,8 +14,8 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
   return {
     settings,
     getParam: (param, fallback, type) => settings[param],
-    getContainer: () => ({ scrollHeight: containerHeight }),
-    getContentAreaContainer: () => ({ scrollHeight: contentAreaHeight })
+    getContainer: () => ({ offsetHeight: containerHeight }),
+    getContentAreaContainer: () => ({ offsetHeight: contentAreaHeight })
   };
 };
 

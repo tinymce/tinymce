@@ -50,10 +50,24 @@ const toggleScrolling = (editor: Editor, state: boolean) => {
   }
 };
 
-const getMargin = (dom: DOMUtils, elm: Element, pos: string, computed: boolean): number => {
-  const value = parseInt(dom.getStyle(elm, `margin-${pos}`, computed), 10);
-  // Margin maybe be an empty string, so in that case treat it as being 0
+const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
+  const value = parseInt(dom.getStyle(elm, name, computed), 10);
+  // The value maybe be an empty string, so in that case treat it as being 0
   return isNaN(value) ? 0 : value;
+};
+
+const normalizeHeight = (dom: DOMUtils, elm: Element, height: number) => {
+  // If using content-box sizing, then we need to take away the border and padding
+  // as those will be added in addition to the height by the browser
+  if (dom.getStyle(elm, 'box-sizing', true) === 'content-box') {
+    const paddingTop = parseCssValueToInt(dom, elm, 'padding-top', true);
+    const paddingBottom = parseCssValueToInt(dom, elm, 'padding-bottom', true);
+    const borderTop = parseCssValueToInt(dom, elm, 'border-top-width', true);
+    const borderBottom = parseCssValueToInt(dom, elm, 'border-bottom-width', true);
+    return height - paddingTop - paddingBottom - borderTop - borderBottom;
+  } else {
+    return height;
+  }
 };
 
 /**
@@ -77,8 +91,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the body element using CSS styles
-  const marginTop = getMargin(dom, body, 'top', true);
-  const marginBottom = getMargin(dom, body, 'bottom', true);
+  const marginTop = parseCssValueToInt(dom, body, 'margin-top', true);
+  const marginBottom = parseCssValueToInt(dom, body, 'margin-bottom', true);
   contentHeight = body.offsetHeight + marginTop + marginBottom;
 
   // Make sure we have a valid height
@@ -89,8 +103,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   }
 
   // Determine the size of the chroming (menubar, toolbar, etc...)
-  const containerHeight = editor.getContainer().scrollHeight;
-  const contentAreaHeight = editor.getContentAreaContainer().scrollHeight;
+  const containerHeight = editor.getContainer().offsetHeight;
+  const contentAreaHeight = editor.getContentAreaContainer().offsetHeight;
   const chromeHeight = containerHeight - contentAreaHeight;
 
   // Don't make it smaller than the minimum height
@@ -110,7 +124,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
     deltaSize = resizeHeight - oldSize.get();
-    dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
+    const normalizedHeight = normalizeHeight(dom, editor.getContainer(), resizeHeight);
+    dom.setStyle(editor.getContainer(), 'height', normalizedHeight + 'px');
     oldSize.set(resizeHeight);
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized

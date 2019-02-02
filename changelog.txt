@@ -9,6 +9,7 @@ Version 5.0.0-rc-3 (TBA)
     Fixed notification icon positioning in alert banners #TINY-2196
     Fixed a typo in the word count plugin name #TINY-3062
     Fixed charmap and emoticons dialogs not having a primary button #TINY-3233
+    Fixed an issue where resizing wouldn't work correctly depending on the box-sizing model #TINY-3278
 Version 5.0.0-rc-2 (2019-01-22)
     Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Added screen reader accessibility for sidebar and statusbar #TINY-2699

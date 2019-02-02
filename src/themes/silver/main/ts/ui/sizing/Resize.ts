@@ -6,9 +6,10 @@
  */
 
 import { Obj, Option } from '@ephox/katamari';
-import { Css, Element, Width } from '@ephox/sugar';
+import { Css, Element, Height, Width } from '@ephox/sugar';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
 import Events from '../../api/Events';
+import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
 
 interface EditorDimensions {
@@ -19,6 +20,20 @@ interface EditorDimensions {
 export enum ResizeTypes {
   None, Both, Vertical
 }
+
+export const normalizeDimensions = (container: Element, dimensions: EditorDimensions) => {
+  const updatedDimensions: EditorDimensions = {};
+
+  if (dimensions.height !== undefined) {
+    updatedDimensions.height = Utils.normalizeHeight(container, dimensions.height);
+  }
+
+  if (dimensions.width !== undefined) {
+    updatedDimensions.width = Utils.normalizeWidth(container, dimensions.width);
+  }
+
+  return updatedDimensions;
+};
 
 export const calcCappedSize = (originalSize: number, delta: number, minSize: Option<number>, maxSize: Option<number>): number => {
   const newSize = originalSize + delta;
@@ -42,7 +57,9 @@ export const getDimensions = (editor, deltas, resizeType: ResizeTypes, originalH
 export const resize = (editor: Editor, deltas, resizeType: ResizeTypes) => {
   const container = Element.fromDom(editor.getContainer());
 
-  const dimensions = getDimensions(editor, deltas, resizeType, editor.getContainer().scrollHeight, Width.get(container));
-  Obj.each(dimensions, (val, dim) => Css.set(container, dim, val + 'px'));
+  const dimensions = getDimensions(editor, deltas, resizeType, Height.get(container), Width.get(container));
+  const normalizedDimensions = normalizeDimensions(container, dimensions);
+
+  Obj.each(normalizedDimensions, (val, dim) => Css.set(container, dim, Utils.numToPx(val)));
   Events.fireResizeEditor(editor);
 };

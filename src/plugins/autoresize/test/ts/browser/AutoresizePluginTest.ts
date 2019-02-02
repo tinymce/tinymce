@@ -1,4 +1,4 @@
-import { Assertions, Logger, Pipeline, RawAssertions, Step, Waiter, Log } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -11,6 +11,11 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
 
   AutoresizePlugin();
   FullscreenPlugin();
+
+  const enum BoxSizing {
+    BorderBox = 'border-box',
+    ContentBox = 'content-box'
+  }
 
   const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
@@ -41,6 +46,43 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     }));
   };
 
+  const sTestResize = (editor: Editor, tinyApis, boxSizing: BoxSizing) => {
+    return Log.stepsAsStep('TBA', `AutoResize: Editor container using ${boxSizing} sizing`, [
+      Step.sync(() => {
+        editor.dom.setStyle(editor.getContainer(), 'box-sizing', boxSizing);
+      }),
+      Log.stepsAsStep('TBA', 'AutoResize: Editor size increase based on content size', [
+        tinyApis.sSetContent('<div style="height: 5000px;">a</div>'),
+        // Content height + bottom margin = 5050
+        Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5050), 10, 3000),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5050), 10, 3000)
+      ]),
+      Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
+        tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 1050), 10, 3000),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 1200), 10, 3000)
+      ]),
+      Log.stepsAsStep('TBA', 'AutoResize: Editor size content set to 10 and autoresize_bottom_margin set to 100', [
+        tinyApis.sSetSetting('autoresize_bottom_margin', 100),
+        tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 110), 10, 3000),
+        tinyApis.sSetSetting('autoresize_bottom_margin', 50)
+      ]),
+      Log.stepsAsStep('TBA', 'AutoResize: Editor size increase content to 1000 based and restrict by max height', [
+        tinyApis.sSetSetting('max_height', 200),
+        tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 200), 10, 3000),
+        tinyApis.sSetSetting('max_height', 0)
+      ]),
+      Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 10 and set min height to 500', [
+        tinyApis.sSetSetting('min_height', 500),
+        tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
+        Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 500), 10, 3000),
+        tinyApis.sSetSetting('min_height', 0)
+      ]),
+    ]);
+  };
+
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
@@ -54,35 +96,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           tinyApis.sExecCommand('mceFullScreen'),
           sAssertScroll(editor, false)
         ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size increase based on content size', [
-          tinyApis.sSetContent('<div style="height: 5000px;">a</div>'),
-          // Content height + bottom margin = 5050
-          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5050), 10, 3000),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5050), 10, 3000)
-        ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
-          tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 1050), 10, 3000),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 1200), 10, 3000)
-        ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size content set to 10 and autoresize_bottom_margin set to 100', [
-          tinyApis.sSetSetting('autoresize_bottom_margin', 100),
-          tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 110), 10, 3000),
-          tinyApis.sSetSetting('autoresize_bottom_margin', 50)
-        ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 1000 based and restrict by max height', [
-          tinyApis.sSetSetting('max_height', 200),
-          tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 200), 10, 3000),
-          tinyApis.sSetSetting('max_height', 0)
-        ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 10 and set min height to 500', [
-          tinyApis.sSetSetting('min_height', 500),
-          tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 500), 10, 3000),
-          tinyApis.sSetSetting('min_height', 0)
-        ])
+        sTestResize(editor, tinyApis, BoxSizing.BorderBox),
+        sTestResize(editor, tinyApis, BoxSizing.ContentBox)
       ] : []
     , onSuccess, onFailure);
   }, {
