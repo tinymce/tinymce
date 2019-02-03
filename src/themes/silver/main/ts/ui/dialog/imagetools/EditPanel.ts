@@ -74,23 +74,27 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const none = Option.none();
   const noop = Fun.noop;
 
-  const emitDisable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
-  const emitEnable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
-
   const emit = (comp: AlloyComponent, event: string, data: Object): void => {
     AlloyTriggers.emitWith(comp, event, data);
   };
 
+  const emitDisable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
+  const emitEnable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
+
   const emitTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transform(), {
       transform
     });
+    emitEnable(comp);
   };
 
   const emitTempTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.tempTransform(), {
       transform
     });
+    emitEnable(comp);
   };
 
   const getBackSwap = (anyInSystem: AlloyComponent): (() => void) => (): void => {
@@ -100,10 +104,12 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   };
 
   const emitTransformApply = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transformApply(), {
       transform,
       swap: getBackSwap(comp)
     });
+    emitEnable(comp);
   };
 
   const createBackButton = (): Memento.MementoRecord => {
@@ -138,12 +144,8 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     createSpacer(),
     createButton('Apply', (button) => {
       const transform = makeCropTransform();
-      emitDisable(button);
-
       emitTransformApply(button, transform);
       imagePanel.hideCrop();
-
-      emitEnable(button);
     }, false, true)
   ];
 
@@ -186,10 +188,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         const width = parseInt(value.width, 10);
         const height = parseInt(value.height, 10);
         const transform = makeResizeTransform(width, height);
-        emitDisable(button);
-
         emitTransformApply(button, transform);
-        emitEnable(button);
       });
     }, false, true)
   ];
@@ -217,9 +216,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const clockwiseRotate = makeValueTransform(ImageTransformations.rotate, 90);
 
   const flipRotateOnAction = (comp, operation) => {
-    emitDisable(comp);
     emitTempTransform(comp, operation);
-    emitEnable(comp);
   };
 
   const flipRotateComponents = [
@@ -313,11 +310,9 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): Memento.MementoRecord => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
-      // TODO: Fire the disable event on mousedown and enable on mouseup for silder
-      emitDisable(slider);
       const valTransform = makeValueTransform(transform, value.x() / 100);
+      // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
-      emitEnable(slider);
     };
     return makeSlider(label, onChoose, min, value, max);
   };
