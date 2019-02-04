@@ -2,7 +2,6 @@ properties([
   disableConcurrentBuilds(),
   pipelineTriggers([
     upstream(threshold: 'SUCCESS', upstreamProjects:
-      // This list should match package.json
       'alloy, bridge'
     ),
     pollSCM('H 0 1 1 1')
@@ -40,11 +39,6 @@ node("primary") {
         node("bedrock-" + permutation.os) {
           echo "Slave checkout on node $NODE_NAME"
           checkout scm
-
-          // never trust node to know what it's doing
-          // dir('node_modules') {
-          //  deleteDir()
-          // }
 
           echo "Installing tools"
           extNpmInstall()
@@ -105,17 +99,13 @@ node("primary") {
     }
   }
 
-  def runTests = {
-    parallel processes
-  }
-
-  def runBuild = load("jenkins-plumbing/standard-build.groovy")
-
   extNpmInstall()
 
-  // build only runs on linux
+  // top level build only runs on linux
   stage ("Type check") {
     sh 'grunt shell:tsc tslint'
   }
-  runBuild(runTests, "5.x", "prerelease")
+  stage ("Run tests") {
+    parallel processes
+  }
 }
