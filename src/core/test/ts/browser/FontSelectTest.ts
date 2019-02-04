@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
 
     Pipeline.async({}, [
       Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '12px'),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
       ])),
 
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         tinyApis.sSetCursor([0, 0], 0),
         tinyApis.sNodeChanged,
         // p content style is 12px which does not match any pt values in the font size select values
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '12px'),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
       ])),
 
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         tinyApis.sSetCursor([0, 0], 0),
         tinyApis.sNodeChanged,
         // h1 content style is 32px which matches 24pt in the font size select values so it should be converted
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '24pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '24pt'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
       ])),
 
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         tinyApis.sSetCursor([0, 0], 0),
         tinyApis.sNodeChanged,
         // the following should be converted and pick up 12.75pt, although there's a rounded 13pt in the dropdown as well
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '12.75pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12.75pt'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
       ])),
 
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         tinyApis.sSetCursor([0, 0], 0),
         tinyApis.sNodeChanged,
         // the following should stay as 18px because there's no matching pt value in the font size select values
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '18px'),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '18px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
       ])),
 
