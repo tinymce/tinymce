@@ -41,8 +41,7 @@ const tab = (editor: Editor) => {
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
       '<ul>' +
       premiumPluginList +
-      '<br />' +
-      '<li style="list-style: none;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></li>' +
+      '<li style="list-style: none; margin-top: 1em;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></li>' +
       '</ul>' +
       '</div>';
   };
