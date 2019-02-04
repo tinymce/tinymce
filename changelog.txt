@@ -115,7 +115,7 @@ Version 5.0.0-preview-1 (2018-10-01)
     Developer preview 1
     Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
 Version 4.9.3 (2019-01-31)
-    Added a visualchars_defaul_state setting to the Visualchars Plugin. Patch contributed by mat3e.
+    Added a visualchars_default_state setting to the Visualchars Plugin. Patch contributed by mat3e.
     Fixed a bug where scrolling on a page with more than one editor would cause a ResizeWindow event to fire. #TINY-3247
     Fixed a bug where if a plugin threw an error during initialisation the whole editor would fail to load. #TINY-3243
     Fixed a bug where getContent would include bogus elements when valid_elements setting was set up in a specific way. #TINY-3213
