@@ -8,8 +8,16 @@ import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
 
 import 'tinymce/themes/silver/Theme';
+import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, failure) => {
+
+  const platform = PlatformDetection.detect();
+
+  if (platform.browser.isIE() || platform.browser.isEdge()) {
+    console.log('Disabled on IE and Edge because of race conditions');
+    return success();
+  }
 
   const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
   // var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
