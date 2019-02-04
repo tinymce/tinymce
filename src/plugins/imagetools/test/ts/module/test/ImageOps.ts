@@ -61,8 +61,10 @@ export default function (editor) {
         cClickToolbarButton('Edit image'),
         Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'), [
           ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
+          Chain.wait(100),
           cClickToolbarButton(label),
           cInteractWithUi,
+          Chain.wait(100),
           cClickButton('Apply'),
           cClickButton('Save'),
           cWaitForDialogClose()
