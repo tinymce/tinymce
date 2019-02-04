@@ -50,9 +50,9 @@ const toggleScrolling = (editor: Editor, state: boolean) => {
   }
 };
 
-const getMargin = (dom: DOMUtils, elm: Element, pos: string, computed: boolean): number => {
-  const value = parseInt(dom.getStyle(elm, `margin-${pos}`, computed), 10);
-  // Margin maybe be an empty string, so in that case treat it as being 0
+const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
+  const value = parseInt(dom.getStyle(elm, name, computed), 10);
+  // The value maybe be an empty string, so in that case treat it as being 0
   return isNaN(value) ? 0 : value;
 };
 
@@ -77,8 +77,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the body element using CSS styles
-  const marginTop = getMargin(dom, body, 'top', true);
-  const marginBottom = getMargin(dom, body, 'bottom', true);
+  const marginTop = parseCssValueToInt(dom, body, 'margin-top', true);
+  const marginBottom = parseCssValueToInt(dom, body, 'margin-bottom', true);
   contentHeight = body.offsetHeight + marginTop + marginBottom;
 
   // Make sure we have a valid height
@@ -89,8 +89,8 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   }
 
   // Determine the size of the chroming (menubar, toolbar, etc...)
-  const containerHeight = editor.getContainer().scrollHeight;
-  const contentAreaHeight = editor.getContentAreaContainer().scrollHeight;
+  const containerHeight = editor.getContainer().offsetHeight;
+  const contentAreaHeight = editor.getContentAreaContainer().offsetHeight;
   const chromeHeight = containerHeight - contentAreaHeight;
 
   // Don't make it smaller than the minimum height
