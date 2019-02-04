@@ -36,7 +36,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       text,
       disabled,
       primary
-    }, action, providersBackstage, [ Disabling.config({ }) ]));
+    }, action, providersBackstage));
   };
 
   const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => {
@@ -45,7 +45,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
       disabled
-    }, action, providersBackstage, [ Disabling.config({ }) ]));
+    }, action, providersBackstage));
   };
 
   const disableAllComponents = (comps, eventcomp) => {
