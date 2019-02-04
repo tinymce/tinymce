@@ -56,20 +56,6 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
   return isNaN(value) ? 0 : value;
 };
 
-const normalizeHeight = (dom: DOMUtils, elm: Element, height: number) => {
-  // If using content-box sizing, then we need to take away the border and padding
-  // as those will be added in addition to the height by the browser
-  if (dom.getStyle(elm, 'box-sizing', true) === 'content-box') {
-    const paddingTop = parseCssValueToInt(dom, elm, 'padding-top', true);
-    const paddingBottom = parseCssValueToInt(dom, elm, 'padding-bottom', true);
-    const borderTop = parseCssValueToInt(dom, elm, 'border-top-width', true);
-    const borderBottom = parseCssValueToInt(dom, elm, 'border-bottom-width', true);
-    return height - paddingTop - paddingBottom - borderTop - borderBottom;
-  } else {
-    return height;
-  }
-};
-
 /**
  * This method gets executed each time the editor needs to resize.
  */
@@ -124,8 +110,7 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
     deltaSize = resizeHeight - oldSize.get();
-    const normalizedHeight = normalizeHeight(dom, editor.getContainer(), resizeHeight);
-    dom.setStyle(editor.getContainer(), 'height', normalizedHeight + 'px');
+    dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set(resizeHeight);
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized

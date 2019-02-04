@@ -10,11 +10,6 @@ import { Editor } from 'tinymce/core/api/Editor';
 UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
 
-  const enum BoxSizing {
-    BorderBox = 'border-box',
-    ContentBox = 'content-box'
-  }
-
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => {
       return Chain.control(
@@ -52,17 +47,15 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
       );
     };
 
-    const sTestResize = (boxSizing: BoxSizing) => {
-      return Chain.asStep(Body.body(), [
+    Pipeline.async({ }, [
+      Chain.asStep(Body.body(), [
         Chain.op(() => {
+          // Add a border to ensure we're using the correct height/width (ie border-box sizing)
           editor.dom.setStyles(editor.getContainer(), {
-            'box-sizing': boxSizing,
-            'border': '2px solid #ccc',
-            'height': boxSizing === BoxSizing.BorderBox ? '400px' : '396px',
-            'width': boxSizing === BoxSizing.BorderBox ? '400px' : '396px'
+            border: '2px solid #ccc'
           });
         }),
-        Chain.label(`Test resize with ${boxSizing} sizing`, NamedChain.asChain([
+        Chain.label(`Test resize with max/min sizing`, NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
           NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
           NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
@@ -97,12 +90,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
           NamedChain.direct('body', cResizeToPos(300, 500, 550, 500), '_'),
           NamedChain.direct('container', cAssertEditorSize(500, 500), '_'),
         ]))
-      ]);
-    };
-
-    Pipeline.async({ }, [
-      sTestResize(BoxSizing.BorderBox),
-      sTestResize(BoxSizing.ContentBox)
+      ])
     ], onSuccess, onFailure);
   },
   {
@@ -111,6 +99,8 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
     resize: 'both',
     min_height: 300,
     min_width: 300,
+    height: 400,
+    width: 400,
     max_height: 500,
     max_width: 500
   }, success, failure);

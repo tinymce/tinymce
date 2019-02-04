@@ -21,20 +21,6 @@ export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const normalizeDimensions = (container: Element, dimensions: EditorDimensions) => {
-  const updatedDimensions: EditorDimensions = {};
-
-  if (dimensions.height !== undefined) {
-    updatedDimensions.height = Utils.normalizeHeight(container, dimensions.height);
-  }
-
-  if (dimensions.width !== undefined) {
-    updatedDimensions.width = Utils.normalizeWidth(container, dimensions.width);
-  }
-
-  return updatedDimensions;
-};
-
 export const calcCappedSize = (originalSize: number, delta: number, minSize: Option<number>, maxSize: Option<number>): number => {
   const newSize = originalSize + delta;
   const minOverride = minSize.filter((min) => newSize < min);
@@ -58,8 +44,6 @@ export const resize = (editor: Editor, deltas, resizeType: ResizeTypes) => {
   const container = Element.fromDom(editor.getContainer());
 
   const dimensions = getDimensions(editor, deltas, resizeType, Height.get(container), Width.get(container));
-  const normalizedDimensions = normalizeDimensions(container, dimensions);
-
-  Obj.each(normalizedDimensions, (val, dim) => Css.set(container, dim, Utils.numToPx(val)));
+  Obj.each(dimensions, (val, dim) => Css.set(container, dim, Utils.numToPx(val)));
   Events.fireResizeEditor(editor);
 };
