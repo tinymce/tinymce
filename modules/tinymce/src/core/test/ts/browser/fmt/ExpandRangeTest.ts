@@ -141,6 +141,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
           cSetRawContent('<p><span data-mce-type="bookmark">ab cd ef</span></p>'),
           cExpandRng([0, 0, 0], 3, [0, 0, 0], 5, inlineFormat, false),
           cAssertRange(editor, [], 0, [], 1)
+        ])),
+        Logger.t('In selection with bookmarks, where the first child of endContainer.previousSibling is a text node that ends with space', Chain.asStep(editor, [
+          cSetRawContent('<p><span><span data-mce-type="bookmark">&#65279;</span>ab <span>cd</span>ef</span><span data-mce-type="bookmark">&#65279;</span><br/></p>'),
+          cExpandRng([0, 0, 0], 1, [0, 1], 1, inlineFormat, false),
+          cAssertRange(editor, [], 0, [0], 1)
         ]))
       ])),
 

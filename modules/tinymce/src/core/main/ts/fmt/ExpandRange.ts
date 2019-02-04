@@ -41,7 +41,7 @@ const excludeTrailingWhitespace = function (endContainer, endOffset) {
     }
 
     if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
-        leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
+      leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
 
       if (leaf.offset > 1) {
         endContainer = leaf.node;
@@ -280,26 +280,34 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
   if (isBookmarkNode(startContainer.parentNode) || isBookmarkNode(startContainer)) {
     startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
     if (rng.collapsed) {
-      startContainer = startContainer.previousSibling || startContainer;
-    } else {
-      startContainer = startContainer.nextSibling || startContainer;
-    }
-
-    if (startContainer.nodeType === 3) {
-      startOffset = rng.collapsed ? startContainer.length : 0;
+      if (startContainer.previousSibling) {
+        startContainer = startContainer.previousSibling;
+        if (startContainer.nodeType === 3) {
+          startOffset = startContainer.length;
+        } else if (startContainer.nodeType === 1) {
+          startOffset = startContainer.childNodes.length;
+        }
+      }
+    } else if (startContainer.nextSibling) {
+      startContainer = startContainer.nextSibling;
+      startOffset = 0;
     }
   }
 
   if (isBookmarkNode(endContainer.parentNode) || isBookmarkNode(endContainer)) {
     endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;
     if (rng.collapsed) {
-      endContainer = endContainer.nextSibling || endContainer;
-    } else {
-      endContainer = endContainer.previousSibling || endContainer;
-    }
-
-    if (endContainer.nodeType === 3) {
-      endOffset = rng.collapsed ? 0 : endContainer.length;
+      if (endContainer.nextSibling) {
+        endContainer = endContainer.nextSibling;
+        endOffset = 0;
+      }
+    } else if (endContainer.previousSibling) {
+      endContainer = endContainer.previousSibling;
+      if (endContainer.nodeType === 3) {
+        endOffset = endContainer.length;
+      } else if (endContainer.nodeType === 1) {
+        endOffset = endContainer.childNodes.length;
+      }
     }
   }
 
