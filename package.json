@@ -1,15 +1,13 @@
 {
-  "name": "@ephox/tinymce",
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  },
-  "version": "5.0.0-rc-2-build.26",
+  "name": "tinymce",
+  "version": "5.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
   },
   "description": "TinyMCE rich text editor",
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies",
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
