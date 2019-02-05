@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future } from '@ephox/katamari';
+import { Arr, Future, Option } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -8,7 +8,7 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) => {
@@ -83,10 +83,10 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
 
         fetch () {
           return Future.pure(
-            Arr.map([
+            Option.from(Arr.map([
               { type: 'item', data: { value: 'dog', meta: { text: 'Dog' } } },
               { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' } } }
-            ], munge)
+            ], munge))
           );
         },
 

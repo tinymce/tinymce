@@ -1,11 +1,11 @@
 import { Adt, Arr, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { AdtInterface, SugarPosition } from '../../alien/TypeDefinitions';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
 // TODO: Morgan, check why and how this type can take both a number or an option.
 export type DragCoords = (x: number | Option<number>, y: number | Option<number>) => CoordAdt;
 
-export interface CoordAdt extends AdtInterface {
+export interface CoordAdt extends Adt {
   // TODO
 }
 

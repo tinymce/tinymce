@@ -1,6 +1,6 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Id, Result } from '@ephox/katamari';
+import { Arr, Future, Id, Result, Option } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -8,7 +8,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { TieredData, tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
@@ -21,7 +21,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
   GuiSetup.setup((store, doc, body) => {
     const sink = Sinks.relativeSink();
 
-    const fetch = (input: AlloyComponent): Future<TieredData> => {
+    const fetch = (input: AlloyComponent): Future<Option<TieredData>> => {
       const future = Future.pure([
         { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
         { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } },
@@ -33,7 +33,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
           value: Id.generate('single-menu-value'),
           items: Arr.map(items, TestDropdownMenu.renderItem)
         });
-        return TieredMenu.singleData('overlord', menu);
+        return Option.some(TieredMenu.singleData('overlord', menu));
       });
     };
 

@@ -7,9 +7,8 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { SelectorFind } from '@ephox/sugar';
-import { StructAssert } from '@ephox/agar/lib/main/ts/ephox/agar/assertions/ApproxStructures';
 
 UnitTest.asynctest('TabSection Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -99,7 +98,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
         });
       }), element);
 
-    const sAssertTabView = (label: string, expected: (s, str, arr) => StructAssert[]) =>
+    const sAssertTabView = (label: string, expected) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: expected(s, str, arr)

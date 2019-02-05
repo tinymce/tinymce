@@ -13,7 +13,7 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { input } from 'ephox/alloy/api/events/NativeEvents';
 import { Attr, SelectorFind } from '@ephox/sugar';
 import * as Tagger from 'ephox/alloy/registry/Tagger';

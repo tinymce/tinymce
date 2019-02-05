@@ -3,7 +3,6 @@ import { Traverse, Element } from '@ephox/sugar';
 
 import * as DescribedHandler from './DescribedHandler';
 import * as EventSource from './EventSource';
-import { AdtInterface } from '../alien/TypeDefinitions';
 import { SimulatedEvent, EventFormat, fromSource, fromExternal } from './SimulatedEvent';
 import { ElementAndHandler, UidAndHandler } from './EventRegistry';
 
@@ -11,12 +10,12 @@ type LookupEvent = (eventName: string, target: Element) => Option<ElementAndHand
 
 type DebuggerLogger = any;
 
-export interface TriggerAdt extends AdtInterface { }
+export interface TriggerAdt extends Adt { }
 
 const adt: {
-  stopped: () => AdtInterface;
-  resume: (elem: Element) => AdtInterface;
-  complete: () => AdtInterface;
+  stopped: () => TriggerAdt;
+  resume: (elem: Element) => TriggerAdt;
+  complete: () => TriggerAdt;
 } = Adt.generate([
   { stopped: [ ] },
   { resume: [ 'element' ] },

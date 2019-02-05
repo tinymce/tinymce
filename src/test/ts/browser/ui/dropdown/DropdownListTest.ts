@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result } from '@ephox/katamari';
+import { Arr, Future, Result, Option } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -10,7 +10,7 @@ import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -90,7 +90,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return TieredMenu.singleData('test', menu);
+            return Option.some(TieredMenu.singleData('test', menu));
           });
         }
       })

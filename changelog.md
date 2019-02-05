@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.9.1] - 2019-01-31
+### Added
+- Exported additional types used in TinyMCE 5
+- GuiSetup and TestStore are now available under a "TestHelpers" export, very useful for testing projects that use Alloy UI
+
+# [4.8.5] - 2019-01-31
+### Changed
+- All fetch callbacks now return a Future Option
+
+# [4.8.3] - 2019-01-29
+### Added
+- Added the windowResize system event
+
+# [4.8.0] - 2019-01-18
+### Added
+- New events for highlight and dehighlight
+
+### Changed
+- Tooltips can now follow highlights by setting the mode to 'follow-highlight'
+
+### Fixed
+- Listed additional events in the event ordering
+- Ensured that a highlighted item will not be first dehighlighted
+
+# [4.7.3] - 2019-01-24
+### Added
+ - Added bubble support for hotspot anchors
+
 # [4.7.0] - 2019-01-18
 ### Added
  - Added more flexible tooltip behaviour.

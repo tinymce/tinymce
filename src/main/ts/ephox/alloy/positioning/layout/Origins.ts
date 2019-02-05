@@ -3,12 +3,11 @@ import { Element, Position, Scroll, Width, Height } from '@ephox/sugar';
 
 import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
-import { AdtInterface, SugarDocument, SugarPosition } from '../../alien/TypeDefinitions';
 import { Bounds, bounds } from '../../alien/Boxes';
 import * as Boxes from '../layout/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
 
-export interface OriginAdt extends AdtInterface {
+export interface OriginAdt extends Adt {
 
 }
 

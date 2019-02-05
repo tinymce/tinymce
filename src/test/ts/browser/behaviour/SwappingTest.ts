@@ -5,7 +5,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Swapping } from 'ephox/alloy/api/behaviour/Swapping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SwappingTest', (success, failure) => {
 

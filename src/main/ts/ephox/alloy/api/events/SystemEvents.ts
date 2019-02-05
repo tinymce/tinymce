@@ -52,6 +52,9 @@ const systemInit = Fun.constant('alloy.system.init');
 // Fired when the window scrolls
 const windowScroll = Fun.constant('alloy.system.scroll');
 
+// Fired when the window resizes
+const windowResize = Fun.constant('alloy.system.resize');
+
 const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
@@ -81,6 +84,9 @@ export interface AlloyDismissTabEvent extends CustomEvent {
 const changeTab = Fun.constant('alloy.change.tab');
 const dismissTab = Fun.constant('alloy.dismiss.tab');
 
+const highlight = Fun.constant('alloy.highlight');
+const dehighlight = Fun.constant('alloy.dehighlight');
+
 export {
 
   focus,
@@ -96,6 +102,7 @@ export {
   systemInit,
   typeaheadCancel,
   windowScroll,
+  windowResize,
 
   dismissRequested,
   focusShifted,
@@ -106,5 +113,8 @@ export {
   changeTab,
   dismissTab,
 
-  slotVisibility
+  slotVisibility,
+
+  highlight,
+  dehighlight,
 };

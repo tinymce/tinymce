@@ -1,7 +1,6 @@
 import { Adt } from '@ephox/katamari';
-import { AdtInterface } from '../../alien/TypeDefinitions';
 
-export interface DirectionAdt extends AdtInterface {
+export interface DirectionAdt extends Adt {
 
 }
 

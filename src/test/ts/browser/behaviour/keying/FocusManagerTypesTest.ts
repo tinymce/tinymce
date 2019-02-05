@@ -7,7 +7,7 @@ import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
 import { Attr } from '@ephox/sugar';
 import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';

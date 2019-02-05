@@ -8,7 +8,7 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { document, console } from '@ephox/dom-globals';
 import * as Tagger from 'ephox/alloy/registry/Tagger';

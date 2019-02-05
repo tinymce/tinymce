@@ -1,8 +1,7 @@
 import { FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Adt } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { AdtInterface } from '../alien/TypeDefinitions';
 import { AlloySpec, ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
@@ -105,13 +104,13 @@ const base = (label, partSchemas, partUidsSchemas, spec) => {
   ]).concat(partUidsSchemas);
 };
 
-const asRawOrDie = <D, S>(label, schema, spec: S, partSchemas, partUidsSchemas): D => {
+const asRawOrDie = <D, S>(label, schema: Adt[], spec: S, partSchemas, partUidsSchemas): D => {
   // OBVIOUSLY NEVER USED RAW BEFORE !!!!!!!!!!!!!!!!!!!!!
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function <D, S>(label: string, schema: AdtInterface[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
+const asStructOrDie = function <D, S>(label: string, schema: Adt[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
