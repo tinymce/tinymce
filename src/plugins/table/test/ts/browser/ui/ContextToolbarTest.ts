@@ -25,8 +25,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     '</tbody>' +
     '</table>';
 
-    const sOpenContextToolbar = GeneralSteps.sequence([
-      tinyApis.sSetContent(tableHtml),
+    const sAddTableAndOpenContextToolbar = (html: string) => GeneralSteps.sequence([
+      tinyApis.sSetContent(html),
       tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]'),
     ]);
 
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     Pipeline.async({}, [
       tinyApis.sFocus,
       Log.stepsAsStep('TBA', 'Table: context toolbar keyboard navigation test', [
-        sOpenContextToolbar,
+        sAddTableAndOpenContextToolbar(tableHtml),
         sPressKeyboardShortcutKey,
         sAssertFocusOnItem('Table properties button', 'button[aria-label="Table properties"]'),
         sPressRightArrowKey,
@@ -96,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
         sAssertHtmlStructure('Assert delete table', '<p><br></p>')
       ]),
       Log.stepsAsStep('TBA', 'Table: context toolbar functionality test', [
-        sOpenContextToolbar,
+        sAddTableAndOpenContextToolbar(tableHtml),
 
         sClickOnToolbarButton('button[aria-label="Table properties"]'),
         sOpenAndCloseDialog,
@@ -118,6 +118,37 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
 
         sClickOnToolbarButton('button[aria-label="Delete column"]'),
         sAssertHtmlStructure('Assert delete column', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Delete table"]'),
+        sAssertHtmlStructure('Assert remove table', '<p><br></p>')
+      ]),
+      Log.stepsAsStep('TBA', 'Table: context toolbar functionality test with focus in caption', [
+        sAddTableAndOpenContextToolbar('<table style = "width: 5%;"><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+        tinyApis.sSetCursor([0, 0, 0], 1),
+
+        sClickOnToolbarButton('button[aria-label="Table properties"]'),
+        sOpenAndCloseDialog,
+
+        sClickOnToolbarButton('button[aria-label="Insert row before"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Insert row after"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Delete row"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Insert column before"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Insert column after"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Delete column"]'),
+        sAssertHtmlStructure('Assert insert row before', '<table><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
+
+        sClickOnToolbarButton('button[aria-label="Delete table"]'),
+        sAssertHtmlStructure('Assert remove table', '<p><br></p>')
       ])
     ], onSuccess, onFailure);
   }, {
