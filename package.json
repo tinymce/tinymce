@@ -2,7 +2,7 @@
   "name": "@tinymce/oxide-icons-default",
   "version": "1.0.27",
   "description": "The default icon pack for TinyMCE",
-  "main": "dist/js/Main.js",
+  "main": "dist/js/icons.js",
   "scripts": {
     "build": "gulp",
     "prepublishOnly": "gulp"
