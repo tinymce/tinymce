@@ -9,27 +9,27 @@
 // Dialog
 //
 
-@dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @dialog-backdrop-background-color: fade(@background-color, 75);
-@dialog-busy-backdrop-background-color: fade(@dialog-background-color, 75);
+@dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@dialog-busy-backdrop-background-color: @dialog-backdrop-background-color;
 
-@dialog-border-style: solid;
-@dialog-border-width: 1px;
 @dialog-border-color: @border-color;
 @dialog-border-radius: @panel-border-radius;
+@dialog-border-width: 1px;
 @dialog-box-shadow: 0 16px 16px -10px fade(@color-black, 15%), 0 0 40px 1px fade(@color-black, 15%);
 
+@dialog-header-background-color: @dialog-background-color;
+@dialog-header-padding: @pad-sm @pad-md 0 @pad-md;
 @dialog-header-separator-border: none;
+
+@dialog-footer-background-color: @dialog-background-color;
+@dialog-footer-padding: @pad-sm @pad-md;
 @dialog-footer-separator-border: 1px solid @dialog-border-color;
 
-@dialog-header-background-color: @dialog-background-color;
-@dialog-footer-background-color: @dialog-background-color;
-@dialog-header-padding: @pad-sm @pad-md 0 @pad-md;
 @dialog-body-padding: 0 @pad-md;
-@dialog-footer-padding: @pad-sm @pad-md;
 
+@dialog-title-font-family: @font-stack;
 @dialog-title-font-size: @font-size-lg;
-@dialog-title-font-family: @font-stack-base;
 @dialog-title-font-style: normal;
 @dialog-title-font-weight: @font-weight-normal;
 @dialog-title-line-height: @line-height-base;
@@ -40,9 +40,9 @@
 @dialog-body-font-style: normal;
 @dialog-body-font-weight: @font-weight-normal;
 @dialog-body-line-height: @line-height-base;
+@dialog-body-text-align: left;
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: normal;
-@dialog-body-text-align: left;
 
 @dialog-table-border-color: @border-color;
 
@@ -73,7 +73,7 @@
     background-color: @dialog-background-color;
     border-color: @dialog-border-color;
     border-radius: @dialog-border-radius;
-    border-style: @dialog-border-style;
+    border-style: solid;
     border-width: @dialog-border-width;
     box-shadow: @dialog-box-shadow;
     display: flex;

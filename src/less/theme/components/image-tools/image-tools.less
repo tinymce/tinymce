@@ -38,6 +38,11 @@
     background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
   }
 
+  // Spacing between multiple sliders
+  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
+    margin-left: @pad-sm;
+  }
+
   // Spacing between button and slider
   .tox-image-tools__toolbar > .tox-button + .tox-slider {
     margin-left: @pad-xl;

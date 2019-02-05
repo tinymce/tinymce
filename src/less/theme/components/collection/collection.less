@@ -208,6 +208,11 @@
     word-break: break-all;
   }
 
+  // Create a slight padding for lists containing no icons
+  .tox-collection--list .tox-collection__item-label:first-child {
+    margin-left: @pad-xs;
+  }
+
   .tox-collection__item-accessory {
     color: @text-color-muted;
     display: inline-block;
