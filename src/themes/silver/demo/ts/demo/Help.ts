@@ -1,7 +1,7 @@
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-import KeyboardShortcutsTab from 'src/plugins/help/main/ts/ui/KeyboardShortcutsTab';
-import VersionTab from 'src/plugins/help/main/ts/ui/VersionTab';
-import PluginsTab from 'src/plugins/help/main/ts/ui/PluginsTab';
+import KeyboardShortcutsTab from 'tinymce/plugins/help/ui/KeyboardShortcutsTab';
+import VersionTab from 'tinymce/plugins/help/ui/VersionTab';
+import PluginsTab from 'tinymce/plugins/help/ui/PluginsTab';
 
 import { setupDemo } from '../components/DemoHelpers';
 import { Fun } from '@ephox/katamari';

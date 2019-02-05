@@ -1,15 +1,13 @@
 {
-  "name": "@ephox/tinymce",
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  },
-  "version": "5.0.0-rc-2-build.9",
+  "name": "tinymce",
+  "version": "5.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
   },
   "description": "TinyMCE rich text editor",
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies",
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
@@ -39,15 +37,19 @@
     "@ephox/mcagar": "latest",
     "@ephox/oxide": "latest",
     "@ephox/oxide-icons-default": "latest",
+    "@ephox/polaris": "latest",
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest",
     "@ephox/swag": "latest",
     "@ephox/wrap-jsverify": "latest",
+    "@tinymce/oxide": "latest",
+    "@tinymce/oxide-icons-default": "latest",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-less": "2.0.0",
     "grunt-contrib-uglify": "4.0.0",

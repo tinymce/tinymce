@@ -1,4 +1,4 @@
-import { Assertions, Logger, Pipeline, RawAssertions, Step, Waiter, Log } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 110), 10, 3000),
           tinyApis.sSetSetting('autoresize_bottom_margin', 50)
         ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease content to 1000 based and restrict by max height', [
+        Log.stepsAsStep('TBA', 'AutoResize: Editor size increase content to 1000 based and restrict by max height', [
           tinyApis.sSetSetting('max_height', 200),
           tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 200), 10, 3000),

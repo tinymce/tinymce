@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock';
 import { IconProvider, get } from '../../../../main/ts/ui/icons/Icons';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
-import { getAll as getAllOxide } from '@ephox/oxide-icons-default';
+import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 
 UnitTest.asynctest('IconsTest', (success, failure) => {
   const iconIndent = getAllOxide().indent;

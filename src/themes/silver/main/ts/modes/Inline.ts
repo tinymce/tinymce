@@ -70,7 +70,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setMenubar(
       uiComponents.outerContainer,
-      identifyMenus(editor, rawUiConfig, backstage)
+      identifyMenus(editor, rawUiConfig)
     );
 
     // initialise the toolbar - initial positioning, refresh docking, then show

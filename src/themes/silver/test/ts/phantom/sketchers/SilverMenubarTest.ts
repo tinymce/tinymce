@@ -13,19 +13,18 @@ import {
   Log,
   Mouse,
 } from '@ephox/agar';
-import { Behaviour, GuiFactory, Memento, Positioning } from '@ephox/alloy';
+import { Behaviour, GuiFactory, Memento, Positioning, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Result, Fun, Arr, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors } from '@ephox/sugar';
 
 import SilverMenubar from '../../../../main/ts/ui/menus/menubar/SilverMenubar';
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       const memSink = Memento.record({
         dom: {

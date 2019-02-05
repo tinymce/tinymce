@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DialogInstanceApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Dialog';
 import { Option } from '@ephox/katamari';
 
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
 import { FileList, File } from '@ephox/dom-globals';
+import { Types } from '@ephox/bridge';
 
 export interface ListValue {
   text: string;
@@ -76,4 +76,4 @@ export interface ImageDialogData {
   fileinput: FileList | File[];
 }
 
-export type API = DialogInstanceApi<ImageDialogData>;
+export type API = Types.Dialog.DialogInstanceApi<ImageDialogData>;

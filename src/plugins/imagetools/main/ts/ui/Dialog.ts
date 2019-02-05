@@ -76,12 +76,10 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
             }
             break;
           case ImageToolsEvents.disable():
-            api.block('Updating image');
             api.disable('save');
             api.disable('cancel');
             break;
           case ImageToolsEvents.enable():
-            api.unblock();
             api.enable('cancel');
             break;
         }

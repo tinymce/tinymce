@@ -5,18 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Traverse } from '@ephox/sugar';
-import { isList } from './ListType';
+import { Element, Traverse, Compare } from '@ephox/sugar';
 
-const hasFirstChildList = (li: Element) => {
-  return Traverse.firstChild(li).map(isList).getOr(false);
+export const enum ListType {
+  OL = 'ol',
+  UL = 'ul'
+}
+
+const isList = (el: Element) => {
+  return Compare.is(el, 'OL,UL');
 };
 
-const hasLastChildList = (li: Element) => {
-  return Traverse.lastChild(li).map(isList).getOr(false);
+const hasFirstChildList = (el: Element) => {
+  return Traverse.firstChild(el).map(isList).getOr(false);
+};
+
+const hasLastChildList = (el: Element) => {
+  return Traverse.lastChild(el).map(isList).getOr(false);
 };
 
 export {
+  isList,
   hasFirstChildList,
   hasLastChildList
 };

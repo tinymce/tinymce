@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { Attachment, Memento } from '@ephox/alloy';
+import { Attachment, Memento, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Class, Traverse } from '@ephox/sugar';
 
@@ -7,15 +7,12 @@ import TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
 import Buttons from 'tinymce/themes/mobile/ui/Buttons';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
 import { Fun } from '@ephox/katamari';
 
-UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
 
   /*
    * PURPOSE
@@ -138,7 +135,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
   ]);
 
   Pipeline.async({}, [
-    GuiSetup.mAddStyles(doc, [
+    TestHelpers.GuiSetup.mAddStyles(doc, [
       '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }',
       '.tinymce-mobile-icon-beta:before { content: "BETA"; }',
       '.tinymce-mobile-icon-gamma-class:before { content: "GAMMA"; }'

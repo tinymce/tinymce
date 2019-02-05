@@ -1,12 +1,11 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox/agar';
-import { GuiFactory, AlloyComponent } from '@ephox/alloy';
+import { GuiFactory, AlloyComponent, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from '../../../../main/ts/ui/toolbar/button/ToolbarButtons';
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 
 UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
@@ -17,7 +16,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
   const shouldDisable = Cell(false);
   const shouldActivate = Cell(false);
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         {

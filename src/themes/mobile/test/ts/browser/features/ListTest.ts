@@ -2,13 +2,11 @@ import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Traverse } from '@ephox/sugar';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
+import { TestHelpers } from '@ephox/alloy';
 
-UnitTest.asynctest('Browser Test: features.ListTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure) {
 
   /* This test is going to create a toolbar with both list items on it */
   const body = Body.body();
@@ -70,7 +68,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function () {
       };
 
       Pipeline.async({}, [
-        GuiSetup.mAddStyles(Traverse.owner(body), [
+        TestHelpers.GuiSetup.mAddStyles(Traverse.owner(body), [
           '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
           '.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected { background: #cadbee; }',
           '.tinymce-mobile-icon-unordered-list:before { content: "ul"; }',
@@ -91,7 +89,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function () {
         sCheckInNumlist('ul converted back to ol'),
         TestUi.sClickComponent(realm, buttons.numlist),
         sCheckInNoList('ol converted to p'),
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }
   );

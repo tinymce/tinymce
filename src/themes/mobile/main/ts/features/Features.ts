@@ -118,7 +118,7 @@ const setup = function (realm, editor) {
           Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
         ])
       })
-    ]));
+    ]), editor);
   };
 
   const feature = function (prereq, sketch) {

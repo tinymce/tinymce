@@ -1,12 +1,3 @@
-# TinyMCE 5 Release Candidate
-
-Welcome to the Release Candidate!
-
-[RC documentation](https://www.tiny.cloud/docs-beta/)
-
-[Log feedback](https://github.com/tinymce/tinymce/labels/5.x)
-
-
 TinyMCE - JavaScript Library for Rich Text Editing
 ===================================================
 
@@ -106,3 +97,7 @@ __How to Contribute to the Docs__
 Docs are hosted on Github in the [tinymce-docs](https://github.com/tinymce/tinymce-docs) repo.
 
 [How to contribute](https://www.tiny.cloud/docs/advanced/contributing-docs/) to the docs, including a style guide, can be found on the TinyMCE website.
+
+[Documentation](https://www.tiny.cloud/docs/)
+
+[Log feedback](https://github.com/tinymce/tinymce/labels/5.x)

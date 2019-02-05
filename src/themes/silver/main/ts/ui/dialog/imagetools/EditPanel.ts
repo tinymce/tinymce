@@ -7,6 +7,7 @@
 
 import {
   AlloyComponent,
+  AlloyEvents,
   AlloySpec,
   AlloyTriggers,
   Behaviour,
@@ -15,8 +16,9 @@ import {
   Memento,
   Replacing,
   Representing,
-  SketchSpec,
   Slider,
+  Disabling,
+  AddEventsBehaviour
 } from '@ephox/alloy';
 import { SliderValueX } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SliderTypes';
 import { ImageTransformations } from '@ephox/imagetools';
@@ -28,22 +30,40 @@ import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
 const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
-  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): SketchSpec => {
-    return renderButton({
+  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): Memento.MementoRecord => {
+    return Memento.record(renderButton({
       name: text,
       text,
       disabled,
       primary
-    }, action, providersBackstage);
+    }, action, providersBackstage));
   };
 
-  const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): SketchSpec => {
-    return renderIconButton({
+  const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => {
+    return Memento.record(renderIconButton({
       name: icon,
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
       disabled
-    }, action, providersBackstage);
+    }, action, providersBackstage));
+  };
+
+  const disableAllComponents = (comps, eventcomp) => {
+    comps.map((mem) => {
+      const component = mem.get(eventcomp);
+      if (component.hasConfigured(Disabling)) {
+        Disabling.disable(component);
+      }
+    });
+  };
+
+  const enableAllComponents = (comps, eventcomp) => {
+    comps.map((mem) => {
+      const component = mem.get(eventcomp);
+      if (component.hasConfigured(Disabling)) {
+        Disabling.enable(component);
+      }
+    });
   };
 
   const panelDom = {
@@ -58,16 +78,23 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     AlloyTriggers.emitWith(comp, event, data);
   };
 
+  const emitDisable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
+  const emitEnable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
+
   const emitTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transform(), {
       transform
     });
+    emitEnable(comp);
   };
 
   const emitTempTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.tempTransform(), {
       transform
     });
+    emitEnable(comp);
   };
 
   const getBackSwap = (anyInSystem: AlloyComponent): (() => void) => (): void => {
@@ -77,28 +104,31 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   };
 
   const emitTransformApply = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+    emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transformApply(), {
       transform,
       swap: getBackSwap(comp)
     });
+    emitEnable(comp);
   };
 
-  const createBackButton = (): SketchSpec => {
+  const createBackButton = (): Memento.MementoRecord => {
     return createButton('Back', (button) => emit(button, ImageToolsEvents.internal.back(), {
       swap: getBackSwap(button)
     }), false, false);
   };
 
-  const createSpacer = (): AlloySpec => {
-    return {
+  const createSpacer = (): Memento.MementoRecord => {
+    return Memento.record({
       dom: {
         tag: 'div',
         classes: [ 'tox-spacer' ]
-      }
-    };
+      },
+      behaviours: Behaviour.derive([ Disabling.config({ }) ])
+    });
   };
 
-  const createApplyButton = (): SketchSpec => {
+  const createApplyButton = (): Memento.MementoRecord => {
     return createButton('Apply', (button) => emit(button, ImageToolsEvents.internal.apply(), {
       swap: getBackSwap(button)
     }), true, true);
@@ -109,17 +139,29 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     return ImageTransformations.crop(ir, rect.x, rect.y, rect.w, rect.h);
   };
 
+  const cropPanelComponents = [
+    createBackButton(),
+    createSpacer(),
+    createButton('Apply', (button) => {
+      const transform = makeCropTransform();
+      emitTransformApply(button, transform);
+      imagePanel.hideCrop();
+    }, false, true)
+  ];
+
   const CropPanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createBackButton(),
-      createSpacer(),
-      createButton('Apply', (button) => {
-        const transform = makeCropTransform();
-        emitTransformApply(button, transform);
-        imagePanel.hideCrop();
-      }, false, true)
-    ]
+    components: cropPanelComponents.map((mem) => mem.asSpec()),
+    containerBehaviours: Behaviour.derive([
+      AddEventsBehaviour.config('image-tools-crop-buttons-events', [
+        AlloyEvents.run(ImageToolsEvents.external.disable(), (comp, se) => {
+          disableAllComponents(cropPanelComponents, comp);
+        }),
+        AlloyEvents.run(ImageToolsEvents.external.enable(), (comp, se) => {
+          enableAllComponents(cropPanelComponents, comp);
+        })
+      ])
+    ])
   });
 
   const memSize = Memento.record(
@@ -135,23 +177,35 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     return ImageTransformations.resize(ir, width, height);
   };
 
+  const resizePanelComponents = [
+    createBackButton(),
+    createSpacer(),
+    memSize,
+    createSpacer(),
+    createButton('Apply', (button) => {
+      memSize.getOpt(button).each((sizeInput) => {
+        const value = Representing.getValue(sizeInput);
+        const width = parseInt(value.width, 10);
+        const height = parseInt(value.height, 10);
+        const transform = makeResizeTransform(width, height);
+        emitTransformApply(button, transform);
+      });
+    }, false, true)
+  ];
+
   const ResizePanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createBackButton(),
-      createSpacer(),
-      memSize.asSpec(),
-      createSpacer(),
-      createButton('Apply', (button) => {
-        memSize.getOpt(button).each((sizeInput) => {
-          const value = Representing.getValue(sizeInput);
-          const width = parseInt(value.width, 10);
-          const height = parseInt(value.height, 10);
-          const transform = makeResizeTransform(width, height);
-          emitTransformApply(button, transform);
-        });
-      }, false, true)
-    ]
+    components: resizePanelComponents.map((mem) => mem.asSpec()),
+    containerBehaviours: Behaviour.derive([
+      AddEventsBehaviour.config('image-tools-resize-buttons-events', [
+        AlloyEvents.run(ImageToolsEvents.external.disable(), (comp, se) => {
+          disableAllComponents(resizePanelComponents, comp);
+        }),
+        AlloyEvents.run(ImageToolsEvents.external.enable(), (comp, se) => {
+          enableAllComponents(resizePanelComponents, comp);
+        })
+      ])
+    ])
   });
 
   const makeValueTransform = (transform: (ir: any, value: any) => any, value: any) => (ir: any): any => transform(ir, value);
@@ -161,32 +215,49 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const counterclockwiseRotate = makeValueTransform(ImageTransformations.rotate, -90);
   const clockwiseRotate = makeValueTransform(ImageTransformations.rotate, 90);
 
+  const flipRotateOnAction = (comp, operation) => {
+    emitTempTransform(comp, operation);
+  };
+
+  const flipRotateComponents = [
+    createBackButton(),
+    createSpacer(),
+    createIconButton('flip-horizontally', 'Flip horizontally', (button) => {
+      flipRotateOnAction(button, horizontalFlip);
+    }, false),
+    createIconButton('flip-vertically', 'Flip vertically', (button) => {
+      flipRotateOnAction(button, verticalFlip);
+    }, false),
+    createIconButton('rotate-left', 'Rotate counterclockwise', (button) => {
+      flipRotateOnAction(button, counterclockwiseRotate);
+    }, false),
+    createIconButton('rotate-right', 'Rotate clockwise', (button) => {
+      flipRotateOnAction(button, clockwiseRotate);
+    }, false),
+    createSpacer(),
+    createApplyButton()
+  ];
+
   const FlipRotatePanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createBackButton(),
-      createSpacer(),
-      createIconButton('flip-horizontally', 'Flip horizontally', (button) => {
-        emitTempTransform(button, horizontalFlip);
-      }, false),
-      createIconButton('flip-vertically', 'Flip vertically', (button) => {
-        emitTempTransform(button, verticalFlip);
-      }, false),
-      createIconButton('rotate-left', 'Rotate counterclockwise', (button) => {
-        emitTempTransform(button, counterclockwiseRotate);
-      }, false),
-      createIconButton('rotate-right', 'Rotate clockwise', (button) => {
-        emitTempTransform(button, clockwiseRotate);
-      }, false),
-      createSpacer(),
-      createApplyButton()
-    ]
+    components: flipRotateComponents.map((mem) => mem.asSpec()),
+    containerBehaviours: Behaviour.derive([
+      AddEventsBehaviour.config('image-tools-fliprotate-buttons-events', [
+        AlloyEvents.run(ImageToolsEvents.external.disable(), (comp, se) => {
+          disableAllComponents(flipRotateComponents, comp);
+        }),
+        AlloyEvents.run(ImageToolsEvents.external.enable(), (comp, se) => {
+          enableAllComponents(flipRotateComponents, comp);
+        })
+      ])
+    ])
   });
 
-  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX) => void, min: number, value: number, max: number): SketchSpec => {
+  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
     const labelPart = Slider.parts().label({
       dom: {
         tag: 'label',
+        classes: ['tox-label'],
         innerHtml: providersBackstage.translate(label)
       }
     });
@@ -211,7 +282,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       }
     });
 
-    return Slider.sketch({
+    return Memento.record(Slider.sketch({
       dom: {
         tag: 'div',
         classes: ['tox-slider'],
@@ -234,37 +305,54 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         Focusing.config({})
       ]),
       onChoose
-    });
+    }));
   };
 
-  const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
+  const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): Memento.MementoRecord => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
       const valTransform = makeValueTransform(transform, value.x() / 100);
-
+      // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
     };
     return makeSlider(label, onChoose, min, value, max);
   };
 
-  const createVariableFilterPanel = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): SketchSpec => {
+  const variableFilterPanelComponents = (label, transform, min, value, max) => {
+    return [
+      createBackButton(),
+      makeVariableSlider(label, transform, min, value, max),
+      createApplyButton()
+    ];
+  };
+
+  const createVariableFilterPanel = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number) => {
+    const filterPanelComponents = variableFilterPanelComponents(label, transform, min, value, max);
     return Container.sketch({
       dom: panelDom,
-      components: [
-        createBackButton(),
-        makeVariableSlider(label, transform, min, value, max),
-        createApplyButton()
-      ]
+      components: filterPanelComponents.map((mem) => mem.asSpec()),
+      containerBehaviours: Behaviour.derive([
+        AddEventsBehaviour.config('image-tools-filter-panel-buttons-events', [
+          AlloyEvents.run(ImageToolsEvents.external.disable(), (comp, se) => {
+            disableAllComponents(filterPanelComponents, comp);
+          }),
+          AlloyEvents.run(ImageToolsEvents.external.enable(), (comp, se) => {
+            enableAllComponents(filterPanelComponents, comp);
+          })
+        ])
+      ])
     });
   };
+
+  const filterPanelComponents = [
+    createBackButton(),
+    createSpacer(),
+    createApplyButton()
+  ];
 
   // Invert, Sharpen, Emboss
   const FilterPanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createBackButton(),
-      createSpacer(),
-      createApplyButton()
-    ]
+    components: filterPanelComponents.map((mem) => mem.asSpec())
   });
 
   const BrightnessPanel = createVariableFilterPanel('Brightness', ImageTransformations.brightness, -100, 0, 100);
@@ -294,28 +382,24 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     return makeSlider(label, onChoose, 0, 100, 200);
   };
 
-  const memRed = Memento.record(
-    makeColorSlider('R')
-  );
+  const memRed = makeColorSlider('R');
 
-  const memGreen = Memento.record(
-    makeColorSlider('G')
-  );
+  const memGreen = makeColorSlider('G');
 
-  const memBlue = Memento.record(
-    makeColorSlider('B')
-  );
+  const memBlue = makeColorSlider('B');
+
+  const colorizePanelComponents = [
+    createBackButton(),
+    memRed,
+    memGreen,
+    memBlue,
+    createApplyButton()
+  ];
 
   // Colorize
   const ColorizePanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createBackButton(),
-      memRed.asSpec(),
-      memGreen.asSpec(),
-      memBlue.asSpec(),
-      createApplyButton()
-    ]
+    components: colorizePanelComponents.map((mem) => mem.asSpec())
   });
 
   const getTransformPanelEvent = (panel: AlloySpec, transform: Option<(ir: any) => any>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
@@ -350,19 +434,21 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const sharpenTransform = Option.some(ImageTransformations.sharpen);
   const invertTransform = Option.some(ImageTransformations.invert);
 
+  const buttonPanelComponents = [
+    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, none, cropPanelUpdate), false),
+    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, none, resizePanelUpdate), false),
+    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, none, noop), false),
+    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, none, noop), false),
+    createIconButton('sharpen', 'Sharpen', getTransformPanelEvent(FilterPanel, sharpenTransform, noop), false),
+    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, none, noop), false),
+    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, none, noop), false),
+    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, none, noop), false),
+    createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false),
+  ];
+
   const ButtonPanel = Container.sketch({
     dom: panelDom,
-    components: [
-      createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, none, cropPanelUpdate), false),
-      createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, none, resizePanelUpdate), false),
-      createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, none, noop), false),
-      createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, none, noop), false),
-      createIconButton('sharpen', 'Sharpen', getTransformPanelEvent(FilterPanel, sharpenTransform, noop), false),
-      createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, none, noop), false),
-      createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, none, noop), false),
-      createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, none, noop), false),
-      createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false),
-    ]
+    components: buttonPanelComponents.map((mem) => mem.asSpec())
   });
 
   const container = Container.sketch({

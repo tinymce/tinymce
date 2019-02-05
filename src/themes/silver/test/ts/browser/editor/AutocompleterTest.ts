@@ -1,16 +1,16 @@
-import '../../../../../silver/main/ts/Theme';
+import 'tinymce/themes/silver/Theme';
 
 import { Logger, Pipeline, Keyboard, Step, Keys, Chain, UiFinder, ApproxStructure, Assertions, GeneralSteps, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Body } from '@ephox/sugar';
-import { TestStore } from '../../module/AlloyTestUtils';
 import { Arr } from '@ephox/katamari';
 import Promise from 'tinymce/core/api/util/Promise';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   interface AutocompleterListStructure {
     type: 'list';

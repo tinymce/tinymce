@@ -76,7 +76,7 @@ const getSpec = (editor) => {
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
   return {
-    tooltip: 'Font Sizes',
+    tooltip: 'Font sizes',
     icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
@@ -98,7 +98,7 @@ const fontsizeSelectMenu = (editor: Editor, backstage) => {
   const spec = getSpec(editor);
   const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
   editor.ui.registry.addNestedMenuItem('fontsizes', {
-    text: 'Font Sizes',
+    text: 'Font sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };

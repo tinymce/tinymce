@@ -5,10 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
-import { message } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/system/Gui';
-import { ConfiguredPart } from '@ephox/alloy/lib/main/ts/ephox/alloy/parts/AlloyParts';
+import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento, AlloyComponent } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -41,8 +38,8 @@ export interface ModeRenderInfo {
 }
 
 export interface UiChannels {
-  broadcastAll: (message: message) => void;
-  broadcastOn: (channels: string[], message: message) => void;
+  broadcastAll: (message: Record<string, any>) => void;
+  broadcastOn: (channels: string[], message: Record<string, any>) => void;
   register: () => void;
 }
 
@@ -105,7 +102,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
-  const partMenubar: ConfiguredPart = OuterContainer.parts().menubar({
+  const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
       tag: 'div',
       classes: [ 'tox-menubar' ]
@@ -117,7 +114,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const partToolbar: ConfiguredPart = OuterContainer.parts().toolbar({
+  const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
       tag: 'div',
       classes: [ 'tox-toolbar' ]
@@ -129,14 +126,14 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const partSocket: ConfiguredPart = OuterContainer.parts().socket({
+  const partSocket: AlloySpec = OuterContainer.parts().socket({
     dom: {
       tag: 'div',
       classes: [ 'tox-edit-area' ]
     }
   });
 
-  const partSidebar: ConfiguredPart = OuterContainer.parts().sidebar({
+  const partSidebar: AlloySpec = OuterContainer.parts().sidebar({
     dom: {
       tag: 'div',
       classes: ['tox-sidebar']

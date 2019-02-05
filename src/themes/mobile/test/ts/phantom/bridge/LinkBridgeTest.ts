@@ -5,11 +5,10 @@ import { Cell, Fun, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
-
-import TestStore from '../../module/test/TestStore';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   const editorState = {
     start: Cell(null),

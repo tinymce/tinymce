@@ -9,7 +9,7 @@ import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/a
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
 
-import * as UiDomFactory from '../util/UiDomFactory';
+import Buttons from '../ui/Buttons';
 
 const addImage = function (editor, blob) {
   BlobConversions.blobToBase64(blob).then(function (base64) {
@@ -57,7 +57,7 @@ const sketch = function (editor): SketchSpec {
   });
 
   return Button.sketch({
-    dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-image ${prefix}-icon"></span>'),
+    dom: Buttons.getToolbarIconButton('image', editor),
     components: [
       memPicker.asSpec()
     ],

@@ -7,7 +7,6 @@
 
 import { AlloyComponent } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
@@ -61,7 +60,7 @@ export interface SelectData {
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): NestedMenuItemContents => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Menu.NestedMenuItemContents => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return {
@@ -90,7 +89,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): NestedMenuItemContents[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): Menu.NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting

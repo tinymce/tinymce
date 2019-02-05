@@ -66,6 +66,9 @@ module.exports = function (grunt) {
 
         pair.dest.forEach(function (zipFilePath) {
           zipFilePath = filterZipPath(zipFilePath);
+          if (options.onBeforeConcat) {
+            chunks = options.onBeforeConcat(zipFilePath, chunks);
+          }
           archive.addData(path.join(options.baseDir, zipFilePath), chunks.join('\r\n'));
         });
       });

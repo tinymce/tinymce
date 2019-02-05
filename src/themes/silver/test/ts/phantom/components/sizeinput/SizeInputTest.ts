@@ -1,11 +1,10 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from '@ephox/agar';
-import { GuiFactory, NativeEvents } from '@ephox/alloy';
+import { GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderSizeInput } from '../../../../../main/ts/ui/dialog/SizeInput';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
@@ -13,7 +12,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderSizeInput({
@@ -62,6 +61,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                   classes: [arr.has('tox-form__controls-h-stack')],
                   children: [
                     s.element('div', {
+                      classes: [arr.has('tox-form__group')],
                       children: [
                         s.element('label', {
                           classes: [arr.has('tox-label')],
@@ -76,23 +76,29 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                       ]
                     }),
                     s.element('div', {
+                      classes: [arr.has('tox-form__group')],
                       children: [
                         s.element('label', {
                           classes: [arr.has('tox-label')],
                           html: str.is('Height')
                         }),
-                        s.element('div', {
-                          children: [
-                            s.element('input', {
-                              classes: [arr.has('tox-textfield')],
-                              attrs: {
-                                'data-alloy-tabstop': str.is('true')
-                              }
-                            }),
-                            s.element('button', {
-                              classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
-                            })
-                          ]
+                        s.element('input', {
+                          classes: [arr.has('tox-textfield')],
+                          attrs: {
+                            'data-alloy-tabstop': str.is('true')
+                          }
+                        })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [arr.has('tox-form__group')],
+                      children: [
+                        s.element('label', {
+                          classes: [arr.has('tox-label')],
+                          html: str.is('&nbsp;')
+                        }),
+                        s.element('button', {
+                          classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
                         })
                       ]
                     })

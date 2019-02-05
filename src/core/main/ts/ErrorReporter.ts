@@ -7,6 +7,7 @@
 
 import { AddOnManager } from './api/AddOnManager';
 import { window } from '@ephox/dom-globals';
+import I18n from './api/util/I18n';
 
 /**
  * Various error reporting helper functions.
@@ -31,8 +32,8 @@ const resolvePluginName = function (targetUrl, suffix) {
 const pluginUrlToMessage = function (editor, url) {
   const plugin = resolvePluginName(url, editor.suffix);
   return plugin ?
-    'Failed to load plugin: ' + plugin + ' from url ' + url :
-    'Failed to load plugin url: ' + url;
+    I18n.translate(['Failed to load plugin: {0} from url {1}', plugin, url]) :
+    I18n.translate(['Failed to load plugin url: {0}', url]);
 };
 
 const displayNotification = function (editor, message) {
@@ -53,11 +54,17 @@ const displayError = function (editor, message) {
 };
 
 const uploadError = function (editor, message) {
-  displayError(editor, 'Failed to upload image: ' + message);
+  displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
 };
 
 const pluginLoadError = function (editor, url) {
   displayError(editor, pluginUrlToMessage(editor, url));
+};
+
+const pluginInitError = function (editor, name, err) {
+  const message = I18n.translate(['Failed to initialize plugin: {0}', name]);
+  initError(message, err);
+  displayError(editor, message);
 };
 
 const initError = function (message, ...x: any[]) {
@@ -73,6 +80,7 @@ const initError = function (message, ...x: any[]) {
 
 export default {
   pluginLoadError,
+  pluginInitError,
   uploadError,
   displayError,
   initError

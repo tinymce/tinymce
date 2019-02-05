@@ -1,15 +1,14 @@
 import { Log, Step, Logger } from '@ephox/agar';
-import { Behaviour, GuiFactory, Replacing } from '@ephox/alloy';
+import { Behaviour, GuiFactory, Replacing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
-import { GuiSetup } from '../../module/AlloyTestUtils';
 import { SimpleBehaviours } from '../../../../main/ts/ui/alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from '../../../../main/ts/ui/controls/Controls';
 import { Cell } from '@ephox/katamari';
 
 UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build({
         dom: {

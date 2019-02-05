@@ -5,13 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, FocusManagers, Keying, TieredMenu } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
-import { MenuSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/MenuTypes';
+import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes, ItemTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';
@@ -34,21 +32,21 @@ export const handleError = (error) => {
 export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuItemApi | BridgeMenu.ToggleMenuItemApi |
   BridgeMenu.SeparatorMenuItemApi | BridgeMenu.ChoiceMenuItemApi | BridgeMenu.FancyMenuItemApi;
 
-const hasIcon = (item) => item.icon !== undefined;
+const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Option<ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'togglemenuitem':
@@ -74,7 +72,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items: ItemSpec[], columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuSpec> => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {
@@ -133,7 +131,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
   };
 };
 
-export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders) => {
   return Options.cat(
     Arr.map(items, (item) => {
       if (item.type === 'choiceitem') {
@@ -148,41 +146,41 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
   );
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec[] => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
         handleError,
         (d: InlineContent.AutocompleterItem) => Option.some(
-          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, providersBackstage)
+          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, sharedBackstage)
         )
       );
     })
   );
 };
 
-export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, presets: Types.PresetTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
-  const alloyItems = Options.cat<ItemSpec>(
+  const alloyItems = Options.cat(
     Arr.map(items, (item) => {
-      return createMenuItemFromBridge(item, itemResponse, providersBackstage);
+      return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
     })
   );
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: Partial<MenuSpec>) => {
+export const createTieredDataFrom = (partialMenu: Partial<MenuTypes.MenuSpec>) => {
   return TieredMenu.singleData(partialMenu.value, partialMenu);
 };
 
-export const createMenuFrom = (partialMenu: Partial<MenuSpec>, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuSpec  => {
+export const createMenuFrom = (partialMenu: Partial<MenuTypes.MenuSpec>, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 
   const movement = deriveMenuMovement(columns, presets);

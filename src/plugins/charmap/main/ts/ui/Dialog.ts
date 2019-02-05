@@ -24,7 +24,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     {
       type: 'collection',
       name: 'results',
-      columns: 'auto'
+      // TODO TINY-3229 implement collection columns properly
+      // columns: 'auto'
     }
   ];
 
@@ -74,7 +75,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
       {
         type: 'cancel',
         name: 'close',
-        text: 'Close'
+        text: 'Close',
+        primary: true
       }
     ],
     initialData,

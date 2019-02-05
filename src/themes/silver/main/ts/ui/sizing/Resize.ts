@@ -6,9 +6,10 @@
  */
 
 import { Obj, Option } from '@ephox/katamari';
-import { Css, Element, Width } from '@ephox/sugar';
+import { Css, Element, Height, Width } from '@ephox/sugar';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
 import Events from '../../api/Events';
+import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
 
 interface EditorDimensions {
@@ -42,7 +43,7 @@ export const getDimensions = (editor, deltas, resizeType: ResizeTypes, originalH
 export const resize = (editor: Editor, deltas, resizeType: ResizeTypes) => {
   const container = Element.fromDom(editor.getContainer());
 
-  const dimensions = getDimensions(editor, deltas, resizeType, editor.getContainer().scrollHeight, Width.get(container));
-  Obj.each(dimensions, (val, dim) => Css.set(container, dim, val + 'px'));
+  const dimensions = getDimensions(editor, deltas, resizeType, Height.get(container), Width.get(container));
+  Obj.each(dimensions, (val, dim) => Css.set(container, dim, Utils.numToPx(val)));
   Events.fireResizeEditor(editor);
 };

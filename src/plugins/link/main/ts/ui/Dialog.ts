@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DialogInstanceApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/components/dialog/Dialog';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Future, Option, Options } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -19,7 +18,7 @@ import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 import { Types } from '@ephox/bridge';
 
-const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   // Merge in the initial state and any changed state
@@ -153,7 +152,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<
       }
     ],
     initialData,
-    onChange: (api: DialogInstanceApi<LinkDialogData>, {name}) => {
+    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, {name}) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

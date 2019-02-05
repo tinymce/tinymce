@@ -7,13 +7,13 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import NodeType from './NodeType';
-import TextBlock from './TextBlock';
+import { createTextBlock } from './TextBlock';
 import Tools from 'tinymce/core/api/util/Tools';
 
 const DOM = DOMUtils.DOM;
 
-const splitList = function (editor, ul, li, newBlock?) {
-  let tmpRng, fragment, bookmarks, node;
+const splitList = function (editor, ul, li) {
+  let tmpRng, fragment, bookmarks, node, newBlock;
 
   const removeAndKeepBookmarks = function (targetNode) {
     Tools.each(bookmarks, function (node) {
@@ -24,7 +24,7 @@ const splitList = function (editor, ul, li, newBlock?) {
   };
 
   bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
-  newBlock = newBlock || TextBlock.createNewTextBlock(editor, li);
+  newBlock = createTextBlock(editor, li);
   tmpRng = DOM.createRng();
   tmpRng.setStartAfter(li);
   tmpRng.setEndAfter(ul);

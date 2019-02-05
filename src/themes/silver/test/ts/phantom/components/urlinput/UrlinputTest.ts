@@ -1,17 +1,16 @@
 import { Assertions, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, ApproxStructure, Chain, UiControls } from '@ephox/agar';
-import { AlloyTriggers, Behaviour, Focusing, GuiFactory, Memento, NativeEvents, Positioning, Representing } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, GuiFactory, Memento, NativeEvents, Positioning, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Future, Option, Result } from '@ephox/katamari';
 import { SelectorFind, Value } from '@ephox/sugar';
 
 import { LinkTargetType } from '../../../../../main/ts/ui/core/LinkTargets';
 import { renderUrlInput } from '../../../../../main/ts/ui/dialog/UrlInput';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { UrlData } from '../../../../../main/ts/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       const memSink = Memento.record(
         {
@@ -92,7 +91,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
       ).getOrDie();
 
       return [
-        GuiSetup.mAddStyles(doc, [
+        TestHelpers.GuiSetup.mAddStyles(doc, [
           '.tox-menu { background: white; }',
           '.tox-collection__item--active { background: #cadbee }'
         ]),
@@ -126,14 +125,12 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header2') })
                         ]
                       })
@@ -144,7 +141,6 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     children: [
                       s.element('div', {
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('&lt;top&gt;') })
                         ]
                       })
@@ -187,14 +183,12 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}),
                           s.element('span', { html: str.is('Header2') })
                         ]
                       })
@@ -252,7 +246,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           }, repValue);
         }),
 
-        GuiSetup.mRemoveStyles
+        TestHelpers.GuiSetup.mRemoveStyles
       ];
     },
     success,

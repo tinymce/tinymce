@@ -19,14 +19,14 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import { GuiSetup, TestStore } from '../../module/AlloyTestUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
+import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestStore();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
@@ -35,7 +35,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
       Pipeline.async({ }, Logger.ts(
         'Check structure of grid collection menu',
         [
-          GuiSetup.mAddStyles(doc, [
+          TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
           Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
@@ -82,7 +82,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
             Keyboard.sKeydown(doc, Keys.right(), { }),
             FocusTools.sTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]')
           ]),
-          GuiSetup.mRemoveStyles
+          TestHelpers.GuiSetup.mRemoveStyles
         ]
       ), onSuccess, onFailure);
     },

@@ -35,7 +35,8 @@ const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: M
       } else if (Obj.has(menuItems, item.toLowerCase())) {
         return acc.concat([ menuItems[item.toLowerCase()] ]);
       } else {
-        console.error('No representation for menuItem: ' + item);
+        // TODO: Add back after TINY-3232 is implemented
+        // console.error('No representation for menuItem: ' + item);
         return acc;
       }
     } else {

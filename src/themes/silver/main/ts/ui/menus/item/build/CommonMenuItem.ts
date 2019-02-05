@@ -15,8 +15,8 @@ import {
   Focusing,
   NativeEvents,
   Replacing,
+  ItemTypes,
 } from '@ephox/alloy';
-import { ItemSpec, NormalItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
 import { Arr, Cell, Fun, Merger, Option } from '@ephox/katamari';
 
 import { DisablingConfigs } from '../../../alien/DisablingConfigs';
@@ -33,12 +33,12 @@ export interface CommonMenuItemSpec<T> {
   onSetup: (itemApi: T) => OnDestroy<T>;
   triggersSubmenu: boolean;
   disabled: boolean;
-  itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any>>;
+  itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   data: ItemDataOutput;
 }
 
-const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructure, itemResponse: ItemResponse): ItemSpec => {
+const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructure, itemResponse: ItemResponse): ItemTypes.ItemSpec => {
   const editorOffCell = Cell(Fun.noop);
 
   return {
@@ -96,7 +96,7 @@ export interface ItemDataInput {
   meta: Record<string, any>;
 }
 
-export type ItemDataOutput = NormalItemSpec['data'];
+export type ItemDataOutput = ItemTypes.NormalItemSpec['data'];
 
 const buildData = (source: ItemDataInput): ItemDataOutput => {
   return {

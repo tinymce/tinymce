@@ -13,7 +13,8 @@ import {
   SketchSpec,
   Unselecting,
   Tabstopping,
-  AlloyComponent
+  AlloyComponent,
+  Layout
 } from '@ephox/alloy';
 import { Future, Id, Option, Merger } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -22,7 +23,6 @@ import * as MenuParts from '../menus/menu/MenuParts';
 import { createTieredDataFrom, createPartialChoiceMenu } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
 import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
 import { Element } from '@ephox/sugar';
-import * as Layout from '@ephox/alloy/lib/main/ts/ephox/alloy/positioning/layout/Layout';
 import ItemResponse from '../menus/item/ItemResponse';
 
 export interface SwatchPanelButtonFoo {
@@ -57,7 +57,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
       return Future.nu((callback) => {
         return spec.fetch(callback);
       }).map((items) => {
-        return createTieredDataFrom(
+        return Option.from(createTieredDataFrom(
           Merger.deepMerge(
             createPartialChoiceMenu(
               Id.generate('menu-value'),
@@ -76,7 +76,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
               movement: deriveMenuMovement(5, 'color')
             }
           )
-        );
+        ));
       });
     },
 

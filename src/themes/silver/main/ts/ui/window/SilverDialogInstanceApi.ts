@@ -18,7 +18,7 @@ import {
 } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Merger, Option } from '@ephox/katamari';
+import { Merger, Option, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
@@ -99,6 +99,9 @@ const getDialogApi = <T>(
   };
 
   const block = (message: string) => {
+    if (!Type.isString(message)) {
+      throw new Error('The dialogInstanceAPI.block function should be passed a blocking message of type string as an argument');
+    }
     withRoot((root) => {
       AlloyTriggers.emitWith(root, formBlockEvent, { message });
     });

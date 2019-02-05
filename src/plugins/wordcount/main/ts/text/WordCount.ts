@@ -9,7 +9,8 @@ import { CharacterData, Node } from '@ephox/dom-globals';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { Editor } from 'tinymce/core/api/Editor';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
-import * as WordGetter from './WordGetter';
+import { Words } from '@ephox/polaris';
+import { Arr } from '@ephox/katamari';
 
 const getText = (node: Node, schema: Schema): string => {
   const blockElements: SchemaMap = schema.getBlockElements();
@@ -42,9 +43,21 @@ export interface WordCount {
   charactersNoSpace: number;
 }
 
+interface Char {
+  character: string;
+}
+
+const extractCharacter = (char: Char) => char.character;
+
+const parseString = (str: string): Char[] => {
+  return Arr.map(str.split(''), (character) => {
+    return { character };
+  });
+};
+
 const getCount = (textContent: string): WordCount => {
   return {
-    words: WordGetter.getWords(textContent).length,
+    words: Words.getWords(parseString(textContent), extractCharacter).length,
     characters: textContent.length,
     charactersNoSpace: textContent.replace(/\s/g, '').length
   };

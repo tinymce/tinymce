@@ -18,8 +18,9 @@ import {
   Representing,
   SketchSpec,
   Tabstopping,
+  Disabling,
+  AlloyComponent
 } from '@ephox/alloy';
-import { AlloyComponent } from '@ephox/alloy/lib/main/ts/ephox/alloy/api/component/ComponentApi';
 import { Types } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -93,30 +94,22 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
     selectOnFocus: false
   });
 
-  const getLabelPart = (label: string) => {
-    return AlloyFormField.parts().label({
+  const getLabel = (label: string) => {
+    return {
       dom: {
         tag: 'label',
         classes: ['tox-label'],
         innerHtml: providersBackstage.translate(label)
       }
-    });
+    };
   };
 
   const widthField = AlloyFormCoupledInputs.parts().field1(
-    formGroup([ getLabelPart('Width'), getFieldPart(true) ])
+    formGroup([ AlloyFormField.parts().label(getLabel('Width')), getFieldPart(true) ])
   );
 
-  const hStack = (components) => ({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-form__controls-h-stack' ]
-    },
-    components
-  });
-
   const heightField = AlloyFormCoupledInputs.parts().field2(
-    formGroup([ getLabelPart('Height'), hStack([ getFieldPart(false), pLock ]) ])
+    formGroup([ AlloyFormField.parts().label(getLabel('Height')), getFieldPart(false) ])
   );
 
   return AlloyFormCoupledInputs.sketch({
@@ -125,11 +118,21 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
       classes: ['tox-form__group']
     },
     components: [
-      hStack([
-        // NOTE: Form coupled inputs to the FormField.sketch themselves.
-        widthField,
-        heightField
-      ])
+      {
+        dom: {
+          tag: 'div',
+          classes: ['tox-form__controls-h-stack']
+        },
+        components: [
+          // NOTE: Form coupled inputs to the FormField.sketch themselves.
+          widthField,
+          heightField,
+          formGroup([
+            getLabel('&nbsp;'),
+            pLock
+          ])
+        ]
+      }
     ],
     field1Name: 'width',
     field2Name: 'height',
@@ -146,6 +149,7 @@ export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackst
       });
     },
     coupledFieldBehaviours: Behaviour.derive([
+      Disabling.config({ }),
       AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
           const isField1 = simulatedEvent.event().isField1();

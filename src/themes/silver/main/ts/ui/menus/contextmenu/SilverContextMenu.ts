@@ -146,7 +146,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
     const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-    if (items.length > 0) {
+    NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers).map((menuData) => {
       e.preventDefault();
 
       // show the context menu, with items set to close on click
@@ -154,9 +154,9 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
         menu: {
           markers: MenuParts.markers('normal')
         },
-        data: NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers)
+        data: menuData
       });
-    }
+    });
   });
 
 };

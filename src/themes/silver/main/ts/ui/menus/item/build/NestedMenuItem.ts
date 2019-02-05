@@ -1,5 +1,4 @@
-import { Disabling } from '@ephox/alloy';
-import { ItemSpec } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/ItemTypes';
+import { Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -9,7 +8,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemSpec => {
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const caret = renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component): Menu.NestedMenuItemInstanceApi => {
     return {
@@ -26,7 +25,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     caret: Option.some(caret),
     checkMark: Option.none(),
     shortcutContent: spec.shortcut
-  }, providersBackstage);
+  }, providersBackstage, renderIcons);
 
   return renderCommonItem({
     data: buildData(spec),

@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, SimpleOrSketchSpec } from '@ephox/alloy';
-import { FormParts } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/FormTypes';
+import { AlloySpec, SimpleOrSketchSpec, FormTypes } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
@@ -35,7 +34,7 @@ import { renderTable } from '../dialog/Table';
 
 // tslint:disable:no-console
 
-export type FormPartRenderer = (parts: FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
+export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 
 const make = function (render: NoFormRenderer): FormPartRenderer {

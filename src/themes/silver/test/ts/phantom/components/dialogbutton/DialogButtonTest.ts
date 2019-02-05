@@ -1,10 +1,9 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
@@ -13,7 +12,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
 
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderButton({

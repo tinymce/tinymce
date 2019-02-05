@@ -1,44 +1,15 @@
-import { ApproxStructure, Assertions, Pipeline, Log } from '@ephox/agar';
+import { Assertions, Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, failure) => {
+import { sAssertNbspStruct, sAssertSpanStruct } from '../module/test/Utils';
 
+UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, failure) => {
   Plugin();
   Theme();
-
-  const spanStruct = ApproxStructure.build(function (s, str) {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.text(str.is('a')),
-            s.element('span', {}),
-            s.element('span', {}),
-            s.text(str.is('b'))
-          ]
-        })
-      ]
-    });
-  });
-
-  const nbspStruct = ApproxStructure.build(function (s, str) {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.text(str.is('a')),
-            s.text(str.is('\u00a0')),
-            s.text(str.is('\u00a0')),
-            s.text(str.is('b'))
-          ]
-        })
-      ]
-    });
-  });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
@@ -48,13 +19,13 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
       tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
       Assertions.sAssertEq('assert equal', 0, editor.dom.select('span').length),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(spanStruct),
+      tinyApis.sAssertContentStructure(sAssertSpanStruct),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(nbspStruct),
+      tinyApis.sAssertContentStructure(sAssertNbspStruct),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(spanStruct),
+      tinyApis.sAssertContentStructure(sAssertSpanStruct),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(nbspStruct)
+      tinyApis.sAssertContentStructure(sAssertNbspStruct)
     ]), onSuccess, onFailure);
   }, {
     plugins: 'visualchars',

@@ -6,16 +6,17 @@
  */
 
 import { Behaviour, Button, Toggling, Unselecting, SketchSpec } from '@ephox/alloy';
-import { Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
+import { getAll } from '@tinymce/oxide-icons-default';
 
 const forToolbarCommand = function (editor, command) {
   return forToolbar(command, function () {
     editor.execCommand(command);
-  }, { });
+  }, { }, editor);
 };
 
 const getToggleBehaviours = function (command) {
@@ -39,18 +40,33 @@ const forToolbarStateCommand = function (editor, command) {
 
   return forToolbar(command, function () {
     editor.execCommand(command);
-  }, extraBehaviours);
+  }, extraBehaviours, editor);
 };
 
 // The action is not just executing the same command
 const forToolbarStateAction = function (editor, clazz, command, action) {
   const extraBehaviours = getToggleBehaviours(command);
-  return forToolbar(clazz, action, extraBehaviours);
+  return forToolbar(clazz, action, extraBehaviours, editor);
 };
 
-const forToolbar = function (clazz, action, extraBehaviours): SketchSpec {
+const defaultIcons = getAll();
+const getIcon = (name, icons) => {
+  return Option.from(icons[name]).or(Option.from(defaultIcons[name]));
+};
+
+const getToolbarIconButton = (clazz, editor) => {
+  const icons = editor.ui.registry.getAll().icons;
+  const optOxideIcon = getIcon(clazz, icons);
+
+  return optOxideIcon.fold(
+    () => UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
+    (icon) => UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item">' + icon + '</span>')
+  );
+};
+
+const forToolbar = function (clazz, action, extraBehaviours, editor): SketchSpec {
   return Button.sketch({
-    dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
+    dom: getToolbarIconButton(clazz, editor),
     action,
 
     buttonBehaviours: Merger.deepMerge(
@@ -66,5 +82,6 @@ export default {
   forToolbar,
   forToolbarCommand,
   forToolbarStateAction,
-  forToolbarStateCommand
+  forToolbarStateCommand,
+  getToolbarIconButton
 };

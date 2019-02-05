@@ -2,7 +2,7 @@ import {
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
     Pipeline, Step, UiFinder
 } from '@ephox/agar';
-import { Attachment } from '@ephox/alloy';
+import { Attachment, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
@@ -12,15 +12,12 @@ import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 
-import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
 
-UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
@@ -193,8 +190,8 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
   };
 
   Pipeline.async({}, detection.browser.isChrome() ? [
-    GuiSetup.mAddStyles(doc, [
-      '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }',
+    TestHelpers.GuiSetup.mAddStyles(doc, [
+      '.tinymce-mobile-toolbar-button:before { content: "LINK"; background: black; color: white; }',
       // Speeds up tests.
       '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
     ]),

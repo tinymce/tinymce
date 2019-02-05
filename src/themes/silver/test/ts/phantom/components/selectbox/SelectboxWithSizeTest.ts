@@ -1,11 +1,10 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'src/themes/silver/demo/ts/components/DemoHelpers';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
@@ -14,7 +13,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
   const helpers = setupDemo();
   const providers = helpers.extras.backstage.shared.providers;
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderSelectBox({

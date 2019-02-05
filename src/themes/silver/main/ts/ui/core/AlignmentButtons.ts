@@ -17,7 +17,7 @@ const register = (editor: Editor) => {
     { name: 'alignjustify', text: 'Justify', cmd: 'JustifyFull', icon: 'align-justify' }
   ];
 
-  const onSetup = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+  const onSetupToggleButton = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
     const handler = (state: boolean) => {
       api.setActive(state);
     };
@@ -40,16 +40,15 @@ const register = (editor: Editor) => {
       tooltip: item.text,
       onAction: () => editor.execCommand(item.cmd),
       icon: item.icon,
-      onSetup: onSetup(item)
+      onSetup: onSetupToggleButton(item)
     });
   });
 
-  const alignNoneToolbarButton = { name: 'alignnone', text: 'No alignment', cmd: 'JustifyNone', icon: 'align-justify' };
+  const alignNoneToolbarButton = { name: 'alignnone', text: 'No alignment', cmd: 'JustifyNone', icon: 'align-none' };
   editor.ui.registry.addButton(alignNoneToolbarButton.name, {
     tooltip: alignNoneToolbarButton.text,
     onAction: () => editor.execCommand(alignNoneToolbarButton.cmd),
-    icon: alignNoneToolbarButton.icon,
-    onSetup: onSetup(alignNoneToolbarButton)
+    icon: alignNoneToolbarButton.icon
   });
 };
 

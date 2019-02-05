@@ -1,9 +1,8 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
-import { GuiSetup } from '../../../module/AlloyTestUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 
 // TODO: Expose properly through alloy.
@@ -14,7 +13,7 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
     translate: I18n.translate
   };
 
-  GuiSetup.setup(
+  TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
         renderGrid({

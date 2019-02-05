@@ -1,6 +1,18 @@
-Version 5.0.0-rc-3 (TBA)
+Version 5.0.0 (2019-02-04)
+    Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
+
+    Changes since RC2:
+    Fixed an issue where tab panel heights weren't sizing properly on smaller screens and weren't updating on resize #TINY-3242
+    Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
+    Changed Tiny 5 mobile skin to look more uniform with desktop #TINY-2650
+    Fixed image tools not having any padding between the label and slider #TINY-3220
     Blacklisted table, th and td as inline editor target #TINY-717
     Fixed context toolbar toggle buttons not showing the correct state #TINY-3022
+    Fixed missing separators in the spellchecker context menu between the suggestions and actions #TINY-3217
+    Fixed notification icon positioning in alert banners #TINY-2196
+    Fixed a typo in the word count plugin name #TINY-3062
+    Fixed charmap and emoticons dialogs not having a primary button #TINY-3233
+    Fixed an issue where resizing wouldn't work correctly depending on the box-sizing model #TINY-3278
 Version 5.0.0-rc-2 (2019-01-22)
     Fixed the link dialog such that it will now retain class attributes when updating links #TINY-2825
     Added screen reader accessibility for sidebar and statusbar #TINY-2699
@@ -106,6 +118,15 @@ Version 5.0.0-preview-2 (2018-10-10)
 Version 5.0.0-preview-1 (2018-10-01)
     Developer preview 1
     Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
+Version 4.9.3 (2019-01-31)
+    Added a visualchars_default_state setting to the Visualchars Plugin. Patch contributed by mat3e.
+    Fixed a bug where scrolling on a page with more than one editor would cause a ResizeWindow event to fire. #TINY-3247
+    Fixed a bug where if a plugin threw an error during initialisation the whole editor would fail to load. #TINY-3243
+    Fixed a bug where getContent would include bogus elements when valid_elements setting was set up in a specific way. #TINY-3213
+    Fixed a bug where only a few function key names could be used when creating keyboard shortcuts. #TINY-3146
+    Fixed a bug where it wasn't possible to enter spaces into an editor after pressing shift+enter. #TINY-3099
+    Fixed a bug where no caret would be rendered after backspacing to a contenteditable false element. #TINY-2998
+    Fixed a bug where deletion to/from indented lists would leave list fragments in the editor. #TINY-2981
 Version 4.9.2 (2018-12-17)
     Fixed a bug with pressing the space key on IE 11 would result in nbsp characters being inserted between words at the end of a block. #TINY-2996
     Fixed a bug where character composition using quote and space on US International keyboards would produce a space instead of a quote. #TINY-2999
