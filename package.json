@@ -24,14 +24,7 @@
   "dependencies": {},
   "devDependencies": {
     "@ephox/oxide-icons-tools": "latest",
-    "event-stream": "^4.0.1",
-    "typescript": "^3.0.0",
     "gulp": "^4.0.0",
-    "gulp-cat": "^0.3.3",
-    "gulp-clean": "^0.4.0",
-    "gulp-inject": "^4.3.2",
-    "gulp-merge": "^0.1.1",
-    "gulp-rename": "^1.4.0",
-    "gulp-typescript": "^5.0.0-alpha.3"
+    "gulp-clean": "^0.4.0"
   }
 }
