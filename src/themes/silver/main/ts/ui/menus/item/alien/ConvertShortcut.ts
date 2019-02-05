@@ -21,7 +21,7 @@ const convertText = (source: string) => {
   };
   const other = {
     meta: 'Ctrl',
-    access: 'Shift + Alt '
+    access: 'Shift + Alt'
   };
   const replace: Record<string, string> = Env.mac ? mac : other;
 
