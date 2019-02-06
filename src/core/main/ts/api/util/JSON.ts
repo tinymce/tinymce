@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 /**
  * JSON parser and serializer class.
@@ -20,55 +20,18 @@ import { Arr, Obj, Type } from '@ephox/katamari';
  * var str = tinymce.util.JSON.serialize(obj);
  */
 
-const serialize = function (o: any, quote: string = '"') {
-  // TODO: Can we just use JSON.stringify here instead?
-  if (Type.isNull(o)) {
-    return 'null';
-  } else if (Type.isNumber(o) || Type.isBoolean(o)) {
-    return o.toString();
-  } else if (Type.isString(o)) {
-    const specialChars = '\bb\tt\nn\ff\rr\""\'\'\\\\';
+const serialize = (obj: any) => {
+  const data = JSON.stringify(obj);
 
-    /*eslint no-control-regex:0 */
-    return quote + o.replace(/([\u0080-\uFFFF\x00-\x1f\"\'\\])/g, (match, group1) => {
-      // Make sure single quotes never get encoded inside double quotes for JSON compatibility
-      if (quote === '"' && match === '\'') {
-        return match;
-      }
-
-      const i = specialChars.indexOf(group1);
-      if (i !== -1) {
-        return '\\' + specialChars.charAt(i + 1);
-      }
-
-      const hexCode = group1.charCodeAt(0).toString(16);
-      return '\\u' + '0000'.substring(hexCode.length) + hexCode;
-    }) + quote;
-  } else if (Type.isArray(o)) {
-    const content = Arr.foldl(o, (acc, value) => {
-      const v = (Type.isFunction(value) || Type.isUndefined(value)) ? 'null' : serialize(value, quote);
-      return acc + (acc.length > 0 ? ',' : '') + v;
-    }, '');
-
-    return '[' + content + ']';
-  } else if (Type.isObject(o)) {
-    if (Date.prototype.isPrototypeOf(o)) {
-      return quote + o.toISOString() + quote;
-    } else {
-      const content = Arr.foldl(Obj.keys(o), (acc, key) => {
-        const value = o[key];
-        if (Type.isFunction(value) || Type.isUndefined(value)) {
-          return acc;
-        } else {
-          return acc + (acc.length > 0 ? ',' : '') + serialize(key, quote) + ':' + serialize(value, quote);
-        }
-      }, '');
-
-      return '{' + content + '}';
-    }
-  } else {
-    return '';
+  if (!Type.isString(data)) {
+    return data;
   }
+
+  // convert unicode chars to escaped chars
+  return data.replace(/[\u0080-\uFFFF]/g, (match) => {
+    const hexCode = match.charCodeAt(0).toString(16);
+    return '\\u' + '0000'.substring(hexCode.length) + hexCode;
+  });
 };
 
 export default {
@@ -77,7 +40,6 @@ export default {
    *
    * @method serialize
    * @param {Object} obj Object to serialize as a JSON string.
-   * @param {String} quote Optional quote string defaults to ".
    * @return {string} JSON string serialized from input.
    */
   serialize,
