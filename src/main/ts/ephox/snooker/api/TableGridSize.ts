@@ -1,12 +1,12 @@
 import DetailsList from '../model/DetailsList';
 import Warehouse from '../model/Warehouse';
 
-var getGridSize = function (table) {
-  var input = DetailsList.fromTable(table);
-  var warehouse = Warehouse.generate(input);
+const getGridSize = function (table) {
+  const input = DetailsList.fromTable(table);
+  const warehouse = Warehouse.generate(input);
   return warehouse.grid();
 };
 
 export default {
-  getGridSize: getGridSize
+  getGridSize
 };

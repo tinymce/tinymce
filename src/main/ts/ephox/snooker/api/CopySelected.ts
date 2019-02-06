@@ -1,73 +1,62 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Arr, Obj, Struct } from '@ephox/katamari';
+import { Attr, Css, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import DetailsList from '../model/DetailsList';
 import Warehouse from '../model/Warehouse';
 import LayerSelector from '../util/LayerSelector';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Selectors } from '@ephox/sugar';
 
-var stats = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
+const statsStruct = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
 
-var findSelectedStats = function (house, isSelected) {
-  var totalColumns = house.grid().columns();
-  var totalRows = house.grid().rows();
+const findSelectedStats = function (house, isSelected) {
+  const totalColumns = house.grid().columns();
+  const totalRows = house.grid().rows();
 
   /* Refactor into a method returning a struct to hide the mutation */
-  var minRow = totalRows;
-  var minCol = totalColumns;
-  var maxRow = 0;
-  var maxCol = 0;
+  let minRow = totalRows;
+  let minCol = totalColumns;
+  let maxRow = 0;
+  let maxCol = 0;
   Obj.each(house.access(), function (detail) {
     if (isSelected(detail)) {
-      var startRow = detail.row();
-      var endRow = startRow + detail.rowspan() - 1;
-      var startCol = detail.column();
-      var endCol = startCol + detail.colspan() - 1;
-      if (startRow < minRow) minRow = startRow;
-      else if (endRow > maxRow) maxRow = endRow;
+      const startRow = detail.row();
+      const endRow = startRow + detail.rowspan() - 1;
+      const startCol = detail.column();
+      const endCol = startCol + detail.colspan() - 1;
+      if (startRow < minRow) { minRow = startRow; } else if (endRow > maxRow) { maxRow = endRow; }
 
-      if (startCol < minCol) minCol = startCol;
-      else if (endCol > maxCol) maxCol = endCol;
+      if (startCol < minCol) { minCol = startCol; } else if (endCol > maxCol) { maxCol = endCol; }
     }
   });
-  return stats(minRow, minCol, maxRow, maxCol);
+  return statsStruct(minRow, minCol, maxRow, maxCol);
 };
 
-var makeCell = function (list, seenSelected, rowIndex) {
+const makeCell = function (list, seenSelected, rowIndex) {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
-  var row = list[rowIndex].element();
-  var td = Element.fromTag('td');
+  const row = list[rowIndex].element();
+  const td = Element.fromTag('td');
   Insert.append(td, Element.fromTag('br'));
-  var f = seenSelected ? Insert.append : Insert.prepend;
+  const f = seenSelected ? Insert.append : Insert.prepend;
   f(row, td);
 };
 
-var fillInGaps = function (list, house, stats, isSelected) {
-  var totalColumns = house.grid().columns();
-  var totalRows = house.grid().rows();
+const fillInGaps = function (list, house, stats, isSelected) {
+  const totalColumns = house.grid().columns();
+  const totalRows = house.grid().rows();
   // unselected cells have been deleted, now fill in the gaps in the model
-  for (var i = 0; i < totalRows; i++) {
-    var seenSelected = false;
-    for (var j = 0; j < totalColumns; j++) {
+  for (let i = 0; i < totalRows; i++) {
+    let seenSelected = false;
+    for (let j = 0; j < totalColumns; j++) {
       if (!(i < stats.minRow() || i > stats.maxRow() || j < stats.minCol() || j > stats.maxCol())) {
         // if there is a hole in the table itself, or it's an unselected position, we need a cell
-        var needCell = Warehouse.getAt(house, i, j).filter(isSelected).isNone();
-        if (needCell) makeCell(list, seenSelected, i);
-        // if we didn't need a cell, this position must be selected, so set the flag
-        else seenSelected = true;
+        const needCell = Warehouse.getAt(house, i, j).filter(isSelected).isNone();
+        if (needCell) { makeCell(list, seenSelected, i); } else { seenSelected = true; }
       }
     }
   }
 };
 
-var clean = function (table, stats) {
+const clean = function (table, stats) {
   // can't use :empty selector as that will not include TRs made up of whitespace
-  var emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), function (row) {
+  const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), function (row) {
     // there is no sugar method for this, and Traverse.children() does too much processing
     return row.dom().childElementCount === 0;
   });
@@ -87,19 +76,19 @@ var clean = function (table, stats) {
   Css.remove(table, 'height');
 };
 
-var extract = function (table, selectedSelector) {
-  var isSelected = function (detail) {
+const extract = function (table, selectedSelector) {
+  const isSelected = function (detail) {
     return Selectors.is(detail.element(), selectedSelector);
   };
 
-  var list = DetailsList.fromTable(table);
-  var house = Warehouse.generate(list);
+  const list = DetailsList.fromTable(table);
+  const house = Warehouse.generate(list);
 
-  var stats = findSelectedStats(house, isSelected);
+  const stats = findSelectedStats(house, isSelected);
 
   // remove unselected cells
-  var selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
-  var unselectedCells = LayerSelector.filterFirstLayer(table, 'th,td', function (cell) {
+  const selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
+  const unselectedCells = LayerSelector.filterFirstLayer(table, 'th,td', function (cell) {
     return Selectors.is(cell, selector);
   });
   Arr.each(unselectedCells, Remove.remove);
@@ -112,5 +101,5 @@ var extract = function (table, selectedSelector) {
 };
 
 export default {
-  extract: extract
+  extract
 };

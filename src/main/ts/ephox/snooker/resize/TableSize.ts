@@ -1,87 +1,86 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { Width } from '@ephox/sugar';
+import CellUtils from '../util/CellUtils';
 import ColumnSizes from './ColumnSizes';
 import Sizes from './Sizes';
-import CellUtils from '../util/CellUtils';
-import { Width } from '@ephox/sugar';
 
-var percentageSize = function (width, element) {
-  var floatWidth = parseFloat(width);
-  var pixelWidth = Width.get(element);
-  var getCellDelta = function (delta) {
+const percentageSize = function (width, element) {
+  const floatWidth = parseFloat(width);
+  const pixelWidth = Width.get(element);
+  const getCellDelta = function (delta) {
     return delta / pixelWidth * 100;
   };
-  var singleColumnWidth = function (width, _delta?) {
+  const singleColumnWidth = function (w, _delta?) {
     // If we have one column in a percent based table, that column should be 100% of the width of the table.
-    return [100 - width];
+    return [100 - w];
   };
   // Get the width of a 10 pixel wide cell over the width of the table as a percentage
-  var minCellWidth = function () {
+  const minCellWidth = function () {
     return CellUtils.minWidth() / pixelWidth * 100;
   };
-  var setTableWidth = function (table, _newWidths, delta?) {
-    var total = floatWidth + delta;
+  const setTableWidth = function (table, _newWidths, delta?) {
+    const total = floatWidth + delta;
     Sizes.setPercentageWidth(table, total);
   };
   return {
     width: Fun.constant(floatWidth),
     pixelWidth: Fun.constant(pixelWidth),
     getWidths: ColumnSizes.getPercentageWidths,
-    getCellDelta: getCellDelta,
-    singleColumnWidth: singleColumnWidth,
-    minCellWidth: minCellWidth,
+    getCellDelta,
+    singleColumnWidth,
+    minCellWidth,
     setElementWidth: Sizes.setPercentageWidth,
-    setTableWidth: setTableWidth
+    setTableWidth
   };
 };
 
-var pixelSize = function (width) {
-  var intWidth = parseInt(width, 10);
-  var getCellDelta = Fun.identity;
-  var singleColumnWidth = function (width, delta) {
-    var newNext = Math.max(CellUtils.minWidth(), width + delta);
-    return [ newNext - width ];
+const pixelSize = function (width) {
+  const intWidth = parseInt(width, 10);
+  const getCellDelta = Fun.identity;
+  const singleColumnWidth = function (w, delta) {
+    const newNext = Math.max(CellUtils.minWidth(), w + delta);
+    return [ newNext - w ];
   };
-  var setTableWidth = function (table, newWidths, _delta?) {
-    var total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
+  const setTableWidth = function (table, newWidths, _delta?) {
+    const total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
     Sizes.setPixelWidth(table, total);
   };
   return {
     width: Fun.constant(intWidth),
     pixelWidth: Fun.constant(intWidth),
     getWidths: ColumnSizes.getPixelWidths,
-    getCellDelta: getCellDelta,
-    singleColumnWidth: singleColumnWidth,
+    getCellDelta,
+    singleColumnWidth,
     minCellWidth: CellUtils.minWidth,
     setElementWidth: Sizes.setPixelWidth,
-    setTableWidth: setTableWidth
+    setTableWidth
   };
 };
 
-var chooseSize = function (element, width) {
+const chooseSize = function (element, width) {
   if (Sizes.percentageBasedSizeRegex().test(width)) {
-    var percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
+    const percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
     return percentageSize(percentMatch[1], element);
   } else if (Sizes.pixelBasedSizeRegex().test(width)) {
-    var pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
+    const pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
     return pixelSize(pixelMatch[1]);
   } else {
-    var fallbackWidth = Width.get(element);
+    const fallbackWidth = Width.get(element);
     return pixelSize(fallbackWidth);
   }
 };
 
-var getTableSize = function (element) {
-  var width = Sizes.getRawWidth(element);
+const getTableSize = function (element) {
+  const width = Sizes.getRawWidth(element);
   // If we have no width still, return a pixel width at least.
   return width.fold(function () {
-    var fallbackWidth = Width.get(element);
+    const fallbackWidth = Width.get(element);
     return pixelSize(fallbackWidth);
-  }, function (width) {
-    return chooseSize(element, width);
+  }, function (w) {
+    return chooseSize(element, w);
   });
 };
 
 export default {
-  getTableSize: getTableSize
+  getTableSize
 };

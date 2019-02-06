@@ -1,29 +1,29 @@
-var none = function () {
+const none = function () {
   return cellType(function (n, w, p) {
     return n();
   });
 };
 
-var whole = function (info) {
+const whole = function (info) {
   return cellType(function (n, w, p) {
     return w(info);
   });
 };
 
-var partial = function (info, offset) {
+const partial = function (info, offset) {
   return cellType(function (n, w, p) {
     return p(info, offset);
   });
 };
 
-var cellType = function (fold) {
+const cellType = function (fold) {
   return {
-    fold: fold
+    fold
   };
 };
 
 export default {
-  none: none,
-  whole: whole,
-  partial: partial
+  none,
+  whole,
+  partial
 };

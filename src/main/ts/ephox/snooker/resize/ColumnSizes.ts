@@ -1,12 +1,11 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { Css } from '@ephox/sugar';
 import Blocks from '../lookup/Blocks';
-import Sizes from './Sizes';
 import CellUtils from '../util/CellUtils';
 import Util from '../util/Util';
-import { Css } from '@ephox/sugar';
+import Sizes from './Sizes';
 
-var getRaw = function (cell, property, getter) {
+const getRaw = function (cell, property, getter) {
   return Css.getRaw(cell, property).fold(function () {
     return getter(cell) + 'px';
   }, function (raw) {
@@ -14,27 +13,27 @@ var getRaw = function (cell, property, getter) {
   });
 };
 
-var getRawW = function (cell) {
+const getRawW = function (cell) {
   return getRaw(cell, 'width', Sizes.getPixelWidth);
 };
 
-var getRawH = function (cell) {
+const getRawH = function (cell) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-var getWidthFrom:any = function (warehouse, direction, getWidth, fallback, tableSize) {
-  var columns = Blocks.columns(warehouse);
+const getWidthFrom: any = function (warehouse, direction, getWidth, fallback, tableSize) {
+  const columns = Blocks.columns(warehouse);
 
-  var backups = Arr.map(columns, function (cellOption) {
+  const backups = Arr.map(columns, function (cellOption) {
     return cellOption.map(direction.edge);
   });
 
   return Arr.map(columns, function (cellOption, c) {
     // Only use the width of cells that have no column span (or colspan 1)
-    var columnCell = cellOption.filter(Fun.not(CellUtils.hasColspan));
+    const columnCell = cellOption.filter(Fun.not(CellUtils.hasColspan));
     return columnCell.fold(function () {
       // Can't just read the width of a cell, so calculate.
-      var deduced = Util.deduce(backups, c);
+      const deduced = Util.deduce(backups, c);
       return fallback(deduced);
     }, function (cell) {
       return getWidth(cell, tableSize);
@@ -42,15 +41,15 @@ var getWidthFrom:any = function (warehouse, direction, getWidth, fallback, table
   });
 };
 
-var getDeduced = function (deduced) {
+const getDeduced = function (deduced) {
   return deduced.map(function (d) { return d + 'px'; }).getOr('');
 };
 
-var getRawWidths = function (warehouse, direction) {
+const getRawWidths = function (warehouse, direction) {
   return getWidthFrom(warehouse, direction, getRawW, getDeduced);
 };
 
-var getPercentageWidths = function (warehouse, direction, tableSize) {
+const getPercentageWidths = function (warehouse, direction, tableSize) {
   return getWidthFrom(warehouse, direction, Sizes.getPercentageWidth, function (deduced) {
     return deduced.fold(function () {
       return tableSize.minCellWidth();
@@ -60,25 +59,25 @@ var getPercentageWidths = function (warehouse, direction, tableSize) {
   }, tableSize);
 };
 
-var getPixelWidths = function (warehouse, direction, tableSize) {
+const getPixelWidths = function (warehouse, direction, tableSize) {
   return getWidthFrom(warehouse, direction, Sizes.getPixelWidth, function (deduced) {
     // Minimum cell width when all else fails.
     return deduced.getOrThunk(tableSize.minCellWidth);
   }, tableSize);
 };
 
-var getHeightFrom = function (warehouse, direction, getHeight, fallback) {
-  var rows = Blocks.rows(warehouse);
+const getHeightFrom = function (warehouse, direction, getHeight, fallback) {
+  const rows = Blocks.rows(warehouse);
 
-  var backups = Arr.map(rows, function (cellOption) {
+  const backups = Arr.map(rows, function (cellOption) {
     return cellOption.map(direction.edge);
   });
 
   return Arr.map(rows, function (cellOption, c) {
-    var rowCell = cellOption.filter(Fun.not(CellUtils.hasRowspan));
+    const rowCell = cellOption.filter(Fun.not(CellUtils.hasRowspan));
 
     return rowCell.fold(function () {
-      var deduced = Util.deduce(backups, c);
+      const deduced = Util.deduce(backups, c);
       return fallback(deduced);
     }, function (cell) {
       return getHeight(cell);
@@ -86,20 +85,20 @@ var getHeightFrom = function (warehouse, direction, getHeight, fallback) {
   });
 };
 
-var getPixelHeights = function (warehouse, direction) {
+const getPixelHeights = function (warehouse, direction) {
   return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced) {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };
 
-var getRawHeights = function (warehouse, direction) {
+const getRawHeights = function (warehouse, direction) {
   return getHeightFrom(warehouse, direction, getRawH, getDeduced);
 };
 
 export default {
-  getRawWidths: getRawWidths,
-  getPixelWidths: getPixelWidths,
-  getPercentageWidths: getPercentageWidths,
-  getPixelHeights: getPixelHeights,
-  getRawHeights: getRawHeights
+  getRawWidths,
+  getPixelWidths,
+  getPercentageWidths,
+  getPixelHeights,
+  getRawHeights
 };

@@ -4,15 +4,15 @@ import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('TableMergeTest', function() {
-  var generator = TestGenerator;
-  var start = Structs.address;
-  var suite = TableMerge.suite;
+UnitTest.test('TableMergeTest', function () {
+  const generator = TestGenerator;
+  const start = Structs.address;
+  const suite = TableMerge.suite;
 
-  var en = Structs.elementnew;
+  const en = Structs.elementnew;
 
   // Advanced Spans
-  var gridAdvancedOne = function () {
+  const gridAdvancedOne = function () {
     return [
       [ en('A', false), en('B', false), en('B', false), en('C', false) ],
       [ en('D', false), en('B', false), en('B', false), en('E', false) ],
@@ -24,7 +24,7 @@ UnitTest.test('TableMergeTest', function() {
     ];
   };
 
-  var gridSpanB = function () {
+  const gridSpanB = function () {
     return [
       [ en('alpha', true), en('alpha', true) ],
       [ en('beta', true),  en('charlie', true) ]
@@ -33,7 +33,7 @@ UnitTest.test('TableMergeTest', function() {
 
   // These are suites which combine all 3 tests in 1 spec (measure, tailor, merge)
   // merge gridBee into gridAphid
-  var gridAphid = function () {
+  const gridAphid = function () {
     return [
       [ en('a', false), en('b', false), en('c', false) ],
       [ en('d', false), en('e', false), en('f', false) ],
@@ -42,7 +42,7 @@ UnitTest.test('TableMergeTest', function() {
     ];
   };
 
-  var gridBee = function () {
+  const gridBee = function () {
     return [
       [ en('bee1', true) ],
       [ en('bee2', true) ],
@@ -52,7 +52,7 @@ UnitTest.test('TableMergeTest', function() {
     ];
   };
 
-  var gridcicada = function () {
+  const gridcicada = function () {
     return [
       [ en('cic1', true), en('cic2', true), en('cic3', true), en('cic3', true), en('cic3', true), en('cic4', true), en('cic4', true), en('cic4', true)]
     ];
@@ -245,8 +245,7 @@ UnitTest.test('TableMergeTest', function() {
       [ en('F', false), en('F', false), en('F', false), en('G', false), en('?_12', true), en('?_13', true), en('?_14', true), en('?_15', true) ],
       [ en('F', false), en('F', false), en('F', false), en('H', false), en('?_16', true), en('?_17', true), en('?_18', true),  en('?_19', true) ],
       [ en('I', false), en('J', false), en('K', false), en('K', false), en('?_20', true), en('?_21', true), en('?_22', true),  en('?_23', true) ],
-      [ en('h(cic1)_0', true),en('h(cic2)_1', true),en('h(cic3)_2', true),en('h(cic3)_3', true),en('h(cic3)_4', true),en('h(cic4)_5', true),en('h(cic4)_6', true),en('h(cic4)_7', true) ]
+      [ en('h(cic1)_0', true), en('h(cic2)_1', true), en('h(cic3)_2', true), en('h(cic3)_3', true), en('h(cic3)_4', true), en('h(cic4)_5', true), en('h(cic4)_6', true), en('h(cic4)_7', true) ]
     ]
   );
 });
-

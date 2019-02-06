@@ -1,19 +1,15 @@
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+import { Body, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TableContent from 'ephox/snooker/api/TableContent';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('TableMergeContentTest', function() {
-  var mergeContentTest = function (specs) {
-    var table = Element.fromTag('table');
-    var row = Element.fromTag('tr');
+UnitTest.test('TableMergeContentTest', function () {
+  const mergeContentTest = function (specs) {
+    const table = Element.fromTag('table');
+    const row = Element.fromTag('tr');
     Insert.append(table, row);
-    var cells = Arr.map(specs, function (item) {
-      var cell = Element.fromTag('td');
+    const cells = Arr.map(specs, function (item) {
+      const cell = Element.fromTag('td');
       cell.dom().innerHTML = item.html;
 
       Insert.append(row, cell);
@@ -39,7 +35,7 @@ UnitTest.test('TableMergeContentTest', function() {
 
   */
 
-  var spec1 = [
+  const spec1 = [
     {
       label: 'just a P block tag, there should NOT be a br proceeding it',
       html: '<p>There should not be a br after.</p>',
@@ -63,7 +59,7 @@ UnitTest.test('TableMergeContentTest', function() {
     }
   ];
 
-  var spec2 = [
+  const spec2 = [
     {
       label: 'textnode followed by a block tag, there should NOT be a br proceeding the p',
       html: 'standard issue textnode <p>There should not be a br after.</p>',
@@ -86,7 +82,7 @@ UnitTest.test('TableMergeContentTest', function() {
     }
   ];
 
-  var spec3 = [
+  const spec3 = [
     {
       label: 'There should not be a br after the hr',
       html: 'standard issue textnode followed by a hr <hr>',
@@ -109,7 +105,7 @@ UnitTest.test('TableMergeContentTest', function() {
     }
   ];
 
-  var spec4 = [
+  const spec4 = [
     {
       label: 'A cell containing only a br should be maintained 0',
       html: '<br>',
@@ -127,7 +123,7 @@ UnitTest.test('TableMergeContentTest', function() {
     }
   ];
 
-  var spec5 = [
+  const spec5 = [
     {
       label: 'A cell containing only a br should be maintained 0',
       html: '<br>',
@@ -145,7 +141,7 @@ UnitTest.test('TableMergeContentTest', function() {
     }
   ];
 
-  var spec6 = [
+  const spec6 = [
     {
       label: 'A cell containing an image and an hr should maintain both',
       html: '<img src="project/src/assets/img/ephox_nav.png">',
@@ -159,8 +155,6 @@ UnitTest.test('TableMergeContentTest', function() {
 
   ];
 
-
-
   mergeContentTest(spec1);
   mergeContentTest(spec2);
   mergeContentTest(spec3);
@@ -168,4 +162,3 @@ UnitTest.test('TableMergeContentTest', function() {
   mergeContentTest(spec5);
   mergeContentTest(spec6);
 });
-

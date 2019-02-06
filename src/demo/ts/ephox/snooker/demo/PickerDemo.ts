@@ -5,19 +5,19 @@ import PickerDirection from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
 import PickerUi from 'ephox/snooker/picker/PickerUi';
 
-
+/* tslint:disable:no-console */
 
 Ready.execute(function () {
 
-  var picker = PickerUi(PickerDirection.ltr, {
+  const picker = PickerUi(PickerDirection.ltr, {
     maxCols: 10,
     maxRows: 10,
     minCols: 1,
     minRows: 1
   }, AriaGrid.createHelp(10, 10, DemoTranslations));
 
-  var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
-  var wrap = Element.fromTag('div');
+  const ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+  const wrap = Element.fromTag('div');
 
   Remove.empty(ephoxUi);
 
@@ -25,12 +25,8 @@ Ready.execute(function () {
   Insert.append(wrap, picker.element());
 
   DomEvent.bind(ephoxUi, 'keydown', function (event) {
-    var key = event.raw().which;
-    if (key === 37) picker.sendLeft();
-    else if (key === 39) picker.sendRight();
-    else if (key === 40) picker.sendDown();
-    else if (key === 38) picker.sendUp();
-    else if (key === 32 || key === 13) picker.sendExecute();
+    const key = event.raw().which;
+    if (key === 37) { picker.sendLeft(); } else if (key === 39) { picker.sendRight(); } else if (key === 40) { picker.sendDown(); } else if (key === 38) { picker.sendUp(); } else if (key === 32 || key === 13) { picker.sendExecute(); }
     event.kill();
   });
 
@@ -38,7 +34,7 @@ Ready.execute(function () {
   picker.setHeaders(1, 1);
   picker.setSelection(2, 2);
 
-  picker.events.select.bind( function(event) {
+  picker.events.select.bind( function (event) {
     console.log('need to create table with ', event.cols(), 'columns and ', event.rows(), 'rows' );
     console.log('headers: ', event.rowHeaders() + ' x ' + event.columnHeaders());
   });

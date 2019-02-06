@@ -6,36 +6,34 @@ import ResizeWire from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import TableResize from 'ephox/snooker/api/TableResize';
 
-
-
 Ready.execute(function () {
 
-  var tester = Element.fromHtml(
-    '<table border=1>'+
-      '<tr>'+
-        '<th>A0</th>'+
-        '<th>A1</th>'+
-        '<th>A2</th>'+
-        '<th>A3</th>'+
-        '<th>A4</th>'+
-      '</tr>'+
-      '<tr>'+
-        '<td>B0</td>'+
-        '<td>B1</td>'+
-        '<td>B2</td>'+
-        '<td>B3</td>'+
-        '<td rowspan="2">B3</td>'+
-      '</tr>'+
-      '<tr>'+
-        '<td>C0</td>'+
-        '<td>C1</td>'+
-        '<td>C2</td>'+
-        '<td>C3</td>'+
-      '</tr>'+
+  const tester = Element.fromHtml(
+    '<table border=1>' +
+      '<tr>' +
+        '<th>A0</th>' +
+        '<th>A1</th>' +
+        '<th>A2</th>' +
+        '<th>A3</th>' +
+        '<th>A4</th>' +
+      '</tr>' +
+      '<tr>' +
+        '<td>B0</td>' +
+        '<td>B1</td>' +
+        '<td>B2</td>' +
+        '<td>B3</td>' +
+        '<td rowspan="2">B3</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td>C0</td>' +
+        '<td>C1</td>' +
+        '<td>C2</td>' +
+        '<td>C3</td>' +
+      '</tr>' +
     '</table>'
   );
 
-  var subject = Element.fromHtml(
+  const subject = Element.fromHtml(
     '<table contenteditable="true" style="border-collapse: collapse;" border="1"><tbody>' +
       '<tr>' +
         '<td style="width: 110px;">1</td>' +
@@ -81,7 +79,7 @@ Ready.execute(function () {
 // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
 // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
 
-  var subject2 = Element.fromHtml(
+  const subject2 = Element.fromHtml(
     '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
       '<tr>' +
         '<td style="width: 110px;">1</td>' +
@@ -97,18 +95,18 @@ Ready.execute(function () {
     '</tbody></table>'
   );
 
-  var subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
+  const subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
 
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-  var ltrs = Element.fromHtml('<div class="ltrs"></div>');
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+  const ltrs = Element.fromHtml('<div class="ltrs"></div>');
   InsertAll.append(ltrs, [ Element.fromHtml('<p>Left to Right tables</p>'), tester, Element.fromTag('p'), subject2 ]);
-  var rtls = Element.fromHtml('<div dir="rtl"></div>');
-   InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
+  const rtls = Element.fromHtml('<div dir="rtl"></div>');
+  InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-  var ltrManager = TableResize(ResizeWire.body(tester, ltrs), ResizeDirection.ltr);
+  const ltrManager = TableResize(ResizeWire.body(tester, ltrs), ResizeDirection.ltr);
   ltrManager.on();
-  var rtlManager = TableResize(ResizeWire.body(subject3, rtls), ResizeDirection.rtl);
+  const rtlManager = TableResize(ResizeWire.body(subject3, rtls), ResizeDirection.rtl);
   rtlManager.on();
 
   // For firefox.
@@ -117,109 +115,108 @@ Ready.execute(function () {
     // document.execCommand("enableObjectResizing", false, "false");
   });
 
-
-  var afterRow = Element.fromTag('button');
+  const afterRow = Element.fromTag('button');
   Insert.append(afterRow, Element.fromText('Row After'));
   Insert.append(ephoxUi, afterRow);
 
-  var beforeRow = Element.fromTag('button');
+  const beforeRow = Element.fromTag('button');
   Insert.append(beforeRow, Element.fromText('Row Before'));
   Insert.append(ephoxUi, beforeRow);
 
-  var afterColumn = Element.fromTag('button');
+  const afterColumn = Element.fromTag('button');
   Insert.append(afterColumn, Element.fromText('Column After'));
   Insert.append(ephoxUi, afterColumn);
 
-  var beforeColumn = Element.fromTag('button');
+  const beforeColumn = Element.fromTag('button');
   Insert.append(beforeColumn, Element.fromText('Column Before'));
   Insert.append(ephoxUi, beforeColumn);
 
-  var splitCellIntoColumns = Element.fromTag('button');
+  const splitCellIntoColumns = Element.fromTag('button');
   Insert.append(splitCellIntoColumns, Element.fromText('Split Cell Into Columns'));
   Insert.append(ephoxUi, splitCellIntoColumns);
 
-  var splitCellIntoRows = Element.fromTag('button');
+  const splitCellIntoRows = Element.fromTag('button');
   Insert.append(splitCellIntoRows, Element.fromText('Split Cell Into Rows'));
   Insert.append(ephoxUi, splitCellIntoRows);
 
-  var eraseRow = Element.fromTag('button');
+  const eraseRow = Element.fromTag('button');
   Insert.append(eraseRow, Element.fromText('Erase row'));
   Insert.append(ephoxUi, eraseRow);
 
-  var eraseColumn = Element.fromTag('button');
+  const eraseColumn = Element.fromTag('button');
   Insert.append(eraseColumn, Element.fromText('Erase column'));
   Insert.append(ephoxUi, eraseColumn);
 
-  var makeButton = function (desc) {
-    var button = Element.fromTag('button');
+  const makeButton = function (desc) {
+    const button = Element.fromTag('button');
     Insert.append(button, Element.fromText(desc));
     Insert.append(ephoxUi, button);
     return button;
   };
 
-  var makeColumnHeader = makeButton('Make column header');
-  var unmakeColumnHeader = makeButton('Unmake column header');
-  var makeRowHeader = makeButton('makeRowHeader');
-  var unmakeRowHeader = makeButton('unmakeRowHeader');
+  const makeColumnHeader = makeButton('Make column header');
+  const unmakeColumnHeader = makeButton('Unmake column header');
+  const makeRowHeader = makeButton('makeRowHeader');
+  const unmakeRowHeader = makeButton('unmakeRowHeader');
 
-  var detection = function () {
-    var selection = window.getSelection();
+  const detection = function () {
+    const selection = window.getSelection();
     if (selection.rangeCount > 0) {
-      var range = selection.getRangeAt(0);
-      var fistElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
+      const range = selection.getRangeAt(0);
+      const fistElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
       return Option.some(Element.fromDom(fistElement));
     } else {
       return Option.none();
     }
   };
 
-  var newCell = function (prev) {
-    var td = Element.fromTag('td');
+  const newCell = function (prev) {
+    const td = Element.fromTag('td');
     Insert.append(td, Element.fromText('?'));
-    if (prev.colspan() === 1) Css.set(td, 'width', Css.get(prev.element(), 'width'));
-    if (prev.rowspan() === 1) Css.set(td, 'height', Css.get(prev.element(), 'height'));
+    if (prev.colspan() === 1) { Css.set(td, 'width', Css.get(prev.element(), 'width')); }
+    if (prev.rowspan() === 1) { Css.set(td, 'height', Css.get(prev.element(), 'height')); }
     return td;
   };
 
-  var gap = function () {
-    var td = Element.fromTag('td');
+  const gap = function () {
+    const td = Element.fromTag('td');
     Insert.append(td, Element.fromText('?'));
     return td;
   };
 
-  var newRow = function (prev) {
-    var tr = Element.fromTag('tr');
+  const newRow = function (prev) {
+    const tr = Element.fromTag('tr');
     return tr;
   };
 
-  var replace = function (cell, tag, attrs) {
-    var replica = Replication.copy(cell, tag);
+  const replace = function (cell, tag, attrs) {
+    const replica = Replication.copy(cell, tag);
     Obj.each(attrs, function (v, k) {
-      if (v !== null) Attr.set(replica, k, v);
+      if (v !== null) { Attr.set(replica, k, v); }
     });
     return replica;
   };
 
-  var generators = {
+  const generators = {
     row: newRow,
     cell: newCell,
-    replace: replace,
-    gap: gap
+    replace,
+    gap
   };
 
-  var runOperation = function (operation) {
+  const runOperation = function (operation) {
     return function (event) {
       detection().each(function (start) {
-        var dir = Direction.getDirection(start);
-        var direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
-        var target = {
+        const dir = Direction.getDirection(start);
+        const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
+        const target = {
           element: Fun.constant(start),
           mergable: Option.none,
           unmergable: Option.none,
           selection: Fun.constant([start])
         };
 
-        //wire, table, target, generators, direction
+        // wire, table, target, generators, direction
         operation(ResizeWire.only(ephoxUi), SelectorFind.ancestor(start, 'table').getOrDie(), target, generators, direction);
       });
     };

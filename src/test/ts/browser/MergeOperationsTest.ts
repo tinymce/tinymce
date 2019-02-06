@@ -1,7 +1,7 @@
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('MergeOperationsTest', function() {
+UnitTest.test('MergeOperationsTest', function () {
   Assertions.checkMerge(
     'SimpleCase - merging textnodes should move all content into the first cell separarted by BRs',
     // Border = 1 would be here, but it is removed so that we can assert html
@@ -80,4 +80,3 @@ UnitTest.test('MergeOperationsTest', function() {
     { startRow: 2, startCol: 0, finishRow: 3, finishCol: 0 }
   );
 });
-

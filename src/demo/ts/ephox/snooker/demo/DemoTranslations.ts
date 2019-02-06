@@ -1,6 +1,5 @@
 
-
 export default {
-  row: function (row) { return row + ' high'; },
-  col: function (col) { return col + ' wide'; }
+  row (row) { return row + ' high'; },
+  col (col) { return col + ' wide'; }
 };

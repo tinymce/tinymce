@@ -1,36 +1,31 @@
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+import { Attr, Class, Element, Html, InsertAll } from '@ephox/sugar';
 import CopySelected from 'ephox/snooker/api/CopySelected';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CopySelectedTest', function() {
+UnitTest.test('CopySelectedTest', function () {
   // normally this is darwin ephemera, but doesn't actually matter what it is
-  var SEL_CLASS = 'copy-selected';
-
+  const SEL_CLASS = 'copy-selected';
 
   // traverse really needs this built in
-  var traverseChildElements = function (e) {
+  const traverseChildElements = function (e) {
     return Arr.map(e.dom().children, Element.fromDom);
   };
 
   // data objects for input/expected
-  var data = function (selected) {
+  const data = function (selected) {
     return function (text, rowspan?, colspan?) {
       return {
-        selected: selected,
+        selected,
         html: text,
         rowspan: rowspan === undefined ? undefined : String(rowspan),
         colspan: colspan === undefined ? undefined : String(colspan)
       };
     };
   };
-  var s = data(true);
-  var ns = data(false);
-  var gen = function () {
+  const s = data(true);
+  const ns = data(false);
+  const gen = function () {
     return {
       selected: false,
       html: '<br>'
@@ -38,46 +33,46 @@ UnitTest.test('CopySelectedTest', function() {
   };
 
   // generate a table structure from a nested array
-  var generateInput = function (input) {
-    var table = Element.fromTag('table');
-    var rows = Arr.map(input, function (row) {
-      var cells = Arr.map(row, function (cell) {
-        var td = Element.fromTag('td');
-        if (cell.rowspan !== undefined) Attr.set(td, 'rowspan', cell.rowspan);
-        if (cell.colspan !== undefined) Attr.set(td, 'colspan', cell.colspan);
-        if (cell.selected) Class.add(td, SEL_CLASS);
+  const generateInput = function (input) {
+    const table = Element.fromTag('table');
+    const rows = Arr.map(input, function (row) {
+      const cells = Arr.map(row, function (cell) {
+        const td = Element.fromTag('td');
+        if (cell.rowspan !== undefined) { Attr.set(td, 'rowspan', cell.rowspan); }
+        if (cell.colspan !== undefined) { Attr.set(td, 'colspan', cell.colspan); }
+        if (cell.selected) { Class.add(td, SEL_CLASS); }
         Html.set(td, cell.html);
         return td;
       });
-      var tr = Element.fromTag('tr');
+      const tr = Element.fromTag('tr');
       InsertAll.append(tr, cells);
       return tr;
     });
-    var withNewlines = Arr.bind(rows, function (row) {
+    const withNewlines = Arr.bind(rows, function (row) {
       return [ Element.fromText('\n'), row];
     });
     InsertAll.append(table, withNewlines.concat(Element.fromText('\n')));
     return table;
   };
 
-  var check = function (label, expected, input) {
-    var table = generateInput(input);
+  const check = function (label, expected, input) {
+    const table = generateInput(input);
 
     CopySelected.extract(table, '.' + SEL_CLASS);
 
     // Now verify that the table matches the nested array structure of expected
-    var htmlForError = ', test "' + label + '". Output HTML:\n' + Html.getOuter(table);
-    var assertWithInfo = function (expected, actual, info) {
-      assert.eq(expected, actual, 'expected ' + info + ' "' + expected + '", was "' + actual + '"' + htmlForError);
+    const htmlForError = ', test "' + label + '". Output HTML:\n' + Html.getOuter(table);
+    const assertWithInfo = function (exp, actual, info) {
+      assert.eq(exp, actual, 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + htmlForError);
     };
 
-    var domRows = traverseChildElements(table);
+    const domRows = traverseChildElements(table);
     assertWithInfo(expected.length, domRows.length, 'number of rows');
     Arr.each(expected, function (row, i) {
-      var domCells = traverseChildElements(domRows[i]);
+      const domCells = traverseChildElements(domRows[i]);
       assertWithInfo(row.length, domCells.length, 'number of cells in output row ' + i + ' to be ');
       Arr.each(row, function (cell, j) {
-        var domCell = domCells[j];
+        const domCell = domCells[j];
         assertWithInfo(cell.html, Html.get(domCell), 'cell text');
         assertWithInfo(cell.rowspan, Attr.get(domCell, 'rowspan'), 'rowspan');
         assertWithInfo(cell.colspan, Attr.get(domCell, 'colspan'), 'colspan');
@@ -105,7 +100,7 @@ UnitTest.test('CopySelectedTest', function() {
     [ s('C', 1, 1), s('D', 1, 1) ]
   ]);
   ////////////////////////////////////////////////////
-  var entireComplex = [
+  const entireComplex = [
     [ s('A', 2, 2),                 s('B', 1, 1) ],
     [                               s('C', 1, 1) ],
     [ s('D', 1, 1),  s('E', 1, 1),  s('F', 1, 1) ]
@@ -253,4 +248,3 @@ UnitTest.test('CopySelectedTest', function() {
   ]
   );
 });
-

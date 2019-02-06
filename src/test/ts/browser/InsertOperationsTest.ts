@@ -2,7 +2,7 @@ import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('InsertOperationsTest', function() {
+UnitTest.test('InsertOperationsTest', function () {
   Assertions.checkOld({ section: 0, row: 0, column: 0 },
     '<table><tbody>' +
       '<tr><td>?</td><td>?</td></tr>' +
@@ -253,12 +253,12 @@ UnitTest.test('InsertOperationsTest', function() {
 
   Assertions.checkStructure({ section: 0, row: 1, column: 1 },
     [
-      [ 'A', '?', 'B','C' ],
+      [ 'A', '?', 'B', 'C' ],
       [ 'D', '?', 'E' ],
       [ 'F' ],
       [ 'G' ],
       [ 'H' ],
-      [ 'I', '?', 'J','K' ],
+      [ 'I', '?', 'J', 'K' ],
       [ 'L', 'M' ]
     ],
 
@@ -405,4 +405,3 @@ UnitTest.test('InsertOperationsTest', function() {
     TableOperations.insertRowAfter, 1, 0, 1
   );
 });
-

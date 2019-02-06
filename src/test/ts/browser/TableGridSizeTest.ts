@@ -1,12 +1,11 @@
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Element, Remove } from '@ephox/sugar';
 import TableGridSize from 'ephox/snooker/api/TableGridSize';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Table grid size test', function() {
-  var testGridSize = function (html, expectedColumnCount, expectedRowCount) {
-    var tbl = Element.fromHtml(html);
-    var size = TableGridSize.getGridSize(tbl);
+UnitTest.test('Table grid size test', function () {
+  const testGridSize = function (html, expectedColumnCount, expectedRowCount) {
+    const tbl = Element.fromHtml(html);
+    const size = TableGridSize.getGridSize(tbl);
 
     assert.eq(expectedColumnCount, size.columns(), 'Should be expected column count');
     assert.eq(expectedRowCount, size.rows(), 'Should be expected row count');
@@ -19,4 +18,3 @@ UnitTest.test('Table grid size test', function() {
   testGridSize('<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>', 1, 2);
   testGridSize('<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>', 2, 2);
 });
-

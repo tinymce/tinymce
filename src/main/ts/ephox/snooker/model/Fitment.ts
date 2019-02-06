@@ -1,9 +1,7 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
+import { Arr, Fun, Result } from '@ephox/katamari';
 import Structs from '../api/Structs';
-import GridRow from './GridRow';
 import Util from '../util/Util';
+import GridRow from './GridRow';
 
 /*
   Fitment, is a module used to ensure that the Inserted table (gridB) can fit squareley within the Host table (gridA).
@@ -18,22 +16,22 @@ import Util from '../util/Util';
     - assumptions: All grids used by this module should be rectangular
 */
 
-var measure = function (startAddress, gridA: Row[], gridB): Result<Delta, string> {
-  if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
-  var rowRemainder = gridA.slice(startAddress.row());
-  var colRemainder = rowRemainder[0].cells().slice(startAddress.column());
+const measure = function (startAddress, gridA: Row[], gridB): Result<Delta, string> {
+  if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) { return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column()); }
+  const rowRemainder = gridA.slice(startAddress.row());
+  const colRemainder = rowRemainder[0].cells().slice(startAddress.column());
 
-  var colRequired = GridRow.cellLength(gridB[0]);
-  var rowRequired = gridB.length;
+  const colRequired = GridRow.cellLength(gridB[0]);
+  const rowRequired = gridB.length;
   return Result.value({
     rowDelta: Fun.constant(rowRemainder.length - rowRequired),
     colDelta: Fun.constant(colRemainder.length - colRequired)
   });
 };
 
-var measureWidth = function (gridA: Row[], gridB: Row[]) {
-  var colLengthA = GridRow.cellLength(gridA[0]);
-  var colLengthB = GridRow.cellLength(gridB[0]);
+const measureWidth = function (gridA: Row[], gridB: Row[]) {
+  const colLengthA = GridRow.cellLength(gridA[0]);
+  const colLengthB = GridRow.cellLength(gridB[0]);
 
   return {
     rowDelta: Fun.constant(0),
@@ -41,19 +39,19 @@ var measureWidth = function (gridA: Row[], gridB: Row[]) {
   };
 };
 
-var fill = function (cells, generator) {
+const fill = function (cells, generator) {
   return Arr.map(cells, function () {
     return Structs.elementnew(generator.cell(), true);
   });
 };
 
-var rowFill = function (grid: Row[], amount: number, generator) {
+const rowFill = function (grid: Row[], amount: number, generator) {
   return grid.concat(Util.repeat(amount, function (_row) {
     return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
   }));
 };
 
-var colFill = function (grid: Row[], amount: number, generator) {
+const colFill = function (grid: Row[], amount: number, generator) {
   return Arr.map(grid, function (row) {
     return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
   });
@@ -64,20 +62,20 @@ export interface Delta {
   rowDelta: () => number;
 }
 export interface Row {
-  cells: () => any
+  cells: () => any;
 }
 
-var tailor = function (gridA: Row[], delta: Delta, generator) {
-  var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
-  var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
+const tailor = function (gridA: Row[], delta: Delta, generator) {
+  const fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
+  const fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
-  var modifiedCols = fillCols(gridA, Math.abs(delta.colDelta()), generator);
-  var tailoredGrid = fillRows(modifiedCols, Math.abs(delta.rowDelta()), generator);
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta()), generator);
+  const tailoredGrid = fillRows(modifiedCols, Math.abs(delta.rowDelta()), generator);
   return tailoredGrid;
 };
 
 export default {
-  measure: measure,
-  measureWidth: measureWidth,
-  tailor: tailor
+  measure,
+  measureWidth,
+  tailor
 };

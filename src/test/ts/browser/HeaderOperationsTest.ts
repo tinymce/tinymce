@@ -2,7 +2,7 @@ import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('HeaderOperationsTest', function() {
+UnitTest.test('HeaderOperationsTest', function () {
   // TODO: Make it keep the column.
   Assertions.checkOld({ section: 0, row: 0, column: 1 },
     '<table><tbody>' +
@@ -278,4 +278,3 @@ UnitTest.test('HeaderOperationsTest', function() {
     TableOperations.makeRowHeader, 0, 0, 1
   );
 });
-

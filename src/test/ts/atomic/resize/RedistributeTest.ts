@@ -1,8 +1,8 @@
 import Redistribution from 'ephox/snooker/resize/Redistribution';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('RedistributeTest', function() {
-  var toStr = function (f) {
+UnitTest.test('RedistributeTest', function () {
+  const toStr = function (f) {
     return f.fold(function (raw) {
       return 'invalid[' + raw + ']';
     }, function (pixels) {
@@ -12,14 +12,12 @@ UnitTest.test('RedistributeTest', function() {
     });
   };
 
-
-  var check = function (expected, input, originalWidth, newWidth) {
-    assert.eq(expected, Redistribution.redistribute(input, originalWidth, newWidth));  
+  const check = function (expected, input, originalWidth, newWidth) {
+    assert.eq(expected, Redistribution.redistribute(input, originalWidth, newWidth));
   };
 
-
-  var checkValidate = function (expected, input) {
-    var actual = toStr(Redistribution.validate(input));
+  const checkValidate = function (expected, input) {
+    const actual = toStr(Redistribution.validate(input));
     assert.eq(expected, actual);
   };
 
@@ -30,14 +28,11 @@ UnitTest.test('RedistributeTest', function() {
   // Put more tests in when it becomes clear that I need them
   checkValidate('pixels[10.5]', '10.5px');
 
-
   check([ '50%', '50%' ], [ '10px', '10px' ], '20', '200%');
 
   check([ '50%', '50%' ], [ '10px', '50%' ], '20', '200%');
 
-
   check([ '20px', '20px' ], [ '10px', '50%' ], '20', '40px');
-
 
   check([ '33px', '33px', '34px' ], [ '33.33%', '33.33%', '33.33%' ], '100', '100px');
 
@@ -53,4 +48,3 @@ UnitTest.test('RedistributeTest', function() {
   assert.eq(50, Redistribution.sum([ '50%' ], 10));
   assert.eq(75, Redistribution.sum([ '50px', '25px' ], 10));
 });
-

@@ -2,7 +2,7 @@ import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('MergeOperationsTest', function() {
+UnitTest.test('MergeOperationsTest', function () {
   Assertions.checkOld({ section: 0, row: 0, column: 0 },
     '<table><tbody>' +
       '<tr><td>A1</td><td rowspan="2">B1</td></tr>' +
@@ -136,4 +136,3 @@ UnitTest.test('MergeOperationsTest', function() {
     TableOperations.splitCellIntoColumns, 1, 0, 0
   );
 });
-

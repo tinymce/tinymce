@@ -1,11 +1,7 @@
 import { Fun } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
+import { Attr, Css, Insert, Remove, Replication } from '@ephox/sugar';
 
-var setBorderColor = function (cell, value) {
+const setBorderColor = function (cell, value) {
   Css.set(cell, 'border-color', value);
   Css.getRaw(cell, 'border-style').fold(function () {
     /* required by older browsers */
@@ -13,43 +9,43 @@ var setBorderColor = function (cell, value) {
   }, Fun.noop); // do nothing when already set
 };
 
-var setBackgroundColor = function (cell, value) {
+const setBackgroundColor = function (cell, value) {
   Css.set(cell, 'background-color', value);
 };
 
-var setHeight = function (cell, value) {
+const setHeight = function (cell, value) {
   Css.set(cell, 'height', value);
 };
 
-var setWidth = function (cell, value) {
+const setWidth = function (cell, value) {
   Css.set(cell, 'width', value);
 };
 
-var setType = function (cell, type) {
-  var replica = Replication.copy(cell, type);
+const setType = function (cell, type) {
+  const replica = Replication.copy(cell, type);
   Insert.after(cell, replica);
   Remove.remove(cell);
 };
 
-var setScope = function (cell, value) {
+const setScope = function (cell, value) {
   Attr.set(cell, 'scope', value);
 };
 
-var setStyle = function (cell, value) {
+const setStyle = function (cell, value) {
   Attr.set(cell, 'style', value);
 };
 
-var setClass = function (cell, value) {
+const setClass = function (cell, value) {
   Attr.set(cell, 'class', value);
 };
 
 export default {
-  setBorderColor: setBorderColor,
-  setBackgroundColor: setBackgroundColor,
-  setHeight: setHeight,
-  setWidth: setWidth,
-  setType: setType,
-  setScope: setScope,
-  setStyle: setStyle,
-  setClass: setClass
+  setBorderColor,
+  setBackgroundColor,
+  setHeight,
+  setWidth,
+  setType,
+  setScope,
+  setStyle,
+  setClass
 };
