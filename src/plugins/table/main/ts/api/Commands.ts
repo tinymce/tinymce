@@ -21,27 +21,30 @@ import * as Events from '../api/Events';
 
 const each = Tools.each;
 
-const registerCommands = function (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<any>>) {
+const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<any>>) => {
   const isRoot = Util.getIsRoot(editor);
-  const eraseTable = function () {
-    getSelectionStartCell().or(getSelectionStartCaption()).each((cellOrCaption) => {
-      const tableOpt = TableLookup.table(cellOrCaption, isRoot);
-      tableOpt.filter(Fun.not(isRoot)).each(function (table) {
-        const cursor = Element.fromText('');
-        Insert.after(table, cursor);
-        Remove.remove(table);
-        if (editor.dom.isEmpty(editor.getBody())) {
-          editor.setContent('');
-          editor.selection.setCursorLocation();
-        } else {
-          const rng = editor.dom.createRng();
-          rng.setStart(cursor.dom(), 0);
-          rng.setEnd(cursor.dom(), 0);
-          editor.selection.setRng(rng);
-          editor.nodeChanged();
-        }
+  const eraseTable = () => {
+    getSelectionStartCell()
+      .orThunk(getSelectionStartCaption)
+      .each((cellOrCaption) => {
+        const tableOpt = TableLookup.table(cellOrCaption, isRoot);
+        tableOpt.filter(Fun.not(isRoot)).each((table) => {
+          const cursor = Element.fromText('');
+          Insert.after(table, cursor);
+          Remove.remove(table);
+
+          if (editor.dom.isEmpty(editor.getBody())) {
+            editor.setContent('');
+            editor.selection.setCursorLocation();
+          } else {
+            const rng = editor.dom.createRng();
+            rng.setStart(cursor.dom(), 0);
+            rng.setEnd(cursor.dom(), 0);
+            editor.selection.setRng(rng);
+            editor.nodeChanged();
+          }
+        });
       });
-    });
   };
 
   const getSelectionStartFromSelector = (selector: string) => () => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
@@ -50,7 +53,7 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
 
   const getSelectionStartCell = getSelectionStartFromSelector('th,td');
 
-  const getTableFromCell = function (cell: Element) {
+  const getTableFromCell = (cell: Element): Option<Element> => {
     return TableLookup.table(cell, isRoot);
   };
 
@@ -70,13 +73,13 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     }
   };
 
-  const actOnSelection = function (execute) {
+  const actOnSelection = (execute) => {
     getSelectionStartCell().each((cell) => {
       const table = getTableFromCell(cell);
-      table.each(function (table) {
+      table.each((table) => {
         const targets = TableTargets.forMenu(selections, table, cell);
         const beforeSize = getSize(table);
-        execute(table, targets).each(function (rng) {
+        execute(table, targets).each((rng) => {
           resizeChange(editor, beforeSize, table);
           editor.selection.setRng(rng);
           editor.focus();
@@ -87,10 +90,10 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     });
   };
 
-  const copyRowSelection = function (execute?) {
+  const copyRowSelection = (execute?) => {
     return getSelectionStartCell().map((cell) => {
       const table = getTableFromCell(cell);
-      return table.bind(function (table) {
+      return table.bind((table) => {
         const doc = Element.fromDom(editor.getDoc());
         const targets = TableTargets.forMenu(selections, table, cell);
         const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
@@ -99,19 +102,18 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     });
   };
 
-  const pasteOnSelection = function (execute) {
+  const pasteOnSelection = (execute) => {
     // If we have clipboard rows to paste
-    clipboardRows.get().each(function (rows) {
-      const clonedRows = Arr.map(rows, function (row) {
+    clipboardRows.get().each((rows) => {
+      const clonedRows = Arr.map(rows, (row) => {
         return Replication.deep(row);
       });
       getSelectionStartCell().each((cell) => {
-        const table = getTableFromCell(cell);
-        table.bind(function (table) {
+        getTableFromCell(cell).each((table) => {
           const doc = Element.fromDom(editor.getDoc());
           const generators = TableFill.paste(doc);
           const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
-          execute(table, targets).each(function (rng) {
+          execute(table, targets).each((rng) => {
             editor.selection.setRng(rng);
             editor.focus();
             cellSelection.clear(table);
@@ -156,12 +158,16 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     },
 
     mceTableCutRow (grid) {
-      clipboardRows.set(copyRowSelection());
-      actOnSelection(actions.deleteRow);
+      copyRowSelection().each((selection) => {
+        clipboardRows.set(selection);
+        actOnSelection(actions.deleteRow);
+      });
     },
 
     mceTableCopyRow (grid) {
-      clipboardRows.set(copyRowSelection());
+      copyRowSelection().each((selection) => {
+        clipboardRows.set(selection);
+      });
     },
 
     mceTablePasteRowBefore (grid) {
@@ -173,7 +179,7 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     },
 
     mceTableDelete: eraseTable
-  }, function (func, name) {
+  }, (func, name) => {
     editor.addCommand(name, func);
   });
 
@@ -184,8 +190,8 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
     mceTableProps: Fun.curry(TableDialog.open, editor, false),
     mceTableRowProps: Fun.curry(RowDialog.open, editor),
     mceTableCellProps: Fun.curry(CellDialog.open, editor)
-  }, function (func, name) {
-    editor.addCommand(name, function (ui, val) {
+  }, (func, name) => {
+    editor.addCommand(name, (ui, val) => {
       func(val);
     });
   });
