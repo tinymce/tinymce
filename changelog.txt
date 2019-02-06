@@ -1,3 +1,5 @@
+Version 5.0.1 (TBD)
+    Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 
