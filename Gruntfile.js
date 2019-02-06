@@ -362,7 +362,15 @@ module.exports = function (grunt) {
             'js/tinymce/skins/*/fonts/readme.md',
             'readme.md'
           ],
-          to: 'tmp/tinymce_<%= pkg.version %>.zip'
+          to: 'tmp/tinymce_<%= pkg.version %>.zip',
+          dataFilter: (args) => {
+            if (args.filePath.endsWith('.min.css')) {
+              var sourcemap = args.data.lastIndexOf('/*# sourceMappingURL=');
+              if (sourcemap > -1) {
+                args.data = args.data.slice(0, sourcemap);
+              }
+            }
+          }
         },
         src: [
           'js/tinymce/langs',
