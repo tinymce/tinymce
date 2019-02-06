@@ -77,7 +77,7 @@ var rows = function (warehouse) {
 
 };
 
-export default <any> {
+export default {
   columns: columns,
   rows: rows
 };

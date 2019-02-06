@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import Structs from '../api/Structs';
-import Fitment from './Fitment';
+import Fitment, { Delta } from './Fitment';
 import GridRow from './GridRow';
 import MergingOperations from '../operate/MergingOperations';
 
@@ -66,7 +66,7 @@ var insert = function (index, gridA, gridB, generator, comparator) {
   return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
 };
 
-export default <any> {
+export default {
   merge: merge,
   insert: insert
 };

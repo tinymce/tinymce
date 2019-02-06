@@ -43,7 +43,7 @@ var setClass = function (cell, value) {
   Attr.set(cell, 'class', value);
 };
 
-export default <any> {
+export default {
   setBorderColor: setBorderColor,
   setBackgroundColor: setBackgroundColor,
   setHeight: setHeight,

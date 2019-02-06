@@ -57,6 +57,6 @@ var merge = function (cells) {
   InsertAll.append(cells[0], contents);
 };
 
-export default <any> {
+export default {
   merge: merge
 };

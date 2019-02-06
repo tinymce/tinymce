@@ -50,7 +50,7 @@ var matchRowHeight = function (warehouse, heights) {
   });
 };
 
-export default <any> {
+export default {
   recalculateWidth: recalculateWidth,
   recalculateHeight: recalculateHeight,
   matchRowHeight: matchRowHeight

@@ -6,7 +6,7 @@ var row = Styles.resolve('table-picker-row');
 var cell = Styles.resolve('table-picker-cell');
 var button = Styles.resolve('table-picker-button');
 
-export default <any> {
+export default {
   table: Fun.constant(table),
   row: Fun.constant(row),
   cell: Fun.constant(cell),

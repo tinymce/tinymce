@@ -145,7 +145,7 @@ var setGenericWidth = function (cell, amount, unit) {
   Css.set(cell, 'width', amount + unit);
 };
 
-export default <any> {
+export default {
   percentageBasedSizeRegex: Fun.constant(percentageBasedSizeRegex),
   pixelBasedSizeRegex: Fun.constant(pixelBasedSizeRegex),
   setPixelWidth: setPixelWidth,

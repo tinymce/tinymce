@@ -235,7 +235,7 @@ var pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 var resize = Adjustments.adjustWidthTo;
 
-export default <any> {
+export default {
   insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
   insertRowsBefore: RunOperation.run(insertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
   insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),

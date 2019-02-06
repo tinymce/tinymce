@@ -38,7 +38,7 @@ var body = function (editable, chrome) {
   };
 };
 
-export default <any> {
+export default {
   only: only,
   detached: detached,
   body: body

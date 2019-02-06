@@ -62,6 +62,6 @@ var redistribute = function (table, optWidth, optHeight, direction) {
 
 };
 
-export default <any> {
+export default {
   redistribute: redistribute
 };

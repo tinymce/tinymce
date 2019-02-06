@@ -31,7 +31,7 @@ var button = function (cell) {
   return SelectorFind.child(cell, '.' + PickerStyles.button()).getOr(cell);
 };
 
-export default <any> {
+export default {
   cells: cells,
   rows: rows,
   grid: grid,

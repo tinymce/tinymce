@@ -95,7 +95,7 @@ var isColBar = function (element) {
   return Class.has(element, resizeColBar);
 };
 
-export default <any> {
+export default {
   refresh: refresh,
   hide: hide,
   show: show,

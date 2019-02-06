@@ -11,7 +11,7 @@ var percentageSize = function (width, element) {
   var getCellDelta = function (delta) {
     return delta / pixelWidth * 100;
   };
-  var singleColumnWidth = function (width, _delta) {
+  var singleColumnWidth = function (width, _delta?) {
     // If we have one column in a percent based table, that column should be 100% of the width of the table.
     return [100 - width];
   };
@@ -19,7 +19,7 @@ var percentageSize = function (width, element) {
   var minCellWidth = function () {
     return CellUtils.minWidth() / pixelWidth * 100;
   };
-  var setTableWidth = function (table, _newWidths, delta) {
+  var setTableWidth = function (table, _newWidths, delta?) {
     var total = floatWidth + delta;
     Sizes.setPercentageWidth(table, total);
   };
@@ -42,7 +42,7 @@ var pixelSize = function (width) {
     var newNext = Math.max(CellUtils.minWidth(), width + delta);
     return [ newNext - width ];
   };
-  var setTableWidth = function (table, newWidths, _delta) {
+  var setTableWidth = function (table, newWidths, _delta?) {
     var total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
     Sizes.setPixelWidth(table, total);
   };
@@ -82,6 +82,6 @@ var getTableSize = function (element) {
   });
 };
 
-export default <any> {
+export default {
   getTableSize: getTableSize
 };

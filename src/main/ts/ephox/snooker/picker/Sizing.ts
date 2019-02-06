@@ -34,7 +34,7 @@ var grow = function (selected, xDelta, yDelta, settings) {
   return process(newSize, settings);
 };
 
-export default <any> {
+export default {
   resize: resize,
   grow: grow
 };

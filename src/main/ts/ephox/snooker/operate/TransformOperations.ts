@@ -49,7 +49,7 @@ var replaceRow = function (grid, index, comparator, substitution) {
   return replaceIn(grid, targets, comparator, substitution);
 };
 
-export default <any> {
+export default {
   replaceColumn: replaceColumn,
   replaceRow: replaceRow
 };

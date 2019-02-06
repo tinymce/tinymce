@@ -8,7 +8,7 @@ import { Compare } from '@ephox/sugar';
  * Identify the index of the current cell within all the cells, and
  * a list of the cells within its table.
  */
-var detect = function (current, isRoot) {
+var detect = function (current, isRoot?) {
   return TableLookup.table(current, isRoot).bind(function (table) {
     var all = TableLookup.cells(table);
     var index = Arr.findIndex(all, function (x) {
@@ -28,7 +28,7 @@ var detect = function (current, isRoot) {
 /*
  * Identify the CellLocation of the cell when navigating forward from current
  */
-var next = function (current, isRoot) {
+var next = function (current, isRoot?) {
   var detection = detect(current, isRoot);
   return detection.fold(function () {
     return CellLocation.none(current);
@@ -40,7 +40,7 @@ var next = function (current, isRoot) {
 /*
  * Identify the CellLocation of the cell when navigating back from current
  */
-var prev = function (current, isRoot) {
+var prev = function (current, isRoot?) {
   var detection = detect(current, isRoot);
   return detection.fold(function () {
     return CellLocation.none();
@@ -49,7 +49,7 @@ var prev = function (current, isRoot) {
   });
 };
 
-export default <any> {
+export default {
   next: next,
   prev: prev
 };

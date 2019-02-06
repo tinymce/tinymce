@@ -36,7 +36,7 @@ var cellLength = function (gridRow) {
   return gridRow.cells().length;
 };
 
-export default <any> {
+export default {
   addCell: addCell,
   setCells: setCells,
   mutateCell: mutateCell,

@@ -48,6 +48,6 @@ var subgrid = function (grid, row, column, comparator) {
   };
 };
 
-export default <any> {
+export default {
   subgrid: subgrid
 };

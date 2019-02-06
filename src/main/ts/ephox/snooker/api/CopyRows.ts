@@ -16,6 +16,6 @@ var copyRows = function (table, target, generators) {
   });
 };
 
-export default <any> {
+export default {
   copyRows:copyRows
 };

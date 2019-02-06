@@ -9,6 +9,6 @@ var halve = function (main, other) {
   });
 };
 
-export default <any> {
+export default {
   halve: halve
 };

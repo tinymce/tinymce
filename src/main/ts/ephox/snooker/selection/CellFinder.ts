@@ -32,7 +32,7 @@ var parentCell = function (warehouse, innerCell) {
   });
 };
 
-export default <any> {
+export default {
   moveBy: moveBy,
   intercepts: intercepts,
   parentCell: parentCell

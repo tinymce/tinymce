@@ -52,7 +52,7 @@ var toGrid = function (warehouse, generators, isNew) {
   return grid;
 };
 
-export default <any> {
+export default {
   toDetails: toDetails,
   toGrid: toGrid
 };

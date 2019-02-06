@@ -22,7 +22,7 @@ var it = function (subject) {
   return subject.element();
 };
 
-export default <any> {
+export default {
   celltype: celltype,
   celltypes: celltypes,
   detail: detail,

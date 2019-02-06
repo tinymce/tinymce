@@ -22,7 +22,7 @@ var cellType = function (fold) {
   };
 };
 
-export default <any> {
+export default {
   none: none,
   whole: whole,
   partial: partial

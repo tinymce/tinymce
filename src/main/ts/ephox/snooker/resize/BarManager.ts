@@ -19,7 +19,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export default <any> function (wire, direction, hdirection) {
+export default function (wire, direction, hdirection) {
   var mutation = BarMutation();
   var resizing = Dragger.transform(mutation, {});
 

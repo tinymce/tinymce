@@ -37,7 +37,7 @@ var isRectangular = function (warehouse, bounds) {
   return isRect ? Option.some(bounds) : Option.none();
 };
 
-export default <any> {
+export default {
   inSelection: inSelection,
   isWithin: isWithin,
   isRectangular: isRectangular

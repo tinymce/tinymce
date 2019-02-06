@@ -7,7 +7,7 @@ import { Width } from '@ephox/sugar';
 
 
 
-export default <any> function (direction, settings) {
+export default function (direction, settings) {
   var active = false;
 
   var on = function () {

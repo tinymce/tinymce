@@ -63,7 +63,7 @@ var deduce = function (xs, index) {
   });
 };
 
-export default <any> {
+export default {
   repeat: repeat,
   range: range,
   unique: unique,

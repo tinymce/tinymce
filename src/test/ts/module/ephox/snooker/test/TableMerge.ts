@@ -39,7 +39,7 @@ var mergeIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, genera
 };
 
 var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
-  Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
+  Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
   Fitment.tailorTest(expectedTailor, startAddress, gridA, {
     rowDelta: Fun.constant(expectedMeasure.rowDelta),
     colDelta: Fun.constant(expectedMeasure.colDelta)
@@ -47,7 +47,7 @@ var suite = function (label, startAddress, gridA, gridB, generator, comparator, 
   mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
 };
 
-export default <any> {
+export default {
   mergeTest: mergeTest,
   mergeIVTest: mergeIVTest,
   suite: suite

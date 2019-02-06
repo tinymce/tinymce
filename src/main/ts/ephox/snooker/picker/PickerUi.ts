@@ -23,7 +23,7 @@ import { Remove } from '@ephox/sugar';
 
 
 
-export default <any> function (direction, settings, helpReference) {
+export default function (direction, settings, helpReference) {
   var events = Events.create({
     select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
   });

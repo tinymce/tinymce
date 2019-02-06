@@ -30,7 +30,7 @@ var assertInfo = function (expected, actual) {
   assert.eq(expected, cleaner);
 };
 
-var checkOld = function (expCell, expectedHtml, input, operation, section, row, column, _direction) {
+var checkOld = function (expCell, expectedHtml, input, operation, section, row, column, _direction?) {
   var table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   var wire = ResizeWire.only(Body.body());
@@ -52,7 +52,7 @@ var checkOld = function (expCell, expectedHtml, input, operation, section, row, 
   Bars.destroy(wire);
 };
 
-var checkPaste = function (expectedHtml, input, pasteHtml, operation, section, row, column, _direction) {
+var checkPaste = function (expectedHtml, input, pasteHtml, operation, section, row, column, _direction?) {
   var table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   var wire = ResizeWire.only(Body.body());
@@ -80,7 +80,7 @@ var checkPaste = function (expectedHtml, input, pasteHtml, operation, section, r
   Bars.destroy(wire);
 };
 
-var checkStructure = function (expCell, expected, input, operation, section, row, column, _direction) {
+var checkStructure = function (expCell, expected, input, operation, section, row, column, _direction?) {
   var table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   var wire = ResizeWire.only(Body.body());
@@ -101,7 +101,7 @@ var checkStructure = function (expCell, expected, input, operation, section, row
   Bars.destroy(wire);
 };
 
-var checkDelete = function (optExpCell, optExpectedHtml, input, operation, cells, platform, _direction) {
+var checkDelete = function (optExpCell, optExpectedHtml, input, operation, cells, platform, _direction?) {
   var table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   var wire = ResizeWire.only(Body.body());
@@ -146,7 +146,7 @@ var checkDelete = function (optExpCell, optExpectedHtml, input, operation, cells
   Bars.destroy(wire);
 };
 
-var checkMerge = function (label, expected, input, selection, bounds, _direction) {
+var checkMerge = function (label, expected, input, selection, bounds, _direction?) {
   var table = Element.fromHtml(input);
   var expectedDom = Element.fromHtml(expected);
 
@@ -174,7 +174,7 @@ var checkMerge = function (label, expected, input, selection, bounds, _direction
   Bars.destroy(wire);
 };
 
-var checkUnmerge = function (expected, input, unmergablePaths, _direction) {
+var checkUnmerge = function (expected, input, unmergablePaths, _direction?) {
   var table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   var wire = ResizeWire.only(Body.body());
@@ -185,7 +185,7 @@ var checkUnmerge = function (expected, input, unmergablePaths, _direction) {
 
   var unmergable = Option.some(Options.cat(unmergables));
 
-  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction, Fun.noop, Fun.noop);
+  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
   // Let's get rid of size information.
@@ -197,7 +197,7 @@ var checkUnmerge = function (expected, input, unmergablePaths, _direction) {
   Bars.destroy(wire);
 };
 
-export default <any> {
+export default {
   assertInfo: assertInfo,
   checkOld: checkOld,
   checkPaste: checkPaste,

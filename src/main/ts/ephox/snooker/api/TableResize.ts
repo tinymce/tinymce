@@ -6,7 +6,7 @@ import BarPositions from '../resize/BarPositions';
 
 
 
-export default <any> function (wire, vdirection) {
+export default function (wire, vdirection) {
   var hdirection = BarPositions.height;
   var manager = BarManager(wire, vdirection, hdirection);
 
@@ -18,7 +18,7 @@ export default <any> function (wire, vdirection) {
 
   manager.events.adjustHeight.bind(function (event) {
     events.trigger.beforeResize(event.table());
-    var delta = hdirection.delta(event.delta(), event.table());
+    var delta = hdirection.delta(event.delta());
     Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
     events.trigger.afterResize(event.table());
   });

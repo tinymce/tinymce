@@ -28,7 +28,7 @@ var findCellLtr = function (position, dimensions, grid, mouse) {
   return findCell(dimensions, grid, deltaX, deltaY);
 };
 
-export default <any> {
+export default {
   findCellRtl: findCellRtl,
   findCellLtr: findCellLtr
 };

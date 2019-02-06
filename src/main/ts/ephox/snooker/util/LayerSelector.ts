@@ -15,7 +15,7 @@ var filterFirstLayer = function (scope, selector, predicate) {
   });
 };
 
-export default <any> {
+export default {
   firstLayer: firstLayer,
   filterFirstLayer: filterFirstLayer
 };

@@ -73,7 +73,7 @@ var splitRows = function (grid, index, comparator, substitution) {
   return grid;
 };
 
-export default <any> {
+export default {
   merge: merge,
   unmerge: unmerge,
   splitRows: splitRows

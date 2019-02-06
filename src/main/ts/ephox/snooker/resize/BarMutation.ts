@@ -5,7 +5,7 @@ import Mutation from './Mutation';
 
 
 
-export default <any> function () {
+export default function () {
   var events = Events.create({
     drag: Event(['xDelta', 'yDelta', 'target'])
   });

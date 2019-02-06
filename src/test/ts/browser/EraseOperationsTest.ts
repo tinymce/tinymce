@@ -456,7 +456,8 @@ UnitTest.test('EraseOperationsTest', function() {
         { section: 0, row: 3, column: 2 },
         { section: 0, row: 4, column: 1 },
         { section: 0, row: 4, column: 2 }
-      ]
+      ],
+      platform
   );
 
   Assertions.checkDelete(Option.none(),

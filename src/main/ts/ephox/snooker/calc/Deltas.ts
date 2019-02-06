@@ -60,6 +60,6 @@ var determine = function (input, column, step, tableSize) {
   return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
 };
 
-export default <any> {
+export default {
   determine: determine
 };

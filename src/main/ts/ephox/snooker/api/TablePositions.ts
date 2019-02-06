@@ -35,7 +35,7 @@ var getWarehouse = function (table) {
   return Warehouse.generate(list);
 };
 
-export default <any> {
+export default {
   moveBy: moveBy,
   intercepts: intercepts,
   nestedIntercepts: nestedIntercepts,

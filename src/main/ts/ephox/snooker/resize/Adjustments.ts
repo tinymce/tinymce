@@ -86,7 +86,7 @@ var adjustWidthTo = function (table, list, direction) {
   }
 };
 
-export default <any> {
+export default {
   adjustWidth: adjustWidth,
   adjustHeight: adjustHeight,
   adjustWidthTo: adjustWidthTo

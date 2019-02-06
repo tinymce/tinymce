@@ -113,7 +113,7 @@ var merging = function (generators) {
 
 var contract = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
 
-export default <any> {
+export default {
   modification: modification,
   transform: transform,
   merging: merging

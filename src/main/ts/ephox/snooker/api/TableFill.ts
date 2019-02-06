@@ -94,7 +94,7 @@ var paste = function (doc) {
   };
 };
 
-export default <any> {
+export default {
   cellOperations: cellOperations,
   paste: paste
 };

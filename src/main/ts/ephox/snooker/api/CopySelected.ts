@@ -111,6 +111,6 @@ var extract = function (table, selectedSelector) {
   return table;
 };
 
-export default <any> {
+export default {
   extract: extract
 };

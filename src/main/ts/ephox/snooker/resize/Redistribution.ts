@@ -120,7 +120,7 @@ var toIntegers = function (values) {
   return r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
 };
 
-export default <any> {
+export default {
   validate: validate,
   redistribute: redistribute,
   sum: sum,

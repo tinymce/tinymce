@@ -2,7 +2,7 @@ import ResizeDirection from './ResizeDirection';
 
 
 
-export default <any> function (directionAt) {
+export default function (directionAt) {
   var auto = function (table) {
     return directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
   };
@@ -12,7 +12,7 @@ export default <any> function (directionAt) {
   };
 
   var positions = function (cols, table) {
-    return auto(table).positions(cols, table);
+    return auto(table).positions(cols);
   };
 
   var edge = function (cell) {

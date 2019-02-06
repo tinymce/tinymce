@@ -7,6 +7,6 @@ var getGridSize = function (table) {
   return warehouse.grid();
 };
 
-export default <any> {
+export default {
   getGridSize: getGridSize
 };

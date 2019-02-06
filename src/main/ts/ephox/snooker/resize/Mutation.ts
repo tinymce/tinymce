@@ -3,7 +3,7 @@ import { Events } from '@ephox/porkbun';
 
 
 
-export default <any> function () {
+export default function () {
   var events = Events.create({
     'drag': Event(['xDelta', 'yDelta'])
   });

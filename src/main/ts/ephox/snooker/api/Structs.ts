@@ -14,7 +14,7 @@ var rowcells = Struct.immutable('cells', 'section');
 var rowdetails = Struct.immutable('details', 'section');
 var bounds = Struct.immutable( 'startRow', 'startCol', 'finishRow', 'finishCol');
 
-export default <any> {
+export default {
   dimensions: dimensions,
   grid: grid,
   address: address,

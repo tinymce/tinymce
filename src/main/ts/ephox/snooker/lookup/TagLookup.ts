@@ -24,6 +24,6 @@ var detect = function (cell) {
   });
 };
 
-export default <any> {
+export default {
   detect: detect
 };

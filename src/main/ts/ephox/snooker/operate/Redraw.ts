@@ -102,7 +102,7 @@ var copy = function (grid) {
   return rows;
 };
 
-export default <any> {
+export default {
   render: render,
   copy: copy
 };

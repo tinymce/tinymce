@@ -76,7 +76,7 @@ var deleteRowsAt = function (grid, start, finish) {
   return grid.slice(0, start).concat(grid.slice(finish + 1));
 };
 
-export default <any> {
+export default {
   insertRowAt: insertRowAt,
   insertColumnAt: insertColumnAt,
   splitCellIntoColumns: splitCellIntoColumns,

@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Structs from './Structs';
 import LayerSelector from '../util/LayerSelector';
-import { Attr } from '@ephox/sugar';
+import { Attr, Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
@@ -11,7 +11,7 @@ import { Selectors } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
 // lookup inside this table
-var lookup = function (tags, element, _isRoot) {
+var lookup = function (tags: string[], element: Element, _isRoot?): Option<Element> {
   var isRoot = _isRoot !== undefined ? _isRoot : Fun.constant(false);
   // If the element we're inspecting is the root, we definitely don't want it.
   if (isRoot(element)) return Option.none();
@@ -29,19 +29,19 @@ var lookup = function (tags, element, _isRoot) {
 /*
  * Identify the optional cell that element represents.
  */
-var cell = function (element, isRoot) {
+var cell = function (element: Element, isRoot?) {
   return lookup([ 'td', 'th' ], element, isRoot);
 };
 
-var cells = function (ancestor) {
+var cells = function (ancestor: Element) {
   return LayerSelector.firstLayer(ancestor, 'th,td');
 };
 
-var notCell = function (element, isRoot) {
+var notCell = function (element: Element, isRoot?) {
   return lookup([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 };
 
-var neighbours = function (selector, element) {
+var neighbours = function (selector: string, element: Element) {
   return Traverse.parent(element).map(function (parent) {
     return SelectorFilter.children(parent, selector);
   });
@@ -50,33 +50,33 @@ var neighbours = function (selector, element) {
 var neighbourCells = Fun.curry(neighbours, 'th,td');
 var neighbourRows  = Fun.curry(neighbours, 'tr');
 
-var firstCell = function (ancestor) {
+var firstCell = function (ancestor: Element) {
   return SelectorFind.descendant(ancestor, 'th,td');
 };
 
-var table = function (element, isRoot) {
+var table = function (element: Element, isRoot?) {
   return SelectorFind.closest(element, 'table', isRoot);
 };
 
-var row = function (element, isRoot) {
+var row = function (element: Element, isRoot?) {
    return lookup([ 'tr' ], element, isRoot);
 };
 
-var rows = function (ancestor) {
+var rows = function (ancestor: Element) {
   return LayerSelector.firstLayer(ancestor, 'tr');
 };
 
-var attr = function (element, property) {
+var attr = function (element: Element, property: string) {
   return parseInt(Attr.get(element, property), 10);
 };
 
-var grid = function (element, rowProp, colProp) {
+var grid = function (element: Element, rowProp: string, colProp: string) {
   var rows = attr(element, rowProp);
   var cols = attr(element, colProp);
   return Structs.grid(rows, cols);
 };
 
-export default <any> {
+export default {
   cell: cell,
   firstCell: firstCell,
   cells: cells,

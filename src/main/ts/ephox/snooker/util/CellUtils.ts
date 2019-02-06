@@ -18,7 +18,7 @@ var getInt = function (element, property) {
   return parseInt(Css.get(element, property), 10);
 };
 
-export default <any> {
+export default {
   hasColspan: hasColspan,
   hasRowspan: hasRowspan,
   minWidth: Fun.constant(10),

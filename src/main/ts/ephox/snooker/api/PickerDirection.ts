@@ -11,7 +11,7 @@ var rtl = {
   isRtl: Fun.constant(true)
 };
 
-export default <any> {
+export default {
   ltr: ltr,
   rtl: rtl
 };

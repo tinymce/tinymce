@@ -74,7 +74,7 @@ var rtl = {
   positions: Fun.curry(findPositions, getRightEdge, getLeftEdge)
 };
 
-export default <any> {
+export default {
   height: height,
   rtl: rtl,
   ltr: ltr

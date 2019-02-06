@@ -96,7 +96,7 @@ var getRawHeights = function (warehouse, direction) {
   return getHeightFrom(warehouse, direction, getRawH, getDeduced);
 };
 
-export default <any> {
+export default {
   getRawWidths: getRawWidths,
   getPixelWidths: getPixelWidths,
   getPercentageWidths: getPercentageWidths,

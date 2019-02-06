@@ -38,7 +38,7 @@ var getHeight = function (cell) {
   return needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
 };
 
-export default <any> {
+export default {
   getWidth: getWidth,
   getHeight: getHeight
 };

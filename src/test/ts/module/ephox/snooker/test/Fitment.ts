@@ -50,7 +50,7 @@ var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
   assert.eq(expected.cols, cols);
 };
 
-export default <any> {
+export default {
   measureTest: measureTest,
   tailorTest: tailorTest,
   tailorIVTest: tailorIVTest

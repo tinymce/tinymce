@@ -129,7 +129,7 @@ var onCells = function (warehouse, target) {
   return cells.length > 0 ? Option.some(cells) : Option.none();
 };
 
-export default <any> {
+export default {
   run: run,
   toDetailList: toDetailList,
   onCell: onCell,

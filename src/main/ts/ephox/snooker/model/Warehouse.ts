@@ -39,7 +39,7 @@ var generate = function (list) {
   //          colspan (merge cell)
   //          element
   //          rowspan (merge cols)
-  var access = {};
+  var access: Record<any, any> = {};
   var cells = [];
 
   var maxRows = list.length;
@@ -91,7 +91,7 @@ var justCells = function (warehouse) {
   return Arr.flatten(rows);
 };
 
-export default <any> {
+export default {
   generate: generate,
   getAt: getAt,
   findItem: findItem,

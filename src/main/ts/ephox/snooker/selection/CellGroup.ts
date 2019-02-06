@@ -28,7 +28,7 @@ var getBox = function (warehouse, startCell, finishCell) {
   });
 };
 
-export default <any> {
+export default {
   getAnyBox: getAnyBox,
   getBox: getBox
 };

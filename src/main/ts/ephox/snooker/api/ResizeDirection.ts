@@ -2,7 +2,7 @@ import BarPositions from '../resize/BarPositions';
 
 
 
-export default <any> {
+export default {
   ltr: BarPositions.ltr,
   rtl: BarPositions.rtl
 };

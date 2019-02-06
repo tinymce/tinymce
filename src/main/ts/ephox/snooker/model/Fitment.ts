@@ -18,7 +18,7 @@ import Util from '../util/Util';
     - assumptions: All grids used by this module should be rectangular
 */
 
-var measure = function (startAddress, gridA, gridB) {
+var measure = function (startAddress, gridA: Row[], gridB): Result<Delta, string> {
   if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
   var rowRemainder = gridA.slice(startAddress.row());
   var colRemainder = rowRemainder[0].cells().slice(startAddress.column());
@@ -31,7 +31,7 @@ var measure = function (startAddress, gridA, gridB) {
   });
 };
 
-var measureWidth = function (gridA, gridB) {
+var measureWidth = function (gridA: Row[], gridB: Row[]) {
   var colLengthA = GridRow.cellLength(gridA[0]);
   var colLengthB = GridRow.cellLength(gridB[0]);
 
@@ -47,19 +47,27 @@ var fill = function (cells, generator) {
   });
 };
 
-var rowFill = function (grid, amount, generator) {
+var rowFill = function (grid: Row[], amount: number, generator) {
   return grid.concat(Util.repeat(amount, function (_row) {
     return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
   }));
 };
 
-var colFill = function (grid: any[], amount, generator) {
+var colFill = function (grid: Row[], amount: number, generator) {
   return Arr.map(grid, function (row) {
     return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
   });
 };
 
-var tailor = function (gridA, delta, generator) {
+export interface Delta {
+  colDelta: () => number;
+  rowDelta: () => number;
+}
+export interface Row {
+  cells: () => any
+}
+
+var tailor = function (gridA: Row[], delta: Delta, generator) {
   var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
   var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
@@ -68,7 +76,7 @@ var tailor = function (gridA, delta, generator) {
   return tailoredGrid;
 };
 
-export default <any> {
+export default {
   measure: measure,
   measureWidth: measureWidth,
   tailor: tailor

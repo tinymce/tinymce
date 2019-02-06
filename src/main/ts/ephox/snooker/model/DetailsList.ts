@@ -43,7 +43,7 @@ var fromPastedRows = function (rows, example) {
   });
 };
 
-export default <any> {
+export default {
   fromTable: fromTable,
   fromPastedRows: fromPastedRows
 };

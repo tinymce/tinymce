@@ -34,7 +34,7 @@ var folder = function (fold) {
   };
 };
 
-export default <any> {
+export default {
   none: none,
   only: only,
   left: left,

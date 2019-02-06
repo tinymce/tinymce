@@ -60,7 +60,7 @@ var generators = {
   }
 };
 
-export default <any> {
+export default {
   targetStub: targetStub,
   generators: generators
 };

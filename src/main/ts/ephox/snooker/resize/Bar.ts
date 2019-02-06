@@ -30,7 +30,7 @@ var row = function (row, x, y, w, h) {
   return blocker;
 };
 
-export default <any> {
+export default {
   col: col,
   row: row
 };
