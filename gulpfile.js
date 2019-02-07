@@ -102,7 +102,7 @@ gulp.task('copyFilesD', function() {
 // Concat icon packs and copy iconManager
 //
 gulp.task('setupIconManager', function() {
-  return gulp.src([ 'src/demo/iconManager.js', './node_modules/@tinymce/oxide-icons-*/dist/js/TinymceIcons.js' ])
+  return gulp.src([ 'src/demo/iconManager.js', './node_modules/@tinymce/oxide-icons-*/dist/icons/*/icons.js' ])
     .pipe(concat('iconManager.js'))
     .pipe(gulp.dest('./build'));
 });
