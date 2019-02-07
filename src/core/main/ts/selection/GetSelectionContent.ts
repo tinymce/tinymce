@@ -23,13 +23,9 @@ const getHtmlContent = (editor: Editor, args: any): string => {
   let fragment;
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  if (rng.cloneContents) {
-    fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
-    if (fragment) {
-      tmpElm.appendChild(fragment);
-    }
-  } else {
-    tmpElm.innerHTML = rng.toString();
+  fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+  if (fragment) {
+    tmpElm.appendChild(fragment);
   }
 
   return editor.selection.serializer.serialize(tmpElm, args);
