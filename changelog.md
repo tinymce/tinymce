@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+# [4.9.4] - 2019-02-07
+### Added
+- Refresh method to Sliding behaviour
 
 # [4.9.1] - 2019-01-31
 ### Added
