@@ -5,18 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Global, Obj, Option, Result } from '@ephox/katamari';
+import { Cell, Global, Obj, Option, Result, Merger } from '@ephox/katamari';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import Promise from 'tinymce/core/api/util/Promise';
 import { Editor } from 'tinymce/core/api/Editor';
+import Settings from 'tinymce/plugins/emoticons/api/Settings';
 
 const ALL_CATEGORY = 'All';
 
-export interface EmojiEntry {
-  title: string;
+interface RawEmojiEntry {
   keywords: string[];
   char: string;
   category: string;
+}
+
+export interface EmojiEntry extends RawEmojiEntry {
+  title: string;
 }
 
 // TODO: Translations for category names
@@ -28,7 +32,8 @@ const categoryNameMap = {
   activity: 'Activity',
   travel_and_places: 'Travel and Places',
   objects: 'Objects',
-  flags: 'Flags'
+  flags: 'Flags',
+  user: 'User Defined'
 };
 
 // Do we have a better way of doing this in tinymce?
@@ -52,18 +57,48 @@ const extractGlobal = (url: string): Result<Record<string, any>, any> => {
   }
 };
 
-const translateCategory = (name) => Obj.has(categoryNameMap, name) ? categoryNameMap[name] : name;
+const translateCategory = (categories: Record<string, string>, name: string) => {
+  return Obj.has(categories, name) ? categories[name] : name;
+};
+
+const getUserDefinedEmoticons = (editor: Editor) => {
+  const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
+  return Obj.map(userDefinedEmoticons, (value: RawEmojiEntry) => {
+    // Set some sane defaults for the custom emoji entry
+    return Merger.merge({ keywords: [], category: 'user' }, value);
+  });
+};
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
+  // Merge the defaults with the user defined categories. Note that any user defined categories should override any defaults
+  const categoryNames = Merger.merge(categoryNameMap, Settings.getEmoticonCategories(editor));
+
+  const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
+    const cats = { };
+    const everything = [ ];
+
+    Obj.each(emojis, (lib: RawEmojiEntry, title: string) => {
+      const entry: EmojiEntry = {
+        // Omitting fitzpatrick_scale
+        title,
+        keywords: lib.keywords,
+        char: lib.char,
+        category: translateCategory(categoryNames, lib.category)
+      };
+      const current = cats[entry.category] !== undefined ? cats[entry.category] : [ ];
+      cats[entry.category] = current.concat([ entry ]);
+      everything.push(entry);
+    });
+
+    categories.set(Option.some(cats));
+    all.set(Option.some(everything));
+  };
 
   editor.on('init', () => {
     ScriptLoader.ScriptLoader.loadScript(databaseUrl, () => {
-      const cats = { };
-      const everything = [ ];
-
       extractGlobal(databaseUrl).fold(
         (err) => {
           console.log(err);
@@ -71,21 +106,8 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
           all.set(Option.some([ ]));
         },
         (emojis) => {
-          Obj.each(emojis, (lib, n) => {
-            const entry: EmojiEntry = {
-              // Omitting fitzpatrick_scale
-              title: n,
-              keywords: lib.keywords,
-              char: lib.char,
-              category: translateCategory(lib.category)
-            };
-            const current = cats[entry.category] !== undefined ? cats[entry.category] : [ ];
-            cats[entry.category] = current.concat([ entry ]);
-            everything.push(entry);
-          });
-
-          categories.set(Option.some(cats));
-          all.set(Option.some(everything));
+          const userEmojis = getUserDefinedEmoticons(editor);
+          processEmojis(Merger.merge(emojis, userEmojis));
         }
       );
     }, () => {

@@ -1,26 +1,16 @@
 import 'tinymce/themes/silver/Theme';
 
-import { Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attr, Body, Element } from '@ephox/sugar';
+
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
+import { cFakeEvent } from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, failure) => {
   EmoticonsPlugin();
-
-  // TODO: Move into shared library
-  const cFakeEvent = function (name) {
-    return Chain.control(
-      Chain.op(function (elm: Element) {
-        const evt = document.createEvent('HTMLEvents');
-        evt.initEvent(name, true, true);
-        elm.dom().dispatchEvent(evt);
-      }),
-      Guard.addLogging('Fake event')
-    );
-  };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
