@@ -1,31 +1,28 @@
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import DetailsList from 'ephox/snooker/model/DetailsList';
 import Warehouse from 'ephox/snooker/model/Warehouse';
 import TableSize from 'ephox/snooker/resize/TableSize';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ResizeTest', function() {
-  var getWarehouse = function (table) {
-    var list = DetailsList.fromTable(table);
+UnitTest.test('ResizeTest', function () {
+  const getWarehouse = function (table) {
+    const list = DetailsList.fromTable(table);
     return Warehouse.generate(list);
   };
 
-  var direction = ResizeDirection.ltr;
+  const direction = ResizeDirection.ltr;
 
-  var boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
-  var box = Element.fromHtml(boundBox);
+  const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
+  const box = Element.fromHtml(boundBox);
   Insert.append(Body.body(), box);
 
-  var percentTablePercentCellsTest = function () {
-    var delta = 200;
+  const percentTablePercentCellsTest = function () {
+    const delta = 200;
 
-    var table = Element.fromHtml(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -44,37 +41,37 @@ UnitTest.test('ResizeTest', function() {
 
     Insert.append(box, table);
 
-    var tableSize = TableSize.getTableSize(table);
+    const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
     assert.eq(100, tableSize.width());
 
     // 25% width delta
-    var step = tableSize.getCellDelta(delta);
+    const step = tableSize.getCellDelta(delta);
     assert.eq(25, step);
 
-    var warehouse = getWarehouse(table);
-    var widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const warehouse = getWarehouse(table);
+    const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([50, 50], widths);
 
-    var deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
 
-    var newWidths = Arr.map(deltas, function (dx, i) {
+    const newWidths = Arr.map(deltas, function (dx, i) {
       return dx + widths[i];
     });
 
     Remove.remove(table);
   };
 
-  var percentTablePixelCellsTest = function () {
-    var delta = 200;
+  const percentTablePixelCellsTest = function () {
+    const delta = 200;
 
-    var table = Element.fromHtml(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -93,21 +90,21 @@ UnitTest.test('ResizeTest', function() {
 
     Insert.append(box, table);
 
-    var tableSize = TableSize.getTableSize(table);
+    const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
     assert.eq(100, tableSize.width());
 
     // 25% width delta
-    var step = tableSize.getCellDelta(delta);
+    const step = tableSize.getCellDelta(delta);
     assert.eq(25, step);
 
-    var warehouse = getWarehouse(table);
-    var widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const warehouse = getWarehouse(table);
+    const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
-    var expectedWidths = [50, 50];
+    const expectedWidths = [50, 50];
 
-    var widthDiffs = Arr.map(expectedWidths, (x,i) => {
+    const widthDiffs = Arr.map(expectedWidths, (x, i) => {
       return widths[i] - x;
     });
 
@@ -119,22 +116,22 @@ UnitTest.test('ResizeTest', function() {
       assert.eq(true, x < 1 && x > -1);
     });
 
-    var deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
 
-    var newWidths = Arr.map(deltas, function (dx, i) {
+    const newWidths = Arr.map(deltas, function (dx, i) {
       return dx + widths[i];
     });
 
     Remove.remove(table);
   };
 
-  var pixelTablePixelCellsTest = function () {
-    var delta = 200;
+  const pixelTablePixelCellsTest = function () {
+    const delta = 200;
 
-    var table = Element.fromHtml(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -153,37 +150,37 @@ UnitTest.test('ResizeTest', function() {
 
     Insert.append(box, table);
 
-    var tableSize = TableSize.getTableSize(table);
+    const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
     assert.eq(800, tableSize.width());
 
     // 25% width delta
-    var step = tableSize.getCellDelta(delta);
+    const step = tableSize.getCellDelta(delta);
     assert.eq(200, step);
 
-    var warehouse = getWarehouse(table);
-    var widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const warehouse = getWarehouse(table);
+    const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([400, 400], widths);
 
-    var deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
     assert.eq([200, -200], deltas);
 
-    var newWidths = Arr.map(deltas, function (dx, i) {
+    const newWidths = Arr.map(deltas, function (dx, i) {
       return dx + widths[i];
     });
 
     Remove.remove(table);
   };
 
-  var pixelTablePercentCellsTest = function () {
-    var delta = 200;
+  const pixelTablePercentCellsTest = function () {
+    const delta = 200;
 
-    var table = Element.fromHtml(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -202,27 +199,27 @@ UnitTest.test('ResizeTest', function() {
 
     Insert.append(box, table);
 
-    var tableSize = TableSize.getTableSize(table);
+    const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
     assert.eq(800, tableSize.width());
 
     // 25% width delta
-    var step = tableSize.getCellDelta(delta);
+    const step = tableSize.getCellDelta(delta);
     assert.eq(200, step);
 
-    var warehouse = getWarehouse(table);
-    var widths = tableSize.getWidths(warehouse, direction, tableSize);
+    const warehouse = getWarehouse(table);
+    const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
     assert.eq([400, 400], widths);
 
-    var deltas = Deltas.determine(widths, 0, step, tableSize);
+    const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
     assert.eq([200, -200], deltas);
 
-    var newWidths = Arr.map(deltas, function (dx, i) {
+    const newWidths = Arr.map(deltas, function (dx, i) {
       return dx + widths[i];
     });
 
@@ -234,4 +231,3 @@ UnitTest.test('ResizeTest', function() {
   pixelTablePixelCellsTest();
   pixelTablePercentCellsTest();
 });
-

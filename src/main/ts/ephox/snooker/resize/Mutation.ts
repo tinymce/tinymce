@@ -1,19 +1,16 @@
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
+import { Event, Events } from '@ephox/porkbun';
 
-
-
-export default <any> function () {
-  var events = Events.create({
-    'drag': Event(['xDelta', 'yDelta'])
+export default function () {
+  const events = Events.create({
+    drag: Event(['xDelta', 'yDelta'])
   });
 
-  var mutate = function (x, y) {
+  const mutate = function (x, y) {
     events.trigger.drag(x, y);
   };
 
   return {
-    mutate: mutate,
+    mutate,
     events: events.registry
   };
-};
+}

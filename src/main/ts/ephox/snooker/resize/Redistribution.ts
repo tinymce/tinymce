@@ -1,35 +1,32 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Adt } from '@ephox/katamari';
+import { Adt, Arr, Fun, Strings } from '@ephox/katamari';
 import Util from '../util/Util';
-import { Strings } from '@ephox/katamari';
 
-var form = Adt.generate([
+const form = Adt.generate([
   { invalid: [ 'raw' ] },
   { pixels: [ 'value' ] },
   { percent: [ 'value' ] }
 ]);
 
-var validateFor = function (suffix, type, value) {
-  var rawAmount = value.substring(0, value.length - suffix.length);
-  var amount = parseFloat(rawAmount);
+const validateFor = function (suffix, type, value) {
+  const rawAmount = value.substring(0, value.length - suffix.length);
+  const amount = parseFloat(rawAmount);
   return rawAmount === amount.toString() ? type(amount) : form.invalid(value);
 };
 
-var validate = function (value) {
-  if (Strings.endsWith(value, '%')) return validateFor('%', form.percent, value);
-  if (Strings.endsWith(value, 'px')) return validateFor('px', form.pixels, value);
+const validate = function (value) {
+  if (Strings.endsWith(value, '%')) { return validateFor('%', form.percent, value); }
+  if (Strings.endsWith(value, 'px')) { return validateFor('px', form.pixels, value); }
   return form.invalid(value);
 };
 
 // Convert all column widths to percent.
-var redistributeToPercent = function (widths, totalWidth) {
+const redistributeToPercent = function (widths, totalWidth) {
   return Arr.map(widths, function (w) {
-    var colType = validate(w);
+    const colType = validate(w);
     return colType.fold(function () {
       return w;
     }, function (px) {
-      var ratio = px / totalWidth * 100;
+      const ratio = px / totalWidth * 100;
       return ratio + '%';
     }, function (pc) {
       return pc + '%';
@@ -37,10 +34,10 @@ var redistributeToPercent = function (widths, totalWidth) {
   });
 };
 
-var redistributeToPx = function (widths, totalWidth, newTotalWidth) {
-  var scale = newTotalWidth / totalWidth;
+const redistributeToPx = function (widths, totalWidth, newTotalWidth) {
+  const scale = newTotalWidth / totalWidth;
   return Arr.map(widths, function (w) {
-    var colType = validate(w);
+    const colType = validate(w);
     return colType.fold(function () {
       return w;
     }, function (px) {
@@ -51,24 +48,24 @@ var redistributeToPx = function (widths, totalWidth, newTotalWidth) {
   });
 };
 
-var redistributeEmpty = function (newWidthType, columns) {
-  var f = newWidthType.fold(
+const redistributeEmpty = function (newWidthType, columns) {
+  const f = newWidthType.fold(
     function () {
       return Fun.constant('');
     },
     function (px) {
-      var num = px / columns;
+      const num = px / columns;
       return Fun.constant(num + 'px');
     },
     function (pc) {
-      var num = pc / columns;
+      const num = pc / columns;
       return Fun.constant(num + 'px');
     }
   );
   return Util.repeat(columns, f);
 };
 
-var redistributeValues = function (newWidthType, widths, totalWidth) {
+const redistributeValues = function (newWidthType, widths, totalWidth) {
   return newWidthType.fold(function () {
     return widths;
   }, function (px) {
@@ -78,25 +75,25 @@ var redistributeValues = function (newWidthType, widths, totalWidth) {
   });
 };
 
-var redistribute = function (widths, totalWidth, newWidth) {
-  var newType = validate(newWidth);
-  var floats = Arr.forall(widths, function (s) { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
+const redistribute = function (widths, totalWidth, newWidth) {
+  const newType = validate(newWidth);
+  const floats = Arr.forall(widths, function (s) { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
   return toIntegers(floats);
 };
 
-var sum = function (values, fallback) {
-  if (values.length === 0) return fallback;
+const sum = function (values, fallback) {
+  if (values.length === 0) { return fallback; }
   return Arr.foldr(values, function (rest, v) {
     return validate(v).fold(Fun.constant(0), Fun.identity, Fun.identity) + rest;
   }, 0);
 };
 
-var roundDown = function (num, unit) {
-  var floored = Math.floor(num);
+const roundDown = function (num, unit) {
+  const floored = Math.floor(num);
   return { value: floored + unit, remainder: num - floored };
 };
 
-var add = function (value, amount) {
+const add = function (value, amount) {
   return validate(value).fold(Fun.constant(value), function (px) {
     return (px + amount) + 'px';
   }, function (pc) {
@@ -104,11 +101,11 @@ var add = function (value, amount) {
   });
 };
 
-var toIntegers = function (values) {
-  if (values.length === 0) return values;
-  var scan = Arr.foldr(values, function (rest, value) {
-    var info = validate(value).fold(
-      function () { return { value: value, remainder: 0 }; },
+const toIntegers = function (values) {
+  if (values.length === 0) { return values; }
+  const scan = Arr.foldr(values, function (rest, value) {
+    const info = validate(value).fold(
+      function () { return { value, remainder: 0 }; },
       function (num) { return roundDown(num, 'px'); },
       function (num) { return roundDown(num, '%'); }
     );
@@ -116,13 +113,13 @@ var toIntegers = function (values) {
     return { output: [ info.value ].concat(rest.output), remainder: rest.remainder + info.remainder };
   }, { output: [], remainder: 0 });
 
-  var r = scan.output;
+  const r = scan.output;
   return r.slice(0, r.length - 1).concat([ add(r[r.length - 1], Math.round(scan.remainder))]);
 };
 
-export default <any> {
-  validate: validate,
-  redistribute: redistribute,
-  sum: sum,
-  toIntegers: toIntegers
+export default {
+  validate,
+  redistribute,
+  sum,
+  toIntegers
 };

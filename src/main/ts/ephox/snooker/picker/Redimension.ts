@@ -1,38 +1,33 @@
+import { Focus, Height, Location, Width } from '@ephox/sugar';
 import Structs from '../api/Structs';
 import Sizing from './Sizing';
-import { Focus } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
 
+export default function (direction, settings) {
+  let active = false;
 
-
-export default <any> function (direction, settings) {
-  var active = false;
-
-  var on = function () {
+  const on = function () {
     active = true;
   };
 
-  var off = function () {
+  const off = function () {
     active = false;
   };
 
-  var getDimensions = function (table) {
-    var width = Width.get(table.element());
-    var height = Height.get(table.element());
+  const getDimensions = function (table) {
+    const width = Width.get(table.element());
+    const height = Height.get(table.element());
     return Structs.dimensions(width, height);
   };
 
-  var getPosition = function (table) {
-    var position = Location.absolute(table.element());
+  const getPosition = function (table) {
+    const position = Location.absolute(table.element());
     return Structs.coords(position.left(), position.top());
   };
 
-  var updateSelection = function (table, grid, changes) {
-    var full = changes.full();
-    if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
-    var last = table.setSelection(changes.selection().row(), changes.selection().column());
+  const updateSelection = function (table, grid, changes) {
+    const full = changes.full();
+    if (full.row() !== grid.rows() || full.column() !== grid.columns()) { table.setSize(full.row(), full.column()); }
+    const last = table.setSelection(changes.selection().row(), changes.selection().column());
     Focus.focus(last);
   };
 
@@ -40,28 +35,28 @@ export default <any> function (direction, settings) {
    * Based on the mouse position (x, y), identify whether the picker table needs to be resized
    * and update its selection
    */
-  var mousemove = function (table, grid, x, y) {
+  const mousemove = function (table, grid, x, y) {
     if (active) {
-      var dimensions = getDimensions(table);
-      var position = getPosition(table);
-      var mouse = Structs.coords(x, y);
-      var address = direction.pickerCell(position, dimensions, grid, mouse);
-      var changes = Sizing.resize(address, settings);
+      const dimensions = getDimensions(table);
+      const position = getPosition(table);
+      const mouse = Structs.coords(x, y);
+      const address = direction.pickerCell(position, dimensions, grid, mouse);
+      const changes = Sizing.resize(address, settings);
       updateSelection(table, grid, changes);
     }
   };
 
-  var manual = function (table, selected, xDelta, yDelta) {
+  const manual = function (table, selected, xDelta, yDelta) {
     if (active) {
-      var changes = Sizing.grow(selected, xDelta, yDelta, settings);
+      const changes = Sizing.grow(selected, xDelta, yDelta, settings);
       updateSelection(table, selected, changes);
     }
   };
 
   return {
-    on: on,
-    off: off,
-    mousemove: mousemove,
-    manual: manual
+    on,
+    off,
+    mousemove,
+    manual
   };
-};
+}

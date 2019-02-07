@@ -3,12 +3,12 @@ import { document } from '@ephox/dom-globals';
 import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import TablePositions from 'ephox/snooker/api/TablePositions';
 
-UnitTest.test('RectangularTest', function() {
-  var body = SelectorFind.first('body').getOrDie();
-  var div = Element.fromTag('div');
+UnitTest.test('RectangularTest', function () {
+  const body = SelectorFind.first('body').getOrDie();
+  const div = Element.fromTag('div');
   Insert.append(body, div);
 
-  var table = Element.fromHtml(
+  const table = Element.fromHtml(
      '<table id="tableA" border=1>' +
        '<tbody>' +
          '<tr>' +
@@ -39,49 +39,49 @@ UnitTest.test('RectangularTest', function() {
      '</table>'
    );
 
-  var table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">'+
+  const table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
    '<tbody><tr>' +
-      '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>'+
-      '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>'+
-      '<td id="TBA2" style="min-width: 100px; height: 40px">A2 </td>'+
-      '<td id="TBA3" style="min-width: 100px; height: 40px">A3 </td>'+
-      '<td id="TBA4" style="min-width: 100px; height: 40px">A4 </td>'+
-      '<td id="TBA5" style="min-width: 100px; height: 40px">A5 </td> '+
+      '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>' +
+      '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>' +
+      '<td id="TBA2" style="min-width: 100px; height: 40px">A2 </td>' +
+      '<td id="TBA3" style="min-width: 100px; height: 40px">A3 </td>' +
+      '<td id="TBA4" style="min-width: 100px; height: 40px">A4 </td>' +
+      '<td id="TBA5" style="min-width: 100px; height: 40px">A5 </td> ' +
     '</tr>' +
     '<tr>' +
-      '<td id="TBB1" style="min-width: 100px; height: 40px" colspan="2" rowspan=2>B1</td>'+
-      '<td id="TBB2" style="min-width: 100px; height: 40px">B2 </td>'+
-      '<td id="TBB3" style="min-width: 100px; height: 40px">B3 </td>'+
-      '<td id="TBB4" style="min-width: 100px; height: 40px">B4 </td>'+
-      '</tr>'+
-    '<tr> '+
-      '<td id="TBC1" style="min-width: 100px; height: 40px">C1 </td>'+
-      '<td id="TBC2" style="min-width: 100px; height: 40px" colspan=2 rowspan=2>C2 </td>'+
+      '<td id="TBB1" style="min-width: 100px; height: 40px" colspan="2" rowspan=2>B1</td>' +
+      '<td id="TBB2" style="min-width: 100px; height: 40px">B2 </td>' +
+      '<td id="TBB3" style="min-width: 100px; height: 40px">B3 </td>' +
+      '<td id="TBB4" style="min-width: 100px; height: 40px">B4 </td>' +
+      '</tr>' +
+    '<tr> ' +
+      '<td id="TBC1" style="min-width: 100px; height: 40px">C1 </td>' +
+      '<td id="TBC2" style="min-width: 100px; height: 40px" colspan=2 rowspan=2>C2 </td>' +
       // '<td id="TBC3" style="min-width: 100px; height: 40px">C3 </td>'+
       // '<td id="TBC4" style="min-width: 100px; height: 40px">C4 </td>'+
       // '<td id="TBC5" style="min-width: 100px; height: 40px">C5 </td>'+
-      '</tr>'+
-    '<tr>'+
-      '<td id="TBD1" style="min-width: 100px; height: 40px">D1 </td>'+
-      '<td id="TBD2" style="min-width: 100px; height: 40px">D2 </td>'+
-      '<td id="TBD3" style="min-width: 100px; height: 40px">D3 </td>'+
-      '<td id="TBD4" style="min-width: 100px; height: 40px">D4 </td>'+
+      '</tr>' +
+    '<tr>' +
+      '<td id="TBD1" style="min-width: 100px; height: 40px">D1 </td>' +
+      '<td id="TBD2" style="min-width: 100px; height: 40px">D2 </td>' +
+      '<td id="TBD3" style="min-width: 100px; height: 40px">D3 </td>' +
+      '<td id="TBD4" style="min-width: 100px; height: 40px">D4 </td>' +
       // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
       // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
     '</tr> </tbody></table>');
 
   InsertAll.append(div, [ table, table2 ] );
 
-  var check = function (tableTarget, from, to, expected) {
+  const check = function (tableTarget, from, to, expected) {
     [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td) {
       td.style.background = '';
     });
     document.querySelector(from).style.background = '#cadbee';
     document.querySelector(to).style.background = '#5adb33';
-    var start = SelectorFilter.descendants(tableTarget, from)[0];
-    var finish = SelectorFilter.descendants(tableTarget, to)[0];
-    var check = TablePositions.getBox(tableTarget, start, finish);
-    assert.eq(expected, check.isSome());
+    const start = SelectorFilter.descendants(tableTarget, from)[0];
+    const finish = SelectorFilter.descendants(tableTarget, to)[0];
+    const c = TablePositions.getBox(tableTarget, start, finish);
+    assert.eq(expected, c.isSome());
   };
 
   check(table, '#tableA td#B1', '#tableA td#C3', false);
@@ -104,7 +104,6 @@ UnitTest.test('RectangularTest', function() {
 
   Remove.remove(table);
 
-
   check(table2, '#tableB td#TBA1', '#tableB td#TBB1', true);
 
   check(table2, '#tableB td#TBA0', '#tableB td#TBD1', true);
@@ -121,4 +120,3 @@ UnitTest.test('RectangularTest', function() {
 
   Remove.remove(div);
 });
-

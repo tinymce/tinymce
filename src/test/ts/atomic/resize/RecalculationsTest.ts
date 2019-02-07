@@ -1,19 +1,18 @@
-import { Arr } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Struct } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Warehouse from 'ephox/snooker/model/Warehouse';
 import Recalculations from 'ephox/snooker/resize/Recalculations';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('RecalculationsTest', function () {
-  var dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
+  const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
 
-  var assertParts = Struct.immutable('widths', 'heights');
+  const assertParts = Struct.immutable('widths', 'heights');
 
-  var check = function (expected, input, sizes) {
-    var warehouse = Warehouse.generate(input);
-    var actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
-    var actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
+  const check = function (expected, input, sizes) {
+    const warehouse = Warehouse.generate(input);
+    const actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
+    const actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
 
     Arr.each(expected, function (expt) {
       assert.eq(expt.widths(), Arr.map(actualW, function (cell) {
@@ -34,8 +33,8 @@ UnitTest.test('RecalculationsTest', function () {
 
   };
 
-  var d = Structs.detail; //  Struct.immutable('element', 'rowspan', 'colspan');
-  var r = Structs.rowdata;
+  const d = Structs.detail; //  Struct.immutable('element', 'rowspan', 'colspan');
+  const r = Structs.rowdata;
 
   check([assertParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }])], [
     r('r0', [d('a', 1, 1)], 'tbody')
@@ -92,4 +91,3 @@ UnitTest.test('RecalculationsTest', function () {
       r('r2', [d('r', 2, 1), d('s', 1, 1), d('t', 2, 1), d('u', 1, 1), d('v', 1, 1)], 'tbody')
     ], dimensions([10, 10, 10, 10, 10, 10, 10], [20, 15, 10]));
 });
-

@@ -1,29 +1,27 @@
 import { Arr } from '@ephox/katamari';
+import { Attr, Node, Traverse } from '@ephox/sugar';
 import Structs from '../api/Structs';
 import TableLookup from '../api/TableLookup';
-import { Attr } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
 
 /*
  * Takes a DOM table and returns a list of list of:
    element: row element
    cells: (id, rowspan, colspan) structs
  */
-var fromTable = function (table) {
-  var rows = TableLookup.rows(table);
+const fromTable = function (table) {
+  const rows = TableLookup.rows(table);
   return Arr.map(rows, function (row) {
-    var element = row;
+    const element = row;
 
-    var parent = Traverse.parent(element);
-    var parentSection = parent.map(function (parent) {
-      var parentName = Node.name(parent);
+    const parent = Traverse.parent(element);
+    const parentSection = parent.map(function (p) {
+      const parentName = Node.name(p);
       return (parentName === 'tfoot' || parentName === 'thead' || parentName === 'tbody') ? parentName : 'tbody';
     }).getOr('tbody');
 
-    var cells = Arr.map(TableLookup.cells(row), function (cell) {
-      var rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      var colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+    const cells = Arr.map(TableLookup.cells(row), function (cell) {
+      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
+      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
       return Structs.detail(cell, rowspan, colspan);
     });
 
@@ -31,11 +29,11 @@ var fromTable = function (table) {
   });
 };
 
-var fromPastedRows = function (rows, example) {
+const fromPastedRows = function (rows, example) {
   return Arr.map(rows, function (row) {
-    var cells = Arr.map(TableLookup.cells(row), function (cell) {
-      var rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      var colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+    const cells = Arr.map(TableLookup.cells(row), function (cell) {
+      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
+      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
       return Structs.detail(cell, rowspan, colspan);
     });
 
@@ -43,7 +41,7 @@ var fromPastedRows = function (rows, example) {
   });
 };
 
-export default <any> {
-  fromTable: fromTable,
-  fromPastedRows: fromPastedRows
+export default {
+  fromTable,
+  fromPastedRows
 };

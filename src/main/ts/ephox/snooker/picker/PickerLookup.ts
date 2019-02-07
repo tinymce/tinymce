@@ -1,39 +1,37 @@
+import { Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Structs from '../api/Structs';
 import PickerStyles from './PickerStyles';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
 
-var CELL_SELECTOR = '.' + PickerStyles.cell();
-var ROW_SELECTOR = '.' + PickerStyles.row();
+const CELL_SELECTOR = '.' + PickerStyles.cell();
+const ROW_SELECTOR = '.' + PickerStyles.row();
 
 // TODO: refactor to build up references at picker creation time (PickerUi.recreate)
 
-var cells = function (ancestor) {
+const cells = function (ancestor) {
   return SelectorFilter.descendants(ancestor, CELL_SELECTOR);
 };
 
-var rows = function (ancestor) {
+const rows = function (ancestor) {
   return SelectorFilter.descendants(ancestor, ROW_SELECTOR);
 };
 
-var attr = function (element, property) {
+const attr = function (element, property) {
   return parseInt(Attr.get(element, property), 10);
 };
 
-var grid = function (element, rowProp, colProp) {
-  var rows = attr(element, rowProp);
-  var cols = attr(element, colProp);
-  return Structs.grid(rows, cols);
+const grid = function (element, rowProp, colProp) {
+  const rowsCount = attr(element, rowProp);
+  const cols = attr(element, colProp);
+  return Structs.grid(rowsCount, cols);
 };
 
-var button = function (cell) {
+const button = function (cell) {
   return SelectorFind.child(cell, '.' + PickerStyles.button()).getOr(cell);
 };
 
-export default <any> {
-  cells: cells,
-  rows: rows,
-  grid: grid,
-  button: button
+export default {
+  cells,
+  rows,
+  grid,
+  button
 };

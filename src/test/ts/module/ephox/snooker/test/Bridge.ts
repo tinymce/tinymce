@@ -1,20 +1,10 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
+import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Attr, Css, Element, Hierarchy, Insert, Node, Replication } from '@ephox/sugar';
 
 // Mock/Stub out helper functions
 
-var targetStub = function (selection, bounds, table) {
-  var cells = Options.cat(Arr.map(selection, function (path) {
+const targetStub = function (selection, bounds, table) {
+  const cells = Options.cat(Arr.map(selection, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));
 
@@ -31,12 +21,12 @@ var targetStub = function (selection, bounds, table) {
   };
 };
 
-var generators = {
-  row: function (e) {
+const generators = {
+  row (e) {
     return Element.fromTag('tr');
   },
-  cell: function (prev) {
-    var tag = Element.fromTag(Node.name(prev.element()));
+  cell (prev) {
+    const tag = Element.fromTag(Node.name(prev.element()));
     Insert.append(tag, Element.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
     Css.getRaw(prev.element(), 'width').each(function (w) {
@@ -44,23 +34,22 @@ var generators = {
     });
     return tag;
   },
-  replace: function (cell, tag, attrs) {
-    var replica = Replication.copy(cell, tag);
+  replace (cell, tag, attrs) {
+    const replica = Replication.copy(cell, tag);
     // TODO: Snooker passes null to indicate 'remove attribute'
     Obj.each(attrs, function (v, k) {
-      if (v === null) Attr.remove(replica, k);
-      else Attr.set(replica, k, v);
+      if (v === null) { Attr.remove(replica, k); } else { Attr.set(replica, k, v); }
     });
     return replica;
   },
-  gap: function () {
-    var tag = Element.fromTag('td');
+  gap () {
+    const tag = Element.fromTag('td');
     Insert.append(tag, Element.fromText('?'));
     return tag;
   }
 };
 
-export default <any> {
-  targetStub: targetStub,
-  generators: generators
+export default {
+  targetStub,
+  generators
 };

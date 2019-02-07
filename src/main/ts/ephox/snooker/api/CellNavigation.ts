@@ -1,17 +1,16 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { Compare } from '@ephox/sugar';
 import CellLocation from './CellLocation';
 import TableLookup from './TableLookup';
-import { Compare } from '@ephox/sugar';
 
 /*
  * Identify the index of the current cell within all the cells, and
  * a list of the cells within its table.
  */
-var detect = function (current, isRoot) {
+const detect = function (current, isRoot?) {
   return TableLookup.table(current, isRoot).bind(function (table) {
-    var all = TableLookup.cells(table);
-    var index = Arr.findIndex(all, function (x) {
+    const all = TableLookup.cells(table);
+    const index = Arr.findIndex(all, function (x) {
       return Compare.eq(current, x);
     });
 
@@ -24,12 +23,11 @@ var detect = function (current, isRoot) {
   });
 };
 
-
 /*
  * Identify the CellLocation of the cell when navigating forward from current
  */
-var next = function (current, isRoot) {
-  var detection = detect(current, isRoot);
+const next = function (current, isRoot?) {
+  const detection = detect(current, isRoot);
   return detection.fold(function () {
     return CellLocation.none(current);
   }, function (info) {
@@ -40,8 +38,8 @@ var next = function (current, isRoot) {
 /*
  * Identify the CellLocation of the cell when navigating back from current
  */
-var prev = function (current, isRoot) {
-  var detection = detect(current, isRoot);
+const prev = function (current, isRoot?) {
+  const detection = detect(current, isRoot);
   return detection.fold(function () {
     return CellLocation.none();
   }, function (info) {
@@ -49,7 +47,7 @@ var prev = function (current, isRoot) {
   });
 };
 
-export default <any> {
-  next: next,
-  prev: prev
+export default {
+  next,
+  prev
 };

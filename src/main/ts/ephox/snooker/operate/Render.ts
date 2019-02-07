@@ -1,8 +1,4 @@
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
+import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
 
 export interface RenderOptions {
   styles: { [key: string]: string };
@@ -13,7 +9,7 @@ export interface RenderOptions {
 const DefaultRenderOptions = {
   styles: {
     'border-collapse': 'collapse',
-    width: '100%'
+    'width': '100%'
   },
   attributes: {
     border: '1'
@@ -21,42 +17,42 @@ const DefaultRenderOptions = {
   percentages: true
 };
 
-var makeTable = function () {
+const makeTable = function () {
   return Element.fromTag('table');
 };
 
-var tableBody = function () {
+const tableBody = function () {
   return Element.fromTag('tbody');
-}
+};
 
-var tableRow = function () {
+const tableRow = function () {
   return Element.fromTag('tr');
 };
 
-var tableHeaderCell = function () {
+const tableHeaderCell = function () {
   return Element.fromTag('th');
 };
 
-var tableCell = function () {
+const tableCell = function () {
   return Element.fromTag('td');
 };
 
-var render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, renderOpts: RenderOptions = DefaultRenderOptions) => {
-  var table = makeTable();
+const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, renderOpts: RenderOptions = DefaultRenderOptions) => {
+  const table = makeTable();
 
   Css.setAll(table, renderOpts.styles);
   Attr.setAll(table, renderOpts.attributes);
 
-  var tbody = tableBody();
+  const tbody = tableBody();
   Insert.append(table, tbody);
 
   // Setting initial widths on cells to avoid jumpy stretching of the active cell and shrinkage of the surrounding ones (see TINY-1398).
-  var trs = [];
-  for (var i = 0; i < rows; i++) {
-    var tr = tableRow();
-    for (var j = 0; j < columns; j++) {
+  const trs = [];
+  for (let i = 0; i < rows; i++) {
+    const tr = tableRow();
+    for (let j = 0; j < columns; j++) {
 
-      var td = i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
+      const td = i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
       if (j < columnHeaders) { Attr.set(td, 'scope', 'row'); }
       if (i < rowHeaders) { Attr.set(td, 'scope', 'col'); }
 
@@ -74,6 +70,4 @@ var render = (rows: number, columns: number, rowHeaders: number, columnHeaders: 
   return table;
 };
 
-export {
-  render
-};
+export { render };

@@ -20,7 +20,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     children: [
                       s.element('td', {
                         styles: {
-                          'width': str.is('50%')
+                          width: str.is('50%')
                         },
                         children: [
                           s.element('br', {})
@@ -28,7 +28,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                       }),
                       s.element('td', {
                         styles: {
-                          'width': str.is('50%')
+                          width: str.is('50%')
                         },
                         children: [
                           s.element('br', {})
@@ -58,7 +58,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     children: [
                       s.element('td', {
                         styles: {
-                          'width': str.is('50%')
+                          width: str.is('50%')
                         },
                         children: [
                           s.element('br', {})
@@ -66,7 +66,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                       }),
                       s.element('td', {
                         styles: {
-                          'width': str.is('50%')
+                          width: str.is('50%')
                         },
                         children: [
                           s.element('br', {})
@@ -86,8 +86,8 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
         Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, arr) => {
           return s.element('table', {
             styles: {
-              'width': str.is('50%'),
-              'height': str.is('100px')
+              width: str.is('50%'),
+              height: str.is('100px')
             },
             children: [
               s.element('tbody', {
@@ -96,7 +96,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     children: [
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})
@@ -104,7 +104,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                       }),
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})
@@ -119,7 +119,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
         }), table);
       })),
       Logger.t('Render table with attributes', Step.sync(() => {
-        const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', 'class': 'myclass' }, percentages: false });
+        const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', class: 'myclass' }, percentages: false });
 
         Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, arr) => {
           return s.element('table', {
@@ -128,8 +128,8 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
               'border-collapse': str.none('Should not have border-collapse')
             },
             attrs: {
-              'border': str.is('1'),
-              'class': str.is('myclass')
+              border: str.is('1'),
+              class: str.is('myclass')
             },
             children: [
               s.element('tbody', {
@@ -138,7 +138,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     children: [
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})
@@ -146,7 +146,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                       }),
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})
@@ -176,7 +176,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                     children: [
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})
@@ -184,7 +184,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
                       }),
                       s.element('td', {
                         styles: {
-                          'width': str.none('Should not have width')
+                          width: str.none('Should not have width')
                         },
                         children: [
                           s.element('br', {})

@@ -1,7 +1,7 @@
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('UnmergeOperationsTest', function() {
+UnitTest.test('UnmergeOperationsTest', function () {
   Assertions.checkUnmerge(
     '<table><tbody>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -110,4 +110,3 @@ UnitTest.test('UnmergeOperationsTest', function() {
     ]
   );
 });
-

@@ -1,18 +1,17 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Transitions from 'ephox/snooker/model/Transitions';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('TableCounterTest', function() {
-  var d = Structs.detail;
-  var r = Structs.rowcells;
-  var rd = Structs.rowdetails;
-  var en = Structs.elementnew;
+UnitTest.test('TableCounterTest', function () {
+  const d = Structs.detail;
+  const r = Structs.rowcells;
+  const rd = Structs.rowdetails;
+  const en = Structs.elementnew;
 
-  var check = function (expected, input) {
-    var actual = Transitions.toDetails(input, Fun.tripleEquals);
-    var cleaner = function (obj) {
+  const check = function (expected, input) {
+    const actual = Transitions.toDetails(input, Fun.tripleEquals);
+    const cleaner = function (obj) {
       return Arr.map(obj, function (row) {
         return Arr.map(row, function (c) {
           return { element: c.element(), rowspan: c.rowspan(), colspan: c.colspan() };
@@ -120,4 +119,3 @@ UnitTest.test('TableCounterTest', function() {
     ]
   );
 });
-

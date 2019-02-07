@@ -5,8 +5,8 @@ import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } f
 import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
 import Sizes from 'ephox/snooker/api/Sizes';
 
-UnitTest.test('Table Sizes Test (fusebox)', function() {
-  var percentTable = '<table style="width: 100%;">' +
+UnitTest.test('Table Sizes Test (fusebox)', function () {
+  const percentTable = '<table style="width: 100%;">' +
                       '<tbody>' +
                       '<tr><td style="width: 10%;">A0</td><td style="width: 30%;">B0</td><td style="width: 20%;">C0</td><td style="width: 25%;">D0</td><td style="width: 15%;">E0</td></tr>' +
                       '<tr><td style="width: 60%;" colspan="3">A1</td><td style="width: 25%;">D1</td><td style="width: 15%;">E1</td></tr>' +
@@ -15,7 +15,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
                       '</tbody>' +
                       '</table>';
 
-  var pixelTable = '<table style="width: 500px;">' +
+  const pixelTable = '<table style="width: 500px;">' +
                     '<tbody>' +
                     '<tr><td style="width: 50px;">A0</td><td style="width: 150px;">B0</td><td style="width: 100px;">C0</td><td style="width: 125px;">D0</td><td style="width: 75px;">E0</td></tr>' +
                     '<tr><td style="width: 300px;" colspan="3">A1</td><td style="width: 125px;">D1</td><td style="width: 75px;">E1</td></tr>' +
@@ -24,19 +24,19 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
                     '</tbody>' +
                     '</table>';
 
-  var pixelTableHeight = '<table border="1" style="border-collapse: collapse; width: 100%;"> <tbody> <tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> <td style="width: 20%; height: 40px;">  </td> <td style="width: 20%; height: 40px;" colspan="2"></td> <td style="width: 20%; height: 140px;" rowspan="2"></td> </tr> <tr> <td style="width: 20%; height: 250px;" rowspan="2"></td> <td style="width: 20%; height: 100px;">  </td> <td style="width: 20%; height: 100px;">  </td> </tr> <tr> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> </tr> </tbody> </table';
+  const pixelTableHeight = '<table border="1" style="border-collapse: collapse; width: 100%;"> <tbody> <tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> <td style="width: 20%; height: 40px;">  </td> <td style="width: 20%; height: 40px;" colspan="2"></td> <td style="width: 20%; height: 140px;" rowspan="2"></td> </tr> <tr> <td style="width: 20%; height: 250px;" rowspan="2"></td> <td style="width: 20%; height: 100px;">  </td> <td style="width: 20%; height: 100px;">  </td> </tr> <tr> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> </tr> </tbody> </table';
 
-  var style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; }</style>');
+  const style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; }</style>');
   Insert.append(Element.fromDom(document.head), style);
 
-  var generateW = function (info, totalWidth) {
-    var table = Element.fromTag('table');
+  const generateW = function (info, totalWidth) {
+    const table = Element.fromTag('table');
     Css.set(table, 'width', totalWidth);
-    var tbody = Element.fromTag('tbody');
-    var trows = Arr.map(info, function (row, r) {
-      var tr = Element.fromTag('tr');
-      var cells = Arr.map(row, function (width, c) {
-        var td = Element.fromTag('td');
+    const tbody = Element.fromTag('tbody');
+    const trows = Arr.map(info, function (row, r) {
+      const tr = Element.fromTag('tr');
+      const cells = Arr.map(row, function (width, c) {
+        const td = Element.fromTag('td');
         Css.set(td, 'width', width);
         Insert.append(td, Element.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
         return td;
@@ -49,14 +49,14 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
     return table;
   };
 
-  var generateH = function (info, totalHeight) {
-    var table = Element.fromTag('table');
+  const generateH = function (info, totalHeight) {
+    const table = Element.fromTag('table');
     Css.set(table, 'height', totalHeight);
-    var tbody = Element.fromTag('tbody');
-    var trows = Arr.map(info, function (row, r) {
-      var tr = Element.fromTag('tr');
-      var cells = Arr.map(row, function (height, c) {
-        var td = Element.fromTag('td');
+    const tbody = Element.fromTag('tbody');
+    const trows = Arr.map(info, function (row, r) {
+      const tr = Element.fromTag('tr');
+      const cells = Arr.map(row, function (height, c) {
+        const td = Element.fromTag('td');
         Css.set(td, 'height', height);
         Insert.append(td, Element.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
         return td;
@@ -69,20 +69,20 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
     return table;
   };
 
-  var readWidth = function (element) {
-    var rows = SelectorFilter.descendants(element, 'tr');
+  const readWidth = function (element) {
+    const rows = SelectorFilter.descendants(element, 'tr');
     return Arr.map(rows, function (row) {
-      var cells = SelectorFilter.descendants(row, 'td,th');
+      const cells = SelectorFilter.descendants(row, 'td,th');
       return Arr.map(cells, function (cell) {
         return Css.getRaw(cell, 'width').getOrDie('Did not contain width information.');
       });
     });
   };
 
-  var readHeight = function (element) {
-    var rows = SelectorFilter.descendants(element, 'tr');
+  const readHeight = function (element) {
+    const rows = SelectorFilter.descendants(element, 'tr');
     return Arr.map(rows, function (row) {
-      var cells = SelectorFilter.descendants(row, 'td,th');
+      const cells = SelectorFilter.descendants(row, 'td,th');
       return Arr.map(cells, function (cell) {
         return Css.getRaw(cell, 'height').getOrDie('Did not contain height information.');
       });
@@ -102,27 +102,27 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
 
   assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
-  var checkWidth = function (expected, table, newWidth) {
+  const checkWidth = function (expected, table, newWidth) {
     Insert.append(Body.body(), table);
     Sizes.redistribute(table, Option.some(newWidth), Option.none(), ResizeDirection.ltr);
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
 
-  var checkBasicWidth = function (expected, input, initialWidth, newWidth) {
-    var table = generateW(input, initialWidth);
+  const checkBasicWidth = function (expected, input, initialWidth, newWidth) {
+    const table = generateW(input, initialWidth);
     checkWidth(expected, table, newWidth);
   };
 
-  var checkHeight = function (expected, table, newHeight) {
+  const checkHeight = function (expected, table, newHeight) {
     Insert.append(Body.body(), table);
     Sizes.redistribute(table, Option.none(), Option.some(newHeight), ResizeDirection.ltr);
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };
 
-  var checkBasicHeight = function (expected, input, initialHeight, newHeight) {
-    var table = generateH(input, initialHeight);
+  const checkBasicHeight = function (expected, input, initialHeight, newHeight) {
+    const table = generateH(input, initialHeight);
     checkHeight(expected, table, newHeight);
   };
 
@@ -139,7 +139,6 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
 
   checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
 
-
   checkHeight([
     [ '140px', '40px',  '40px',           '140px' ],
     [         '250px', '100px', '100px'          ],
@@ -149,19 +148,19 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
   checkHeight([
     [ '70px', '20px',  '20px',        '70px' ],
     [         '125px', '50px', '50px'        ],
-    [ '75px',          '75px','75px', '75px' ]
+    [ '75px',          '75px', '75px', '75px' ]
   ], Element.fromHtml(pixelTableHeight), '150px');
 
   checkHeight([
     [ '46%', '13%',  '13%',        '46%' ],
     [         '84%', '33%', '33%'        ],
-    [ '51%',          '51%','51%', '51%' ]
+    [ '51%',          '51%', '51%', '51%' ]
   ], Element.fromHtml(pixelTableHeight), '100%');
 
   checkHeight([
     [ '46%', '13%',  '13%',        '46%' ],
     [         '84%', '33%', '33%'        ],
-    [ '51%',          '51%','51%', '51%' ]
+    [ '51%',          '51%', '51%', '51%' ]
   ], Element.fromHtml(pixelTableHeight), '150%');
 
   checkWidth([
@@ -222,4 +221,3 @@ UnitTest.test('Table Sizes Test (fusebox)', function() {
 
   Remove.remove(style);
 });
-

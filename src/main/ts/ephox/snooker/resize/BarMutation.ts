@@ -1,18 +1,15 @@
 import { Option } from '@ephox/katamari';
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
+import { Event, Events } from '@ephox/porkbun';
 import Mutation from './Mutation';
 
-
-
-export default <any> function () {
-  var events = Events.create({
+export default function () {
+  const events = Events.create({
     drag: Event(['xDelta', 'yDelta', 'target'])
   });
 
-  var target = Option.none();
+  let target = Option.none();
 
-  var delegate = Mutation();
+  const delegate = Mutation();
 
   delegate.events.drag.bind(function (event) {
     target.each(function (t) {
@@ -21,18 +18,18 @@ export default <any> function () {
     });
   });
 
-  var assign = function (t) {
+  const assign = function (t) {
     target = Option.some(t);
   };
 
-  var get = function () {
+  const get = function () {
     return target;
   };
 
   return {
-    assign: assign,
-    get: get,
+    assign,
+    get,
     mutate: delegate.mutate,
     events: events.registry
   };
-};
+}

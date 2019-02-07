@@ -1,14 +1,9 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Contracts } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
+import { Attr, Css } from '@ephox/sugar';
 
-var elementToData = function (element) {
-  var colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
-  var rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
+const elementToData = function (element) {
+  const colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
+  const rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
   return {
     element: Fun.constant(element),
     colspan: Fun.constant(colspan),
@@ -16,29 +11,29 @@ var elementToData = function (element) {
   };
 };
 
-var modification = function (generators, _toData) {
+const modification = function (generators, _toData) {
   contract(generators);
-  var position = Cell(Option.none());
-  var toData = _toData !== undefined ? _toData : elementToData;
+  const position = Cell(Option.none());
+  const toData = _toData !== undefined ? _toData : elementToData;
 
-  var nu = function (data) {
+  const nu = function (data) {
     return generators.cell(data);
   };
 
-  var nuFrom = function (element) {
-    var data = toData(element);
+  const nuFrom = function (element) {
+    const data = toData(element);
     return nu(data);
   };
 
-  var add = function (element) {
-    var replacement = nuFrom(element);
-    if (position.get().isNone()) position.set(Option.some(replacement));
-    recent = Option.some({ item: element, replacement: replacement });
+  const add = function (element) {
+    const replacement = nuFrom(element);
+    if (position.get().isNone()) { position.set(Option.some(replacement)); }
+    recent = Option.some({ item: element, replacement });
     return replacement;
   };
 
-  var recent = Option.none();
-  var getOrInit = function (element, comparator) {
+  let recent = Option.none();
+  const getOrInit = function (element, comparator) {
     return recent.fold(function () {
       return add(element);
     }, function (p) {
@@ -47,31 +42,31 @@ var modification = function (generators, _toData) {
   };
 
   return {
-    getOrInit: getOrInit,
+    getOrInit,
     cursor: position.get
   } ;
 };
 
-var transform = function (scope, tag) {
+const transform = function (scope, tag) {
   return function (generators) {
-    var position = Cell(Option.none());
+    const position = Cell(Option.none());
     contract(generators);
-    var list = [];
+    const list = [];
 
-    var find = function (element, comparator) {
+    const find = function (element, comparator) {
       return Arr.find(list, function (x) { return comparator(x.item, element); });
     };
 
-    var makeNew = function (element) {
-      var cell = generators.replace(element, tag, {
-        scope: scope
+    const makeNew = function (element) {
+      const cell = generators.replace(element, tag, {
+        scope
       });
       list.push({ item: element, sub: cell });
-      if (position.get().isNone()) position.set(Option.some(cell));
+      if (position.get().isNone()) { position.set(Option.some(cell)); }
       return cell;
     };
 
-    var replaceOrInit = function (element, comparator) {
+    const replaceOrInit = function (element, comparator) {
       return find(element, comparator).fold(function () {
         return makeNew(element);
       }, function (p) {
@@ -80,20 +75,20 @@ var transform = function (scope, tag) {
     };
 
     return {
-      replaceOrInit: replaceOrInit,
+      replaceOrInit,
       cursor: position.get
     };
   };
 };
 
-var merging = function (generators) {
+const merging = function (generators) {
   contract(generators);
-  var position = Cell(Option.none());
+  const position = Cell(Option.none());
 
-  var combine = function (cell) {
-    if (position.get().isNone()) position.set(Option.some(cell));
+  const combine = function (cell) {
+    if (position.get().isNone()) { position.set(Option.some(cell)); }
     return function () {
-      var raw = generators.cell({
+      const raw = generators.cell({
         element: Fun.constant(cell),
         colspan: Fun.constant(1),
         rowspan: Fun.constant(1)
@@ -106,15 +101,15 @@ var merging = function (generators) {
   };
 
   return {
-    combine: combine,
+    combine,
     cursor: position.get
   };
 };
 
-var contract = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
+const contract = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
 
-export default <any> {
-  modification: modification,
-  transform: transform,
-  merging: merging
+export default {
+  modification,
+  transform,
+  merging
 };

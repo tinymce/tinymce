@@ -4,26 +4,25 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element, Html, Insert } from '@ephox/sugar';
 import TableFill from 'ephox/snooker/api/TableFill';
 
-UnitTest.test('CloneFormatsTest', function() {
-  var doc = document;
-  var cloneFormats = Option.none();
-  var noCloneFormats = Option.some([]);
-  var cloneTableFill = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
-  var noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
+UnitTest.test('CloneFormatsTest', function () {
+  const doc = document;
+  const cloneFormats = Option.none();
+  const noCloneFormats = Option.some([]);
+  const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+  const noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 
-  var cellElement = Element.fromTag('td');
-  var cellContent = Element.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
+  const cellElement = Element.fromTag('td');
+  const cellContent = Element.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
   Insert.append(cellElement, cellContent);
-  var cell = {
+  const cell = {
     element: Fun.constant(cellElement),
     colspan: Fun.constant(1)
   };
 
-  var clonedCell = cloneTableFill.cell(cell);
+  const clonedCell = cloneTableFill.cell(cell);
 
   assert.eq('<td><strong><em><br></em></strong></td>', Html.getOuter(clonedCell));
 
-  var noClonedCell = noCloneTableFill.cell(cell);
+  const noClonedCell = noCloneTableFill.cell(cell);
   assert.eq('<td><br></td>', Html.getOuter(noClonedCell));
 });
-

@@ -1,8 +1,5 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
-import { Position } from '@ephox/sugar';
+import { Fun, Option } from '@ephox/katamari';
+import { Element, Location, Position } from '@ephox/sugar';
 
 // parent: the container where the resize bars are appended
 //         this gets mouse event handlers only if it is not a child of 'view' (eg, detached/inline mode)
@@ -11,9 +8,9 @@ import { Position } from '@ephox/sugar';
 //       resize bars ('parent') and so will listen to events from both (eg, iframe mode)
 // origin: the offset for the point to display the bars in the appropriate position
 
-var only = function (element) {
+const only = function (element) {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
-  var parent = Option.from(element.dom().documentElement).map(Element.fromDom).getOr(element);
+  const parent = Option.from(element.dom().documentElement).map(Element.fromDom).getOr(element);
   return {
     parent: Fun.constant(parent),
     view: Fun.constant(element),
@@ -21,16 +18,16 @@ var only = function (element) {
   };
 };
 
-var detached = function (editable, chrome) {
-  var origin = Fun.curry(Location.absolute, chrome);
+const detached = function (editable, chrome) {
+  const origin = Fun.curry(Location.absolute, chrome);
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
-    origin: origin
+    origin
   };
 };
 
-var body = function (editable, chrome) {
+const body = function (editable, chrome) {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
@@ -38,8 +35,8 @@ var body = function (editable, chrome) {
   };
 };
 
-export default <any> {
-  only: only,
-  detached: detached,
-  body: body
+export default {
+  only,
+  detached,
+  body
 };

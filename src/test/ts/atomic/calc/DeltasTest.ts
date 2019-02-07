@@ -2,18 +2,18 @@ import { Fun } from '@ephox/katamari';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Deltas', function() {
-  var min = 10;
-  var check = function (expected, input, column, step) {
-    var singleColumnWidth = function (width, _delta) {
-      var newNext = Math.max(min, width + step);
+UnitTest.test('Deltas', function () {
+  const min = 10;
+  const check = function (expected, input, column, step) {
+    const singleColumnWidth = function (width, _delta) {
+      const newNext = Math.max(min, width + step);
       return [ newNext - width ];
     };
-    var tableSize = {
+    const tableSize = {
       minCellWidth: Fun.constant(10),
-      singleColumnWidth: singleColumnWidth
+      singleColumnWidth
     };
-    var actual = Deltas.determine(input, column, step, tableSize);
+    const actual = Deltas.determine(input, column, step, tableSize);
     assert.eq(expected, actual);
   };
 
@@ -44,4 +44,3 @@ UnitTest.test('Deltas', function() {
   check([], [], 0, 0);
   check([50, -50], [200, 200], 0, 50);
 });
-

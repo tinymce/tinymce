@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-var celltype = function (subject) {
+const celltype = function (subject) {
   return subject.fold(function () {
     return 'none';
   }, function (info) {
@@ -10,21 +10,21 @@ var celltype = function (subject) {
   });
 };
 
-var celltypes = function (subject) {
+const celltypes = function (subject) {
   return Arr.map(subject, celltype);
 };
 
-var detail = function (subject) {
+const detail = function (subject) {
   return subject.element() + '---' + subject.rowspan() + 'x' + subject.colspan();
 };
 
-var it = function (subject) {
+const it = function (subject) {
   return subject.element();
 };
 
-export default <any> {
-  celltype: celltype,
-  celltypes: celltypes,
-  detail: detail,
-  it: it
+export default {
+  celltype,
+  celltypes,
+  detail,
+  it
 };

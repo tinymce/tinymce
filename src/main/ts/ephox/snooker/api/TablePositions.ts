@@ -5,39 +5,39 @@ import CellFinder from '../selection/CellFinder';
 import CellGroup from '../selection/CellGroup';
 import { Compare } from '@ephox/sugar';
 
-var moveBy = function (cell, deltaRow, deltaColumn) {
+const moveBy = function (cell, deltaRow, deltaColumn) {
   return TableLookup.table(cell).bind(function (table) {
-    var warehouse = getWarehouse(table);
+    const warehouse = getWarehouse(table);
     return CellFinder.moveBy(warehouse, cell, deltaRow, deltaColumn);
   });
 };
 
-var intercepts = function (table, first, last) {
-  var warehouse = getWarehouse(table);
+const intercepts = function (table, first, last) {
+  const warehouse = getWarehouse(table);
   return CellFinder.intercepts(warehouse, first, last);
 };
 
-var nestedIntercepts = function (table, first, firstTable, last, lastTable) {
-  var warehouse = getWarehouse(table);
-  var startCell = Compare.eq(table, firstTable) ? first : CellFinder.parentCell(warehouse, first);
-  var lastCell = Compare.eq(table, lastTable) ? last : CellFinder.parentCell(warehouse, last);
+const nestedIntercepts = function (table, first, firstTable, last, lastTable) {
+  const warehouse = getWarehouse(table);
+  const startCell = Compare.eq(table, firstTable) ? first : CellFinder.parentCell(warehouse, first);
+  const lastCell = Compare.eq(table, lastTable) ? last : CellFinder.parentCell(warehouse, last);
   return CellFinder.intercepts(warehouse, startCell, lastCell);
 };
 
-var getBox = function (table, first, last) {
-  var warehouse = getWarehouse(table);
+const getBox = function (table, first, last) {
+  const warehouse = getWarehouse(table);
   return CellGroup.getBox(warehouse, first, last);
 };
 
 // Private method ... keep warehouse in snooker, please.
-var getWarehouse = function (table) {
-  var list = DetailsList.fromTable(table);
+const getWarehouse = function (table) {
+  const list = DetailsList.fromTable(table);
   return Warehouse.generate(list);
 };
 
-export default <any> {
-  moveBy: moveBy,
-  intercepts: intercepts,
-  nestedIntercepts: nestedIntercepts,
-  getBox: getBox
+export default {
+  moveBy,
+  intercepts,
+  nestedIntercepts,
+  getBox
 };

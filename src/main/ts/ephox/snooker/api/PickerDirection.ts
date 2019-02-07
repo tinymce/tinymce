@@ -1,17 +1,17 @@
 import { Fun } from '@ephox/katamari';
 import CellPosition from '../picker/CellPosition';
 
-var ltr = {
+const ltr = {
   pickerCell: CellPosition.findCellLtr,
   isRtl: Fun.constant(false)
 };
 
-var rtl = {
+const rtl = {
   pickerCell: CellPosition.findCellRtl,
   isRtl: Fun.constant(true)
 };
 
-export default <any> {
-  ltr: ltr,
-  rtl: rtl
+export default {
+  ltr,
+  rtl
 };

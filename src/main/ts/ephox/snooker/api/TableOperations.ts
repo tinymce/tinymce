@@ -1,13 +1,6 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import Generators from './Generators';
-import Structs from './Structs';
-import TableContent from './TableContent';
-import TableLookup from './TableLookup';
+import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Remove } from '@ephox/sugar';
 import DetailsList from '../model/DetailsList';
-import GridRow from '../model/GridRow';
 import RunOperation from '../model/RunOperation';
 import TableMerge from '../model/TableMerge';
 import Transitions from '../model/Transitions';
@@ -16,22 +9,25 @@ import MergingOperations from '../operate/MergingOperations';
 import ModificationOperations from '../operate/ModificationOperations';
 import TransformOperations from '../operate/TransformOperations';
 import Adjustments from '../resize/Adjustments';
-import { Remove } from '@ephox/sugar';
+import Generators from './Generators';
+import Structs from './Structs';
+import TableContent from './TableContent';
+import TableLookup from './TableLookup';
 
-var prune = function (table) {
-  var cells = TableLookup.cells(table);
-  if (cells.length === 0) Remove.remove(table);
+const prune = function (table) {
+  const cells = TableLookup.cells(table);
+  if (cells.length === 0) { Remove.remove(table); }
 };
 
-var outcome = Struct.immutable('grid', 'cursor');
+const outcome = Struct.immutable('grid', 'cursor');
 
-var elementFromGrid = function (grid, row, column) {
+const elementFromGrid = function (grid, row, column) {
   return findIn(grid, row, column).orThunk(function () {
     return findIn(grid, 0, 0);
   });
 };
 
-var findIn = function (grid, row, column) {
+const findIn = function (grid, row, column) {
   return Option.from(grid[row]).bind(function (r) {
     return Option.from(r.cells()[column]).bind(function (c) {
       return Option.from(c.element());
@@ -39,13 +35,13 @@ var findIn = function (grid, row, column) {
   });
 };
 
-var bundle = function (grid, row, column) {
+const bundle = function (grid, row, column) {
   return outcome(grid, findIn(grid, row, column));
 };
 
-var uniqueRows = function (details) {
+const uniqueRows = function (details) {
   return Arr.foldl(details, function (rest, detail) {
-    return Arr.exists(rest, function (currentDetail){
+    return Arr.exists(rest, function (currentDetail) {
         return currentDetail.row() === detail.row();
       }) ? rest : rest.concat([detail]);
     }, []).sort(function (detailA, detailB) {
@@ -53,9 +49,9 @@ var uniqueRows = function (details) {
   });
 };
 
-var uniqueColumns = function (details) {
+const uniqueColumns = function (details) {
   return Arr.foldl(details, function (rest, detail) {
-    return Arr.exists(rest, function (currentDetail){
+    return Arr.exists(rest, function (currentDetail) {
         return currentDetail.column() === detail.column();
       }) ? rest : rest.concat([detail]);
     }, []).sort(function (detailA, detailB) {
@@ -63,179 +59,179 @@ var uniqueColumns = function (details) {
   });
 };
 
-var insertRowBefore = function (grid, detail, comparator, genWrappers) {
-  var example = detail.row();
-  var targetIndex = detail.row();
-  var newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertRowBefore = function (grid, detail, comparator, genWrappers) {
+  const example = detail.row();
+  const targetIndex = detail.row();
+  const newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, targetIndex, detail.column());
 };
 
-var insertRowsBefore = function (grid, details, comparator, genWrappers) {
-  var example = details[0].row();
-  var targetIndex = details[0].row();
-  var rows = uniqueRows(details);
-  var newGrid = Arr.foldl(rows, function (newGrid, _row) {
-    return ModificationOperations.insertRowAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertRowsBefore = function (grid, details, comparator, genWrappers) {
+  const example = details[0].row();
+  const targetIndex = details[0].row();
+  const rows = uniqueRows(details);
+  const newGrid = Arr.foldl(rows, function (newG, _row) {
+    return ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
   }, grid);
   return bundle(newGrid, targetIndex, details[0].column());
 };
 
-var insertRowAfter = function (grid, detail, comparator, genWrappers) {
-  var example = detail.row();
-  var targetIndex = detail.row() + detail.rowspan();
-  var newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertRowAfter = function (grid, detail, comparator, genWrappers) {
+  const example = detail.row();
+  const targetIndex = detail.row() + detail.rowspan();
+  const newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, targetIndex, detail.column());
 };
 
-var insertRowsAfter = function (grid, details, comparator, genWrappers) {
-  var rows = uniqueRows(details);
-  var example = rows[rows.length - 1].row();
-  var targetIndex = rows[rows.length - 1].row() + rows[rows.length - 1].rowspan();
-  var newGrid = Arr.foldl(rows, function (newGrid, _row) {
-    return ModificationOperations.insertRowAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertRowsAfter = function (grid, details, comparator, genWrappers) {
+  const rows = uniqueRows(details);
+  const example = rows[rows.length - 1].row();
+  const targetIndex = rows[rows.length - 1].row() + rows[rows.length - 1].rowspan();
+  const newGrid = Arr.foldl(rows, function (newG, _row) {
+    return ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
   }, grid);
   return bundle(newGrid, targetIndex, details[0].column());
 };
 
-var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
-  var example = detail.column();
-  var targetIndex = detail.column();
-  var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertColumnBefore = function (grid, detail, comparator, genWrappers) {
+  const example = detail.column();
+  const targetIndex = detail.column();
+  const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), targetIndex);
 };
 
-var insertColumnsBefore = function (grid, details, comparator, genWrappers) {
-  var columns = uniqueColumns(details);
-  var example = columns[0].column();
-  var targetIndex = columns[0].column();
-  var newGrid = Arr.foldl(columns, function (newGrid, _row) {
-    return ModificationOperations.insertColumnAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertColumnsBefore = function (grid, details, comparator, genWrappers) {
+  const columns = uniqueColumns(details);
+  const example = columns[0].column();
+  const targetIndex = columns[0].column();
+  const newGrid = Arr.foldl(columns, function (newG, _row) {
+    return ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
   }, grid);
   return bundle(newGrid, details[0].row(), targetIndex);
 };
 
-var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
-  var example = detail.column();
-  var targetIndex = detail.column() + detail.colspan();
-  var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertColumnAfter = function (grid, detail, comparator, genWrappers) {
+  const example = detail.column();
+  const targetIndex = detail.column() + detail.colspan();
+  const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), targetIndex);
 };
 
-var insertColumnsAfter = function (grid, details, comparator, genWrappers) {
-  var example = details[details.length - 1].column();
-  var targetIndex = details[details.length - 1].column() + details[details.length - 1].colspan();
-  var columns = uniqueColumns(details);
-  var newGrid = Arr.foldl(columns, function (newGrid, _row) {
-    return ModificationOperations.insertColumnAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+const insertColumnsAfter = function (grid, details, comparator, genWrappers) {
+  const example = details[details.length - 1].column();
+  const targetIndex = details[details.length - 1].column() + details[details.length - 1].colspan();
+  const columns = uniqueColumns(details);
+  const newGrid = Arr.foldl(columns, function (newG, _row) {
+    return ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
   }, grid);
   return bundle(newGrid, details[0].row(), targetIndex);
 };
 
-var makeRowHeader = function (grid, detail, comparator, genWrappers) {
-  var newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
+const makeRowHeader = function (grid, detail, comparator, genWrappers) {
+  const newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var makeColumnHeader = function (grid, detail, comparator, genWrappers) {
-  var newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
+const makeColumnHeader = function (grid, detail, comparator, genWrappers) {
+  const newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var unmakeRowHeader = function (grid, detail, comparator, genWrappers) {
-  var newGrid =  TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
+const unmakeRowHeader = function (grid, detail, comparator, genWrappers) {
+  const newGrid =  TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {
-  var newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
+const unmakeColumnHeader = function (grid, detail, comparator, genWrappers) {
+  const newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var splitCellIntoColumns = function (grid, detail, comparator, genWrappers) {
-  var newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
+const splitCellIntoColumns = function (grid, detail, comparator, genWrappers) {
+  const newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var splitCellIntoRows = function (grid, detail, comparator, genWrappers) {
-  var newGrid = ModificationOperations.splitCellIntoRows(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
+const splitCellIntoRows = function (grid, detail, comparator, genWrappers) {
+  const newGrid = ModificationOperations.splitCellIntoRows(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
-var eraseColumns = function (grid, details, comparator, _genWrappers) {
-  var columns = uniqueColumns(details);
+const eraseColumns = function (grid, details, comparator, _genWrappers) {
+  const columns = uniqueColumns(details);
 
-  var newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column(), columns[columns.length - 1].column());
-  var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
+  const newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column(), columns[columns.length - 1].column());
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
   return outcome(newGrid, cursor);
 };
 
-var eraseRows = function (grid, details, comparator, _genWrappers) {
-  var rows = uniqueRows(details);
+const eraseRows = function (grid, details, comparator, _genWrappers) {
+  const rows = uniqueRows(details);
 
-  var newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row(), rows[rows.length - 1].row());
-  var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
+  const newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row(), rows[rows.length - 1].row());
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
   return outcome(newGrid, cursor);
 };
 
-var mergeCells = function (grid, mergable, comparator, _genWrappers) {
-  var cells = mergable.cells();
+const mergeCells = function (grid, mergable, comparator, _genWrappers) {
+  const cells = mergable.cells();
   TableContent.merge(cells);
-  var newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
+  const newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
   return outcome(newGrid, Option.from(cells[0]));
 };
 
-var unmergeCells = function (grid, unmergable, comparator, genWrappers) {
-  var newGrid = Arr.foldr(unmergable, function (b, cell) {
+const unmergeCells = function (grid, unmergable, comparator, genWrappers) {
+  const newGrid = Arr.foldr(unmergable, function (b, cell) {
     return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
   }, grid);
   return outcome(newGrid, Option.from(unmergable[0]));
 };
 
-var pasteCells = function (grid, pasteDetails, comparator, genWrappers) {
-  var gridify = function (table, generators) {
-    var list = DetailsList.fromTable(table);
-    var wh = Warehouse.generate(list);
+const pasteCells = function (grid, pasteDetails, comparator, genWrappers) {
+  const gridify = function (table, generators) {
+    const list = DetailsList.fromTable(table);
+    const wh = Warehouse.generate(list);
     return Transitions.toGrid(wh, generators, true);
   };
-  var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
-  var startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
-  var mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
+  const gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+  const startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
+  const mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
   return mergedGrid.fold(function () {
     return outcome(grid, Option.some(pasteDetails.element()));
   }, function (nuGrid) {
-    var cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
+    const cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
     return outcome(nuGrid, cursor);
   });
 };
 
-var gridifyRows = function (rows, generators, example) {
-  var pasteDetails = DetailsList.fromPastedRows(rows, example);
-  var wh = Warehouse.generate(pasteDetails);
+const gridifyRows = function (rows, generators, example) {
+  const pasteDetails = DetailsList.fromPastedRows(rows, example);
+  const wh = Warehouse.generate(pasteDetails);
   return Transitions.toGrid(wh, generators, true);
 };
 
-var pasteRowsBefore = function (grid, pasteDetails, comparator, genWrappers) {
-  var example = grid[pasteDetails.cells[0].row()];
-  var index = pasteDetails.cells[0].row();
-  var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
-  var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
+const pasteRowsBefore = function (grid, pasteDetails, comparator, genWrappers) {
+  const example = grid[pasteDetails.cells[0].row()];
+  const index = pasteDetails.cells[0].row();
+  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
+  const mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
+  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
   return outcome(mergedGrid, cursor);
 };
 
-var pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
-  var example = grid[pasteDetails.cells[0].row()];
-  var index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
-  var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
-  var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
-  var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
+const pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
+  const example = grid[pasteDetails.cells[0].row()];
+  const index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
+  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
+  const mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
+  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
   return outcome(mergedGrid, cursor);
 };
 
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
-var resize = Adjustments.adjustWidthTo;
+const resize = Adjustments.adjustWidthTo;
 
-export default <any> {
+export default {
   insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
   insertRowsBefore: RunOperation.run(insertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
   insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),

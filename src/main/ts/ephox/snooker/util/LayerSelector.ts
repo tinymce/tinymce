@@ -1,13 +1,11 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Selectors } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Selectors, Traverse } from '@ephox/sugar';
 
-var firstLayer = function (scope, selector) {
+const firstLayer = function (scope, selector) {
   return filterFirstLayer(scope, selector, Fun.constant(true));
 };
 
-var filterFirstLayer = function (scope, selector, predicate) {
+const filterFirstLayer = function (scope, selector, predicate) {
   return Arr.bind(Traverse.children(scope), function (x) {
     return Selectors.is(x, selector) ?
       predicate(x) ? [ x ] : [ ]
@@ -15,7 +13,7 @@ var filterFirstLayer = function (scope, selector, predicate) {
   });
 };
 
-export default <any> {
-  firstLayer: firstLayer,
-  filterFirstLayer: filterFirstLayer
+export default {
+  firstLayer,
+  filterFirstLayer
 };

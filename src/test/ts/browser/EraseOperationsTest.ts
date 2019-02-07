@@ -4,14 +4,14 @@ import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('EraseOperationsTest', function() {
-  var platform = PlatformDetection.detect();
+UnitTest.test('EraseOperationsTest', function () {
+  const platform = PlatformDetection.detect();
 
-  var deleteExpectedContent1 = '<table><tbody>' +
+  const deleteExpectedContent1 = '<table><tbody>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
       '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected1 = {
+  const deleteExpected1 = {
     normal: deleteExpectedContent1,
     ie: deleteExpectedContent1
   };
@@ -30,11 +30,11 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent2 = '<table><tbody>' +
+  const deleteExpectedContent2 = '<table><tbody>' +
       '<tr><td>C1</td><td>D1</td></tr>' +
       '<tr><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected2 = {
+  const deleteExpected2 = {
     normal: deleteExpectedContent2,
     ie: deleteExpectedContent2
   };
@@ -53,11 +53,11 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent3 = '<table><tbody>' +
+  const deleteExpectedContent3 = '<table><tbody>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
       '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected3 = {
+  const deleteExpected3 = {
     normal: deleteExpectedContent3,
     ie: deleteExpectedContent3
   };
@@ -80,11 +80,11 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent4 = '<table><tbody>' +
+  const deleteExpectedContent4 = '<table><tbody>' +
       '<tr><th colspan="2">A1</th><td>D1</td></tr>' +
       '<tr><th>A2</th><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected4 = {
+  const deleteExpected4 = {
     normal: deleteExpectedContent4,
     ie: deleteExpectedContent4
   };
@@ -102,10 +102,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent5 = '<table><tbody>' +
+  const deleteExpectedContent5 = '<table><tbody>' +
       '<tr><th>A2</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected5 = {
+  const deleteExpected5 = {
     normal: deleteExpectedContent5,
     ie: deleteExpectedContent5
   };
@@ -123,10 +123,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent6 = '<table><tbody>' +
+  const deleteExpectedContent6 = '<table><tbody>' +
       '<tr><th>A3</th><td>B3</td><td>C3</td><td>D3</td></tr>' +
     '</tbody></table>';
-  var deleteExpected6 = {
+  const deleteExpected6 = {
     normal: deleteExpectedContent6,
     ie: deleteExpectedContent6
   };
@@ -146,10 +146,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent7 = '<table><tbody>' +
+  const deleteExpectedContent7 = '<table><tbody>' +
       '<tr><th>A2</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected7 = {
+  const deleteExpected7 = {
     normal: deleteExpectedContent7,
     ie: deleteExpectedContent7
   };
@@ -172,11 +172,11 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent8 = '<table><tbody>' +
+  const deleteExpectedContent8 = '<table><tbody>' +
       '<tr><th rowspan="2">A1</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '<tr><td>B3</td><td>C3</td><td>D3</td></tr>' +
     '</tbody></table>';
-  var deleteExpected8 = {
+  const deleteExpected8 = {
     normal: deleteExpectedContent8,
     ie: deleteExpectedContent8
   };
@@ -195,9 +195,9 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent9 = '<table border="1">' +
+  const deleteExpectedContent9 = '<table border="1">' +
     '<tbody><tr><td>G</td><td>H</td><td>I</td></tr></tbody></table>';
-  var deleteExpected9 = {
+  const deleteExpected9 = {
     normal: deleteExpectedContent9,
     ie: deleteExpectedContent9
   };
@@ -216,7 +216,7 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent10 = '<table border="1">' +
+  const deleteExpectedContent10 = '<table border="1">' +
       '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
         '<tr><td>50</td><td>51</td><td>52</td><td colspan="2">33 34 43 44 53 54 </td><td>55</td><td>56</td><td>57</td><td>58</td><td>59</td></tr>' +
         '<tr><td>60</td><td>61</td><td>62</td><td>63</td><td>64</td><td>65</td><td>66</td><td>67</td><td>68</td><td>69</td></tr>' +
@@ -224,7 +224,7 @@ UnitTest.test('EraseOperationsTest', function() {
         '<tr><td>80</td><td>81</td><td>82</td><td>83</td><td>84</td><td>85</td><td>86</td><td>87</td><td>88</td><td>89</td></tr>' +
         '<tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>';
-  var deleteExpected10 = {
+  const deleteExpected10 = {
     normal: deleteExpectedContent10,
     ie: deleteExpectedContent10
   };
@@ -252,7 +252,7 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpected11 = {
+  const deleteExpected11 = {
     normal: '<table border="1">' +
       '<tbody><tr><td>0</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>10</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr><tr><td>20</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr><tr><td>30</td><td>32</td><td colspan="2" rowspan="3">33 34 43 44 53 54 </td><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td></tr><tr><td>40</td><td>42</td><td>45</td><td>46</td><td>47</td><td>48</td><td>49</td></tr><tr><td>50</td><td>52</td><td>55</td><td>56</td><td>57</td><td>58</td><td>59</td></tr><tr><td>60</td><td>62</td><td>63</td><td>64</td><td>65</td><td>66</td><td>67</td><td>68</td><td>69</td></tr><tr><td>70</td><td>72</td><td>73</td><td>74</td><td>75</td><td>76</td><td>77</td><td>78</td><td>79</td></tr><tr><td>80</td><td>82</td><td>83</td><td>84</td><td>85</td><td>86</td><td>87</td><td>88</td><td>89</td></tr><tr><td>90</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>',
@@ -284,10 +284,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent12 = '<table border="1">' +
+  const deleteExpectedContent12 = '<table border="1">' +
       '<tbody><tr><td>0</td><td>1</td><td>2</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>10</td><td rowspan="2">11 21</td><td>12</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr><tr><td>20</td><td>22</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr><tr><td>30</td><td>31</td><td>32</td><td rowspan="3">33 34 43 44 53 54 </td><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td></tr><tr><td>40</td><td>41</td><td>42</td><td>45</td><td>46</td><td>47</td><td>48</td><td>49</td></tr><tr><td>50</td><td>51</td><td>52</td><td>55</td><td>56</td><td>57</td><td>58</td><td>59</td></tr><tr><td>60</td><td>61</td><td>62</td><td>64</td><td>65</td><td>66</td><td>67</td><td>68</td><td>69</td></tr><tr><td>70</td><td>71</td><td>72</td><td>74</td><td>75</td><td>76</td><td>77</td><td>78</td><td>79</td></tr><tr><td>80</td><td>81</td><td>82</td><td>84</td><td>85</td><td>86</td><td>87</td><td>88</td><td>89</td></tr><tr><td>90</td><td>91</td><td>92</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>';
-  var deleteExpected12 = {
+  const deleteExpected12 = {
     normal: deleteExpectedContent12,
     ie: deleteExpectedContent12
   };
@@ -313,7 +313,7 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpected13 = {
+  const deleteExpected13 = {
     normal: '<table border="1">' +
     '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>10</td><td rowspan="2">11 21</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr><tr><td>20</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr><tr><td>40</td><td>41</td><td>42</td><td colspan="2" rowspan="2">33 34 43 44 53 54 </td><td>45</td><td>46</td><td>47</td><td>48</td><td>49</td></tr><tr><td>50</td><td>51</td><td>52</td><td>55</td><td>56</td><td>57</td><td>58</td><td>59</td></tr><tr><td>60</td><td>61</td><td>62</td><td>63</td><td>64</td><td>65</td><td>66</td><td>67</td><td>68</td><td>69</td></tr><tr><td>70</td><td>71</td><td>72</td><td>73</td><td>74</td><td>75</td><td>76</td><td>77</td><td>78</td><td>79</td></tr><tr><td>80</td><td>81</td><td>82</td><td>83</td><td>84</td><td>85</td><td>86</td><td>87</td><td>88</td><td>89</td></tr><tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>',
@@ -343,10 +343,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent14 = '<table border="1">' +
+  const deleteExpectedContent14 = '<table border="1">' +
       '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>10</td><td rowspan="2">11 21</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr><tr><td>20</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr><tr><td>30</td><td>31</td><td>32</td><td colspan="2">33 34 43 44 53 54 </td><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td></tr><tr><td>60</td><td>61</td><td>62</td><td>63</td><td>64</td><td>65</td><td>66</td><td>67</td><td>68</td><td>69</td></tr><tr><td>70</td><td>71</td><td>72</td><td>73</td><td>74</td><td>75</td><td>76</td><td>77</td><td>78</td><td>79</td></tr><tr><td>80</td><td>81</td><td>82</td><td>83</td><td>84</td><td>85</td><td>86</td><td>87</td><td>88</td><td>89</td></tr><tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>';
-  var deleteExpected14 = {
+  const deleteExpected14 = {
     normal: deleteExpectedContent14,
     ie: deleteExpectedContent14
   };
@@ -373,8 +373,8 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent15 = '<table border="1"><tbody><tr><td>row 0 cell 0 row 1 cell 0 </td><td>row 1 cell 1</td><td rowspan="2">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>';
-  var deleteExpected15 = {
+  const deleteExpectedContent15 = '<table border="1"><tbody><tr><td>row 0 cell 0 row 1 cell 0 </td><td>row 1 cell 1</td><td rowspan="2">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>';
+  const deleteExpected15 = {
     normal: deleteExpectedContent15,
     ie: deleteExpectedContent15
   };
@@ -389,8 +389,8 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent16 = '<table border="1"><tbody><tr><td>row 2 cell 0</td><td>row 2 cell 1</td><td>row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>';
-  var deleteExpected16 = {
+  const deleteExpectedContent16 = '<table border="1"><tbody><tr><td>row 2 cell 0</td><td>row 2 cell 1</td><td>row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>';
+  const deleteExpected16 = {
     normal: deleteExpectedContent16,
     ie: deleteExpectedContent16
   };
@@ -406,8 +406,8 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent17 = '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr></tr><tr><td>row 2 cell 0</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 2</td></tr></tbody></table>';
-  var deleteExpected17 = {
+  const deleteExpectedContent17 = '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr></tr><tr><td>row 2 cell 0</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 2</td></tr></tbody></table>';
+  const deleteExpected17 = {
     normal: deleteExpectedContent17,
     ie: deleteExpectedContent17
   };
@@ -423,8 +423,8 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent18 = '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td></tr><tr></tr><tr><td>row 2 cell 0</td></tr><tr><td>row 3 cell 0</td></tr><tr><td>row 4 cell 0</td></tr></tbody></table>';
-  var deleteExpected18 = {
+  const deleteExpectedContent18 = '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td></tr><tr></tr><tr><td>row 2 cell 0</td></tr><tr><td>row 3 cell 0</td></tr><tr><td>row 4 cell 0</td></tr></tbody></table>';
+  const deleteExpected18 = {
     normal: deleteExpectedContent18,
     ie: deleteExpectedContent18
   };
@@ -456,7 +456,8 @@ UnitTest.test('EraseOperationsTest', function() {
         { section: 0, row: 3, column: 2 },
         { section: 0, row: 4, column: 1 },
         { section: 0, row: 4, column: 2 }
-      ]
+      ],
+      platform
   );
 
   Assertions.checkDelete(Option.none(),
@@ -472,10 +473,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent19 = '<table><tbody>' +
+  const deleteExpectedContent19 = '<table><tbody>' +
       '<tr><th>A2</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected19 = {
+  const deleteExpected19 = {
     normal: deleteExpectedContent19,
     ie: deleteExpectedContent19
   };
@@ -495,10 +496,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent20 = '<table><thead>' +
+  const deleteExpectedContent20 = '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
     '</thead></table>';
-  var deleteExpected20 = {
+  const deleteExpected20 = {
     normal: deleteExpectedContent20,
     ie: deleteExpectedContent20
   };
@@ -535,13 +536,13 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent21 = '<table><thead>' +
+  const deleteExpectedContent21 = '<table><thead>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
       '</thead>' +
       '<tbody>' +
       '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected21 = {
+  const deleteExpected21 = {
     normal: deleteExpectedContent21,
     ie: deleteExpectedContent21
   };
@@ -561,13 +562,13 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent22 = '<table><thead>' +
+  const deleteExpectedContent22 = '<table><thead>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
       '</thead>' +
       '<tbody>' +
       '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected22 = {
+  const deleteExpected22 = {
     normal: deleteExpectedContent22,
     ie: deleteExpectedContent22
   };
@@ -588,11 +589,11 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent23 = '<table><tbody>' +
+  const deleteExpectedContent23 = '<table><tbody>' +
       '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
       '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected23 = {
+  const deleteExpected23 = {
     normal: deleteExpectedContent23,
     ie: deleteExpectedContent23
   };
@@ -611,10 +612,10 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 
-  var deleteExpectedContent24 = '<table><tbody>' +
+  const deleteExpectedContent24 = '<table><tbody>' +
       '<tr><th>A2</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
     '</tbody></table>';
-  var deleteExpected24 = {
+  const deleteExpected24 = {
     normal: deleteExpectedContent24,
     ie: deleteExpectedContent24
   };
@@ -632,4 +633,3 @@ UnitTest.test('EraseOperationsTest', function() {
     platform
   );
 });
-

@@ -33,9 +33,11 @@
     "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/sand": "latest",
+    "@ephox/tslint-rules": "^1.0.2",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1"
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -45,6 +47,7 @@
   "scripts": {
     "prepublishOnly": "tsc",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts"
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "tslint --project ."
   }
 }

@@ -1,27 +1,26 @@
 import { Fun } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Attr, Css } from '@ephox/sugar';
 
-var getSpan = function (cell, type) {
+const getSpan = function (cell, type) {
   return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
 };
 
-var hasColspan = function (cell) {
+const hasColspan = function (cell) {
   return getSpan(cell, 'colspan');
 };
 
-var hasRowspan = function (cell) {
+const hasRowspan = function (cell) {
   return getSpan(cell, 'rowspan');
 };
 
-var getInt = function (element, property) {
+const getInt = function (element, property) {
   return parseInt(Css.get(element, property), 10);
 };
 
-export default <any> {
-  hasColspan: hasColspan,
-  hasRowspan: hasRowspan,
+export default {
+  hasColspan,
+  hasRowspan,
   minWidth: Fun.constant(10),
   minHeight: Fun.constant(10),
-  getInt: getInt
+  getInt
 };

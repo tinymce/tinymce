@@ -1,27 +1,26 @@
-import { Arr } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('FitmentTest', function() {
-  var generator = TestGenerator;
-  var start = Structs.address;
-  var measureTest = Fitment.measureTest;
-  var tailorTest = Fitment.tailorTest;
-  var mergeGridsTest = TableMerge.mergeTest;
+UnitTest.test('FitmentTest', function () {
+  const generator = TestGenerator;
+  const start = Structs.address;
+  const measureTest = Fitment.measureTest;
+  const tailorTest = Fitment.tailorTest;
+  const mergeGridsTest = TableMerge.mergeTest;
 
-  var en = Structs.elementnew;
+  const en = Structs.elementnew;
 
-  var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
-    test(expected, startAddress, gridA, gridB, generator, comparator);
+  const check = function (test, expected, startAddress, gridAa, gridBb, generatorr, comparator) {
+    test(expected, startAddress, gridAa, gridBb, generatorr, comparator);
   };
 
   // Simple test data, 4 basic variants of merging:
   // gridB into gridA with different start points
-  var gridA = function () {
+  const gridA = function () {
     return [
       [ en('a', false), en('b', false), en('c', false) ],
       [ en('d', false), en('e', false), en('f', false) ],
@@ -29,7 +28,7 @@ UnitTest.test('FitmentTest', function() {
     ];
   };
 
-  var gridB = function () {
+  const gridB = function () {
     return [
       [en(1, true), en(2, true)],
       [en(3, true), en(4, true)]
@@ -148,4 +147,3 @@ UnitTest.test('FitmentTest', function() {
       error: 'invalid start address out of table bounds, row: 8, column: 1'
     }, start(8, 1), gridA, gridB, generator, Fun.tripleEquals);
 });
-

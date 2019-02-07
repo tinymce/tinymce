@@ -1,6 +1,5 @@
 
-
-export default <any> {
-  row: function (row) { return row + ' high'; },
-  col: function (col) { return col + ' wide'; }
+export default {
+  row (row) { return row + ' high'; },
+  col (col) { return col + ' wide'; }
 };

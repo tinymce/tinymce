@@ -3,7 +3,7 @@ import Warehouse from '../model/Warehouse';
 import CellBounds from './CellBounds';
 import { Compare } from '@ephox/sugar';
 
-var getBounds = function (detailA, detailB) {
+const getBounds = function (detailA, detailB) {
   return Structs.bounds(
     Math.min(detailA.row(), detailB.row()),
     Math.min(detailA.column(), detailB.column()),
@@ -12,9 +12,9 @@ var getBounds = function (detailA, detailB) {
   );
 };
 
-var getAnyBox = function (warehouse, startCell, finishCell) {
-  var startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
-  var finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
+const getAnyBox = function (warehouse, startCell, finishCell) {
+  const startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
+  const finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
   return startCoords.bind(function (sc) {
     return finishCoords.map(function (fc) {
       return getBounds(sc, fc);
@@ -22,13 +22,13 @@ var getAnyBox = function (warehouse, startCell, finishCell) {
   });
 };
 
-var getBox = function (warehouse, startCell, finishCell) {
+const getBox = function (warehouse, startCell, finishCell) {
   return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds) {
     return CellBounds.isRectangular(warehouse, bounds);
   });
 };
 
-export default <any> {
-  getAnyBox: getAnyBox,
-  getBox: getBox
+export default {
+  getAnyBox,
+  getBox
 };
