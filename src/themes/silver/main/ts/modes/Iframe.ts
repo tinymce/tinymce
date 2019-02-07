@@ -78,9 +78,13 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
 
+  const split = editor.getParam('toolbar_drawer', false, 'boolean');
+
   const refreshMore = () => {
-    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-    toolbar.each(SplitToolbar.refresh);
+    if (split) {
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      toolbar.each(SplitToolbar.refresh);
+    }
   };
 
   editor.on('ResizeWindow', refreshMore);

@@ -24,24 +24,29 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
+  const split = editor.getParam('toolbar_drawer', false, 'boolean');
+
   const setPosition = () => {
     const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-    toolbar.each((tbar) => {
-      SplitToolbar.refresh(tbar);
-    });
+    if (split) {
+      toolbar.each(SplitToolbar.refresh);
+    }
 
     const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
     if (!isDocked) {
       // We need to update the toolbar location if the window has resized while the toolbar is position absolute
       // Not sure if we should always set this, or if it's worth checking against the current position
-      const offset = Height.get(toolbar.getOrDie().components()[1].element());
+      const offset = split ? toolbar.fold(() => 0, (tbar) => {
+        // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+        return Height.get(tbar.components()[1].element());
+      }) : 0;
       Css.setAll(floatContainer.element(), {
         top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + offset + 'px',
         left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
       });
     }
     // Let docking handle fixed <-> absolute transitions, etc.
-    Docking.refreshOffset(floatContainer, 0);
+    Docking.refresh(floatContainer);
   };
 
   const show = () => {

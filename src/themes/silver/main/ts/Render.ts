@@ -123,7 +123,8 @@ const setup = (editor: Editor): RenderInfo => {
     backstage,
     onEscape() {
       editor.focus();
-    }
+    },
+    split: editor.getParam('toolbar_drawer', false, 'boolean')
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
