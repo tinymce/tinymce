@@ -37,7 +37,7 @@ const generate = function (list) {
   //          colspan (merge cell)
   //          element
   //          rowspan (merge cols)
-  const access: Record<any, any> = {};
+  const access: Record<string, ReturnType<typeof Structs.extended>> = {};
   const cells = [];
 
   const maxRows = list.length;
