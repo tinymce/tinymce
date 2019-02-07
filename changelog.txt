@@ -1,6 +1,8 @@
 Version 5.0.1 (TBD)
     Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
     Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281
+    Fixed production CSS including references to source maps #TINY-3920
+    Fixed development CSS was not included in development zip #TINY-3920
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 
