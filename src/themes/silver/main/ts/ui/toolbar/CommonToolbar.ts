@@ -16,22 +16,17 @@ import {
   SplitToolbar as SplitAlloyToolbar,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
-  Focusing,
-  GuiFactory,
-  Attachment,
-  Memento,
-  Positioning
+  Focusing
 } from '@ephox/alloy';
-import { Arr, Option, Result } from '@ephox/katamari';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Arr, Option } from '@ephox/katamari';
+import { Location } from '@ephox/sugar';
+import { window } from '@ephox/dom-globals';
 
 export interface Toolbar {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
-  getSink: () => Result<AlloyComponent, Error>;
-  backstage: UiFactoryBackstage;
 }
 
 export interface ToolbarGroup {
@@ -94,36 +89,12 @@ const renderToolbarGroup = (foo: ToolbarGroup) => {
   });
 };
 
+const measure = (primary) => {
+  return window.innerWidth - Location.absolute(primary).left();
+};
+
 const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
-
-  const memOverflow = Memento.record(
-    AlloyToolbar.sketch({
-      dom: {
-        tag: 'div',
-        classes: ['tox-toolbar-overflow']
-      }
-    })
-  );
-
-  const getOverflow = () => {
-    return foo.getSink().toOption().bind((sink) => {
-      return memOverflow.getOpt(sink).map(
-        // () => {
-        //   // overflow isn't there yet ... so add it, and return the built thing
-        //   const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
-        //   Attachment.attach(sink, builtoverFlow);
-        //   Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
-        //   return builtoverFlow;
-        // },
-        (overflow) => {
-          // you have the build thing, so just return it
-          Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), overflow);
-          return overflow;
-        }
-      );
-    });
-  };
 
   return SplitAlloyToolbar.sketch({
     uid: foo.uid,
@@ -131,8 +102,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
-    floating: true,
-    overflow: getOverflow,
+    measure: Option.some(measure),
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': toolbarGroup({
@@ -154,18 +124,18 @@ const renderMoreToolbar = (foo: Toolbar) => {
           classes: [ 'tox-toolbar-primary' ]
         }
       }),
-      // SplitAlloyToolbar.parts().overflow({
-      //   dom: {
-      //     tag: 'div',
-      //     classes: [ 'tox-toolbar-overflow' ]
-      //   }
-      // })
+      SplitAlloyToolbar.parts().overflow({
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-toolbar-overflow' ]
+        }
+      })
     ],
     markers: {
-      openClass: 'example-overflow-open',
-      closedClass: 'example-overflow-closed',
-      growingClass: 'example-overflow-growing',
-      shrinkingClass: 'example-overflow-shrinking'
+      openClass: 'tox-toolbar-overflow__open',
+      closedClass: 'tox-toolbar-overflow__closed',
+      growingClass: 'tox-toolbar-overflow__growing',
+      shrinkingClass: 'tox-toolbar-overflow__shrinking'
     },
     splitToolbarBehaviours: Behaviour.derive([
       Keying.config({
@@ -178,21 +148,6 @@ const renderMoreToolbar = (foo: Toolbar) => {
         AlloyEvents.runOnAttached(function (component) {
           const groups = Arr.map(foo.initGroups, renderToolbarGroup);
           AlloyToolbar.setGroups(component, groups);
-        }),
-        AlloyEvents.run('alloy.toolbar.toggle', (toolbar, se) => {
-          console.log('huh it did it');
-          foo.getSink().toOption().each((sink) => {
-            memOverflow.getOpt(sink).fold(() => {
-              // overflow isn't there yet ... so add it, and return the built thing
-              const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
-              Attachment.attach(sink, builtoverFlow);
-              Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
-              SplitAlloyToolbar.refresh(toolbar);
-              // return builtoverFlow;
-            }, (builtOverflow) => {
-              Attachment.detach(builtOverflow);
-            });
-          });
         })
       ])
     ])

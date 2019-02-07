@@ -78,12 +78,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
 
-  const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-  toolbar.each((tbar) => {
-    window.addEventListener('resize', () => {
-      SplitToolbar.refresh(tbar);
-    });
-  });
+  const refreshMore = () => {
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    toolbar.each(SplitToolbar.refresh);
+  };
+
+  editor.on('ResizeWindow', refreshMore);
 
   return {
     iframeContainer: socket.element().dom(),

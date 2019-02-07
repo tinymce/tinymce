@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment, Docking, Focusing } from '@ephox/alloy';
+import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -25,17 +25,23 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadInlineSkin(editor);
 
   const setPosition = () => {
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    toolbar.each((tbar) => {
+      SplitToolbar.refresh(tbar);
+    });
+
     const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
     if (!isDocked) {
       // We need to update the toolbar location if the window has resized while the toolbar is position absolute
       // Not sure if we should always set this, or if it's worth checking against the current position
+      const offset = Height.get(toolbar.getOrDie().components()[1].element());
       Css.setAll(floatContainer.element(), {
-        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
+        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + offset + 'px',
         left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
       });
     }
     // Let docking handle fixed <-> absolute transitions, etc.
-    Docking.refresh(floatContainer);
+    Docking.refreshOffset(floatContainer, 0);
   };
 
   const show = () => {
