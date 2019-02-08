@@ -1,4 +1,4 @@
-import { Id } from '@ephox/katamari';
+import { Id, Type } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
@@ -28,6 +28,9 @@ var cFromElement = function (element, settings: Record<string, any>) {
       tinymce.init(Merger.merge(settings, {
         selector: '#' + randomId,
         setup: function (editor) {
+          if (Type.isFunction(settings.setup)) {
+            settings.setup(editor);
+          }
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
               next(editor);
