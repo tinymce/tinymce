@@ -3,6 +3,7 @@ Version 5.0.1 (TBD)
     Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281
     Fixed production CSS including references to source maps #TINY-3920
     Fixed development CSS was not included in development zip #TINY-3920
+    Added a new toolbar setting `toolbar_drawer` that displays a limited set of toolbar groups with a secondary overflow toolbar which can be toggled on or off #TINY-2874
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 
