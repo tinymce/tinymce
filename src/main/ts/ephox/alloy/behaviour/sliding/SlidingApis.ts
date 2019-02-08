@@ -104,8 +104,16 @@ const doStartGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slid
   slideConfig.onStartGrow(component);
 };
 
+const refresh = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
+  if (slideState.isExpanded()) {
+    Css.remove(component.element(), getDimensionProperty(slideConfig));
+    const fullSize = getDimension(slideConfig, component.element());
+    Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
+  }
+};
+
 const grow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
-  if (! slideState.isExpanded()) { doStartGrow(component, slideConfig, slideState); }
+  if (!slideState.isExpanded()) { doStartGrow(component, slideConfig, slideState); }
 };
 
 const shrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState) => {
@@ -144,6 +152,7 @@ const toggleGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slide
 };
 
 export {
+  refresh,
   grow,
   shrink,
   immediateShrink,

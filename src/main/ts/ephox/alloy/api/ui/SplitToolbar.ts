@@ -73,6 +73,8 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   Css.remove(primary.element(), 'visibility');
   Css.reflow(primary.element());
 
+  Sliding.refresh(overflow);
+
 };
 
 const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (detail, components, spec, externals) => {
