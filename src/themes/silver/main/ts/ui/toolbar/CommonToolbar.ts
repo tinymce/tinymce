@@ -21,12 +21,15 @@ import {
 import { Arr, Option } from '@ephox/katamari';
 import { Location } from '@ephox/sugar';
 import { window } from '@ephox/dom-globals';
+import { renderIconButtonSpec } from '../general/Button';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface Toolbar {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
+  backstage: UiFactoryBackstage;
 }
 
 export interface ToolbarGroup {
@@ -34,7 +37,7 @@ export interface ToolbarGroup {
   items: AlloySpec[];
 }
 
-const toolbarGroup = (foo: ToolbarGroup) => {
+const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
   const attributes = foo.title.fold(() => {
     return {};
   },
@@ -56,37 +59,16 @@ const toolbarGroup = (foo: ToolbarGroup) => {
     markers: {
       // nav within a group breaks if disabled buttons are first in their group so skip them
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
-    }
-  };
-};
-
-const renderToolbarGroup = (foo: ToolbarGroup) => {
-  const attributes = foo.title.fold(() => {
-    return {};
-  },
-  (title) => {
-    return { attributes: { title } };
-  });
-  return AlloyToolbarGroup.sketch({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-toolbar__group' ],
-      ...attributes
     },
-    components: [
-      AlloyToolbarGroup.parts().items({})
-    ],
-    items: foo.items,
-    markers: {
-      // nav within a group breaks if disabled buttons are first in their group so skip them
-      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
-    },
-
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({ }),
       Focusing.config({ })
     ])
-  });
+  };
+};
+
+const renderToolbarGroup = (foo: ToolbarGroup) => {
+  return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(foo));
 };
 
 const measure = (primary) => {
@@ -105,37 +87,36 @@ const renderMoreToolbar = (foo: Toolbar) => {
     measure: Option.some(measure),
     parts: {
       // This already knows it is a toolbar group
-      'overflow-group': toolbarGroup({
+      'overflow-group': renderToolbarGroupCommon({
         title: Option.none(),
         items: [ ]
       }),
-      'overflow-button': {
-        dom: {
-          tag: 'button',
-          classes: [ 'example-more-button' ],
-          innerHtml: 'More...'
-        }
-      }
+      'overflow-button': renderIconButtonSpec({
+        name: 'more',
+        icon: Option.some('image-options'),
+        disabled: false,
+        tooltip: Option.some('More...')
+      }, Option.none(), foo.backstage.shared.providers)
     },
     components: [
       SplitAlloyToolbar.parts().primary({
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar-primary' ]
+          classes: [ 'tox-toolbar__primary' ]
         }
       }),
       SplitAlloyToolbar.parts().overflow({
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar-overflow' ]
+          classes: [ 'tox-toolbar__overflow' ]
         }
       })
     ],
     markers: {
-      openClass: 'tox-toolbar-overflow__open',
-      closedClass: 'tox-toolbar-overflow__closed',
-      growingClass: 'tox-toolbar-overflow__growing',
-      shrinkingClass: 'tox-toolbar-overflow__shrinking'
+      openClass: 'tox-toolbar__overflow--open',
+      closedClass: 'tox-toolbar__overflow--closed',
+      growingClass: 'tox-toolbar__overflow--growing',
+      shrinkingClass: 'tox-toolbar__overflow--shrinking'
     },
     splitToolbarBehaviours: Behaviour.derive([
       Keying.config({

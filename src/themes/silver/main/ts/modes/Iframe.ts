@@ -78,7 +78,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
 
-  const split = editor.getParam('toolbar_drawer', false, 'boolean');
+  const split = Settings.isSplitToolbar(editor);
 
   const refreshMore = () => {
     if (split) {

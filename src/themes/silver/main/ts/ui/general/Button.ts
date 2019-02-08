@@ -40,7 +40,15 @@ export interface IconButtonFoo {
   disabled?: boolean;
 }
 
-const renderCommon = (spec, action, extraBehaviours = [], dom, components): SketchSpec => {
+const renderCommonSpec = (spec, actionOpt, extraBehaviours = [], dom, components) => {
+  const action = actionOpt.fold(() => {
+    return {};
+  }, (action) => {
+    return {
+      action
+    };
+  });
+
   const common = {
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(spec.disabled),
@@ -54,14 +62,18 @@ const renderCommon = (spec, action, extraBehaviours = [], dom, components): Sket
       click: ['button press', 'alloy.base.behaviour'],
       mousedown: ['button press', 'alloy.base.behaviour']
     },
-    action
+    ...action
   };
   const domFinal = Merger.deepMerge(common, { dom });
-  const specFinal = Merger.deepMerge(domFinal, { components });
+  return Merger.deepMerge(domFinal, { components });
+};
+
+const renderCommon = (spec, action, extraBehaviours = [], dom, components): SketchSpec => {
+  const specFinal = renderCommonSpec(spec, Option.some(action), extraBehaviours, dom, components);
   return AlloyButton.sketch(specFinal);
 };
 
-export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderIconButtonSpec = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
     'title': providersBackstage.translate(tooltip)
@@ -75,7 +87,12 @@ export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage
   const components = componentRenderPipeline([
     icon
   ]);
-  return renderCommon(spec, action, extraBehaviours, dom, components);
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components);
+};
+
+export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+  const iconButtonSpec = renderIconButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours);
+  return AlloyButton.sketch(iconButtonSpec);
 };
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that

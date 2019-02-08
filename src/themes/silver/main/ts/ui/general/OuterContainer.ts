@@ -124,7 +124,8 @@ const partToolbar = Composite.partType.optional({
           return Option.some(true);
         },
         cyclicKeying: false,
-        initGroups: []
+        initGroups: [],
+        backstage: spec.backstage
       });
     }
   },

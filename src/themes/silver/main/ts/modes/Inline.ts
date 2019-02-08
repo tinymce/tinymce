@@ -17,6 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import { isSplitToolbar } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -24,7 +25,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
-  const split = editor.getParam('toolbar_drawer', false, 'boolean');
+  const split = isSplitToolbar(editor);
 
   const setPosition = () => {
     const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
