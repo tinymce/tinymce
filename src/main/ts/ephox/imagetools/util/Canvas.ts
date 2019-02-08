@@ -1,3 +1,5 @@
+import { document } from '@ephox/dom-globals';
+
 function create(width, height) {
   return resize(document.createElement('canvas'), width, height);
 }

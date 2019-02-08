@@ -6,6 +6,7 @@ import { Blob } from '@ephox/sand';
 import { FileReader } from '@ephox/sand';
 import { Uint8Array } from '@ephox/sand';
 import { Window } from '@ephox/sand';
+import { URL, Image, XMLHttpRequest, HTMLCanvasElement } from '@ephox/dom-globals';
 
 function loadImage(image) {
   return new Promise(function (resolve) {
