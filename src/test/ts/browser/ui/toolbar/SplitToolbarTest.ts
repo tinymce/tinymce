@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
@@ -64,7 +64,8 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
               innerHtml: '+'
             }
           }
-        }
+        },
+        measure: Option.none()
       })
     );
 

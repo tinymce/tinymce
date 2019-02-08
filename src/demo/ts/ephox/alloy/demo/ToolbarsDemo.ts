@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
@@ -159,7 +159,8 @@ export default (): void => {
         closedClass: 'demo-sliding-closed',
         growingClass: 'demo-sliding-height-growing',
         shrinkingClass: 'demo-sliding-height-shrinking'
-      }
+      },
+      measure: Option.none()
     })
   );
 
