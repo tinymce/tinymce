@@ -23,8 +23,8 @@
 
 .tox {
   .tox-toolbar,
-  .tox-toolbar-primary,
-  .tox-toolbar-overflow {
+  .tox-toolbar-overlord .tox-toolbar__primary,
+  .tox-toolbar-overlord .tox-toolbar__overflow {
     background: @toolbar-background;
     background-color: @toolbar-background-color;
     border-top: 1px solid @toolbar-separator-color;
@@ -36,7 +36,7 @@
     padding: @toolbar-padding-y @toolbar-padding-x;
   }
 
-  .tox-toolbar-overflow.tox-toolbar-overflow__closed {
+  .tox-toolbar-overlord .tox-toolbar__overflow.tox-toolbar__overflow--closed {
     display: none;
   }
 
