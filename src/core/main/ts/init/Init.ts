@@ -17,6 +17,7 @@ import ErrorReporter from '../ErrorReporter';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
 import { appendContentCssFromSettings } from './ContentCss';
+import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 
 const DOM = DOMUtils.DOM;
 
@@ -64,6 +65,11 @@ const initPlugins = function (editor: Editor) {
 
 const initIcons = (editor: Editor) => {
   const iconPackName: string = Tools.trim(editor.settings.icons);
+
+  const defaultIcons = getAllOxide();
+  Obj.each(defaultIcons, (svgData, icon) => {
+    editor.ui.registry.addIcon(icon, svgData);
+  });
 
   Obj.each(IconManager.get(iconPackName).icons, (svgData, name) => {
     editor.ui.registry.addIcon(name, svgData);

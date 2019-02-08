@@ -40,9 +40,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              children: [
-                s.text(str.is('fake-icon-name'))
-              ]
+              html: str.startsWith('<svg')
             }),
             s.element('span', {
               classes: [ arr.has('tox-collection__item-label') ],
@@ -61,9 +59,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              children: [
-                s.text(str.is('fake-icon-name'))
-              ]
+              html: str.startsWith('<svg')
             })
           ]
         });
