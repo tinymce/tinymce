@@ -1,4 +1,5 @@
 Version 5.0.1 (TBD)
+    Fixed an issue where retrieving the selected content as text didn't create newlines #TINY-3197
     Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
     Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281
     Fixed production CSS including references to source maps #TINY-3920
