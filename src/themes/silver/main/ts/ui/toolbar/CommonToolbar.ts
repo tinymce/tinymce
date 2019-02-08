@@ -75,6 +75,23 @@ const measure = (primary) => {
   return window.innerWidth - Location.absolute(primary).left();
 };
 
+const getToolbarbehaviours = (foo, modeName) => {
+  return Behaviour.derive([
+    Keying.config({
+      // Tabs between groups
+      mode: modeName,
+      onEscape: foo.onEscape,
+      selector: '.tox-toolbar__group'
+    }),
+    AddEventsBehaviour.config('toolbar-events', [
+      AlloyEvents.runOnAttached(function (component) {
+        const groups = Arr.map(foo.initGroups, renderToolbarGroup);
+        AlloyToolbar.setGroups(component, groups);
+      })
+    ])
+  ]);
+};
+
 const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
@@ -118,20 +135,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
       growingClass: 'tox-toolbar__overflow--growing',
       shrinkingClass: 'tox-toolbar__overflow--shrinking'
     },
-    splitToolbarBehaviours: Behaviour.derive([
-      Keying.config({
-        // Tabs between groups
-        mode: modeName,
-        onEscape: foo.onEscape,
-        selector: '.tox-toolbar__group'
-      }),
-      AddEventsBehaviour.config('toolbar-events', [
-        AlloyEvents.runOnAttached(function (component) {
-          const groups = Arr.map(foo.initGroups, renderToolbarGroup);
-          AlloyToolbar.setGroups(component, groups);
-        })
-      ])
-    ])
+    splitToolbarBehaviours: getToolbarbehaviours(foo, modeName)
   });
 };
 
@@ -148,20 +152,7 @@ const renderToolbar = (foo: Toolbar) => {
       AlloyToolbar.parts().groups({ })
     ],
 
-    toolbarBehaviours: Behaviour.derive([
-      Keying.config({
-        // Tabs between groups
-        mode: modeName,
-        onEscape: foo.onEscape,
-        selector: '.tox-toolbar__group'
-      }),
-      AddEventsBehaviour.config('toolbar-events', [
-        AlloyEvents.runOnAttached(function (component) {
-          const groups = Arr.map(foo.initGroups, renderToolbarGroup);
-          AlloyToolbar.setGroups(component, groups);
-        })
-      ])
-    ])
+    toolbarBehaviours: getToolbarbehaviours(foo, modeName)
   });
 };
 
