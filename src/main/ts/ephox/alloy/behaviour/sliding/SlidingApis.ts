@@ -14,7 +14,7 @@ const getDimension = (slideConfig: SlidingConfig, elem) => {
 
 const disableTransitions = (component: AlloyComponent, slideConfig: SlidingConfig) => {
   const root = getAnimationRoot(component, slideConfig);
-  Classes.remove(root, [slideConfig.shrinkingClass, slideConfig.growingClass]);
+  Classes.remove(root, [ slideConfig.shrinkingClass, slideConfig.growingClass ]);
 };
 
 const setShrunk = (component: AlloyComponent, slideConfig: SlidingConfig) => {
