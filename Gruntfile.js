@@ -244,7 +244,7 @@ module.exports = function (grunt) {
         options: {
           process: function(content) {
             return content.
-              replace(/@@version@@/g, BUILD_VERSION).
+              replace(/@@version@@/g, packageData.version).
               replace(/@@releaseDate@@/g, packageData.date);
           }
         },
@@ -324,10 +324,7 @@ module.exports = function (grunt) {
               expand: true,
               flatten: true,
               cwd: 'node_modules/@tinymce/oxide/build/skins/ui/' + name,
-              src: [
-                '*.min.css',
-                '*.min.css.map'
-              ],
+              src: '**',
               dest: 'js/tinymce/skins/ui/' + mappedName
             }
           ];
@@ -365,12 +362,21 @@ module.exports = function (grunt) {
             'js/tinymce/skins/*/fonts/readme.md',
             'readme.md'
           ],
-          to: 'tmp/tinymce_<%= pkg.version %>.zip'
+          to: 'tmp/tinymce_<%= pkg.version %>.zip',
+          dataFilter: (args) => {
+            if (args.filePath.endsWith('.min.css')) {
+              var sourcemap = args.data.lastIndexOf('/*# sourceMappingURL=');
+              if (sourcemap > -1) {
+                args.data = args.data.slice(0, sourcemap);
+              }
+            }
+          }
         },
         src: [
           'js/tinymce/langs',
           'js/tinymce/plugins',
-          'js/tinymce/skins',
+          'js/tinymce/skins/**/*.min.css',
+          'js/tinymce/skins/**/*.woff',
           'js/tinymce/themes',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
@@ -420,7 +426,7 @@ module.exports = function (grunt) {
           },
           onBeforeConcat: function (destPath, chunks) {
             // Strip the license from each file and prepend the license, so it only appears once
-            var license = grunt.file.read('src/core/text/license-header.js').replace(/@@version@@/g, BUILD_VERSION).replace(/@@releaseDate@@/g, packageData.date);
+            var license = grunt.file.read('src/core/text/license-header.js').replace(/@@version@@/g, packageData.version).replace(/@@releaseDate@@/g, packageData.date);
             return [license].concat(chunks.map(function (chunk) {
               return chunk.replace(license, '').trim();
             }));
