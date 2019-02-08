@@ -61,7 +61,7 @@ const autocompleterItemSchema = ValueSchema.objOf([
 const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.strictString('ch'),
-  FieldSchema.defaultedNumber('minChars', 0),
+  FieldSchema.defaultedNumber('minChars', 1),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.defaultedNumber('maxResults', 10),
   FieldSchema.defaultedFunction('matches', () => true),
