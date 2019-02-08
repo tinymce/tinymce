@@ -7,7 +7,7 @@ import { Arr, Fun } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * start: sets the start position to search at
  */
-const make = function (xs, f, start) {
+const make = function (xs, f, start?) {
 
   const init = {
     len: start !== undefined ? start : 0,
@@ -27,6 +27,6 @@ const make = function (xs, f, start) {
   return r.list;
 };
 
-export default <any> {
+export default {
   make
 };

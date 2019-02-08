@@ -12,7 +12,7 @@ const chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.
 const wordbreak = '[^' + chars + ']';
 const wordchar = '[' + chars + ']';
 
-export default <any> {
+export default {
   chars: Fun.constant(chars),
   wordbreak: Fun.constant(wordbreak),
   wordchar: Fun.constant(wordchar)

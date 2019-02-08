@@ -9,7 +9,7 @@ const cssSanitise = function (str) {
   return Sanitise.css(str);
 };
 
-export default <any> {
+export default {
   cssSanitise,
   splits
 };

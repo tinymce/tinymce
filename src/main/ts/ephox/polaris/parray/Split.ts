@@ -25,6 +25,6 @@ const splits = function (parray, positions, subdivide) {
   });
 };
 
-export default <any> {
+export default {
   splits
 };

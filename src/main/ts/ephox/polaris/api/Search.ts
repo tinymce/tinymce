@@ -9,7 +9,7 @@ const findmany = function (input, targets) {
   return Sleuth.search(input, targets);
 };
 
-export default <any> {
+export default {
   findall,
   findmany
 };

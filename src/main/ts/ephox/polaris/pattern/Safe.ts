@@ -15,7 +15,7 @@ const token = function (input) {
   return Unsafe.token(value);
 };
 
-export default <any> {
+export default {
   sanitise,
   word,
   token

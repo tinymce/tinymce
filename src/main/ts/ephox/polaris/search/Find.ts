@@ -20,6 +20,6 @@ const all = function (input, pattern) {
   return r;
 };
 
-export default <any> {
+export default {
   all
 };

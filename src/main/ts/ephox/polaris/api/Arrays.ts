@@ -18,7 +18,7 @@ const sliceby = function (array, predicate) {
   return Slice.sliceby(array, predicate);
 };
 
-export default <any> {
+export default {
   splitby,
   splitbyAdv,
   sliceby,
