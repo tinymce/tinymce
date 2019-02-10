@@ -64,8 +64,7 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
               innerHtml: '+'
             }
           }
-        },
-        measure: Option.none()
+        }
       })
     );
 
