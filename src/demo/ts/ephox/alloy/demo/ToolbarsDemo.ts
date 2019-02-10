@@ -159,8 +159,7 @@ export default (): void => {
         closedClass: 'demo-sliding-closed',
         growingClass: 'demo-sliding-height-growing',
         shrinkingClass: 'demo-sliding-height-shrinking'
-      },
-      measure: Option.none()
+      }
     })
   );
 
