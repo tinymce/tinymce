@@ -78,10 +78,6 @@ const renderToolbarGroup = (foo: ToolbarGroup) => {
   return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(foo));
 };
 
-const measure = (primary) => {
-  return window.innerWidth - Location.absolute(primary).left();
-};
-
 const getToolbarbehaviours = (foo, modeName) => {
   return Behaviour.derive([
     Keying.config({
@@ -108,7 +104,6 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
-    measure: Option.some(measure),
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
