@@ -7,10 +7,10 @@
 
 import { Types } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
-import VersionTab from '../ui/VersionTab';
+import VersionPanel from '../ui/VersionPanel';
 
 const getVersionPanel = function (editor: Editor): Types.Dialog.BodyComponentApi {
-  return editor.getParam('help_version', VersionTab.defaultPanel, 'function')();
+  return editor.getParam('help_version', VersionPanel.defaultPanel, 'function')();
 };
 
 export default {
