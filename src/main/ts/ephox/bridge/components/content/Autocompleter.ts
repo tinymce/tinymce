@@ -41,7 +41,7 @@ export interface Autocompleter {
   ch: string;
   minChars: number;
   columns: ColumnTypes;
-  matches: (rng: Range, text: string, pattern: string) => boolean;
+  matches: Option<(rng: Range, text: string, pattern: string) => boolean>;
   fetch: (pattern: string, maxResults: number) => Promise<AutocompleterItemApi[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;
@@ -64,7 +64,7 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.defaultedNumber('minChars', 1),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.defaultedNumber('maxResults', 10),
-  FieldSchema.defaultedFunction('matches', () => true),
+  FieldSchema.optionFunction('matches'),
   FieldSchema.strictFunction('fetch'),
   FieldSchema.strictFunction('onAction')
 ]);
