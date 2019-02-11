@@ -51,8 +51,7 @@ const forToolbarStateAction = function (editor, clazz, command, action) {
 
 const getToolbarIconButton = (clazz, editor) => {
   const icons = editor.ui.registry.getAll().icons;
-  const getIcon = Option.from(icons[clazz]);
-  const optOxideIcon = getIcon;
+  const optOxideIcon = Option.from(icons[clazz]);
 
   return optOxideIcon.fold(
     () => UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
