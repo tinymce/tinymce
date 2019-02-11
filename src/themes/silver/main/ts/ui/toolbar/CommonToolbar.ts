@@ -19,8 +19,6 @@ import {
   Focusing
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
-import { Location } from '@ephox/sugar';
-import { window } from '@ephox/dom-globals';
 import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
