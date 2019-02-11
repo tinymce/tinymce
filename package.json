@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/oxide-icons-default",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "The default icon pack for TinyMCE",
   "main": "dist/js/icons.js",
   "scripts": {
