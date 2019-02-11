@@ -41,7 +41,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
-                s.text(str.is('fake-icon-name'))
+                s.text(str.is(ch))
               ]
             }),
             s.element('span', {
@@ -62,7 +62,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
-                s.text(str.is('fake-icon-name'))
+                s.text(str.is(ch))
               ]
             })
           ]
