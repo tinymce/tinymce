@@ -39,7 +39,7 @@ const wordchar = function () {
   return Chars.wordchar();
 };
 
-export default <any> {
+export default {
   safeword,
   safetoken,
   custom,

@@ -37,7 +37,7 @@ const splitbyAdv = function (xs, pred) {
   return r;
 };
 
-export default <any> {
+export default {
   splitby,
   splitbyAdv
 };

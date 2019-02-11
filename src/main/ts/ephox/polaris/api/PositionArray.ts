@@ -3,7 +3,7 @@ import Query from '../parray/Query';
 import Split from '../parray/Split';
 import Translate from '../parray/Translate';
 
-const generate = function (items, generator, start) {
+const generate = function (items, generator, start?) {
   return Generator.make(items, generator, start);
 };
 
@@ -27,7 +27,7 @@ const sublist = function (parray, start, finish) {
   return Query.sublist(parray, start, finish);
 };
 
-export default <any> {
+export default {
   generate,
   get,
   find,

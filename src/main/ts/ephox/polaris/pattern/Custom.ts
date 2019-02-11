@@ -1,5 +1,5 @@
 
-export default <any> function (regex, prefix, suffix, flags) {
+export default function (regex, prefix, suffix, flags) {
   const term = function () {
     return new RegExp(regex, flags.getOr('g'));
   };
@@ -9,4 +9,4 @@ export default <any> function (regex, prefix, suffix, flags) {
     prefix,
     suffix
   };
-};
+}

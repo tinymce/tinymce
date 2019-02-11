@@ -10,6 +10,6 @@ const translate = function (parray, offset) {
   });
 };
 
-export default <any> {
+export default {
   translate
 };

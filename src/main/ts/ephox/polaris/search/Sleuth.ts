@@ -34,6 +34,6 @@ const search = function (text, targets) {
   return sort(unsorted);
 };
 
-export default <any> {
+export default {
   search
 };

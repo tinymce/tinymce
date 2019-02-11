@@ -10,7 +10,7 @@ const cata = function (subject, onInclude, onExcludeWith, onExcludeWithout) {
   return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
 };
 
-export default <any> {
+export default {
   include: adt.include,
   excludeWith: adt.excludeWith,
   excludeWithout: adt.excludeWithout,

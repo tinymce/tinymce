@@ -10,6 +10,6 @@ const boundAt = function (xs, left, right, comparator) {
   return xs.slice(first, last);
 };
 
-export default <any> {
+export default {
   boundAt
 };

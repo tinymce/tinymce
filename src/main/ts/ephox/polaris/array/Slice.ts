@@ -8,6 +8,6 @@ const sliceby = function (list, pred) {
   return list.slice(0, index);
 };
 
-export default <any> {
+export default {
   sliceby
 };

@@ -80,7 +80,7 @@ const tokens = function (value, parameters) {
   });
 };
 
-export default <any> {
+export default {
   tokens,
   link,
   autolink

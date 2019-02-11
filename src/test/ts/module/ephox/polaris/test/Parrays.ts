@@ -19,7 +19,7 @@ const dump = function (parray) {
   });
 };
 
-export default <any> {
+export default {
   make,
   dump
 };

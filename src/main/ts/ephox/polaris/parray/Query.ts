@@ -43,7 +43,7 @@ const find = function (parray, pred) {
   return Arr.find(parray, pred);
 };
 
-export default <any> {
+export default {
   get,
   find,
   inUnit,

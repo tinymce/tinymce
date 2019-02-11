@@ -29,7 +29,7 @@ const word = function (input) {
   return Custom(regex, prefix, suffix, Option.none());
 };
 
-export default <any> {
+export default {
   token,
   word
 };
