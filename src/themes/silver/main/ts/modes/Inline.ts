@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment, Docking, Focusing } from '@ephox/alloy';
+import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -17,6 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import { isSplitToolbar } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -24,13 +25,24 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
+  const split = isSplitToolbar(editor);
+
   const setPosition = () => {
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    if (split) {
+      toolbar.each(SplitToolbar.refresh);
+    }
+
     const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
     if (!isDocked) {
       // We need to update the toolbar location if the window has resized while the toolbar is position absolute
       // Not sure if we should always set this, or if it's worth checking against the current position
+      const offset = split ? toolbar.fold(() => 0, (tbar) => {
+        // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+        return Height.get(tbar.components()[1].element());
+      }) : 0;
       Css.setAll(floatContainer.element(), {
-        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
+        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + offset + 'px',
         left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
       });
     }

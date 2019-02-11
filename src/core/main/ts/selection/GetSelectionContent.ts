@@ -14,7 +14,16 @@ import Zwsp from '../text/Zwsp';
 import { Editor } from '../api/Editor';
 
 const getTextContent = (editor: Editor): string => {
-  return Option.from(editor.selection.getRng()).map((r) => Zwsp.trim(r.toString())).getOr('');
+  return Option.from(editor.selection.getRng()).map((rng) => {
+    const bin = editor.dom.add(editor.getBody(), 'div', {
+      'data-mce-bogus': 'all',
+      'style': 'overflow: hidden; opacity: 0;'
+    }, rng.cloneContents());
+
+    const text = Zwsp.trim(bin.innerText);
+    editor.dom.remove(bin);
+    return text;
+  }).getOr('');
 };
 
 const getHtmlContent = (editor: Editor, args: any): string => {
@@ -23,13 +32,9 @@ const getHtmlContent = (editor: Editor, args: any): string => {
   let fragment;
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  if (rng.cloneContents) {
-    fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
-    if (fragment) {
-      tmpElm.appendChild(fragment);
-    }
-  } else {
-    tmpElm.innerHTML = rng.toString();
+  fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
+  if (fragment) {
+    tmpElm.appendChild(fragment);
   }
 
   return editor.selection.serializer.serialize(tmpElm, args);
