@@ -67,12 +67,13 @@ const initIcons = (editor: Editor) => {
   const iconPackName: string = Tools.trim(editor.settings.icons);
 
   const defaultIcons = getAllOxide();
-  Obj.each(defaultIcons, (svgData, icon) => {
-    editor.ui.registry.addIcon(icon, svgData);
-  });
+  const loadIcons = {
+    ...defaultIcons,
+    ...IconManager.get(iconPackName).icons
+  };
 
-  Obj.each(IconManager.get(iconPackName).icons, (svgData, name) => {
-    editor.ui.registry.addIcon(name, svgData);
+  Obj.each(loadIcons, (svgData, icon) => {
+    editor.ui.registry.addIcon(icon, svgData);
   });
 };
 
@@ -153,9 +154,9 @@ const renderThemeUi = function (editor: Editor) {
 const init = function (editor: Editor) {
   editor.fire('ScriptsLoaded');
 
+  initIcons(editor);
   initTheme(editor);
   initPlugins(editor);
-  initIcons(editor);
   const boxInfo = renderThemeUi(editor);
   editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
   appendContentCssFromSettings(editor);

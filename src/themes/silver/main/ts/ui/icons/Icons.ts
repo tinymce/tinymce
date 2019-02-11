@@ -14,15 +14,15 @@ const defaultIcon = (icons: IconProvider): string => {
 };
 
 const get = (name: string, icons: IconProvider): string => {
-  return Option.from(icons()[name]).getOr(defaultIcon(icons));
+  return Option.from(icons()[name]).getOrThunk(() => defaultIcon(icons));
 };
 
 const getOr = (name: string, icons: IconProvider, fallback: Option<string>): string => {
-  return Option.from(icons()[name]).or(fallback).getOr(defaultIcon(icons));
+  return Option.from(icons()[name]).or(fallback).getOrThunk(() => defaultIcon(icons));
 };
 
 const getFirst = (names: string[], icons: IconProvider): string => {
-  return Options.findMap(names, (name) => Option.from(icons()[name])).getOr(defaultIcon(icons));
+  return Options.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(() => defaultIcon(icons));
 };
 
 export {
