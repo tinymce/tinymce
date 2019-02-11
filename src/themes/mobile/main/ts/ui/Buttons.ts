@@ -49,14 +49,10 @@ const forToolbarStateAction = function (editor, clazz, command, action) {
   return forToolbar(clazz, action, extraBehaviours, editor);
 };
 
-const defaultIcons = getAll();
-const getIcon = (name, icons) => {
-  return Option.from(icons[name]).or(Option.from(defaultIcons[name]));
-};
-
 const getToolbarIconButton = (clazz, editor) => {
   const icons = editor.ui.registry.getAll().icons;
-  const optOxideIcon = getIcon(clazz, icons);
+  const getIcon = Option.from(icons[clazz]);
+  const optOxideIcon = getIcon;
 
   return optOxideIcon.fold(
     () => UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-toolbar-group-item ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
