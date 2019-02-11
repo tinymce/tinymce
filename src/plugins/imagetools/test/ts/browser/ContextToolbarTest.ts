@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import ImageUtils from '../module/test/ImageUtils';
 import ImageOps from '../module/test/ImageOps';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
   Theme();
   Plugin();
 
