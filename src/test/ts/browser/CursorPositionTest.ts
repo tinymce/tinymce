@@ -18,12 +18,20 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
   const child3c = Element.fromText('');
   const child3d = Element.fromTag('br');
   const child3e = Element.fromText('');
-  InsertAll.append(child3, [ child3a, child3b, child3c, child3d, child3e ]);
+  InsertAll.append(child3, [child3a, child3b, child3c, child3d, child3e]);
 
   const child4 = Element.fromTag('br');
   const child5 = Element.fromText('');
 
-  InsertAll.append(container, [ child1, child2, child3, child4, child5 ]);
+  InsertAll.append(container, [child1, child2, child3, child4, child5]);
+
+  const pBr = Element.fromTag('p');
+  const br = Element.fromTag('br');
+  InsertAll.append(pBr, [br]);
+
+  const pImg = Element.fromTag('p');
+  const img = Element.fromTag('img');
+  InsertAll.append(pImg, [img]);
 
   const checkFirst = function (label, expected, root) {
     const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
@@ -53,6 +61,16 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
   assert.eq(true, Edge.isAtLeftEdge(container, child3a, 0));
   assert.eq(false, Edge.isAtLeftEdge(container, child2, 1));
 
-  // INVESTIGATE: Not sure if offset here should be 0 or 1.
-  assert.eq(true, Edge.isAtRightEdge(container, child4, 0));
+  // This changed from zero to 1, because left of a BR is now counted as not the end of the element
+  assert.eq(true, Edge.isAtRightEdge(container, child4, 1));
+
+  // TBIO-5309: This used to return true, which necessitated the above test change
+  // this broke TBIO selection fixer code, which messed up what we copied to the clipboard
+  // and probably some of the formatting code too
+  assert.eq(false, Awareness.isEnd(br, 0));
+
+  // general tests for the Awareness isEnd inline element code
+  assert.eq(false, Awareness.isEnd(img, 0));
+  assert.eq(true, Awareness.isEnd(img, 1))
+  assert.eq(true, Awareness.isEnd(br, 1))
 });
