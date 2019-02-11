@@ -16,11 +16,13 @@ import {
   SplitToolbar as SplitAlloyToolbar,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
-  Focusing
+  Focusing,
+  Toggling
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { ToolbarButtonClasses } from './button/ButtonClasses';
 
 export interface Toolbar {
   uid: string;
@@ -113,7 +115,9 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
         icon: Option.some('image-options'),
         disabled: false,
         tooltip: Option.some('More...')
-      }, Option.none(), foo.backstage.shared.providers)
+      }, Option.none(), foo.backstage.shared.providers, [
+        Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' } })
+      ])
     },
     components: [
       SplitAlloyToolbar.parts().primary({

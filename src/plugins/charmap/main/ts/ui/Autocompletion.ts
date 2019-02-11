@@ -5,20 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Scan from '../core/Scan';
 import { CharMap } from '../core/CharMap';
-
-const isStartOfWord = (rng: Range, text: string) => rng.startOffset === 0 || /\s/.test(text.charAt(rng.startOffset - 1));
 
 const init = (editor: Editor, all: CharMap) => {
   editor.ui.registry.addAutocompleter('charmap', {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    matches: isStartOfWord,
     fetch: (pattern, maxResults) => {
       return new Promise((resolve, reject) => {
         resolve(Scan.scan(all, pattern));
