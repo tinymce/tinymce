@@ -50,8 +50,7 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
       const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
       cellOpt.each(function (domCell) {
         const cell = Element.fromDom(domCell);
-        const table = TableLookup.table(cell);
-        table.bind(function (table) {
+        TableLookup.table(cell).each(function (table) {
 
           const elements = Arr.filter(Elements.fromHtml(e.content), function (content) {
             return Node.name(content) !== 'meta';
