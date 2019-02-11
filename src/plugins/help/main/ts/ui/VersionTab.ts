@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
+import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';
-import { Types } from '@ephox/bridge';
+import Settings from '../api/Settings';
 
-const tab = () => {
+const defaultPanel = (): Types.Dialog.BodyComponentApi => {
   const getVersion = (major: string, minor: string) => {
     return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
   };
@@ -20,14 +22,19 @@ const tab = () => {
     type: 'htmlpanel',
     html: '<p>' + I18n.translate(['You are using {0}', changeLogLink]) + '</p>'
   };
+  return htmlPanel;
+};
+
+const tab = (editor: Editor) => {
   return {
     title: 'Version',
     items: [
-      htmlPanel
+      Settings.getVersionPanel(editor)
     ]
   };
 };
 
 export default {
+  defaultPanel,
   tab
 };

@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
-import { Types } from '@ephox/bridge';
 
 const opener = function (editor: Editor) {
   return function () {
@@ -18,7 +18,7 @@ const opener = function (editor: Editor) {
       tabs: [
         KeyboardShortcutsTab.tab(),
         PluginsTab.tab(editor),
-        VersionTab.tab()
+        VersionTab.tab(editor)
       ]
     };
     editor.windowManager.open(
