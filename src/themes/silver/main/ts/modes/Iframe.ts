@@ -17,6 +17,7 @@ import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Cell } from '@ephox/katamari';
+import Events from '../api/Events';
 
 const DOM = DOMUtils.DOM;
 
@@ -73,7 +74,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       if (last.left() !== window.innerWidth || last.top() !== window.innerHeight) {
         const next = Position(window.innerWidth, window.innerHeight);
         lastDimensions.set(next);
-        editor.fire('ContentResize');
+        Events.fireResizeContent(editor);
       }
     };
 
@@ -112,7 +113,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     }
   };
 
-  editor.on('ContentResize', refreshMore);
+  editor.on('ResizeContent', refreshMore);
 
   return {
     iframeContainer: socket.element().dom(),
