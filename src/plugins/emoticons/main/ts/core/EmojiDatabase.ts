@@ -23,7 +23,6 @@ export interface EmojiEntry extends RawEmojiEntry {
   title: string;
 }
 
-// TODO: Translations for category names
 const categoryNameMap = {
   symbols: 'Symbols',
   people: 'People',
@@ -73,8 +72,6 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
-  // Merge the defaults with the user defined categories. Note that any user defined categories should override any defaults
-  const categoryNames = Merger.merge(categoryNameMap, Settings.getEmoticonCategories(editor));
 
   const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
     const cats = { };
@@ -86,7 +83,7 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
         title,
         keywords: lib.keywords,
         char: lib.char,
-        category: translateCategory(categoryNames, lib.category)
+        category: translateCategory(categoryNameMap, lib.category)
       };
       const current = cats[entry.category] !== undefined ? cats[entry.category] : [ ];
       cats[entry.category] = current.concat([ entry ]);

@@ -12,7 +12,6 @@ import { Arr } from '@ephox/katamari';
 
 const isArray = Tools.isArray;
 
-// TODO: i18n
 export const UserDefined = 'User Defined';
 
 export type CharMap = {
