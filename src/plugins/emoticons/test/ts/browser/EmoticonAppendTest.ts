@@ -45,8 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
               children: [
                 tabElement(s, str, arr)('All'),
                 tabElement(s, str, arr)('People'),
-                tabElement(s, str, arr)('User Defined'),
-                tabElement(s, str, arr)('Custom')
+                tabElement(s, str, arr)('User Defined')
               ]
             });
           })),
@@ -92,12 +91,8 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
       },
       brain_explode: {
         keywords: [ 'brain', 'explode', 'blown' ],
-        char: '🤯',
-        category: 'custom'
+        char: '🤯'
       }
-    },
-    emoticons_categories: {
-      custom: 'Custom'
     }
   }, success, failure);
 });
