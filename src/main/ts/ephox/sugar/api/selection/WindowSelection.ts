@@ -100,13 +100,15 @@ const readRange = function (selection) {
 };
 
 const doGetExact = function (selection) {
-  const anchorNode = Element.fromDom(selection.anchorNode);
-  const focusNode = Element.fromDom(selection.focusNode);
-  return DocumentPosition.after(anchorNode, selection.anchorOffset, focusNode, selection.focusOffset) ? Option.some(
+  const anchor = Element.fromDom(selection.anchorNode);
+  const focus = Element.fromDom(selection.focusNode);
+
+  // if this returns true anchor is _after_ focus, so we need a custom selection object to maintain the RTL selection
+  return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset) ? Option.some(
     Selection.range(
-      Element.fromDom(selection.anchorNode),
+      anchor,
       selection.anchorOffset,
-      Element.fromDom(selection.focusNode),
+      focus,
       selection.focusOffset
     )
   ) : readRange(selection);

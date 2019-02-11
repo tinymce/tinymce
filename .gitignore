@@ -1,4 +1,5 @@
 .DS_Store
+
 *~
 *.iws
 *.sublime-workspace
@@ -12,5 +13,5 @@
 
 ephox-sugar-*.tgz
 package-lock.json
-
+yarn.lock
 jenkins-plumbing
