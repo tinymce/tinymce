@@ -126,7 +126,15 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
             sFireInsert(editor),
             tinyApis.sAssertSelection([0, 0], 7, [0, 0], 7),
             tinyApis.sAssertContent('<p>a b c d</p>')
-          ]))
+          ])),
+          Logger.t('Insert in text node multiple nbsps between inline elements', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p><em>a</em>&nbsp;&nbsp;<em>b</em></p>'),
+            tinyApis.sSetCursor([0, 1], 1),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+            tinyApis.sAssertContent('<p><em>a</em> &nbsp;<em>b</em></p>')
+          ])),
         ])),
 
         Logger.t('Insert in text on IE using keypress', GeneralSteps.sequence(browser.isIE() ? [
