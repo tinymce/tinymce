@@ -142,7 +142,7 @@ const open = (editor: Editor) => {
         title: 'General',
         items: CellDialogGeneralTab.items(editor)
       },
-      Helpers.getAdvancedTab()
+      Helpers.getAdvancedTab(editor)
     ]
   };
   const dialogPanel: Types.Dialog.PanelApi = {

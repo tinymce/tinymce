@@ -72,7 +72,14 @@ const getColorMap = (editor: Editor): string[] => {
 
 const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
   const unmapped = getColorMap(editor);
-  return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
+  if (unmapped !== undefined) {
+    return mapColors(unmapped);
+  } else {
+    defaultColors.forEach(function (entry) {
+      entry.text = editor.editorManager.translate(entry.text);
+    });
+    return defaultColors;
+  }
 };
 
 const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {

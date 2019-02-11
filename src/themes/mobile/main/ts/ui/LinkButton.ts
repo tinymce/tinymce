@@ -13,6 +13,7 @@ import RangePreserver from '../util/RangePreserver';
 import Buttons from './Buttons';
 import * as Inputs from './Inputs';
 import * as SerialisedDialog from './SerialisedDialog';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const getGroups = Thunk.cached(function (realm, editor) {
   return [
@@ -21,10 +22,10 @@ const getGroups = Thunk.cached(function (realm, editor) {
       items: [
         SerialisedDialog.sketch({
           fields: [
-            Inputs.field('url', 'Type or paste URL'),
-            Inputs.field('text', 'Link text'),
-            Inputs.field('title', 'Link title'),
-            Inputs.field('target', 'Link target'),
+            Inputs.field('url', I18n.translate('Type or paste URL')),
+            Inputs.field('text', I18n.translate('Link text')),
+            Inputs.field('title', I18n.translate('Link title')),
+            Inputs.field('target', I18n.translate('Link target')),
             Inputs.hidden('link')
           ],
 

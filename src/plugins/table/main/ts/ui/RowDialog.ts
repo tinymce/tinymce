@@ -127,7 +127,7 @@ const open = (editor: Editor) => {
         title: 'General',
         items: RowDialogGeneralTab.items(editor)
       },
-      Helpers.getAdvancedTab()
+      Helpers.getAdvancedTab(editor)
     ]
   };
   const dialogPanel: Types.Dialog.PanelApi = {

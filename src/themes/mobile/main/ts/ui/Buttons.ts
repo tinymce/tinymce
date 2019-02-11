@@ -12,6 +12,7 @@ import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 import { getAll } from '@tinymce/oxide-icons-default';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const forToolbarCommand = function (editor, command) {
   return forToolbar(command, function () {
@@ -50,8 +51,15 @@ const forToolbarStateAction = function (editor, clazz, command, action) {
 };
 
 const defaultIcons = getAll();
+
 const getIcon = (name, icons) => {
-  return Option.from(icons[name]).or(Option.from(defaultIcons[name]));
+  const translationName = name + '_icon';
+  const translatedIcon = I18n.translate(translationName);
+  if (translatedIcon === translationName) {
+    return Option.from(icons[name]).or(Option.from(defaultIcons[name]));
+  } else {
+    return Option.from(translatedIcon).or(Option.from(defaultIcons[name]));
+  }
 };
 
 const getToolbarIconButton = (clazz, editor) => {

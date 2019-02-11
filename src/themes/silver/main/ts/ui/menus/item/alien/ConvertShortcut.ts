@@ -7,6 +7,7 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
+import I18n from 'tinymce/core/api/util/I18n';
 
 // Converts shortcut format to Mac/PC variants
 // Note: This is different to the help shortcut converter, as it doesn't padd the + symbol with spaces
@@ -20,7 +21,7 @@ const convertText = (source: string) => {
     access: '&#x2303;&#x2325;'
   };
   const other = {
-    meta: 'Ctrl',
+    meta: I18n.translate('Ctrl'),
     access: 'Shift+Alt'
   };
   const replace: Record<string, string> = Env.mac ? mac : other;

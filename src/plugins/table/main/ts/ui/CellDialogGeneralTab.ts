@@ -93,7 +93,14 @@ const children: Types.Dialog.BodyComponentApi[] = [
 ];
 
 const items = (editor): Types.Dialog.BodyComponentApi[] => {
-
+  // translate children items
+  children.forEach(function (entry) {
+    if (typeof (entry as any).items !== 'undefined') {
+      (entry as any).items.forEach(function (item) {
+        item.text = editor.editorManager.translate(item.text);
+      });
+    }
+  });
   return getClassList(editor).fold(
     () => children,
     (classlist) => children.concat(classlist)

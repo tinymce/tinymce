@@ -84,7 +84,7 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = () => {
+const getAdvancedTab = (editor) => {
   const items: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'borderstyle',
@@ -115,6 +115,16 @@ const getAdvancedTab = () => {
       label: 'Background color'
     }
   ];
+
+  // translation of border style items
+  items.forEach(function (entry) {
+    if (typeof (entry as any).items !== 'undefined') {
+      (entry as any).items.forEach(function (item) {
+        item.text = editor.editorManager.translate(item.text);
+      });
+    }
+  });
+
   return {
     title: 'Advanced',
     items

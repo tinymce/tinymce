@@ -22,6 +22,9 @@ const fallbacks = [
 const getTargets = (editor): Option<ListItem[]> => {
   if (Settings.shouldShowTargetList(editor.settings)) {
     const list = Settings.getTargetList(editor.settings);
+    fallbacks.forEach(function (entry) {
+      entry.text = editor.editorManager.translate(entry.text);
+    });
     return ListOptions.sanitize(list).orThunk(
       () => Option.some(fallbacks)
     );

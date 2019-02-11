@@ -10,6 +10,7 @@ import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Option, Strings } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Settings from './Settings';
+import I18n from 'tinymce/core/api/util/I18n';
 
 export interface ColorSwatchDialogData {
   colorpicker: string;
@@ -69,13 +70,13 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
     type,
-    text: 'Remove color',
+    text: I18n.translate('Remove color'),
     icon: 'color-swatch-remove-color',
     value: 'remove'
   };
   const custom = {
     type,
-    text: 'Custom color',
+    text: I18n.translate('Custom color'),
     icon: 'color-picker',
     value: 'custom'
   };

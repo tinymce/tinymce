@@ -66,6 +66,14 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
 ];
 
 const items = (editor) => {
+  // translate row type and alignment items
+  formChildren.forEach(function (entry) {
+    if (typeof (entry as any).items !== 'undefined') {
+      (entry as any).items.forEach(function (item) {
+        item.text = editor.editorManager.translate(item.text);
+      });
+    }
+  });
   return getClassList(editor).fold(
     () => formChildren,
     (classes) => formChildren.concat(classes)

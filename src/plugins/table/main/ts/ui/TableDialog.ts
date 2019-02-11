@@ -256,6 +256,15 @@ const open = (editor: Editor, isNew?: boolean) => {
     }
   ] : [];
 
+  // translation of alignment selections left, right, ...
+  alignmentItem.forEach(function (entry) {
+      if (typeof (entry as any).items !== 'undefined') {
+        (entry as any).items.forEach(function (item) {
+        item.text = editor.editorManager.translate(item.text);
+      });
+    }
+  });
+
   const generalTabItems = rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
 
   const generalPanel: Types.Dialog.BodyComponentApi = {
@@ -276,7 +285,7 @@ const open = (editor: Editor, isNew?: boolean) => {
         title: 'General',
         items: [ generalPanel ]
       },
-      Helpers.getAdvancedTab()
+      Helpers.getAdvancedTab(editor)
     ]
   };
 
