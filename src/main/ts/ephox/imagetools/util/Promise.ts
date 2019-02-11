@@ -1,3 +1,5 @@
+import { setTimeout } from '@ephox/dom-globals';
+
 /* eslint-disable */
 
 /* jshint ignore:start */

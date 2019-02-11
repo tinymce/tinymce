@@ -15,6 +15,9 @@
     "source-map-loader": "^0.2.3",
     "typescript": "^3.1.6"
   },
+  "dependencies": {
+    "@ephox/dom-globals": "latest"
+  },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",

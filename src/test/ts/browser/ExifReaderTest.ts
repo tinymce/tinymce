@@ -6,6 +6,7 @@ import ExifReader from 'ephox/imagetools/meta/ExifReader';
 import { JPEGMeta } from 'ephox/imagetools/api/Main';
 import { Obj } from '@ephox/katamari';
 import Promise from 'ephox/imagetools/util/Promise';
+import { XMLHttpRequest } from '@ephox/dom-globals';
 
 let problematiJPEGs: any[] = [
 	{

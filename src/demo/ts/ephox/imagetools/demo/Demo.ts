@@ -1,5 +1,6 @@
 import ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
+import { document } from '@ephox/dom-globals';
 
 function getValue(el) {
     var value;
