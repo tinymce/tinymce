@@ -113,6 +113,7 @@ const link = function (editor: Editor, attachState: AttachState) {
 
         if (data.hasOwnProperty('text')) {
           if (anchorElm.hasOwnProperty('innerText')) {
+            // TODO TINY-3312: Remove the any type once dom-globals has been updated
             (<any> anchorElm).innerText = data.text;
           } else {
             anchorElm.textContent = data.text;
