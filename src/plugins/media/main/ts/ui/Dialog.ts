@@ -30,8 +30,8 @@ type DialogData = {
 // NOTE: This means the dialog doesn't actually comply with the DialogData type, but it's too complex to unwind now
 const unwrap = (data) => Merger.merge(data, {
   source1: data.source1.value,
-  source2: data.source2.value,
-  poster: data.poster.value
+  source2: Obj.get(data, 'source2').bind((src) => Obj.get(src, 'value')).getOr(''),
+  poster: Obj.get(data, 'poster').bind((src) => Obj.get(src, 'value')).getOr('')
 });
 
 const wrap = (data) => Merger.merge(data, {
