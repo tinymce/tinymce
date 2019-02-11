@@ -213,7 +213,7 @@ const showDialog = function (editor: Editor) {
         name: 'source2',
         type: 'urlinput',
         filetype: 'media',
-        label: 'Alternative image URL'
+        label: 'Alternative source URL'
       }
     );
   }
