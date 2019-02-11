@@ -18,7 +18,7 @@ const get = (name: string, icons: IconProvider): string => {
 };
 
 const getOr = (name: string, icons: IconProvider, fallback: Option<string>): string => {
-  return Option.from(icons()[name]).getOr(defaultIcon(icons));
+  return Option.from(icons()[name]).or(fallback).getOr(defaultIcon(icons));
 };
 
 const getFirst = (names: string[], icons: IconProvider): string => {

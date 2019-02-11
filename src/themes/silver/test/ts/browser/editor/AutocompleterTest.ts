@@ -31,7 +31,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
 
       const eDoc = Element.fromDom(editor.getDoc());
 
-      const structWithTitleAndIconAndText = (d) => (s, str, arr) => {
+      const structWithTitleAndIconAndText = (d, ch) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
           attrs: {
@@ -40,7 +40,9 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              html: str.startsWith('<svg')
+              children: [
+                s.text(str.is('fake-icon-name'))
+              ]
             }),
             s.element('span', {
               classes: [ arr.has('tox-collection__item-label') ],
@@ -50,7 +52,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         });
       };
 
-      const structWithTitleAndIcon = (d) => (s, str, arr) => {
+      const structWithTitleAndIcon = (d, ch) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
           attrs: {
@@ -59,7 +61,9 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           children: [
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
-              html: str.startsWith('<svg')
+              children: [
+                s.text(str.is('fake-icon-name'))
+              ]
             })
           ]
         });
@@ -72,7 +76,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         1000
       );
 
-      const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => {
+      const sAssertAutocompleterStructure = (structure: AutocompleterStructure, character) => {
         return Chain.asStep(Body.body(), [
           UiFinder.cFindIn('.tox-autocompleter'),
           Assertions.cAssertStructure(
@@ -87,7 +91,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       return s.element('div', {
                         classes: [ arr.has('tox-collection__group') ],
                         children: Arr.map(group, (d) => {
-                          const itemStructure = structure.type === 'list' ? structWithTitleAndIconAndText(d) : structWithTitleAndIcon(d);
+                          const itemStructure = structure.type === 'list' ? structWithTitleAndIconAndText(d, character) : structWithTitleAndIcon(d, character);
                           return itemStructure(s, str, arr);
                         })
                       });
@@ -108,7 +112,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           tinyApis.sSetCursor([ 0, 0 ], content.length),
           Keyboard.sKeypress(eDoc, scenario.triggerChar.charCodeAt(0), { }),
           tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
-          sAssertAutocompleterStructure(scenario.structure),
+          sAssertAutocompleterStructure(scenario.structure, scenario.triggerChar),
           scenario.choice,
           sWaitForAutocompleteToClose,
           scenario.assertion
@@ -220,7 +224,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               { title: 'three' }
             ]
           ]
-        }),
+        }, '='),
         // Check the options shrink to 1 item
         sSetContentAndTrigger('test=tw', 'w'.charCodeAt(0)),
         Waiter.sTryUntil('Wait for autocompleter to update items', sAssertAutocompleterStructure({
@@ -230,7 +234,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               { title: 'two' }
             ]
           ]
-        }), 100, 1000),
+        }, '='), 100, 1000),
         // Check the autocompleter is hidden/closed when no items match
         sSetContentAndTrigger('test=twe', 'e'.charCodeAt(0)),
         sWaitForAutocompleteToClose,
@@ -244,7 +248,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               { title: 'two' }
             ]
           ]
-        }),
+        }, '='),
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),
         sWaitForAutocompleteToClose
       ]);
@@ -275,7 +279,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
                   value: `plus-${letter}`,
                   text: `p-${letter}`,
-                  icon: 'fake-icon-name'
+                  icon: '+'
                 }))
               );
             });
@@ -297,7 +301,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a' ], (letter) => ({
                   value: `colon1-${letter}`,
                   text: `c1-${letter}`,
-                  icon: 'fake-icon-name'
+                  icon: ':'
                 }))
               );
             });
@@ -318,7 +322,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b' ], (letter) => ({
                   value: `colon2-${letter}`,
                   text: `c2-${letter}`,
-                  icon: 'fake-icon-name'
+                  icon: ':'
                 }))
               );
             });
@@ -339,7 +343,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
                   value: `tilde-${letter}`,
                   text: `t-${letter}`,
-                  icon: 'fake-icon-name'
+                  icon: '~'
                 }))
               );
             });
@@ -365,7 +369,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 Arr.map(filteredItems, (number) => ({
                   value: `${number}`,
                   text: `${number}`,
-                  icon: 'fake-icon-name'
+                  icon: '='
                 }))
               );
             });
