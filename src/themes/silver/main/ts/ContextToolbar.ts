@@ -212,6 +212,15 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     );
   });
 
+  editor.on('focusout', (e) => {
+    Delay.setEditorTimeout(editor, () => {
+      if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
+        lastAnchor.set(Option.none());
+        InlineView.hide(contextbar);
+      }
+    }, 0);
+  });
+
   editor.on('nodeChange', (e) => {
     Focus.search(contextbar.element()).fold(
       () => {
