@@ -159,36 +159,6 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function () {
     ), false);
   });
 
-  suite.test('isBeforeContentEditableFalse', function () {
-    setupHtml(
-      '<span contentEditable="false"></span>' +
-      '<span contentEditable="false"></span>a'
-    );
-
-    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 0)), true);
-    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 1)), true);
-    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 2)), false);
-    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 3)), false);
-  });
-
-  suite.test('isBeforeContentEditableFalse/isAfterContentEditableFalse on bogus all element', function () {
-    setupHtml('<input><p contentEditable="false" data-mce-bogus="all"></p><input>');
-    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 1)), false);
-    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 2)), false);
-  });
-
-  suite.test('isAfterContentEditableFalse', function () {
-    setupHtml(
-      '<span contentEditable="false"></span>' +
-      '<span contentEditable="false"></span>a'
-    );
-
-    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 0)), false);
-    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 1)), true);
-    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 2)), true);
-    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 3)), false);
-  });
-
   suite.test('normalizeRange', function () {
     setupHtml(
       'abc<span contentEditable="false">1</span>def'

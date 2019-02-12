@@ -12,12 +12,13 @@ import { Editor } from '../api/Editor';
 import NodeType from '../dom/NodeType';
 import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
-import { getElementFromPosition, isAfterSpace, isBeforeSpace } from '../caret/CaretUtils';
+import { getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
 import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
 import { Text } from '@ephox/dom-globals';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from 'tinymce/core/caret/CaretBr';
+import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 
 const nbsp = '\u00a0';
 

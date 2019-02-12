@@ -19,11 +19,10 @@ import ArrUtils from '../util/ArrUtils';
 import { Range, Element } from '@ephox/dom-globals';
 import { Fun, Arr } from '@ephox/katamari';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
+import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const getSelectedNode = RangeNodes.getSelectedNode;
-const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
-const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
 const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, range): Range => {
   const forwards = direction === HDirection.Forwards;
@@ -82,11 +81,11 @@ const moveToCeFalseVertically = function (direction: LineWalker.VDirection, edit
   nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
   caretClientRect = ArrUtils.last(caretPosition.getClientRects());
 
-  if (isBeforeContentEditableFalse(caretPosition) || CaretUtils.isBeforeTable(caretPosition)) {
+  if (isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode();
   }
 
-  if (isAfterContentEditableFalse(caretPosition) || CaretUtils.isAfterTable(caretPosition)) {
+  if (isAfterContentEditableFalse(caretPosition) || isAfterTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode(true);
   }
 
