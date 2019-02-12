@@ -115,9 +115,7 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
         icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...')
-      }, Option.none(), foo.backstage.shared.providers, [
-        Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' } })
-      ])
+      }, Option.none(), foo.backstage.shared.providers)
     },
     components: [
       SplitAlloyToolbar.parts().primary({
@@ -137,7 +135,8 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
       growingClass: 'tox-toolbar__overflow--growing',
-      shrinkingClass: 'tox-toolbar__overflow--shrinking'
+      shrinkingClass: 'tox-toolbar__overflow--shrinking',
+      overflowToggledClass: ToolbarButtonClasses.Ticked
     },
     splitToolbarBehaviours: getToolbarbehaviours(foo, modeName)
   });
