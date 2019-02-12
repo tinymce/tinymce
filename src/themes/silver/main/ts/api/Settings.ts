@@ -61,6 +61,8 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
   return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
 };
 
+const isSplitToolbar = (editor: Editor) => editor.getParam('toolbar_drawer', false, 'boolean');
+
 export {
   getSkinUrl,
   isReadOnly,
@@ -75,5 +77,6 @@ export {
   getRemovedMenuItems,
   isMenubarEnabled,
   isToolbarEnabled,
-  getMultipleToolbarsSetting
+  getMultipleToolbarsSetting,
+  isSplitToolbar
 };

@@ -43,7 +43,7 @@ export default () => {
             // },
             KeyboardShortcutsTab.tab(),
             PluginsTab.tab(editor),
-            VersionTab.tab()
+            VersionTab.tab(editor)
           ]
         },
         buttons: [

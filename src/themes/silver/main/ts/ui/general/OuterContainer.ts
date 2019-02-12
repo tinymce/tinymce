@@ -21,7 +21,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
-import { renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
+import { renderMoreToolbar, renderToolbarGroup, renderToolbar } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -116,14 +116,16 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      return renderToolbar({
+      const renderer = spec.split ? renderMoreToolbar : renderToolbar;
+      return renderer({
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
           return Option.some(true);
         },
         cyclicKeying: false,
-        initGroups: []
+        initGroups: [],
+        backstage: spec.backstage
       });
     }
   },

@@ -5,20 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireSkinLoaded = function (editor) {
+const fireSkinLoaded = (editor) => {
   return editor.fire('SkinLoaded');
 };
 
-const fireResizeEditor = function (editor) {
+const fireResizeEditor = (editor) => {
   return editor.fire('ResizeEditor');
 };
 
-const fireBeforeRenderUI = function (editor) {
+const fireBeforeRenderUI = (editor) => {
   return editor.fire('BeforeRenderUI');
+};
+
+const fireResizeContent = (editor) => {
+  return editor.fire('ResizeContent');
 };
 
 export default {
   fireSkinLoaded,
   fireResizeEditor,
-  fireBeforeRenderUI
+  fireBeforeRenderUI,
+  fireResizeContent
 };

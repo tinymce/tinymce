@@ -7,10 +7,15 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 
-const getEmoticonDatabaseUrl = function (editor: Editor, pluginUrl: string): string {
+const getEmoticonDatabaseUrl = (editor: Editor, pluginUrl: string): string => {
   return editor.getParam('emoticons_database_url', `${pluginUrl}/js/emojis${editor.suffix}.js`);
 };
 
+const getAppendedEmoticons = (editor: Editor) => {
+  return editor.getParam('emoticons_append', {}, 'object');
+};
+
 export default {
-  getEmoticonDatabaseUrl
+  getEmoticonDatabaseUrl,
+  getAppendedEmoticons
 };

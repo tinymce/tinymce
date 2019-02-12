@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Disabling } from '@ephox/alloy';
-import { Body, Element, Selectors } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
+import { Body, Element, Selectors, Position } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import OuterContainer from '../ui/general/OuterContainer';
@@ -15,6 +16,10 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import { Cell } from '@ephox/katamari';
+import Events from '../api/Events';
+
+const DOM = DOMUtils.DOM;
 
 const handleSwitchMode = (uiComponents: RenderUiComponents) => {
   return (e) => {
@@ -59,6 +64,27 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     if (editor.readonly) {
       handleSwitchMode(uiComponents)({mode: 'readonly'});
     }
+
+    const lastDimensions = Cell<Position>(Position(0, 0));
+
+    const window = editor.contentWindow;
+
+    const resize = () => {
+      const last = lastDimensions.get();
+      if (last.left() !== window.innerWidth || last.top() !== window.innerHeight) {
+        const next = Position(window.innerWidth, window.innerHeight);
+        lastDimensions.set(next);
+        Events.fireResizeContent(editor);
+      }
+    };
+
+    DOM.bind(window, 'resize', resize);
+
+    const removeResize = function () {
+      DOM.unbind(window, 'resize', resize);
+    };
+
+    editor.on('remove', removeResize);
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
@@ -77,6 +103,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.addQueryValueHandler('ToggleSidebar', () => {
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
+
+  const split = Settings.isSplitToolbar(editor);
+
+  const refreshMore = () => {
+    if (split) {
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      toolbar.each(SplitToolbar.refresh);
+    }
+  };
+
+  editor.on('ResizeContent', refreshMore);
 
   return {
     iframeContainer: socket.element().dom(),

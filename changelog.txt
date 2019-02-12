@@ -1,5 +1,16 @@
 Version 5.0.1 (TBD)
+    Fixed an issue with the Context Toolbar not being removed when clicking outside of the editor. #TINY-2804
+    Fixed an issue where clicking 'Remove link' wouldn't remove the link in certain circumstances #TINY-3199
+    Added the ability of the code sample toolbar button to highlight #TINY-3040
+    Fixed an issue where retrieving the selected content as text didn't create newlines #TINY-3197
     Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
+    Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281
+    Fixed production CSS including references to source maps #TINY-3920
+    Fixed development CSS was not included in development zip #TINY-3920
+    Added a new toolbar setting `toolbar_drawer` that, upon the toolbar running over one line of groups, the remaining groups will overflow into a collapsible drawer #TINY-2874
+    Added a new help dialog setting `help_version` that allows providing a custom version panel #TINY-2875
+    Fixed the autocompleter matches predicate not matching on the start of words by default #TINY-3306
+    Added new settings to the emoticons plugin to allow additional emoticons to be added #TINY-3088
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 

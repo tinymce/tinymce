@@ -5,9 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLAnchorElement } from '@ephox/dom-globals';
+import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
+
+export interface AttachState {
+  href?: string;
+  attach?: () => void;
+}
 
 const getHref = (elm: HTMLAnchorElement): string => {
   // Returns the real href value not the resolved a.href value
@@ -38,21 +44,21 @@ const toggleTargetRules = function (rel, isUnsafe) {
   return newRel.length ? toString(newRel) : '';
 };
 
-const trimCaretContainers = function (text) {
+const trimCaretContainers = function (text: string) {
   return text.replace(/\uFEFF/g, '');
 };
 
-const getAnchorElement = function (editor, selectedElm?) {
+const getAnchorElement = function (editor: Editor, selectedElm?: Element): HTMLAnchorElement {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
-    // for an image conained in a figure we look for a link inside the selected element
-    return editor.dom.select('a[href]', selectedElm)[0];
+    // for an image contained in a figure we look for a link inside the selected element
+    return editor.dom.select('a[href]', selectedElm)[0] as HTMLAnchorElement;
   } else {
-    return editor.dom.getParent(selectedElm, 'a[href]');
+    return editor.dom.getParent(selectedElm, 'a[href]') as HTMLAnchorElement;
   }
 };
 
-const getAnchorText = function (selection, anchorElm) {
+const getAnchorText = function (selection, anchorElm: HTMLAnchorElement) {
   const text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
   return trimCaretContainers(text);
 };
@@ -74,11 +80,11 @@ const isOnlyTextSelected = function (html) {
   return true;
 };
 
-const isImageFigure = function (node) {
-  return node && node.nodeName === 'FIGURE' && /\bimage\b/i.test(node.className);
+const isImageFigure = function (elm: Element) {
+  return elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 };
 
-const link = function (editor, attachState) {
+const link = function (editor: Editor, attachState: AttachState) {
   return function (data) {
     editor.undoManager.transact(function () {
       const selectedElm = editor.selection.getNode();
@@ -106,8 +112,9 @@ const link = function (editor, attachState) {
         editor.focus();
 
         if (data.hasOwnProperty('text')) {
-          if ('innerText' in anchorElm) {
-            anchorElm.innerText = data.text;
+          if (anchorElm.hasOwnProperty('innerText')) {
+            // TODO TINY-3312: Remove the any type once dom-globals has been updated
+            (<any> anchorElm).innerText = data.text;
           } else {
             anchorElm.textContent = data.text;
           }
@@ -130,20 +137,24 @@ const link = function (editor, attachState) {
   };
 };
 
-const unlink = function (editor) {
+const unlink = function (editor: Editor) {
   return function () {
     editor.undoManager.transact(function () {
       const node = editor.selection.getNode();
       if (isImageFigure(node)) {
         unlinkImageFigure(editor, node);
       } else {
-        editor.execCommand('unlink');
+        const anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
+        if (anchorElm) {
+          editor.dom.remove(anchorElm, true);
+        }
       }
+      editor.focus();
     });
   };
 };
 
-const unlinkImageFigure = function (editor, fig) {
+const unlinkImageFigure = function (editor: Editor, fig: Element) {
   let a, img;
   img = editor.dom.select('img', fig)[0];
   if (img) {
@@ -155,7 +166,7 @@ const unlinkImageFigure = function (editor, fig) {
   }
 };
 
-const linkImageFigure = function (editor, fig, attrs) {
+const linkImageFigure = function (editor: Editor, fig: Element, attrs: Record<string, any>) {
   let a, img;
   img = editor.dom.select('img', fig)[0];
   if (img) {

@@ -159,6 +159,8 @@ indentation               <new>                 Toolbar group names
 permanent pen             <new>                 Toolbar group names
 comments                  <new>                 Toolbar group names
 
+More...                   <new>                 More drawer tooltip
+
 
 No longer Used
 -----------------------------------------------------

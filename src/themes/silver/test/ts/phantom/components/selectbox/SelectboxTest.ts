@@ -2,16 +2,21 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
+  const providers = {
+    icons: () => <Record<string, string>> {
+      'chevron-down': '<svg></svg>'
+    },
+    menuItems: () => <Record<string, any>> {},
+    translate: I18n.translate
+  };
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -75,7 +80,6 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
       ];
     },
     () => {
-      helpers.destroy();
       success();
     },
     failure

@@ -14,6 +14,8 @@ import { getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
 import Promise from 'tinymce/core/api/util/Promise';
 
+const isStartOfWord = (rng: Range, text: string) => rng.startOffset === 0 || /\s/.test(text.charAt(rng.startOffset - 1));
+
 const getTriggerContext = (initRange: Range, initText: string, database: AutocompleterDatabase): Option<{ range: Range, text: string, triggerChar: string }> => {
   return Options.findMap(database.triggerChars, (ch) => {
     return getContext(initRange, ch, initText, initRange.startOffset).map(({ rng, text }) => {
@@ -35,7 +37,7 @@ const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optio
 
   return getTriggerContext(rng, startText, database).map((context) => {
     const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => {
-      return context.text.length >= autocompleter.minChars && autocompleter.matches(context.range, startText, context.text);
+      return context.text.length >= autocompleter.minChars && autocompleter.matches.getOr(isStartOfWord)(context.range, startText, context.text);
     });
     const lookupData = Promise.all(Arr.map(autocompleters, (ac) => {
       // TODO: Find a sensible way to do maxResults
