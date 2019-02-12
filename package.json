@@ -8,8 +8,7 @@
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "@ephox/sand": "latest",
-    "@ephox/sugar": "latest",
-    "@ephox/swag": "^3.0.2"
+    "@ephox/sugar": "latest"
   },
   "files": [
     "lib/main",
@@ -24,6 +23,7 @@
   ],
   "devDependencies": {
     "@ephox/bedrock": "latest",
+    "@ephox/swag": "latest",
     "awesome-typescript-loader": "^5.0.0",
     "grunt": "^1.0.3",
     "grunt-contrib-clean": "^1.1.0",
