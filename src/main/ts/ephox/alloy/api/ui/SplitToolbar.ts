@@ -16,6 +16,7 @@ import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { Toggling } from '../behaviour/Toggling';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
@@ -75,6 +76,9 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
 
   Sliding.refresh(overflow);
 
+  AlloyParts.getPart(toolbar, detail, 'overflow-button').each((moreButton) => {
+    Toggling.set(moreButton, Sliding.hasGrown(overflow));
+  });
 };
 
 const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (detail, components, spec, externals) => {

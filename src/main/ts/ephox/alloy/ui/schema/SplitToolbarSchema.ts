@@ -8,9 +8,10 @@ import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
+import { Toggling } from '../../api/behaviour/Toggling';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
-  Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
+  Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', () => {
     return Cell([ ]);
@@ -50,7 +51,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.external({
-    name: 'overflow-button'
+    name: 'overflow-button',
+    overrides: (toolbarDetail) => {
+      return {
+        buttonBehaviours: Behaviour.derive([
+          Toggling.config({ toggleClass: toolbarDetail.markers.overflowToggledClass, aria: { mode: 'pressed' } })
+        ])
+      };
+    }
   }),
 
   PartType.external({

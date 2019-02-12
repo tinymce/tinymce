@@ -50,7 +50,8 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
           closedClass: 'test-sliding-closed',
           openClass: 'test-sliding-open',
           shrinkingClass: 'test-sliding-height-shrinking',
-          growingClass: 'test-sliding-height-growing'
+          growingClass: 'test-sliding-height-growing',
+          overflowToggledClass: 'test-more-button-toggled'
         },
 
         parts: {
