@@ -77,7 +77,7 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
   Sliding.refresh(overflow);
 
   AlloyParts.getPart(toolbar, detail, 'overflow-button').each((moreButton) => {
-    Toggling.set(moreButton, Sliding.hasGrown(ps.overflow()));
+    Toggling.set(moreButton, Sliding.hasGrown(overflow));
   });
 };
 
