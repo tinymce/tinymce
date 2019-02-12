@@ -30,9 +30,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const calcPosition = (offset: number = 0) => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
+    const location = Location.absolute(Element.fromDom(editor.getBody()));
     return {
-      top: Math.round(Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element())) + offset + 'px',
-      left: Math.round(Location.absolute(Element.fromDom(editor.getBody())).left()) + 'px'
+      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset + 'px',
+      left: Math.round(location.left()) + 'px'
     };
   };
 
