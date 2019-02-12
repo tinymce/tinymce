@@ -2,7 +2,7 @@ import Sanitise from 'ephox/polaris/string/Sanitise';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Sanitise.css', function () {
-  const check = function (expected, input) {
+  const check = function (expected: string, input: string) {
     const actual = Sanitise.css(input);
     assert.eq(expected, actual);
   };

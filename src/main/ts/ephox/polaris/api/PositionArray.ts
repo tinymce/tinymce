@@ -3,29 +3,17 @@ import Query from '../parray/Query';
 import Split from '../parray/Split';
 import Translate from '../parray/Translate';
 
-const generate = function (items, generator, start?) {
-  return Generator.make(items, generator, start);
-};
+const generate = Generator.make;
 
-const get = function (parray, offset) {
-  return Query.get(parray, offset);
-};
+const get = Query.get;
 
-const find = function (parray, pred) {
-  return Query.find(parray, pred);
-};
+const find = Query.find;
 
-const splits = function (parray, positions, subdivide) {
-  return Split.splits(parray, positions, subdivide);
-};
+const splits = Split.splits;
 
-const translate = function (parray, amount) {
-  return Translate.translate(parray, amount);
-};
+const translate = Translate.translate;
 
-const sublist = function (parray, start, finish) {
-  return Query.sublist(parray, start, finish);
-};
+const sublist = Query.sublist;
 
 export default {
   generate,

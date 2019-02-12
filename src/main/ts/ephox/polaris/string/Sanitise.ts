@@ -1,7 +1,7 @@
 /**
  * Sanitises a string for use in a CSS class name
  */
-const css = function (str) {
+const css = function (str: string) {
   // special case; the first character must a letter. More strict than CSS, but easier to implement.
   const r = /^[a-zA-Z]/.test(str) ? '' : 'e';
 

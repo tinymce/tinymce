@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
-import Splitting from '../api/Splitting';
+import { Splitting } from '../api/Splitting';
 
 /**
  * Split an array into chunks matched by the predicate
  */
-const splitby = function (xs, pred) {
+const splitby = function <T> (xs: T[], pred: (x: T) => boolean) {
   return splitbyAdv(xs, function (x) {
     return pred(x) ? Splitting.excludeWithout(x) : Splitting.include(x);
   });
@@ -13,9 +13,9 @@ const splitby = function (xs, pred) {
 /**
  * Split an array into chunks matched by the predicate
  */
-const splitbyAdv = function (xs, pred) {
-  const r = [];
-  let part = [];
+const splitbyAdv = function <T> (xs: T[], pred: (x: T) => Splitting<T>) {
+  const r: T[][] = [];
+  let part: T[] = [];
   Arr.each(xs, function (x) {
     const choice = pred(x);
     Splitting.cata(choice, function () {

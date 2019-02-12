@@ -4,8 +4,8 @@ import * as WordBoundary from 'ephox/polaris/words/WordBoundary';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Words.WordBoundaryTest', function () {
-  const iwb = function (str, index) {
-    return WordBoundary.isWordBoundary(StringMapper.classify(str), index);
+  const iwb = function (str: string, index: number) {
+    return WordBoundary.isWordBoundary(StringMapper.classify(str.split('')), index);
   };
 
   const testWordBoundary = function () {

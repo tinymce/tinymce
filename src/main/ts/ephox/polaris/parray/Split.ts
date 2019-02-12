@@ -1,11 +1,12 @@
 import { Arr } from '@ephox/katamari';
 import Query from './Query';
 import Translate from './Translate';
+import { PRange } from '../pattern/Types';
 
 /**
  * After subdivide has split the unit, update the resulting PositionArray based on the unit start position.
  */
-const divide = function (unit, positions, subdivide) {
+const divide = function <T extends PRange> (unit: T, positions: number[], subdivide: (unit: T, positions: number[]) => T[]) {
   const mini = subdivide(unit, positions);
   return Translate.translate(mini, unit.start());
 };
@@ -13,7 +14,7 @@ const divide = function (unit, positions, subdivide) {
 /**
  * Adds extra split points into a PositionArray, using subdivide to split if necessary
  */
-const splits = function (parray, positions, subdivide) {
+const splits = function <T extends PRange> (parray: T[], positions: number[], subdivide: (unit: T, positions: number[]) => T[]) {
   if (positions.length === 0) { return parray; }
 
   return Arr.bind(parray, function (unit) {

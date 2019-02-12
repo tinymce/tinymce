@@ -11,7 +11,7 @@ const isProtocol = (str: string): boolean => {
 };
 
 const findWordEnd = (characters: string[], startIndex: number) => {
-  let i;
+  let i: number;
   for (i = startIndex; i < characters.length; i++) {
     if (WHITESPACE.test(characters[i])) {
       break;

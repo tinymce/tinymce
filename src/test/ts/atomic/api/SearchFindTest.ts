@@ -3,9 +3,10 @@ import { Arr, Struct, Unicode } from '@ephox/katamari';
 import Pattern from 'ephox/polaris/api/Pattern';
 import Search from 'ephox/polaris/api/Search';
 import Safe from 'ephox/polaris/pattern/Safe';
+import { PRegExp } from 'ephox/polaris/pattern/Types';
 
 UnitTest.test('api.Search.findall (using api.Pattern)', function () {
-  const checkAll = function (expected, input, pattern) {
+  const checkAll = function (expected: [number, number][], input: string, pattern: PRegExp) {
     const actual = Search.findall(input, pattern);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
@@ -13,8 +14,9 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
       assert.eq(exp[1], actual[i].finish());
     });
   };
+  const testData: (pattern: PRegExp, name: string) => { pattern: () => PRegExp, name: () => string } = Struct.immutable('pattern', 'name');
 
-  const checkMany = function (expected, text, targets) {
+  const checkMany = function (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) {
     const actual = Search.findmany(text, targets);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
@@ -49,7 +51,6 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
   const suffix = Safe.sanitise(']');
   checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));
 
-  const testData = Struct.immutable('pattern', 'name');
   checkMany([], '', []);
   checkMany([
     [1, 3, 'alpha']

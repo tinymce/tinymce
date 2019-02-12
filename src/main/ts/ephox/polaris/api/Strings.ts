@@ -1,13 +1,9 @@
 import Sanitise from '../string/Sanitise';
 import Split from '../string/Split';
 
-const splits = function (text, points) {
-  return Split.splits(text, points);
-};
+const splits = Split.splits;
 
-const cssSanitise = function (str) {
-  return Sanitise.css(str);
-};
+const cssSanitise = Sanitise.css;
 
 export default {
   cssSanitise,

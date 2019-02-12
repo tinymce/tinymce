@@ -4,7 +4,7 @@ import Parrays from 'ephox/polaris/test/Parrays';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.PositionArray.get', function () {
-  const check = function (expected, input, offset) {
+  const check = function (expected: Option<string>, input: string[], offset: number) {
     const parray = Parrays.make(input);
     const actual = PositionArray.get(parray, offset);
     expected.fold(function () {

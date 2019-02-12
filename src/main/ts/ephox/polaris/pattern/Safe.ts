@@ -1,16 +1,16 @@
 import Unsafe from './Unsafe';
 
 /** Escapes regex characters in a string */
-const sanitise = function (input) {
+const sanitise = function (input: string) {
   return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
 };
 
-const word = function (input) {
+const word = function (input: string) {
   const value = sanitise(input);
   return Unsafe.word(value);
 };
 
-const token = function (input) {
+const token = function (input: string) {
   const value = sanitise(input);
   return Unsafe.token(value);
 };

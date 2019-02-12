@@ -1,22 +1,22 @@
 import { Fun } from '@ephox/katamari';
 import Arrays from 'ephox/polaris/api/Arrays';
-import Splitting from 'ephox/polaris/api/Splitting';
+import { Splitting } from 'ephox/polaris/api/Splitting';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Arrays.splitby', function () {
-  const check = function (expected, input, pred) {
+  const check = function <T> (expected: T[][], input: T[], pred: (x: T) => boolean) {
     const actual = Arrays.splitby(input, pred);
     assert.eq(expected, actual);
   };
 
-  check([], [], Fun.constant(true));
-  check([[1]], [1], Fun.constant(false));
-  check([[1, 2, 3]], [1, 2, 3], Fun.constant(false));
+  check([], [], Fun.always);
+  check([[1]], [1], Fun.never);
+  check([[1, 2, 3]], [1, 2, 3], Fun.never);
   check([[1], [2, 3], [4, 5, 6], [7], [8]], [1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8], function (x) {
     return x === '|';
   });
 
-  const predicate = function (value) {
+  const predicate = function (value: string) {
     if (value === 'x') {
       return Splitting.excludeWithout(value);
     } else if (value === '.') {
@@ -26,7 +26,7 @@ UnitTest.test('api.Arrays.splitby', function () {
     }
   };
 
-  const checkAdv = function (expected, input) {
+  const checkAdv = function (expected: string[][], input: string[]) {
     const actual = Arrays.splitbyAdv(input, predicate);
     assert.eq(expected, actual);
   };

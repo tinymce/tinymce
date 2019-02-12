@@ -70,8 +70,8 @@ const autolink = function () {
   return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?#^${}(),]*', 'g');
 };
 
-const tokens = function (value, parameters) {
-  return value.replace(/\{(\d+)\}/g, function (match, contents, offset, s) {
+const tokens = function (value: string, parameters: string[]) {
+  return value.replace(/\{(\d+)\}/g, function (match, contents: string) {
     const index = parseInt(contents, 10);
     if (parameters[index] === undefined) {
       throw new Error('No value for token: ' + match + ' in translation: ' + value);

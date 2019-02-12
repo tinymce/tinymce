@@ -5,12 +5,10 @@ const SETS = UnicodeData.SETS;
 const OTHER = UnicodeData.characterIndices.OTHER;
 
 const getType = (char: string): number => {
-  let j;
-  let set;
   let type = OTHER;
   const setsLength = SETS.length;
-  for (j = 0; j < setsLength; ++j) {
-    set = SETS[j];
+  for (let j = 0; j < setsLength; ++j) {
+    const set = SETS[j];
 
     if (set && set.test(char)) {
       type = j;
@@ -20,10 +18,10 @@ const getType = (char: string): number => {
   return type;
 };
 
-const memoize = (func) => {
-  const cache = {};
+const memoize = <R> (func: (char: string) => R) => {
+  const cache: Record<string, R> = {};
 
-  return (char) => {
+  return (char: string) => {
     if (cache[char]) {
       return cache[char];
     } else {

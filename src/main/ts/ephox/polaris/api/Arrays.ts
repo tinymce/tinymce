@@ -2,21 +2,13 @@ import Boundaries from '../array/Boundaries';
 import Slice from '../array/Slice';
 import Split from '../array/Split';
 
-const boundAt = function (xs, left, right, comparator) {
-  return Boundaries.boundAt(xs, left, right, comparator);
-};
+const boundAt = Boundaries.boundAt;
 
-const splitby = function (array, predicate) {
-  return Split.splitby(array, predicate);
-};
+const splitby = Split.splitby;
 
-const splitbyAdv = function (array, predicate) {
-  return Split.splitbyAdv(array, predicate);
-};
+const splitbyAdv = Split.splitbyAdv;
 
-const sliceby = function (array, predicate) {
-  return Slice.sliceby(array, predicate);
-};
+const sliceby = Slice.sliceby;
 
 export default {
   splitby,

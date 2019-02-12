@@ -2,10 +2,10 @@ import { characterIndices as ci } from './UnicodeData';
 import { CharacterMap } from './StringMapper';
 
 const isWordBoundary = (map: CharacterMap, index: number): boolean => {
-  let prevType;
+  let prevType: number;
   const type = map[index];
   const nextType = map[index + 1];
-  let nextNextType;
+  let nextNextType: number;
 
   if (index < 0 || (index > map.length - 1 && index !== 0)) {
     return false;

@@ -3,41 +3,23 @@ import Custom from '../pattern/Custom';
 import Safe from '../pattern/Safe';
 import Unsafe from '../pattern/Unsafe';
 
-const safeword = function (input) {
-  return Safe.word(input);
-};
+const safeword = Safe.word;
 
-const safetoken = function (input) {
-  return Safe.token(input);
-};
+const safetoken = Safe.token;
 
-const custom = function (input, prefix, suffix, flags) {
-  return Custom(input, prefix, suffix, flags);
-};
+const custom = Custom;
 
-const unsafeword = function (input) {
-  return Unsafe.word(input);
-};
+const unsafeword = Unsafe.word;
 
-const unsafetoken = function (input) {
-  return Unsafe.token(input);
-};
+const unsafetoken = Unsafe.token;
 
-const sanitise = function (input) {
-  return Safe.sanitise(input);
-};
+const sanitise = Safe.sanitise;
 
-const chars = function () {
-  return Chars.chars();
-};
+const chars = Chars.chars;
 
-const wordbreak = function () {
-  return Chars.wordbreak();
-};
+const wordbreak = Chars.wordbreak;
 
-const wordchar = function () {
-  return Chars.wordchar();
-};
+const wordchar = Chars.wordchar;
 
 export default {
   safeword,
