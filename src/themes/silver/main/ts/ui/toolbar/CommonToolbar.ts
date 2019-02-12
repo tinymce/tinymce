@@ -112,7 +112,7 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
       }),
       'overflow-button': renderIconButtonSpec({
         name: 'more',
-        icon: Option.some('image-options'),
+        icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...')
       }, Option.none(), foo.backstage.shared.providers, [
