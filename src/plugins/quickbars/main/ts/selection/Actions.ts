@@ -10,10 +10,6 @@ import { Editor } from 'tinymce/core/api/Editor';
 
 import Unlink from './Unlink';
 
-const formatBlock = function (editor: Editor, formatName: string) {
-  editor.execCommand('FormatBlock', false, formatName);
-};
-
 const collapseSelectionToEnd = function (editor: Editor) {
   editor.selection.collapse(false);
 };
@@ -45,7 +41,6 @@ const createLink = function (editor: Editor, url: string) {
 };
 
 export default {
-  formatBlock,
   createLink,
   unlink
 };
