@@ -13,10 +13,11 @@ import Tracks from '../mutant/Tracks';
 import Up from '../mutant/Up';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { Universe } from './Universe';
 
 
 
-export default <any> function (raw) {
+export default function (raw): Universe<any, any> {
   var content = Tracks.track(raw, Option.none());
 
   // NOTE: The top point might change when we are wrapping.

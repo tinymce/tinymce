@@ -15,10 +15,12 @@ import { SelectorFilter } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 import { Text } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
+import { Universe } from './Universe';
+import { Document } from '@ephox/dom-globals';
 
 
 
-export default <any> function () {
+export default function (): Universe<Element, Document> {
   var clone = function (element) {
     return Element.fromDom(element.dom().cloneNode(false));
   };
