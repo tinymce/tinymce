@@ -16,8 +16,7 @@ import {
   SplitToolbar as SplitAlloyToolbar,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
-  Focusing,
-  Toggling
+  Focusing
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
