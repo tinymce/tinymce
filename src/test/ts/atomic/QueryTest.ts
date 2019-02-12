@@ -19,7 +19,7 @@ UnitTest.test('QueryTest', function() {
         Gene('1.1.4.1', 'duck', [])
       ])
     ])
-  ]), Option.none());
+  ]));
 
   var checkPrev = function (expected, id) {
     var first = universe.find(universe.get(), id).getOrDie();
