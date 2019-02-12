@@ -36,6 +36,7 @@ export default () => {
             //   items: [
             //     {
             //       type: 'htmlpanel',
+            //       presets: 'document',
             //       html: '<p>Html paragraph</p>'
             //     }
             //   ]

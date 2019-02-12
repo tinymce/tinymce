@@ -10,7 +10,8 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
       return GuiFactory.build(
         renderHtmlPanel({
           type: 'htmlpanel',
-          html: '<br /><br /><hr />'
+          html: '<br /><br /><hr />',
+          presets: 'presentation'
         })
       );
     },
