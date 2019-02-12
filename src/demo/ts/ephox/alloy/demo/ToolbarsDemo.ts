@@ -158,7 +158,8 @@ export default (): void => {
         openClass: 'demo-sliding-open',
         closedClass: 'demo-sliding-closed',
         growingClass: 'demo-sliding-height-growing',
-        shrinkingClass: 'demo-sliding-height-shrinking'
+        shrinkingClass: 'demo-sliding-height-shrinking',
+        overflowToggledClass: 'demo-more-button-toggled'
       }
     })
   );

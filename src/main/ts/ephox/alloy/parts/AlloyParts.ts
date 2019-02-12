@@ -46,7 +46,7 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
           ...g,
           config,
           validated
-        }
+        };
       };
     });
   });
