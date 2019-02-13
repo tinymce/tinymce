@@ -11,6 +11,7 @@ Version 5.0.1 (TBD)
     Added a new help dialog setting `help_version` that allows providing a custom version panel #TINY-2875
     Fixed the autocompleter matches predicate not matching on the start of words by default #TINY-3306
     Added new settings to the emoticons plugin to allow additional emoticons to be added #TINY-3088
+    Fixed an issue where the window could be scrolled with modal dialogs open #TINY-2252
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 

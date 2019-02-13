@@ -24,7 +24,7 @@ import {
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
-import { Attr, Node } from '@ephox/sugar';
+import { Attr, Body, Class, Node } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -129,12 +129,21 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
             Keying.focusIn(comp);
           })
         ])),
+        AddEventsBehaviour.config('scroll-lock', [
+          AlloyEvents.runOnAttached(() => {
+            Class.add(Body.body(), 'tox-dialog__disable-scroll');
+          }),
+          AlloyEvents.runOnDetached(() => {
+            Class.remove(Body.body(), 'tox-dialog__disable-scroll');
+          }),
+        ]),
         RepresentingConfigs.memory({ })
       ]),
 
       eventOrder: {
-        [SystemEvents.execute()]: ['execute-on-form'],
-        [SystemEvents.attachedToDom()]: ['reflecting', 'execute-on-form']
+        [SystemEvents.execute()]: [ 'execute-on-form' ],
+        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'execute-on-form', 'alloy.base.behaviour' ],
+        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'execute-on-form', 'reflecting', 'scroll-lock' ],
       },
 
       dom: {
