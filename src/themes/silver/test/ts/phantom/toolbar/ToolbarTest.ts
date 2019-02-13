@@ -4,6 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
 import { Arr, Option } from '@ephox/katamari';
+import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
 
@@ -20,6 +21,8 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
       ])
     };
   };
+  const helpers = setupDemo();
+  const backstage = helpers.extras.backstage;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -38,7 +41,8 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
             {
               title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
             }
-          ]
+          ],
+          backstage
         })
       );
     },
@@ -150,7 +154,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
         TestHelpers.GuiSetup.mRemoveStyles
       ];
     },
-    success,
+    () => {
+      helpers.destroy();
+      success();
+    },
     failure
   );
 });
