@@ -12,12 +12,13 @@ import { Editor } from '../api/Editor';
 import NodeType from '../dom/NodeType';
 import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
-import { isBeforeSpace, isAfterSpace, getElementFromPosition } from '../caret/CaretUtils';
+import { getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
 import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
 import { Text } from '@ephox/dom-globals';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from 'tinymce/core/caret/CaretBr';
+import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 
 const nbsp = '\u00a0';
 
@@ -52,8 +53,8 @@ const isInPre = (pos: CaretPosition) => {
     .exists((elm) => isPreValue(Css.get(elm, 'white-space')));
 };
 
-const isAtBeginningOfBody = (root, pos) => CaretFinder.prevPosition(root.dom(), pos).isNone();
-const isAtEndOfBody = (root, pos) => CaretFinder.nextPosition(root.dom(), pos).isNone();
+const isAtBeginningOfBody = (root: Element, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();
+const isAtEndOfBody = (root: Element, pos: CaretPosition) => CaretFinder.nextPosition(root.dom(), pos).isNone();
 
 const isAtLineBoundary = (root: Element, pos: CaretPosition) => {
   return (
@@ -90,6 +91,10 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   }
 };
 
+const needsToBeNbsp = (root: Element, pos: CaretPosition) => {
+  return needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
+};
+
 const isNbspAt = (text: string, offset: number) => {
   return isNbsp(text.charAt(offset));
 };
@@ -97,16 +102,6 @@ const isNbspAt = (text: string, offset: number) => {
 const hasNbsp = (pos: CaretPosition) => {
   const container = pos.container();
   return NodeType.isText(container) && Strings.contains(container.data, nbsp);
-};
-
-const normalizeNbspAtStart = (root: Element, node: Text, text: string): string => {
-  const firstPos = CaretPosition(node, 0);
-
-  if (isNbspAt(text, 0) && !needsToBeNbspLeft(root, firstPos)) {
-    return ' ' + text.slice(1);
-  } else {
-    return text;
-  }
 };
 
 const normalizeNbspMiddle = (text: string): string => {
@@ -119,27 +114,45 @@ const normalizeNbspMiddle = (text: string): string => {
   }).join('');
 };
 
-const normalizeNbspAtEnd = (root: Element, node: Text, text: string): string => {
-  const lastPos = CaretPosition(node, text.length);
-  if (isNbspAt(text, text.length - 1) && !needsToBeNbspRight(root, lastPos)) {
-    return text.slice(0, -1) + ' ';
+const normalizeNbspAtStart = (root: Element, node: Text): boolean => {
+  const text = node.data;
+  const firstPos = CaretPosition(node, 0);
+
+  if (isNbspAt(text, 0) && !needsToBeNbsp(root, firstPos)) {
+    node.data = ' ' + text.slice(1);
+    return true;
   } else {
-    return text;
+    return false;
+  }
+};
+
+const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
+  const text = node.data;
+  const newText = normalizeNbspMiddle(text);
+  if (newText !== text) {
+    node.data = newText;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const normalizeNbspAtEnd = (root: Element, node: Text): boolean => {
+  const text = node.data;
+  const lastPos = CaretPosition(node, text.length);
+  if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos)) {
+    node.data = text.slice(0, -1) + ' ';
+    return true;
+  } else {
+    return false;
   }
 };
 
 const normalizeNbsps = (root: Element, pos: CaretPosition): Option<CaretPosition> => {
   return Option.some(pos).filter(hasNbsp).bind((pos) => {
     const container = pos.container() as Text;
-    const text = container.nodeValue;
-    const newText = normalizeNbspAtStart(root, container, normalizeNbspMiddle(normalizeNbspAtEnd(root, container, text)));
-
-    if (text !== newText) {
-      pos.container().nodeValue = newText;
-      return Option.some(pos);
-    } else {
-      return Option.none();
-    }
+    const normalized = normalizeNbspAtStart(root, container) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container);
+    return normalized ? Option.some(pos) : Option.none();
   });
 };
 
