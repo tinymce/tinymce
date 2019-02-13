@@ -79,10 +79,9 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
         tag: 'input',
         attributes: {
           type: 'file',
-          multiple: 'multiple'
+          accept: 'image/*'
         },
         styles: {
-          // opacity: '0',
           display: 'none'
         }
       },

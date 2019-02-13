@@ -9,7 +9,7 @@ import { Option } from '@ephox/katamari';
 
 import { ImageData } from '../core/ImageData';
 import { UploadHandler } from '../core/Uploader';
-import { FileList, File } from '@ephox/dom-globals';
+import { File } from '@ephox/dom-globals';
 import { Types } from '@ephox/bridge';
 
 export interface ListValue {
@@ -73,7 +73,7 @@ export interface ImageDialogData {
   border: string;
   hspace: string;
   borderstyle: string;
-  fileinput: FileList | File[];
+  fileinput: File[];
 }
 
 export type API = Types.Dialog.DialogInstanceApi<ImageDialogData>;

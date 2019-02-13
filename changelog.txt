@@ -1,8 +1,11 @@
 Version 5.0.1 (TBD)
+    Fixed an issue where uploading non-image files in the Image Plugin upload tab threw an error. #TINY-3244
+    Added H1-H6 toggle button registration to the silver theme #TINY-3070
     Fixed an issue in the media plugin that was causing the source url and height/width to be lost in certain circumstances #TINY-2858
     Fixed an issue with the Context Toolbar not being removed when clicking outside of the editor #TINY-2804
     Fixed an issue where clicking 'Remove link' wouldn't remove the link in certain circumstances #TINY-3199
     Added the ability of the code sample toolbar button to highlight #TINY-3040
+    Fixed an issue where the media plugin would fail when parsing dialog data #TINY-3218
     Fixed an issue where retrieving the selected content as text didn't create newlines #TINY-3197
     Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
     Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281

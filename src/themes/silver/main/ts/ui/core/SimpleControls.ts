@@ -49,6 +49,16 @@ const registerFormatButtons = (editor: Editor) => {
       onAction: toggleFormat(editor, btn.name)
     });
   });
+
+  for (let i = 1; i <= 6; i++) {
+    const name = 'h' + i;
+    editor.ui.registry.addToggleButton(name, {
+      text: name.toUpperCase(),
+      tooltip: 'Heading ' + i,
+      onSetup: onSetupFormatToggle(editor, name),
+      onAction: toggleFormat(editor, name)
+    });
+  }
 };
 
 const registerCommandButtons = (editor: Editor) => {
