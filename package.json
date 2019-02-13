@@ -1,7 +1,7 @@
 {
   "name": "@ephox/boss",
   "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
-  "version": "3.0.9",
+  "version": "3.0.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/boss"
