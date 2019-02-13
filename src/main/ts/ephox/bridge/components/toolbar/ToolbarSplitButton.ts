@@ -9,6 +9,7 @@ export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
 export type PresetTypes = 'color' | 'normal' | 'listpreview';
+export type PresetItemTypes = 'color' | 'normal';
 export type ColumnTypes = number | 'auto';
 
 export interface ToolbarSplitButtonApi {
