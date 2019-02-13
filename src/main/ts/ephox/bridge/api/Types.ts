@@ -15,7 +15,7 @@ import * as TextArea from '../components/dialog/Textarea';
 import * as UrlInput from '../components/dialog/UrlInput';
 import * as ImageTools from '../components/dialog/ImageTools';
 import * as Table from '../components/dialog/Table';
-import { ColumnTypes, PresetTypes, PresetItemTypes } from '../components/toolbar/ToolbarSplitButton';
+import { ColumnTypes, PresetTypes } from '../components/toolbar/ToolbarSplitButton';
 import * as Label from '../components/dialog/Label';
 // tslint:disable-next-line:no-duplicate-imports
 import { DialogButton } from '../components/dialog/Dialog';
@@ -42,7 +42,6 @@ export {
   Collection,
   ColumnTypes,
   PresetTypes,
-  PresetItemTypes,
   Label,
   Table
 };

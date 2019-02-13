@@ -8,8 +8,7 @@ export type ToolbarSplitButtonItemTypes = ChoiceMenuItemApi | SeparatorMenuItemA
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
-export type PresetTypes = 'color' | 'normal' | 'toolbar';
-export type PresetItemTypes = 'color' | 'normal';
+export type PresetTypes = 'color' | 'normal' | 'listpreview';
 export type ColumnTypes = number | 'auto';
 
 export interface ToolbarSplitButtonApi {
@@ -58,7 +57,7 @@ export const splitButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
-  FieldSchema.defaultedStringEnum('presets', 'normal', ['normal', 'color', 'toolbar']),
+  FieldSchema.defaultedStringEnum('presets', 'normal', ['normal', 'color', 'listpreview']),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.strictFunction('onItemAction')
