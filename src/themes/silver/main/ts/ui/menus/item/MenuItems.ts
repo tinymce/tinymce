@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { renderAutocompleteItem, renderChoiceItem } from './build/ChoiceItem';
+import { renderAutocompleteItem } from './build/AutocompleteMenuItem';
+import { renderChoiceItem } from './build/ChoiceItem';
 import { renderFancyMenuItem } from './build/FancyMenuItem';
 import { renderNormalItem } from './build/NormalMenuItem';
 import { renderNestedItem } from './build/NestedMenuItem';
