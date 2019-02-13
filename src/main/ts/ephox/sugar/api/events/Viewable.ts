@@ -41,7 +41,7 @@ const mutate = function (element: Element, f) {
 // IE11 and above, not using numerosity so we can poll on IE10
 const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-const onShow = function (element: Element, f) {
+const onShow = function (element: Element, f: () => void): () => void {
   if (Visibility.isVisible(element)) {
     Window.requestAnimationFrame(f);
     return Fun.noop;

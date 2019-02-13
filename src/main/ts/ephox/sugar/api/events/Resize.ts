@@ -33,7 +33,7 @@ const findElem = function (element: Element) {
   }).getOr(-1);
 };
 
-const bind = function (element: Element, handler) {
+const bind = function (element: Element, handler: () => void) {
   let el = Arr.find(elems, function (elm) {
     return Compare.eq(elm.element, element);
   }).getOr(undefined);
