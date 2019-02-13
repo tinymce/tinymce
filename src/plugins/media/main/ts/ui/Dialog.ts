@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Obj, Arr } from '@ephox/katamari';
+import { Merger, Obj, Arr, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -78,16 +78,24 @@ const getSource = function (editor: Editor) {
 
 const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
   return function (response) {
+    // Skip setting values if a URL hasn't been defined
+    if (!Type.isString(response.url) || response.url.trim().length === 0) {
+      return;
+    }
+
     const html = response.html;
     const snippetData = snippetToData(editor, html);
-    const nuData = {
+    const nuData: Partial<DialogData> = {
       source1: response.url,
-      embed: html,
-      dimensions: {
-        width: snippetData.width ? snippetData.width : '',
-        height: snippetData.height ? snippetData.height : ''
-      }
+      embed: html
     };
+
+    // Add optional values
+    Arr.each([ 'width', 'height' ], (prop) => {
+      Obj.get(snippetData, prop).each((value) => {
+        nuData.dimensions = Merger.merge({ [prop]: value }, nuData.dimensions);
+      });
+    });
 
     win.setData(wrap(nuData));
   };
@@ -274,11 +282,10 @@ const showDialog = function (editor: Editor) {
           handleSource1(api);
           break;
 
-        case 'dimensions':
-          handleSource1(api);
-
         case 'embed':
           handleEmbed(api);
+          break;
+
         default:
           break;
       }

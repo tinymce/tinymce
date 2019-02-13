@@ -1,6 +1,6 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -13,9 +13,10 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
-    Pipeline.async({},
-      Log.steps('TBA', 'Media: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', [
+    Pipeline.async({}, [
+      Log.stepsAsStep('TBA', 'Media: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', [apis.sSetContent(''),
         Utils.sTestEmbedContentFromUrl(ui,
           'https://www.youtube.com/watch?v=b3XFjWInBog',
           '<iframe src="//www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>'
@@ -31,8 +32,19 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
         Utils.sAssertSizeRecalcConstrained(ui),
         Utils.sAssertSizeRecalcUnconstrained(ui),
         Utils.sAssertSizeRecalcConstrainedReopen(ui)
+      ]),
+      Log.stepsAsStep('TBA', 'Media: Test changing source, width and height doesn\'t delete other values', [
+        apis.sSetContent(''),
+        Utils.sOpenDialog(ui),
+        Utils.sSetHeightAndWidth(ui, '300', '300'),
+        Utils.sAssertHeightAndWidth(ui, '300', '300'),
+        Utils.sChangeHeightValue(ui, ''),
+        Utils.sAssertHeightAndWidth(ui, '', '300'),
+        Utils.sPasteSourceValue(ui, 'https://youtu.be/G60llMJepZI'),
+        Utils.sAssertHeightAndWidth(ui, '314', '300'),
+        Utils.sCloseDialog(ui)
       ])
-    , onSuccess, onFailure);
+    ], onSuccess, onFailure);
   }, {
     plugins: ['media'],
     toolbar: 'media',
