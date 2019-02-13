@@ -16,11 +16,11 @@ import {
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFactoryBackstageProviders) => {
+const renderContextForm = (ctx: Toolbar.ContextForm, backstage: UiFactoryBackstage) => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({ }),
@@ -58,7 +58,7 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
     })
   );
 
-  const commands = generate(memInput, ctx.commands, providersBackstage);
+  const commands = generate(memInput, ctx.commands, backstage.shared.providers);
 
   return renderToolbar({
     uid: Id.generate('context-toolbar'),
@@ -73,7 +73,8 @@ const renderContextForm = (ctx: Toolbar.ContextForm, providersBackstage: UiFacto
       }
     ],
     onEscape: Option.none,
-    cyclicKeying: true
+    cyclicKeying: true,
+    backstage
   });
 };
 

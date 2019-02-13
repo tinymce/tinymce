@@ -14,15 +14,14 @@ import {
   Sketcher,
   Toolbar as AlloyToolbar,
   UiSketcher,
-  Behaviour,
-  SketchSpec
+  Behaviour
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
-import { renderMoreToolbar, renderToolbarGroup, renderToolbar, Toolbar, MoreToolbar } from '../toolbar/CommonToolbar';
+import { renderMoreToolbar, renderToolbarGroup, renderToolbar } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -113,13 +112,10 @@ const partMenubar = Composite.partType.optional({
     FieldSchema.strict('getSink')
   ]
 });
-
-type ToolbarRenderer = ((foo: MoreToolbar) => SketchSpec) | ((foo: Toolbar) => SketchSpec);
-
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer: ToolbarRenderer = spec.split ? renderMoreToolbar : renderToolbar;
+      const renderer = spec.split ? renderMoreToolbar : renderToolbar;
       return renderer({
         uid: spec.uid,
         onEscape: () => {
