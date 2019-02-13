@@ -78,26 +78,24 @@ const getSource = function (editor: Editor) {
 
 const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
   return function (response) {
-    // Skip setting values if a URL hasn't been defined
-    if (!Type.isString(response.url) || response.url.trim().length === 0) {
-      return;
-    }
+    // Only set values if a URL has been defined
+    if (Type.isString(response.url) && response.url.trim().length > 0) {
+      const html = response.html;
+      const snippetData = snippetToData(editor, html);
+      const nuData: Partial<DialogData> = {
+        source1: response.url,
+        embed: html
+      };
 
-    const html = response.html;
-    const snippetData = snippetToData(editor, html);
-    const nuData: Partial<DialogData> = {
-      source1: response.url,
-      embed: html
-    };
-
-    // Add optional values
-    Arr.each([ 'width', 'height' ], (prop) => {
-      Obj.get(snippetData, prop).each((value) => {
-        nuData.dimensions = Merger.merge({ [prop]: value }, nuData.dimensions);
+      // Add optional values
+      Arr.each([ 'width', 'height' ], (prop) => {
+        Obj.get(snippetData, prop).each((value) => {
+          nuData.dimensions = Merger.merge({ [ prop ]: value }, nuData.dimensions);
+        });
       });
-    });
 
-    win.setData(wrap(nuData));
+      win.setData(wrap(nuData));
+    }
   };
 };
 
