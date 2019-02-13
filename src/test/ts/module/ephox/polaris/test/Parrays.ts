@@ -9,9 +9,9 @@ export interface PArrayTestItem {
 
 const generator = function (item: string, start: number) {
   return Option.some<PArrayTestItem>({
-    start: () => start,
-    finish: () => start + item.length,
-    item: () => item
+    start: Fun.constant(start),
+    finish: Fun.constant(start + item.length),
+    item: Fun.constant(item)
   });
 };
 

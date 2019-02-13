@@ -1,4 +1,4 @@
-import { Unicode } from '@ephox/katamari';
+import { Unicode, Fun } from '@ephox/katamari';
 
 // \w is a word character
 // \' is an apostrophe
@@ -13,7 +13,7 @@ const wordbreak = '[^' + chars + ']';
 const wordchar = '[' + chars + ']';
 
 export default {
-  chars: () => chars,
-  wordbreak: () => wordbreak,
-  wordchar: () => wordchar
+  chars: Fun.constant(chars) as () => string,
+  wordbreak: Fun.constant(wordbreak) as () => string,
+  wordchar: Fun.constant(wordchar) as () => string
 };
