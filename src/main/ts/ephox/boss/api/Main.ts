@@ -4,6 +4,7 @@ import DomUniverse from './DomUniverse';
 import Gene from './Gene';
 import TestUniverse from './TestUniverse';
 import TextGene from './TextGene';
+import { Universe } from './Universe';
 
 // NON API USAGE
 // used by phoenix
@@ -19,5 +20,6 @@ export {
   TestUniverse,
   TextGene,
   Logger,
-  Locator
+  Locator,
+  Universe
 };
