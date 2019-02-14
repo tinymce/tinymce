@@ -2,8 +2,8 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Logger } from '@ephox/boss';
-import Wrapping from 'ephox/phoenix/api/general/Wrapping';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Wrapping from 'ephox/phoenix/api/general/Wrapping';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WrapperTest', function() {

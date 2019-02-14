@@ -1,7 +1,7 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import Page from '../module/ephox/phoenix/test/Page';
-import DomSplit from 'ephox/phoenix/api/dom/DomSplit';
+import { Page } from '../module/ephox/phoenix/test/Page';
+import * as DomSplit from 'ephox/phoenix/api/dom/DomSplit';
 import { Text, Traverse } from '@ephox/sugar';
 
 UnitTest.test('DomSplitTest', function () {

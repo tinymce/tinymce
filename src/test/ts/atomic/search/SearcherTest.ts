@@ -3,9 +3,9 @@ import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import Searcher from 'ephox/phoenix/search/Searcher';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Searcher from 'ephox/phoenix/search/Searcher';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SearcherTest', function() {

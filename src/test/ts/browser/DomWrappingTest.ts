@@ -1,5 +1,5 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
+import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 import { Insert, InsertAll, Remove, Element, Class, Html, SelectorFind, Traverse } from '@ephox/sugar';
 
 UnitTest.test('DomWrappingTest', function () {

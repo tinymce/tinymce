@@ -1,12 +1,12 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
-import Walker from 'ephox/phoenix/gather/Walker';
-import Walkers from 'ephox/phoenix/gather/Walkers';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Walker from 'ephox/phoenix/gather/Walker';
+import { Walkers } from 'ephox/phoenix/gather/Walkers';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WalkerTest', function() {
-  var universe = TestUniverse(
+  const universe = TestUniverse(
     Gene('a', 'node', [
       Gene('b', 'node', [ ]),
       Gene('c', 'node', [
@@ -16,14 +16,14 @@ UnitTest.test('WalkerTest', function() {
     ])
   );
 
-  var checkNone = function (id, traverse, direction) {
-    var item = Finder.get(universe, id);
+  const checkNone = function (id, traverse, direction) {
+    const item = Finder.get(universe, id);
     assert.eq(true, traverse(universe, item, direction).isNone());
   };
 
-  var check = function (expected, id, traverse, direction) {
-    var item = Finder.get(universe, id);
-    var actual = traverse(universe, item, direction).getOrDie();
+  const check = function (expected, id, traverse, direction) {
+    const item = Finder.get(universe, id);
+    const actual = traverse(universe, item, direction).getOrDie();
     assert.eq(expected, actual.item().id);
   };
 

@@ -1,18 +1,19 @@
-import Spot from '../api/data/Spot';
-import Family from '../api/general/Family';
-import Split from './Split';
+import { Universe } from '@ephox/boss';
+import * as Spot from '../api/data/Spot';
+import * as Family from '../api/general/Family';
+import * as Split from './Split';
 
 /**
  * Splits the start and end, then collects all text nodes in between.
  */
-var diff = function (universe, base, baseOffset, end, endOffset) {
-  var start = Split.split(universe, base, baseOffset).after().fold(function () {
+const diff = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number) {
+  const start = Split.split(universe, base, baseOffset).after().fold(function () {
     return Spot.delta(base, 1);
   }, function (after) {
     return Spot.delta(after, 0);
   });
 
-  var finish = Split.split(universe, end, endOffset).before().fold(function () {
+  const finish = Split.split(universe, end, endOffset).before().fold(function () {
     return Spot.delta(end, 0);
   }, function (before) {
     return Spot.delta(before, 1);
@@ -23,19 +24,19 @@ var diff = function (universe, base, baseOffset, end, endOffset) {
 /**
  * Splits a text node using the offsets specified.
  */
-var same = function (universe, base, baseOffset, end, endOffset) {
-  var middle = Split.splitByPair(universe, base, baseOffset, endOffset);
+const same = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, _end: E, endOffset: number) {
+  const middle = Split.splitByPair(universe, base, baseOffset, endOffset);
   return [middle];
 };
 
 /**
  * Returns all text nodes in range. Uses same() or diff() depending on whether base === end.
  */
-var nodes = function (universe, base, baseOffset, end, endOffset) {
-  var f = universe.eq(base, end) ? same : diff;
+const nodes = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number) {
+  const f = universe.eq(base, end) ? same : diff;
   return f(universe, base, baseOffset, end, endOffset);
 };
 
-export default {
-  nodes: nodes
+export {
+  nodes
 };

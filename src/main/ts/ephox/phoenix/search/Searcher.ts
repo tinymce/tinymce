@@ -1,17 +1,16 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import NamedPattern from '../api/data/NamedPattern';
-import Spot from '../api/data/Spot';
-import Family from '../api/general/Family';
-import TypedList from '../extract/TypedList';
-import MatchSplitter from './MatchSplitter';
-import { Pattern } from '@ephox/polaris';
-import { PositionArray } from '@ephox/polaris';
-import { Search } from '@ephox/polaris';
+import { Universe } from '@ephox/boss';
+import { Arr, Option } from '@ephox/katamari';
+import { Pattern, PositionArray, Search } from '@ephox/polaris';
+import { NamedPattern } from '../api/data/NamedPattern';
+import * as Spot from '../api/data/Spot';
+import { TypedItem } from '../api/data/TypedItem';
+import * as Family from '../api/general/Family';
+import * as TypedList from '../extract/TypedList';
+import * as MatchSplitter from './MatchSplitter';
 
-var gen = function (universe, input) {
+const gen = function <E, D>(universe: Universe<E, D>, input: E[]) {
   return PositionArray.generate(input, function (unit, offset) {
-    var finish = offset + universe.property().getText(unit).length;
+    const finish = offset + universe.property().getText(unit).length;
     return Option.from(Spot.range(unit, offset, finish));
   });
 };
@@ -23,14 +22,14 @@ var gen = function (universe, input) {
  *
  * Returns a list of matches.
  */
-var run = function (universe, elements, patterns, optimise) {
-  var sections = Family.group(universe, elements, optimise);
-  var result = Arr.bind(sections, function (x) {
-    var input = TypedList.justText(x);
-    var text = Arr.map(input, universe.property().getText).join('');
+const run = function <E, D>(universe: Universe<E, D>, elements: E[], patterns: NamedPattern[], optimise?: (e: E) => boolean) {
+  const sections = Family.group(universe, elements, optimise);
+  const result = Arr.bind(sections, function (x: TypedItem<E, D>[]) {
+    const input = TypedList.justText(x);
+    const text = Arr.map(input, universe.property().getText).join('');
 
-    var matches = Search.findmany(text, patterns);
-    var plist = gen(universe, input);
+    const matches = Search.findmany(text, patterns);
+    const plist = gen(universe, input);
 
     return MatchSplitter.separate(universe, plist, matches);
   });
@@ -42,9 +41,9 @@ var run = function (universe, elements, patterns, optimise) {
 /**
  * Runs a search for one or more words
  */
-var safeWords = function (universe, elements, words, optimise) {
-  var patterns = Arr.map(words, function (word) {
-    var pattern = Pattern.safeword(word);
+const safeWords = function <E, D>(universe: Universe<E, D>, elements: E[], words: string[], optimise?: (e: E) => boolean) {
+  const patterns = Arr.map(words, function (word) {
+    const pattern = Pattern.safeword(word);
     return NamedPattern(word, pattern);
   });
   return run(universe, elements, patterns, optimise);
@@ -54,13 +53,13 @@ var safeWords = function (universe, elements, words, optimise) {
 /**
  * Runs a search for a single token
  */
-var safeToken = function (universe, elements, token, optimise) {
-  var pattern = NamedPattern(token, Pattern.safetoken(token));
+const safeToken = function <E, D>(universe: Universe<E, D>, elements: E[], token: string, optimise?: (e: E) => boolean) {
+  const pattern = NamedPattern(token, Pattern.safetoken(token));
   return run(universe, elements, [pattern], optimise);
 };
 
-export default {
-  safeWords: safeWords,
-  safeToken: safeToken,
-  run: run
+export {
+  safeWords,
+  safeToken,
+  run
 };

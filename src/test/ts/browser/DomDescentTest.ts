@@ -1,7 +1,7 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Hierarchy, Element } from '@ephox/sugar';
 import { Obj } from '@ephox/katamari';
-import DomDescent from 'ephox/phoenix/api/dom/DomDescent';
+import * as DomDescent from 'ephox/phoenix/api/dom/DomDescent';
 
 UnitTest.test('DomDescentTest', function () {
 

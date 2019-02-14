@@ -1,6 +1,6 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import Page from '../module/ephox/phoenix/test/Page';
-import DomGather from 'ephox/phoenix/api/dom/DomGather';
+import { Page } from '../module/ephox/phoenix/test/Page';
+import * as DomGather from 'ephox/phoenix/api/dom/DomGather';
 import { Arr } from '@ephox/katamari';
 
 UnitTest.test('DomGatherTest', function () {

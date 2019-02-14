@@ -1,48 +1,46 @@
-import { Fun } from '@ephox/katamari';
-import Seeker from '../../gather/Seeker';
-import Walker from '../../gather/Walker';
-import Walkers from '../../gather/Walkers';
+import { Universe } from '@ephox/boss';
+import { Fun, Option } from '@ephox/katamari';
+import * as Seeker from '../../gather/Seeker';
+import { backtrack, sidestep, advance, go } from '../../gather/Walker';
+import { Walkers } from '../../gather/Walkers';
+import { Direction, Successor, Transition, Traverse } from '../data/Types';
 
-var isLeaf = function (universe, element) {
+type IsLeafApi = <E, D>(universe: Universe<E, D>, element: E) => boolean;
+const isLeaf: IsLeafApi = function (universe, element) {
   return universe.property().children(element).length === 0;
 };
 
-var before = function (universe, item, isRoot) {
+type BeforeApi = <E, D>(universe: Universe<E, D>, item: E, isRoot: (e: E) => boolean) => Option<E>;
+const before: BeforeApi = function (universe, item, isRoot) {
   return seekLeft(universe, item, Fun.curry(isLeaf, universe), isRoot);
 };
 
-var after = function (universe, item, isRoot) {
+type AfterApi = <E, D>(universe: Universe<E, D>, item: E, isRoot: (e: E) => boolean) => Option<E>;
+const after: AfterApi = function (universe, item, isRoot) {
   return seekRight(universe, item, Fun.curry(isLeaf, universe), isRoot);
 };
 
-var seekLeft = function (universe, item, predicate, isRoot) {
-  return Seeker.left(universe, item, predicate, isRoot);
-};
+type SeekLeftApi = <E, D>(universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean) => Option<E>;
+const seekLeft: SeekLeftApi = Seeker.left;
 
-var seekRight = function (universe, item, predicate, isRoot) {
-  return Seeker.right(universe, item, predicate, isRoot);
-};
+type SeekRightApi = <E, D>(universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean) => Option<E>;
+const seekRight: SeekRightApi = Seeker.right;
 
-var walkers = function () {
-  return {
-    left: Walkers.left,
-    right: Walkers.right
-  };
-};
+type WalkersApi = { left: () => Direction; right: () => Direction; }
+const walkers: WalkersApi = Walkers;
 
-var walk = function (universe, item, mode, direction, _rules?) {
-  return Walker.go(universe, item, mode, direction, _rules);
-};
+type WalkApi = <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules?: Successor[]) => Option<Traverse<E>>;
+const walk: WalkApi = go;
 
-export default {
-  before: before,
-  after: after,
-  seekLeft: seekLeft,
-  seekRight: seekRight,
-  walkers: walkers,
-  walk: walk,
+export {
+  before,
+  after,
+  seekLeft,
+  seekRight,
+  walkers,
+  walk,
   // These have to be direct references.
-  backtrack: Walker.backtrack,
-  sidestep: Walker.sidestep,
-  advance: Walker.advance
+  backtrack,
+  sidestep,
+  advance
 };

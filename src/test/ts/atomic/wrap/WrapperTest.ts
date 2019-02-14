@@ -1,10 +1,10 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
-import Wrapper from 'ephox/phoenix/wrap/Wrapper';
-import Wraps from 'ephox/phoenix/wrap/Wraps';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Wrapper from 'ephox/phoenix/wrap/Wrapper';
+import { Wraps } from 'ephox/phoenix/wrap/Wraps';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WrapperTest', function() {

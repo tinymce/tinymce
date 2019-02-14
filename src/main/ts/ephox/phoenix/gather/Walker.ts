@@ -1,31 +1,25 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Universe } from '@ephox/boss';
+import { Arr, Option, Struct } from '@ephox/katamari';
+import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
-export type Traverse = {
-  item: () => unknown
-  mode: () => unknown
-}
-var traverse = Struct.immutable('item', 'mode');
+type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>
+const traverse: TraverseConstructor = Struct.immutable('item', 'mode');
 
-var backtrack = function (universe, item, direction, _transition): Option<Traverse> {
-  var transition = _transition !== undefined ? _transition : sidestep;
+const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
   return universe.property().parent(item).map(function (p) {
     return traverse(p, transition);
   });
 };
 
-var sidestep = function (universe, item, direction, _transition): Option<Traverse> {
-  var transition = _transition !== undefined ? _transition : advance;
+const sidestep: Transition = function (universe, item, direction, transition = advance) {
   return direction.sibling(universe, item).map(function (p) {
     return traverse(p, transition);
   });
 };
 
-var advance = function (universe, item, direction, _transition): Option<Traverse> {
-  var transition = _transition !== undefined ? _transition : advance;
-  var children = universe.property().children(item);
-  var result = direction.first(children);
+const advance: Transition = function (universe, item, direction, transition = advance) {
+  const children = universe.property().children(item);
+  const result = direction.first(children);
   return result.map(function (r) {
     return traverse(r, transition);
   });
@@ -38,22 +32,15 @@ var advance = function (universe, item, direction, _transition): Option<Traverse
  * next: the next traversal to apply if the current traversal succeeds (e.g. advance after sidestepping)
  * fallback: the traversal to fallback to when the current traversal does not find a node
  */
-export type Successor = {
-  current: (...any) => Option<Traverse>,
-  next: (...any) => Option<Traverse>,
-  fallback: Option<unknown>
-}
-
-var successors: Successor[] = [
+const successors: Successor[] = [
   { current: backtrack, next: sidestep, fallback: Option.none() },
   { current: sidestep, next: advance, fallback: Option.some(backtrack) },
   { current: advance, next: advance, fallback: Option.some(sidestep) }
 ];
 
-var go = function (universe, item, mode, direction, rules?: Successor[]) {
-  var rules = rules !== undefined ? rules : successors;
+const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
-  var ruleOpt = Arr.find(rules, function (succ) {
+  const ruleOpt = Arr.find(rules, function (succ) {
     return succ.current === mode;
   });
 
@@ -67,7 +54,7 @@ var go = function (universe, item, mode, direction, rules?: Successor[]) {
   });
 };
 
-export default {
+export {
   backtrack,
   sidestep,
   advance,

@@ -1,17 +1,18 @@
 import { DomUniverse } from '@ephox/boss';
-import Family from '../general/Family';
+import { Element } from '@ephox/sugar';
+import * as Family from '../general/Family';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var range = function (start, startDelta, finish, finishDelta) {
+const range = function (start: Element, startDelta: number, finish: Element, finishDelta: number) {
   return Family.range(universe, start, startDelta, finish, finishDelta);
 };
 
-var group = function (elements, optimise) {
+const group = function (elements: Element[], optimise?: (e: Element) => boolean) {
   return Family.group(universe, elements, optimise);
 };
 
-export default {
-  range: range,
-  group: group
+export {
+  range,
+  group
 };

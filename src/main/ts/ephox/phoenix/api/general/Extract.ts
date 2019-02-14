@@ -1,32 +1,30 @@
-import Extract from '../../extract/Extract';
-import ExtractText from '../../extract/ExtractText';
-import Find from '../../extract/Find';
+import { Universe } from '@ephox/boss';
+import { Option } from '@ephox/katamari';
+import * as Extract from '../../extract/Extract';
+import * as ExtractText from '../../extract/ExtractText';
+import * as Find from '../../extract/Find';
+import { TypedItem } from '../data/TypedItem';
+import { SpotPoint } from '../data/Types';
 
-var from = function (universe, item, optimise?) {
-  return Extract.typed(universe, item, optimise);
-};
+type FromApi = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) => TypedItem<E, D>[];
+const from: FromApi = Extract.typed;
 
-var all = function (universe, item, optimise?) {
-  return Extract.items(universe, item, optimise);
-};
+type AllApi = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) => E[];
+const all: AllApi = Extract.items;
 
-var extract = function (universe, child, offset, optimise?) {
-  return Extract.extract(universe, child, offset, optimise);
-};
+type ExtractApi = <E, D>(universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) => SpotPoint<E>;
+const extract: ExtractApi = Extract.extract;
 
-var extractTo = function (universe, child, offset, pred, optimise?) {
-  return Extract.extractTo(universe, child, offset, pred, optimise);
-};
+type ExtractToApi = <E, D>(universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) => SpotPoint<E>;
+const extractTo: ExtractToApi = Extract.extractTo;
 
-var find = function (universe, parent, offset, optimise?) {
-  return Find.find(universe, parent, offset, optimise);
-};
+type FindApi = <E, D>(universe: Universe<E, D>, parent: E, offset: number, optimise?: (e: E) => boolean) => Option<SpotPoint<E>>;
+const find: FindApi = Find.find;
 
-var toText = function (universe, item, optimise?) {
-  return ExtractText.from(universe, item, optimise);
-};
+type ToTextApi = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) => string;
+const toText: ToTextApi = ExtractText.from;
 
-export default {
+export {
   extract,
   extractTo,
   all,

@@ -1,37 +1,38 @@
 import { DomUniverse } from '@ephox/boss';
-import Extract from '../general/Extract';
+import { Element } from '@ephox/sugar';
+import * as Extract from '../general/Extract';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var from = function (element, optimise) {
+const from = function (element: Element, optimise?: (e: Element) => boolean) {
   return Extract.from(universe, element, optimise);
 };
 
-var all = function (element, optimise) {
+const all = function (element: Element, optimise?: (e: Element) => boolean) {
   return Extract.all(universe, element, optimise);
 };
 
-var extract = function (child, offset, optimise) {
+const extract = function (child: Element, offset: number, optimise?: (e: Element) => boolean) {
   return Extract.extract(universe, child, offset, optimise);
 };
 
-var extractTo = function (child, offset, pred, optimise) {
+const extractTo = function (child: Element, offset: number, pred: (e: Element) => boolean, optimise?: (e: Element) => boolean) {
   return Extract.extractTo(universe, child, offset, pred, optimise);
 };
 
-var find = function (parent, offset, optimise) {
+const find = function (parent: Element, offset: number, optimise?: (e: Element) => boolean) {
   return Extract.find(universe, parent, offset, optimise);
 };
 
-var toText = function (element, optimise) {
+const toText = function (element: Element, optimise?: (e: Element) => boolean) {
   return Extract.toText(universe, element, optimise);
 };
 
-export default {
-  extract: extract,
-  extractTo: extractTo,
-  all: all,
-  from: from,
-  find: find,
-  toText: toText
+export {
+  extract,
+  extractTo,
+  all,
+  from,
+  find,
+  toText
 };

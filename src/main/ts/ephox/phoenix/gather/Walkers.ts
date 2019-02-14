@@ -1,36 +1,38 @@
+import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
+import { Direction } from '../api/data/Types';
 
-var left = function () {
-  var sibling = function (universe, item) {
+const left = function (): Direction {
+  const sibling = function <E, D>(universe: Universe<E, D>, item: E) {
     return universe.query().prevSibling(item);
   };
 
-  var first = function (children) {
+  const first = function <E>(children: E[]): Option<E> {
     return children.length > 0 ? Option.some(children[children.length - 1]) : Option.none();
   };
 
   return {
-    sibling: sibling,
-    first: first
+    sibling,
+    first,
   };
 };
 
-var right = function () {
-  var sibling = function (universe, item) {
+const right = function (): Direction {
+  const sibling = function <E, D>(universe: Universe<E, D>, item: E) {
     return universe.query().nextSibling(item);
   };
 
-  var first = function (children) {
+  const first = function <E>(children: E[]): Option<E> {
     return children.length > 0 ? Option.some(children[0]) : Option.none();
   };
 
   return {
-    sibling: sibling,
-    first: first
+    sibling,
+    first,
   };
 };
 
-export default {
-  left: left,
-  right: right
+export const Walkers = {
+  left,
+  right
 };

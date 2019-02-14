@@ -1,40 +1,42 @@
+import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import Splitter from './Splitter';
-import { PositionArray } from '@ephox/polaris';
+import { PositionArray, PRange } from '@ephox/polaris';
+import { NamedPattern } from '../api/data/NamedPattern';
+import { SearchResult, SpotRange } from '../api/data/Types';
+import * as Splitter from './Splitter';
 
 /**
  * Split each text node in the list using the match endpoints.
  *
  * Each match is then mapped to the word it matched and the elements that make up the word.
  */
-var separate = function (universe, list, matches) {
-  var allPositions = Arr.bind(matches, function (match) {
-    return [ match.start(), match.finish() ];
+const separate = function <E, D, M extends PRange & NamedPattern>(universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]) {
+  const allPositions = Arr.bind(matches, function (match) {
+    return [match.start(), match.finish()];
   });
 
-  var subdivide = function (unit, positions) {
+  const subdivide = function (unit: SpotRange<E>, positions: number[]) {
     return Splitter.subdivide(universe, unit.element(), positions);
   };
 
-  var structure = PositionArray.splits(list, allPositions, subdivide);
+  const structure = PositionArray.splits(list, allPositions, subdivide);
 
-  var collate = function (match) {
-    var sub = PositionArray.sublist(structure, match.start(), match.finish());
+  const collate = function (match: M): SearchResult<E> {
+    const sub = PositionArray.sublist(structure, match.start(), match.finish());
 
-    var elements = Arr.map(sub, function (unit) { return unit.element(); });
+    const elements = Arr.map(sub, function (unit) { return unit.element(); });
 
-    var exact = Arr.map(elements, universe.property().getText).join('');
+    const exact = Arr.map(elements, universe.property().getText).join('');
     return {
-      elements: Fun.constant(elements),
+      elements: () => elements,
       word: match.word,
-      exact: Fun.constant(exact)
+      exact: () => exact
     };
   };
 
   return Arr.map(matches, collate);
 };
 
-export default {
-  separate: separate
+export {
+  separate
 };

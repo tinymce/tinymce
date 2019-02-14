@@ -1,12 +1,13 @@
 import { DomUniverse } from '@ephox/boss';
-import Injection from '../general/Injection';
+import { Element } from '@ephox/sugar';
+import * as Injection from '../general/Injection';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var atStartOf = function (element, offset, injection) {
+const atStartOf = function (element: Element, offset: number, injection: Element) {
   Injection.atStartOf(universe, element, offset, injection);
 };
 
-export default {
-  atStartOf: atStartOf
+export {
+  atStartOf
 };

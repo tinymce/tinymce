@@ -1,7 +1,7 @@
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Css, DomEvent, Element, Insert, Node, SelectorFind } from '@ephox/sugar';
-import DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
+import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 var editor = Element.fromTag('div');
 Css.setAll(editor, {

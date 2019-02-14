@@ -1,7 +1,7 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import { DomUniverse } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
-import Family from 'ephox/phoenix/api/general/Family';
+import * as Family from 'ephox/phoenix/api/general/Family';
 import { Element, Text } from '@ephox/sugar';
 
 UnitTest.test('FamilyGroupTest', function () {

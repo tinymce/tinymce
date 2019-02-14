@@ -24,7 +24,7 @@
     "@ephox/boss": "latest",
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
-    "@ephox/polaris": "latest"
+    "@ephox/polaris": "../polaris/ephox-polaris-v3.0.15.tgz"
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",

@@ -1,39 +1,41 @@
-import { Fun } from '@ephox/katamari';
+import { Adt } from '@ephox/katamari';
 
-var none = function () {
-  return folder(function (n, s, m, e) {
-    return n();
-  }, 'none');
-};
+type NoneHandler<U> = () => U;
+type StartHandler<E, U> = (element: E) => U;
+type MiddleHandler<E, U> = (before: E, after: E) => U;
+type EndHandler<E, U> = (element: E) => U;
 
-var start = function (element) {
-  return folder(function (n, s, m, e) {
-    return s(element);
-  }, 'start');
-};
+export interface SplitPosition<E> {
+  fold: <U> (
+    onNone: NoneHandler<U>,
+    onStart: StartHandler<E, U>,
+    onMiddle: MiddleHandler<E, U>,
+    onEnd: EndHandler<E, U>
+  ) => U;
+  match: <U> (branches: {
+    none: NoneHandler<U>;
+    start: StartHandler<E, U>;
+    middle: MiddleHandler<E, U>;
+    end: EndHandler<E, U>;
+  }) => U;
+  log: (label: string) => void;
+}
 
-var middle = function (before, after) {
-  return folder(function (n, s, m, e) {
-    return m(before, after);
-  }, 'middle');
-};
+const adt: {
+  none: <E> () => SplitPosition<E>;
+  start: <E> (element: E) => SplitPosition<E>;
+  middle: <E> (before: E, after: E) => SplitPosition<E>;
+  end: <E> (element: E) => SplitPosition<E>;
+} = Adt.generate([
+  { none: [] },
+  { start: ['element'] },
+  { middle: ['before', 'after'] },
+  { end: ['element'] }
+]);
 
-var end = function (element) {
-  return folder(function (n, s, m, e) {
-    return e(element);
-  }, 'end');
-};
-
-var folder = function (fold, label) {
-  return {
-    fold: fold,
-    label: Fun.constant(label)
-  };
-};
-
-export default {
-  none: none,
-  start: start,
-  middle: middle,
-  end: end
+export const SplitPosition = {
+  none: adt.none,
+  start: adt.start,
+  middle: adt.middle,
+  end: adt.end
 };

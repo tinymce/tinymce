@@ -1,32 +1,31 @@
-import Splitter from '../../search/Splitter';
-import Positions from '../../split/Positions';
-import Range from '../../split/Range';
-import Split from '../../split/Split';
+import { Universe } from '@ephox/boss';
+import * as Splitter from '../../search/Splitter';
+import * as Positions from '../../split/Positions';
+import * as Range from '../../split/Range';
+import * as Split from '../../split/Split';
+import { TextSplit } from '../data/TextSplit';
+import { SpotRange } from '../data/Types';
+import { SplitPosition } from '../Main';
 
-var split = function (universe, item, position) {
-  return Split.split(universe, item, position);
-};
+type SplitApi = <E, D>(universe: Universe<E, D>, item: E, position: number) => TextSplit<E>;
+const split: SplitApi = Split.split;
 
-var splitByPair = function (universe, item, start, finish) {
-  return Split.splitByPair(universe, item, start, finish);
-};
+type SplitByPairApi = <E, D>(universe: Universe<E, D>, item: E, start: number, end: number) => E;
+const splitByPair: SplitByPairApi = Split.splitByPair;
 
-var range = function (universe, start, startOffset, finish, finishOffset) {
-  return Range.nodes(universe, start, startOffset, finish, finishOffset);
-};
+type RangeApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number) => E[];
+const range: RangeApi = Range.nodes;
 
-var subdivide = function (universe, item, positions) {
-  return Splitter.subdivide(universe, item, positions);
-};
+type SubdivideApi = <E, D>(universe: Universe<E, D>, item: E, positions: number[]) => SpotRange<E>[];
+const subdivide: SubdivideApi = Splitter.subdivide;
 
-var position = function (universe, target) {
-  return Positions.determine(target);
-};
+type PositionApi = <E, D>(_universe: Universe<E, D>, target: TextSplit<E>) => SplitPosition<E>
+const position: PositionApi = (_universe, target) => Positions.determine(target);
 
-export default {
-  split: split,
-  splitByPair: splitByPair,
-  range: range,
-  subdivide: subdivide,
-  position: position
+export {
+  split,
+  splitByPair,
+  range,
+  subdivide,
+  position
 };
