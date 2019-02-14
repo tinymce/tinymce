@@ -39,7 +39,7 @@ interface WindowExtra<T> {
   closeWindow: () => void;
 }
 
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaattrs) => {
+const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaattrs: boolean) => {
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const dialogFooterId = Id.generate('dialog-footer');
@@ -77,19 +77,13 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }
   );
 
+  // ariaattrs is being passed through to silver inline dialog
+  // from the window manager as a property of 'params'
   const attributes = {
-    ...ariaattrs ?
-    {
-      role: 'dialog',
-        ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`,
-        ['aria-live']: 'polite'
-    } :
-    {
       role: 'dialog',
       ['aria-labelledby']: dialogLabelId,
-      ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`
-    }
+      ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`,
+      ...ariaattrs ? { ['aria-live']: 'polite' } : {}
   };
 
   // TODO: Disable while validating?
