@@ -41,9 +41,9 @@ const setup = (extras: WindowManagerSetup) => {
   // Some plugins break with this API type specified. Investigate.
   const open = (config/*: Types.Dialog.DialogApi<T>*/, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void) => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.toolbar(), closeWindow, params.ariaattrs);
+      return openInlineDialog(config, extras.backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.cursor(), closeWindow, params.ariaattrs);
+      return openInlineDialog(config, extras.backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
       return openModalDialog(config, closeWindow);
     }
@@ -80,7 +80,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open(factory, config);
   };
 
-  const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void, ariaattrs) => {
+  const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void, ariaAttrs) => {
     const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData: Record<string, string>, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData(internalInitialData, dataValidator);
 
@@ -99,7 +99,7 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialogUi.instanceApi);
           }
         },
-        extras.backstage, ariaattrs
+        extras.backstage, ariaAttrs
       );
 
       const inlineDialog = GuiFactory.build(InlineView.sketch({
