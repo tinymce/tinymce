@@ -19,6 +19,7 @@ import { ColumnTypes, PresetTypes, PresetItemTypes } from '../components/toolbar
 import * as Label from '../components/dialog/Label';
 // tslint:disable-next-line:no-duplicate-imports
 import { DialogButton } from '../components/dialog/Dialog';
+import { HtmlPanelPresetTypes } from '../components/dialog/HtmlPanel';
 
 // These are the types that are to be used internally in implementations
 
@@ -43,6 +44,7 @@ export {
   ColumnTypes,
   PresetTypes,
   PresetItemTypes,
+  HtmlPanelPresetTypes,
   Label,
   Table
 };
