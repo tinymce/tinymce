@@ -25,7 +25,7 @@ export default function (): Universe<Element, Document> {
     return Element.fromDom(element.dom().cloneNode(false));
   };
 
-  var document = function(element: Element) {
+  var document = function (element: Element) {
     return (element.dom() as DomNode).ownerDocument;
   }
 
