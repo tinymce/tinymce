@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step, Chain, UiFi
 import { UnitTest } from '@ephox/bedrock';
 import { Cell, Arr } from '@ephox/katamari';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
-import { Element, Body } from '@ephox/sugar';
+import { Element, Body, Css } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
 import { document } from '@ephox/dom-globals';
@@ -178,6 +178,12 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       }),
       container
     ),
+    Step.sync(() => {
+      const top = Css.get(container, 'top');
+      const left = Css.get(container, 'left');
+      Assertions.assertEq(`Container top position (${top}) should be an integer`, true, top.indexOf('.') === -1);
+      Assertions.assertEq(`Container left position (${left}) should be an integer`, true, left.indexOf('.') === -1);
+    }),
 
     Mouse.sClickOn(container, '.tox-toolbar button'),
     Step.sync(() => {
