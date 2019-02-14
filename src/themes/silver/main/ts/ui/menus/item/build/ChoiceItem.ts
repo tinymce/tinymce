@@ -5,73 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, Toggling, Tooltipping, GuiFactory, Behaviour, ItemTypes } from '@ephox/alloy';
-import { InlineContent, Menu, Types } from '@ephox/bridge';
-import { Merger, Option, Obj } from '@ephox/katamari';
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../../backstage/Backstage';
+import { Disabling, Toggling } from '@ephox/alloy';
+import { Menu, Types } from '@ephox/bridge';
+import { Merger, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
-import { HTMLElement } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
-
-type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
-
-// Use meta to pass through special information about the tooltip
-// (yes this is horrible but it is not yet public API)
-const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] => {
-  return Obj.get(meta, 'tooltipWorker').map((tooltipWorker: TooltipWorker) => {
-    return [
-      Tooltipping.config({
-        lazySink: sharedBackstage.getSink,
-        tooltipDom: {
-          tag: 'div',
-        },
-        tooltipComponents: [
-        ],
-        anchor: (comp) => ({
-          anchor: 'submenu',
-          item: comp
-        }),
-        mode: 'follow-highlight',
-        onShow: (component, _tooltip) => {
-          tooltipWorker((elm) => {
-            Tooltipping.setComponents(component, [
-              GuiFactory.external({element: Element.fromDom(elm) })
-            ]);
-          });
-        }
-      })
-    ];
-  }).getOr([]);
-};
-
-// TODO: Remove dupe between these
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared): ItemTypes.ItemSpec => {
-
-  const structure = renderItemStructure({
-    presets,
-    textContent:  useText ? spec.text : Option.none(),
-    ariaLabel: spec.text,
-    iconContent: spec.icon,
-    shortcutContent: Option.none(),
-    checkMark: Option.none(),
-    caret: Option.none(),
-    value: spec.value
-  }, sharedBackstage.providers, true, spec.icon);
-
-  return renderCommonItem({
-    data: buildData(spec),
-    disabled: spec.disabled,
-    getApi: () => ({}),
-    onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
-    onSetup: () => () => { },
-    triggersSubmenu: false,
-    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage),
-  }, structure, itemResponse);
-};
 
 const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
@@ -123,4 +65,4 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
   );
 };
 
-export { renderChoiceItem, renderAutocompleteItem };
+export { renderChoiceItem };
