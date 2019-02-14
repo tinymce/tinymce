@@ -91,7 +91,7 @@ Open link in...           [Target]              Link
 Current window            [None]                Link
 
 Media...                  [Media]               Media
-Alternative image URL     [Alternative source]  Media
+Alternative source URL    [Alternative source]  Media
 Media poster (Image URL)  [Poster]              Media
 
 Print...                  [Print]               Print

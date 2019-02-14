@@ -14,7 +14,7 @@ import {
   Sketcher,
   Toolbar as AlloyToolbar,
   UiSketcher,
-  Behaviour,
+  Behaviour
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
@@ -112,7 +112,6 @@ const partMenubar = Composite.partType.optional({
     FieldSchema.strict('getSink')
   ]
 });
-
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {

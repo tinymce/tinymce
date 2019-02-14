@@ -14,12 +14,13 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
 
   interface AutocompleterListStructure {
     type: 'list';
-    groups: { title: string; text: string; }[][];
+    hasIcons: boolean;
+    groups: { title: string; text: string; icon?: string }[][];
   }
 
   interface AutocompleterGridStructure {
     type: 'grid';
-    groups: { title: string; }[][];
+    groups: { title: string; icon?: string }[][];
   }
 
   type AutocompleterStructure = AutocompleterListStructure | AutocompleterGridStructure;
@@ -31,7 +32,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
 
       const eDoc = Element.fromDom(editor.getDoc());
 
-      const structWithTitleAndIconAndText = (d, ch) => (s, str, arr) => {
+      const structWithTitleAndIconAndText = (d) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
           attrs: {
@@ -41,7 +42,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
-                s.text(str.is(ch))
+                s.text(str.is(d.icon))
               ]
             }),
             s.element('span', {
@@ -52,7 +53,22 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         });
       };
 
-      const structWithTitleAndIcon = (d, ch) => (s, str, arr) => {
+      const structWithTitleAndText = (d) => (s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('tox-collection__item') ],
+          attrs: {
+            title: str.is(d.title)
+          },
+          children: [
+            s.element('span', {
+              classes: [ arr.has('tox-collection__item-label') ],
+              html: str.is(d.text)
+            })
+          ]
+        });
+      };
+
+      const structWithTitleAndIcon = (d) => (s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
           attrs: {
@@ -62,7 +78,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('span', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
-                s.text(str.is(ch))
+                s.text(str.is(d.icon))
               ]
             })
           ]
@@ -76,7 +92,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         1000
       );
 
-      const sAssertAutocompleterStructure = (structure: AutocompleterStructure, character) => {
+      const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => {
         return Chain.asStep(Body.body(), [
           UiFinder.cFindIn('.tox-autocompleter'),
           Assertions.cAssertStructure(
@@ -91,8 +107,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       return s.element('div', {
                         classes: [ arr.has('tox-collection__group') ],
                         children: Arr.map(group, (d) => {
-                          const itemStructure = structure.type === 'list' ? structWithTitleAndIconAndText(d, character) : structWithTitleAndIcon(d, character);
-                          return itemStructure(s, str, arr);
+                          if (structure.type === 'list') {
+                            if (structure.hasIcons) {
+                              return structWithTitleAndIconAndText(d)(s, str, arr);
+                            } else {
+                              return structWithTitleAndText(d)(s, str, arr);
+                            }
+                          } else {
+                            return structWithTitleAndIcon(d)(s, str, arr);
+                          }
                         })
                       });
                     })
@@ -112,7 +135,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           tinyApis.sSetCursor([ 0, 0 ], content.length),
           Keyboard.sKeypress(eDoc, scenario.triggerChar.charCodeAt(0), { }),
           tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
-          sAssertAutocompleterStructure(scenario.structure, scenario.triggerChar),
+          sAssertAutocompleterStructure(scenario.structure),
           scenario.choice,
           sWaitForAutocompleteToClose,
           scenario.assertion
@@ -123,12 +146,13 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         triggerChar: '+',
         structure: {
           type: 'list',
+          hasIcons: true,
           groups: [
             [
-              { title: 'p-a', text: 'p-a' },
-              { title: 'p-b', text: 'p-b' },
-              { title: 'p-c', text: 'p-c' },
-              { title: 'p-d', text: 'p-d' }
+              { title: 'p-a', text: 'p-a', icon: '+' },
+              { title: 'p-b', text: 'p-b', icon: '+' },
+              { title: 'p-c', text: 'p-c', icon: '+' },
+              { title: 'p-d', text: 'p-d', icon: '+' }
             ]
           ]
         },
@@ -145,11 +169,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           type: 'grid',
           groups: [
             [
-              { title: 'c1-a' },
-              { title: 'c2-a' }
+              { title: 'c1-a', icon: ':' },
+              { title: 'c2-a', icon: ':' }
             ],
             [
-              { title: 'c2-b' }
+              { title: 'c2-b', icon: ':' }
             ]
           ]
         },
@@ -166,10 +190,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           type: 'grid',
           groups: [
             [
-              { title: 't-a' },
-              { title: 't-b' },
-              { title: 't-c' },
-              { title: 't-d' }
+              { title: 't-a', icon: '~' },
+              { title: 't-b', icon: '~' },
+              { title: 't-c', icon: '~' },
+              { title: 't-d', icon: '~' }
             ]
           ]
         },
@@ -182,14 +206,36 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
       });
 
       const sTestFourthAutocomplete = sTestAutocompleter({
+        triggerChar: '!',
+        structure: {
+          type: 'list',
+          hasIcons: false,
+          groups: [
+            [
+              { title: 'exclamation-a', text: 'exclamation-a' },
+              { title: 'exclamation-b', text: 'exclamation-b' },
+              { title: 'exclamation-c', text: 'exclamation-c' },
+              { title: 'exclamation-d', text: 'exclamation-d' }
+            ]
+          ]
+        },
+        choice: GeneralSteps.sequence([
+          Keyboard.sKeydown(eDoc, Keys.down(), { }),
+          Keyboard.sKeydown(eDoc, Keys.down(), { }),
+          Keyboard.sKeydown(eDoc, Keys.enter(), { })
+        ]),
+        assertion: store.sAssertEq('Exclamation-c should fire', [ 'exclamation:exclamation-c' ])
+      });
+
+      const sTestFifthAutocomplete = sTestAutocompleter({
         triggerChar: '=',
         content: 'test=t',
         structure: {
           type: 'grid',
           groups: [
             [
-              { title: 'two' },
-              { title: 'three' }
+              { title: 'two', icon: '=' },
+              { title: 'three', icon: '=' }
             ]
           ]
         },
@@ -220,21 +266,21 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           type: 'grid',
           groups: [
             [
-              { title: 'two' },
-              { title: 'three' }
+              { title: 'two', icon: '=' },
+              { title: 'three', icon: '=' }
             ]
           ]
-        }, '='),
+        }),
         // Check the options shrink to 1 item
         sSetContentAndTrigger('test=tw', 'w'.charCodeAt(0)),
         Waiter.sTryUntil('Wait for autocompleter to update items', sAssertAutocompleterStructure({
           type: 'grid',
           groups: [
             [
-              { title: 'two' }
+              { title: 'two', icon: '=' }
             ]
           ]
-        }, '='), 100, 1000),
+        }), 100, 1000),
         // Check the autocompleter is hidden/closed when no items match
         sSetContentAndTrigger('test=twe', 'e'.charCodeAt(0)),
         sWaitForAutocompleteToClose,
@@ -245,10 +291,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           type: 'grid',
           groups: [
             [
-              { title: 'two' }
+              { title: 'two', icon: '=' }
             ]
           ]
-        }, '='),
+        }),
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),
         sWaitForAutocompleteToClose
       ]);
@@ -260,7 +306,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
             Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),
             Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
-            Logger.t('Checking forth autocomplete, trigger: "=", custom activation check', sTestFourthAutocomplete),
+            Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),
+            Logger.t('Checking fifth autocomplete, trigger: "=", custom activation check', sTestFifthAutocomplete),
             Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation)
           ]
         ), onSuccess, onFailure);
@@ -350,6 +397,26 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           },
           onAction: (autocompleteApi, rng, value) => {
             store.adder('tilde:' + value)();
+            autocompleteApi.hide();
+          }
+        });
+
+        ed.ui.registry.addAutocompleter('Exclamation', {
+          ch: '!',
+          minChars: 0,
+          columns: 1,
+          fetch: (pattern, maxResults) => {
+            return new Promise((resolve) => {
+              resolve(
+                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                  value: `exclamation-${letter}`,
+                  text: `exclamation-${letter}`
+                }))
+              );
+            });
+          },
+          onAction: (autocompleteApi, rng, value) => {
+            store.adder('exclamation:' + value)();
             autocompleteApi.hide();
           }
         });

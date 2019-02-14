@@ -28,13 +28,6 @@ export interface Toolbar {
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
-}
-
-export interface MoreToolbar {
-  uid: string;
-  cyclicKeying: boolean;
-  onEscape: (comp: AlloyComponent) => Option<boolean>;
-  initGroups: ToolbarGroup[];
   backstage: UiFactoryBackstage;
 }
 
@@ -94,7 +87,7 @@ const getToolbarbehaviours = (foo, modeName) => {
   ]);
 };
 
-const renderMoreToolbar = (foo: MoreToolbar) => {
+const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return SplitAlloyToolbar.sketch({

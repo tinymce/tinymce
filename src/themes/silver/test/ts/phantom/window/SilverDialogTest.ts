@@ -1,4 +1,4 @@
-import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, FocusTools, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, FocusTools, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -71,6 +71,14 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
       Element.fromDom(document),
       'input'
     ),
+    Assertions.sAssertStructure('"tox-dialog__scroll-disable" should exist on the body',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('body', {
+          classes: [ arr.has('tox-dialog__disable-scroll') ]
+        });
+      }),
+      Body.body()
+    ),
     Step.sync(() => {
       currentApi.get().disable('barny');
     }),
@@ -83,7 +91,15 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
       ]),
       100,
       3000
-    )
+    ),
+    Assertions.sAssertStructure('"tox-dialog__scroll-disable" should have been removed from the body',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('body', {
+          classes: [ arr.not('tox-dialog__disable-scroll') ]
+        });
+      }),
+      Body.body()
+    ),
   ], () => {
     helpers.destroy();
     success();
