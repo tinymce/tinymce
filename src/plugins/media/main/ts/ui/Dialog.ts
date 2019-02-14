@@ -17,14 +17,14 @@ import UpdateHtml from '../core/UpdateHtml';
 import { Types } from '@ephox/bridge';
 
 type DialogData = {
-  source1: string;
-  source2: string;
-  embed: string;
-  dimensions: {
-    width: string;
-    height: string;
+  source1?: string;
+  source2?: string;
+  embed?: string;
+  dimensions?: {
+    width?: string;
+    height?: string;
   };
-  poster: string;
+  poster?: string;
 };
 
 // NOTE: This means the dialog doesn't actually comply with the DialogData type, but it's too complex to unwind now
