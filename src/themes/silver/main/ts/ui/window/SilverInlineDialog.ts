@@ -39,8 +39,10 @@ interface WindowExtra<T> {
   closeWindow: () => void;
 }
 
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
+const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaattrs) => {
   const dialogLabelId = Id.generate('dialog-label');
+  const dialogContentId = Id.generate('dialog-content');
+  const dialogFooterId = Id.generate('dialog-footer');
 
   const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => {
     return Option.some(incoming);
@@ -56,13 +58,13 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memBody = Memento.record(
     renderInlineBody({
       body: dialogInit.internalDialog.body
-    }, backstage) as SimpleSpec
+    }, dialogContentId, backstage) as SimpleSpec
   );
 
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: dialogInit.internalDialog.buttons
-    }, backstage.shared.providers)
+    }, dialogFooterId, backstage.shared.providers)
   );
 
   const dialogEvents = SilverDialogEvents.init(
@@ -75,15 +77,27 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }
   );
 
+  const attributes = {
+    ...ariaattrs ?
+    {
+      role: 'dialog',
+        ['aria-labelledby']: dialogLabelId,
+        ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`,
+        ['aria-live']: 'polite'
+    } :
+    {
+      role: 'dialog',
+      ['aria-labelledby']: dialogLabelId,
+      ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`
+    }
+  };
+
   // TODO: Disable while validating?
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'tox-dialog' ],
-      attributes: {
-        role: 'dialog',
-        ['aria-labelledby']: dialogLabelId
-      }
+      attributes
     },
     eventOrder: {
       [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],

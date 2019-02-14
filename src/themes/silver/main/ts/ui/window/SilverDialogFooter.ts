@@ -64,7 +64,7 @@ const renderComponents = (_data, state) => {
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
+const renderFooter = (initFoo: WindowFooterFoo, id: Option<string>, providersBackstage: UiFactoryBackstageProviders) => {
   const updateState = (_comp, data: WindowFooterFoo) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
       const memButton = Memento.record(makeButton(button, providersBackstage));
@@ -86,8 +86,10 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
     });
   };
 
+  const ariaDescribedbyId = id.map((x): string => `id=${x}`).getOr('');
+
   return {
-    dom: DomFactory.fromHtml('<div class="tox-dialog__footer"></div>'),
+    dom: DomFactory.fromHtml(`<div class="tox-dialog__footer" ${ariaDescribedbyId}></div>`),
     components: [ ],
     behaviours: Behaviour.derive([
       Reflecting.config({
@@ -100,13 +102,13 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
   };
 };
 
-const renderInlineFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
-  return renderFooter(initFoo, providersBackstage);
+const renderInlineFooter = (initFoo: WindowFooterFoo, contentId: string, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderFooter(initFoo, Option.some(contentId), providersBackstage);
 };
 
 const renderModalFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
   return ModalDialog.parts().footer(
-    renderFooter(initFoo, providersBackstage)
+    renderFooter(initFoo, Option.none(), providersBackstage)
   );
 };
 

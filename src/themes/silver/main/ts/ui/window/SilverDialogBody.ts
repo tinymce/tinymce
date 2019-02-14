@@ -20,7 +20,7 @@ type WindowBodyFoo = {
   body: Types.Dialog.Dialog<unknown>['body']
 };
 
-const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpec => {
+const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactoryBackstage): AlloySpec => {
   const renderComponents = (incoming: WindowBodyFoo) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
@@ -50,7 +50,10 @@ const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpe
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__content-js' ]
+      classes: [ 'tox-dialog__content-js' ],
+      attributes: {
+        ...id.map((x): {id?: string} => ({id: x})).getOr({})
+      }
     },
     components: [ ],
     behaviours: Behaviour.derive([
@@ -65,13 +68,13 @@ const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpe
   };
 };
 
-const renderInlineBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
-  return renderBody(foo, backstage);
+const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFactoryBackstage) => {
+  return renderBody(foo, Option.some(contentId), backstage);
 };
 
 const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
   return ModalDialog.parts().body(
-    renderBody(foo, backstage)
+    renderBody(foo, Option.none(), backstage)
   );
 };
 
