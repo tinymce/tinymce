@@ -1,5 +1,6 @@
 import * as FilteredEvent from '../../impl/FilteredEvent';
 import { MouseEvent } from '@ephox/dom-globals';
+import Element from '../node/Element';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const isLeftClick = function (raw: MouseEvent) {
@@ -29,9 +30,9 @@ const isRealClick = function (raw: any) {
     : true;
 };
 
-const filtered = function (event, filter) {
+const filtered = function (event: string, filter: FilteredEvent.EventFilter) {
   return {
-    bind (element, f) {
+    bind (element: Element, f: FilteredEvent.EventHandler) {
       return FilteredEvent.bind(element, event, filter, f);
     }
   };

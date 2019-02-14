@@ -1,7 +1,24 @@
 import { Fun } from '@ephox/katamari';
 import Element from '../api/node/Element';
 
-const mkEvent = function (target, x, y, stop, prevent, kill, raw) {
+export interface EventArgs {
+  target: () => Element;
+  x: () => number;
+  y: () => number;
+  stop: () => void;
+  prevent: () => void;
+  kill: () => void;
+  raw: () => any; // Set to any since there might be a lot of code working directly with the sub types of Event
+}
+
+export interface EventUnbinder {
+  unbind: () => void;
+}
+
+export type EventHandler = (evt: EventArgs) => void;
+export type EventFilter = (evt: any) => boolean;
+
+const mkEvent = (target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: () => any): EventArgs => {
   // switched from a struct to manual Fun.constant() because we are passing functions now, not just values
   return {
     target:  Fun.constant(target),
@@ -14,7 +31,7 @@ const mkEvent = function (target, x, y, stop, prevent, kill, raw) {
   };
 };
 
-const handle = function (filter, handler) {
+const handle = function (filter: EventFilter, handler: EventHandler) {
   return function (rawEvent) {
     if (!filter(rawEvent)) { return; }
 
@@ -37,7 +54,7 @@ const handle = function (filter, handler) {
   };
 };
 
-const binder = function (element, event, filter, handler, useCapture) {
+const binder = function (element: Element, event: string, filter: EventFilter, handler: EventHandler, useCapture: boolean): EventUnbinder {
   const wrapped = handle(filter, handler);
   // IE9 minimum
   element.dom().addEventListener(event, wrapped, useCapture);
@@ -47,20 +64,20 @@ const binder = function (element, event, filter, handler, useCapture) {
   };
 };
 
-const bind = function (element, event, filter, handler) {
+const bind = function (element: Element, event: string, filter: EventFilter, handler: EventHandler) {
   return binder(element, event, filter, handler, false);
 };
 
-const capture = function (element, event, filter, handler) {
+const capture = function (element: Element, event: string, filter: EventFilter, handler: EventHandler) {
   return binder(element, event, filter, handler, true);
 };
 
-const unbind = function (element, event, handler, useCapture) {
+const unbind = function (element: Element, event: string, handler: EventHandler, useCapture: boolean) {
   // IE9 minimum
   element.dom().removeEventListener(event, handler, useCapture);
 };
 
 export {
   bind,
-  capture,
+  capture
 };
