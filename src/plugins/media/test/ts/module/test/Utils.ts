@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, Mouse, Logger, Guard, RawAssertions } from '@ephox/agar';
 import { Event, HTMLElement, document } from '@ephox/dom-globals';
 import { Body, Element, Focus } from '@ephox/sugar';
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 export const selectors = {
   source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
@@ -64,42 +64,39 @@ const sAssertWidthValue = sAssertFieldValue(selectors.width);
 const sAssertHeightValue = sAssertFieldValue(selectors.height);
 const sAssertSourceValue = sAssertFieldValue(selectors.source);
 
-const sSetValueAndTrigger = (selector, value, event) => (ui) => {
-  return Logger.t(`Set ${value} and trigger ${event}`, Chain.asStep({}, [
+const sSetValueAndTrigger = (selector, value, events: string[]) => (ui) => {
+  return Logger.t(`Set ${value} and trigger ${events.join(',')}`, Chain.asStep({}, [
     Chain.fromChains([
       cFindInDialog(selector)(ui),      // get the element
       Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
       cSetValueOn(selector, value)(ui), // change the value
-      cFakeEvent(event),                 // fire [change, input etc],
+      ...Arr.map(events, (event) => cFakeEvent(event)),                 // fire [change, input etc],
       Chain.wait(0) // Wait needed as paste event is triggered async
     ])
   ]));
 };
 
-const sPasteSourceValue = function (ui, value) {
-  return sSetValueAndTrigger(selectors.source, value, 'paste')(ui);
+const sPasteSourceValue = function (ui, value: string) {
+  return sSetValueAndTrigger(selectors.source, value, [ 'paste' ])(ui);
 };
 
-const sChangeWidthValue = function (ui, value) {
-  return sSetValueAndTrigger(selectors.width, value, 'input')(ui);
+const sChangeWidthValue = function (ui, value: string) {
+  return sSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(ui);
 };
 
-const sChangeHeightValue = function (ui, value) {
-  return sSetValueAndTrigger(selectors.height, value, 'input')(ui);
+const sChangeHeightValue = function (ui, value: string) {
+  return sSetValueAndTrigger(selectors.height, value, [ 'input', 'change' ])(ui);
 };
 
 const sAssertSizeRecalcConstrained = function (ui) {
   return Logger.t('Asset constrained size recalculation', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
-    sAssertWidthValue(ui, '300'),
-    sAssertHeightValue(ui, '150'),
+    sAssertHeightAndWidth(ui, '150', '300'),
     sChangeWidthValue(ui, '350'),
-    sAssertWidthValue(ui, '350'),
-    sAssertHeightValue(ui, '175'),
+    sAssertHeightAndWidth(ui, '175', '350'),
     sChangeHeightValue(ui, '100'),
-    sAssertHeightValue(ui, '100'),
-    sAssertWidthValue(ui, '200'),
+    sAssertHeightAndWidth(ui, '100', '200'),
     sCloseDialog(ui)
   ]));
 };
@@ -108,20 +105,16 @@ const sAssertSizeRecalcConstrainedReopen = function (ui) {
   return Logger.t('Assert constrained size recalculation on dialog reopen', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
-    sAssertWidthValue(ui, '300'),
-    sAssertHeightValue(ui, '150'),
+    sAssertHeightAndWidth(ui, '150', '300'),
     sChangeWidthValue(ui, '350'),
-    sAssertWidthValue(ui, '350'),
-    sAssertHeightValue(ui, '175'),
+    sAssertHeightAndWidth(ui, '175', '350'),
     sChangeHeightValue(ui, '100'),
-    sAssertHeightValue(ui, '100'),
-    sAssertWidthValue(ui, '200'),
+    sAssertHeightAndWidth(ui, '100', '200'),
     sSubmitAndReopen(ui),
-    sAssertHeightValue(ui, '100'),
-    sAssertWidthValue(ui, '200'),
+    sAssertHeightAndWidth(ui, '100', '200'),
     sChangeWidthValue(ui, '350'),
-    sAssertWidthValue(ui, '350'),
-    sAssertHeightValue(ui, '175')
+    sAssertHeightAndWidth(ui, '175', '350'),
+    sCloseDialog(ui)
   ]));
 };
 
@@ -130,14 +123,11 @@ const sAssertSizeRecalcUnconstrained = function (ui) {
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
     ui.sClickOnUi('click checkbox', selectors.lockIcon),
-    sAssertWidthValue(ui, '300'),
-    sAssertHeightValue(ui, '150'),
+    sAssertHeightAndWidth(ui, '150', '300'),
     sChangeWidthValue(ui, '350'),
-    sAssertWidthValue(ui, '350'),
-    sAssertHeightValue(ui, '150'),
+    sAssertHeightAndWidth(ui, '150', '350'),
     sChangeHeightValue(ui, '100'),
-    sAssertHeightValue(ui, '100'),
-    sAssertWidthValue(ui, '350'),
+    sAssertHeightAndWidth(ui, '100', '350'),
     sCloseDialog(ui)
   ]));
 };
@@ -271,6 +261,20 @@ const cExists = (selector) => {
   );
 };
 
+const sSetHeightAndWidth = (ui, height: string, width: string) => {
+  return Logger.t(`Set height and width to ${height}x${width}`, GeneralSteps.sequence([
+    sChangeWidthValue(ui, width),
+    sChangeHeightValue(ui, height)
+  ]));
+};
+
+const sAssertHeightAndWidth = (ui, height: string, width: string) => {
+  return Logger.t('Check height and width updated', GeneralSteps.sequence([
+    sAssertWidthValue(ui, width),
+    sAssertHeightValue(ui, height)
+  ]));
+};
+
 export default {
   cSetSourceInput,
   cFindTextarea,
@@ -293,7 +297,10 @@ export default {
   sAssertEmbedData,
   sAssertSourceValue,
   sChangeWidthValue,
+  sChangeHeightValue,
   sPasteTextareaValue,
+  sSetHeightAndWidth,
+  sAssertHeightAndWidth,
   selectors,
   cExists,
   cNotExists
