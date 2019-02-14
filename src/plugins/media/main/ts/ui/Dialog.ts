@@ -87,7 +87,7 @@ const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, 
         embed: html
       };
 
-      // Add optional values
+      // Add additional values that might have been returned in the html
       Arr.each([ 'width', 'height' ], (prop) => {
         Obj.get(snippetData, prop).each((value) => {
           nuData.dimensions = Merger.merge({ [ prop ]: value }, nuData.dimensions);
