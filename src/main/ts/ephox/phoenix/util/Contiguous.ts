@@ -14,7 +14,7 @@ type AccOrSkip = <E>(rest: Data<E>, parent: E, item: E) => Data<E>;
 // Start a new list so push the current group into the groups list (if not empty) and reset current to have just item
 const nextlist = function <E>(rest: Data<E>, parent: E, item: E): Data<E> {
   return {
-    groups: rest.current.length > 0 ? rest.groups.concat({ parent: rest.parent, children: rest.current }) : rest.groups,
+    groups: rest.current.length > 0 && rest.parent !== null ? rest.groups.concat({ parent: rest.parent, children: rest.current }) : rest.groups,
     current: [item],
     parent: parent
   };
@@ -54,7 +54,7 @@ const textnodes = function <E, D>(universe: Universe<E, D>, items: E[]) {
     });
   }, init);
 
-  return result.current.length > 0 ? result.groups.concat({ parent: result.parent, children: result.current }) : result.groups;
+  return result.current.length > 0 && result.parent !== null ? result.groups.concat({ parent: result.parent, children: result.current }) : result.groups;
 };
 
 export {
