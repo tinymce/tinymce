@@ -16,8 +16,7 @@ import {
   SplitToolbar as SplitAlloyToolbar,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
-  Focusing,
-  Toggling
+  Focusing
 } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
@@ -25,13 +24,6 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
 export interface Toolbar {
-  uid: string;
-  cyclicKeying: boolean;
-  onEscape: (comp: AlloyComponent) => Option<boolean>;
-  initGroups: ToolbarGroup[];
-}
-
-export interface MoreToolbar {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
@@ -95,7 +87,7 @@ const getToolbarbehaviours = (foo, modeName) => {
   ]);
 };
 
-const renderMoreToolbar = (foo: MoreToolbar) => {
+const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return SplitAlloyToolbar.sketch({
@@ -112,12 +104,10 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
       }),
       'overflow-button': renderIconButtonSpec({
         name: 'more',
-        icon: Option.some('image-options'),
+        icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...')
-      }, Option.none(), foo.backstage.shared.providers, [
-        Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' } })
-      ])
+      }, Option.none(), foo.backstage.shared.providers)
     },
     components: [
       SplitAlloyToolbar.parts().primary({
@@ -137,7 +127,8 @@ const renderMoreToolbar = (foo: MoreToolbar) => {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
       growingClass: 'tox-toolbar__overflow--growing',
-      shrinkingClass: 'tox-toolbar__overflow--shrinking'
+      shrinkingClass: 'tox-toolbar__overflow--shrinking',
+      overflowToggledClass: ToolbarButtonClasses.Ticked
     },
     splitToolbarBehaviours: getToolbarbehaviours(foo, modeName)
   });

@@ -113,7 +113,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
     };
   }
 
-  if (presets === 'toolbar' && columns !== 'auto') {
+  if (presets === 'listpreview' && columns !== 'auto') {
     const structure = forToolbar(columns);
     return {
       value,
@@ -147,12 +147,15 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
 };
 
 export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
+  // Render text and icons if we're using a single column, otherwise only render icons
+  const renderText = columns === 1;
+  const renderIcons = !renderText || menuHasIcons(items);
   return Options.cat(
     Arr.map(items, (item) => {
       return InlineContent.createAutocompleterItem(item).fold(
         handleError,
         (d: InlineContent.AutocompleterItem) => Option.some(
-          MenuItems.autocomplete(d, columns === 1, 'normal', onItemValueHandler, itemResponse, sharedBackstage)
+          MenuItems.autocomplete(d, renderText, 'normal', onItemValueHandler, itemResponse, sharedBackstage, renderIcons)
         )
       );
     })

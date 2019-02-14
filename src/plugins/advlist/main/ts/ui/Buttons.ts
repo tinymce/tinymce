@@ -45,7 +45,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
-    presets: 'toolbar',
+    presets: 'listpreview',
     columns: 3,
     fetch: (callback) => {
       const items = Tools.map(styles, (styleValue) => {

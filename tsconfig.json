@@ -7,6 +7,7 @@
     "importHelpers": true,
     "lib": ["es2015"],
     "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
     "outDir": "lib",
     "baseUrl": ".",

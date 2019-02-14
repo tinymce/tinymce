@@ -107,10 +107,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true
+        cyclicKeying: true,
+        backstage: extras.backstage
       });
     })() : (() => {
-      return ContextForm.renderContextForm(ctx, extras.backstage.shared.providers);
+      return ContextForm.renderContextForm(ctx, extras.backstage);
     })();
   };
 
@@ -210,6 +211,15 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     resetTimer(
       Delay.setEditorTimeout(editor, launchContextToolbar, 0)
     );
+  });
+
+  editor.on('focusout', (e) => {
+    Delay.setEditorTimeout(editor, () => {
+      if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
+        lastAnchor.set(Option.none());
+        InlineView.hide(contextbar);
+      }
+    }, 0);
   });
 
   editor.on('nodeChange', (e) => {

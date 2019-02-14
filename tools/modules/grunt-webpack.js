@@ -58,6 +58,9 @@ let create = (entries, tsConfig, outDir, filename) => {
               loader: 'ts-loader',
               options: {
                 transpileOnly: true,
+                compilerOptions: {
+                  declarationMap: false
+                },
                 configFile: tsConfig,
                 experimentalWatchApi: true
               }

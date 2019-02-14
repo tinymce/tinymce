@@ -164,7 +164,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
         ed.ui.registry.addSplitButton('toolbar-collection', {
           type: 'splitbutton',
           columns: 3,
-          presets: 'toolbar',
+          presets: 'listpreview',
           fetch: (callback) => {
             callback(
               Arr.map([ 'A', 'B', 'C', 'D', 'E', 'F' ], (letter) => {

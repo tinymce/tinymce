@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
       }));
     };
 
-    const sAssertPresense = function (selector) {
+    const sAssertPresence = function (selector) {
       return Logger.t('Assert element is present',
         Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody()))
       );
@@ -47,11 +47,11 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
         ),
         api.sSetSelection([0], 0, [0], 0),
         sLinkTheSelection(),
-        sAssertPresense({ 'figure.image > a[href="http://google.com"] > img': 1 }),
+        sAssertPresence({ 'figure.image > a[href="http://google.com"] > img': 1 }),
 
         api.sSetSelection([0], 0, [0], 0),
         sUnlinkSelection(),
-        sAssertPresense({ 'figure.image > img': 1 }),
+        sAssertPresence({ 'figure.image > img': 1 }),
         TestLinkUi.sClearHistory
       ])
     , onSuccess, onFailure);
