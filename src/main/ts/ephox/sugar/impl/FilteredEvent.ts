@@ -31,7 +31,7 @@ const mkEvent = (target: Element, x: number, y: number, stop: () => void, preven
   };
 };
 
-const handle = function (filter, handler: EventHandler) {
+const handle = function (filter: EventFilter, handler: EventHandler) {
   return function (rawEvent) {
     if (!filter(rawEvent)) { return; }
 
@@ -54,7 +54,7 @@ const handle = function (filter, handler: EventHandler) {
   };
 };
 
-const binder = function (element, event, filter, handler, useCapture): EventUnbinder {
+const binder = function (element: Element, event: string, filter: EventFilter, handler: EventHandler, useCapture: boolean): EventUnbinder {
   const wrapped = handle(filter, handler);
   // IE9 minimum
   element.dom().addEventListener(event, wrapped, useCapture);
