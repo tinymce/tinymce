@@ -260,33 +260,37 @@ const changeAStyle = (helpers: Helpers, info: ImageDialogInfo, api: API) => {
 const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   const data = api.getData();
   api.block('Uploading image'); // What msg do we pass to the lock?
-  const file = data.fileinput[0];
-  const blobUri: string = URL.createObjectURL(file);
+  Arr.head(data.fileinput)
+    .fold(() => {
+      api.unblock();
+    }, (file) => {
+      const blobUri: string = URL.createObjectURL(file);
 
-  const uploader = Uploader({
-    url: info.url,
-    basePath: info.basePath,
-    credentials: info.credentials,
-    handler: info.handler
-  });
+      const uploader = Uploader({
+        url: info.url,
+        basePath: info.basePath,
+        credentials: info.credentials,
+        handler: info.handler
+      });
 
-  const finalize = () => {
-    api.unblock();
-    URL.revokeObjectURL(blobUri);
-  };
+      const finalize = () => {
+        api.unblock();
+        URL.revokeObjectURL(blobUri);
+      };
 
-  Utils.blobToDataUri(file).then((dataUrl) => {
-    const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-    uploader.upload(blobInfo).then((url: string) => {
-      api.setData({ src: { value: url, meta: { } } });
-      api.showTab('General');
-      changeSrc(helpers, info, state, api);
-      finalize();
-    }).catch((err) => {
-      finalize();
-      helpers.alertErr(api, err);
+      Utils.blobToDataUri(file).then((dataUrl) => {
+        const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
+        uploader.upload(blobInfo).then((url: string) => {
+          api.setData({ src: { value: url, meta: { } } });
+          api.showTab('General');
+          changeSrc(helpers, info, state, api);
+          finalize();
+        }).catch((err) => {
+          finalize();
+          helpers.alertErr(api, err);
+        });
+      });
     });
-  });
 };
 
 const changeHandler = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState) => (api: API, evt: ChangeEvent) => {

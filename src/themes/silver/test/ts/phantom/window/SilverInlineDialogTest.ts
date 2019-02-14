@@ -1,4 +1,4 @@
-import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, Step, FocusTools, Logger } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, Step, FocusTools, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -98,6 +98,14 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       'Focus should start on the input',
       Element.fromDom(document),
       'input'
+    ),
+    Assertions.sAssertStructure('"tox-dialog__scroll-disable" should not have been added to the body',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('body', {
+          classes: [ arr.not('tox-dialog__disable-scroll') ]
+        });
+      }),
+      Body.body()
     ),
     Step.sync(() => {
       helpers.uiMothership.broadcastOn([ Channels.dismissPopups() ], {

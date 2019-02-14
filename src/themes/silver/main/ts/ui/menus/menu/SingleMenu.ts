@@ -113,7 +113,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
     };
   }
 
-  if (presets === 'toolbar' && columns !== 'auto') {
+  if (presets === 'listpreview' && columns !== 'auto') {
     const structure = forToolbar(columns);
     return {
       value,

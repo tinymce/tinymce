@@ -107,10 +107,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true
+        cyclicKeying: true,
+        backstage: extras.backstage
       });
     })() : (() => {
-      return ContextForm.renderContextForm(ctx, extras.backstage.shared.providers);
+      return ContextForm.renderContextForm(ctx, extras.backstage);
     })();
   };
 
