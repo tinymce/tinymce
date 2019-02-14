@@ -16,7 +16,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { Text } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import { Universe } from './Universe';
-import { Document } from '@ephox/dom-globals';
+import { Document, Node as DomNode } from '@ephox/dom-globals';
 
 
 
@@ -24,6 +24,10 @@ export default function (): Universe<Element, Document> {
   var clone = function (element) {
     return Element.fromDom(element.dom().cloneNode(false));
   };
+
+  var document = function(element: Element) {
+    return (element.dom() as DomNode).ownerDocument;
+  }
 
   var isBoundary = function (element) {
     if (!Node.isElement(element)) return false;
@@ -95,6 +99,7 @@ export default function (): Universe<Element, Document> {
       children: Traverse.children,
       name: Node.name,
       parent: Traverse.parent,
+      document: document,
       isText: Node.isText,
       isComment: Node.isComment,
       isElement: Node.isElement,

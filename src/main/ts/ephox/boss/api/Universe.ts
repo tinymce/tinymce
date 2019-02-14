@@ -51,6 +51,7 @@ export interface Universe<E,D> {
     children: (element: E) => E[];
     name: (element: E) => string;
     parent: (element: E) => Option<E>;
+    document: (element: E) => D;
     isText: (element: E) => boolean;
     isComment: (element: E) => boolean;
     isElement: (element: E) => boolean;

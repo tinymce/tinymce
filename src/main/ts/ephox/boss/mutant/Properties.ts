@@ -13,6 +13,10 @@ var parent = function (item) {
   return item.parent;
 };
 
+var document = function (item) {
+  return undefined; // currently the test universe does not have documents
+}
+
 var isText = function (item) {
   return item.name === 'TEXT_GENE';
 };
@@ -41,10 +45,11 @@ var isBoundary = function (item) {
   return Arr.contains(TagBoundaries, item.name);
 };
 
-export default <any> {
+export default {
   children: children,
   name: name,
   parent: parent,
+  document: document,
   isText: isText,
   isComment: isComment,
   isElement: isElement,
