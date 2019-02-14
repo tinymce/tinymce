@@ -17,7 +17,7 @@ import { Universe } from './Universe';
 
 
 
-export default function (raw): Universe<any, any> {
+export default function (raw): Universe<any, undefined> {
   var content = Tracks.track(raw, Option.none());
 
   // NOTE: The top point might change when we are wrapping.
@@ -92,6 +92,7 @@ export default function (raw): Universe<any, any> {
       children: Properties.children,
       name: Properties.name,
       parent: Properties.parent,
+      document: Properties.document,
       isText: Properties.isText,
       isComment: Properties.isComment,
       isElement: Properties.isElement,
