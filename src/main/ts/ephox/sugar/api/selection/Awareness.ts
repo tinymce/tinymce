@@ -4,10 +4,8 @@ import * as Text from '../node/Text';
 import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
 
-const elementsWithCursorPosition = ['img', 'br'];
-
 const getEnd = function (element: Element) {
-  return Arr.contains(elementsWithCursorPosition, Node.name(element)) ? 1 : Text.getOption(element).fold(function () {
+  return Node.name(element) === 'img' ? 1 : Text.getOption(element).fold(function () {
     return Traverse.children(element).length;
   }, function (v) {
     return v.length;
@@ -32,6 +30,7 @@ const isTextNodeWithCursorPosition = function (el: Element) {
   }).isSome();
 };
 
+const elementsWithCursorPosition = [ 'img', 'br' ];
 const isCursorPosition = function (elem: Element) {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
   return hasCursorPosition || Arr.contains(elementsWithCursorPosition, Node.name(elem));
