@@ -133,7 +133,7 @@ UnitTest.test('RegexesTest', function () {
   Arr.each(trueCases, function (cs) {
     const matched = Regexes.link().exec(cs);
     assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
-    if (matched.length > 1) {
+    if (matched !== null && matched.length > 1) {
       console.log('matched groups:');
       Arr.each(matched, function (s, i) {
         console.log(i, s);
@@ -143,9 +143,8 @@ UnitTest.test('RegexesTest', function () {
   });
 
   Arr.each(falseCases, function (cs) {
-    const match = Regexes.link().test(cs);
-    const asserter = match === false ? match : (cs === cs.match(Regexes.link())[0]);
-    assert.eq(false, asserter, 'expected false but was true: ' + cs);
+    const match = Regexes.link().exec(cs);
+    assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
   });
 
   const autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
@@ -222,9 +221,9 @@ UnitTest.test('RegexesTest', function () {
 
   // remember don't inline the module function execution, JS regexes have state!
   Obj.each(autolinks, function (v, k) {
-    const match = Regexes.autolink().test(k);
-    if (match) {
-      const url = Regexes.autolink().exec(k)[1];
+    const match = Regexes.autolink().exec(k);
+    if (match !== null) {
+      const url = match[1];
       assert.eq(true, v === url, 'expected ' + v + ' but was "' + url + '"');
     } else {
       assert.fail('expected ' + v + ' but did not match "' + k + '"');

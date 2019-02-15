@@ -4,7 +4,7 @@ import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.find', function () {
-  const check = function (expected: Option<string>, input: string[], value: string) {
+  const check = function (expected: Option<string>, input: string[], value: string | null) {
     const pred = function (unit: Parrays.PArrayTestItem) {
       return unit.item() === value;
     };

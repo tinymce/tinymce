@@ -12,7 +12,7 @@ const splitby: SplitByApi = Split.splitby;
 type SplitByAdvApi = <T>(xs: T[], pred: (x: T) => Splitting<T>) => T[][];
 const splitbyAdv: SplitByAdvApi = Split.splitbyAdv;
 
-type SliceByApi = <T>(list: T[], pred: (x: T, i: number, xs: T[]) => boolean) => T[];
+type SliceByApi = <T>(list: T[], pred: (x: T, i: number, xs: ReadonlyArray<T>) => boolean) => T[];
 const sliceby: SliceByApi = Slice.sliceby;
 
 export {
