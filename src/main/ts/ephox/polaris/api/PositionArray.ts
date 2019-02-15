@@ -2,18 +2,26 @@ import Generator from '../parray/Generator';
 import Query from '../parray/Query';
 import Split from '../parray/Split';
 import Translate from '../parray/Translate';
+import { Option, Arr } from '@ephox/katamari';
+import { PRange } from '../pattern/Types';
 
-const generate = Generator.make;
+type GenerateApi = <T, R extends { finish: () => number; }>(xs: T[], f: (x: T, offset: number) => Option<R>, start?: number) => R[];
+const generate: GenerateApi = Generator.make;
 
-const get = Query.get;
+type GetApi = <T extends PRange>(parray: T[], offset: number) => Option<T>;
+const get: GetApi = Query.get;
 
-const find = Query.find;
+type FindApi = typeof Arr.find;
+const find: FindApi = Query.find;
 
-const splits = Split.splits;
+type SplitsApi = <T extends PRange>(parray: T[], positions: number[], subdivide: (unit: T, positions: number[]) => T[]) => T[];
+const splits: SplitsApi = Split.splits;
 
-const translate = Translate.translate;
+type TranslateApi = <T extends PRange>(parray: T[], offset: number) => T[];
+const translate: TranslateApi = Translate.translate;
 
-const sublist = Query.sublist;
+type SublistApi = <T extends PRange>(parray: T[], start: number, finish: number) => T[];
+const sublist: SublistApi = Query.sublist;
 
 export default {
   generate,

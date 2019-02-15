@@ -1,9 +1,12 @@
 import Find from '../search/Find';
 import Sleuth from '../search/Sleuth';
+import { PRange, PRegExp } from '../pattern/Types';
 
-const findall = Find.all;
+type FindallApi = (input: string, pattern: PRegExp) => PRange[];
+const findall: FindallApi = Find.all;
 
-const findmany = Sleuth.search;
+type FindmanyApi = <T extends { pattern: () => PRegExp; }>(text: string, targets: T[]) => (T & PRange)[];
+const findmany: FindmanyApi = Sleuth.search;
 
 export default {
   findall,

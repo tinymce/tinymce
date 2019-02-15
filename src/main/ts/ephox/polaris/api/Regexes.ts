@@ -1,4 +1,5 @@
-const link = function () {
+type LinkApi = () => RegExp;
+const link: LinkApi = function () {
  /*
     The RegEx parses the following components (https://www.rfc-editor.org/rfc/rfc3986.txt):
 
@@ -56,7 +57,8 @@ const link = function () {
   return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~=%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
 };
 
-const autolink = function () {
+type AutolinkApi = () => RegExp;
+const autolink: AutolinkApi = function () {
   /*
    * Takes the link regex, and makes two additions:
    *
@@ -70,7 +72,8 @@ const autolink = function () {
   return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?#^${}(),]*', 'g');
 };
 
-const tokens = function (value: string, parameters: string[]) {
+type TokensApi = (value: string, parameters: string[]) => string;
+const tokens: TokensApi = function (value: string, parameters: string[]) {
   return value.replace(/\{(\d+)\}/g, function (match, contents: string) {
     const index = parseInt(contents, 10);
     if (parameters[index] === undefined) {

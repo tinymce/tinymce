@@ -1,9 +1,11 @@
 import Sanitise from '../string/Sanitise';
 import Split from '../string/Split';
 
-const splits = Split.splits;
+type SplitsApi = (value: string, indices: number[]) => string[];
+const splits: SplitsApi = Split.splits;
 
-const cssSanitise = Sanitise.css;
+type CssSanitiseApi = (str: string) => string;
+const cssSanitise: CssSanitiseApi = Sanitise.css;
 
 export default {
   cssSanitise,

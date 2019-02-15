@@ -2,24 +2,35 @@ import Chars from '../pattern/Chars';
 import Custom from '../pattern/Custom';
 import Safe from '../pattern/Safe';
 import Unsafe from '../pattern/Unsafe';
+import { PRegExp } from '../pattern/Types';
+import { Option } from '@ephox/katamari';
 
-const safeword = Safe.word;
+type SafewordApi = (input: string) => PRegExp;
+const safeword: SafewordApi = Safe.word;
 
-const safetoken = Safe.token;
+type SafeTokenApi = (input: string) => PRegExp;
+const safetoken: SafeTokenApi = Safe.token;
 
-const custom = Custom;
+type CustomApi = (regex: string, prefix: (match: RegExpExecArray) => number, suffix: (match: RegExpExecArray) => number, flags: Option<string>) => PRegExp;
+const custom: CustomApi = Custom;
 
-const unsafeword = Unsafe.word;
+type UnsafewordApi = (input: string) => PRegExp;
+const unsafeword: UnsafewordApi = Unsafe.word;
 
-const unsafetoken = Unsafe.token;
+type UnsafetokenApi = (input: string) => PRegExp;
+const unsafetoken: UnsafetokenApi = Unsafe.token;
 
-const sanitise = Safe.sanitise;
+type SanitiseApi = (input: string) => string;
+const sanitise: SanitiseApi = Safe.sanitise;
 
-const chars = Chars.chars;
+type CharsApi = () => string;
+const chars: CharsApi = Chars.chars;
 
-const wordbreak = Chars.wordbreak;
+type WordbreakApi = () => string;
+const wordbreak: WordbreakApi = Chars.wordbreak;
 
-const wordchar = Chars.wordchar;
+type WordcharApi = () => string;
+const wordchar: WordcharApi = Chars.wordchar;
 
 export default {
   safeword,
