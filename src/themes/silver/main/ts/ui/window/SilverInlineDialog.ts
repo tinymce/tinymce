@@ -42,7 +42,6 @@ interface WindowExtra<T> {
 const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
-  const dialogFooterId = Id.generate('dialog-footer');
 
   const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => {
     return Option.some(incoming);
@@ -64,7 +63,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: dialogInit.internalDialog.buttons
-    }, dialogFooterId, backstage.shared.providers)
+    }, backstage.shared.providers)
   );
 
   const dialogEvents = SilverDialogEvents.init(
@@ -82,7 +81,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const attributes = {
       role: 'dialog',
       ['aria-labelledby']: dialogLabelId,
-      ['aria-describedby']: `${dialogContentId} ${dialogFooterId}`,
+      ['aria-describedby']: `${dialogContentId}`,
       ...ariaAttrs ? { ['aria-live']: 'polite' } : {}
   };
 
