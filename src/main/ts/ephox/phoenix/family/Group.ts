@@ -1,7 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Arrays, Splitting } from '@ephox/polaris';
-import { TypedItem } from '../api/data/TypedItem';
 import * as Extract from '../api/general/Extract';
 
 /**
@@ -15,12 +14,11 @@ const group = function <E, D>(universe: Universe<E, D>, items: E[], optimise?: (
   // TBIO-3432: Previously, we only split by boundaries. Now, we are splitting by
   // empty tags as well. However, we keep the empty tags.
   const segments = Arrays.splitbyAdv(extractions, function (item) {
-    return TypedItem.cata(
-      item,
-      () => Splitting.excludeWithout(item),
-      () => Splitting.excludeWith(item),
-      () => Splitting.include(item)
-    );
+    return item.match({
+      boundary: () => Splitting.excludeWithout(item),
+      empty: () => Splitting.excludeWith(item),
+      text: () => Splitting.include(item)
+    });
   });
 
   return Arr.filter(segments, function (x) { return x.length > 0; });
