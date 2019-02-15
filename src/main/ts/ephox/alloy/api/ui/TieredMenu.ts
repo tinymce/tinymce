@@ -38,7 +38,7 @@ const collapseItem = (text: string): ItemDataTuple => {
   };
 };
 
-const tieredMenu = single({
+const tieredMenu: TieredMenuSketcher = single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -86,7 +86,7 @@ const tieredMenu = single({
     singleData,
     collapseItem
   }
-}) as Partial<TieredMenuSketcher>;
+});
 
 export {
   tieredMenu,
