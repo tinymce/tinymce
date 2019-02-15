@@ -1,7 +1,7 @@
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import PositionArray from 'ephox/polaris/api/PositionArray';
-import Parrays from 'ephox/polaris/test/Parrays';
-import { UnitTest, assert } from '@ephox/bedrock';
+import * as PositionArray from 'ephox/polaris/api/PositionArray';
+import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.get', function () {
   const check = function (expected: Option<string>, input: string[], offset: number) {

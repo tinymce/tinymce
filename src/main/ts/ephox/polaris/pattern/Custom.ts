@@ -1,7 +1,8 @@
 import { Option } from '@ephox/katamari';
 import { PRegExp } from './Types';
 
-export default function (regex: string, prefix: PRegExp['prefix'], suffix: PRegExp['suffix'], flags: Option<string>): PRegExp {
+// tslint:disable-next-line:variable-name
+export const Custom = function (regex: string, prefix: PRegExp['prefix'], suffix: PRegExp['suffix'], flags: Option<string>): PRegExp {
   const term = function () {
     return new RegExp(regex, flags.getOr('g'));
   };
@@ -11,4 +12,4 @@ export default function (regex: string, prefix: PRegExp['prefix'], suffix: PRegE
     prefix,
     suffix
   };
-}
+};

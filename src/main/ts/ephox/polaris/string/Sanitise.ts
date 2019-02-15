@@ -11,6 +11,6 @@ const css = function (str: string) {
   return r + sanitised;
 };
 
-export default {
+export {
   css
 };

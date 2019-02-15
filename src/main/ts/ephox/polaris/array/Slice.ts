@@ -8,6 +8,6 @@ const sliceby = function <T> (list: T[], pred: (x: T, i: number, xs: T[]) => boo
   return list.slice(0, index);
 };
 
-export default {
+export {
   sliceby
 };

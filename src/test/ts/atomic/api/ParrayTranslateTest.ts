@@ -1,6 +1,6 @@
-import PositionArray from 'ephox/polaris/api/PositionArray';
-import Parrays from 'ephox/polaris/test/Parrays';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as PositionArray from 'ephox/polaris/api/PositionArray';
+import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.translate', function () {
   const check = function (expected: string[], input: string[], offset: number) {

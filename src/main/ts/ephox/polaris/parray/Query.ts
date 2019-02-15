@@ -44,7 +44,7 @@ const find: typeof Arr.find = function (parray, pred) {
   return Arr.find(parray, pred);
 };
 
-export default {
+export {
   get,
   find,
   inUnit,

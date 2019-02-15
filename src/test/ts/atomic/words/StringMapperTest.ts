@@ -1,6 +1,6 @@
+import { assert, UnitTest } from '@ephox/bedrock';
 import * as StringMapper from 'ephox/polaris/words/StringMapper';
 import * as UnicodeData from 'ephox/polaris/words/UnicodeData';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Words.StringMapperTest', function () {
   const ci = UnicodeData.characterIndices;

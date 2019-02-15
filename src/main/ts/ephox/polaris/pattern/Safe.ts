@@ -1,4 +1,4 @@
-import Unsafe from './Unsafe';
+import * as Unsafe from './Unsafe';
 
 /** Escapes regex characters in a string */
 const sanitise = function (input: string) {
@@ -15,7 +15,7 @@ const token = function (input: string) {
   return Unsafe.token(value);
 };
 
-export default {
+export {
   sanitise,
   word,
   token

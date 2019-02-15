@@ -8,12 +8,16 @@ import { Unicode, Fun } from '@ephox/katamari';
 // \u00C0 - \u00FF are various language characters (Latin-1)
 // \u0100 - \u017F are various language characters (Latin Extended-A)
 // \u2018 and \u2019 are the smart quote characters
-const chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
-const wordbreak = '[^' + chars + ']';
-const wordchar = '[' + chars + ']';
+const charsStr = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
+const wordbreakStr = '[^' + charsStr + ']';
+const wordcharStr = '[' + charsStr + ']';
 
-export default {
-  chars: Fun.constant(chars) as () => string,
-  wordbreak: Fun.constant(wordbreak) as () => string,
-  wordchar: Fun.constant(wordchar) as () => string
+const chars = Fun.constant(charsStr) as () => string;
+const wordbreak = Fun.constant(wordbreakStr) as () => string;
+const wordchar = Fun.constant(wordcharStr) as () => string;
+
+export {
+  chars,
+  wordbreak,
+  wordchar
 };

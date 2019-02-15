@@ -10,6 +10,6 @@ const boundAt = function <T, T2> (xs: T[], left: T2, right: T2, comparator: (a: 
   return xs.slice(first, last);
 };
 
-export default {
+export {
   boundAt
 };

@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Find from './Find';
+import * as Find from './Find';
 import { PRegExp, PRange } from '../pattern/Types';
 
 const sort = function <T extends PRange> (array: T[]) {
@@ -35,6 +35,6 @@ const search = function <T extends { pattern: () => PRegExp }> (text: string, ta
   return sort(unsorted);
 };
 
-export default {
+export {
   search
 };

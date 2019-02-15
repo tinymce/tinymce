@@ -27,6 +27,6 @@ const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T
   return r.list;
 };
 
-export default {
+export {
   make
 };

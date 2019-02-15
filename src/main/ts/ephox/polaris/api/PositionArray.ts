@@ -1,8 +1,8 @@
-import Generator from '../parray/Generator';
-import Query from '../parray/Query';
-import Split from '../parray/Split';
-import Translate from '../parray/Translate';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
+import * as Generator from '../parray/Generator';
+import * as Query from '../parray/Query';
+import * as Split from '../parray/Split';
+import * as Translate from '../parray/Translate';
 import { PRange } from '../pattern/Types';
 
 type GenerateApi = <T, R extends { finish: () => number; }>(xs: T[], f: (x: T, offset: number) => Option<R>, start?: number) => R[];
@@ -23,7 +23,7 @@ const translate: TranslateApi = Translate.translate;
 type SublistApi = <T extends PRange>(parray: T[], start: number, finish: number) => T[];
 const sublist: SublistApi = Query.sublist;
 
-export default {
+export {
   generate,
   get,
   find,

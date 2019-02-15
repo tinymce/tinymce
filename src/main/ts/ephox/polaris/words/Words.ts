@@ -1,5 +1,5 @@
+import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
-import { classify, CharacterMap } from './StringMapper';
 import { isWordBoundary } from './WordBoundary';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;

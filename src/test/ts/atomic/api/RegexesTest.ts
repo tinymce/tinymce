@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Obj } from '@ephox/katamari';
-import Regexes from 'ephox/polaris/api/Regexes';
+import * as Regexes from 'ephox/polaris/api/Regexes';
 
 // tslint:disable no-console
 UnitTest.test('RegexesTest', function () {

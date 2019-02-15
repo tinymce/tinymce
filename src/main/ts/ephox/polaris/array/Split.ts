@@ -37,7 +37,7 @@ const splitbyAdv = function <T> (xs: T[], pred: (x: T) => Splitting<T>) {
   return r;
 };
 
-export default {
+export {
   splitby,
   splitbyAdv
 };

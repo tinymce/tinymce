@@ -12,6 +12,6 @@ const translate = function <T extends PRange> (parray: T[], offset: number) {
   });
 };
 
-export default {
+export {
   translate
 };

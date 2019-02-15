@@ -83,7 +83,7 @@ const tokens: TokensApi = function (value: string, parameters: string[]) {
   });
 };
 
-export default {
+export {
   tokens,
   link,
   autolink

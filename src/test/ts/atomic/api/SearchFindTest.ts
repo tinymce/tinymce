@@ -1,8 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Struct, Unicode } from '@ephox/katamari';
-import Pattern from 'ephox/polaris/api/Pattern';
-import Search from 'ephox/polaris/api/Search';
-import Safe from 'ephox/polaris/pattern/Safe';
+import * as Pattern from 'ephox/polaris/api/Pattern';
+import * as Search from 'ephox/polaris/api/Search';
+import * as Safe from 'ephox/polaris/pattern/Safe';
 import { PRegExp } from 'ephox/polaris/pattern/Types';
 
 UnitTest.test('api.Search.findall (using api.Pattern)', function () {

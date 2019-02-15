@@ -1,6 +1,6 @@
 import { Fun, Option } from '@ephox/katamari';
-import Chars from './Chars';
-import Custom from './Custom';
+import * as Chars from './Chars';
+import { Custom } from './Custom';
 
 /**
  * Tokens have no prefix or suffix
@@ -29,7 +29,7 @@ const word = function (input: string) {
   return Custom(regex, prefix, suffix, Option.none());
 };
 
-export default {
+export {
   token,
   word
 };

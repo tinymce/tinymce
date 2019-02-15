@@ -20,6 +20,6 @@ const splits = function (value: string, indices: number[]): string[] {
   return lastPoint < value.length ? divisions.values.concat(value.substring(lastPoint)) : divisions.values;
 };
 
-export default {
+export {
   splits
 };

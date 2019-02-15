@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import Query from './Query';
-import Translate from './Translate';
+import * as Query from './Query';
+import * as Translate from './Translate';
 import { PRange } from '../pattern/Types';
 
 /**
@@ -26,6 +26,6 @@ const splits = function <T extends PRange> (parray: T[], positions: number[], su
   });
 };
 
-export default {
+export {
   splits
 };

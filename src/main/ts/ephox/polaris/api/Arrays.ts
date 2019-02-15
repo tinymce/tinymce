@@ -1,6 +1,6 @@
-import Boundaries from '../array/Boundaries';
-import Slice from '../array/Slice';
-import Split from '../array/Split';
+import * as Boundaries from '../array/Boundaries';
+import * as Slice from '../array/Slice';
+import * as Split from '../array/Split';
 import { Splitting } from './Main';
 
 type BoundAtApi = <T, T2>(xs: T[], left: T2, right: T2, comparator: (a: T2, b: T) => boolean) => T[];
@@ -15,7 +15,7 @@ const splitbyAdv: SplitByAdvApi = Split.splitbyAdv;
 type SliceByApi = <T>(list: T[], pred: (x: T, i: number, xs: T[]) => boolean) => T[];
 const sliceby: SliceByApi = Slice.sliceby;
 
-export default {
+export {
   splitby,
   splitbyAdv,
   sliceby,

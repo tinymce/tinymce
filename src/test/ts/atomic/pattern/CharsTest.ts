@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Chars from 'ephox/polaris/pattern/Chars';
+import * as Chars from 'ephox/polaris/pattern/Chars';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CharsTest', function () {

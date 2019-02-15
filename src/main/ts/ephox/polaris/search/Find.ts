@@ -21,6 +21,6 @@ const all = function (input: string, pattern: PRegExp) {
   return r;
 };
 
-export default {
+export {
   all
 };

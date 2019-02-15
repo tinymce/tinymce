@@ -1,5 +1,5 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import PositionArray from 'ephox/polaris/api/PositionArray';
+import * as PositionArray from 'ephox/polaris/api/PositionArray';
 
 export interface PArrayTestItem {
   start: () => number;
@@ -25,7 +25,7 @@ const dump = function (parray: PArrayTestItem[]) {
   });
 };
 
-export default {
+export {
   make,
   dump
 };
