@@ -186,8 +186,9 @@
     width: @collection-item-list-icon-width * 2;
   }
 
-  .tox-collection--list .tox-collection__item-icon:first-child {
-    margin-right: @pad-sm;
+  // Make a space between all elements within a list item
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-left: @pad-sm;
   }
 
   // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
