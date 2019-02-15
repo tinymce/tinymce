@@ -1,11 +1,17 @@
 import { Arr } from '@ephox/katamari';
-import Chars from 'ephox/polaris/pattern/Chars';
+import * as Chars from 'ephox/polaris/pattern/Chars';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CharsTest', function () {
   const supported = [ 'fr', 'en_au', 'pt', 'it', 'nl', 'en_uk', 'pt_pt', 'de', 'nb', 'en_br', 'sv', 'da', 'en', 'es', 'en_gb', 'fi', 'en_us' ];
 
-  const extras = {
+  interface Extra {
+    label: string;
+    html: string;
+    chars: string;
+  }
+
+  const extras: Record<string, Extra> = {
     fr: {
       label: 'French language',
       html: 'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
@@ -97,7 +103,7 @@ UnitTest.test('CharsTest', function () {
 
   const regex = new RegExp(Chars.wordchar(), '');
 
-  const checkAllKnown = function (label, str) {
+  const checkAllKnown = function (label: string, str: string) {
     const chars = str.split('');
     const breaks = Arr.filter(chars, function (c) {
       return !regex.test(c);

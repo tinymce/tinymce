@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
 /**
  * Generate a PositionArray
@@ -7,19 +7,19 @@ import { Arr, Fun } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * start: sets the start position to search at
  */
-const make = function (xs, f, start?) {
+const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T, offset: number) => Option<R>, start: number = 0) {
 
   const init = {
-    len: start !== undefined ? start : 0,
-    list: []
+    len: start,
+    list: [] as R[]
   };
 
-  const r = Arr.foldl(xs, function (b, a) {
-    const value = f(a, b.len);
-    return value.fold(Fun.constant(b), function (v) {
+  const r = Arr.foldl(xs, function (acc, item) {
+    const value = f(item, acc.len);
+    return value.fold(Fun.constant(acc), function (v) {
       return {
         len: v.finish(),
-        list: b.list.concat([v])
+        list: acc.list.concat([v])
       };
     });
   }, init);
@@ -27,6 +27,6 @@ const make = function (xs, f, start?) {
   return r.list;
 };
 
-export default {
+export {
   make
 };

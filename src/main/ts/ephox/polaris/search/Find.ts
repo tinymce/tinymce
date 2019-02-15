@@ -1,11 +1,12 @@
 import { Fun } from '@ephox/katamari';
+import { PRegExp, PRange } from '../pattern/Types';
 
 /**
  * Returns the offset pairs of all matches of pattern on the input string, adjusting for prefix and suffix offsets
  */
-const all = function (input, pattern) {
+const all = function (input: string, pattern: PRegExp) {
   const term = pattern.term();
-  const r = [];
+  const r: PRange[] = [];
   let match = term.exec(input);
   while (match) {
     const start = match.index + pattern.prefix(match);
@@ -20,6 +21,6 @@ const all = function (input, pattern) {
   return r;
 };
 
-export default {
+export {
   all
 };

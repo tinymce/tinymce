@@ -1,15 +1,15 @@
-import PositionArray from 'ephox/polaris/api/PositionArray';
-import Strings from 'ephox/polaris/api/Strings';
-import Parrays from 'ephox/polaris/test/Parrays';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as PositionArray from 'ephox/polaris/api/PositionArray';
+import * as Strings from 'ephox/polaris/api/Strings';
+import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.splits', function () {
-  const subdivide = function (unit, positions) {
+  const subdivide = function (unit: Parrays.PArrayTestItem, positions: number[]) {
     const tokens = Strings.splits(unit.item(), positions);
     return Parrays.make(tokens);
   };
 
-  const check = function (expected, input, positions) {
+  const check = function (expected: string[], input: string[], positions: number[]) {
     const parray = Parrays.make(input);
     const actual = PositionArray.splits(parray, positions, subdivide);
     assert.eq(expected, Parrays.dump(actual));

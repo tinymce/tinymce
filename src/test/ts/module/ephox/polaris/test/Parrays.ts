@@ -1,25 +1,31 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import PositionArray from 'ephox/polaris/api/PositionArray';
+import * as PositionArray from 'ephox/polaris/api/PositionArray';
 
-const generator = function (item, start) {
-  return Option.some({
+export interface PArrayTestItem {
+  start: () => number;
+  finish: () => number;
+  item: () => string;
+}
+
+const generator = function (item: string, start: number) {
+  return Option.some<PArrayTestItem>({
     start: Fun.constant(start),
     finish: Fun.constant(start + item.length),
     item: Fun.constant(item)
   });
 };
 
-const make = function (values) {
+const make = function (values: string[]) {
   return PositionArray.generate(values, generator);
 };
 
-const dump = function (parray) {
+const dump = function (parray: PArrayTestItem[]) {
   return Arr.map(parray, function (unit) {
     return unit.start() + '->' + unit.finish() + '@ ' + unit.item();
   });
 };
 
-export default {
+export {
   make,
   dump
 };

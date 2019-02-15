@@ -1,5 +1,8 @@
-import { getWords } from '../words/Words';
+import { getWords as getWordsBase, WordOptions } from '../words/Words';
 
-export default {
+type GetWordsApi = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions) => T[][];
+const getWords: GetWordsApi = getWordsBase;
+
+export {
   getWords
 };

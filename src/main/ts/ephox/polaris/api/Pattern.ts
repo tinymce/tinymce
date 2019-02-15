@@ -1,45 +1,38 @@
-import Chars from '../pattern/Chars';
-import Custom from '../pattern/Custom';
-import Safe from '../pattern/Safe';
-import Unsafe from '../pattern/Unsafe';
+import { Option } from '@ephox/katamari';
+import * as Chars from '../pattern/Chars';
+import { Custom } from '../pattern/Custom';
+import * as Safe from '../pattern/Safe';
+import { PRegExp } from '../pattern/Types';
+import * as Unsafe from '../pattern/Unsafe';
 
-const safeword = function (input) {
-  return Safe.word(input);
-};
+type SafewordApi = (input: string) => PRegExp;
+const safeword: SafewordApi = Safe.word;
 
-const safetoken = function (input) {
-  return Safe.token(input);
-};
+type SafeTokenApi = (input: string) => PRegExp;
+const safetoken: SafeTokenApi = Safe.token;
 
-const custom = function (input, prefix, suffix, flags) {
-  return Custom(input, prefix, suffix, flags);
-};
+type CustomApi = (regex: string, prefix: (match: RegExpExecArray) => number, suffix: (match: RegExpExecArray) => number, flags: Option<string>) => PRegExp;
+const custom: CustomApi = Custom;
 
-const unsafeword = function (input) {
-  return Unsafe.word(input);
-};
+type UnsafewordApi = (input: string) => PRegExp;
+const unsafeword: UnsafewordApi = Unsafe.word;
 
-const unsafetoken = function (input) {
-  return Unsafe.token(input);
-};
+type UnsafetokenApi = (input: string) => PRegExp;
+const unsafetoken: UnsafetokenApi = Unsafe.token;
 
-const sanitise = function (input) {
-  return Safe.sanitise(input);
-};
+type SanitiseApi = (input: string) => string;
+const sanitise: SanitiseApi = Safe.sanitise;
 
-const chars = function () {
-  return Chars.chars();
-};
+type CharsApi = () => string;
+const chars: CharsApi = Chars.chars;
 
-const wordbreak = function () {
-  return Chars.wordbreak();
-};
+type WordbreakApi = () => string;
+const wordbreak: WordbreakApi = Chars.wordbreak;
 
-const wordchar = function () {
-  return Chars.wordchar();
-};
+type WordcharApi = () => string;
+const wordchar: WordcharApi = Chars.wordchar;
 
-export default {
+export {
   safeword,
   safetoken,
   custom,

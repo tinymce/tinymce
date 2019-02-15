@@ -1,15 +1,13 @@
-import Sanitise from '../string/Sanitise';
-import Split from '../string/Split';
+import * as Sanitise from '../string/Sanitise';
+import * as Split from '../string/Split';
 
-const splits = function (text, points) {
-  return Split.splits(text, points);
-};
+type SplitsApi = (value: string, indices: number[]) => string[];
+const splits: SplitsApi = Split.splits;
 
-const cssSanitise = function (str) {
-  return Sanitise.css(str);
-};
+type CssSanitiseApi = (str: string) => string;
+const cssSanitise: CssSanitiseApi = Sanitise.css;
 
-export default {
+export {
   cssSanitise,
   splits
 };
