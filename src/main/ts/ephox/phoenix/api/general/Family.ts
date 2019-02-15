@@ -1,15 +1,15 @@
-import Group from '../../family/Group';
-import Range from '../../family/Range';
+import { Universe } from '@ephox/boss';
+import * as Group from '../../family/Group';
+import * as Range from '../../family/Range';
+import { TypedItem } from '../data/TypedItem';
 
-var range = function (universe, start, startDelta, finish, finishDelta) {
-  return Range.range(universe, start, startDelta, finish, finishDelta);
-};
+type RangeApi = <E, D>(universe: Universe<E, D>, item1: E, delta1: number, item2: E, delta2: number) => E[];
+const range: RangeApi = Range.range;
 
-var group = function (universe, items, optimise) {
-  return Group.group(universe, items, optimise);
-};
+type GroupApi = <E, D>(universe: Universe<E, D>, items: E[], optimise?: (e: E) => boolean) => TypedItem<E, D>[][];
+const group: GroupApi = Group.group;
 
-export default {
-  range: range,
-  group: group
+export {
+  range,
+  group
 };

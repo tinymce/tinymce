@@ -1,7 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Spot from '../api/data/Spot';
-import TypedItem from './TypedItem';
-import TypedList from './TypedList';
+import * as Spot from '../api/data/Spot';
+import { TypedItem } from '../api/data/TypedItem';
+import * as TypedList from './TypedList';
 
 /**
  * Flattens the item tree into an array of TypedItem representations.
@@ -15,11 +16,11 @@ import TypedList from './TypedList';
  *  Otherwise returns []
  * TODO: for TBIO-470 for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
  */
-var typed = function (universe, item, optimise) {
+var typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): TypedItem<E, D>[] {
   if (universe.property().isText(item)) {
-    return [ TypedItem.text(item, universe) ];
+    return [TypedItem.text(item, universe)];
   } else if (universe.property().isEmptyTag(item)) {
-    return [ TypedItem.empty(item, universe) ];
+    return [TypedItem.empty(item, universe)];
   } else if (universe.property().isElement(item)) {
     var children = universe.property().children(item);
     var boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
@@ -35,17 +36,17 @@ var typed = function (universe, item, optimise) {
 /**
  * Returns just the actual elements from a call to typed().
  */
-var items = function (universe, item, optimise) {
+var items = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
   var typedItemList = typed(universe, item, optimise);
 
-  var raw = function (item, universe) { return item; };
+  var raw = function (item: E, _universe: Universe<E, D>) { return item; };
 
-  return Arr.map(typedItemList, function (typedItem) {
+  return Arr.map(typedItemList, function (typedItem: TypedItem<E, D>) {
     return typedItem.fold(raw, raw, raw);
   });
 };
 
-var extractToElem = function (universe, child, offset, item, optimise) {
+var extractToElem = function <E, D>(universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean) {
   var extractions = typed(universe, item, optimise);
   var prior = TypedList.dropUntil(extractions, child);
   var count = TypedList.count(prior);
@@ -58,7 +59,7 @@ var extractToElem = function (universe, child, offset, item, optimise) {
  *
  * To find the exact reference later, use Find.
  */
-var extract = function (universe, child, offset, optimise) {
+var extract = function <E, D>(universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) {
   return universe.property().parent(child).fold(function () {
     return Spot.point(child, offset);
   }, function (parent) {
@@ -72,7 +73,7 @@ var extract = function (universe, child, offset, optimise) {
  *
  * To find the exact reference later, use Find.
  */
-var extractTo = function (universe, child, offset, pred, optimise) {
+var extractTo = function <E, D>(universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) {
   return universe.up().predicate(child, pred).fold(function () {
     return Spot.point(child, offset);
   }, function (v) {
@@ -80,9 +81,9 @@ var extractTo = function (universe, child, offset, pred, optimise) {
   });
 };
 
-export default {
-  typed: typed,
-  items: items,
-  extractTo: extractTo,
-  extract: extract
+export {
+  typed,
+  items,
+  extractTo,
+  extract
 };

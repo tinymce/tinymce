@@ -2,8 +2,8 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
-import Gather from 'ephox/phoenix/api/general/Gather';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Gather from 'ephox/phoenix/api/general/Gather';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Seeker Test', function() {

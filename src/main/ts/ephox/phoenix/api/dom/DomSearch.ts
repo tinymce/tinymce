@@ -1,21 +1,23 @@
 import { DomUniverse } from '@ephox/boss';
-import Search from '../general/Search';
+import { Element } from '@ephox/sugar';
+import { NamedPattern } from '../data/NamedPattern';
+import * as Search from '../general/Search';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var run = function (elements, patterns, optimise?) {
+const run = function (elements: Element[], patterns: NamedPattern[], optimise?: (e: Element) => boolean) {
   return Search.run(universe, elements, patterns, optimise);
 };
 
-var safeWords = function (elements, words, optimise?) {
+const safeWords = function (elements: Element[], words: string[], optimise?: (e: Element) => boolean) {
   return Search.safeWords(universe, elements, words, optimise);
 };
 
-var safeToken = function (elements, token, optimise?) {
+const safeToken = function (elements: Element[], token: string, optimise?: (e: Element) => boolean) {
   return Search.safeToken(universe, elements, token, optimise);
 };
 
-export default {
+export {
   safeWords,
   safeToken,
   run,

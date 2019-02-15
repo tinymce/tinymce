@@ -2,10 +2,10 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Spot from 'ephox/phoenix/api/data/Spot';
-import Splitter from 'ephox/phoenix/search/Splitter';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Spot from 'ephox/phoenix/api/data/Spot';
+import * as Splitter from 'ephox/phoenix/search/Splitter';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SplitterTest', function() {

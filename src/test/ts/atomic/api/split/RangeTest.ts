@@ -1,9 +1,9 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
-import Split from 'ephox/phoenix/api/general/Split';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Split from 'ephox/phoenix/api/general/Split';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IdentifyTest', function() {

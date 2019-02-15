@@ -1,18 +1,19 @@
+import { Universe } from '@ephox/boss';
 import { Fun } from '@ephox/katamari';
-import InjectPosition from '../api/data/InjectPosition';
-import Split from '../api/general/Split';
+import { InjectPosition } from '../api/data/InjectPosition';
+import * as Split from '../api/general/Split';
 
-var insertAtText = function (universe, element, offset) {
-  var split = Split.split(universe, element, offset);
-  var position = Split.position(universe, split);
+const insertAtText = function <E, D>(universe: Universe<E, D>, element: E, offset: number) {
+  const split = Split.split(universe, element, offset);
+  const position = Split.position(universe, split);
   return position.fold(function () {
     return InjectPosition.invalid(element, offset);
-  }, InjectPosition.before, InjectPosition.after, InjectPosition.after);
+  }, InjectPosition.before, (before, _after) => InjectPosition.after(before), InjectPosition.after);
 };
 
-var insertAtElement = function (universe, parent, offset) {
-  var children = universe.property().children(parent);
-  var isEmptyTag = universe.property().isEmptyTag(parent);
+const insertAtElement = function <E, D>(universe: Universe<E, D>, parent: E, offset: number) {
+  const children = universe.property().children(parent);
+  const isEmptyTag = universe.property().isEmptyTag(parent);
 
   if (isEmptyTag) return InjectPosition.before(parent);
   else if (offset === children.length) return InjectPosition.last(parent);
@@ -33,28 +34,28 @@ var insertAtElement = function (universe, parent, offset) {
  *   - if a valid child, insert before the child.
  *   - if invalid .... invalid case.
  */
-var atStartOf = function (universe, element, offset, injection) {
-  var insertion = universe.property().isText(element) ? insertAtText : insertAtElement;
-  var position = insertion(universe, element, offset);
+const atStartOf = function <E, D>(universe: Universe<E, D>, element: E, offset: number, injection: E) {
+  const insertion = universe.property().isText(element) ? insertAtText : insertAtElement;
+  const position = insertion(universe, element, offset);
 
-  var onLast = function (p) {
+  const onLast = function (p: E) {
     universe.insert().append(p, injection);
   };
 
-  var onBefore = function (m) {
+  const onBefore = function (m: E) {
     universe.insert().before(m, injection);
   };
 
-  var onAfter = function (m) {
+  const onAfter = function (m: E) {
     universe.insert().after(m, injection);
   };
 
-  var onRest = onBefore;
-  var onInvalid = Fun.noop;
+  const onRest = onBefore;
+  const onInvalid = Fun.noop;
 
   position.fold(onBefore, onAfter, onRest, onLast, onInvalid);
 };
 
-export default {
-  atStartOf: atStartOf
+export {
+  atStartOf
 };

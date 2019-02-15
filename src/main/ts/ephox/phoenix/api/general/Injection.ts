@@ -1,9 +1,9 @@
-import Injection from '../../injection/Injection';
+import { Universe } from '@ephox/boss';
+import * as Injection from '../../injection/Injection';
 
-var atStartOf = function (universe, element, offset, injection) {
-  Injection.atStartOf(universe, element, offset, injection);
-};
+type AtStartOfApi = <E, D>(universe: Universe<E, D>, element: E, offset: number, injection: E) => void;
+const atStartOf: AtStartOfApi = Injection.atStartOf;
 
-export default {
-  atStartOf: atStartOf
+export {
+  atStartOf
 };

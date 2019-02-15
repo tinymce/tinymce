@@ -2,8 +2,8 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
-import Split from 'ephox/phoenix/api/general/Split';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Split from 'ephox/phoenix/api/general/Split';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Split.(split,splitByPair)', function() {

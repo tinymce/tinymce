@@ -2,9 +2,9 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
-import Contiguous from 'ephox/phoenix/util/Contiguous';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Contiguous from 'ephox/phoenix/util/Contiguous';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Contiguous Text Nodes Test', function() {

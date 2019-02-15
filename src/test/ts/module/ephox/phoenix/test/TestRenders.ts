@@ -30,11 +30,11 @@ var text = function (item) {
   return item.text;
 };
 
-export default {
-  typeditem: typeditem,
-  typeditems: typeditems,
-  ids: ids,
-  id: id,
-  texts: texts,
-  text: text
+export {
+  typeditem,
+  typeditems,
+  ids,
+  id,
+  texts,
+  text
 };

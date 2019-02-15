@@ -1,8 +1,8 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import Page from '../module/ephox/phoenix/test/Page';
+import { Page } from '../module/ephox/phoenix/test/Page';
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Element, Text } from '@ephox/sugar';
-import DomExtract from 'ephox/phoenix/api/dom/DomExtract';
+import * as DomExtract from 'ephox/phoenix/api/dom/DomExtract';
 
 UnitTest.test('DomExtractTest', function () {
 

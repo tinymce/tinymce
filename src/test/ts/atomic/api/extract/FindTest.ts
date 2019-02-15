@@ -2,8 +2,8 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
-import Extract from 'ephox/phoenix/api/general/Extract';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Extract from 'ephox/phoenix/api/general/Extract';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Extract.find', function() {

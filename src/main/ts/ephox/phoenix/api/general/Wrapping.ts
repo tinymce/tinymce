@@ -1,36 +1,34 @@
-import SpanWrap from '../../wrap/SpanWrap';
-import Wrapper from '../../wrap/Wrapper';
-import Wraps from '../../wrap/Wraps';
+import { Universe } from '@ephox/boss';
+import { Option } from '@ephox/katamari';
+import * as SpanWrap from '../../wrap/SpanWrap';
+import * as Wrapper from '../../wrap/Wrapper';
+import { Wraps } from '../../wrap/Wraps';
+import { SpotPoints, Wrapter } from '../data/Types';
 
-var nu = function (universe, element) {
-  return Wraps(universe, element);
-};
+type NuApi = <E, D>(universe: Universe<E, D>, item: E) => Wrapter<E>;
+const nu: NuApi = Wraps;
 
-var wrapWith = function (universe, base, baseOffset, end, endOffset, c) {
-  return Wrapper.wrapWith(universe, base, baseOffset, end, endOffset, c);
-};
+type WrapWithApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) => E[];
+const wrapWith: WrapWithApi = Wrapper.wrapWith;
 
-var wrapper = function (universe, wrapped, c) {
-  return Wrapper.wrapper(universe, wrapped, c);
-};
+type WrapperApi = <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>) => E[];
+const wrapper: WrapperApi = Wrapper.wrapper;
 
-var leaves = function (universe, base, baseOffset, end, endOffset, c) {
-  return Wrapper.leaves(universe, base, baseOffset, end, endOffset, c);
-};
+type LeavesApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) => Option<SpotPoints<E>>;
+const leaves: LeavesApi = Wrapper.leaves;
 
-var reuse = function (universe, base, baseOffset, end, endOffset, predicate, nu) {
-  return Wrapper.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
-};
+type ReuseApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) => E[];
+const reuse: ReuseApi = Wrapper.reuse;
 
-var spans = function (universe, base, baseOffset, end, endOffset, exclusions) {
+const spans = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, exclusions?: (e: E) => boolean) {
   return SpanWrap.spans(universe, base, baseOffset, end, endOffset, exclusions);
 };
 
-export default {
-  nu: nu,
-  wrapWith: wrapWith,
-  wrapper: wrapper,
-  leaves: leaves,
-  reuse: reuse,
-  spans: spans
+export {
+  nu,
+  wrapWith,
+  wrapper,
+  leaves,
+  reuse,
+  spans
 };

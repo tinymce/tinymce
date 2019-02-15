@@ -2,8 +2,8 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
-import DomSearch from 'ephox/phoenix/api/dom/DomSearch';
-import DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
+import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
+import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomSearchTest', function () {
   var body = Element.fromDom(document.body);

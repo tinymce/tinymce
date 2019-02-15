@@ -1,46 +1,44 @@
-import { Fun } from '@ephox/katamari';
+import { Adt } from '@ephox/katamari';
 
-var before = function (element) {
-  return folder(function (b, a, r, l, i) {
-    return b(element);
-  }, 'before');
-};
+type InjectPositionHandler<E, U> = (item: E) => U;
+type InvalidHandler<E, U> = (item: E, offset: number) => U;
 
-var after = function (element) {
-  return folder(function (b, a, r, l, i) {
-    return a(element);
-  }, 'after');
-};
+export interface InjectPosition<E> {
+  fold: <U> (
+    onBefore: InjectPositionHandler<E, U>,
+    onAfter: InjectPositionHandler<E, U>,
+    onRest: InjectPositionHandler<E, U>,
+    onLast: InjectPositionHandler<E, U>,
+    onInvalid: InvalidHandler<E, U>
+  ) => U;
+  match: <U> (branches: {
+    before: InjectPositionHandler<E, U>,
+    after: InjectPositionHandler<E, U>,
+    rest: InjectPositionHandler<E, U>,
+    last: InjectPositionHandler<E, U>,
+    invalid: InvalidHandler<E, U>,
+  }) => U;
+  log: (label: string) => void;
+}
 
-var rest = function (element) {
-  return folder(function (b, a, r, l, i) {
-    return r(element);
-  }, 'rest');
-};
+const adt: {
+  before: <E> (element: E) => InjectPosition<E>;
+  after: <E> (element: E) => InjectPosition<E>;
+  rest: <E> (element: E) => InjectPosition<E>;
+  last: <E> (element: E) => InjectPosition<E>;
+  invalid: <E> (element: E, offset: number) => InjectPosition<E>;
+} = Adt.generate([
+  { before: ['element'] },
+  { after: ['element'] },
+  { rest: ['element'] },
+  { last: ['element'] },
+  { invalid: ['element', 'offset'] }
+]);
 
-var last = function (parent) {
-  return folder(function (b, a, r, l, i) {
-    return l(parent);
-  }, 'last');
-};
-
-var invalid = function (element, offset) {
-  return folder(function (b, a, r, l, i) {
-    return i(element, offset);
-  }, 'invalid');
-};
-
-var folder = function (fold, label) {
-  return {
-    fold: fold,
-    label: Fun.constant(label)
-  };
-};
-
-export default {
-  before: before,
-  after: after,
-  rest: rest,
-  last: last,
-  invalid: invalid
+export const InjectPosition = {
+  before: adt.before,
+  after: adt.after,
+  rest: adt.rest,
+  last: adt.last,
+  invalid: adt.invalid
 };

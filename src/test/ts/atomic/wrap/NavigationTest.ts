@@ -2,8 +2,8 @@ import { CommentGene } from '@ephox/boss';
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
-import Finder from 'ephox/phoenix/test/Finder';
-import Navigation from 'ephox/phoenix/wrap/Navigation';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as Navigation from 'ephox/phoenix/wrap/Navigation';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('NavigationTest', function() {

@@ -1,19 +1,18 @@
-import Navigation from '../../wrap/Navigation';
+import { Universe } from '@ephox/boss';
+import * as Navigation from '../../wrap/Navigation';
+import { SpotPoint } from '../data/Types';
 
-var toLeaf = function (unviverse, element, offset) {
-  return Navigation.toLeaf(unviverse, element, offset);
-};
+type ToLeafApi = <E, D>(universe: Universe<E, D>, element: E, offset: number) => SpotPoint<E>;
+const toLeaf: ToLeafApi = Navigation.toLeaf;
 
-var freefallLtr = function (universe, element) {
-  return Navigation.freefallLtr(universe, element);
-};
+type FreefallLtrApi = <E, D>(universe: Universe<E, D>, element: E) => SpotPoint<E>;
+const freefallLtr: FreefallLtrApi = Navigation.freefallLtr;
 
-var freefallRtl = function (universe, element) {
-  return Navigation.freefallRtl(universe, element);
-};
+type FreefallRtlApi = <E, D>(universe: Universe<E, D>, element: E) => SpotPoint<E>;
+const freefallRtl: FreefallRtlApi = Navigation.freefallRtl;
 
-export default {
-  toLeaf: toLeaf,
-  freefallLtr: freefallLtr,
-  freefallRtl: freefallRtl
+export {
+  toLeaf,
+  freefallLtr,
+  freefallRtl
 };

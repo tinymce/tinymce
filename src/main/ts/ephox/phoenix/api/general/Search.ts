@@ -1,18 +1,18 @@
-import Searcher from '../../search/Searcher';
+import { Universe } from '@ephox/boss';
+import * as Searcher from '../../search/Searcher';
+import { NamedPattern } from '../data/NamedPattern';
+import { SearchResult } from '../data/Types';
 
-var run = function (universe, items, patterns, optimise?) {
-  return Searcher.run(universe, items, patterns, optimise);
-};
+type RunApi = <E, D>(universe: Universe<E, D>, elements: E[], patterns: NamedPattern[], optimise?: (e: E) => boolean) => SearchResult<E>[];
+const run: RunApi = Searcher.run;
 
-var safeWords = function (universe, items, words, optimise?) {
-  return Searcher.safeWords(universe, items, words, optimise);
-};
+type SafeWordsApi = <E, D>(universe: Universe<E, D>, elements: E[], words: string[], optimise?: (e: E) => boolean) => SearchResult<E>[];
+const safeWords: SafeWordsApi = Searcher.safeWords;
 
-var safeToken = function (universe, items, token, optimise?) {
-  return Searcher.safeToken(universe, items, token, optimise);
-};
+type SafeTokenApi = <E, D>(universe: Universe<E, D>, elements: E[], token: string, optimise?: (e: E) => boolean) => SearchResult<E>[];
+const safeToken: SafeTokenApi = Searcher.safeToken;
 
-export default {
+export {
   safeWords,
   safeToken,
   run,

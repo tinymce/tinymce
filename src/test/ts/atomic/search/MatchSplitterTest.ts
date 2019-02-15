@@ -4,10 +4,10 @@ import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import Spot from 'ephox/phoenix/api/data/Spot';
-import MatchSplitter from 'ephox/phoenix/search/MatchSplitter';
-import Finder from 'ephox/phoenix/test/Finder';
-import TestRenders from 'ephox/phoenix/test/TestRenders';
+import * as Spot from 'ephox/phoenix/api/data/Spot';
+import * as MatchSplitter from 'ephox/phoenix/search/MatchSplitter';
+import * as Finder from 'ephox/phoenix/test/Finder';
+import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { PositionArray } from '@ephox/polaris';
 import { UnitTest, assert } from '@ephox/bedrock';
 

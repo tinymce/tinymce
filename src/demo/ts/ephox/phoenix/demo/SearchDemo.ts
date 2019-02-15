@@ -1,8 +1,8 @@
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value } from '@ephox/sugar';
-import DomSearch from 'ephox/phoenix/api/dom/DomSearch';
-import DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
+import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
+import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 var container = Element.fromTag('div');
 

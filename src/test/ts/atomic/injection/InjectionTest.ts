@@ -1,8 +1,8 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
-import Injection from 'ephox/phoenix/injection/Injection';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Injection from 'ephox/phoenix/injection/Injection';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('InsertAtTest', function() {

@@ -1,37 +1,39 @@
 import { DomUniverse } from '@ephox/boss';
-import Wrapping from '../general/Wrapping';
+import { Element } from '@ephox/sugar';
+import { Wrapter } from '../data/Types';
+import * as Wrapping from '../general/Wrapping';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var nu = function (element) {
+const nu = function (element: Element) {
   return Wrapping.nu(universe, element);
 };
 
-var wrapWith = function (base, baseOffset, end, endOffset, c) {
+const wrapWith = function (base: Element, baseOffset: number, end: Element, endOffset: number, c: () => Wrapter<Element>) {
   return Wrapping.wrapWith(universe, base, baseOffset, end, endOffset, c);
 };
 
-var wrapper = function (wrapped, c) {
+const wrapper = function (wrapped: Element[], c: () => Wrapter<Element>) {
   return Wrapping.wrapper(universe, wrapped, c);
 };
 
-var leaves = function (base, baseOffset, end, endOffset, c) {
+const leaves = function (base: Element, baseOffset: number, end: Element, endOffset: number, c: () => Wrapter<Element>) {
   return Wrapping.leaves(universe, base, baseOffset, end, endOffset, c);
 };
 
-var reuse = function (base, baseOffset, end, endOffset, predicate, nu) {
+const reuse = function (base: Element, baseOffset: number, end: Element, endOffset: number, predicate: (e: Element) => boolean, nu: () => Wrapter<Element>) {
   return Wrapping.reuse(universe, base, baseOffset, end, endOffset, predicate, nu);
 };
 
-var spans = function (base, baseOffset, end, endOffset, exclusions) {
+const spans = function (base: Element, baseOffset: number, end: Element, endOffset: number, exclusions?: (e: Element) => boolean) {
   return Wrapping.spans(universe, base, baseOffset, end, endOffset, exclusions);
 };
 
-export default {
-  nu: nu,
-  wrapWith: wrapWith,
-  wrapper: wrapper,
-  leaves: leaves,
-  reuse: reuse,
-  spans: spans
+export {
+  nu,
+  wrapWith,
+  wrapper,
+  leaves,
+  reuse,
+  spans
 };

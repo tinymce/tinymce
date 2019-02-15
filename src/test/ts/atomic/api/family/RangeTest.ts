@@ -2,8 +2,8 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Family from 'ephox/phoenix/api/general/Family';
-import Finder from 'ephox/phoenix/test/Finder';
+import * as Family from 'ephox/phoenix/api/general/Family';
+import * as Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('RangeTest', function() {

@@ -1,21 +1,23 @@
+import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
-import Spot from '../api/data/Spot';
+import * as Spot from '../api/data/Spot';
+import { SpotPoint } from '../api/data/Types';
 
 /**
  * Return the last available cursor position in the node.
  */
-var toLast = function (universe, node) {
+const toLast = function <E, D>(universe: Universe<E, D>, node: E): SpotPoint<E> {
   if (universe.property().isText(node)) {
     return Spot.point(node, universe.property().getText(node).length);
   } else {
-    var children = universe.property().children(node);
+    const children = universe.property().children(node);
     // keep descending if there are children.
     return children.length > 0 ? toLast(universe, children[children.length - 1]) : Spot.point(node, children.length);
   }
 };
 
-var toLower = function (universe, node) {
-  var lastOffset = universe.property().isText(node) ?
+const toLower = function <E, D>(universe: Universe<E, D>, node: E) {
+  const lastOffset = universe.property().isText(node) ?
     universe.property().getText(node).length :
     universe.property().children(node).length;
   return Spot.point(node, lastOffset);
@@ -24,8 +26,8 @@ var toLower = function (universe, node) {
 /**
  * Descend down to a leaf node at the given offset.
  */
-var toLeaf = function (universe, element, offset) {
-  var children = universe.property().children(element);
+const toLeaf = function <E, D>(universe: Universe<E, D>, element: E, offset: number): SpotPoint<E> {
+  const children = universe.property().children(element);
   if (children.length > 0 && offset < children.length) {
     return toLeaf(universe, children[offset], 0);
   } else if (children.length > 0 && universe.property().isElement(element) && children.length === offset) {
@@ -35,7 +37,7 @@ var toLeaf = function (universe, element, offset) {
   }
 };
 
-var scan = function (universe, element, direction) {
+const scan = function <E, D>(universe: Universe<E, D>, element: E, direction: (e: E) => Option<E>): Option<E> {
   // if a comment or zero-length text, scan the siblings
   if ((universe.property().isText(element) && universe.property().getText(element).trim().length === 0)
     || universe.property().isComment(element)) {
@@ -49,30 +51,30 @@ var scan = function (universe, element, direction) {
   }
 };
 
-var freefallLtr = function (universe, element) {
-  var candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
+const freefallLtr = function <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> {
+  const candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
   if (universe.property().isText(candidate)) return Spot.point(candidate, 0);
-  var children = universe.property().children(candidate);
+  const children = universe.property().children(candidate);
   return children.length > 0 ? freefallLtr(universe, children[0]) : Spot.point(candidate, 0);
 };
 
-var toEnd = function (universe, element) {
+const toEnd = function <E, D>(universe: Universe<E, D>, element: E) {
   if (universe.property().isText(element)) return universe.property().getText(element).length;
-  var children = universe.property().children(element);
+  const children = universe.property().children(element);
   return children.length;
 };
 
-var freefallRtl = function (universe, element) {
-  var candidate = scan(universe, element, universe.query().prevSibling).getOr(element);
+const freefallRtl = function <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> {
+  const candidate = scan(universe, element, universe.query().prevSibling).getOr(element);
   if (universe.property().isText(candidate)) return Spot.point(candidate, toEnd(universe, candidate));
-  var children = universe.property().children(candidate);
+  const children = universe.property().children(candidate);
   return children.length > 0 ? freefallRtl(universe, children[children.length - 1]) : Spot.point(candidate, toEnd(universe, candidate));
 };
 
-export default {
-  toLast: toLast,
-  toLeaf: toLeaf,
-  toLower: toLower,
-  freefallLtr: freefallLtr,
-  freefallRtl: freefallRtl
+export {
+  toLast,
+  toLeaf,
+  toLower,
+  freefallLtr,
+  freefallRtl
 };

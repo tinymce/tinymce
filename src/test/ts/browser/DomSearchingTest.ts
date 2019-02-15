@@ -1,7 +1,7 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import DomSearch from 'ephox/phoenix/api/dom/DomSearch';
+import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import { Pattern } from '@ephox/polaris';
 
 UnitTest.test('DomSearchingTest', function () {
