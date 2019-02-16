@@ -9,6 +9,14 @@ import Settings from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const addToEditor = (editor: Editor) => {
+  editor.ui.registry.addContextToolbar('imageselection', {
+    predicate: (node) => {
+      return node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+    },
+    items: 'alignleft aligncenter alignright',
+    position: 'node'
+  });
+
   editor.ui.registry.addContextToolbar('textselection', {
     predicate: (node) => {
       return !editor.selection.isCollapsed();
