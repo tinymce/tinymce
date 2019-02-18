@@ -57,7 +57,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memBody = Memento.record(
     renderInlineBody({
       body: dialogInit.internalDialog.body
-    }, dialogContentId, backstage) as SimpleSpec
+    }, dialogContentId, backstage, ariaAttrs) as SimpleSpec
   );
 
   const memFooter = Memento.record(
@@ -76,21 +76,16 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }
   );
 
-  // ariaattrs is being passed through to silver inline dialog
-  // from the window manager as a property of 'params'
-  const attributes = {
-      role: 'dialog',
-      ['aria-labelledby']: dialogLabelId,
-      ['aria-describedby']: `${dialogContentId}`,
-      ...ariaAttrs ? { ['aria-live']: 'polite' } : {}
-  };
-
   // TODO: Disable while validating?
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'tox-dialog' ],
-      attributes
+      attributes: {
+        role: 'dialog',
+        ['aria-labelledby']: dialogLabelId,
+        ['aria-describedby']: `${dialogContentId}`,
+      }
     },
     eventOrder: {
       [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],

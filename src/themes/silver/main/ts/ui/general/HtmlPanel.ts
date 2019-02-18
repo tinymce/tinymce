@@ -8,6 +8,7 @@
 import { Container as AlloyContainer, SketchSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 
+// TODO: Refer directly to the bridge interface type (HtmlPanel.HtmlPanel) #TINY-3349
 export interface HtmlPanelFoo {
   type: 'htmlpanel';
   html: string;
