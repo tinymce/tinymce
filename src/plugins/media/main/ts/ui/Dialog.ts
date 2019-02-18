@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Obj, Arr } from '@ephox/katamari';
+import { Merger, Obj, Arr, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -17,14 +17,14 @@ import UpdateHtml from '../core/UpdateHtml';
 import { Types } from '@ephox/bridge';
 
 type DialogData = {
-  source1: string;
-  source2: string;
-  embed: string;
-  dimensions: {
-    width: string;
-    height: string;
+  source1?: string;
+  source2?: string;
+  embed?: string;
+  dimensions?: {
+    width?: string;
+    height?: string;
   };
-  poster: string;
+  poster?: string;
 };
 
 // NOTE: This means the dialog doesn't actually comply with the DialogData type, but it's too complex to unwind now
@@ -78,18 +78,26 @@ const getSource = function (editor: Editor) {
 
 const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
   return function (response) {
-    const html = response.html;
-    const snippetData = snippetToData(editor, html);
-    const nuData = {
-      source1: response.url,
-      embed: html,
-      dimensions: {
-        width: snippetData.width ? snippetData.width : '',
-        height: snippetData.height ? snippetData.height : ''
-      }
-    };
+    // Only set values if a URL has been defined
+    if (Type.isString(response.url) && response.url.trim().length > 0) {
+      const html = response.html;
+      const snippetData = snippetToData(editor, html);
+      const nuData: Partial<DialogData> = {
+        source1: response.url,
+        embed: html
+      };
 
-    win.setData(wrap(nuData));
+      // Add additional values that might have been returned in the html
+      Arr.each([ 'width', 'height' ], (prop) => {
+        Obj.get(snippetData, prop).each((value) => {
+          const dimensions = nuData.dimensions || {};
+          dimensions[prop] = value;
+          nuData.dimensions = dimensions;
+        });
+      });
+
+      win.setData(wrap(nuData));
+    }
   };
 };
 
@@ -274,11 +282,10 @@ const showDialog = function (editor: Editor) {
           handleSource1(api);
           break;
 
-        case 'dimensions':
-          handleSource1(api);
-
         case 'embed':
           handleEmbed(api);
+          break;
+
         default:
           break;
       }

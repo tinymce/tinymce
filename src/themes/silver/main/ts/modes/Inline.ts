@@ -27,6 +27,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const split = isSplitToolbar(editor);
 
+  const calcPosition = (offset: number = 0) => {
+    // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
+    // so we need to round this to account for that.
+    const location = Location.absolute(Element.fromDom(editor.getBody()));
+    return {
+      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset + 'px',
+      left: Math.round(location.left()) + 'px'
+    };
+  };
+
   const setPosition = () => {
     const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
     if (split) {
@@ -41,10 +51,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
         // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
         return Height.get(tbar.components()[1].element());
       }) : 0;
-      Css.setAll(floatContainer.element(), {
-        top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + offset + 'px',
-        left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
-      });
+      Css.setAll(floatContainer.element(), calcPosition(offset));
     }
     // Let docking handle fixed <-> absolute transitions, etc.
     Docking.refresh(floatContainer);
@@ -86,11 +93,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     );
 
     // initialise the toolbar - initial positioning, refresh docking, then show
-    Css.setAll(floatContainer.element(), {
-      position: 'absolute',
-      top: Location.absolute(Element.fromDom(editor.getBody())).top() - Height.get(floatContainer.element()) + 'px',
-      left: Location.absolute(Element.fromDom(editor.getBody())).left() + 'px'
-    });
+    Css.set(floatContainer.element(), 'position', 'absolute');
     setPosition();
     show();
 
