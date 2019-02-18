@@ -2,11 +2,13 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { NoState } from '../../behaviour/common/BehaviourState';
-import { EventFormat } from '../../events/SimulatedEvent';
 import { AlloyEventKeyAndHandler, AlloyEventRecord, derive } from '../events/AlloyEvents';
 import { AlloyBehaviour, create as createBehaviour, NamedConfiguredBehaviour } from './Behaviour';
 
-const events = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): AlloyBehaviour<any, any> => {
+// AlloyEventKeyAndHandler type argument needs to be any here to satisfy an array of handlers
+// where each item can be any subtype of EventFormat we can't use <T extends EventFormat> since
+// then each item would have to be the same type
+const events = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<any>>): AlloyBehaviour<any, any> => {
   const events: AlloyEventRecord = derive(eventHandlers);
 
   return createBehaviour({
@@ -20,7 +22,7 @@ const events = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<Event
   });
 };
 
-const config = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<EventFormat>>): NamedConfiguredBehaviour<any, any> => {
+const config = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<any>>): NamedConfiguredBehaviour<any, any> => {
   const me = events(name, eventHandlers);
   return {
     key: name,
