@@ -1,23 +1,11 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "importHelpers": true,
-    "lib": ["es2015"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "outDir": "lib",
     "baseUrl": ".",
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["lib/globals/tinymce/core/*"],
-      "tinymce/ui/*": ["src/ui/main/ts/*"],
-      "tinymce/themes/mobile/*": ["src/themes/mobile/main/ts/*"],
-      "tinymce/themes/modern/*": ["src/themes/modern/main/ts/*"],
-      "tinymce/themes/quickbars/*": ["src/themes/quickbars/main/ts/*"],
-      "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/anchor/*": ["src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["src/plugins/autolink/main/ts/*"],
@@ -49,6 +37,7 @@
       "tinymce/plugins/paste/*": ["src/plugins/paste/main/ts/*"],
       "tinymce/plugins/preview/*": ["src/plugins/preview/main/ts/*"],
       "tinymce/plugins/print/*": ["src/plugins/print/main/ts/*"],
+      "tinymce/plugins/quickbars/*": ["src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["src/plugins/save/main/ts/*"],
       "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/main/ts/*"],
       "tinymce/plugins/spellchecker/*": ["src/plugins/spellchecker/main/ts/*"],
@@ -64,15 +53,9 @@
     }
   },
   "include": [
-    "src/ui/main/ts",
-    "src/ui/src/demo/ts",
-    "src/ui/src/test/ts",
     "src/plugins/*/main/ts",
     "src/plugins/*/src/demo/ts",
     "src/plugins/*/src/test/ts",
-    "src/themes/*/main/ts",
-    "src/themes/*/src/demo/ts",
-    "src/themes/*/src/test/ts",
     "src/core/dist/globals/tinymce/core/",
     "src/core/dist/globals/**/*.ts",
   ]
