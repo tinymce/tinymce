@@ -2,6 +2,7 @@ import '../../../../../themes/silver/main/ts/Theme';
 
 import { Assertions, Pipeline, Step, Logger, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -15,18 +16,21 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
     const api = TinyApis(editor);
 
     const sLinkTheSelection = function () {
-      const insertLink = LinkPluginUtils.link(editor, {});
       return Logger.t('Link the selection', Step.sync(function () {
-        insertLink({
-          href: 'http://google.com'
+        LinkPluginUtils.link(editor, {}, {
+          href: 'http://google.com',
+          text: Option.none(),
+          title: Option.none(),
+          rel: Option.none(),
+          target: Option.none(),
+          class: Option.none()
         });
       }));
     };
 
     const sUnlinkSelection = function () {
-      const removeLink = LinkPluginUtils.unlink(editor);
       return Logger.t('Unlink the selection', Step.sync(function () {
-        removeLink();
+        LinkPluginUtils.unlink(editor);
       }));
     };
 
