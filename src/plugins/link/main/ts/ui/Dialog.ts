@@ -31,9 +31,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTarget
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
   const getChangedValue = (key: string) => {
-    return Option.from(data[key]).bind((value) => {
-      return info.anchor[key].is(value) ? Option.none() : Option.some(value);
-    });
+    return Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
   };
 
   const changedData = {
