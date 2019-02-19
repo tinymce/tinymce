@@ -83,11 +83,23 @@ const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
   }
 };
 
+const leanRight = (pos: CaretPosition): CaretPosition => {
+  const container = pos.container();
+  const offset = pos.offset();
+
+  if (NodeType.isText(container) && offset < container.data.length) {
+    return CaretPosition(container, offset + 1);
+  } else {
+    return pos;
+  }
+};
+
 const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
-  if (isInPre(pos)) {
+  const afterPos = leanRight(pos);
+  if (isInPre(afterPos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, pos) || isBeforeBr(root, pos) || hasSpaceAfter(root, pos);
+    return isAtEndOfBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
   }
 };
 
@@ -139,7 +151,7 @@ const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
 
 const normalizeNbspAtEnd = (root: Element, node: Text): boolean => {
   const text = node.data;
-  const lastPos = CaretPosition(node, text.length);
+  const lastPos = CaretPosition(node, text.length - 1);
   if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos)) {
     node.data = text.slice(0, -1) + ' ';
     return true;

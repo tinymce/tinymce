@@ -180,6 +180,33 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
           ]))
         ])),
 
+        Logger.t('Nbsp at img', GeneralSteps.sequence([
+          Logger.t('Insert nbsp before an image at start of a block should not remove the nbsp', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p>&nbsp;<img src="about:blank" /></p>'),
+            tinyApis.sSetCursor([0, 0], 1),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1),
+            tinyApis.sAssertContent('<p>&nbsp;<img src="about:blank" /></p>')
+          ])),
+          Logger.t('Insert nbsp between two images should remove nbsp', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p><img src="about:blank" />&nbsp;<img src="about:blank" /></p>'),
+            tinyApis.sSetCursor([0, 1], 1),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+            tinyApis.sAssertContent('<p><img src="about:blank" /> <img src="about:blank" /></p>')
+          ])),
+          Logger.t('Insert nbsp after an image at the end of a block should not remove the nbsp', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<p><img src="about:blank" />&nbsp;</p>'),
+            tinyApis.sSetCursor([0, 1], 1),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+            tinyApis.sAssertContent('<p><img src="about:blank" />&nbsp;</p>')
+          ]))
+        ])),
+
         Logger.t('Insert in text on IE using keypress', GeneralSteps.sequence(browser.isIE() ? [
           tinyApis.sFocus,
           tinyApis.sSetContent('<p>a&nbsp;b</p>'),
