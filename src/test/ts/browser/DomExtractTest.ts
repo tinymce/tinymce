@@ -7,15 +7,15 @@ import * as DomExtract from 'ephox/phoenix/api/dom/DomExtract';
 UnitTest.test('DomExtractTest', function () {
 
   // IMPORTANT: Otherwise CSS display does not work.
-  var page = Page();
+  const page = Page();
 
-  var optimise = Fun.constant(false);
+  const optimise = Fun.constant(false);
 
 
   (function () {
     // Test extractTo
-    var check = function (eNode, eOffset, cNode, cOffset, predicate) {
-      var actual = DomExtract.extractTo(cNode, cOffset, predicate, optimise);
+    const check = function (eNode: Element, eOffset: number, cNode: Element, cOffset: number, predicate: (e: Element) => boolean) {
+      const actual = DomExtract.extractTo(cNode, cOffset, predicate, optimise);
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };
@@ -28,13 +28,13 @@ UnitTest.test('DomExtractTest', function () {
 
   (function () {
     // Test find.
-    var check = function (eNode, eOffset, pNode, pOffset) {
-      var actual = DomExtract.find(pNode, pOffset, optimise).getOrDie();
+    const check = function (eNode: Element, eOffset: number, pNode: Element, pOffset: number) {
+      const actual = DomExtract.find(pNode, pOffset, optimise).getOrDie();
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };
 
-    var checkNone = function (pNode, pOffset) {
+    const checkNone = function (pNode: Element, pOffset: number) {
       assert.eq(true, DomExtract.find(pNode, pOffset, optimise).isNone());
     };
 
@@ -48,8 +48,8 @@ UnitTest.test('DomExtractTest', function () {
 
   (function () {
     // Test extract
-    var check = function (eNode, eOffset, cNode, cOffset) {
-      var actual = DomExtract.extract(cNode, cOffset, optimise);
+    const check = function (eNode: Element, eOffset: number, cNode: Element, cOffset: number) {
+      const actual = DomExtract.extract(cNode, cOffset, optimise);
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };
@@ -62,9 +62,9 @@ UnitTest.test('DomExtractTest', function () {
 
   (function () {
     // Test from
-    var check = function (expected, input) {
-      var rawActual = DomExtract.from(input, optimise);
-      var actual = Arr.map(rawActual, function (x) {
+    const check = function (expected: string, input: Element) {
+      const rawActual = DomExtract.from(input, optimise);
+      const actual = Arr.map(rawActual, function (x) {
         return x.fold(function () {
           return '\\w';
         }, function () {

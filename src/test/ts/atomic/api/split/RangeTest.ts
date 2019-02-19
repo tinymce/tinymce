@@ -7,11 +7,11 @@ import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IdentifyTest', function() {
-  var check = function (all, expected, baseid, baseoffset, endid, endoffset, input) {
-    var universe = TestUniverse(input);
-    var base = Finder.get(universe, baseid);
-    var end = Finder.get(universe, endid);
-    var actual = Split.range(universe, base, baseoffset, end, endoffset);
+  const check = function (all: string[], expected: string[], baseid: string, baseoffset: number, endid: string, endoffset: number, input: Gene) {
+    const universe = TestUniverse(input);
+    const base = Finder.get(universe, baseid);
+    const end = Finder.get(universe, endid);
+    const actual = Split.range(universe, base, baseoffset, end, endoffset);
     assert.eq(expected, TestRenders.texts(actual));
     assert.eq(all, TestRenders.texts(universe.get().children));
   };

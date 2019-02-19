@@ -1,13 +1,12 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse } from '@ephox/boss';
+import { Fun, Option } from '@ephox/katamari';
+import { Direction, Traverse } from 'ephox/phoenix/api/data/Types';
 import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('WalkerPathTest', function() {
+UnitTest.test('WalkerPathTest', function () {
   const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'node', [
@@ -43,10 +42,10 @@ UnitTest.test('WalkerPathTest', function() {
     ])
   );
 
-  const checkPath = function (expected, id, direction) {
+  const checkPath = function (expected: string[], id: string, direction: Direction) {
     const start = Finder.get(universe, id);
-    let path = [];
-    let current = Option.some({ item: Fun.constant(start), mode: Fun.constant(Walker.advance) });
+    let path: string[] = [];
+    let current: Option<Traverse<Gene>> = Option.some({ item: Fun.constant(start), mode: Fun.constant(Walker.advance) });
     while (current.isSome()) {
       const c = current.getOrDie();
       path = path.concat(c.item().id);

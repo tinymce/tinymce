@@ -1,14 +1,14 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse } from '@ephox/boss';
+import { Direction, Transition } from 'ephox/phoenix/api/data/Types';
 import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('WalkerTest', function() {
+UnitTest.test('WalkerTest', function () {
   const universe = TestUniverse(
     Gene('a', 'node', [
-      Gene('b', 'node', [ ]),
+      Gene('b', 'node', []),
       Gene('c', 'node', [
         Gene('d', 'node', []),
         Gene('e', 'node', [])
@@ -16,12 +16,12 @@ UnitTest.test('WalkerTest', function() {
     ])
   );
 
-  const checkNone = function (id, traverse, direction) {
+  const checkNone = function (id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
     assert.eq(true, traverse(universe, item, direction).isNone());
   };
 
-  const check = function (expected, id, traverse, direction) {
+  const check = function (expected: string, id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
     const actual = traverse(universe, item, direction).getOrDie();
     assert.eq(expected, actual.item().id);

@@ -1,11 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse } from '@ephox/boss';
 import * as Parents from 'ephox/phoenix/family/Parents';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ParentsTest', function() {
-  var doc = TestUniverse(
+UnitTest.test('ParentsTest', function () {
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('a', '', [
         Gene('aa', '', [
@@ -36,11 +35,11 @@ UnitTest.test('ParentsTest', function() {
     ])
   );
 
-  var check = function (expected, first, last) {
-    var start = Finder.get(doc, first);
-    var finish = Finder.get(doc, last);
-    var actual = Parents.common(doc, start, finish);
-    assert.eq(expected, actual.getOrDie().id);
+  const check = function (expected: string, first: string, last: string) {
+    const start = Finder.get(doc, first);
+    const finish = Finder.get(doc, last);
+    const actual = Parents.common(doc, start, finish);
+    assert.eq(expected, actual.getOrDie('No common parent').id);
   };
 
   check('abc', 'abc', 'abcc');

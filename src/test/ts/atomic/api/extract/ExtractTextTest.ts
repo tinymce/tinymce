@@ -1,12 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene, Universe } from '@ephox/boss';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ExtractTextTest', function() {
-  var doc = TestUniverse(
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
         Gene('1.1', 'p', [
@@ -29,9 +27,9 @@ UnitTest.test('ExtractTextTest', function() {
     ])
   );
 
-  var check = function (expected, extract, initial) {
-    var start = Finder.get(doc, initial);
-    var actual = extract(doc, start);
+  const check = function (expected: string, extract: <E, D>(universe: Universe<E, D>, item: E) => string, initial: string) {
+    const start = Finder.get(doc, initial);
+    const actual = extract(doc, start);
     assert.eq(expected, actual.trim());
   };
 

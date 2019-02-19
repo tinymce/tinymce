@@ -1,35 +1,35 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
-import { Insert, InsertAll, Remove, Element, Class, Html, SelectorFind, Traverse } from '@ephox/sugar';
 
 UnitTest.test('DomWrappingTest', function () {
-  var root = Element.fromTag('div');
-  var body = SelectorFind.first('body').getOrDie();
+  const root = Element.fromTag('div');
+  const body = SelectorFind.first('body').getOrDie();
 
   Insert.append(body, root);
 
-  var t = Element.fromText;
-  var s = function (tag, xs) {
-    var element = Element.fromTag(tag);
+  const t = Element.fromText;
+  const s = function (tag: string, xs: Element[]) {
+    const element = Element.fromTag(tag);
     InsertAll.append(element, xs);
     return element;
   };
 
-  var check = function (input, f) {
-    var container = Element.fromTag('div');
+  const check = function (input: Element[], f: (e: Element) => void) {
+    const container = Element.fromTag('div');
     Insert.append(root, container);
     InsertAll.append(container, input);
     f(container);
     Remove.remove(container);
   };
 
-  var checker = function (expected, p1, offset1, p2, offset2, input, initial) {
-    check(input, function (container) {
+  const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: Element[], initial: string) {
+    check(input, function (container: Element) {
       assert.eq(initial, Html.get(container));
-      var first = c(container, p1);
-      var second = c(container, p2);
+      const first = c(container, p1);
+      const second = c(container, p2);
       DomWrapping.wrapWith(first, offset1, second, offset2, function () {
-        var basic = Element.fromTag('span');
+        const basic = Element.fromTag('span');
         Class.add(basic, 'me');
         return DomWrapping.nu(basic);
       });
@@ -38,8 +38,8 @@ UnitTest.test('DomWrappingTest', function () {
     });
   };
 
-  var c = function (element, paths) {
-    var children = Traverse.children(element);
+  const c = function (element: Element, paths: number[]): Element {
+    const children = Traverse.children(element);
     return paths.length === 0 ? element : c(children[paths[0]], paths.slice(1));
   };
 

@@ -52,9 +52,9 @@ const ext = <E, D>(ti: TypedItemAdt<E, D>): TypedItem<E, D> => ({
 type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedItem<E, D>;
 
 // currently Fun.compose does not create the correct output type for functions with generic types
-const text = Fun.compose(ext, adt.text) as TypedItemConstructor;
-const boundary = Fun.compose(ext, adt.boundary) as TypedItemConstructor;
-const empty = Fun.compose(ext, adt.empty) as TypedItemConstructor;
+const text = Fun.compose(ext as any, adt.text as any) as TypedItemConstructor;
+const boundary = Fun.compose(ext as any, adt.boundary as any) as TypedItemConstructor;
+const empty = Fun.compose(ext as any, adt.empty as any) as TypedItemConstructor;
 
 const cata = function <E, D, U>(subject: TypedItem<E, D>, onBoundary: Handler<E, D, U>, onEmpty: Handler<E, D, U>, onText: Handler<E, D, U>) {
   return subject.fold(onBoundary, onEmpty, onText);

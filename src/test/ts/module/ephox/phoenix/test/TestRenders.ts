@@ -1,6 +1,8 @@
-import { Arr } from '@ephox/katamari';
+import { Gene } from '@ephox/boss';
+import { Arr, Option } from '@ephox/katamari';
+import { TypedItem } from 'ephox/phoenix/api/Main';
 
-var typeditem = function (a) {
+const typeditem = function (a: TypedItem<Gene, undefined>) {
   return a.fold(function (item) {
     return 'boundary(' + item.id + ')';
   }, function (item) {
@@ -10,24 +12,24 @@ var typeditem = function (a) {
   });
 };
 
-var typeditems = function (items) {
+const typeditems = function (items: TypedItem<Gene, undefined>[]) {
   return Arr.map(items, typeditem);
 };
 
-var ids = function (items) {
+const ids = function (items: Gene[]) {
   return Arr.map(items, id);
 };
 
-var id = function (item) {
+const id = function (item: Gene) {
   return item.id;
 };
 
-var texts = function (items) {
+const texts = function (items: Gene[]) {
   return Arr.map(items, text);
 };
 
-var text = function (item) {
-  return item.text;
+const text = function (item: Gene) {
+  return Option.from(item.text).getOr('');
 };
 
 export {
