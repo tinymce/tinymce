@@ -205,34 +205,36 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     timer.set(t);
   };
 
-  // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-  editor.on('click keyup setContent ObjectResized ResizeEditor', (e) => {
-    // Fixing issue with chrome focus on img.
-    resetTimer(
-      Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-    );
-  });
+  editor.on('init', () => {
+    // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
+    editor.on('click keyup setContent ObjectResized ResizeEditor', (e) => {
+      // Fixing issue with chrome focus on img.
+      resetTimer(
+        Delay.setEditorTimeout(editor, launchContextToolbar, 0)
+      );
+    });
 
-  editor.on('focusout', (e) => {
-    Delay.setEditorTimeout(editor, () => {
-      if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
-        lastAnchor.set(Option.none());
-        InlineView.hide(contextbar);
-      }
-    }, 0);
-  });
+    editor.on('focusout', (e) => {
+      Delay.setEditorTimeout(editor, () => {
+        if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
+          lastAnchor.set(Option.none());
+          InlineView.hide(contextbar);
+        }
+      }, 0);
+    });
 
-  editor.on('nodeChange', (e) => {
-    Focus.search(contextbar.element()).fold(
-      () => {
-        resetTimer(
-          Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-        );
-      },
-      (_) => {
+    editor.on('nodeChange', (e) => {
+      Focus.search(contextbar.element()).fold(
+        () => {
+          resetTimer(
+            Delay.setEditorTimeout(editor, launchContextToolbar, 0)
+          );
+        },
+        (_) => {
 
-      }
-    );
+        }
+      );
+    });
   });
 };
 
