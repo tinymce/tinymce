@@ -97,10 +97,10 @@ const setupContextToolbars = function (editor: Editor) {
           if (!anchor) {
             const attachState = { href: value, attach: () => { } };
             const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
-            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0) : Option.none();
+            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
             Utils.link(editor, attachState, {
               href: value,
-              text: text.or(Option.from(value)),
+              text,
               title: Option.none(),
               rel: Option.none(),
               target: Option.none(),
