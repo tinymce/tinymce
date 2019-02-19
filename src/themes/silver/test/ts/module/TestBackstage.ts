@@ -7,4 +7,4 @@ export default {
     interpreter: Fun.identity
   },
   interpreter: Fun.identity
-}
+};
