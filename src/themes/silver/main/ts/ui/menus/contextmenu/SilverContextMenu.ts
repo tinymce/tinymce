@@ -125,38 +125,39 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     }),
   );
 
-  editor.on('contextmenu', (e) => {
-    if (isNativeOverrideKeyEvent(editor, e)) {
-      return;
-    }
+  editor.on('init', () => {
+    editor.on('contextmenu', (e) => {
+      if (isNativeOverrideKeyEvent(editor, e)) {
+        return;
+      }
 
-    // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
-    // Chrome: button = 0 & target = the selection range node
-    // Firefox: button = 0 & target = body
-    // IE: button = 2 & target = body
-    // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-    const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
-    const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+      // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
+      // Chrome: button = 0 & target = the selection range node
+      // Firefox: button = 0 & target = body
+      // IE: button = 2 & target = body
+      // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
+      const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
+      const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
-    const registry = editor.ui.registry.getAll();
-    const menuConfig = Settings.getContextMenu(editor);
+      const registry = editor.ui.registry.getAll();
+      const menuConfig = Settings.getContextMenu(editor);
 
-    // Use the event target element for mouse clicks, otherwise fallback to the current selection
-    const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
+      // Use the event target element for mouse clicks, otherwise fallback to the current selection
+      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
 
-    const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
+      const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-    NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers).map((menuData) => {
-      e.preventDefault();
+      NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers).map((menuData) => {
+        e.preventDefault();
 
-      // show the context menu, with items set to close on click
-      InlineView.showMenuAt(contextmenu, anchorSpec, {
-        menu: {
-          markers: MenuParts.markers('normal')
-        },
-        data: menuData
+        // show the context menu, with items set to close on click
+        InlineView.showMenuAt(contextmenu, anchorSpec, {
+          menu: {
+            markers: MenuParts.markers('normal')
+          },
+          data: menuData
+        });
       });
     });
   });
-
 };
