@@ -110,7 +110,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
     domModification: {
       attributes: {
         role: detail.role.getOr('button'),
-        'aria-haspopup': true
+        ['aria-haspopup']: true
       }
     }
   };

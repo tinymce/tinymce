@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+# [4.9.15] - 2019-02-19
+### Added
+- Aria-describedby to be set as content id on modal dialogs
+
 # [4.9.11] - 2019-02-12
 ### Added
 - Toggling behaviour to SplitToolbar's overflow button

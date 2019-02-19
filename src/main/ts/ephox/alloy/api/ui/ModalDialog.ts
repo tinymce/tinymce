@@ -18,6 +18,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
+import AriaDescribe from '../../aria/AriaDescribe';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
 
@@ -147,6 +148,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
             AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
+            AriaDescribe.describedBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'body').element());
           })
         ])
       ]

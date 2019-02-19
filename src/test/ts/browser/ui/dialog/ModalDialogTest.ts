@@ -223,6 +223,21 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ])
       ])),
 
+      Logger.t('Dialog should have aria-describedby with content id', Chain.asStep(gui.element(), [
+        NamedChain.asChain([
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
+          NamedChain.bundle((f) => {
+            const contentId = Attr.get(f.body, 'id');
+            Assertions.assertEq('contentId should be set', true, Attr.has(f.body, 'id'));
+            Assertions.assertEq('contentId should not be empty', true, contentId.length > 0);
+            const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');
+            Assertions.assertEq('aria-describedby should be set to contentId', contentId, dialogDescribedBy);
+            return Result.value(f);
+          })
+        ])
+      ])),
+
       FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
       Keyboard.sKeydown(doc, Keys.tab(), { }),
       FocusTools.sTryOnSelector('Focus should be on body now', doc, '.test-dialog-body'),
