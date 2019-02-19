@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
-import { renderHtmlPanel } from '../../../../../main/ts/ui/general/HtmlPanel';
+import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
 UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(

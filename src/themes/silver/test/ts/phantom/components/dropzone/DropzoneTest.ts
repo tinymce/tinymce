@@ -2,13 +2,11 @@ import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@eph
 import { AlloyTriggers, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
-import { renderDropZone } from '../../../../../main/ts/ui/dialog/Dropzone';
+import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Dropzone component Test', (success, failure) => {
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -17,7 +15,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
           type: 'dropzone',
           name: 'drop1',
           label: Option.some('Dropzone Label'),
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -72,10 +70,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
         })
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

@@ -6,16 +6,15 @@ import { Option } from '@ephox/katamari';
 import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import I18n from 'tinymce/core/api/util/I18n';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
   const providers = {
+    ...TestProviders,
     icons: () => <Record<string, string>> {
-      'chevron-down': '<svg></svg>'
+      'chevron-down': '<svg></svg>' // details don't matter, just needs an SVG for the test
     },
-    menuItems: () => <Record<string, any>> {},
-    translate: I18n.translate
   };
 
   TestHelpers.GuiSetup.setup(
@@ -79,9 +78,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component)
       ];
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

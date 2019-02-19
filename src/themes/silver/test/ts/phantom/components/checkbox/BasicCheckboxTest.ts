@@ -3,7 +3,7 @@ import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { HTMLInputElement } from '@ephox/dom-globals';
 
-import { renderCheckbox } from '../../../../../main/ts/ui/general/Checkbox';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {

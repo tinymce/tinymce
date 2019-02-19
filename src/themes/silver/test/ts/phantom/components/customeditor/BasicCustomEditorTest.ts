@@ -7,7 +7,7 @@ import { Class, Element } from '@ephox/sugar';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import Promise from '../../../../../../../core/main/ts/api/util/Promise';
+import Promise from 'tinymce/core/api/util/Promise';
 
 UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   const resolveInit = Cell(false);

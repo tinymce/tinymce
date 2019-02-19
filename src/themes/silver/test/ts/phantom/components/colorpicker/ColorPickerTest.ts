@@ -3,7 +3,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 
-import { renderColorPicker } from '../../../../../main/ts/ui/dialog/ColorPicker';
+import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
