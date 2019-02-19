@@ -1,8 +1,7 @@
 import '../../../../../themes/silver/main/ts/Theme';
 
-import { Assertions, Pipeline, Step, Logger, Log } from '@ephox/agar';
+import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -16,16 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
     const api = TinyApis(editor);
 
     const sLinkTheSelection = function () {
-      return Logger.t('Link the selection', Step.sync(function () {
-        LinkPluginUtils.link(editor, {}, {
-          href: 'http://google.com',
-          text: Option.none(),
-          title: Option.none(),
-          rel: Option.none(),
-          target: Option.none(),
-          class: Option.none()
-        });
-      }));
+      return Logger.t('Link the selection', TestLinkUi.sInsertLink('http://google.com'));
     };
 
     const sUnlinkSelection = function () {
@@ -35,8 +25,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
     };
 
     const sAssertPresence = function (selector) {
-      return Logger.t('Assert element is present',
-        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody()))
+      return Waiter.sTryUntil('Assert element is present',
+        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody())),
+        100, 1000
       );
     };
 

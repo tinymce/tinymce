@@ -21,6 +21,13 @@ import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
+  if (!data.url.value) {
+    Utils.unlink(editor);
+    // Temporary fix. TODO: TINY-2811
+    api.close();
+    return;
+  }
+
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
   const getChangedValue = (key: string) => {
@@ -42,13 +49,6 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTarget
     href: data.url.value,
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
-
-  if (!data.url.value) {
-    Utils.unlink(editor);
-    // Temporary fix. TODO: TINY-2811
-    api.close();
-    return;
-  }
 
   DialogConfirms.preprocess(editor, assumeExternalTargets, changedData).get((pData) => {
     Utils.link(editor, attachState, pData);
