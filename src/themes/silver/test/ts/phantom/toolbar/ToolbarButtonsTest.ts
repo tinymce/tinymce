@@ -6,12 +6,12 @@ import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from '../../../../main/ts/ui/toolbar/button/ToolbarButtons';
-import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
+import TestExtras from '../../module/TestExtras';
+import TestProviders from '../../module/TestProviders';
 
 UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
-  const helpers = setupDemo();
-  const sharedBackstage = helpers.extras.backstage.shared;
-  const providers = sharedBackstage.providers;
+
+  const helpers = TestExtras();
 
   const shouldDisable = Cell(false);
   const shouldActivate = Cell(false);
@@ -44,7 +44,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     store.adder('onAction.1')();
                     api.setDisabled(shouldDisable.get());
                   }
-                }, providers)
+                }, TestProviders)
               ]
             },
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     api.setDisabled(shouldDisable.get());
                     api.setActive(shouldActivate.get());
                   }
-                }, providers)
+                }, TestProviders)
               ]
             },
 
@@ -109,7 +109,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     store.adder('onItemAction.3')();
                     api.setActive(true);
                   }
-                }, sharedBackstage)
+                }, helpers.shared)
               ]
             },
           ]

@@ -5,11 +5,11 @@ import { Cell } from '@ephox/katamari';
 import { Body, Value } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
-import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { TestHelpers } from '@ephox/alloy';
+import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
-  const helpers = setupDemo();
+  const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
   const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
