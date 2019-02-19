@@ -4,26 +4,24 @@ import Removal from 'ephox/boss/mutant/Removal';
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('RemovalTest', function() {
-  var data = function () {
-    return {
-      id: 'A',
-      children: [
-        { id: 'B', children: [ ] },
-        { id: 'C', children: [
-          { id: 'D', children: [
-            { id: 'E', children: [] }
-          ]},
-          { id: 'F', children: [] }
-        ]}
-      ]
-    };
+  const data = function (): Gene {
+    return Gene('A', '.', [
+      Gene('B', '.'),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.')
+        ]),
+        Gene('F', '.')
+      ])
+    ]);
   };
 
-  var check = function (expected, input, itemId) {
-    var family = Tracks.track(input, Option.none());
-    var item = Locator.byId(family, itemId).getOrDie();
+  const check = function (expected: string, input: Gene, itemId: string) {
+    const family = Tracks.track(input, Option.none());
+    const item = Locator.byId(family, itemId).getOrDie();
     Removal.unwrap(item);
     assert.eq(expected, Logger.basic(family));
   };

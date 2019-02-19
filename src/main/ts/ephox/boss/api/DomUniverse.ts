@@ -1,51 +1,37 @@
-import TagBoundaries from '../common/TagBoundaries';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Compare } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { PredicateFilter } from '@ephox/sugar';
-import { PredicateFind } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Universe } from './Universe';
 import { Document, Node as DomNode } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse } from '@ephox/sugar';
+import TagBoundaries from '../common/TagBoundaries';
+import { Universe } from './Universe';
 
 
 
 export default function (): Universe<Element, Document> {
-  var clone = function (element) {
-    return Element.fromDom(element.dom().cloneNode(false));
+  const clone = function (element: Element) {
+    return Element.fromDom((element.dom() as DomNode).cloneNode(false));
   };
 
-  var document = function (element: Element) {
+  const document = function (element: Element) {
     return (element.dom() as DomNode).ownerDocument;
   }
 
-  var isBoundary = function (element) {
+  const isBoundary = function (element: Element) {
     if (!Node.isElement(element)) return false;
     if (Node.name(element) === 'body') return true;
     return Arr.contains(TagBoundaries, Node.name(element));
   };
 
-  var isEmptyTag = function (element) {
+  const isEmptyTag = function (element: Element) {
     if (!Node.isElement(element)) return false;
     return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
   };
 
-  var comparePosition = function (element, other) {
-    return element.dom().compareDocumentPosition(other.dom());
+  const comparePosition = function (element: Element, other: Element) {
+    return (element.dom() as DomNode).compareDocumentPosition(other.dom() as DomNode);
   };
 
-  var copyAttributesTo = function (source, destination) {
-    var as = Attr.clone(source);
+  const copyAttributesTo = function (source: Element, destination: Element) {
+    const as = Attr.clone(source);
     Attr.setAll(destination, as);
   };
 

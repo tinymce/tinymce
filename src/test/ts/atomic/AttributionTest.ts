@@ -1,18 +1,10 @@
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene } from 'ephox/boss/api/Gene';
 import Attribution from 'ephox/boss/mutant/Attribution';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('AttributionTest', function() {
-  var item = {
-    attrs: {
-      border: '10'
-    }
-  };
-
-  var b = {
-    attrs: {
-      cat: 'dog'
-    }
-  }
+UnitTest.test('AttributionTest', function () {
+  const item = Gene('id1', 'name1', [], {}, { border: '10' });
+  const b = Gene('id2', 'name2', [], {}, { cat: 'dog' });
 
   assert.eq({ border: '10' }, item.attrs);
   Attribution.set(item, 'cat', 'mogel');

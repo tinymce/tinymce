@@ -1,12 +1,5 @@
+import { Gene } from './Gene';
 
-
-export default <any> function (id, text) {
-  return {
-    id: id,
-    name: 'COMMENT_GENE',
-    text: text,
-    children: [],
-    css: {},
-    attrs: {}
-  };
+export default function (id: string, text: string) {
+  return Gene(id, 'COMMENT_GENE', [], {}, {}, text);
 };

@@ -1,10 +1,11 @@
 import Attribution from './Attribution';
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 
-var ATTR_REGEX = /^\[(.*)\]$/;
+const ATTR_REGEX = /^\[(.*)\]$/;
 
-var eq = function (a, b) {
+const eq = function (a: Gene, b: Gene) {
   return a.id === undefined && b.id === undefined ? a.name === b.name : a.id === b.id;
 };
 
@@ -12,18 +13,18 @@ var eq = function (a, b) {
 // Selector support, either:
 // 'name,name,...' : comma-list of names to compare against item name
 // '[attr]'        : single attribute 'attr' key present in item attrs
-var is = function (item, selector) {
-  var tagMatch = function () {
-    var matches = selector.split(',');
+const is = function (item: Gene, selector: string) {
+  const tagMatch = function () {
+    const matches = selector.split(',');
     return Arr.contains(matches, item.name);
   };
-  var attrMatch = function (match) {
+  const attrMatch = function (match: RegExpMatchArray) {
     return (Attribution.get(item, match[1]) !== undefined);
   };
   return Option.from(selector.match(ATTR_REGEX)).fold(tagMatch, attrMatch);
 };
 
-export default <any> {
-  eq: eq,
-  is: is
+export default {
+  eq,
+  is
 };

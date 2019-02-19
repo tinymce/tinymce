@@ -1,33 +1,30 @@
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Gene } from '../../../main/ts/ephox/boss/api/Gene';
 
 UnitTest.test('TracksTest', function() {
-  var family = {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  };
+  const family = Gene('A', '.', [
+    Gene('B', '.'),
+    Gene('C', '.', [
+      Gene('D', '.', [
+        Gene('E', '.')
+      ]),
+      Gene('F', '.')
+    ])
+  ]);
 
-  var result = Tracks.track(family, Option.some({ id: 'parent' }));
+  const result = Tracks.track(family, Option.some(Gene('parent', '.')));
 
-  assert.eq(true, result.parent.exists(function (x) { return x.id === 'parent'; }));
-  var a = result;
-  var b = result.children[0];
-  var c = result.children[1];
-  var d = result.children[1].children[0];
-  var e = result.children[1].children[0].children[0];
-  var f = result.children[1].children[1];
+  const a = result;
+  const b = result.children[0];
+  const c = result.children[1];
+  const d = result.children[1].children[0];
+  const e = result.children[1].children[0].children[0];
+  const f = result.children[1].children[1];
 
-  var p = function (item) {
-    return item.parent.getOrDie().id;
+  const p = function (item: Gene) {
+    return Option.from(item.parent).getOrDie('Expected to have parent').id;
   };
 
   assert.eq('A', a.id);
@@ -37,6 +34,7 @@ UnitTest.test('TracksTest', function() {
   assert.eq('E', e.id);
   assert.eq('F', f.id);
 
+  assert.eq('parent', p(a));
   assert.eq('A', p(b));
   assert.eq('A', p(c));
   assert.eq('C', p(d));

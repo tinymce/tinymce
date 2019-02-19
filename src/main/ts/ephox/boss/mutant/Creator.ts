@@ -1,41 +1,42 @@
-import TextGene from '../api/TextGene';
-import { Merger } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
+import { TextGene } from '../api/TextGene';
 
-var isNu = function (item) {
-  return item.id === 'nu_' + item.name || item.id === '?_' + item.text;
+const isNu = function (item: Gene) {
+  return item.id === 'nu_' + item.name || Option.from(item.text).exists((text) => item.id === '?_' + text);
 };
 
-var seed = function () {
+const seed = function () {
   return {
     random: Math.random()
   };
 };
 
-var nu = function (name) {
-  return Merger.merge(
-    { id: 'nu_' + name, name: name, parent: Option.none() },
-    seed()
-  );
+const nu = function (name: string) {
+  return {
+    ...Gene('nu_' + name, name),
+    ...seed()
+  };
 };
 
-var clone = function (item) {
-  return Merger.merge({}, item, {
+const clone = function (item: Gene): Gene {
+  return {
+    ...item,
     children: [],
     id: 'clone**<' + item.id + '>'
-  });
+  }
 };
 
-var text = function (value) {
-  return Merger.merge(
-    TextGene('?_' + value, value),
-    seed()
-  );
+const text = function (value: string): Gene {
+  return {
+    ...TextGene('?_' + value, value),
+    ...seed()
+  };
 };
 
-export default <any> {
-  nu: nu,
-  clone: clone,
-  text: text,
-  isNu: isNu
+export default {
+  nu,
+  clone,
+  text,
+  isNu
 };

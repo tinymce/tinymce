@@ -1,12 +1,9 @@
 import Styling from 'ephox/boss/mutant/Styling';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('StylingTest', function() {
-  var item = {
-    css: {
-      border: '10'
-    }
-  };
+  const item = Gene('item', 'item', [], { border: '10' });
 
   assert.eq({ border: '10' }, item.css);
   Styling.set(item, 'cat', 'mogel');

@@ -6,7 +6,6 @@ export interface Universe<E,D> {
     closest: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
     predicate: (scope: E, predicate: (e: E) => boolean, isRoot?: (e: E) => boolean) => Option<E>;
     all: (element: E, isRoot?: (e: E) => boolean) => E[];
-    top?: (element: E) => E;
   };
   down: () => {
     selector: (scope: E, selector: string) => E[];
@@ -62,7 +61,4 @@ export interface Universe<E,D> {
   };
   eq: (e1: E, e2: E) => boolean;
   is: (element: E, selector: string) => boolean;
-  find?: (root: any, id: any) => any;
-  get?: () => any;
-  shortlog?: (f: any) => any;
 }

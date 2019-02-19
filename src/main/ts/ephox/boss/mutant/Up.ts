@@ -1,40 +1,39 @@
+import { Fun, Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 import Comparator from './Comparator';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var selector = function (item, query) {
-  var matches = [];
-  return item.parent.bind(function (parent) {
+const selector = function (item: Gene, query: string): Option<Gene> {
+  return Option.from(item.parent).bind(function (parent) {
     return Comparator.is(parent, query) ? Option.some(parent) : selector(parent, query);
   });
 };
 
-var closest = function (scope, query) {
+const closest = function (scope: Gene, query: string) {
   return Comparator.is(scope, query) ? Option.some(scope) : selector(scope, query);
 };
 
-var top = function (item) {
-  return item.parent.fold(Fun.constant(item), function (parent) {
+const top = function (item: Gene): Gene {
+  return Option.from(item.parent).fold(Fun.constant(item), function (parent) {
     return top(parent);
   });
 };
 
-var predicate = function (item, f) {
-  return item.parent.bind(function (parent) {
+const predicate = function (item: Gene, f: (e: Gene) => boolean): Option<Gene> {
+  return Option.from(item.parent).bind(function (parent) {
     return f(parent) ? Option.some(parent) : predicate(parent, f);
   });
 };
 
-var all = function (item) {
-  return item.parent.fold(Fun.constant([]), function (parent) {
+const all = function (item: Gene): Gene[] {
+  return Option.from(item.parent).fold(Fun.constant([]), function (parent) {
     return [parent].concat(all(parent));
   });
 };
 
-export default <any> {
-  selector: selector,
-  closest: closest,
-  predicate: predicate,
-  all: all,
-  top: top
+export default {
+  selector,
+  closest,
+  predicate,
+  all,
+  top
 };

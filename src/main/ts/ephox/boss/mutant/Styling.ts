@@ -1,29 +1,30 @@
-import { Merger } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 
-var set = function (item, property, value) {
-  var r = {};
-  r[property] = value;
-  item.css = Merger.merge(item.css !== undefined ? item.css : {}, r);
+const set = function (item: Gene, property: string, value: string) {
+  item.css = {
+    ...item.css,
+    [property]: value
+  };
 };
 
-var get = function (item, property) {
-  return item.css !== undefined && item.css[property] !== undefined ? item.css[property] : 0;
+const get = function (item: Gene, property: string) {
+  return item.css !== undefined && item.css[property] !== undefined ? item.css[property] : '0';
 };
 
-var getRaw = function (item, property) {
+const getRaw = function (item: Gene, property: string): Option<string> {
   return item.css !== undefined && item.css[property] !== undefined ? Option.some(item.css[property]) : Option.none();
 };
 
-var remove = function (item, property) {
-  var rest = Merger.merge({}, item.css);
+const remove = function (item: Gene, property: string) {
+  const rest: Record<string, string> = { ...item.css };
   delete rest[property];
   item.css = rest;
 };
 
-export default <any> {
-  get: get,
-  getRaw: getRaw,
-  set: set,
-  remove: remove
+export default {
+  get,
+  getRaw,
+  set,
+  remove
 };
