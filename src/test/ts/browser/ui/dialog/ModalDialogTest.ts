@@ -223,6 +223,21 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ])
       ])),
 
+      Logger.t('Dialog should have aria-describedby with body describe id', Chain.asStep(gui.element(), [
+        NamedChain.asChain([
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
+          NamedChain.bundle((f) => {
+            const describeId = Attr.get(f.body, 'id');
+            Assertions.assertEq('describeId should be set', true, Attr.has(f.body, 'id'));
+            Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
+            const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');
+            Assertions.assertEq('aria-describedby should be set to describeId', describeId, dialogDescribedBy);
+            return Result.value(f);
+          })
+        ])
+      ])),
+
       FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
       Keyboard.sKeydown(doc, Keys.tab(), { }),
       FocusTools.sTryOnSelector('Focus should be on body now', doc, '.test-dialog-body'),
@@ -275,7 +290,6 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Step.sync(() => {
         ModalDialog.show(dialog);
       }),
-
 
       sCheckDialogStructure(
         'Checking initial structure after showing (not busy)',
@@ -350,7 +364,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
                 classes: [ 'test-busy-second-class' ],
                 innerHtml: 'Still loading'
               }
-            }
+            };
           });
         })
       ),
