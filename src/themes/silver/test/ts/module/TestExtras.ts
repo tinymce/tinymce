@@ -50,6 +50,7 @@ export default () => {
     backstage,
     shared,
     extras,
-    destroy
+    destroy,
+    uiMothership
   };
 };
