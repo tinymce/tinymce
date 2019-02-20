@@ -5,10 +5,10 @@ import Detach from './Detach';
 import Up from './Up';
 
 const unwrap = function (item: Gene) {
-  Option.from(item.parent).each(function (parent) {
+  item.parent.each(function (parent) {
     const children = item.children;
     Arr.each(children, function (child) {
-      child.parent = parent;
+      child.parent = Option.some(parent);
     });
 
     const index = Arr.findIndex(parent.children, function (sibling) {

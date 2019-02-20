@@ -24,7 +24,7 @@ UnitTest.test('TracksTest', function() {
   const f = result.children[1].children[1];
 
   const p = function (item: Gene) {
-    return Option.from(item.parent).getOrDie('Expected to have parent').id;
+    return item.parent.getOrDie('Expected to have parent').id;
   };
 
   assert.eq('A', a.id);

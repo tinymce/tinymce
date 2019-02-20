@@ -3,7 +3,7 @@ import { Gene } from '../api/Gene';
 import Comparator from './Comparator';
 
 const selector = function (item: Gene, query: string): Option<Gene> {
-  return Option.from(item.parent).bind(function (parent) {
+  return item.parent.bind(function (parent) {
     return Comparator.is(parent, query) ? Option.some(parent) : selector(parent, query);
   });
 };
@@ -13,19 +13,19 @@ const closest = function (scope: Gene, query: string) {
 };
 
 const top = function (item: Gene): Gene {
-  return Option.from(item.parent).fold(Fun.constant(item), function (parent) {
+  return item.parent.fold(Fun.constant(item), function (parent) {
     return top(parent);
   });
 };
 
 const predicate = function (item: Gene, f: (e: Gene) => boolean): Option<Gene> {
-  return Option.from(item.parent).bind(function (parent) {
+  return item.parent.bind(function (parent) {
     return f(parent) ? Option.some(parent) : predicate(parent, f);
   });
 };
 
 const all = function (item: Gene): Gene[] {
-  return Option.from(item.parent).fold(Fun.constant([]), function (parent) {
+  return item.parent.fold(Fun.constant([]), function (parent) {
     return [parent].concat(all(parent));
   });
 };
