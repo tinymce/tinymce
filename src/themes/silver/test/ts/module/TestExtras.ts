@@ -1,9 +1,7 @@
-import { Result } from '@ephox/katamari';
-import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui, AnchorSpec } from '@ephox/alloy';
+import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui } from '@ephox/alloy';
 import { Body, Class } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import TestBackstage from './TestBackstage';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 export default () => {
 
@@ -24,42 +22,7 @@ export default () => {
   const uiMothership = Gui.create();
   Class.add(uiMothership.element(), 'tox');
 
-  const backstage: UiFactoryBackstage = {
-    ...TestBackstage
-  };
-
-  const shared = backstage.shared;
-  backstage.shared = {
-    ...shared,
-    // NOTE: Non-sensical anchors
-    anchors: {
-      toolbar: (): AnchorSpec => {
-        return {
-          anchor: 'hotspot',
-          hotspot: sink
-        };
-      },
-      banner: (): AnchorSpec => {
-        return {
-          anchor: 'hotspot',
-          hotspot: sink
-        };
-      },
-      cursor: (): AnchorSpec => {
-        return {
-          anchor: 'hotspot',
-          hotspot: sink
-        };
-      },
-      node: (elem): AnchorSpec => {
-        return {
-          anchor: 'hotspot',
-          hotspot: sink
-        };
-      }
-    },
-    getSink: () => Result.value(sink)
-  };
+  const backstage = TestBackstage(sink);
 
   const extras = {
     backstage
