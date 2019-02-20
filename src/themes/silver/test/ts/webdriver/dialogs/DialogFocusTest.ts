@@ -5,11 +5,11 @@ import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
-import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { TestHelpers } from '@ephox/alloy';
+import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
-  const helpers = setupDemo();
+  const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
   const doc = Element.fromDom(document);

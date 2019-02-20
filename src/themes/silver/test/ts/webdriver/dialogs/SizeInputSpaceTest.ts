@@ -3,12 +3,10 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 
-import { renderSizeInput } from '../../../../main/ts/ui/dialog/SizeInput';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
+import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
+import TestProviders from '../../module/TestProviders';
 
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -18,7 +16,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
           name: 'dimensions',
           label: Option.some('size'),
           constrain: true
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -54,10 +52,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
         sAssertLockedStatus('Firing space on a non-pressed button', true)
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

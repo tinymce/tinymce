@@ -1,12 +1,10 @@
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
 import { Assertions, ApproxStructure } from '@ephox/agar';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Table component Test', (success, failure) => {
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -18,7 +16,7 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
             [ 'a', 'b', 'c'],
             [ 'd', 'e', 'f']
           ]
-        }, providers)
+        }, TestProviders)
       );
     }, (doc, body, gui, component, store) => {
       return [
@@ -51,10 +49,7 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
         )
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

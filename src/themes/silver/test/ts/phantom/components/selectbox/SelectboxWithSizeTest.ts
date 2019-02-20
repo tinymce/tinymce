@@ -2,16 +2,13 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
-import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
+import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
-
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -28,7 +25,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
             { value: 'four', text: 'Four'},
             { value: 'five', text: 'Five'}
           ]
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -71,10 +68,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component)
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

@@ -3,15 +3,13 @@ import { AlloyComponent, Composing, GuiFactory, TestHelpers } from '@ephox/alloy
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
-import { renderIFrame } from '../../../../../main/ts/ui/dialog/IFrame';
+import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('IFrame component Test', (success, failure) => {
   const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   const sAssertInitialIframeStructure = (component: AlloyComponent) => {
     return Assertions.sAssertStructure(
@@ -96,7 +94,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           name: 'frame-a',
           label: Option.some('iframe label'),
           sandboxed: true,
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -112,10 +110,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         platformNeedsSandboxing ? sAssertSandboxedIframeContent(frame) : sAssertStandardIframeContent(frame)
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

@@ -1,16 +1,12 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
 import { renderButton } from '../../../../../main/ts/ui/general/Button';
 import { Option } from '@ephox/katamari';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
-
-  const helpers = setupDemo();
-
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -21,7 +17,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
           disabled: false,
           primary: true,
           icon: Option.none()
-        }, store.adder('button.action'), providers)
+        }, store.adder('button.action'), TestProviders)
       );
     },
     (_doc, _body, gui, component, store) => {
@@ -45,10 +41,7 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
         store.sAssertEq('Button action should have fired', [ 'button.action' ])
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -9,30 +9,38 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (success, failure) => {
 
-  // TODO: Investigate why this fails when not run as an isolated test
-  return success();
-
   const imgSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
   Theme();
   QuickbarsPlugin();
 
+  enum Alignment {
+    Left = 'left',
+    Right = 'right',
+    Center = 'center'
+  }
+
   const sAssertButtonToggledState = (name: string, state: boolean) => {
     return Chain.asStep(Body.body(), [
-      UiFinder.cFindIn(`.tox-toolbar button[aria-label="${name}"]`),
-      Assertions.cAssertStructure(`Check ${name} button is ${state ? 'active' : 'inactive'}`,
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            classes: [ state ? arr.has('tox-tbtn--enabled') : arr.not('tox-tbtn--enabled') ]
-          });
-        })
+      Chain.control(
+        Chain.fromChains( [
+          UiFinder.cFindIn(`.tox-toolbar button[aria-label="${name}"]`),
+          Assertions.cAssertStructure(`Check ${name} button is ${state ? 'active' : 'inactive'}`,
+            ApproxStructure.build((s, str, arr) => {
+              return s.element('button', {
+                classes: [ state ? arr.has('tox-tbtn--enabled') : arr.not('tox-tbtn--enabled') ]
+              });
+            })
+          )
+        ]),
+        Guard.tryUntil('wait for toolbar button state', 100, 1000)
       )
     ]);
   };
 
   const sWaitForTextToolbarAndAssertState = (tinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, blockquote: boolean) => {
     return GeneralSteps.sequence([
-      tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar button[aria-label="Bold"]'),
+      tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar'),
       sAssertButtonToggledState('Bold', bold),
       sAssertButtonToggledState('Italic', italic),
       sAssertButtonToggledState('Heading 2', heading2),
@@ -41,13 +49,29 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     ]);
   };
 
-  const sWaitForImageToolbarAndAssertState = (tinyUi, alignLeft: boolean, alignCenter: boolean, alignRight: boolean) => {
+  const sSetImageAndAssertToolbarState = (tinyApis, tinyUi, useFigure: boolean, alignment?: Alignment) => {
+    let attrs, imageHtml;
+    if (alignment === undefined) {
+      attrs = useFigure ? 'class="image"' : '';
+    } else if (alignment === Alignment.Center) {
+      attrs = useFigure ? `class="image align-${alignment}"` : `style="margin-left: auto; margin-right: auto; display: block;"`;
+    } else {
+      attrs = useFigure ? `class="image align-${alignment}"` : `style="float: ${alignment};"`;
+    }
+
+    if (useFigure) {
+      imageHtml = `<figure ${attrs} contenteditable="false"><img src="${imgSrc}"><figcaption contenteditable="true">Caption</figcaption></figure>`;
+    } else {
+      imageHtml = `<p><img src="${imgSrc}" ${attrs}></p>`;
+    }
+
     return GeneralSteps.sequence([
-      tinyUi.sWaitForPopup('wait for resize handles', '#mceResizeHandlese'),
-      tinyUi.sWaitForUi('wait for image selection toolbar to show', '.tox-toolbar button[aria-label="Align left"]'),
-      sAssertButtonToggledState('Align left', alignLeft),
-      sAssertButtonToggledState('Align center', alignCenter),
-      sAssertButtonToggledState('Align right', alignRight)
+      tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p>' + imageHtml),
+      tinyApis.sSelect(useFigure ? 'figure' : 'img', []),
+      tinyUi.sWaitForUi('wait for image selection toolbar to show', '.tox-toolbar'),
+      sAssertButtonToggledState('Align left', alignment === Alignment.Left),
+      sAssertButtonToggledState('Align center', alignment === Alignment.Center),
+      sAssertButtonToggledState('Align right', alignment === Alignment.Right)
     ]);
   };
 
@@ -65,28 +89,18 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
         sWaitForTextToolbarAndAssertState(tinyUi, true, false, false, false, false),
         tinyApis.sSetSelection([0, 3, 0], 1, [0, 3, 0], 4),
         sWaitForTextToolbarAndAssertState(tinyUi, false, true, false, false, false),
-        tinyApis.sSetSelection([1, 0], 1, [1, 0], 1),
+        tinyApis.sSetSelection([1, 0], 0, [1, 0], 1),
         sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, true)
       ]),
       Log.stepsAsStep('TBA', 'Image selection toolbar', [
-        tinyApis.sSetContent('<p><img src="' + imgSrc + '"></p>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, false, false, false),
-        tinyApis.sSetContent('<p><img src="' + imgSrc + '" style="float: left;"></p>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, true, false, false),
-        tinyApis.sSetContent('<p><img src="' + imgSrc + '" style="float: right;"></p>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, false, false, true),
-        tinyApis.sSetContent('<p>&nbsp;</p><figure class="image" contenteditable="false"><img src="' + imgSrc + '"><figcaption contenteditable="true">Caption</figcaption></figure>'),
-        tinyApis.sSetSelection([1], 0, [1], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, false, false, false),
-        tinyApis.sSetContent('<p>&nbsp;</p><figure class="image align-left" style="text-align: left;" contenteditable="false"><img src="' + imgSrc + '"><figcaption contenteditable="true">Caption</figcaption></figure>'),
-        tinyApis.sSetSelection([1], 0, [1], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, true, false, false),
-        tinyApis.sSetContent('<p>&nbsp;</p><figure class="image align-right" style="text-align: right;" contenteditable="false""><img src="' + imgSrc + '"><figcaption contenteditable="true">Caption</figcaption></figure>'),
-        tinyApis.sSetSelection([1], 0, [1], 1),
-        sWaitForImageToolbarAndAssertState(tinyUi, false, false, true),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, false),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, false, Alignment.Left),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, false, Alignment.Center),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, false, Alignment.Right),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, true),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, true, Alignment.Left),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, true, Alignment.Center),
+        sSetImageAndAssertToolbarState(tinyApis, tinyUi, true, Alignment.Right)
       ])
     ], onSuccess, onFailure);
   }, {

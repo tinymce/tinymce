@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { IconProvider, get } from '../../../../main/ts/ui/icons/Icons';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
-import { TinyLoader } from '../../../../../../../node_modules/@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('IconsTest', (success, failure) => {

@@ -2,15 +2,12 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { setupDemo } from 'tinymce/themes/silver/demo/components/DemoHelpers';
 
-import { renderInput } from '../../../../../main/ts/ui/dialog/TextField';
+import { renderInput } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('Input component Test', (success, failure) => {
-
-  const helpers = setupDemo();
-  const providers = helpers.extras.backstage.shared.providers;
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
@@ -20,7 +17,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
           label: Option.some('LabelA'),
           placeholder: Option.none(),
           validation: Option.none()
-        }, providers)
+        }, TestProviders)
       );
     },
     (doc, body, gui, component, store) => {
@@ -52,10 +49,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component)
       ];
     },
-    () => {
-      helpers.destroy();
-      success();
-    },
+    success,
     failure
   );
 });

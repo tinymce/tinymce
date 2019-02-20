@@ -4,8 +4,8 @@ import { UnitTest } from '@ephox/bedrock';
 import { Future, Option, Result } from '@ephox/katamari';
 import { SelectorFind, Value } from '@ephox/sugar';
 
-import { LinkTargetType } from '../../../../../main/ts/ui/core/LinkTargets';
-import { renderUrlInput } from '../../../../../main/ts/ui/dialog/UrlInput';
+import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
+import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import { UrlData } from '../../../../../main/ts/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 
