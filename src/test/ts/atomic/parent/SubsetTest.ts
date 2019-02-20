@@ -21,7 +21,7 @@ UnitTest.test('SubsetTest', function() {
       Gene('six', 'li', [ TextGene('6-text', 'six') ]),
       Gene('seven-nine', 'ol', [
         Gene('seven-eight', 'ol', [
-          Gene('seven', 'li,' [ TextGene('7-text', 'seven') ]),
+          Gene('seven', 'li', [ TextGene('7-text', 'seven') ]),
           Gene('eight', 'li', [ TextGene('8-text', 'eight') ])
         ])
       ])

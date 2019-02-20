@@ -6,34 +6,34 @@ import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SimplifyTest', function() {
   var doc = TestUniverse(Gene('root', 'root', [
-    { id: 'a', children: [
-      { id: 'aa', children: [
-        { id: 'aaa', children: [] },
-        { id: 'aab', children: [] },
-        { id: 'aac', children: [] }
-      ]},
-      { id: 'ab', children: [] },
-      { id: 'ac', children: [
-        { id: 'aca', children: [] },
-        { id: 'acb', children: [
-          { id: 'acba', children: [] },
-          { id: 'acbb', children: [
-            { id: 'acbba', children: [] }
-          ]}
-        ]}
-      ]}
-    ]},
-    { id: 'b', children: [] },
-    { id: 'c', children: [
-      { id: 'ca', children: [] },
-      { id: 'cb', children: [
-        { id: 'cba', children: [
-          { id: 'cbaa', children: [] },
-          { id: 'cbab', children: [] }
-        ]},
-        { id: 'cbb', children: [] }
-      ]}
-    ]}
+    Gene('a', '.', [
+      Gene('aa', '.', [
+        Gene('aaa', '.'),
+        Gene('aab', '.'),
+        Gene('aac', '.')
+      ]),
+      Gene('ab', '.'),
+      Gene('ac', '.', [
+        Gene('aca', '.'),
+        Gene('acb', '.', [
+          Gene('acba', '.'),
+          Gene('acbb', '.', [
+            Gene('acbba', '.')
+          ])
+        ])
+      ])
+    ]),
+    Gene('b', '.'),
+    Gene('c', '.', [
+      Gene('ca', '.'),
+      Gene('cb', '.', [
+        Gene('cba', '.', [
+          Gene('cbaa', '.'),
+          Gene('cbab', '.')
+        ]),
+        Gene('cbb', '.')
+      ])
+    ])
   ]));
 
   var check = function (expected, raw) {
