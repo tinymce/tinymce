@@ -1,9 +1,7 @@
-import TestProviders from './TestProviders';
-import { UiFactoryBackstage } from '../../../main/ts/backstage/Backstage';
-import { Result, Fun } from '@ephox/katamari';
 import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui } from '@ephox/alloy';
 import { Body, Class } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
+import TestBackstage from './TestBackstage';
 
 export default () => {
 
@@ -24,15 +22,7 @@ export default () => {
   const uiMothership = Gui.create();
   Class.add(uiMothership.element(), 'tox');
 
-  const shared = {
-    providers: TestProviders,
-    interpreter: Fun.identity,
-    getSink: () => Result.value(sink),
-  };
-
-  const backstage: UiFactoryBackstage = {
-    shared
-  };
+  const backstage = TestBackstage(sink);
 
   const extras = {
     backstage
@@ -48,8 +38,9 @@ export default () => {
 
   return {
     backstage,
-    shared,
+    shared: backstage.shared,
     extras,
-    destroy
+    destroy,
+    uiMothership
   };
 };
