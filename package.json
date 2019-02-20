@@ -1,7 +1,7 @@
 {
   "name": "@ephox/phoenix",
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
-  "version": "5.0.14",
+  "version": "5.0.15",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/phoenix"
