@@ -1,24 +1,23 @@
+import { Arr, Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 import Comparator from './Comparator';
 import Creator from './Creator';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var byId = function (item, id) {
+const byId = function (item: Gene, id: string): Option<Gene> {
   if (id === undefined) throw 'Id value not specified for byId: ' + id;
   if (item.id !== undefined && item.id === id) {
     return Option.some(item);
   } else {
     return Arr.foldl(item.children || [], function (b, a) {
       return byId(a, id).or(b);
-    }, Option.none());
+    }, Option.none<Gene>());
   }
 };
 
-var byItem = function (item, target) {
-  var itemNu = Creator.isNu(item);
-  var targetNu = Creator.isNu(target);
-  var sameId = item.id !== undefined && item.id === target.id;
+const byItem = function (item: Gene, target: Gene): Option<Gene> {
+  const itemNu = Creator.isNu(item);
+  const targetNu = Creator.isNu(target);
+  const sameId = item.id !== undefined && item.id === target.id;
   if (sameId && !itemNu && !targetNu) {
     return Option.some(item);
   } else if (sameId && itemNu && targetNu && item.random === target.random) {
@@ -30,14 +29,14 @@ var byItem = function (item, target) {
   }
 };
 
-var indexIn = function (parent, item) {
+const indexIn = function (parent: Gene, item: Gene) {
   return Arr.findIndex(parent.children, function (x) {
     return Comparator.eq(x, item);
   });
 };
 
-export default <any> {
-  byId: byId,
-  byItem: byItem,
-  indexIn: indexIn
+export default {
+  byId,
+  byItem,
+  indexIn
 };

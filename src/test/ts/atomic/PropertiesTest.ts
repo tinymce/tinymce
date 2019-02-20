@@ -1,15 +1,15 @@
 import CommentGene from 'ephox/boss/api/CommentGene';
-import Gene from 'ephox/boss/api/Gene';
-import TextGene from 'ephox/boss/api/TextGene';
+import { Gene } from 'ephox/boss/api/Gene';
+import { TextGene } from 'ephox/boss/api/TextGene';
 import Properties from 'ephox/boss/mutant/Properties';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('PropertiesTest', function() {
-  var g = Gene('root', 'root', []);
-  var t = TextGene('-gene-', 'post-image text');
-  var c = CommentGene('-comment-', 'comment');
+  const g = Gene('root', 'root', []);
+  const t = TextGene('-gene-', 'post-image text');
+  const c = CommentGene('-comment-', 'comment');
 
-  var check = function (expected, element, pred) {
+  const check = function (expected: boolean, element: Gene, pred: (e: Gene) => boolean) {
     assert.eq(expected, pred(element));
   };
 

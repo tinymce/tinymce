@@ -1,11 +1,12 @@
+import { Arr, Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 import Comparator from './Comparator';
 import Locator from './Locator';
-import { Arr } from '@ephox/katamari';
 
-var detach = function (root, target) {
+const detach = function (root: Gene, target: Gene) {
   return Locator.byItem(root, target).bind(function (item) {
-    return item.parent.bind(function (parent) {
-      var index = Arr.findIndex(parent.children || [], function (child) {
+    return Option.from(item.parent).bind(function (parent) {
+      const index = Arr.findIndex(parent.children || [], function (child) {
         return Comparator.eq(child, item);
       });
 
@@ -17,6 +18,6 @@ var detach = function (root, target) {
   });
 };
 
-export default <any> {
-  detach: detach
+export default {
+  detach
 };

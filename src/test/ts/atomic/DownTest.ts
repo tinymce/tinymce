@@ -1,4 +1,4 @@
-import Gene from 'ephox/boss/api/Gene';
+import { Gene } from 'ephox/boss/api/Gene';
 import Down from 'ephox/boss/mutant/Down';
 import Locator from 'ephox/boss/mutant/Locator';
 import Tracks from 'ephox/boss/mutant/Tracks';
@@ -7,7 +7,7 @@ import { Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DownTest', function() {
-  var family = Tracks.track(
+  const family = Tracks.track(
     Gene('1', 'root', [
       Gene('1.1', 'duck', [
         Gene('1.1.1', 'goose', []),
@@ -24,20 +24,20 @@ UnitTest.test('DownTest', function() {
       ])
     ]), Option.none());
 
-  var check = function (expected, actual) {
+  const check = function (expected: string[], actual: Gene[]) {
     assert.eq(expected, Arr.map(actual, function (item) {
       return item.id;
     }));
   };
 
-  var checkSelector = function (expected, query) {
-    var actual = Down.selector(family, query);
+  const checkSelector = function (expected: string[], query: string) {
+    const actual = Down.selector(family, query);
     check(expected, actual);
   };
 
-  var checkPredicate = function (expected, id, predicate) {
-    var start = Locator.byId(family, id).getOrDie('Did not find start: ' + id);
-    var actual = Down.predicate(start, predicate);
+  const checkPredicate = function (expected: string[], id: string, predicate: (e: Gene) => boolean) {
+    const start = Locator.byId(family, id).getOrDie('Did not find start: ' + id);
+    const actual = Down.predicate(start, predicate);
     check(expected, actual);
   };
 

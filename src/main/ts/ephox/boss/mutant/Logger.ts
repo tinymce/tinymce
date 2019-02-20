@@ -1,20 +1,21 @@
 import { Arr } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 
-var basic = function (item) {
-  return custom(item, function (i) {
+const basic = function (item: Gene) {
+  return custom(item, function (i: Gene) {
     return i.id;
   });
 };
 
-var custom = function (item, renderer) {
+const custom = function (item: Gene, renderer: (e: Gene) => string): string {
   return item.children && item.children.length > 0 ?
-      renderer(item) + '(' + Arr.map(item.children || [], function (c) {
-        return custom(c, renderer);
-      }).join(',') + ')'
-      : renderer(item);
+    renderer(item) + '(' + Arr.map(item.children || [], function (c) {
+      return custom(c, renderer);
+    }).join(',') + ')'
+    : renderer(item);
 };
 
-export default <any> {
-  basic: basic,
-  custom: custom
+export default {
+  basic,
+  custom
 };

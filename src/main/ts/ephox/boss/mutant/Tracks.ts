@@ -1,11 +1,9 @@
 import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 
-var track = function (current, parent) {
-  var r = Merger.deepMerge(current, {
-    parent: parent
-  });
+const track = function (current: Gene, parent: Option<Gene>) {
+  const r: Gene = {...current, parent: parent.getOrUndefined() };
 
   r.children = Arr.map(current.children || [], function (child) {
     // NOTE: The child must link to the new one being created (r)
@@ -15,6 +13,6 @@ var track = function (current, parent) {
   return r;
 };
 
-export default <any> {
-  track: track
+export default {
+  track
 };

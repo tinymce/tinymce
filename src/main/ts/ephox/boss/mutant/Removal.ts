@@ -1,17 +1,17 @@
+import { Arr, Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 import Comparator from './Comparator';
 import Detach from './Detach';
 import Up from './Up';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var unwrap = function (item) {
-  item.parent.each(function (parent) {
-    var children = item.children;
+const unwrap = function (item: Gene) {
+  Option.from(item.parent).each(function (parent) {
+    const children = item.children;
     Arr.each(children, function (child) {
-      child.parent = Option.some(parent);
+      child.parent = parent;
     });
 
-    var index = Arr.findIndex(parent.children, function (sibling) {
+    const index = Arr.findIndex(parent.children, function (sibling) {
       return Comparator.eq(sibling, item);
     });
 
@@ -23,16 +23,16 @@ var unwrap = function (item) {
   });
 };
 
-var remove = function (item) {
+const remove = function (item: Gene) {
   detach(item);
 };
 
-var detach = function (item) {
+const detach = function (item: Gene) {
   Detach.detach(Up.top(item), item);
 };
 
-export default <any> {
-  unwrap: unwrap,
-  remove: remove,
-  detach: detach
+export default {
+  unwrap,
+  remove,
+  detach
 };

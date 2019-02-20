@@ -1,11 +1,10 @@
-import Gene from 'ephox/boss/api/Gene';
-import TestUniverse from 'ephox/boss/api/TestUniverse';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene } from 'ephox/boss/api/Gene';
+import { TestUniverse } from 'ephox/boss/api/TestUniverse';
 import Query from 'ephox/boss/mutant/Query';
-import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('QueryTest', function() {
-  var universe = TestUniverse(Gene('1', 'root', [
+UnitTest.test('QueryTest', function () {
+  const universe = TestUniverse(Gene('1', 'root', [
     Gene('1.1', 'duck', [
       Gene('1.1.1', 'goose', []),
       Gene('1.1.2', 'goose', [
@@ -21,23 +20,23 @@ UnitTest.test('QueryTest', function() {
     ])
   ]));
 
-  var checkPrev = function (expected, id) {
-    var first = universe.find(universe.get(), id).getOrDie();
-    var actual = Query.prevSibling(first).getOr({ id: '_nope_' });
-    assert.eq(expected, actual.id);
+  const checkPrev = function (expected: string, id: string) {
+    const first = universe.find(universe.get(), id).getOrDie();
+    const actual = Query.prevSibling(first).map((e) => e.id).getOr('_nope_');
+    assert.eq(expected, actual);
   };
 
-  var checkNext = function (expected, id) {
-    var first = universe.find(universe.get(), id).getOrDie();
-    var actual = Query.nextSibling(first).getOr({ id: '_nope_' });
-    assert.eq(expected, actual.id);
+  const checkNext = function (expected: string, id: string) {
+    const first = universe.find(universe.get(), id).getOrDie();
+    const actual = Query.nextSibling(first).map((e) => e.id).getOr('_nope_');
+    assert.eq(expected, actual);
   };
 
-  var checkPosition = function (expected, one, other) {
-    var first = universe.find(universe.get(), one).getOrDie();
-    var last = universe.find(universe.get(), other).getOrDie();
+  const checkPosition = function (expected: number, one: string, other: string) {
+    const first = universe.find(universe.get(), one).getOrDie();
+    const last = universe.find(universe.get(), other).getOrDie();
 
-    var actual = Query.comparePosition(first, last);
+    const actual = Query.comparePosition(first, last);
     assert.eq(expected, actual);
   };
 

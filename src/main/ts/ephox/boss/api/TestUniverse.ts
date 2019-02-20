@@ -14,29 +14,39 @@ import Up from '../mutant/Up';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Universe } from './Universe';
+import { Gene } from './Gene';
 
+export interface TestUniverseUp extends ReturnType<Universe<Gene, undefined>['up']> {
+  top: (element: Gene) => Gene;
+}
 
+export interface TestUniverse extends Universe<Gene, undefined> {
+  up: () => TestUniverseUp;
+  find: (root: Gene, id: string) => Option<Gene>;
+  get: () => Gene;
+  shortlog: (f?: (e: Gene) => string) => string;
+}
 
-export default function (raw): Universe<any, undefined> {
-  var content = Tracks.track(raw, Option.none());
+export const TestUniverse = function (raw: Gene): TestUniverse {
+  let content = Tracks.track(raw, Option.none());
 
   // NOTE: The top point might change when we are wrapping.
-  var wrap = function (anchor, wrapper) {
+  const wrap = function (anchor: Gene, wrapper: Gene) {
     Insertion.wrap(anchor, wrapper);
-    content.parent.fold(Fun.noop, function (p) {
+    Option.from(content.parent).fold(Fun.noop, function (p) {
       content = p;
     });
   };
 
-  var find = function (root, id) {
+  const find = function (root: Gene, id: string) {
     return Locator.byId(root, id);
   };
 
-  var get = function () {
+  const get = function () {
     return content;
   };
 
-  var shortlog = function (f) {
+  const shortlog = function (f?: (e: Gene) => string) {
     return f !== undefined ? Logger.custom(content, f) : Logger.basic(content);
   };
 

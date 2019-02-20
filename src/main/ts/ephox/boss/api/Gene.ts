@@ -1,11 +1,21 @@
+export interface Gene {
+  id: string;
+  name: string;
+  children: Gene[];
+  css: Record<string, string>;
+  attrs: Record<string, string>;
+  text?: string;
+  parent?: Gene;
+  random?: number;
+}
 
-
-export default <any> function (id, name, children, css, attrs) {
+export const Gene = function (id: string, name: string, children: Gene[] = [], css: Record<string, string> = {}, attrs: Record<string, string> = {}, text?: string): Gene {
   return {
-    id: id,
-    name: name,
-    children: children,
-    css: css !== undefined ? css : {},
-    attrs: attrs !== undefined ? attrs : {}
+    id,
+    name,
+    children,
+    css,
+    attrs,
+    text,
   };
 };

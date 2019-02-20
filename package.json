@@ -20,7 +20,8 @@
   "dependencies": {
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
-    "@ephox/sugar": "latest"
+    "@ephox/sugar": "latest",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",

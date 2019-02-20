@@ -1,21 +1,22 @@
-import Comparator from './Comparator';
 import { Arr } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
+import Comparator from './Comparator';
 
-var selector = function (item, query) {
+const selector = function (item: Gene, query: string): Gene[] {
   return Arr.bind(item.children || [], function (child) {
-    var rest = selector(child, query);
-    return Comparator.is(child, query) ? [ child ].concat(rest) : rest;
+    const rest = selector(child, query);
+    return Comparator.is(child, query) ? [child].concat(rest) : rest;
   });
 };
 
-var predicate = function (item, pred) {
+const predicate = function (item: Gene, pred: (e: Gene) => boolean): Gene[] {
   return Arr.bind(item.children || [], function (child) {
-    var rest = predicate(child, pred);
-    return pred(child) ? [ child ].concat(rest) : rest;
+    const rest = predicate(child, pred);
+    return pred(child) ? [child].concat(rest) : rest;
   });
 };
 
-export default <any> {
-  selector: selector,
-  predicate: predicate
+export default {
+  selector,
+  predicate
 };

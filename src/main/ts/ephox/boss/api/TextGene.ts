@@ -1,12 +1,5 @@
+import { Gene } from './Gene';
 
-
-export default <any> function (id, text) {
-  return {
-    id: id,
-    name: 'TEXT_GENE',
-    text: text,
-    children: [],
-    css: {},
-    attrs: {}
-  };
+export const TextGene = function (id: string, text: string) {
+  return Gene(id, 'TEXT_GENE', [], {}, {}, text);
 };

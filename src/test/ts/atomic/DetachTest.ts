@@ -1,101 +1,80 @@
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Option } from '@ephox/katamari';
+import { Gene } from 'ephox/boss/api/Gene';
 import Detach from 'ephox/boss/mutant/Detach';
-import Locator from 'ephox/boss/mutant/Locator';
 import Logger from 'ephox/boss/mutant/Logger';
 import Tracks from 'ephox/boss/mutant/Tracks';
-import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DetachTest', function() {
-  var family = Tracks.track(
-  {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, Option.none());
 
-  var check = function (expected, input, id) {
-    var family = Tracks.track(input, Option.none());
-    var target = Locator.byId(family, id).getOrDie();
-    var actual = Detach.detach(family, target);
-    assert.eq(expected, Logger.basic(family));
+  const check = function (expectedRemain: string, expectedDetach: Option<string>, input: Gene, id: string) {
+    const family = Tracks.track(input, Option.none());
+    const actualDetach = Detach.detach(family, Gene(id, '.'));
+    assert.eq(expectedRemain, Logger.basic(family));
+    expectedDetach.fold(() => {
+      assert.eq(true, actualDetach.isNone(), 'Expected no detached node');
+    }, (expected) => {
+      actualDetach.map(Logger.basic).fold(() => {
+        assert.fail('Expected detached node to be ' + expected + ' but no node found.');
+      }, (actual) => {
+        assert.eq(expected, actual);
+      })
+    });
   };
 
-  var checkNone = function (expected, input, id) {
-    var family = Tracks.track(input, Option.none());
-    var actual = Detach.detach(family, { id: id });
-    assert.eq(false, actual.isSome());
-  };
+  check('A(B)', Option.some('C(D(E),F)'),
+    Gene('A', '.', [
+      Gene('B', '.', []),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.', [])
+        ]),
+        Gene('F', '.', [])
+      ])
+    ]), 'C');
 
-  check('A(B)', {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, 'C');
+  check('A(B,C(D(E)))', Option.some('F'),
+    Gene('A', '.', [
+      Gene('B', '.', []),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.', [])
+        ]),
+        Gene('F', '.', [])
+      ])
+    ]), 'F');
 
-  check('A(B,C(D(E)))', {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, 'F');
+  check('A(B,C(F))', Option.some('D(E)'),
+    Gene('A', '.', [
+      Gene('B', '.'),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.')
+        ]),
+        Gene('F', '.')
+      ])
+    ]), 'D');
 
-  check('A(B,C(F))', {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, 'D');
+  check('A(B,C(D(E),F))', Option.none(), 
+    Gene('A', '.', [
+      Gene('B', '.'),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.')
+        ]),
+        Gene('F', '.')
+      ])
+    ]), 'Z');
 
-  checkNone('A(B)', {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, 'Z');
-
-  check('A(B,C(D(E)))', {
-    id: 'A',
-    children: [
-      { id: 'B', children: [ ] },
-      { id: 'C', children: [
-        { id: 'D', children: [
-          { id: 'E', children: [] }
-        ]},
-        { id: 'F', children: [] }
-      ]}
-    ]
-  }, 'F');
+  check('A(B,C(D(E)))', Option.some('F'),
+    Gene('A', '.', [
+      Gene('B', '.'),
+      Gene('C', '.', [
+        Gene('D', '.', [
+          Gene('E', '.')
+        ]),
+        Gene('F', '.')
+      ])
+    ]), 'F');
 });
 

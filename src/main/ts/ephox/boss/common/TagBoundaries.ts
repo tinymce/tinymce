@@ -1,6 +1,6 @@
 
 
-export default <any> [
+export default [
   'body',
   'p',
   'div',

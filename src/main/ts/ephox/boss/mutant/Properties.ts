@@ -1,47 +1,48 @@
 import TagBoundaries from '../common/TagBoundaries';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
+import { Gene } from '../api/Gene';
 
-var children = function (item) {
+const children = function (item: Gene) {
   return item.children;
 };
 
-var name = function (item) {
+const name = function (item: Gene) {
   return item.name;
 };
 
-var parent = function (item) {
-  return item.parent;
+const parent = function (item: Gene): Option<Gene> {
+  return Option.from(item.parent);
 };
 
-var document = function (item) {
+const document = function (item: Gene) {
   return undefined; // currently the test universe does not have documents
 }
 
-var isText = function (item) {
+const isText = function (item: Gene) {
   return item.name === 'TEXT_GENE';
 };
 
-var isComment = function (item) {
+const isComment = function (item: Gene) {
   return item.name === 'COMMENT_GENE';
 };
 
-var isElement = function (item) {
+const isElement = function (item: Gene) {
   return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
 };
 
-var getText = function (item) {
-  return item.text;
+const getText = function (item: Gene) {
+  return Option.from(item.text).getOrDie('Text not available on this node')
 };
 
-var setText = function (item, value) {
+const setText = function (item: Gene, value: string | undefined) {
   item.text = value;
 };
 
-var isEmptyTag = function (item) {
+const isEmptyTag = function (item: Gene) {
   return Arr.contains([ 'br', 'img', 'hr' ], item.name);
 };
 
-var isBoundary = function (item) {
+const isBoundary = function (item: Gene) {
   return Arr.contains(TagBoundaries, item.name);
 };
 
