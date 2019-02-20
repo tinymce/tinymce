@@ -11,7 +11,7 @@ const name = function (item: Gene) {
 };
 
 const parent = function (item: Gene): Option<Gene> {
-  return Option.from(item.parent);
+  return item.parent;
 };
 
 const document = function (item: Gene) {
