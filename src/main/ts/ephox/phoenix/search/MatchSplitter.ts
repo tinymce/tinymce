@@ -1,7 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
-import { NamedPattern } from '../api/data/NamedPattern';
 import { SearchResult, SpotRange } from '../api/data/Types';
 import * as Splitter from './Splitter';
 

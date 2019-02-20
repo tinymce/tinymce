@@ -67,7 +67,7 @@ UnitTest.test('WrapperTest', function () {
   };
 
   // Let's just do stuff.
-  const result = check(
+  check(
     'root(' +
     'a(' +
     'aa(' +
