@@ -1,14 +1,11 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
+import { Arr, Fun } from '@ephox/katamari';
 import * as Searcher from 'ephox/phoenix/search/Searcher';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SearcherTest', function() {
+UnitTest.test('SearcherTest', function () {
   /*
     An example of some <b>test</b> data. The word being looked for will be word and for.
 
@@ -20,7 +17,7 @@ UnitTest.test('SearcherTest', function() {
     <p>There will be three paragraphs. This one ends with partial fo</p>
     <p>r and more.</p>
   */
-  var data = function () {
+  const data = function () {
     return Gene('root', 'root', [
       Gene('p1', 'p', [
         TextGene('p1-a', 'An example of some '),
@@ -48,12 +45,18 @@ UnitTest.test('SearcherTest', function() {
     ]);
   };
 
-  var checkWords = function (expected, itemIds, words, input) {
-    var universe = TestUniverse(input);
-    var items = Finder.getAll(universe, itemIds);
-    var actual = Searcher.safeWords(universe, items, words, Fun.constant(false));
+  interface CheckItem {
+    items: string[];
+    word: string;
+    exact: string;
+  }
 
-    var processed = Arr.map(actual, function (match) {
+  const checkWords = function (expected: CheckItem[], itemIds: string[], words: string[], input: Gene) {
+    const universe = TestUniverse(input);
+    const items = Finder.getAll(universe, itemIds);
+    const actual = Searcher.safeWords(universe, items, words, Fun.constant(false) as (e: Gene) => boolean);
+
+    const processed = Arr.map(actual, function (match): CheckItem {
       return {
         items: TestRenders.texts(match.elements()),
         word: match.word(),
@@ -66,13 +69,13 @@ UnitTest.test('SearcherTest', function() {
   //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
   //paragraphs. This one ends with a partial fo|r and more.
 
-  checkWords( [
-    { items: [ 'test' ], word: 'test', exact: 'test' },
-    { items: [ 'word' ], word: 'word', exact: 'word' },
-    { items: [ 'for' ], word: 'for', exact: 'for' },
-    { items: [ 'w', 'or', 'd' ], word: 'word', exact: 'word' },
-    { items: [ 'for' ], word: 'for', exact: 'for' },
-    { items: [ 'tes', 't' ], word: 'test', exact: 'test' }
-  ], [ 'p1', 'p2', 'p3' ], [ 'for', 'test', 'word' ], data());
+  checkWords([
+    { items: ['test'], word: 'test', exact: 'test' },
+    { items: ['word'], word: 'word', exact: 'word' },
+    { items: ['for'], word: 'for', exact: 'for' },
+    { items: ['w', 'or', 'd'], word: 'word', exact: 'word' },
+    { items: ['for'], word: 'for', exact: 'for' },
+    { items: ['tes', 't'], word: 'test', exact: 'test' }
+  ], ['p1', 'p2', 'p3'], ['for', 'test', 'word'], data());
 });
 

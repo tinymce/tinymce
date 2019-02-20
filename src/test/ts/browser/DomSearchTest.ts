@@ -6,23 +6,23 @@ import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomSearchTest', function () {
-  var body = Element.fromDom(document.body);
-  var container = Element.fromTag('div');
+  const body = Element.fromDom(document.body);
+  const container = Element.fromTag('div');
   Insert.append(body, container);
 
-  var check = function (expected, rawTexts, words) {
-    var elements = Arr.map(rawTexts, function (x) {
+  const check = function (expected: string, rawTexts: string[], words: string[]) {
+    const elements = Arr.map(rawTexts, function (x) {
       return Element.fromText(x);
     });
 
     Remove.empty(container);
     InsertAll.append(container, elements);
 
-    var snapshots = DomSearch.safeWords(elements, words, Fun.constant(false));
+    const snapshots = DomSearch.safeWords(elements, words, Fun.constant(false));
 
     Arr.each(snapshots, function (x) {
       DomWrapping.wrapper(x.elements(), function () {
-        var span = Element.fromTag('span');
+        const span = Element.fromTag('span');
         Attr.set(span, 'data-word', x.word());
         return DomWrapping.nu(span);
       });

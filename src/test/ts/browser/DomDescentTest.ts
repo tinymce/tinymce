@@ -1,25 +1,26 @@
-import { UnitTest, assert } from '@ephox/bedrock';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Obj } from '@ephox/katamari';
+import { Element, Hierarchy } from '@ephox/sugar';
+import { SpotPoint } from 'ephox/phoenix/api/data/Types';
 import * as DomDescent from 'ephox/phoenix/api/dom/DomDescent';
 
 UnitTest.test('DomDescentTest', function () {
 
-  var root = Element.fromHtml(
+  const root = Element.fromHtml(
     '<div>\n' +
     '<p>This <span>first</span> thing I do</p>' +
     '<table>\n  <tbody>\n  <tr>\n  <td>Hi</td>\n  </tr>\n  </tbody>\n  </table>\n' +
     '</div>'
   );
 
-  var toRef = function (v: number[], k: string) {
+  const toRef = function (v: number[], k: string) {
     return {
       element: Hierarchy.follow(root, v).getOrDie('Could not find path: ' + v + ' for key: ' + k),
       path: v
     };
   };
 
-  var refs = Obj.map({
+  const refs = Obj.map({
     'div': [],
     'p': [1],
     'span': [1].concat([1]),
@@ -29,8 +30,13 @@ UnitTest.test('DomDescentTest', function () {
     'tdtext': [2, 1, 1, 1, 0]
   }, toRef);
 
-  var check = function (expected, actual) {
-    var aPath = Hierarchy.path(root, actual.element()).getOrDie('Could not extract path');
+  interface CheckItem {
+    path: number[];
+    offset: number;
+  }
+
+  const check = function (expected: CheckItem, actual: SpotPoint<Element>) {
+    const aPath = Hierarchy.path(root, actual.element()).getOrDie('Could not extract path');
     assert.eq(expected.path, aPath);
     assert.eq(expected.offset, actual.offset());
   };

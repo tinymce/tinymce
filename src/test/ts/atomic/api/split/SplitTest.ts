@@ -1,27 +1,25 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Split.(split,splitByPair)', function() {
-  var generate = function (text) {
-    var universe = TestUniverse(
+UnitTest.test('api.Split.(split,splitByPair)', function () {
+  const generate = function (text: string) {
+    const universe = TestUniverse(
       Gene('root', 'root', [
         TextGene('generate_text', text)
       ])
     );
 
-    var item = Finder.get(universe, 'generate_text');
+    const item = Finder.get(universe, 'generate_text');
     return {
       universe: universe,
       item: item
     };
   };
 
-  var isEq = function (opt1, opt2) {
+  const isEq = function (opt1: Option<string>, opt2: Option<Gene>) {
     return opt1.fold(function () {
       return opt2.isNone();
     }, function (a) {
@@ -31,16 +29,16 @@ UnitTest.test('api.Split.(split,splitByPair)', function() {
     });
   };
 
-  var checkSplit = function (before, after, text, position) {
-    var input = generate(text);
-    var actual = Split.split(input.universe, input.item, position);
+  const checkSplit = function (before: Option<string>, after: Option<string>, text: string, position: number) {
+    const input = generate(text);
+    const actual = Split.split(input.universe, input.item, position);
     assert.eq(true, isEq(before, actual.before()));
     assert.eq(true, isEq(after, actual.after()));
   };
 
-  var checkPair = function (expected, middle, text, start, finish) {
-    var input = generate(text);
-    var actual = Split.splitByPair(input.universe, input.item, start, finish);
+  const checkPair = function (expected: string, middle: string, text: string, start: number, finish: number) {
+    const input = generate(text);
+    const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);
     assert.eq(expected, input.universe.shortlog(function (item) {
       return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;

@@ -1,12 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Injection from 'ephox/phoenix/injection/Injection';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('InsertAtTest', function() {
-  var makeUniverse = function () {
+UnitTest.test('InsertAtTest', function () {
+  const makeUniverse = function () {
     return TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'node', [
@@ -24,9 +22,9 @@ UnitTest.test('InsertAtTest', function() {
     );
   };
 
-  var check = function (expected, element, offset, injection) {
-    var universe = makeUniverse();
-    var start = Finder.get(universe, element);
+  const check = function (expected: string, element: string, offset: number, injection: Gene) {
+    const universe = makeUniverse();
+    const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);
     assert.eq(expected, universe.shortlog(function (item) {
       return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;

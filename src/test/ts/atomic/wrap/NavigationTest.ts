@@ -1,13 +1,10 @@
-import { CommentGene } from '@ephox/boss';
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { CommentGene, Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as Navigation from 'ephox/phoenix/wrap/Navigation';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('NavigationTest', function() {
-  var doc = TestUniverse(
+  let doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
         Gene('1.1', 'p', [
@@ -29,20 +26,25 @@ UnitTest.test('NavigationTest', function() {
     ])
   );
 
-  var checkLast = function (expected, id) {
-    var actual = Navigation.toLast(doc, Finder.get(doc, id));
+  interface CheckItem {
+    element: string;
+    offset: number;
+  }
+
+  const checkLast = function (expected: CheckItem, id: string) {
+    const actual = Navigation.toLast(doc, Finder.get(doc, id));
     assert.eq(expected.element, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };
 
-  var checkLower = function (expected, id) {
-    var actual = Navigation.toLower(doc, Finder.get(doc, id));
+  const checkLower = function (expected: CheckItem, id: string) {
+    const actual = Navigation.toLower(doc, Finder.get(doc, id));
     assert.eq(expected.element, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };
 
-  var checkLeaf = function (expected, id, offset) {
-    var actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
+  const checkLeaf = function (expected: CheckItem, id: string, offset: number) {
+    const actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
     assert.eq(expected.element, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };
@@ -58,17 +60,17 @@ UnitTest.test('NavigationTest', function() {
   checkLeaf({ element: '1.2.2.1', offset: 0 }, '1.2', 1);
   checkLeaf({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2', 5);
 
-  var checkFreeFallLtr = function (expected, universe, elementId) {
-    var element = Finder.get(doc, elementId);
-    var actual = Navigation.freefallLtr(universe, element);
+  const checkFreeFallLtr = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+    const element = Finder.get(doc, elementId);
+    const actual = Navigation.freefallLtr(universe, element);
     assert.eq(element.id, elementId);
     assert.eq(expected.element, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };
 
-  var checkFreeFallRtl = function (expected, universe, elementId) {
-    var element = Finder.get(doc, elementId);
-    var actual = Navigation.freefallRtl(universe, element);
+  const checkFreeFallRtl = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+    const element = Finder.get(doc, elementId);
+    const actual = Navigation.freefallRtl(universe, element);
     assert.eq(element.id, elementId);
     assert.eq(expected.element, actual.element().id);
     assert.eq(expected.offset, actual.offset());

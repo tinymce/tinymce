@@ -1,15 +1,13 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import * as Gather from 'ephox/phoenix/api/general/Gather';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Seeker Test', function() {
-  var some = Option.some;
+UnitTest.test('Seeker Test', function () {
+  const some = Option.some;
 
-  var universe = TestUniverse(
+  const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('a', 'node', [
         Gene('aa', 'node', [
@@ -40,11 +38,11 @@ UnitTest.test('Seeker Test', function() {
     ])
   );
 
-  var isRoot = function (item) {
+  const isRoot = function (item: Gene) {
     return item.id === 'root';
   };
 
-  var check = function (expected, actual) {
+  const check = function (expected: Option<string>, actual: Option<Gene>) {
     actual.fold(function () {
       assert.eq(true, expected.isNone());
     }, function (act) {
@@ -56,15 +54,15 @@ UnitTest.test('Seeker Test', function() {
     });
   };
 
-  var checkBefore = function (expected, id) {
-    var item = Finder.get(universe, id);
-    var actual = Gather.before(universe, item, isRoot);
+  const checkBefore = function (expected: Option<string>, id: string) {
+    const item = Finder.get(universe, id);
+    const actual = Gather.before(universe, item, isRoot);
     check(expected, actual);
   };
 
-  var checkAfter = function (expected, id) {
-    var item = Finder.get(universe, id);
-    var actual = Gather.after(universe, item, isRoot);
+  const checkAfter = function (expected: Option<string>, id: string) {
+    const item = Finder.get(universe, id);
+    const actual = Gather.after(universe, item, isRoot);
     check(expected, actual);
   };
 

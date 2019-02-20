@@ -1,14 +1,12 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Group from 'ephox/phoenix/family/Group';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('GroupTest', function() {
-  var doc = TestUniverse(
+UnitTest.test('GroupTest', function () {
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
         Gene('1.1', 'p', [
@@ -30,25 +28,25 @@ UnitTest.test('GroupTest', function() {
     ])
   );
 
-  var check = function (expected, ids) {
-    var items = Arr.map(ids, function (id) {
+  const check = function (expected: string[][], ids: string[]) {
+    const items = Arr.map(ids, function (id) {
       return Finder.get(doc, id);
     });
-    var actual = Group.group(doc, items);
+    const actual = Group.group(doc, items);
     assert.eq(expected, Arr.map(actual, function (xs) {
       return Arr.map(xs, TestRenders.typeditem);
     }));
   };
 
   check([
-    [ 'empty(1.1.1)' ],
-    [ 'text("post-image text")' ],
-    [ 'text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")' ]
-  ], [ '1' ]);
+    ['empty(1.1.1)'],
+    ['text("post-image text")'],
+    ['text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")']
+  ], ['1']);
 
   check([
-    [ 'empty(1.1.1)' ],
-    [ 'text("post-image text")' ]
-  ], [ '1.1' ]);
+    ['empty(1.1.1)'],
+    ['text("post-image text")']
+  ], ['1.1']);
 });
 

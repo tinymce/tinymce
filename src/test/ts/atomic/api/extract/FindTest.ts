@@ -1,13 +1,11 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Extract.find', function() {
-  var doc = TestUniverse(
+UnitTest.test('api.Extract.find', function () {
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
         Gene('1.1', 'p', [
@@ -29,9 +27,9 @@ UnitTest.test('api.Extract.find', function() {
     ])
   );
 
-  var check = function (expected, topId, offset) {
-    var top = Finder.get(doc, topId);
-    var actual = Extract.find(doc, top, offset);
+  const check = function (expected: Option<{ id: string, offset: number }>, topId: string, offset: number) {
+    const top = Finder.get(doc, topId);
+    const actual = Extract.find(doc, top, offset);
     expected.fold(function () {
       assert.eq(actual.isNone(), true, 'Expected none, actual: some');
     }, function (exp) {

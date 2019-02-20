@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import * as Seeker from '../../gather/Seeker';
 import { backtrack, sidestep, advance, go } from '../../gather/Walker';
 import { Walkers } from '../../gather/Walkers';

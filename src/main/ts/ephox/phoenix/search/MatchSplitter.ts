@@ -1,7 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
-import { NamedPattern } from '../api/data/NamedPattern';
 import { SearchResult, SpotRange } from '../api/data/Types';
 import * as Splitter from './Splitter';
 
@@ -10,7 +9,7 @@ import * as Splitter from './Splitter';
  *
  * Each match is then mapped to the word it matched and the elements that make up the word.
  */
-const separate = function <E, D, M extends PRange & NamedPattern>(universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]) {
+const separate = function <E, D, M extends PRange & {word: () => string}>(universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]) {
   const allPositions = Arr.bind(matches, function (match) {
     return [match.start(), match.finish()];
   });

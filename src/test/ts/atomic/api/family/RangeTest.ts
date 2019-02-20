@@ -1,13 +1,11 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Family from 'ephox/phoenix/api/general/Family';
 import * as Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('RangeTest', function() {
-  var doc = TestUniverse(
+UnitTest.test('RangeTest', function () {
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('a', 'div', [
         Gene('aa', 'div', [
@@ -39,15 +37,15 @@ UnitTest.test('RangeTest', function() {
     ])
   );
 
-  var check = function (expected, startId, finishId, delta1, delta2) {
-    var start = Finder.get(doc, startId);
-    var finish = Finder.get(doc, finishId);
-    var actual = Family.range(doc, start, delta1, finish, delta2);
+  const check = function (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) {
+    const start = Finder.get(doc, startId);
+    const finish = Finder.get(doc, finishId);
+    const actual = Family.range(doc, start, delta1, finish, delta2);
     assert.eq(expected, Arr.map(actual, function (x) { return x.id; }));
   };
 
   check(['a'], 'a', 'a', 0, 0); // This doesn't check that it is a text node. Is that a problem?
-  check(['aaa', 'aabab', 'aba', 'abb' ], 'aaa', 'abca', 0, 0);
+  check(['aaa', 'aabab', 'aba', 'abb'], 'aaa', 'abca', 0, 0);
   check(['aaa'], 'aaa', 'aaa', 1, 1);
   check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aabab', 'aca', 0, 0);
   check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 0, 1);

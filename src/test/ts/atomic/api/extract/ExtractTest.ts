@@ -8,7 +8,7 @@ import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Extract.(from,all,extract,extractTo)', function() {
-  var doc = TestUniverse(
+  const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
         Gene('1.1', 'p', [
@@ -30,36 +30,36 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', function() {
     ])
   );
 
-  var check = function (expected, extract, initial) {
-    var start = Finder.get(doc, initial);
-    var actual = extract(doc, start);
+  const check = function (expected: string[], extract: typeof Extract.from, initial: string) {
+    const start = Finder.get(doc, initial);
+    const actual = extract(doc, start);
     assert.eq(expected, Arr.map(actual, TestRenders.typeditem));
   };
 
-  var checkFrom = function (expected, initial) {
+  const checkFrom = function (expected: string[], initial: string) {
     check(expected, Extract.from, initial);
   };
 
-  var checkAll = function (expected, initial) {
-    var start = Finder.get(doc, initial);
-    var actual = Extract.all(doc, start);
+  const checkAll = function (expected: string[], initial: string) {
+    const start = Finder.get(doc, initial);
+    const actual = Extract.all(doc, start);
     assert.eq(expected, Arr.map(actual, function (a) {
       return a.id;
     }));
   };
 
   //
-  // var extract = function (universe, child, offset) {
-  var checkExtract = function (expected, childId, offset) {
-    var child = Finder.get(doc, childId);
-    var actual = Extract.extract(doc, child, offset);
+  // const extract = function (universe, child, offset) {
+  const checkExtract = function (expected: {id: string; offset: number}, childId: string, offset: number) {
+    const child = Finder.get(doc, childId);
+    const actual = Extract.extract(doc, child, offset);
     assert.eq(expected.id, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };
 
-  var checkExtractTo = function (expected, childId, offset, pred) {
-    var child = Finder.get(doc, childId);
-    var actual = Extract.extractTo(doc, child, offset, pred);
+  const checkExtractTo = function (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) {
+    const child = Finder.get(doc, childId);
+    const actual = Extract.extractTo(doc, child, offset, pred);
     assert.eq(expected.id, actual.element().id);
     assert.eq(expected.offset, actual.offset());
   };

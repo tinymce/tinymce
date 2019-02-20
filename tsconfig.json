@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
     "moduleResolution": "node",
     "target": "es5",
     "module": "es2015",

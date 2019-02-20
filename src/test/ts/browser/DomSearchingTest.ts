@@ -5,10 +5,10 @@ import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import { Pattern } from '@ephox/polaris';
 
 UnitTest.test('DomSearchingTest', function () {
-  var root = Element.fromTag('div');
+  const root = Element.fromTag('div');
   root.dom().innerHTML = 'This is some<ol><li>text</li></ol>';
 
-  var result = DomSearch.run([root], [{
+  const result = DomSearch.run([root], [{
     word: Fun.constant('sometext'),
     pattern: Fun.constant(Pattern.unsafetoken('sometext'))
   }], Fun.constant(false));
