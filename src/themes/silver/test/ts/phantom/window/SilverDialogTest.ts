@@ -3,14 +3,14 @@ import { UnitTest } from '@ephox/bedrock';
 import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
-import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
 import { document } from '@ephox/dom-globals';
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { TestHelpers } from '@ephox/alloy';
+import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
-  const helpers = setupDemo();
+  const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
   const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);

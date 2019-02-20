@@ -2,11 +2,10 @@ import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, 
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Element } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-
-import { setupDemo } from '../../../../demo/ts/components/DemoHelpers';
+import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
-  const helpers = setupDemo();
+  const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
   const cAssertFormContents = (label: string, f: (s, str, arr) => StructAssert) => {
