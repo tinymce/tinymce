@@ -13,6 +13,8 @@ export interface SplitToolbarDetail extends CompositeSketchDetail {
   dom: RawDomSchema;
   components: AlloySpec[ ];
   splitToolbarBehaviours: SketchBehaviours;
+  floating: boolean;
+  overflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 
   builtGroups: Cell<AlloyComponent[]>;
   markers: {
@@ -29,6 +31,8 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   splitToolbarBehaviours?: AlloyBehaviourRecord;
+  floating?: boolean;
+  overflow?: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 
   markers: {
     closedClass: string;
@@ -47,4 +51,5 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
 export interface SplitToolbarSketcher extends CompositeSketch<SplitToolbarSpec, SplitToolbarDetail> {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
+  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }

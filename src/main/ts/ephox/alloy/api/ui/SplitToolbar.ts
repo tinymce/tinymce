@@ -1,8 +1,5 @@
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
-import { SketchSpec } from '../../api/component/SpecTypes';
-
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Overflows from '../../toolbar/Overflows';
 import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
@@ -17,41 +14,49 @@ import { ToolbarGroup } from './ToolbarGroup';
 import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { Toggling } from '../behaviour/Toggling';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
   Toolbar.setGroups(bar, bGroups);
 };
 
-const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
-  const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
-  const primary = ps.primary();
-  const overflow = ps.overflow();
+const refresh = (toolbar, detail: SplitToolbarDetail, externals, toolbarToggleEvent) => {
+  const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
+  const overflow = AlloyParts.getPart(toolbar, detail, 'overflow').orThunk(() => detail.overflow(toolbar));
 
   // Set the primary toolbar to have visibilty hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
 
   // Clear the overflow toolbar
-  Toolbar.setGroups(overflow, [ ]);
+  overflow.each((overf) => {
+    Toolbar.setGroups(overf, []);
+  });
 
   // Put all the groups inside the primary toolbar
   const groups = detail.builtGroups.get();
 
   const overflowGroupSpec = ToolbarGroup.sketch({
-     ...externals['overflow-group'](),
+    ...externals['overflow-group'](),
     items: [
       Button.sketch({
         ...externals['overflow-button'](),
-        action (button) {
-          // This used to look up the overflow again ... we may need to do that.
-          Sliding.toggleGrow(ps.overflow());
+        action(button) {
+          if (detail.floating === true) {
+            AlloyTriggers.emit(toolbar, toolbarToggleEvent);
+          } else {
+            // This used to look up the overflow again ... we may need to do that.
+            overflow.each((overf) => {
+              Sliding.toggleGrow(overf);
+            });
+          }
         }
       })
     ]
   });
   const overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 
-  setStoredGroups(primary, groups.concat([ overflowGroup ]));
+  setStoredGroups(primary, groups.concat([overflowGroup]));
 
   const total = Width.get(primary.element());
 
@@ -63,25 +68,36 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals) => {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert
     // Can just reset the toolbar groups also ... but may be a bit slower.
     Replacing.remove(primary, overflowGroup);
-    Toolbar.setGroups(overflow, [ ]);
+    overflow.each((overf) => {
+      Toolbar.setGroups(overf, []);
+    });
     // Maybe remove the overflow drawer.
   } else {
     setStoredGroups(primary, overflows.within());
-    setStoredGroups(overflow, overflows.extra());
+    overflow.each((overf) => {
+      setStoredGroups(overf, overflows.extra());
+    });
     // Maybe add the overflow drawer.
   }
 
   Css.remove(primary.element(), 'visibility');
   Css.reflow(primary.element());
 
-  Sliding.refresh(overflow);
-
-  AlloyParts.getPart(toolbar, detail, 'overflow-button').each((moreButton) => {
-    Toggling.set(moreButton, Sliding.hasGrown(overflow));
+  overflow.each((overf) => {
+    AlloyParts.getPart(toolbar, detail, 'overflow-button').each((moreButton) => {
+      if (detail.floating === true) {
+        Toggling.set(moreButton, overf.getSystem().isConnected());
+      } else {
+        Sliding.refresh(overf);
+        Toggling.set(moreButton, Sliding.hasGrown(overf));
+      }
+    });
   });
 };
 
 const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (detail, components, spec, externals) => {
+  const toolbarToggleEvent = 'alloy.toolbar.toggle';
+
   const doSetGroups = (toolbar, groups) => {
     const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups.set(built);
@@ -89,7 +105,11 @@ const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (d
 
   const setGroups = (toolbar, groups) => {
     doSetGroups(toolbar, groups);
-    refresh(toolbar, detail, externals);
+    refresh(toolbar, detail, externals, toolbarToggleEvent);
+  };
+
+  const getMoreButton = (toolbar) => {
+    return AlloyParts.getPart(toolbar, detail, 'overflow-button');
   };
 
   return {
@@ -98,12 +118,15 @@ const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (d
     components,
     behaviours: SketchBehaviours.augment(
       detail.splitToolbarBehaviours,
-      [ ]
+      []
     ),
     apis: {
       setGroups,
-      refresh (toolbar) {
-        refresh(toolbar, detail, externals);
+      refresh(toolbar) {
+        refresh(toolbar, detail, externals, toolbarToggleEvent);
+      },
+      getMoreButton(toolbar) {
+        return getMoreButton(toolbar);
       }
     },
 
@@ -119,11 +142,14 @@ const SplitToolbar = Sketcher.composite({
   partFields: SplitToolbarSchema.parts(),
   factory,
   apis: {
-    setGroups (apis, toolbar, groups) {
+    setGroups(apis, toolbar, groups) {
       apis.setGroups(toolbar, groups);
     },
-    refresh (apis, toolbar) {
+    refresh(apis, toolbar) {
       apis.refresh(toolbar);
+    },
+    getMoreButton(apis, toolbar) {
+      return apis.getMoreButton(toolbar);
     }
   }
 }) as SplitToolbarSketcher;
