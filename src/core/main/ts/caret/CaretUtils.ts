@@ -13,9 +13,8 @@ import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option, Fun } from '@ephox/katamari';
 import { HDirection } from 'tinymce/core/caret/CaretWalker';
 import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
-import { Node, Range, Text } from '@ephox/dom-globals';
+import { Node, Range } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
-import { isWhiteSpace } from '../text/CharType';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -284,15 +283,6 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   return range;
 };
 
-const isNextToContentEditableFalse = (relativeOffset: number, caretPosition: CaretPosition) => {
-  const node = getChildNodeAtRelativeOffset(relativeOffset, caretPosition);
-  return isContentEditableFalse(node) && !NodeType.isBogusAll(node);
-};
-
-const isNextToTable = (relativeOffset: number, caretPosition: CaretPosition) => {
-  return NodeType.isTable(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
-};
-
 const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => {
   return Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 };
@@ -306,21 +296,6 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
 
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
-
-const isBeforeContentEditableFalse = Fun.curry(isNextToContentEditableFalse, 0);
-const isAfterContentEditableFalse = Fun.curry(isNextToContentEditableFalse, -1);
-const isBeforeTable = Fun.curry(isNextToTable, 0);
-const isAfterTable = Fun.curry(isNextToTable, -1);
-
-const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
-  return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
-    const delta = forward ? 0 : -1;
-    return predicate(text.data.charAt(pos.offset() + delta));
-  });
-};
-
-const isBeforeSpace = Fun.curry(isChar, true, isWhiteSpace);
-const isAfterSpace = Fun.curry(isChar, false, isWhiteSpace);
 
 const getElementFromPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode()).map(Element.fromDom);
 const getElementFromPrevPosition = (pos: CaretPosition): Option<Element> => Option.from(pos.getNode(true)).map(Element.fromDom);
@@ -355,16 +330,11 @@ export {
   isInSameBlock,
   isInSameEditingHost,
   isMoveInsideSameBlock,
-  isBeforeContentEditableFalse,
-  isAfterContentEditableFalse,
-  isBeforeTable,
-  isAfterTable,
-  isBeforeSpace,
-  isAfterSpace,
   normalizeRange,
   getRelativeCefElm,
   getNormalizedRangeEndPoint,
   getElementFromPosition,
   getElementFromPrevPosition,
-  getVisualCaretPosition
+  getVisualCaretPosition,
+  getChildNodeAtRelativeOffset
 };
