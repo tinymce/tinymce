@@ -10,7 +10,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import EditorSettings from '../alien/EditorSettings';
 
 const getTextSelectionToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | form:quicklink h2 h3 blockquote');
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | quicklink h2 h3 blockquote');
 };
 
 const getInsertToolbarItems = function (editor: Editor): string {

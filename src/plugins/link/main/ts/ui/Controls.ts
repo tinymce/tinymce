@@ -71,6 +71,7 @@ const setupContextToolbars = function (editor: Editor) {
     launch: {
       type: 'contextformtogglebutton',
       icon: 'link',
+      tooltip: 'Link',
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
