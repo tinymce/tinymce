@@ -23,7 +23,6 @@
   "devDependencies": {
     "@tinymce/oxide-icons-default": "latest",
     "event-stream": "^3.3.4",
-    "fancy-log": "^1.3.3",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^3.10.0",

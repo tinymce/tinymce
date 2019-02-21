@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var less = require('gulp-less');
-var gulpLog = require('fancy-log');
 var lessAutoprefix = require('less-plugin-autoprefix');
 var gulpStylelint = require('gulp-stylelint');
 var variablesOutput = require('less-plugin-variables-output');
