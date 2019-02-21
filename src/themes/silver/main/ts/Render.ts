@@ -96,9 +96,13 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
     return memAnchorBar.getOpt(container);
-  }).getOrDie('Could not find a toolbar element');
+  }).getOrDie('Could not find a anchor bar element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
+  const lazyMoreButton = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getMoreButton(container);
+  }).getOrDie('Could not find more button element');
+
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 

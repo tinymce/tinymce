@@ -14,7 +14,8 @@ import {
   Sketcher,
   Toolbar as AlloyToolbar,
   UiSketcher,
-  Behaviour
+  Behaviour,
+  SplitToolbar
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
@@ -45,6 +46,7 @@ interface OuterContainerApis {
   // Maybe just change to ToolbarAnchor.
   getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
+  getMoreButton: (comp: AlloyComponent) => Option<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
@@ -76,6 +78,12 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     setToolbar(comp, groups) {
       Composite.parts.getPart(comp, detail, 'toolbar').each(function (toolbar) {
         AlloyToolbar.setGroups(toolbar, groups);
+      });
+    },
+    getMoreButton(comp) {
+      const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
+      return toolbar.bind((toolbar) => {
+        return SplitToolbar.getMoreButton(toolbar);
       });
     },
     focusToolbar(comp) {
@@ -124,6 +132,7 @@ const partToolbar = Composite.partType.optional({
         },
         cyclicKeying: false,
         initGroups: [],
+        getSink: spec.getSink,
         backstage: spec.backstage
       });
     }
@@ -131,7 +140,8 @@ const partToolbar = Composite.partType.optional({
   name: 'toolbar',
   schema: [
     FieldSchema.strict('dom'),
-    FieldSchema.strict('onEscape')
+    FieldSchema.strict('onEscape'),
+    FieldSchema.strict('getSink')
   ]
 });
 
@@ -190,7 +200,9 @@ export default Sketcher.composite({
 
       apis.setToolbar(comp, groups);
     },
-
+    getMoreButton(apis, comp) {
+      return apis.getMoreButton(comp);
+    },
     // FIX: Dupe
     setMenubar(apis, comp, menus) {
       apis.setMenubar(comp, menus);

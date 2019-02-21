@@ -30,7 +30,7 @@ const getSpec = (editor): SelectSpec => {
 
   const flatten = (fmt): string[] => {
     const subs = fmt.items;
-    return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
+    return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [fmt.format];
   };
 
   const onAction = (rawItem) => () => {
@@ -47,15 +47,17 @@ const getSpec = (editor): SelectSpec => {
   const nodeChangeHandler = Option.some((comp) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
-      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [ { title: fmt.title, format: fmt.format } ];
+      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     return (e) => {
-      const detectedFormat = findNearest(editor, () => flattenedItems, e);
-      const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
-      });
+      if (comp.getSystem().isConnected()) {
+        const detectedFormat = findNearest(editor, () => flattenedItems, e);
+        const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+        AlloyTriggers.emitWith(comp, updateMenuText, {
+          text
+        });
+      }
     };
   });
 

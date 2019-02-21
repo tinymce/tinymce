@@ -49,7 +49,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       // Not sure if we should always set this, or if it's worth checking against the current position
       const offset = split ? toolbar.fold(() => 0, (tbar) => {
         // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-        return Height.get(tbar.components()[1].element());
+        return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
       }) : 0;
       Css.setAll(floatContainer.element(), calcPosition(offset));
     }

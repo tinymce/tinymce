@@ -35,6 +35,7 @@ export interface UiFactoryBackstageShared {
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
     toolbar: () => AnchorSpec,
+    toolbarOverflow: () => AnchorSpec,
     banner: () => AnchorSpec,
     cursor: () => AnchorSpec,
     node: (elem: Option<Element>) => AnchorSpec
@@ -61,7 +62,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -79,6 +80,17 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
             bubble: Bubble.nu(-12, 12, bubbleAlignments),
+            layouts: {
+              onRtl: () => [ Layout.southeast ],
+              onLtr: () => [ Layout.southwest ]
+            }
+          };
+        },
+        toolbarOverflow: () => {
+          return {
+            anchor: 'hotspot',
+            // TODO AP-174 (below)
+            hotspot: lazyMoreButton(),
             layouts: {
               onRtl: () => [ Layout.southeast ],
               onLtr: () => [ Layout.southwest ]

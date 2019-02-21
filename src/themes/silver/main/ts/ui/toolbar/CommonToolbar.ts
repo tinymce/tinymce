@@ -16,9 +16,13 @@ import {
   SplitToolbar as SplitAlloyToolbar,
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup,
-  Focusing
+  Focusing,
+  Memento,
+  GuiFactory,
+  Attachment,
+  Positioning
 } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Result } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -28,6 +32,7 @@ export interface Toolbar {
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
+  getSink: () => Result<AlloyComponent, Error>;
   backstage: UiFactoryBackstage;
 }
 
@@ -40,18 +45,18 @@ const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
   const attributes = foo.title.fold(() => {
     return {};
   },
-  (title) => {
-    return { attributes: { title } };
-  });
+    (title) => {
+      return { attributes: { title } };
+    });
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__group' ],
+      classes: ['tox-toolbar__group'],
       ...attributes
     },
 
     components: [
-      AlloyToolbarGroup.parts().items({ })
+      AlloyToolbarGroup.parts().items({})
     ],
 
     items: foo.items,
@@ -60,8 +65,8 @@ const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
-      Tabstopping.config({ }),
-      Focusing.config({ })
+      Tabstopping.config({}),
+      Focusing.config({})
     ])
   };
 };
@@ -70,7 +75,33 @@ const renderToolbarGroup = (foo: ToolbarGroup) => {
   return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(foo));
 };
 
-const getToolbarbehaviours = (foo, modeName) => {
+const getToolbarbehaviours = (foo, modeName, overflowOpt) => {
+  const onAttached = AlloyEvents.runOnAttached(function (component) {
+    const groups = Arr.map(foo.initGroups, renderToolbarGroup);
+    AlloyToolbar.setGroups(component, groups);
+  });
+
+  const eventBehaviours = overflowOpt.fold(() => [
+    onAttached
+  ],
+    (memOverflow) => [
+      onAttached,
+      AlloyEvents.run('alloy.toolbar.toggle', (toolbar, se) => {
+        foo.getSink().toOption().each((sink) => {
+          memOverflow.getOpt(sink).fold(() => {
+            // overflow isn't there yet ... so add it, and return the built thing
+            const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
+            Attachment.attach(sink, builtoverFlow);
+            Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
+            SplitAlloyToolbar.refresh(toolbar);
+            // return builtoverFlow;
+          }, (builtOverflow) => {
+            Attachment.detach(builtOverflow);
+          });
+        });
+      })
+    ]
+  );
   return Behaviour.derive([
     Keying.config({
       // Tabs between groups
@@ -78,29 +109,53 @@ const getToolbarbehaviours = (foo, modeName) => {
       onEscape: foo.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', [
-      AlloyEvents.runOnAttached(function (component) {
-        const groups = Arr.map(foo.initGroups, renderToolbarGroup);
-        AlloyToolbar.setGroups(component, groups);
-      })
-    ])
+    AddEventsBehaviour.config('toolbar-events', eventBehaviours)
   ]);
 };
 
 const renderMoreToolbar = (foo: Toolbar) => {
   const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
 
+  const memOverflow = Memento.record(
+    AlloyToolbar.sketch({
+      dom: {
+        tag: 'div',
+        classes: ['tox-toolbar__overflow']
+      }
+    })
+  );
+
+  const getOverflow = (toolbar) => {
+    return foo.getSink().toOption().bind((sink) => {
+      return memOverflow.getOpt(sink).bind(
+        (overflow) => {
+          return SplitAlloyToolbar.getMoreButton(toolbar).bind((_moreButton) => {
+            if (overflow.getSystem().isConnected()) {
+              // you have the build thing, so just return it
+              Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), overflow);
+              return Option.some(overflow);
+            } else {
+              return Option.none();
+            }
+          });
+        }
+      );
+    });
+  };
+
   return SplitAlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar-overlord' ]
+      classes: ['tox-toolbar-overlord']
     },
+    floating: true,
+    overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
         title: Option.none(),
-        items: [ ]
+        items: []
       }),
       'overflow-button': renderIconButtonSpec({
         name: 'more',
@@ -113,13 +168,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
       SplitAlloyToolbar.parts().primary({
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar__primary' ]
-        }
-      }),
-      SplitAlloyToolbar.parts().overflow({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-toolbar__overflow' ]
+          classes: ['tox-toolbar__primary']
         }
       })
     ],
@@ -130,7 +179,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
-    splitToolbarBehaviours: getToolbarbehaviours(foo, modeName)
+    splitToolbarBehaviours: getToolbarbehaviours(foo, modeName, Option.some(memOverflow))
   });
 };
 
@@ -141,13 +190,13 @@ const renderToolbar = (foo: Toolbar) => {
     uid: foo.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ]
+      classes: ['tox-toolbar']
     },
     components: [
-      AlloyToolbar.parts().groups({ })
+      AlloyToolbar.parts().groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(foo, modeName)
+    toolbarBehaviours: getToolbarbehaviours(foo, modeName, Option.none())
   });
 };
 
