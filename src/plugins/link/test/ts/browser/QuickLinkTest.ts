@@ -55,7 +55,21 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
         UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
       ]),
 
-      Log.stepsAsStep('TBA', 'Checking that QuickLink can edit and existing link', [
+      Log.stepsAsStep('TBA', 'Checking that QuickLink can add a link to a selected image and keep the current image', [
+        tinyApis.sSetContent('<p><img src="image.jpg"></p>'),
+        tinyApis.sSelect('img', []),
+        sOpenQuickLink,
+        FocusTools.sSetActiveValue(doc, 'http://tiny.cloud/2'),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        tinyApis.sAssertContentPresence({
+          'a[href="http://tiny.cloud/2"]': 1,
+          'a:contains("http://tiny.cloud/2")': 0,
+          'img[src="image.jpg"]': 1
+        }),
+        UiFinder.sNotExists(Body.body(), '.tox-pop__dialog')
+      ]),
+
+      Log.stepsAsStep('TBA', 'Checking that QuickLink can edit an existing link', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud/3">Word</a></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 'W'.length, [ 0, 0, 0 ], 'Wo'.length),
         sOpenQuickLink,

@@ -11,6 +11,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
 import Settings from '../api/Settings';
+import { HTMLAnchorElement } from '@ephox/dom-globals';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
@@ -23,7 +24,7 @@ const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('unlink', {
     icon: 'unlink',
     tooltip: 'Remove link',
-    onAction: Utils.unlink(editor),
+    onAction: () => Utils.unlink(editor),
     onSetup: Actions.toggleEnabledState(editor)
   });
 };
@@ -46,7 +47,7 @@ const setupMenuItems = function (editor: Editor) {
   editor.ui.registry.addMenuItem('unlink', {
     icon: 'unlink',
     text: 'Remove link',
-    onAction: Utils.unlink(editor),
+    onAction: () => Utils.unlink(editor),
     onSetup: Actions.toggleEnabledState(editor)
   });
 };
@@ -56,7 +57,7 @@ const setupContextMenu = function (editor: Editor) {
   const inLink = 'link unlink openlink';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
-      return Utils.hasLinks(editor.dom.getParents(element, 'a')) ? inLink : noLink;
+      return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;
     }
   });
 };
@@ -96,8 +97,15 @@ const setupContextToolbars = function (editor: Editor) {
           if (!anchor) {
             const attachState = { href: value, attach: () => { } };
             const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
-            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0) : Option.none();
-            Utils.link(editor, attachState)({ href: value, text: text.getOr(value) });
+            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
+            Utils.link(editor, attachState, {
+              href: value,
+              text,
+              title: Option.none(),
+              rel: Option.none(),
+              target: Option.none(),
+              class: Option.none()
+            });
             formApi.hide();
           } else {
             editor.dom.setAttrib(anchor, 'href', value);
@@ -114,7 +122,7 @@ const setupContextToolbars = function (editor: Editor) {
         onSetup: () => () => { },
         // TODO: The original inlite action was quite complex. Are we missing something with this?
         onAction: (formApi) => {
-          Utils.unlink(editor)();
+          Utils.unlink(editor);
           formApi.hide();
         }
       }
