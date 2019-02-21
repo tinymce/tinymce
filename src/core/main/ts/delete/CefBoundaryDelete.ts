@@ -15,9 +15,7 @@ import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import * as CefUtils from '../keyboard/CefUtils';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
-
-const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
-const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
+import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from '../caret/CaretPositionPredicates';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
   if (NodeType.isText(node) && node.data.length === 0) {

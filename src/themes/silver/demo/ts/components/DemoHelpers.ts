@@ -10,7 +10,7 @@ const setupDemo = () => {
 
   const oldSink = document.querySelectorAll('.mce-silver-sink');
   if (oldSink.length > 0) {
-    throw Error('old sinks found, a previous test did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
+    throw Error('old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
   }
 
 // begin of demo helpers

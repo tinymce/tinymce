@@ -7,10 +7,6 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 
-const shouldPlainTextInform = (editor: Editor): boolean => {
-  return editor.getParam('paste_plaintext_inform', true);
-};
-
 const shouldBlockDrop = (editor: Editor): boolean => {
   return editor.getParam('paste_block_drop', false);
 };
@@ -76,7 +72,6 @@ const shouldUseDefaultFilters = (editor: Editor): boolean => {
 };
 
 export default {
-  shouldPlainTextInform,
   shouldBlockDrop,
   shouldPasteDataImages,
   shouldFilterDrop,

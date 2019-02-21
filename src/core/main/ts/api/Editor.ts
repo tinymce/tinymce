@@ -151,6 +151,7 @@ export interface Editor {
   getParam(name: string, defaultVal?: any, type?: string): any;
   getWin(): Window;
   hasEventListeners(name: string): boolean;
+  hasFocus(): boolean;
   hide(): void;
   insertContent(content, args?): void;
   isDirty(): boolean;

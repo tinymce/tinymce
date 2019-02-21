@@ -24,11 +24,10 @@ import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import { Range, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
+import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from './caret/CaretPositionPredicates';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
-const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
 interface SelectionOverrides {
   showCaret: (direction: number, node: Element, before: boolean, scrollIntoView?: boolean) => Range;

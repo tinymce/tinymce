@@ -21,14 +21,13 @@ import Settings from 'tinymce/plugins/paste/api/Settings';
 
 PluginManager.add('paste', function (editor: Editor) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
-    const userIsInformedState = Cell(false);
     const draggingInternallyState = Cell(false);
     const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
     const clipboard = Clipboard(editor, pasteFormat);
     const quirks = Quirks.setup(editor);
 
     Buttons.register(editor, clipboard);
-    Commands.register(editor, clipboard, userIsInformedState);
+    Commands.register(editor, clipboard);
     PrePostProcess.setup(editor);
     CutCopy.register(editor);
     DragDrop.setup(editor, clipboard, draggingInternallyState);
