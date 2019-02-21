@@ -6,14 +6,11 @@
  */
 
 import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
-
-export interface AttachState {
-  href?: string;
-  attach?: () => void;
-}
+import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
 const getHref = (elm: HTMLAnchorElement): string => {
   // Returns the real href value not the resolved a.href value
@@ -21,34 +18,34 @@ const getHref = (elm: HTMLAnchorElement): string => {
   return href ? href : elm.getAttribute('href');
 };
 
-const toggleTargetRules = function (rel, isUnsafe) {
-  const rules = ['noopener'];
-  let newRel = rel ? rel.split(/\s+/) : [];
+const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
+  const rules = [ 'noopener' ];
+  const rels = rel ? rel.split(/\s+/) : [];
 
-  const toString = function (rel) {
-    return Tools.trim(rel.sort().join(' '));
+  const toString = (rels: string[]): string => {
+    return Tools.trim(rels.sort().join(' '));
   };
 
-  const addTargetRules = function (rel) {
-    rel = removeTargetRules(rel);
-    return rel.length ? rel.concat(rules) : rules;
+  const addTargetRules = (rels: string[]): string[] => {
+    rels = removeTargetRules(rels);
+    return rels.length > 0 ? rels.concat(rules) : rules;
   };
 
-  const removeTargetRules = function (rel) {
-    return rel.filter(function (val) {
+  const removeTargetRules = (rels: string[]): string[] => {
+    return rels.filter((val) => {
       return Tools.inArray(rules, val) === -1;
     });
   };
 
-  newRel = isUnsafe ? addTargetRules(newRel) : removeTargetRules(newRel);
-  return newRel.length ? toString(newRel) : '';
+  const newRels = isUnsafe ? addTargetRules(rels) : removeTargetRules(rels);
+  return newRels.length > 0 ? toString(newRels) : '';
 };
 
-const trimCaretContainers = function (text: string) {
+const trimCaretContainers = (text: string): string => {
   return text.replace(/\uFEFF/g, '');
 };
 
-const getAnchorElement = function (editor: Editor, selectedElm?: Element): HTMLAnchorElement {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
@@ -58,20 +55,20 @@ const getAnchorElement = function (editor: Editor, selectedElm?: Element): HTMLA
   }
 };
 
-const getAnchorText = function (selection, anchorElm: HTMLAnchorElement) {
+const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   const text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
   return trimCaretContainers(text);
 };
 
-const isLink = function (elm) {
-  return elm && elm.nodeName === 'A' && elm.href;
+const isLink = (elm: HTMLAnchorElement): boolean => {
+  return elm && elm.nodeName === 'A' && !!elm.href;
 };
 
-const hasLinks = function (elements) {
+const hasLinks = (elements: HTMLAnchorElement[]) => {
   return Tools.grep(elements, isLink).length > 0;
 };
 
-const isOnlyTextSelected = function (html) {
+const isOnlyTextSelected = (html: string) => {
   // Partial html and not a fully selected anchor element
   if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
     return false;
@@ -80,85 +77,90 @@ const isOnlyTextSelected = function (html) {
   return true;
 };
 
-const isImageFigure = function (elm: Element) {
+const isImageFigure = (elm: Element) => {
   return elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 };
 
-const link = function (editor: Editor, attachState: AttachState) {
-  return function (data) {
-    editor.undoManager.transact(function () {
-      const selectedElm = editor.selection.getNode();
-      const anchorElm = getAnchorElement(editor, selectedElm);
-
-      const linkAttrs = {
-        href: data.href,
-        target: data.target ? data.target : null,
-        rel: data.rel ? data.rel : null,
-        class: data.class ? data.class : null,
-        title: data.title ? data.title : null
-      };
-
-      if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-        const newRel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
-        linkAttrs.rel = newRel ? newRel : null;
-      }
-
-      if (data.href === attachState.href) {
-        attachState.attach();
-        attachState = {};
-      }
-
-      if (anchorElm) {
-        editor.focus();
-
-        if (data.hasOwnProperty('text')) {
-          if (anchorElm.hasOwnProperty('innerText')) {
-            // TODO TINY-3312: Remove the any type once dom-globals has been updated
-            (<any> anchorElm).innerText = data.text;
-          } else {
-            anchorElm.textContent = data.text;
-          }
-        }
-
-        editor.dom.setAttribs(anchorElm, linkAttrs);
-
-        editor.selection.select(anchorElm);
-        editor.undoManager.add();
-      } else {
-        if (isImageFigure(selectedElm)) {
-          linkImageFigure(editor, selectedElm, linkAttrs);
-        } else if (data.hasOwnProperty('text')) {
-          editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(data.text)));
-        } else {
-          editor.execCommand('mceInsertLink', false, linkAttrs);
-        }
-      }
+const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => {
+  return Arr.foldl([ 'title', 'rel', 'class', 'target' ], (acc, key) => {
+    data[key].each((value) => {
+      // If dealing with an empty string, then treat that as being null so the attribute is removed
+      acc[key] = value.length > 0 ? value : null;
     });
-  };
+    return acc;
+  }, {
+    href: data.href
+  });
 };
 
-const unlink = function (editor: Editor) {
-  return function () {
-    editor.undoManager.transact(function () {
-      const node = editor.selection.getNode();
-      if (isImageFigure(node)) {
-        unlinkImageFigure(editor, node);
-      } else {
-        const anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
-        if (anchorElm) {
-          editor.dom.remove(anchorElm, true);
-        }
-      }
+const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
+  // If we have text, then update the anchor elements text content
+  text.each((text) => {
+    if (anchorElm.hasOwnProperty('innerText')) {
+      anchorElm.innerText = text;
+    } else {
+      anchorElm.textContent = text;
+    }
+  });
+
+  editor.dom.setAttribs(anchorElm, linkAttrs);
+  editor.selection.select(anchorElm);
+};
+
+const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, linkAttrs: Record<string, string>) => {
+  if (isImageFigure(selectedElm)) {
+    linkImageFigure(editor, selectedElm, linkAttrs);
+  } else {
+    text.fold(
+      () => editor.execCommand('mceInsertLink', false, linkAttrs),
+      (text) => editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)))
+    );
+  }
+};
+
+const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  editor.undoManager.transact(() => {
+    const selectedElm = editor.selection.getNode();
+    const anchorElm = getAnchorElement(editor, selectedElm);
+    const linkAttrs = getLinkAttrs(data);
+
+    if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+      const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
+      linkAttrs.rel = newRel ? newRel : null;
+    }
+
+    if (data.href === attachState.href) {
+      attachState.attach();
+    }
+
+    if (anchorElm) {
       editor.focus();
-    });
-  };
+      updateLink(editor, anchorElm, data.text, linkAttrs);
+    } else {
+      createLink(editor, selectedElm, data.text, linkAttrs);
+    }
+  });
 };
 
-const unlinkImageFigure = function (editor: Editor, fig: Element) {
-  let a, img;
-  img = editor.dom.select('img', fig)[0];
+const unlink = (editor: Editor) => {
+  editor.undoManager.transact(() => {
+    const node = editor.selection.getNode();
+    if (isImageFigure(node)) {
+      unlinkImageFigure(editor, node);
+    } else {
+      const anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
+      if (anchorElm) {
+        editor.dom.remove(anchorElm, true);
+      }
+    }
+    editor.focus();
+  });
+};
+
+const unlinkImageFigure = (editor: Editor, fig: Element) => {
+  const img = editor.dom.select('img', fig)[0];
   if (img) {
-    a = editor.dom.getParents(img, 'a[href]', fig)[0];
+    const a = editor.dom.getParents(img, 'a[href]', fig)[0];
     if (a) {
       a.parentNode.insertBefore(img, a);
       editor.dom.remove(a);
@@ -166,11 +168,10 @@ const unlinkImageFigure = function (editor: Editor, fig: Element) {
   }
 };
 
-const linkImageFigure = function (editor: Editor, fig: Element, attrs: Record<string, any>) {
-  let a, img;
-  img = editor.dom.select('img', fig)[0];
+const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, string>) => {
+  const img = editor.dom.select('img', fig)[0];
   if (img) {
-    a = editor.dom.create('a', attrs);
+    const a = editor.dom.create('a', attrs);
     img.parentNode.insertBefore(a, img);
     a.appendChild(img);
   }
@@ -185,5 +186,5 @@ export default {
   isOnlyTextSelected,
   getAnchorElement,
   getAnchorText,
-  toggleTargetRules
+  applyRelTargetRules
 };

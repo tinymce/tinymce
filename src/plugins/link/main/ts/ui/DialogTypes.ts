@@ -58,16 +58,16 @@ export interface LinkDialogData {
   link: string;
   rel: string;
   target: string;
-  classz: string;
+  linkClass: string;
 }
 
 export interface LinkDialogOutput {
   href: string;
-  text: string;
-  target: string;
-  rel: string;
-  class: string;
-  title: string;
+  text: Option<string>;
+  target: Option<string>;
+  rel: Option<string>;
+  class: Option<string>;
+  title: Option<string>;
 }
 
 interface LinkUrlMeta {
@@ -76,4 +76,9 @@ interface LinkUrlMeta {
   original?: {
     value: string;
   };
+}
+
+export interface AttachState {
+  href?: string;
+  attach?: () => void;
 }
