@@ -72,6 +72,12 @@ const navigate = (forward: boolean, root: Element, from: CaretPosition) => {
   });
 };
 
+const navigateIgnore = (forward: boolean, root: Element, from: CaretPosition, ignoreFilter: (pos: CaretPosition) => boolean) => {
+  return navigate(forward, root, from).bind((pos) => {
+    return ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Option.some(pos);
+  });
+};
+
 const positionIn = (forward: boolean, element: Element): Option<CaretPosition> => {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
@@ -95,6 +101,7 @@ export default {
   nextPosition,
   prevPosition,
   navigate,
+  navigateIgnore,
   positionIn,
   firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
   lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>

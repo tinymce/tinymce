@@ -1,4 +1,6 @@
-Version 5.0.1 (TBD)
+Version 5.0.1 (2019-02-21)
+    Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
+    Fixed an issue where adding links to images would replace the image with text #TINY-3356
     Fixed an issue where the inline editor could use fractional pixels for positioning #TINY-3202
     Fixed an issue where uploading non-image files in the Image Plugin upload tab threw an error. #TINY-3244
     Added H1-H6 toggle button registration to the silver theme #TINY-3070

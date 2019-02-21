@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Future, Option, Options } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -16,19 +17,30 @@ import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
-import { Types } from '@ephox/bridge';
 
-const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assumeExternalTargets: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
-  // Merge in the initial state and any changed state
-  const resultData = {
+  if (!data.url.value) {
+    Utils.unlink(editor);
+    // Temporary fix. TODO: TINY-2811
+    api.close();
+    return;
+  }
+
+  // Check if a key is defined, meaning it was a field in the dialog. If it is,
+  // then check if it's changed and return none if nothing has changed.
+  const getChangedValue = (key: string) => {
+    return Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  };
+
+  const changedData = {
     href: data.url.value,
-    text: Option.from(data.text).or(text).getOr(undefined),
-    target: Option.from(data.target).or(info.anchor.target).getOr(undefined),
-    rel: Option.from(data.rel).or(info.anchor.rel).getOr(undefined),
-    class: Option.from(data.classz).or(info.anchor.linkClass).getOr(undefined),
-    title: Option.from(data.title).or(info.anchor.title).getOr(undefined),
+    text: getChangedValue('text'),
+    target: getChangedValue('target'),
+    rel: getChangedValue('rel'),
+    class: getChangedValue('linkClass'),
+    title: getChangedValue('title'),
   };
 
   const attachState = {
@@ -36,24 +48,8 @@ const handleSubmit = (editor, info: LinkDialogInfo, text: Option<string>, assume
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
 
-  const insertLink = Utils.link(editor, attachState);
-  const removeLink = Utils.unlink(editor);
-
-  const url = data.url.value;
-
-  if (!url) {
-    removeLink();
-    // Temporary fix. TODO: TINY-2811
-    api.close();
-    return;
-  }
-
-  if (text.is(data.text) || (info.optNode.isNone() && !data.text)) {
-    delete resultData.text;
-  }
-
-  DialogConfirms.preprocess(editor, assumeExternalTargets, resultData).get((pData) => {
-    insertLink(pData);
+  DialogConfirms.preprocess(editor, assumeExternalTargets, changedData).get((pData) => {
+    Utils.link(editor, attachState, pData);
   });
 
   api.close();
@@ -85,7 +81,7 @@ const getInitialData = (info: LinkDialogInfo): LinkDialogData => ({
   link: info.anchor.url.getOr(''),
   rel: info.anchor.rel.getOr(''),
   target: info.anchor.target.getOr(''),
-  classz: info.anchor.linkClass.getOr('')
+  linkClass: info.anchor.linkClass.getOr('')
 });
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<LinkDialogData> => {
@@ -130,7 +126,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<
         catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
         catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
         catalogs.link.map(ListOptions.createUi('link', 'Link list')),
-        catalogs.classes.map(ListOptions.createUi('classz', 'Class'))
+        catalogs.classes.map(ListOptions.createUi('linkClass', 'Class'))
       ])
     ])
   };
@@ -164,7 +160,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit): Types.Dialog.DialogApi<
 const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
-    const onSubmit = handleSubmit(editor, info, info.anchor.text, Settings.assumeExternalTargets(editor.settings));
+    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor.settings));
     return makeDialog(info, onSubmit);
   }).get((spec) => {
     editor.windowManager.open(spec);
