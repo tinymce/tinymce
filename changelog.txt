@@ -1,3 +1,6 @@
+Version 5.0.2 (TBD)
+    Updated the build process to include package lock files to the dev distribution archive #TINY-2870
+    Fixed the quicklink toolbar button not rendering in the quickbars plugin #TINY-3125
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
     Fixed an issue where adding links to images would replace the image with text #TINY-3356
@@ -22,7 +25,6 @@ Version 5.0.1 (2019-02-21)
     Fixed an issue where autocomplete menus would show an icon margin, when no items had icons #TINY-3329
     Fixed an issue in the quickbars plugin where images incorrectly showed the text selection toolbar #TINY-3338
     Fixed an issue that caused the inline editor to fail to render in specific circumstances #TINY-3353
-    Fixed the quicklink toolbar button not rendering in the quickbars plugin #TINY-3125
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 

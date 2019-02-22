@@ -50,16 +50,6 @@ node("primary") {
 
 
           echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-
-          // individual test timeout - 50 seconds. Ideally would only be 30 but resample URL tends to take a while, as do tests that run all languages
-          def singleTimeout ="50000"
-
-          // overall timeout - was 780 seconds (13m) , trying 1200s (20m) for the slow VMs
-          // -system and -acceptance tests are sometimes taking >16m (Aug '17)
-          def totalTimeout="1200000"
-
-          def customParams = '--totalTimeout ' + totalTimeout + ' --singleTimeout ' + singleTimeout + ' --stopOnFailure'
-
           def name = permutation.name
 
           // Clean out the old XML files before running tests, since we junit import *.XML files
@@ -73,7 +63,6 @@ node("primary") {
 
 
           def bedrock = "yarn grunt bedrock-auto:standard --bedrock-browser=" + permutation.browser
-
           def successfulTests = true
 
           if (isUnix()) {
