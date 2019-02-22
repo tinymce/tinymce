@@ -1,9 +1,7 @@
 import { Struct } from '@ephox/katamari';
-
-import { AnchorBox } from '../../positioning/layout/Layout';
-import * as Origins from './Origins';
-import { window } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
+import { AnchorBox } from './LayoutTypes';
+import * as Origins from './Origins';
 import { OriginAdt } from './Origins';
 
 /*

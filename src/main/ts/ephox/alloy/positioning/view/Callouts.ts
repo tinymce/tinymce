@@ -5,7 +5,7 @@ import { Classes, Css, Height, Width, Element } from '@ephox/sugar';
 import * as Origins from '../layout/Origins';
 import * as Anchors from './Anchors';
 import * as Bounder from './Bounder';
-import { AnchorElement, AnchorBox } from '../../positioning/layout/Layout';
+import { AnchorElement, AnchorBox } from '../../positioning/layout/LayoutTypes';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
 

@@ -4,6 +4,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as Bubble from '../layout/Bubble';
 import * as CssPosition from '../../alien/CssPosition';
 import * as Layout from '../layout/Layout';
+import * as LayoutTypes from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
 import * as AnchorLayouts from './AnchorLayouts';
 import { Element, Position } from '@ephox/sugar';
@@ -45,13 +46,13 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
       box.height()
     );
 
-    const layoutsLtr = (): Layout.AnchorLayout[] => {
+    const layoutsLtr = (): LayoutTypes.AnchorLayout[] => {
       return anchorInfo.showAbove ?
         [Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.north, Layout.south] :
         [Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.south, Layout.south];
     };
 
-    const layoutsRtl = (): Layout.AnchorLayout[] => {
+    const layoutsRtl = (): LayoutTypes.AnchorLayout[] => {
       return anchorInfo.showAbove ?
         [Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.north, Layout.south] :
         [Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.south, Layout.north];
@@ -60,10 +61,10 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
     const layouts = AnchorLayouts.get(elem, anchorInfo, layoutsLtr(), layoutsRtl());
 
     return NuAnchor({
-      anchorBox: anchorBox,
+      anchorBox,
       bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: anchorInfo.overrides,
-      layouts: layouts,
+      layouts,
       placer: Option.none()
     });
   });

@@ -8,7 +8,7 @@ import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 import { Element } from '@ephox/sugar';
-import { AnchorLayout } from '../../positioning/layout/Layout';
+import { AnchorLayout } from '../../positioning/layout/LayoutTypes';
 import { LazySink } from '../../api/component/CommonTypes';
 
 // F is the fetched data

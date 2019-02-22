@@ -115,6 +115,7 @@ import {
 } from '../positioning/mode/Anchoring';
 
 import * as Layout from '../positioning/layout/Layout';
+import * as InnerLayout from '../positioning/layout/InnerLayout';
 import * as Bubble from '../positioning/layout/Bubble';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import { LazySink } from './component/CommonTypes';
@@ -243,6 +244,7 @@ export {
 
   // layout
   Layout,
+  InnerLayout,
   Bubble,
   MaxHeight,
   LazySink,
