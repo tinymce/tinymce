@@ -8,7 +8,7 @@
 import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option, Result, Type, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Options, Result, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
@@ -191,10 +191,15 @@ const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSett
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras): Option<AlloySpec> => {
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes?: string[]): Option<AlloySpec> => {
   return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
-    // Fallback and attempt to lookup form specific elements as well
-    return Obj.get(buttons, 'form:' + toolbarItem.toLowerCase());
+    if (prefixes !== undefined) {
+      return Options.findMap(prefixes, (prefix) => {
+        return Obj.get(buttons, prefix + toolbarItem.toLowerCase());
+      });
+    } else {
+      return Option.none();
+    }
   }).fold(
     () => {
       return Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
@@ -211,11 +216,11 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
   );
 };
 
-const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras): ToolbarGroup[] => {
+const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras, prefixes?: string[]): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, extras).toArray();
+      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, extras, prefixes).toArray();
     });
     return {
       title: Option.from(editor.translate(group.name)),
