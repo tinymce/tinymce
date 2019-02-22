@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import TinyChannels from '../channels/TinyChannels';
 
@@ -18,18 +19,23 @@ const fireChange = function (realm, command, state) {
   });
 };
 
-const init = function (realm, editor) {
+const init = function (realm, editor: Editor) {
   const allFormats = Obj.keys(editor.formatter.get());
-  Arr.each(allFormats, function (command) {
-    editor.formatter.formatChanged(command, function (state) {
+  const allFormatHandlers = Arr.map(allFormats, function (command) {
+    return editor.formatter.formatChangedWithUnbind(command, function (state) {
       fireChange(realm, command, state);
     });
   });
 
-  Arr.each([ 'ul', 'ol' ], function (command) {
-    editor.selection.selectorChanged(command, function (state, data) {
+  const listHandlers = Arr.map([ 'ul', 'ol' ], function (command) {
+    return editor.selection.selectorChangedWithUnbind(command, function (state, data) {
       fireChange(realm, command, state);
     });
+  });
+
+  editor.on('remove', () => {
+    Arr.each(allFormatHandlers, (handler) => handler.unbind());
+    Arr.each(listHandlers, (handler) => handler.unbind());
   });
 };
 

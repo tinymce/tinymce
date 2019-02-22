@@ -8,6 +8,7 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from '../../../../../../core/main/ts/api/Editor';
 import { Toolbar } from '@ephox/bridge';
+import { Cell, Option } from '@ephox/katamari';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
@@ -16,21 +17,18 @@ const toggleFormat = (editor: Editor, fmt: string) => {
 };
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const handler = (state: boolean) => {
-    api.setActive(state);
+  const unbindCell = Cell<Option<Function>>(Option.none());
+
+  const init = () => {
+    api.setActive(editor.formatter.match(name));
+    const unbind = editor.formatter.formatChangedWithUnbind(name, (state: boolean) => api.setActive(state)).unbind;
+    unbindCell.set(Option.some(unbind));
   };
 
-  if (editor.formatter) {
-    api.setActive(editor.formatter.match(name));
-    editor.formatter.formatChanged(name, handler);
-  } else {
-    editor.on('init', () => {
-      api.setActive(editor.formatter.match(name));
-      editor.formatter.formatChanged(name, handler);
-    });
-  }
+  // The editor may or may not have been setup yet, so check for that
+  editor.formatter ? init() : editor.on('init', init);
 
-  return () => { };
+  return () => unbindCell.get().each((unbind) => unbind());
 };
 
 const registerFormatButtons = (editor: Editor) => {

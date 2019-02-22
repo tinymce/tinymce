@@ -9,7 +9,7 @@ import { Node } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
-import FormatChanged from '../fmt/FormatChanged';
+import FormatChanged, { FormatChangeCallback } from '../fmt/FormatChanged';
 import FormatRegistry from '../fmt/FormatRegistry';
 import MatchFormat from '../fmt/MatchFormat';
 import Preview from '../fmt/Preview';
@@ -53,7 +53,8 @@ export interface Formatter {
   matchAll: (names: string[], vars?: FormatVars) => Format[];
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
   canApply: (name: string) => boolean;
-  formatChanged: (names: string, callback: (state: boolean, data: { node: Node, format: Format, parents: any }) => void, similar?: boolean) => void;
+  formatChanged: (names: string, callback: FormatChangeCallback, similar?: boolean) => void;
+  formatChangedWithUnbind: (names: string, FormatChangeCallback, similar?: boolean) => { unbind: () => void };
   getCssText: (format: string | Format) => string;
 }
 
@@ -183,6 +184,17 @@ export default function (editor) {
      * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
      */
     formatChanged: Fun.curry(FormatChanged.formatChanged, editor, formatChangeState),
+
+    /**
+     * Executes the specified callback when the current selection matches the formats or not.
+     *
+     * @method formatChanged
+     * @param {String} formats Comma separated list of formats to check for.
+     * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
+     * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
+     * @return {Object} Returns an object with a function to unbind the format changed handler.
+     */
+    formatChangedWithUnbind: Fun.curry(FormatChanged.formatChangedWithUnbind, editor, formatChangeState),
 
     /**
      * Returns a preview css text for the specified format.

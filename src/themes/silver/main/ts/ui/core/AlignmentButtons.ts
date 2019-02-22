@@ -6,6 +6,7 @@
  */
 
 import { Toolbar } from '@ephox/bridge';
+import { Cell, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -18,21 +19,18 @@ const register = (editor: Editor) => {
   ];
 
   const onSetupToggleButton = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-    const handler = (state: boolean) => {
-      api.setActive(state);
+    const unbindCell = Cell<Option<Function>>(Option.none());
+
+    const init = () => {
+      api.setActive(editor.formatter.match(item.name));
+      const unbind = editor.formatter.formatChangedWithUnbind(item.name, (state: boolean) => api.setActive(state)).unbind;
+      unbindCell.set(Option.some(unbind));
     };
 
-    if (editor.formatter) {
-      api.setActive(editor.formatter.match(item.name));
-      editor.formatter.formatChanged(item.name, handler);
-    } else {
-      editor.on('init', () => {
-        api.setActive(editor.formatter.match(item.name));
-        editor.formatter.formatChanged(item.name, handler);
-      });
-    }
+    // The editor may or may not have been setup yet, so check for that
+    editor.formatter ? init() : editor.on('init', init);
 
-    return () => { };
+    return () => unbindCell.get().each((unbind) => unbind());
   };
 
   Tools.each(alignToolbarButtons, (item) => {

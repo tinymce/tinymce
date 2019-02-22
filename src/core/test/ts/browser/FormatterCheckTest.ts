@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function () {
 
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
 
-    editor.formatter.formatChanged('complex', function (state, args) {
+    const handler = editor.formatter.formatChangedWithUnbind('complex', function (state, args) {
       newState = state;
       newArgs = args;
     }, true);
@@ -197,6 +197,9 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function () {
     LegacyUnit.equal(newArgs.format, 'complex');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
     LegacyUnit.equal(newArgs.parents.length, 1);
+
+    // Unbind the format change handler
+    handler.unbind();
   });
 
   suite.test('Selected style element text', function (editor) {
