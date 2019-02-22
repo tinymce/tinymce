@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Registry } from '@ephox/bridge';
 import { Document, HTMLElement, Window } from '@ephox/dom-globals';
 import { Annotator } from 'tinymce/core/api/Annotator';
 import { Selection } from 'tinymce/core/api/dom/Selection';
@@ -31,6 +30,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
+import { registry, Ui } from 'tinymce/ui/BridgeRegistry';
 
 /**
  * Include the base event class documentation.
@@ -179,10 +179,6 @@ export interface Editor {
   _scanForImages(): Promise<any>;
 }
 
-export interface Ui {
-  registry: Registry.Registry;
-}
-
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
@@ -315,8 +311,6 @@ export const Editor = function (id, settings, editorManager) {
     Env.overrideViewPort = false;
   }
 
-  const registry = Registry.create();
-
   /**
    * Editor ui components
    *
@@ -324,7 +318,7 @@ export const Editor = function (id, settings, editorManager) {
    * @type Object
    */
   self.ui = {
-    registry
+    registry: registry()
   };
 
   // Call setup
