@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
-import { Element, Insert, Replication, Remove } from '@ephox/sugar';
+import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
@@ -21,7 +21,7 @@ import * as Events from '../api/Events';
 
 const each = Tools.each;
 
-const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<any>>) => {
+const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => {
     getSelectionStartCell()
@@ -75,8 +75,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
 
   const actOnSelection = (execute) => {
     getSelectionStartCell().each((cell) => {
-      const table = getTableFromCell(cell);
-      table.each((table) => {
+      getTableFromCell(cell).each((table) => {
         const targets = TableTargets.forMenu(selections, table, cell);
         const beforeSize = getSize(table);
         execute(table, targets).each((rng) => {
@@ -92,8 +91,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
 
   const copyRowSelection = (execute?) => {
     return getSelectionStartCell().map((cell) => {
-      const table = getTableFromCell(cell);
-      return table.bind((table) => {
+      return getTableFromCell(cell).bind((table) => {
         const doc = Element.fromDom(editor.getDoc());
         const targets = TableTargets.forMenu(selections, table, cell);
         const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());

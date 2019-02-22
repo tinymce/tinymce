@@ -40,7 +40,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
               title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
             }
           ],
-          backstage: TestBackstage
+          backstage: TestBackstage()
         })
       );
     },

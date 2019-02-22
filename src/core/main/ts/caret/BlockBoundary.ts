@@ -12,17 +12,23 @@ import { CaretPosition } from './CaretPosition';
 import CaretFinder from './CaretFinder';
 import * as ElementType from '../dom/ElementType';
 import { isInSameBlock } from './CaretUtils';
+import { Element as DomElement } from '@ephox/dom-globals';
+import { isEmptyText } from './CaretPositionPredicates';
+
+const navigateIgnoreEmptyTextNodes = (forward: boolean, root: DomElement, from: CaretPosition) => {
+  return CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
+};
 
 const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) => {
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
   return Arr.head(parentBlocks).fold(
     () => {
-      return CaretFinder.navigate(forward, root.dom(), pos).forall((newPos) => {
+      return navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => {
         return isInSameBlock(newPos, pos, root.dom()) === false;
       });
     },
     (parent) => {
-      return CaretFinder.navigate(forward, parent.dom(), pos).isNone();
+      return navigateIgnoreEmptyTextNodes(forward, parent.dom(), pos).isNone();
     }
   );
 };

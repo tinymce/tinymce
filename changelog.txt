@@ -1,7 +1,11 @@
-Version 5.0.1 (TBD)
+Version 5.0.2 (TBD)
+    Updated the build process to include package lock files to the dev distribution archive #TINY-2870
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
     Added default icons to registry #TINY-3307
+Version 5.0.1 (2019-02-21)
+    Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
+    Fixed an issue where adding links to images would replace the image with text #TINY-3356
     Fixed an issue where the inline editor could use fractional pixels for positioning #TINY-3202
     Fixed an issue where uploading non-image files in the Image Plugin upload tab threw an error. #TINY-3244
     Added H1-H6 toggle button registration to the silver theme #TINY-3070

@@ -50,7 +50,7 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
   };
 
   const ariaAttributes = {
-    ['aria-live']: 'polite'
+    'aria-live': 'polite'
   };
 
   return {
