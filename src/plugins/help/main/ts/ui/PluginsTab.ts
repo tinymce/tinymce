@@ -91,6 +91,7 @@ const tab = (editor: Editor) => {
 
   const htmlPanel: Types.Dialog.BodyComponentApi = {
     type: 'htmlpanel',
+    presets: 'document',
     html: [
       installedPlugins(editor),
       availablePlugins()

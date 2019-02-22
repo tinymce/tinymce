@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Plugins tab', [
         sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
         sPressTabKey,
-        sAssertFocusOnItem('Installed Plugins', 'div[role="presentation"]'),
+        sAssertFocusOnItem('Installed Plugins', 'div[role="document"]'),
         sPressTabKey,
         sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
         sPressTabKey,
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Version tab', [
         sAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")'),
         sPressTabKey,
-        sAssertFocusOnItem('TinyMCE Version', 'div[role="presentation"]'),
+        sAssertFocusOnItem('TinyMCE Version', 'div[role="document"]'),
         sPressTabKey,
         sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
         sPressTabKey,
