@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
-import { Editor } from '../../../../../../core/main/ts/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
