@@ -57,9 +57,6 @@ import { IconManager } from './IconManager';
 
 let tinymce = EditorManager;
 
-/**
- * @include ../../../../../tools/docs/tinymce.js
- */
 const publicApi = {
   geom: {
     Rect

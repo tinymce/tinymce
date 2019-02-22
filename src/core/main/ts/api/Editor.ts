@@ -33,12 +33,6 @@ import { WindowManager } from './WindowManager';
 import { registry, Ui } from 'tinymce/ui/BridgeRegistry';
 
 /**
- * Include the base event class documentation.
- *
- * @include ../../../../../tools/docs/tinymce.Event.js
- */
-
-/**
  * This class contains the core logic for a TinyMCE editor.
  *
  * @class tinymce.Editor
@@ -186,12 +180,6 @@ const resolve = Tools.resolve;
 const ie = Env.ie;
 
 /**
- * Include Editor API docs.
- *
- * @include ../../../../../tools/docs/tinymce.Editor.js
- */
-
-/**
  * Constructs a editor instance by id.
  *
  * @constructor
@@ -315,8 +303,9 @@ export const Editor = function (id, settings, editorManager) {
    * Editor ui components
    *
    * @property ui
-   * @type Object
+   * @type tinymce.Editor.ui
    */
+
   self.ui = {
     registry: registry()
   };

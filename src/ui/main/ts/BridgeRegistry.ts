@@ -1,16 +1,8 @@
 import { Registry } from '@ephox/bridge';
-
 /**
  * blah blah
  *
  * @class tinymce.Editor.ui
- */
-
-/**
- * Editor ui components Mike
- *
- * @property registry
- * @type Object
  */
 const registry = () => {
   const bridge = Registry.create();
