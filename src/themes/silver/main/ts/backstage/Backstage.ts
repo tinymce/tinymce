@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Layout, Bubble, AnchorSpec, FormTypes } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AnchorSpec, Bubble, FormTypes, Layout, InnerLayout } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
-
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-import { Editor } from 'tinymce/core/api/Editor';
+
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -62,6 +62,7 @@ const bubbleAlignments = {
 };
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+  const isInline = editor.inline;
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -74,7 +75,20 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       },
       anchors: {
         toolbar: () => {
-          return {
+          // If inline, anchor to the inside top of the editable area
+          // If iframe, anchor below the div.tox-anchorbar in the editor chrome
+          const inlineAnchor = (): AnchorSpec => ({
+            anchor: 'node',
+            root: Element.fromDom(editor.getBody()),
+            node: Option.from(Element.fromDom(editor.getBody())),
+            bubble: Bubble.nu(-12, 12, bubbleAlignments),
+            layouts: {
+              onRtl: () => [ InnerLayout.southeast ],
+              onLtr: () => [ InnerLayout.southwest ]
+            }
+          });
+
+          const iframeAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
@@ -83,10 +97,24 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
               onRtl: () => [ Layout.southeast ],
               onLtr: () => [ Layout.southwest ]
             }
-          };
+          });
+
+          return isInline ? inlineAnchor() : iframeAnchor();
         },
         banner: () => {
-          return {
+          // If inline, anchor to the inside top of the editable area
+          // If iframe, anchor below the div.tox-anchorbar in the editor chrome
+          const inlineAnchor = (): AnchorSpec => ({
+            anchor: 'node',
+            root: Element.fromDom(editor.getBody()),
+            node: Option.from(Element.fromDom(editor.getBody())),
+            layouts: {
+              onRtl: () => [ InnerLayout.north ],
+              onLtr: () => [ InnerLayout.north ]
+            }
+          });
+
+          const iframeAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
@@ -94,7 +122,9 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
               onRtl: () => [ Layout.south ],
               onLtr: () => [ Layout.south ]
             }
-          };
+          });
+
+          return isInline ? inlineAnchor() : iframeAnchor();
         },
         cursor: () => {
           return {
