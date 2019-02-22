@@ -1,3 +1,5 @@
+Version 5.0.2 (TBD)
+    Updated the build process to include package lock files to the dev distribution archive #TINY-2870
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
     Fixed an issue where adding links to images would replace the image with text #TINY-3356
