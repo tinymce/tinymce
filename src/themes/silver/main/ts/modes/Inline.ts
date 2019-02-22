@@ -7,7 +7,7 @@
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location } from '@ephox/sugar';
+import { Body, Css, Element, Height, Location, Class } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -62,12 +62,30 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     setPosition();
     Docking.refresh(floatContainer);
+    if (split /* && floating */) {
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      toolbar.each((tb) => {
+        const overflow = SplitToolbar.getOverflow(tb);
+        overflow.each((overf) => {
+          Class.remove(overf.element(), 'tox-toolbar__overflow--closed');
+        });
+      });
+    }
   };
 
   const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+      if (split /* && floating */) {
+        const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+        toolbar.each((tb) => {
+          const overflow = SplitToolbar.getOverflow(tb);
+          overflow.each((overf) => {
+            Class.add(overf.element(), 'tox-toolbar__overflow--closed');
+          });
+        });
+      }
     }
   };
 
