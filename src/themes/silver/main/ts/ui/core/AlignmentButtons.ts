@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
-import { Cell, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { onSetupFormatToggle } from './Utils';
 
 const register = (editor: Editor) => {
   const alignToolbarButtons = [
@@ -18,27 +17,12 @@ const register = (editor: Editor) => {
     { name: 'alignjustify', text: 'Justify', cmd: 'JustifyFull', icon: 'align-justify' }
   ];
 
-  const onSetupToggleButton = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-    const unbindCell = Cell<Option<Function>>(Option.none());
-
-    const init = () => {
-      api.setActive(editor.formatter.match(item.name));
-      const unbind = editor.formatter.formatChangedWithUnbind(item.name, (state: boolean) => api.setActive(state)).unbind;
-      unbindCell.set(Option.some(unbind));
-    };
-
-    // The editor may or may not have been setup yet, so check for that
-    editor.formatter ? init() : editor.on('init', init);
-
-    return () => unbindCell.get().each((unbind) => unbind());
-  };
-
   Tools.each(alignToolbarButtons, (item) => {
     editor.ui.registry.addToggleButton(item.name, {
       tooltip: item.text,
       onAction: () => editor.execCommand(item.cmd),
       icon: item.icon,
-      onSetup: onSetupToggleButton(item)
+      onSetup: onSetupFormatToggle(editor, item.name)
     });
   });
 

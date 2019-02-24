@@ -5,30 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
-import { Cell, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { onSetupFormatToggle } from './Utils';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
     editor.execCommand('mceToggleFormat', false, fmt);
   };
-};
-
-const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const unbindCell = Cell<Option<Function>>(Option.none());
-
-  const init = () => {
-    api.setActive(editor.formatter.match(name));
-    const unbind = editor.formatter.formatChangedWithUnbind(name, (state: boolean) => api.setActive(state)).unbind;
-    unbindCell.set(Option.some(unbind));
-  };
-
-  // The editor may or may not have been setup yet, so check for that
-  editor.formatter ? init() : editor.on('init', init);
-
-  return () => unbindCell.get().each((unbind) => unbind());
 };
 
 const registerFormatButtons = (editor: Editor) => {

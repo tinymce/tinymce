@@ -6,111 +6,129 @@
  */
 
 import { Arr, Cell, Obj } from '@ephox/katamari';
-import { Node } from '@ephox/dom-globals';
+import { Element, Node } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 
 export type FormatChangeCallback = (state: boolean, data: { node: Node, format: string, parents: any }) => void;
-type FormatChangeCallbackList = (FormatChangeCallback[] & { similar?: boolean });
-type FormatChangedData = Record<string, FormatChangeCallbackList>;
+type FormatCallbacks = Record<string, FormatChangeCallback[]>;
+type FormatData = { similar?: boolean, callbacks: FormatChangeCallback[] };
+type RegisteredFormats = Record<string, FormatData>;
 
-const setup = (formatChangeData: Cell<FormatChangedData>, editor: Editor) => {
-  const currentFormats = {};
+const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
+  const currentFormats = Cell<Record<string, FormatChangeCallback[]>>({ });
 
-  formatChangeData.set({});
+  registeredFormatListeners.set({});
 
   editor.on('NodeChange', (e) => {
-    let parents = FormatUtils.getParents(editor.dom, e.element);
-    const matchedFormats = {};
-
-    // Ignore bogus nodes like the <a> tag created by moveStart()
-    parents = Arr.filter(parents, (node) => {
-      return node.nodeType === 1 && !node.getAttribute('data-mce-bogus');
-    });
-
-    // Check for new formats
-    Obj.each(formatChangeData.get(), (callbacks: FormatChangeCallbackList, format: string) => {
-      Arr.exists(parents, (node: Node) => {
-        if (editor.formatter.matchNode(node, format, {}, callbacks.similar)) {
-          if (!currentFormats[format]) {
-            // Execute callbacks
-            Arr.each(callbacks, (callback: FormatChangeCallback) => {
-              callback(true, { node, format, parents });
-            });
-
-            currentFormats[format] = callbacks;
-          }
-
-          matchedFormats[format] = callbacks;
-          return true;
-        }
-
-        return MatchFormat.matchesUnInheritedFormatSelector(editor, node, format);
-      });
-    });
-
-    // Check if current formats still match
-    Obj.each(currentFormats, (callbacks: FormatChangeCallbackList, format: string) => {
-      if (!matchedFormats[format]) {
-        delete currentFormats[format];
-
-        Arr.each(callbacks, (callback: FormatChangeCallback) => {
-          callback(false, { node: e.element, format, parents });
-        });
-      }
-    });
+    updateAndFireChangeCallbacks(editor, e.element, currentFormats, registeredFormatListeners.get());
   });
 };
 
-const addListeners = (formatChangeData: Cell<FormatChangedData>, formats: string, callback: FormatChangeCallback, similar: boolean) => {
-  const formatChangeItems = formatChangeData.get();
+const updateAndFireChangeCallbacks = (editor: Editor, elm: Element, currentFormats: Cell<FormatCallbacks>, formatChangeData: RegisteredFormats) => {
+  const formatsList = Obj.keys(currentFormats.get());
+  const newFormats: FormatCallbacks = { };
+  const matchedFormats: FormatCallbacks = { };
+
+  // Ignore bogus nodes like the <a> tag created by moveStart()
+  const parents = Arr.filter(FormatUtils.getParents(editor.dom, elm), (node) => {
+    return node.nodeType === 1 && !node.getAttribute('data-mce-bogus');
+  });
+
+  // Check for new formats
+  Obj.each(formatChangeData, (data: FormatData, format: string) => {
+    Arr.exists(parents, (node: Node) => {
+      if (editor.formatter.matchNode(node, format, {}, data.similar)) {
+        if (formatsList.indexOf(format) === -1) {
+          // Execute callbacks
+          Arr.each(data.callbacks, (callback: FormatChangeCallback) => {
+            callback(true, { node, format, parents });
+          });
+
+          newFormats[format] = data.callbacks;
+        }
+
+        matchedFormats[format] = data.callbacks;
+        return true;
+      }
+
+      return MatchFormat.matchesUnInheritedFormatSelector(editor, node, format);
+    });
+  });
+
+  // Check if current formats still match
+  const remainingFormats = filterRemainingFormats(currentFormats.get(), matchedFormats, elm, parents);
+
+  // Update the current formats
+  currentFormats.set({
+    ...newFormats,
+    ...remainingFormats
+  });
+};
+
+const filterRemainingFormats = (currentFormats: FormatCallbacks, matchedFormats: FormatCallbacks, elm: Element, parents: Node[]) => {
+  return Obj.bifilter(currentFormats, (callbacks: FormatChangeCallback[], format: string) => {
+    if (!Obj.has(matchedFormats, format)) {
+      // Execute callbacks
+      Arr.each(callbacks, (callback: FormatChangeCallback) => {
+        callback(false, { node: elm, format, parents });
+      });
+
+      return false;
+    } else {
+      return true;
+    }
+  }).t;
+};
+
+const addListeners = (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar: boolean) => {
+  const formatChangeItems = registeredFormatListeners.get();
 
   Arr.each(formats.split(','), (format) => {
     if (!formatChangeItems[format]) {
-      formatChangeItems[format] = [];
-      formatChangeItems[format].similar = similar;
+      formatChangeItems[format] = { similar, callbacks: [] };
     }
 
-    formatChangeItems[format].push(callback);
+    formatChangeItems[format].callbacks.push(callback);
   });
 
-  formatChangeData.set(formatChangeItems);
+  registeredFormatListeners.set(formatChangeItems);
 };
 
-const removeListeners = (formatChangeData: Cell<FormatChangedData>, formats: string, callback: FormatChangeCallback) => {
-  const formatChangeItems = formatChangeData.get();
+const removeListeners = (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback) => {
+  const formatChangeItems = registeredFormatListeners.get();
 
   Arr.each(formats.split(','), (format) => {
-    formatChangeItems[format] = Arr.filter(formatChangeItems[format], (c) => {
+    formatChangeItems[format].callbacks = Arr.filter(formatChangeItems[format].callbacks, (c) => {
       return c !== callback;
     });
 
-    if (formatChangeItems[format].length === 0) {
+    if (formatChangeItems[format].callbacks.length === 0) {
       delete formatChangeItems[format];
     }
   });
 
-  formatChangeData.set(formatChangeItems);
+  registeredFormatListeners.set(formatChangeItems);
 };
 
-const formatChanged = (editor: Editor, formatChangeState: Cell<FormatChangedData>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
+const formatChanged = (editor: Editor, formatChangeState: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
   formatChangedWithUnbind(editor, formatChangeState, formats, callback, similar);
 };
 
-const formatChangedWithUnbind = (editor: Editor, formatChangeState: Cell<FormatChangedData>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
-  if (formatChangeState.get() === null) {
-    setup(formatChangeState, editor);
+const formatChangedWithUnbind = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
+  if (registeredFormatListeners.get() === null) {
+    setup(registeredFormatListeners, editor);
   }
 
-  addListeners(formatChangeState, formats, callback, similar);
+  addListeners(registeredFormatListeners, formats, callback, similar);
 
   return {
-    unbind: () => removeListeners(formatChangeState, formats, callback)
+    unbind: () => removeListeners(registeredFormatListeners, formats, callback)
   };
 };
 
-export default {
+export {
   formatChanged,
   formatChangedWithUnbind
 };

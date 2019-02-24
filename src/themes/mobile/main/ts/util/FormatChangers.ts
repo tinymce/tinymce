@@ -21,21 +21,16 @@ const fireChange = function (realm, command, state) {
 
 const init = function (realm, editor: Editor) {
   const allFormats = Obj.keys(editor.formatter.get());
-  const allFormatHandlers = Arr.map(allFormats, function (command) {
-    return editor.formatter.formatChangedWithUnbind(command, function (state) {
+  Arr.each(allFormats, function (command) {
+    editor.formatter.formatChanged(command, function (state) {
       fireChange(realm, command, state);
     });
   });
 
-  const listHandlers = Arr.map([ 'ul', 'ol' ], function (command) {
-    return editor.selection.selectorChangedWithUnbind(command, function (state, data) {
+  Arr.each([ 'ul', 'ol' ], function (command) {
+    editor.selection.selectorChanged(command, function (state, data) {
       fireChange(realm, command, state);
     });
-  });
-
-  editor.on('remove', () => {
-    Arr.each(allFormatHandlers, (handler) => handler.unbind());
-    Arr.each(listHandlers, (handler) => handler.unbind());
   });
 };
 
