@@ -18,10 +18,10 @@ var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari version
 var exportLessVariablesToJson = new variablesOutput({ filename: 'build/skin-tool/less-variables.json' });
 
 // windows doesn't add the lib subfolder to global prefixes
-const lib = process.platform === 'win32' ? '' : 'lib';
+const lib = process.platform === 'win32' ? '' : 'lib/';
 
-const browserSyncPath = `./scratch/tools/${lib}/node_modules/browser-sync`;
-const backstopJsPath = `./scratch/tools/${lib}/node_modules/backstopjs`;
+const browserSyncPath = `./scratch/tools/${lib}node_modules/browser-sync`;
+const backstopJsPath = `./scratch/tools/${lib}node_modules/backstopjs`;
 
 const browserSync = (() => {
   let browserSyncInstance;
