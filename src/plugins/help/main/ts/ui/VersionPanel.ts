@@ -18,7 +18,8 @@ const defaultPanel = (): Types.Dialog.BodyComponentApi => {
 
   const htmlPanel: Types.Dialog.BodyComponentApi = {
     type: 'htmlpanel',
-    html: '<p>' + I18n.translate(['You are using {0}', changeLogLink]) + '</p>'
+    html: '<p>' + I18n.translate(['You are using {0}', changeLogLink]) + '</p>',
+    presets: 'document'
   };
   return htmlPanel;
 };

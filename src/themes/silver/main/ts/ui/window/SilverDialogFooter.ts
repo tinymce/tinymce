@@ -87,7 +87,7 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
   };
 
   return {
-    dom: DomFactory.fromHtml('<div class="tox-dialog__footer"></div>'),
+    dom: DomFactory.fromHtml(`<div class="tox-dialog__footer"></div>`),
     components: [ ],
     behaviours: Behaviour.derive([
       Reflecting.config({
