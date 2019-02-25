@@ -51,6 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
             return iframeDoc.body.firstChild !== null;
           })
         ]),
+        UiFinder.sExists(docBody, dialogSelector + ' p:contains("b")'),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
         Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
         tinyApis.sAssertContent('<p><em>this is external</em></p>'),
