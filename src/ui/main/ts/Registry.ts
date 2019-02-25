@@ -1,6 +1,6 @@
 import { Registry } from '@ephox/bridge';
 /**
- * TinyMCE 5 Ui registration API.  The available Ui components can be configered ... WIP wording please to say this -> this list contains all the stuff we support, they all can be configured, see blah for specific config options and what they mean
+ * TinyMCE 5 Ui registration API.
  *
  * @class tinymce.editor.ui.registry
  */
@@ -10,14 +10,13 @@ const registry = () => {
   return {
 
     /**
-     * Registers a new auto completer component.
+     * Registers a new auto completer component.  When a configured string pattern is matched in the content while typing, the autocompleter will be triggered.  Emoticons and Charmap use an autocompleter.
      *
      * @method addAutocompleter
      * @param {String} name Unique name identifying this autocomplete configuration.
-     * @param {AutocompleterApi} obj The autocomplete configuration object.
+     * @param {InlineContent.AutocompleterApi} obj The autocomplete configuration object.
      * @return {void}
      */
-
     addAutocompleter: bridge.addAutocompleter,
 
     /**
@@ -25,18 +24,17 @@ const registry = () => {
      *
      * @method addButton
      * @param {String} name Unique name identifying the button, this button name will be used in the toolbar configuration to reference the button.
-     * @param {ToolbarButtonApi} obj the button configuration object.
+     * @param {Toolbar.ToolbarButtonApi} obj the button configuration object.
      * @return {void}
      */
-
     addButton: bridge.addButton,
 
     /**
-     * Registers a new contextual form item that only appears when a content predicate is matched for example the cursor is on a link tag.
+     * Registers a new contextual form item. Similar to a context menu item, a context form is an item with an input form element appearing when a content predicate is matched.  An example us of a context form is the link plugin when the configuration { link_context_toolbar: true } is used.  When the cursor is on a link, a context input form appears allowing for quick changes to the url field.
      *
      * @method addContextForm
      * @param {String} name Unique name identifying the new context form item.
-     * @param {ContextFormApi} obj the context form configuration object.
+     * @param {Toolbar.ContextFormApi} obj the context form configuration object.
      * @return {void}
      */
     addContextForm: bridge.addContextForm,
@@ -46,7 +44,7 @@ const registry = () => {
      *
      * @method addContextMenu
      * @param {String} name Unique name identifying the new context menu.
-     * @param {ContextMenuApi} obj The context menu configuration object.
+     * @param {Menu.ContextMenuApi} obj The context menu configuration object.
      * @return {void}
      */
     addContextMenu: bridge.addContextMenu,
@@ -56,7 +54,7 @@ const registry = () => {
      *
      * @method addContextToolbar
      * @param {String} name Unique name identifying the new context toolbar.
-     * @param {ContextToolbarApi} obj The context menu configuration object.
+     * @param {Toolbar.ContextToolbarApi} obj The context menu configuration object.
      * @return {void}
      */
     addContextToolbar: bridge.addContextToolbar,
@@ -76,7 +74,7 @@ const registry = () => {
      *
      * @method addMenuButton
      * @param {String} name Unique name identifying the new menu button.
-     * @param {ToolbarMenuButtonApi} obj The menu button configuration object.
+     * @param {Toolbar.ToolbarMenuButtonApi} obj The menu button configuration object.
      * @return {void}
      */
     addMenuButton: bridge.addMenuButton,
@@ -86,7 +84,7 @@ const registry = () => {
      *
      * @method addMenuItem
      * @param {String} name Unique name identifying the new menu item.
-     * @param {MenuItemApi} obj The menu item configuration object.
+     * @param {Menu.MenuItemApi} obj The menu item configuration object.
      * @return {void}
      */
     addMenuItem: bridge.addMenuItem,
@@ -96,7 +94,7 @@ const registry = () => {
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
-     * @param {NestedMenuItemApi} obj The nested menu item configuration object.
+     * @param {Menu.NestedMenuItemApi} obj The nested menu item configuration object.
      * @return {void}
      */
     addNestedMenuItem: bridge.addNestedMenuItem,
@@ -106,7 +104,7 @@ const registry = () => {
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.
-     * @param {SidebarApi} obj The sidebar configuration object.
+     * @param {Sidebar.SidebarApi} obj The sidebar configuration object.
      * @return {void}
      */
     addSidebar: bridge.addSidebar,
@@ -116,7 +114,7 @@ const registry = () => {
      *
      * @method addSplitButton
      * @param {String} name Unique name identifying the new split button.
-     * @param {ToolbarSplitButtonApi} obj The split button configuration object.
+     * @param {Toolbar.ToolbarSplitButtonApi} obj The split button configuration object.
      * @return {void}
      */
     addSplitButton: bridge.addSplitButton,
@@ -126,7 +124,7 @@ const registry = () => {
      *
      * @method addToggleButton
      * @param {String} name Unique name identifying the new split button.
-     * @param {ToolbarToggleButtonApi} obj The toggle button configuration object.
+     * @param {Toolbar.ToolbarToggleButtonApi} obj The toggle button configuration object.
      * @return {void}
      */
     addToggleButton: bridge.addToggleButton,
@@ -136,7 +134,8 @@ const registry = () => {
      *
      * @method addToggleMenuItem
      * @param {String} name Unique name identifying the new menu item.
-     * @param {ToggleMenuItemApi} obj The menu item configuration object.
+     * @param {Menu.ToggleMenuItemApi} obj The menu item configuration object.
+     * @return {void}
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
@@ -144,7 +143,7 @@ const registry = () => {
      * This method getAll returns the registry object, which contains all the configurations added via the editor.ui.registry methods.  The registry is used by TinyMCE 5 to generate Ui components.
      *
      * @method getAll
-     * @return {Object} obj
+     * @return {Object} obj { buttons, contextMenus, contextToolbars, icons, menuItems, popups, sidebars }
      */
     getAll: bridge.getAll
   };
