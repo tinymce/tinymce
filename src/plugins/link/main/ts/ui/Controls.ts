@@ -67,10 +67,11 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
-  editor.ui.registry.addContextForm('link-form', {
+  editor.ui.registry.addContextForm('quicklink', {
     launch: {
       type: 'contextformtogglebutton',
       icon: 'link',
+      tooltip: 'Link',
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
