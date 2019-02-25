@@ -133,7 +133,8 @@ const partToolbar = Composite.partType.optional({
         cyclicKeying: false,
         initGroups: [],
         getSink: spec.getSink,
-        backstage: spec.backstage
+        backstage: spec.backstage,
+        floating: spec.floating
       });
     }
   },

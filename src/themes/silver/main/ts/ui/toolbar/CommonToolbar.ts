@@ -26,6 +26,8 @@ import { Arr, Option, Result } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { Editor } from 'tinymce/core/api/Editor';
+import { isSplitFloatingToolbar } from '../../api/Settings';
 
 export interface Toolbar {
   uid: string;
@@ -34,6 +36,7 @@ export interface Toolbar {
   initGroups: ToolbarGroup[];
   getSink: () => Result<AlloyComponent, Error>;
   backstage: UiFactoryBackstage;
+  floating: boolean;
 }
 
 export interface ToolbarGroup {
@@ -143,13 +146,32 @@ const renderMoreToolbar = (foo: Toolbar) => {
     });
   };
 
+  const primary = SplitAlloyToolbar.parts().primary({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__primary']
+    }
+  });
+
+  const splitToolbarComponents = foo.floating ? [
+    primary
+  ] : [
+    primary,
+    SplitAlloyToolbar.parts().overflow({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-toolbar__overflow' ]
+      }
+    })
+  ];
+
   return SplitAlloyToolbar.sketch({
     uid: foo.uid,
     dom: {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
     },
-    floating: true,
+    floating: foo.floating,
     overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group
@@ -164,14 +186,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
         tooltip: Option.some('More...')
       }, Option.none(), foo.backstage.shared.providers)
     },
-    components: [
-      SplitAlloyToolbar.parts().primary({
-        dom: {
-          tag: 'div',
-          classes: ['tox-toolbar__primary']
-        }
-      })
-    ],
+    components: splitToolbarComponents,
     markers: {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
