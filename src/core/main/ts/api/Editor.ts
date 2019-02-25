@@ -30,7 +30,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
-import { registry, Ui } from 'tinymce/ui/BridgeRegistry';
+import { registry, Ui } from 'tinymce/ui/Registry';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
