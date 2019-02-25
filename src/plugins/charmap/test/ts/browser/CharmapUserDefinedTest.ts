@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (su
           FocusTools.cGetFocused,
           cFakeEvent('input')
         ]),
-        tinyUi.sWaitForUi('wait for character A', '.tox-collection span:contains(A)')
+        tinyUi.sWaitForUi('wait for character A', '.tox-collection .tox-collection__item-icon:contains(A)')
       ])
     , onSuccess, onFailure);
   }, {

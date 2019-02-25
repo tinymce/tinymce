@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Default'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Circle'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Square'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Default'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -141,7 +141,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Lower Alpha'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Lower Greek'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -175,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Lower Roman'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -189,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Upper Alpha'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
                           title: str.is('Upper Roman'),
                         },
                         children: [
-                          s.element('span', {
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-icon') ]
                           })
                         ]
