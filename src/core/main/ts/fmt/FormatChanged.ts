@@ -8,6 +8,7 @@
 import { Arr, Cell, Obj } from '@ephox/katamari';
 import { Element, Node } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 
@@ -38,7 +39,7 @@ const updateAndFireChangeCallbacks = (editor: Editor, elm: Element, currentForma
 
   // Check for new formats
   Obj.each(formatChangeData, (data: FormatData, format: string) => {
-    Arr.exists(parents, (node: Node) => {
+    Tools.each(parents, (node: Node) => {
       if (editor.formatter.matchNode(node, format, {}, data.similar)) {
         if (formatsList.indexOf(format) === -1) {
           // Execute callbacks
@@ -50,10 +51,12 @@ const updateAndFireChangeCallbacks = (editor: Editor, elm: Element, currentForma
         }
 
         matchedFormats[format] = data.callbacks;
-        return true;
+        return false;
       }
 
-      return MatchFormat.matchesUnInheritedFormatSelector(editor, node, format);
+      if (MatchFormat.matchesUnInheritedFormatSelector(editor, node, format)) {
+        return false;
+      }
     });
   });
 
