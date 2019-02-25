@@ -6,7 +6,6 @@
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["lib/globals/tinymce/core/*"],
-      "tinymce/ui/*": ["src/ui/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/anchor/*": ["src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["src/plugins/autolink/main/ts/*"],
@@ -54,7 +53,6 @@
     }
   },
   "include": [
-    "src/ui/main/ts",
     "src/plugins/*/main/ts",
     "src/plugins/*/src/demo/ts",
     "src/plugins/*/src/test/ts",

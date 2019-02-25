@@ -30,7 +30,8 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
-import { registry, Ui } from 'tinymce/ui/Registry';
+import { registry } from 'tinymce/core/api/ui/Registry';
+import { Registry } from '@ephox/bridge';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -54,6 +55,10 @@ import { registry, Ui } from 'tinymce/ui/Registry';
 
 export type AnyFunction = (...x: any[]) => any;
 export type EditorSettings = Record<string, any>;
+
+export interface Ui {
+  registry: Registry.Registry;
+}
 export interface Editor {
   $: any;
   annotator: Annotator;

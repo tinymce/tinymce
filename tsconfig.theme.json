@@ -6,7 +6,6 @@
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["lib/globals/tinymce/core/*"],
-      "tinymce/ui/*": ["src/ui/main/ts/*"],
       "tinymce/themes/mobile/*": ["src/themes/mobile/main/ts/*"],
       "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"]
     }
