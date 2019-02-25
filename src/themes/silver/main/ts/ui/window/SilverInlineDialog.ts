@@ -39,8 +39,9 @@ interface WindowExtra<T> {
   closeWindow: () => void;
 }
 
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
+const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
   const dialogLabelId = Id.generate('dialog-label');
+  const dialogContentId = Id.generate('dialog-content');
 
   const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => {
     return Option.some(incoming);
@@ -56,7 +57,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memBody = Memento.record(
     renderInlineBody({
       body: dialogInit.internalDialog.body
-    }, backstage) as SimpleSpec
+    }, dialogContentId, backstage, ariaAttrs) as SimpleSpec
   );
 
   const memFooter = Memento.record(
@@ -82,7 +83,8 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
       classes: [ 'tox-dialog' ],
       attributes: {
         role: 'dialog',
-        ['aria-labelledby']: dialogLabelId
+        ['aria-labelledby']: dialogLabelId,
+        ['aria-describedby']: `${dialogContentId}`,
       }
     },
     eventOrder: {
