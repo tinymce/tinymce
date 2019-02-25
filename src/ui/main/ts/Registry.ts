@@ -80,7 +80,7 @@ const registry = () => {
     addMenuButton: bridge.addMenuButton,
 
     /**
-     * Registers a new menu item that executes a command when clicked.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (addMenuItem), reveal a nested menu (see addNestedMenuItem below), or act as a toggle with a check mark display state (see addToggleMenuItem below)
+     * Registers a new menu item that executes a command when clicked or activated.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (addMenuItem), reveal a nested menu (see addNestedMenuItem below), or act as a toggle with a checkmark to display state (see addToggleMenuItem below)
      *
      * @method addMenuItem
      * @param {String} name Unique name identifying the new menu item.
@@ -90,7 +90,7 @@ const registry = () => {
     addMenuItem: bridge.addMenuItem,
 
     /**
-     * Registers a new nested menu item that reveals when a menu item is clicked or activated.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (addNestedMenuItem), or act as a toggle with a check mark display state (see addToggleMenuItem below)
+     * Registers a new nested menu item that reveals when a menu item is clicked or activated.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (addNestedMenuItem), or act as a toggle with a checkmark to display state (see addToggleMenuItem below)
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
@@ -130,7 +130,7 @@ const registry = () => {
     addToggleButton: bridge.addToggleButton,
 
     /**
-     * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (see addNestedMenuItem above), or act as a toggle with a check mark display state (addToggleMenuItem)
+     * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (see addNestedMenuItem above), or act as a toggle with a checkmark to display state (addToggleMenuItem)
      *
      * @method addToggleMenuItem
      * @param {String} name Unique name identifying the new menu item.
