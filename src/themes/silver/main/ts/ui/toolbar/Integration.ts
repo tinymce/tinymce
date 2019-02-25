@@ -191,15 +191,13 @@ const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSett
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes?: string[]): Option<AlloySpec> => {
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
   return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
-    if (prefixes !== undefined) {
-      return Options.findMap(prefixes, (prefix) => {
+    return prefixes.bind((ps) => {
+      return Options.findMap(ps, (prefix) => {
         return Obj.get(buttons, prefix + toolbarItem.toLowerCase());
       });
-    } else {
-      return Option.none();
-    }
+    });
   }).fold(
     () => {
       return Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
@@ -216,7 +214,7 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
   );
 };
 
-const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras, prefixes?: string[]): ToolbarGroup[] => {
+const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
