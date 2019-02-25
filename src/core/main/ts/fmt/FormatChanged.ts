@@ -115,11 +115,7 @@ const removeListeners = (registeredFormatListeners: Cell<RegisteredFormats>, for
   registeredFormatListeners.set(formatChangeItems);
 };
 
-const formatChanged = (editor: Editor, formatChangeState: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
-  formatChangedWithUnbind(editor, formatChangeState, formats, callback, similar);
-};
-
-const formatChangedWithUnbind = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
+const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
   if (registeredFormatListeners.get() === null) {
     setup(registeredFormatListeners, editor);
   }
@@ -132,6 +128,5 @@ const formatChangedWithUnbind = (editor: Editor, registeredFormatListeners: Cell
 };
 
 export {
-  formatChanged,
-  formatChangedWithUnbind
+  formatChanged
 };

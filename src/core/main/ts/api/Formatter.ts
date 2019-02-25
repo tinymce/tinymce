@@ -53,8 +53,7 @@ export interface Formatter {
   matchAll: (names: string[], vars?: FormatVars) => Format[];
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
   canApply: (name: string) => boolean;
-  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => void;
-  formatChangedWithUnbind: (names: string, FormatChangeCallback, similar?: boolean) => { unbind: () => void };
+  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => { unbind: () => void };
   getCssText: (format: string | Format) => string;
 }
 
@@ -184,17 +183,6 @@ export default function (editor) {
      * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
      */
     formatChanged: Fun.curry(FormatChanged.formatChanged, editor, formatChangeState),
-
-    /**
-     * Executes the specified callback when the current selection matches the formats or not.
-     *
-     * @method formatChangedWithUnbind
-     * @param {String} formats Comma separated list of formats to check for.
-     * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
-     * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
-     * @return {Object} Returns an object with a function to unbind the format changed handler.
-     */
-    formatChangedWithUnbind: Fun.curry(FormatChanged.formatChangedWithUnbind, editor, formatChangeState),
 
     /**
      * Returns a preview css text for the specified format.

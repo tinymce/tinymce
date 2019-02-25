@@ -16,12 +16,12 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
 
   const init = () => {
     api.setActive(editor.formatter.match(name));
-    const unbind = editor.formatter.formatChangedWithUnbind(name, api.setActive).unbind;
+    const unbind = editor.formatter.formatChanged(name, api.setActive).unbind;
     unbindCell.set(Option.some(unbind));
   };
 
   // The editor may or may not have been setup yet, so check for that
-  editor.formatter ? init() : editor.on('init', init);
+  editor.initialized ? init() : editor.on('init', init);
 
   return () => unbindCell.get().each((unbind) => unbind());
 };

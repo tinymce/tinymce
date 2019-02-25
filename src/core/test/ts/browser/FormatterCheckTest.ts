@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function () {
 
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
 
-    const handler = editor.formatter.formatChangedWithUnbind('complex', function (state, args) {
+    const handler = editor.formatter.formatChanged('complex', function (state, args) {
       newState = state;
       newArgs = args;
     }, true);
