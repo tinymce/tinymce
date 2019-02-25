@@ -8,6 +8,7 @@
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning, MaxHeight } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Thunk } from '@ephox/katamari';
 import { Css, DomEvent, Element, Focus } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -19,7 +20,6 @@ import ToolbarLookup from './ui/context/ToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ToolbarScopes';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
-import { Element as DomElement } from '@ephox/dom-globals';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -102,7 +102,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
       const allButtons = Merger.merge(buttons, scopes.formNavigators);
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras);
+      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras, Option.some([ 'form:' ]));
       return renderToolbar({
         uid: Id.generate('context-toolbar'),
         initGroups,
