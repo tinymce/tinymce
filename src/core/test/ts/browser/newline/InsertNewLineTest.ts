@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -10,6 +10,8 @@ const browser = PlatformDetection.detect().browser;
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failure) => {
   Theme();
+
+  const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
 
   const sInsertNewline = function (editor: Editor, args) {
     return Step.sync(function () {
@@ -42,6 +44,16 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
           tinyApis.sSetCursor([0, 0], 2),
           sInsertNewline(editor, { }),
           tinyApis.sAssertContent('<p>ab</p><p>&nbsp;</p>'),
+          tinyApis.sAssertSelection([1], 0, [1], 0)
+        ])),
+        Logger.t('Insert block after bookmark', GeneralSteps.sequence([
+          tinyApis.sSetRawContent(`<p>${bookmarkSpan}<br data-mce-bogus="1"></p>`),
+          tinyApis.sSetCursor([0], 1),
+          sInsertNewline(editor, { }),
+          Step.sync(() => {
+            const rawContent = editor.getContent({ format: 'raw' });
+            Assertions.assertEq('Content should only have one bookmark span', `<p>${bookmarkSpan}<br data-mce-bogus="1"></p><p><br data-mce-bogus="1"></p>`, rawContent);
+          }),
           tinyApis.sAssertSelection([1], 0, [1], 0)
         ]))
       ])),
