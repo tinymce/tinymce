@@ -110,5 +110,9 @@ export default function () {
   };
 
   tinymce.init(settings);
-  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  tinymce.init(Merger.deepMerge(settings, {
+    inline: true,
+    selector: 'div.tinymce',
+    fixed_toolbar_container: '#fixed_toolbar'
+  }));
 }

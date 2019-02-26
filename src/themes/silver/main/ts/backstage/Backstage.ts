@@ -17,7 +17,7 @@ import { IconProvider } from '../ui/icons/Icons';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-
+import { useFixedContainer } from '../modes/Settings';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -62,7 +62,8 @@ const bubbleAlignments = {
 };
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
-  const isInline = editor.inline;
+  const useFixedToolbarContainer = useFixedContainer(editor);
+  const bodyElement = () => Element.fromDom(editor.getBody());
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -75,12 +76,12 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       },
       anchors: {
         toolbar: () => {
-          // If inline, anchor to the inside top of the editable area
-          // If iframe, anchor below the div.tox-anchorbar in the editor chrome
-          const inlineAnchor = (): AnchorSpec => ({
+          // If using fixed_toolbar_container, anchor to the inside top of the editable area
+          // Else, anchor below the div.tox-anchorbar in the editor chrome
+          const fixedToolbarAnchor = (): AnchorSpec => ({
             anchor: 'node',
-            root: Element.fromDom(editor.getBody()),
-            node: Option.from(Element.fromDom(editor.getBody())),
+            root: bodyElement(),
+            node: Option.from(bodyElement()),
             bubble: Bubble.nu(-12, 12, bubbleAlignments),
             layouts: {
               onRtl: () => [ InnerLayout.southeast ],
@@ -88,7 +89,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             }
           });
 
-          const iframeAnchor = (): AnchorSpec => ({
+          const standardAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
@@ -99,22 +100,22 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             }
           });
 
-          return isInline ? inlineAnchor() : iframeAnchor();
+          return useFixedToolbarContainer ? fixedToolbarAnchor() : standardAnchor();
         },
         banner: () => {
-          // If inline, anchor to the inside top of the editable area
-          // If iframe, anchor below the div.tox-anchorbar in the editor chrome
-          const inlineAnchor = (): AnchorSpec => ({
+          // If using fixed_toolbar_container, anchor to the inside top of the editable area
+          // Else, anchor below the div.tox-anchorbar in the editor chrome
+          const fixedToolbarAnchor = (): AnchorSpec => ({
             anchor: 'node',
-            root: Element.fromDom(editor.getBody()),
-            node: Option.from(Element.fromDom(editor.getBody())),
+            root: bodyElement(),
+            node: Option.from(bodyElement()),
             layouts: {
               onRtl: () => [ InnerLayout.north ],
               onLtr: () => [ InnerLayout.north ]
             }
           });
 
-          const iframeAnchor = (): AnchorSpec => ({
+          const standardAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
             // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
@@ -124,12 +125,12 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             }
           });
 
-          return isInline ? inlineAnchor() : iframeAnchor();
+          return useFixedToolbarContainer ? fixedToolbarAnchor() : standardAnchor();
         },
         cursor: () => {
           return {
             anchor: 'selection',
-            root: Element.fromDom(editor.getBody()),
+            root: bodyElement(),
             getSelection: () => {
               const rng = editor.selection.getRng();
               return Option.some(
@@ -141,7 +142,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         node: (element: Option<Element>) => {
           return {
             anchor: 'node',
-            root: Element.fromDom(editor.getBody()),
+            root: bodyElement(),
             node: element
           };
         }

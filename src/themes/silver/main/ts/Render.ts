@@ -8,7 +8,7 @@
 import { AlloySpec, Behaviour, Gui, GuiFactory, Keying, Positioning, SimpleSpec, Memento, AlloyComponent } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
-import { Css, Insert, Element } from '@ephox/sugar';
+import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';

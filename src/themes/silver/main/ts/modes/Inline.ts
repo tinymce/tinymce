@@ -6,8 +6,8 @@
  */
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
-import { Option, Type } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location, Node, SelectorFind } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Body, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -18,14 +18,12 @@ import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { isSplitToolbar } from '../api/Settings';
-
-const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container');
-const fixedContainerElement = (editor) => SelectorFind.descendant(Body.body(), fixedContainerSelector(editor));
-const useFixedContainer = (editor) => fixedContainerElement(editor).isSome();
+import { useFixedContainer, fixedContainerElement } from './Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
+  const useFixedToolbarContainer = useFixedContainer(editor);
 
   loadInlineSkin(editor);
 
@@ -42,7 +40,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const setPosition = () => {
-    if (!useFixedContainer(editor)) {
+    if (!useFixedToolbarContainer) {
       const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
       if (split) {
         toolbar.each(SplitToolbar.refresh);
@@ -85,7 +83,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     floatContainer = uiComponents.outerContainer;
 
     let uiContainer = Body.body();
-    if (useFixedContainer) {
+    if (useFixedToolbarContainer) {
       uiContainer = fixedContainerElement(editor).getOr(Body.body());
     }
 
@@ -102,14 +100,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
-    if (!useFixedContainer) {
-      // initialise the toolbar - initial positioning, refresh docking, then show
+    if (!useFixedToolbarContainer) {
+      console.log('fix cont');
       Css.set(floatContainer.element(), 'position', 'absolute');
       setPosition();
-      show();
 
       editor.on('nodeChange ResizeWindow', setPosition);
     }
+
+    // initialise the toolbar - initial positioning, refresh docking, then show
+    show();
 
     editor.on('activate', show);
     editor.on('deactivate', hide);
