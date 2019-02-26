@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.10.0] - 2019-02-19
+### Added
+- Floating mode for SplitToolbars
+
 # [4.9.15] - 2019-02-19
 ### Added
 - Aria-describedby to be set as content id on modal dialogs
