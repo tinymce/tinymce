@@ -77,10 +77,10 @@ const register = function (htmlParser, settings, dom) {
 
       if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        if (Zwsp.isZwsp(node.firstChild.value)) {
-          node.remove();
-        } else {
+        if (node.firstChild !== undefined && !Zwsp.isZwsp(node.firstChild.value)) {
           node.unwrap();
+        } else {
+          node.remove();
         }
       }
     }
