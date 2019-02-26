@@ -43,7 +43,7 @@ export default () => {
 
   const unregister = (component: AlloyComponent): void => {
     Tagger.read(component.element()).each((tagId) => {
-      components[tagId] = undefined;
+      delete components[tagId];
       events.unregisterId(tagId);
     });
   };

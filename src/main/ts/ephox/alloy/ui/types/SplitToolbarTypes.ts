@@ -52,4 +52,5 @@ export interface SplitToolbarSketcher extends CompositeSketch<SplitToolbarSpec, 
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
   getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
+  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }

@@ -84,11 +84,14 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals, toolbarToggleEv
   Css.reflow(primary.element());
 
   overflow.each((overf) => {
+    if (!detail.floating) {
+      Sliding.refresh(overf);
+    }
+
     AlloyParts.getPart(toolbar, detail, 'overflow-button').each((moreButton) => {
-      if (detail.floating === true) {
+      if (detail.floating) {
         Toggling.set(moreButton, overf.getSystem().isConnected());
       } else {
-        Sliding.refresh(overf);
         Toggling.set(moreButton, Sliding.hasGrown(overf));
       }
     });
@@ -112,6 +115,10 @@ const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (d
     return AlloyParts.getPart(toolbar, detail, 'overflow-button');
   };
 
+  const getOverflow = (toolbar) => {
+    return AlloyParts.getPart(toolbar, detail, 'overflow').orThunk(() => detail.overflow(toolbar));
+  };
+
   return {
     uid: detail.uid,
     dom: detail.dom,
@@ -127,6 +134,9 @@ const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = (d
       },
       getMoreButton(toolbar) {
         return getMoreButton(toolbar);
+      },
+      getOverflow(toolbar) {
+        return getOverflow(toolbar);
       }
     },
 
@@ -150,6 +160,9 @@ const SplitToolbar = Sketcher.composite({
     },
     getMoreButton(apis, toolbar) {
       return apis.getMoreButton(toolbar);
+    },
+    getOverflow(apis, toolbar) {
+      return apis.getOverflow(toolbar);
     }
   }
 }) as SplitToolbarSketcher;
