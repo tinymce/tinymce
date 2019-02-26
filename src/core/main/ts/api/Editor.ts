@@ -185,6 +185,14 @@ const resolve = Tools.resolve;
 const ie = Env.ie;
 
 /**
+ * Include Editor API docs.
+ *
+ * @include ../../../../../tools/docs/tinymce.Editor.js
+ */
+
+/**
+
+/**
  * Constructs a editor instance by id.
  *
  * @constructor
