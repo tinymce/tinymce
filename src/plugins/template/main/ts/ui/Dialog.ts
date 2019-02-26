@@ -26,6 +26,13 @@ interface TemplateData {
   value: TemplateValues;
 }
 
+type DialogData = {
+  template: string;
+  preview: string;
+};
+
+type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => void;
+
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
     let contentCssLinks = '';
@@ -112,7 +119,7 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
     });
   };
 
-  const onChange = (templates: TemplateData[], updateDialog) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
+  const onChange = (templates: TemplateData[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {
@@ -133,11 +140,6 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
         api.close();
       });
     });
-  };
-
-  type DialogData = {
-    template: string;
-    preview: string;
   };
 
   const openDialog = (templates: TemplateData[]) => {
