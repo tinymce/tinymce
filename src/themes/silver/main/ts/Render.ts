@@ -23,6 +23,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import { useFixedContainer } from './modes/Settings';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -162,8 +163,8 @@ const setup = (editor: Editor): RenderInfo => {
   const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
     hasToolbar ? [ partToolbar ] : [ ],
-    // Inline anchors to the top of the editable area for fixed_toolbar_container
-    isInline ? [ ] : [ memAnchorBar.asSpec() ],
+    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ]
   ]);

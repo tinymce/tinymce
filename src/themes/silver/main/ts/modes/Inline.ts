@@ -24,10 +24,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   let floatContainer;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
+  const split = isSplitToolbar(editor);
 
   loadInlineSkin(editor);
-
-  const split = isSplitToolbar(editor);
 
   const calcPosition = (offset: number = 0) => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
@@ -40,23 +39,27 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const setPosition = () => {
-    if (!useFixedToolbarContainer) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-      if (split) {
-        toolbar.each(SplitToolbar.refresh);
-      }
+    // Handes positioning, Docking and SplitToolbar (more drawer) behaviour. Modes:
+    // 1. Basic inline: does positioning and Docking
+    // 2. Inline + more drawer: does positioning, Docking and SplitToolbar
+    // 3. Inline + fixed_toolbar_container: does nothing
+    // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    if (split) {
+      toolbar.each(SplitToolbar.refresh);
+    }
 
-      const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
-      if (!isDocked) {
-        // We need to update the toolbar location if the window has resized while the toolbar is position absolute
-        // Not sure if we should always set this, or if it's worth checking against the current position
-        const offset = split ? toolbar.fold(() => 0, (tbar) => {
-          // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-          return Height.get(tbar.components()[1].element());
-        }) : 0;
-        Css.setAll(floatContainer.element(), calcPosition(offset));
-      }
-      // Let docking handle fixed <-> absolute transitions, etc.
+    if (!useFixedToolbarContainer) {
+      // We need to always recalculate the toolbar's position so Docking switches between fixed and
+      // absolute correctly. Only recalculating when position: absolute breaks transition on window
+      // resize behaviour (chrome gets stuck fixed to the top of the viewport).
+      const offset = split ? toolbar.fold(() => 0, (tbar) => {
+        // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+        return Height.get(tbar.components()[1].element());
+      }) : 0;
+      Css.setAll(floatContainer.element(), calcPosition(offset));
+
+      // Let Docking handle fixed <-> absolute transitions, etc.
       Docking.refresh(floatContainer);
     }
   };
@@ -101,16 +104,15 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     );
 
     if (!useFixedToolbarContainer) {
-      console.log('fix cont');
+      // Do not set position if using fixed_toolbar_container
       Css.set(floatContainer.element(), 'position', 'absolute');
-      setPosition();
-
-      editor.on('nodeChange ResizeWindow', setPosition);
     }
 
-    // initialise the toolbar - initial positioning, refresh docking, then show
+    // Initialise the toolbar - set initial positioning then show
+    setPosition();
     show();
 
+    editor.on('nodeChange ResizeWindow', setPosition);
     editor.on('activate', show);
     editor.on('deactivate', hide);
 

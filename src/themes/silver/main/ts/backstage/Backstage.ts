@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, AnchorSpec, Bubble, FormTypes, Layout, InnerLayout } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AnchorSpec, Bubble, FormTypes, Layout, LayoutInside } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
@@ -84,8 +84,8 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             node: Option.from(bodyElement()),
             bubble: Bubble.nu(-12, 12, bubbleAlignments),
             layouts: {
-              onRtl: () => [ InnerLayout.southeast ],
-              onLtr: () => [ InnerLayout.southwest ]
+              onRtl: () => [ LayoutInside.southeast ],
+              onLtr: () => [ LayoutInside.southwest ]
             }
           });
 
@@ -110,8 +110,8 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             root: bodyElement(),
             node: Option.from(bodyElement()),
             layouts: {
-              onRtl: () => [ InnerLayout.north ],
-              onLtr: () => [ InnerLayout.north ]
+              onRtl: () => [ LayoutInside.north ],
+              onLtr: () => [ LayoutInside.north ]
             }
           });
 
