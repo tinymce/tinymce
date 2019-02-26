@@ -84,7 +84,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setToolbar(
       uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage})
+      identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
     );
 
     OuterContainer.setMenubar(

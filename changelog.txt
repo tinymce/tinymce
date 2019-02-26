@@ -3,6 +3,7 @@ Version 5.0.2 (TBD)
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
     Added default icons to registry #TINY-3307
+    Fixed the quicklink toolbar button not rendering in the quickbars plugin #TINY-3125
     Added a new `editor.formatter.formatChangedWithUnbind` function, to be able to unbind format changed listeners #TINY-3191
     Fixed an issue where format changed listeners weren't getting unbound #TINY-3191`
 Version 5.0.1 (2019-02-21)

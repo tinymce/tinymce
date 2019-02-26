@@ -1,5 +1,5 @@
 import { GuiFactory } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 import { identifyButtons } from '../../../main/ts/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
@@ -101,7 +101,7 @@ export default function () {
       { label: 'SplitButton', button: 'beta' },
       { label: 'StyleButton', button: 'styleselect' }
     ], ({ label, button }) => {
-      const groups = identifyButtons(mockEditor, { buttons, toolbar: button }, helpers.extras);
+      const groups = identifyButtons(mockEditor, { buttons, toolbar: button }, helpers.extras, Option.none());
       const buttonComponents = Arr.flatten(Arr.map(groups, (group) => group.items));
       return {
         dom: {

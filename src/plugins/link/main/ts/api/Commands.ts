@@ -13,7 +13,7 @@ const register = function (editor) {
     if (Settings.useQuickLink(editor.settings)) {
       // Taken from ContextEditorEvents in silver. Find a better way.
       editor.fire('contexttoolbar-show', {
-        toolbarKey: 'link-form'
+        toolbarKey: 'quicklink'
       });
     } else {
       Actions.openDialog(editor)();
