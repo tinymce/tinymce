@@ -115,7 +115,8 @@ import {
 } from '../positioning/mode/Anchoring';
 
 import * as Layout from '../positioning/layout/Layout';
-import * as InnerLayout from '../positioning/layout/InnerLayout';
+import * as LayoutInside from '../positioning/layout/LayoutInside';
+import * as LayoutTypes from '../positioning/layout/LayoutTypes';
 import * as Bubble from '../positioning/layout/Bubble';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import { LazySink } from './component/CommonTypes';
@@ -123,7 +124,6 @@ import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
-
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -244,7 +244,8 @@ export {
 
   // layout
   Layout,
-  InnerLayout,
+  LayoutInside,
+  LayoutTypes,
   Bubble,
   MaxHeight,
   LazySink,

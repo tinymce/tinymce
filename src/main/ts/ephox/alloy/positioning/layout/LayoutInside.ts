@@ -4,7 +4,8 @@ import * as Direction from './Direction';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 /*
-  Layout for menus and inline context dialogs;
+  Layouts for things that go inside the editable area.
+  Designed for use with fixed_toolbar_container.
   Either above or below. Never left or right.
   Aligned to the left or right of the anchor as appropriate.
  */
