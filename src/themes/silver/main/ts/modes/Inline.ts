@@ -17,7 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { isSplitToolbar } from '../api/Settings';
+import { isSplitToolbar, isSplitFloatingToolbar } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -26,6 +26,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadInlineSkin(editor);
 
   const split = isSplitToolbar(editor);
+  const floating = isSplitFloatingToolbar(editor);
 
   const calcPosition = (offset: number = 0) => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
@@ -62,7 +63,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     setPosition();
     Docking.refresh(floatContainer);
-    if (split /* && floating */) {
+    if (split && floating) {
       const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
       toolbar.each((tb) => {
         const overflow = SplitToolbar.getOverflow(tb);
@@ -77,7 +78,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-      if (split /* && floating */) {
+      if (split && floating) {
         const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
         toolbar.each((tb) => {
           const overflow = SplitToolbar.getOverflow(tb);
