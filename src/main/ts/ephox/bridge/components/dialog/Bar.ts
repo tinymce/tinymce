@@ -2,12 +2,12 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { BodyComponentApi, BodyComponent } from './BodyComponent';
 
 export interface BarApi {
-  type: 'grid';
+  type: 'bar';
   items: BodyComponentApi[];
 }
 
 export interface Bar {
-  type: 'grid';
+  type: 'bar';
   items: BodyComponent[];
 }
 
