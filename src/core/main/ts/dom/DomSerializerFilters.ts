@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
+import Zwsp from '../text/Zwsp';
 
 declare const unescape: any;
 
@@ -75,7 +76,12 @@ const register = function (htmlParser, settings, dom) {
       node = nodes[i];
 
       if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup) {
-        node.remove();
+        // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
+        if (Zwsp.isZwsp(node.firstChild.value)) {
+          node.remove();
+        } else {
+          node.unwrap();
+        }
       }
     }
   });
