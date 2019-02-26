@@ -39,7 +39,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const setPosition = () => {
-    // Handes positioning, Docking and SplitToolbar (more drawer) behaviour. Modes:
+    // Handles positioning, Docking and SplitToolbar (more drawer) behaviour. Modes:
     // 1. Basic inline: does positioning and Docking
     // 2. Inline + more drawer: does positioning, Docking and SplitToolbar
     // 3. Inline + fixed_toolbar_container: does nothing
