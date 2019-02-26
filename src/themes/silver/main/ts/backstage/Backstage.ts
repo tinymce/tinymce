@@ -82,10 +82,10 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
             anchor: 'node',
             root: bodyElement(),
             node: Option.from(bodyElement()),
-            bubble: Bubble.nu(-12, 12, bubbleAlignments),
+            bubble: Bubble.nu(-12, -12, bubbleAlignments),
             layouts: {
-              onRtl: () => [ LayoutInside.southeast ],
-              onLtr: () => [ LayoutInside.southwest ]
+              onRtl: () => [ LayoutInside.northeast ],
+              onLtr: () => [ LayoutInside.northwest ]
             }
           });
 
