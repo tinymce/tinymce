@@ -137,7 +137,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
     const onDestroy = onDestroyCell.get();
     if (onDestroy !== undefined) {
-      editor.off('nodeChange', onDestroyCell.get());
+      editor.off('nodeChange', onDestroy);
     }
   }).getOr(() => { });
 
