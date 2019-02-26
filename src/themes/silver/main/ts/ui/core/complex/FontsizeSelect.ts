@@ -64,14 +64,12 @@ const getSpec = (editor) => {
 
   const nodeChangeHandler = Option.some((comp) => {
     return () => {
-      if (comp.getSystem().isConnected()) {
-        const { matchOpt, px } = getMatchingValue();
+      const { matchOpt, px } = getMatchingValue();
 
-        const text = matchOpt.fold(() => px, (match) => match.title);
-        AlloyTriggers.emitWith(comp, updateMenuText, {
-          text
-        });
-      }
+      const text = matchOpt.fold(() => px, (match) => match.title);
+      AlloyTriggers.emitWith(comp, updateMenuText, {
+        text
+      });
     };
   });
 

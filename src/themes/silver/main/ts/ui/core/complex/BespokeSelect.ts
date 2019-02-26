@@ -127,7 +127,7 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
 
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
-  const onDestroyCell = Cell(Fun.noop);
+  const onDestroyCell = Cell(undefined);
 
   const onAttach = spec.nodeChangeHandler.map((f) => (comp) => {
     const handler = f(comp);
@@ -136,7 +136,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   }).getOr(() => { });
   const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
     const onDestroy = onDestroyCell.get();
-    if (onDestroy !== null && onDestroy !== undefined) {
+    if (onDestroy !== undefined) {
       editor.off('nodeChange', onDestroyCell.get());
     }
   }).getOr(() => { });

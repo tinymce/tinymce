@@ -45,13 +45,11 @@ const getSpec = (editor: Editor) => {
 
   const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
     return () => {
-      if (comp.getSystem().isConnected()) {
-        const match = getMatchingValue();
-        const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
-        AlloyTriggers.emitWith(comp, updateMenuIcon, {
-          icon: `align-${alignment}`
-        });
-      }
+      const match = getMatchingValue();
+      const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
+      AlloyTriggers.emitWith(comp, updateMenuIcon, {
+        icon: `align-${alignment}`
+      });
     };
   });
 

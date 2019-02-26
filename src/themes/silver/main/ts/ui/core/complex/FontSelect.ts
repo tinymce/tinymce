@@ -96,14 +96,12 @@ const getSpec = (editor) => {
 
   const nodeChangeHandler = Option.some((comp) => {
     return () => {
-      if (comp.getSystem().isConnected()) {
-        const fontFamily = editor.queryCommandValue('FontName');
-        const match = getMatchingValue();
-        const text = match.fold(() => fontFamily, (item) => item.title);
-        AlloyTriggers.emitWith(comp, updateMenuText, {
-          text
-        });
-      }
+      const fontFamily = editor.queryCommandValue('FontName');
+      const match = getMatchingValue();
+      const text = match.fold(() => fontFamily, (item) => item.title);
+      AlloyTriggers.emitWith(comp, updateMenuText, {
+        text
+      });
     };
   });
 
