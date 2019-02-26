@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.10.0] - 2019-02-19
+# [4.10.0] - 2019-02-26
 ### Added
 - Floating mode for SplitToolbars
 
