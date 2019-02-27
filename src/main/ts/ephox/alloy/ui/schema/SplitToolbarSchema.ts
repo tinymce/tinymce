@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Cell, Fun } from '@ephox/katamari';
+import { Cell, Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Sliding } from '../../api/behaviour/Sliding';
@@ -15,11 +15,15 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', () => {
     return Cell([ ]);
-  })
+  }),
+  FieldSchema.defaulted('overflow', (toolbar) => Option.none()),
+  FieldSchema.defaultedBoolean('floating', false)
 ]);
 
 const toolbarSchema = [
-  FieldSchema.strict('dom')
+  FieldSchema.strict('dom'),
+  FieldSchema.defaulted('overflow', (toolbar) => Option.none()),
+  FieldSchema.defaultedBoolean('floating', false)
 ];
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
@@ -29,7 +33,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'primary'
   }),
 
-  PartType.required({
+  PartType.optional({
     factory: Toolbar,
     schema: toolbarSchema,
     name: 'overflow',
