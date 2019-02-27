@@ -6,17 +6,18 @@
  */
 
 import { AlloySpec, SketchSpec } from '@ephox/alloy';
-import { Objects, ValueSchema } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Option, Result, Type, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Options, Result, Type } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
+import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
   renderSplitButton,
   renderToolbarButton,
   renderToolbarToggleButton,
-} from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+} from './button/ToolbarButtons';
 
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
@@ -31,9 +32,15 @@ export const handleError = (error) => {
   console.error(ValueSchema.formatError(error));
 };
 
+export type ToolbarButton = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.ToolbarSplitButtonApi;
+
 interface ToolbarGroupSetting {
   name?: string;
   items: string[];
+}
+
+interface Extras {
+  backstage: UiFactoryBackstage;
 }
 
 const defaultToolbar = [
@@ -60,7 +67,7 @@ const defaultToolbar = [
   }
 ];
 
-const renderFromBridge = <BI, BO>(bridgeBuilder: (i: BI) => Result<BO, ValueSchema.SchemaError<any>>, render: (o: BO, extras) => AlloySpec) => {
+const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras) => AlloySpec) => {
   return (spec, extras) => {
     const internal = bridgeBuilder(spec).fold(
       Fun.compose(Result.error, ValueSchema.formatError),
@@ -113,15 +120,15 @@ const types = {
     }
   ),
 
-  styleSelectButton: (editor: Editor, extras) => createStyleSelect(editor, extras.backstage),
-  fontsizeSelectButton: (editor: Editor, extras) => createFontsizeSelect(editor, extras.backstage),
-  fontSelectButton: (editor: Editor, extras) => createFontSelect(editor, extras.backstage),
-  formatButton: (editor: Editor, extras) => createFormatSelect(editor, extras.backstage),
-  alignMenuButton: (editor: Editor, extras) => createAlignSelect(editor, extras.backstage)
+  styleSelectButton: (editor: Editor, extras: Extras) => createStyleSelect(editor, extras.backstage),
+  fontsizeSelectButton: (editor: Editor, extras: Extras) => createFontsizeSelect(editor, extras.backstage),
+  fontSelectButton: (editor: Editor, extras: Extras) => createFontSelect(editor, extras.backstage),
+  formatButton: (editor: Editor, extras: Extras) => createFormatSelect(editor, extras.backstage),
+  alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = function (spec, extras): Option<SketchSpec> {
-  return Objects.readOptFrom<(spec, extras) => SketchSpec>(types, spec.type).fold(
+const extractFrom = (spec: ToolbarButton, extras: Extras): Option<AlloySpec> => {
+  return Obj.get(types, spec.type).fold(
     () => {
       console.error('skipping button defined by', spec);
       return Option.none();
@@ -134,7 +141,7 @@ const extractFrom = function (spec, extras): Option<SketchSpec> {
   );
 };
 
-const bespokeButtons = {
+const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
   styleselect: types.styleSelectButton,
   fontsizeselect: types.fontsizeSelectButton,
   fontselect: types.fontSelectButton,
@@ -184,24 +191,34 @@ const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSett
   }
 };
 
-const identifyButtons = function (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras): ToolbarGroup[] {
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
+  return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
+    return prefixes.bind((ps) => {
+      return Options.findMap(ps, (prefix) => {
+        return Obj.get(buttons, prefix + toolbarItem.toLowerCase());
+      });
+    });
+  }).fold(
+    () => {
+      return Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
+        return r(editor, extras);
+      }).orThunk(() => {
+        // TODO: Add back after TINY-3232 is implemented
+        // console.error('No representation for toolbarItem: ' + toolbarItem);
+        return Option.none();
+      });
+    },
+    (spec) => {
+      return extractFrom(spec, extras);
+    }
+  );
+};
+
+const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] : Objects.readOptFrom(toolbarConfig.buttons, toolbarItem.toLowerCase()).fold(
-        () => {
-          return Objects.readOptFrom<(spec: Editor, extras) => SketchSpec>(bespokeButtons, toolbarItem.toLowerCase()).map((r) => {
-            return r(editor, extras);
-          }).orThunk(() => {
-            // TODO: Add back after TINY-3232 is implemented
-            // console.error('No representation for toolbarItem: ' + toolbarItem);
-            return Option.none();
-          });
-        },
-        (spec) => {
-          return extractFrom(spec, extras);
-        }
-      ).toArray();
+      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, extras, prefixes).toArray();
     });
     return {
       title: Option.from(editor.translate(group.name)),

@@ -29,8 +29,8 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
                     return s.element('div', {
                       classes: [ arr.has('tox-collection__item') ],
                       children: [
-                        ...hasIcons ? [ s.element('span', { classes: [ arr.has('tox-collection__item-icon') ]}) ] : [ ],
-                        s.element('span', exp.submenu ? {
+                        ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ]}) ] : [ ],
+                        s.element('div', exp.submenu ? {
                           classes: [ arr.has('tox-collection__item-label') ],
                           html: str.is(exp.html)
                         } : {

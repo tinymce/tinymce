@@ -19,6 +19,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       interpreter: Fun.identity,
       anchors: {
         toolbar: anchorFn,
+        toolbarOverflow: anchorFn,
         banner: anchorFn,
         cursor: anchorFn,
         node: anchorFn

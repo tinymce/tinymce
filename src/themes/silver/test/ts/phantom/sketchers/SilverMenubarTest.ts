@@ -136,13 +136,13 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                       return s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-icon') ] }),
-                          s.element('span', {
+                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
+                          s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
                           })
                         ].concat(hasCaret ? [
-                          s.element('span', { classes: [ arr.has('tox-collection__item-caret') ] })
+                          s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
                         ] : [ ])
                       });
                     })

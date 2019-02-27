@@ -7,7 +7,7 @@
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location } from '@ephox/sugar';
+import { Body, Css, Element, Height, Location, Class } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -17,7 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { isSplitToolbar } from '../api/Settings';
+import { getToolbarDrawer, ToolbarDrawer } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -25,7 +25,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
-  const split = isSplitToolbar(editor);
+  const splitSetting = getToolbarDrawer(editor);
+  const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
+  const floating = splitSetting === ToolbarDrawer.floating;
 
   const calcPosition = (offset: number = 0) => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
@@ -49,7 +51,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       // Not sure if we should always set this, or if it's worth checking against the current position
       const offset = split ? toolbar.fold(() => 0, (tbar) => {
         // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-        return Height.get(tbar.components()[1].element());
+        return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
       }) : 0;
       Css.setAll(floatContainer.element(), calcPosition(offset));
     }
@@ -62,12 +64,30 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     setPosition();
     Docking.refresh(floatContainer);
+    if (floating) {
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      toolbar.each((tb) => {
+        const overflow = SplitToolbar.getOverflow(tb);
+        overflow.each((overf) => {
+          Class.remove(overf.element(), 'tox-toolbar__overflow--closed');
+        });
+      });
+    }
   };
 
   const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+      if (floating) {
+        const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+        toolbar.each((tb) => {
+          const overflow = SplitToolbar.getOverflow(tb);
+          overflow.each((overf) => {
+            Class.add(overf.element(), 'tox-toolbar__overflow--closed');
+          });
+        });
+      }
     }
   };
 
@@ -84,7 +104,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setToolbar(
       uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage})
+      identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
     );
 
     OuterContainer.setMenubar(

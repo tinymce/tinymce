@@ -57,7 +57,7 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
-    ...isSandbox ? { sandbox : 'allow-scripts' } : { }
+    ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
   };
 
   const sourcing = getDynamicSource(isSandbox);

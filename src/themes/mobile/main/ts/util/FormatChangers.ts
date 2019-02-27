@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
 
 import TinyChannels from '../channels/TinyChannels';
 
@@ -18,7 +19,7 @@ const fireChange = function (realm, command, state) {
   });
 };
 
-const init = function (realm, editor) {
+const init = function (realm, editor: Editor) {
   const allFormats = Obj.keys(editor.formatter.get());
   Arr.each(allFormats, function (command) {
     editor.formatter.formatChanged(command, function (state) {

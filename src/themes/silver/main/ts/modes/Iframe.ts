@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
+import { Cell, Option } from '@ephox/katamari';
 import { Body, Element, Selectors, Position } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as Settings from '../api/Settings';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
@@ -16,7 +17,6 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { Cell } from '@ephox/katamari';
 import Events from '../api/Events';
 
 const DOM = DOMUtils.DOM;
@@ -47,7 +47,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.on('init', () => {
     OuterContainer.setToolbar(
       uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage})
+      identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
     );
 
     OuterContainer.setMenubar(
@@ -104,16 +104,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
 
-  const split = Settings.isSplitToolbar(editor);
+  const drawer = Settings.getToolbarDrawer(editor);
 
-  const refreshMore = () => {
-    if (split) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-      toolbar.each(SplitToolbar.refresh);
-    }
+  const refreshDrawer = () => {
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    toolbar.each(SplitToolbar.refresh);
   };
 
-  editor.on('ResizeContent', refreshMore);
+  if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
+    editor.on('ResizeContent', refreshDrawer);
+  }
 
   return {
     iframeContainer: socket.element().dom(),

@@ -52,11 +52,11 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
   const setContents = (comp, items) => {
     const htmlLines = Arr.map(items, (item) => {
       const textContent = spec.columns === 1 ? item.text.map((text) => {
-        return `<span class="tox-collection__item-label">${text}</span>`;
+        return `<div class="tox-collection__item-label">${text}</div>`;
       }).getOr('') : '';
 
       const iconContent = item.icon.map((icon) => {
-        return `<span class="tox-collection__item-icon">${icon}</span>`;
+        return `<div class="tox-collection__item-icon">${icon}</div>`;
       }).getOr('');
 
       // Replacing the hyphens and underscores in collection items with spaces
