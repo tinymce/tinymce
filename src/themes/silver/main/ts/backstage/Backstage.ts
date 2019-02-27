@@ -17,7 +17,7 @@ import { IconProvider } from '../ui/icons/Icons';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-import { useFixedContainer } from '../modes/Settings';
+import { useFixedContainer } from '../api/Settings';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;

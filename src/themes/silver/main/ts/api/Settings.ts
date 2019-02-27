@@ -9,6 +9,7 @@ import { Option, Type, Obj, Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from '../ui/core/complex/StyleFormatTypes';
+import { SelectorFind, Body } from '@ephox/sugar';
 
 const getSkinUrl = function (editor: Editor): string {
   const settings = editor.settings;
@@ -63,6 +64,10 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
 
 const isSplitToolbar = (editor: Editor) => editor.getParam('toolbar_drawer', false, 'boolean');
 
+const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container');
+const fixedContainerElement = (editor) => SelectorFind.descendant(Body.body(), fixedContainerSelector(editor));
+const useFixedContainer = (editor) => editor.getParam('inline', false) && fixedContainerElement(editor).isSome();
+
 export {
   getSkinUrl,
   isReadOnly,
@@ -78,5 +83,7 @@ export {
   isMenubarEnabled,
   isToolbarEnabled,
   getMultipleToolbarsSetting,
-  isSplitToolbar
+  isSplitToolbar,
+  fixedContainerElement,
+  useFixedContainer,
 };

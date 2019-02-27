@@ -17,8 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { isSplitToolbar } from '../api/Settings';
-import { useFixedContainer, fixedContainerElement } from './Settings';
+import { isSplitToolbar, useFixedContainer, fixedContainerElement } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -38,36 +37,44 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     };
   };
 
-  const setPosition = () => {
+  const setChromePosition = (toolbar) => {
+    // We need to always recalculate the toolbar's position so Docking switches between fixed and
+    // absolute correctly. Only recalculating when position: absolute breaks transition on window
+    // resize behaviour (chrome gets stuck fixed to the top of the viewport).
+    const offset = split ? toolbar.fold(() => 0, (tbar) => {
+      // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+      return Height.get(tbar.components()[1].element());
+    }) : 0;
+    Css.setAll(floatContainer.element(), calcPosition(offset));
+
+    // Let Docking handle fixed <-> absolute transitions, etc.
+    Docking.refresh(floatContainer);
+  };
+
+  const updateChromeUi = () => {
     // Handles positioning, Docking and SplitToolbar (more drawer) behaviour. Modes:
     // 1. Basic inline: does positioning and Docking
     // 2. Inline + more drawer: does positioning, Docking and SplitToolbar
     // 3. Inline + fixed_toolbar_container: does nothing
     // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
+
     const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+
+    // SplitToolbar
     if (split) {
       toolbar.each(SplitToolbar.refresh);
     }
 
+    // Positioning and Docking
     if (!useFixedToolbarContainer) {
-      // We need to always recalculate the toolbar's position so Docking switches between fixed and
-      // absolute correctly. Only recalculating when position: absolute breaks transition on window
-      // resize behaviour (chrome gets stuck fixed to the top of the viewport).
-      const offset = split ? toolbar.fold(() => 0, (tbar) => {
-        // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-        return Height.get(tbar.components()[1].element());
-      }) : 0;
-      Css.setAll(floatContainer.element(), calcPosition(offset));
-
-      // Let Docking handle fixed <-> absolute transitions, etc.
-      Docking.refresh(floatContainer);
+      setChromePosition(toolbar);
     }
   };
 
   const show = () => {
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
-    setPosition();
+    updateChromeUi();
   };
 
   const hide = () => {
@@ -75,6 +82,15 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
     }
+  };
+
+  const attach = () => {
+    let uiContainer = Body.body();
+    if (useFixedToolbarContainer) {
+      uiContainer = fixedContainerElement(editor).getOr(Body.body());
+    }
+    Attachment.attachSystem(uiContainer, uiComponents.mothership);
+    Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
   };
 
   const render = () => {
@@ -85,13 +101,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     floatContainer = uiComponents.outerContainer;
 
-    let uiContainer = Body.body();
-    if (useFixedToolbarContainer) {
-      uiContainer = fixedContainerElement(editor).getOr(Body.body());
-    }
-
-    Attachment.attachSystem(uiContainer, uiComponents.mothership);
-    Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
+    attach();
 
     OuterContainer.setToolbar(
       uiComponents.outerContainer,
@@ -109,10 +119,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     }
 
     // Initialise the toolbar - set initial positioning then show
-    setPosition();
+    updateChromeUi();
     show();
 
-    editor.on('nodeChange ResizeWindow', setPosition);
+    editor.on('nodeChange ResizeWindow', updateChromeUi);
     editor.on('activate', show);
     editor.on('deactivate', hide);
 
