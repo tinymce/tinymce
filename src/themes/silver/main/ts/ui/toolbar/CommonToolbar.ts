@@ -32,7 +32,7 @@ export interface Toolbar {
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
-  getSink: () => Result<AlloyComponent, Error>;
+  getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
   floating: boolean;
 }
