@@ -26,7 +26,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadInlineSkin(editor);
 
   const splitSetting = getToolbarDrawer(editor);
-  const split = splitSetting.length > 0;
+  const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
   const floating = splitSetting === ToolbarDrawer.floating;
 
   const calcPosition = (offset: number = 0) => {

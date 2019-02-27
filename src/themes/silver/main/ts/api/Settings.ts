@@ -67,7 +67,7 @@ enum ToolbarDrawer {
   sliding = 'sliding'
 }
 
-const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', 'off', 'string') as ToolbarDrawer;
+const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
 
 export {
   getSkinUrl,

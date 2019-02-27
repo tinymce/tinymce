@@ -124,7 +124,7 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer = spec.split !== ToolbarDrawer.default ? renderMoreToolbar : renderToolbar;
+      const renderer = (spec.split === ToolbarDrawer.sliding || spec.split === ToolbarDrawer.floating) ? renderMoreToolbar : renderToolbar;
       return renderer({
         uid: spec.uid,
         onEscape: () => {

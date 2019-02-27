@@ -111,7 +111,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     toolbar.each(SplitToolbar.refresh);
   };
 
-  if (drawer !== Settings.ToolbarDrawer.default) {
+  if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
     editor.on('ResizeContent', refreshDrawer);
   }
 
