@@ -5,32 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import { Editor } from '../../../../../../core/main/ts/api/Editor';
-import { Toolbar } from '@ephox/bridge';
+import { onSetupFormatToggle } from './Utils';
 
 const toggleFormat = (editor: Editor, fmt: string) => {
   return () => {
     editor.execCommand('mceToggleFormat', false, fmt);
   };
-};
-
-const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const handler = (state: boolean) => {
-    api.setActive(state);
-  };
-
-  if (editor.formatter) {
-    api.setActive(editor.formatter.match(name));
-    editor.formatter.formatChanged(name, handler);
-  } else {
-    editor.on('init', () => {
-      api.setActive(editor.formatter.match(name));
-      editor.formatter.formatChanged(name, handler);
-    });
-  }
-
-  return () => { };
 };
 
 const registerFormatButtons = (editor: Editor) => {

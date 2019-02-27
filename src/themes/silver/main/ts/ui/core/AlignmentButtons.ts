@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
 import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { onSetupFormatToggle } from './Utils';
 
 const register = (editor: Editor) => {
   const alignToolbarButtons = [
@@ -17,30 +17,12 @@ const register = (editor: Editor) => {
     { name: 'alignjustify', text: 'Justify', cmd: 'JustifyFull', icon: 'align-justify' }
   ];
 
-  const onSetupToggleButton = (item) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-    const handler = (state: boolean) => {
-      api.setActive(state);
-    };
-
-    if (editor.formatter) {
-      api.setActive(editor.formatter.match(item.name));
-      editor.formatter.formatChanged(item.name, handler);
-    } else {
-      editor.on('init', () => {
-        api.setActive(editor.formatter.match(item.name));
-        editor.formatter.formatChanged(item.name, handler);
-      });
-    }
-
-    return () => { };
-  };
-
   Tools.each(alignToolbarButtons, (item) => {
     editor.ui.registry.addToggleButton(item.name, {
       tooltip: item.text,
       onAction: () => editor.execCommand(item.cmd),
       icon: item.icon,
-      onSetup: onSetupToggleButton(item)
+      onSetup: onSetupFormatToggle(editor, item.name)
     });
   });
 
