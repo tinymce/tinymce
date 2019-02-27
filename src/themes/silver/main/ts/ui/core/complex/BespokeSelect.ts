@@ -7,7 +7,7 @@
 
 import { AlloyComponent } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Cell, Fun } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -127,6 +127,20 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
 
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
+  const onDestroyCell = Cell(undefined);
+
+  const onAttach = spec.nodeChangeHandler.map((f) => (comp) => {
+    const handler = f(comp);
+    onDestroyCell.set(handler);
+    editor.on('nodeChange', handler);
+  }).getOr(Fun.noop);
+  const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
+    const onDestroy = onDestroyCell.get();
+    if (onDestroy !== undefined) {
+      editor.off('nodeChange', onDestroy);
+    }
+  }).getOr(Fun.noop);
+
   return renderCommonDropdown(
     {
       text: spec.icon.isSome() ? Option.none() : Option.some(''),
@@ -134,8 +148,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       tooltip: Option.from(spec.tooltip),
       role: Option.none(),
       fetch: items.getFetch(backstage, getStyleItems),
-      onAttach: spec.nodeChangeHandler.map((f) => (comp) => editor.on('nodeChange', f(comp))).getOr(() => { }),
-      onDetach: spec.nodeChangeHandler.map((f) => (comp) => editor.off('nodeChange', f(comp))).getOr(() => { }),
+      onAttach,
+      onDetach,
       columns: 1,
       presets: 'normal',
       classes: spec.icon.isSome() ? [] : [ 'bespoke' ]

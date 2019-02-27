@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 
 import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Result } from '@ephox/katamari';
 import TestBackstage from '../../module/TestBackstage';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
@@ -40,7 +40,9 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
               title: Option.some('another group title'), items: Arr.map([ 'six' ], makeButton)
             }
           ],
-          backstage: TestBackstage()
+          backstage: TestBackstage(),
+          floating: false,
+          getSink: () => Result.error('')
         })
       );
     },

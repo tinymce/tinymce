@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, B
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Option, Thunk } from '@ephox/katamari';
+import { Cell, Id, Merger, Option, Thunk, Result } from '@ephox/katamari';
 import { Css, DomEvent, Element, Focus } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -108,7 +108,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         initGroups,
         onEscape: Option.none,
         cyclicKeying: true,
-        backstage: extras.backstage
+        backstage: extras.backstage,
+        floating: false,
+        getSink: () => Result.error('')
       });
     })() : (() => {
       return ContextForm.renderContextForm(ctx, extras.backstage);
