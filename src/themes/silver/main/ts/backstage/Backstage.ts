@@ -77,7 +77,6 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         toolbar: () => {
           return {
             anchor: 'hotspot',
-            // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
             bubble: Bubble.nu(-12, 12, bubbleAlignments),
             layouts: {
@@ -89,7 +88,6 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         toolbarOverflow: () => {
           return {
             anchor: 'hotspot',
-            // TODO AP-174 (below)
             hotspot: lazyMoreButton(),
             layouts: {
               onRtl: () => [ Layout.southeast ],
@@ -100,7 +98,6 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         banner: () => {
           return {
             anchor: 'hotspot',
-            // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
             layouts: {
               onRtl: () => [ Layout.south ],
