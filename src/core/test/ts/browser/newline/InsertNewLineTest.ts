@@ -1,10 +1,11 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { Element } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
-import { PlatformDetection } from '@ephox/sand';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -21,6 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
+    const body = Element.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -50,10 +52,31 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
           tinyApis.sSetRawContent(`<p>${bookmarkSpan}<br data-mce-bogus="1"></p>`),
           tinyApis.sSetCursor([0], 1),
           sInsertNewline(editor, { }),
-          Step.sync(() => {
-            const rawContent = editor.getContent({ format: 'raw' });
-            Assertions.assertEq('Content should only have one bookmark span', `<p>${bookmarkSpan}<br data-mce-bogus="1"></p><p><br data-mce-bogus="1"></p>`, rawContent);
-          }),
+          Assertions.sAssertStructure('Content should only have one bookmark span', ApproxStructure.build((s, str) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    ApproxStructure.fromHtml(bookmarkSpan),
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                }),
+                s.element('p', {
+                  children: [
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                })
+              ]
+            });
+          }), body),
           tinyApis.sAssertSelection([1], 0, [1], 0)
         ]))
       ])),
