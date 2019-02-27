@@ -104,15 +104,11 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align | fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
-    // toolbar_drawer: 'floating'
+    toolbar_drawer: 'floating'
   };
 
   tinymce.init(settings);
-  tinymce.init(Merger.deepMerge(settings, {
-    inline: true,
-    selector: 'div.tinymce',
-    // fixed_toolbar_container: '#fixed_toolbar'
-  }));
+  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 }

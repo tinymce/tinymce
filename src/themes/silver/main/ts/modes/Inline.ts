@@ -77,7 +77,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     updateChromeUi();
-    Docking.refresh(floatContainer);
+
     if (floating) {
       const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
       toolbar.each((tb) => {

@@ -71,7 +71,10 @@ enum ToolbarDrawer {
 const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
 
 const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container', '', 'string');
-const fixedContainerElement = (editor) => fixedContainerSelector.length > 0 ? SelectorFind.descendant(Body.body(), fixedContainerSelector(editor)) : Option.none();
+const fixedContainerElement = (editor) => {
+  const selector = fixedContainerSelector(editor);
+  return selector.length > 0 ? SelectorFind.descendant(Body.body(), selector) : Option.none();
+};
 const useFixedContainer = (editor) => editor.getParam('inline', false, 'boolean') && fixedContainerElement(editor).isSome();
 
 export {
