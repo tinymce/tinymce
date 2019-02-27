@@ -64,9 +64,9 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
 
 const isSplitToolbar = (editor: Editor) => editor.getParam('toolbar_drawer', false, 'boolean');
 
-const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container');
-const fixedContainerElement = (editor) => SelectorFind.descendant(Body.body(), fixedContainerSelector(editor));
-const useFixedContainer = (editor) => editor.getParam('inline', false) && fixedContainerElement(editor).isSome();
+const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container', '', 'string');
+const fixedContainerElement = (editor) => fixedContainerSelector.length > 0 ? SelectorFind.descendant(Body.body(), fixedContainerSelector(editor)) : Option.none();
+const useFixedContainer = (editor) => editor.getParam('inline', false, 'boolean') && fixedContainerElement(editor).isSome();
 
 export {
   getSkinUrl,
