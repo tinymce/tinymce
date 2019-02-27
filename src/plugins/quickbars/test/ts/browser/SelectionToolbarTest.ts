@@ -4,6 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
 
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -12,6 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
   const imgSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
   Theme();
+  LinkPlugin();
   QuickbarsPlugin();
 
   enum Alignment {
@@ -38,11 +40,12 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     ]);
   };
 
-  const sWaitForTextToolbarAndAssertState = (tinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, blockquote: boolean) => {
+  const sWaitForTextToolbarAndAssertState = (tinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => {
     return GeneralSteps.sequence([
       tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar'),
       sAssertButtonToggledState('Bold', bold),
       sAssertButtonToggledState('Italic', italic),
+      sAssertButtonToggledState('Link', link),
       sAssertButtonToggledState('Heading 2', heading2),
       sAssertButtonToggledState('Heading 3', heading3),
       sAssertButtonToggledState('Blockquote', blockquote)
@@ -84,13 +87,13 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
       Log.stepsAsStep('TBA', 'Text selection toolbar', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
-        sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, false),
+        sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, false, false),
         tinyApis.sSetSelection([0, 1, 0], 0, [0, 1, 0], 3),
-        sWaitForTextToolbarAndAssertState(tinyUi, true, false, false, false, false),
+        sWaitForTextToolbarAndAssertState(tinyUi, true, false, false, false, false, false),
         tinyApis.sSetSelection([0, 3, 0], 1, [0, 3, 0], 4),
-        sWaitForTextToolbarAndAssertState(tinyUi, false, true, false, false, false),
+        sWaitForTextToolbarAndAssertState(tinyUi, false, true, false, false, false, false),
         tinyApis.sSetSelection([1, 0], 0, [1, 0], 1),
-        sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, true)
+        sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, false, true)
       ]),
       Log.stepsAsStep('TBA', 'Image selection toolbar', [
         sSetImageAndAssertToolbarState(tinyApis, tinyUi, false),
@@ -104,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
       ])
     ], onSuccess, onFailure);
   }, {
-    plugins: 'quickbars',
+    plugins: 'quickbars link',
     inline: true,
     toolbar: false,
     menubar: false,

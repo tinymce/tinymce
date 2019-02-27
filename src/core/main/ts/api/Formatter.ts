@@ -9,7 +9,7 @@ import { Node } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
-import FormatChanged from '../fmt/FormatChanged';
+import * as FormatChanged from '../fmt/FormatChanged';
 import FormatRegistry from '../fmt/FormatRegistry';
 import MatchFormat from '../fmt/MatchFormat';
 import Preview from '../fmt/Preview';
@@ -53,7 +53,7 @@ export interface Formatter {
   matchAll: (names: string[], vars?: FormatVars) => Format[];
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
   canApply: (name: string) => boolean;
-  formatChanged: (names: string, callback: (state: boolean, data: { node: Node, format: Format, parents: any }) => void, similar?: boolean) => void;
+  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => { unbind: () => void };
   getCssText: (format: string | Format) => string;
 }
 
