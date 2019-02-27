@@ -411,6 +411,8 @@ module.exports = function (grunt) {
           'Gruntfile.js',
           'readme.md',
           'package.json',
+          'package-lock.json',
+          'yarn.lock',
           '.eslintrc',
           '.jscsrc',
           '.jshintrc'

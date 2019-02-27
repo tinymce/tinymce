@@ -20,7 +20,9 @@ type WindowBodyFoo = {
   body: Types.Dialog.Dialog<unknown>['body']
 };
 
-const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpec => {
+// ariaAttrs is being passed through to silver inline dialog
+// from the WindowManager as a property of 'params'
+const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
   const renderComponents = (incoming: WindowBodyFoo) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
@@ -47,10 +49,18 @@ const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpe
     });
   };
 
+  const ariaAttributes = {
+    'aria-live': 'polite'
+  };
+
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__content-js' ]
+      classes: [ 'tox-dialog__content-js' ],
+      attributes: {
+        ...id.map((x): {id?: string} => ({id: x})).getOr({}),
+        ...ariaAttrs ? ariaAttributes : {}
+      }
     },
     components: [ ],
     behaviours: Behaviour.derive([
@@ -65,13 +75,13 @@ const renderBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage): AlloySpe
   };
 };
 
-const renderInlineBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
-  return renderBody(foo, backstage);
+const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+  return renderBody(foo, Option.some(contentId), backstage, ariaAttrs);
 };
 
 const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
   return ModalDialog.parts().body(
-    renderBody(foo, backstage)
+    renderBody(foo, Option.none(), backstage, false)
   );
 };
 
