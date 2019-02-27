@@ -54,16 +54,16 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                             title: str.is('Alpha')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon'), arr.has('tox-collection__item-checkmark') ],
                               children: [
                                 s.element('svg', {})
                               ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-label') ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-accessory') ]
                             })
                           ]
@@ -74,16 +74,16 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                             title: str.is('Beta')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
                               ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-label') ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-caret') ]
                             })
                           ]
@@ -99,16 +99,16 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                             title: str.is('Gamma')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
                               ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-label') ]
                             }),
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-accessory') ]
                             })
                           ]

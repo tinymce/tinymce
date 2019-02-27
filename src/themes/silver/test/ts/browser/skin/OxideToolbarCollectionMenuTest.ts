@@ -57,7 +57,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('A-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
@@ -71,7 +71,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('B-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
@@ -85,7 +85,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('C-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
@@ -104,7 +104,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('D-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
@@ -118,7 +118,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('E-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})
@@ -132,7 +132,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                             title: str.is('F-button')
                           },
                           children: [
-                            s.element('span', {
+                            s.element('div', {
                               classes: [ arr.has('tox-collection__item-icon') ],
                               children: [
                                 s.element('svg', {})

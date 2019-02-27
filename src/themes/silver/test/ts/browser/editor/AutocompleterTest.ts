@@ -39,13 +39,13 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             title: str.is(d.title)
           },
           children: [
-            s.element('span', {
+            s.element('div', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
                 s.text(str.is(d.icon))
               ]
             }),
-            s.element('span', {
+            s.element('div', {
               classes: [ arr.has('tox-collection__item-label') ],
               html: str.is(d.text)
             })
@@ -60,7 +60,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             title: str.is(d.title)
           },
           children: [
-            s.element('span', {
+            s.element('div', {
               classes: [ arr.has('tox-collection__item-label') ],
               html: str.is(d.text)
             })
@@ -75,7 +75,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             title: str.is(d.title)
           },
           children: [
-            s.element('span', {
+            s.element('div', {
               classes: [ arr.has('tox-collection__item-icon') ],
               children: [
                 s.text(str.is(d.icon))

@@ -58,7 +58,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
                           },
                           children: [
                             // NOTE: The oxide demo page has div, but I think that's just a mistake
-                            s.element('span', {
+                            s.element('div', {
                              classes: [ arr.has('tox-collection__item-icon') ],
                              children: [
                                s.element('svg', {})
