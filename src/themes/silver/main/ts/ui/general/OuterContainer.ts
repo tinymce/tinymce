@@ -23,6 +23,7 @@ import { Arr, Option } from '@ephox/katamari';
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import { renderMoreToolbar, renderToolbarGroup, renderToolbar } from '../toolbar/CommonToolbar';
+import { ToolbarDrawer } from '../../api/Settings';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -123,7 +124,7 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer = spec.split.length > 0 ? renderMoreToolbar : renderToolbar;
+      const renderer = spec.split !== ToolbarDrawer.default ? renderMoreToolbar : renderToolbar;
       return renderer({
         uid: spec.uid,
         onEscape: () => {
@@ -134,7 +135,7 @@ const partToolbar = Composite.partType.optional({
         initGroups: [],
         getSink: spec.getSink,
         backstage: spec.backstage,
-        floating: spec.split === 'floating'
+        floating: spec.split === ToolbarDrawer.floating
       });
     }
   },

@@ -61,7 +61,13 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
   return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
 };
 
-const getToolbarDrawer = (editor: Editor) => editor.getParam('toolbar_drawer', '', 'string');
+enum ToolbarDrawer {
+  default = '',
+  floating = 'floating',
+  sliding = 'sliding'
+}
+
+const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', 'off', 'string') as ToolbarDrawer;
 
 export {
   getSkinUrl,
@@ -78,5 +84,6 @@ export {
   isMenubarEnabled,
   isToolbarEnabled,
   getMultipleToolbarsSetting,
-  getToolbarDrawer
+  getToolbarDrawer,
+  ToolbarDrawer
 };

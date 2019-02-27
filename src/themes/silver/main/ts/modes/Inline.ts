@@ -17,7 +17,7 @@ import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { getToolbarDrawer } from '../api/Settings';
+import { getToolbarDrawer, ToolbarDrawer } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -27,7 +27,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const splitSetting = getToolbarDrawer(editor);
   const split = splitSetting.length > 0;
-  const floating = splitSetting === 'floating';
+  const floating = splitSetting === ToolbarDrawer.floating;
 
   const calcPosition = (offset: number = 0) => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
