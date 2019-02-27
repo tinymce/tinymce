@@ -3,6 +3,7 @@ Version 5.0.2 (TBD)
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
     Added default icons to registry #TINY-3307
+    Added fixed_toolbar_container #TINY-2712
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
     Fixed an issue where adding links to images would replace the image with text #TINY-3356
