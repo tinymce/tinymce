@@ -7,10 +7,10 @@
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { Body, Class, Css, Element, Height, Location } from '@ephox/sugar';
+import { Class, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
-import { fixedContainerElement, getToolbarDrawer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import { getToolbarDrawer, ToolbarDrawer, getUiContainer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
@@ -105,15 +105,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     }
   };
 
-  const attach = () => {
-    let uiContainer = Body.body();
-    if (useFixedToolbarContainer) {
-      uiContainer = fixedContainerElement(editor).getOr(Body.body());
-    }
-    Attachment.attachSystem(uiContainer, uiComponents.mothership);
-    Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
-  };
-
   const render = () => {
     if (floatContainer) {
       show();
@@ -122,7 +113,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     floatContainer = uiComponents.outerContainer;
 
-    attach();
+    const uiContainer = getUiContainer(editor);
+    Attachment.attachSystem(uiContainer, uiComponents.mothership);
+    Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
 
     OuterContainer.setToolbar(
       uiComponents.outerContainer,

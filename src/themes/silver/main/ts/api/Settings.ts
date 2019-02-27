@@ -9,7 +9,7 @@ import { Option, Type, Obj, Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from '../ui/core/complex/StyleFormatTypes';
-import { SelectorFind, Body } from '@ephox/sugar';
+import { SelectorFind, Body, Element } from '@ephox/sugar';
 
 const getSkinUrl = function (editor: Editor): string {
   const settings = editor.settings;
@@ -70,12 +70,21 @@ enum ToolbarDrawer {
 
 const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
 
-const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container', '', 'string');
-const fixedContainerElement = (editor) => {
+const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
+
+const fixedContainerElement = (editor): Option<Element> => {
   const selector = fixedContainerSelector(editor);
-  return selector.length > 0 ? SelectorFind.descendant(Body.body(), selector) : Option.none();
+  const isInline = editor.getParam('inline', false, 'boolean');
+  // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
+  return selector.length > 0 && isInline ? SelectorFind.descendant(Body.body(), selector) : Option.none();
 };
-const useFixedContainer = (editor) => editor.getParam('inline', false, 'boolean') && fixedContainerElement(editor).isSome();
+
+const useFixedContainer = (editor): boolean => editor.getParam('inline', false, 'boolean') && fixedContainerElement(editor).isSome();
+
+const getUiContainer = (editor): Element => {
+  const fixedContainer = fixedContainerElement(editor);
+  return fixedContainer.getOr(Body.body());
+};
 
 export {
   getSkinUrl,
@@ -92,7 +101,7 @@ export {
   isMenubarEnabled,
   isToolbarEnabled,
   getMultipleToolbarsSetting,
-  fixedContainerElement,
+  getUiContainer,
   useFixedContainer,
   getToolbarDrawer,
   ToolbarDrawer
