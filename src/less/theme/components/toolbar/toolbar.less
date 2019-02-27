@@ -23,8 +23,8 @@
 
 .tox {
   .tox-toolbar,
-  .tox-toolbar-overlord .tox-toolbar__primary,
-  .tox-toolbar-overlord .tox-toolbar__overflow {
+  .tox-toolbar__primary,
+  .tox-toolbar__overflow {
     background: @toolbar-background;
     background-color: @toolbar-background-color;
     border-top: 1px solid @toolbar-separator-color;
@@ -36,7 +36,7 @@
     padding: @toolbar-padding-y @toolbar-padding-x;
   }
 
-  .tox-toolbar-overlord .tox-toolbar__overflow.tox-toolbar__overflow--closed {
+  .tox-toolbar__overflow.tox-toolbar__overflow--closed {
     display: none;
   }
 
@@ -51,5 +51,13 @@
   // Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
   .tox-tbtn__icon-wrap {
     //
+  }
+}
+
+.tox.tox-tinymce-aux {
+  .tox-toolbar__overflow {
+    border-left: 1px solid @toolbar-separator-color;
+    border-radius: 6px;
+    border-right: 1px solid @toolbar-separator-color;
   }
 }
