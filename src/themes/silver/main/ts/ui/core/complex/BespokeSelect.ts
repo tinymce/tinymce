@@ -133,13 +133,13 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
     const handler = f(comp);
     onDestroyCell.set(handler);
     editor.on('nodeChange', handler);
-  }).getOr(() => { });
+  }).getOr(Fun.noop);
   const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
     const onDestroy = onDestroyCell.get();
     if (onDestroy !== undefined) {
       editor.off('nodeChange', onDestroy);
     }
-  }).getOr(() => { });
+  }).getOr(Fun.noop);
 
   return renderCommonDropdown(
     {

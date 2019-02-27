@@ -123,7 +123,7 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer = spec.split ? renderMoreToolbar : renderToolbar;
+      const renderer = spec.split.length > 0 ? renderMoreToolbar : renderToolbar;
       return renderer({
         uid: spec.uid,
         onEscape: () => {
@@ -134,7 +134,7 @@ const partToolbar = Composite.partType.optional({
         initGroups: [],
         getSink: spec.getSink,
         backstage: spec.backstage,
-        floating: spec.floating
+        floating: spec.split === 'floating'
       });
     }
   },

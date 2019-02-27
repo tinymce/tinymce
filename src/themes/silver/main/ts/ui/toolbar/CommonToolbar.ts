@@ -26,8 +26,6 @@ import { Arr, Option, Result } from '@ephox/katamari';
 import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
-import { Editor } from 'tinymce/core/api/Editor';
-import { isSplitFloatingToolbar } from '../../api/Settings';
 
 export interface Toolbar {
   uid: string;
