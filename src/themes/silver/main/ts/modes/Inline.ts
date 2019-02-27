@@ -7,23 +7,25 @@
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location } from '@ephox/sugar';
+import { Body, Class, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
-
+import { fixedContainerElement, getToolbarDrawer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import { UiFactoryBackstage } from '../backstage/Backstage';
+import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
-import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
-import { UiFactoryBackstage } from '../backstage/Backstage';
-import { isSplitToolbar, useFixedContainer, fixedContainerElement } from '../api/Settings';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
-  const split = isSplitToolbar(editor);
+
+  const splitSetting = getToolbarDrawer(editor);
+  const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
+  const floating = splitSetting === ToolbarDrawer.floating;
 
   loadInlineSkin(editor);
 
@@ -43,7 +45,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // resize behaviour (chrome gets stuck fixed to the top of the viewport).
     const offset = split ? toolbar.fold(() => 0, (tbar) => {
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-      return Height.get(tbar.components()[1].element());
+      return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
     Css.setAll(floatContainer.element(), calcPosition(offset));
 
@@ -75,12 +77,31 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     updateChromeUi();
+    Docking.refresh(floatContainer);
+    if (floating) {
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      toolbar.each((tb) => {
+        const overflow = SplitToolbar.getOverflow(tb);
+        overflow.each((overf) => {
+          Class.remove(overf.element(), 'tox-toolbar__overflow--closed');
+        });
+      });
+    }
   };
 
   const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+      if (floating) {
+        const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+        toolbar.each((tb) => {
+          const overflow = SplitToolbar.getOverflow(tb);
+          overflow.each((overf) => {
+            Class.add(overf.element(), 'tox-toolbar__overflow--closed');
+          });
+        });
+      }
     }
   };
 

@@ -35,6 +35,7 @@ export interface UiFactoryBackstageShared {
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
     toolbar: () => AnchorSpec,
+    toolbarOverflow: () => AnchorSpec,
     banner: () => AnchorSpec,
     cursor: () => AnchorSpec,
     node: (elem: Option<Element>) => AnchorSpec
@@ -61,7 +62,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
   const useFixedToolbarContainer = useFixedContainer(editor);
   const bodyElement = () => Element.fromDom(editor.getBody());
   const backstage: UiFactoryBackstage = {
@@ -91,7 +92,6 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
 
           const standardAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
-            // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
             bubble: Bubble.nu(-12, 12, bubbleAlignments),
             layouts: {
@@ -101,6 +101,16 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
           });
 
           return useFixedToolbarContainer ? fixedToolbarAnchor() : standardAnchor();
+        },
+        toolbarOverflow: () => {
+          return {
+            anchor: 'hotspot',
+            hotspot: lazyMoreButton(),
+            layouts: {
+              onRtl: () => [ Layout.southeast ],
+              onLtr: () => [ Layout.southwest ]
+            }
+          };
         },
         banner: () => {
           // If using fixed_toolbar_container, anchor to the inside top of the editable area
@@ -117,7 +127,6 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
 
           const standardAnchor = (): AnchorSpec => ({
             anchor: 'hotspot',
-            // TODO AP-174 (below)
             hotspot: lazyAnchorbar(),
             layouts: {
               onRtl: () => [ Layout.south ],

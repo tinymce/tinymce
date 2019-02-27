@@ -62,7 +62,13 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
   return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
 };
 
-const isSplitToolbar = (editor: Editor) => editor.getParam('toolbar_drawer', false, 'boolean');
+enum ToolbarDrawer {
+  default = '',
+  floating = 'floating',
+  sliding = 'sliding'
+}
+
+const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
 
 const fixedContainerSelector = (editor) => editor.getParam('fixed_toolbar_container', '', 'string');
 const fixedContainerElement = (editor) => fixedContainerSelector.length > 0 ? SelectorFind.descendant(Body.body(), fixedContainerSelector(editor)) : Option.none();
@@ -83,7 +89,8 @@ export {
   isMenubarEnabled,
   isToolbarEnabled,
   getMultipleToolbarsSetting,
-  isSplitToolbar,
   fixedContainerElement,
   useFixedContainer,
+  getToolbarDrawer,
+  ToolbarDrawer
 };

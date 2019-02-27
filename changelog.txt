@@ -1,4 +1,5 @@
 Version 5.0.2 (TBD)
+    Fixed a memory leak related to select toolbar items #TINY-2874
     Updated the build process to include package lock files to the dev distribution archive #TINY-2870
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
