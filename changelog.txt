@@ -1,9 +1,13 @@
 Version 5.0.2 (TBD)
+    Fixed a memory leak related to select toolbar items #TINY-2874
+    Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
     Updated the build process to include package lock files to the dev distribution archive #TINY-2870
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
     Added default icons to registry #TINY-3307
     Fixed the quicklink toolbar button not rendering in the quickbars plugin #TINY-3125
+    Fixed an issue where format changed listeners weren't getting unbound #TINY-3191
+    Fixed an issue where menus where generating invalid HTML in some cases #TINY-3323
     Fixed the template plugin dialog missing the description field #TINY-3337
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102

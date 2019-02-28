@@ -12,7 +12,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Editor } from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting, isSplitToolbar } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, isToolbarEnabled, isMenubarEnabled, getMultipleToolbarsSetting, getToolbarDrawer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -96,9 +96,13 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
     return memAnchorBar.getOpt(container);
-  }).getOrDie('Could not find a toolbar element');
+  }).getOrDie('Could not find a anchor bar element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
+  const lazyMoreButton = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getMoreButton(container);
+  }).getOrDie('Could not find more button element');
+
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
@@ -124,7 +128,7 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: isSplitToolbar(editor)
+    split: getToolbarDrawer(editor)
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({

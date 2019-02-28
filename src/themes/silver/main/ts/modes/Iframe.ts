@@ -104,16 +104,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
   });
 
-  const split = Settings.isSplitToolbar(editor);
+  const drawer = Settings.getToolbarDrawer(editor);
 
-  const refreshMore = () => {
-    if (split) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-      toolbar.each(SplitToolbar.refresh);
-    }
+  const refreshDrawer = () => {
+    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+    toolbar.each(SplitToolbar.refresh);
   };
 
-  editor.on('ResizeContent', refreshMore);
+  if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
+    editor.on('ResizeContent', refreshDrawer);
+  }
 
   return {
     iframeContainer: socket.element().dom(),

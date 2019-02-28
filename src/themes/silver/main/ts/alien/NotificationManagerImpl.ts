@@ -94,7 +94,6 @@ export default function (editor: Editor, extras, uiMothership) {
         }, GuiFactory.premade(notification));
       },
       moveRel: (element: Element, rel) => {
-        // TODO: fix anchor point banner AP-174
         // TODO: this should stack, TC-TC, BC-TC
         InlineView.showAt(notificationWrapper, extras.backstage.shared.anchors.banner(), GuiFactory.premade(notification));
       },

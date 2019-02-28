@@ -217,17 +217,17 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     return s.element('div', {
                       classes: [ arr.has('tox-collection__item') ],
                       children: [
-                        s.element('span', {
+                        s.element('div', {
                           classes: [ arr.has('tox-collection__item-icon') ],
                           children: [
                             s.element('svg', { })
                           ]
                         }),
-                        s.element('span', {
+                        s.element('div', {
                           classes: [ arr.has('tox-collection__item-label') ],
                           html: str.is('Text with icon')
                         }),
-                        s.element('span', {
+                        s.element('div', {
                           classes: [ arr.has('tox-collection__item-accessory') ],
                           html: str.is(Env.mac ? '\u2318' + 'M' : 'Ctrl' + '+M')
                         })

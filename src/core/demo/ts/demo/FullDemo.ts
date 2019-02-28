@@ -106,7 +106,7 @@ export default function () {
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
-    toolbar_drawer: true
+    toolbar_drawer: 'floating'
   };
 
   tinymce.init(settings);

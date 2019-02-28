@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
       Logger.t('test table grid disabled', GeneralSteps.sequence([
         tinyApis.sFocus,
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
-        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item span.tox-collection__item-label:contains("Table")'), 10, 1000),
+        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div.tox-dialog:has(div.tox-dialog__title:contains("Table Properties"))'),
           Chain.op(function (x) {

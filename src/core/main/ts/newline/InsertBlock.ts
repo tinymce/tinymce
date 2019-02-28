@@ -20,6 +20,7 @@ import { PredicateFilter, Element, Node } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
 import { Editor } from '../api/Editor';
 import { EditorEvent } from '../api/dom/EventUtils';
+import Bookmarks from '../bookmark/Bookmarks';
 
 const trimZwsp = (fragment: DocumentFragment) => {
   Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
@@ -244,7 +245,8 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
       // Clone any parent styles
       do {
         if (textInlineElements[node.nodeName]) {
-          if (isCaretNode(node)) {
+          // Ignore caret or bookmark nodes when cloning
+          if (isCaretNode(node) || Bookmarks.isBookmarkNode(node)) {
             continue;
           }
 
