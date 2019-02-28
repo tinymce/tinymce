@@ -13,6 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
+import * as Utils from '../core/Utils';
 
 interface TemplateValues {
   url?: string;
@@ -181,7 +182,7 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
         },
         {
           type: 'htmlpanel',
-          html: `<p aria-live="polite">${template.value.description}</p>`
+          html: `<p aria-live="polite">${Utils.htmlEscape(template.value.description)}</p>`
         },
         {
           label: 'Preview',
