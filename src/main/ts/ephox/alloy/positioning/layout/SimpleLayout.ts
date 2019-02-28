@@ -1,27 +1,25 @@
-import { Option, Struct, Fun } from '@ephox/katamari';
-
-import * as Callouts from '../view/Callouts';
-import * as Boxes from './Boxes';
-import * as Layout from './Layout';
-import * as MaxHeight from './MaxHeight';
-import * as Origins from './Origins';
-import { Anchor } from '../../positioning/layout/Anchor';
+import { Option, Struct } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { Bounds } from '../../alien/Boxes';
+import { Anchor } from '../../positioning/layout/Anchor';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { AnchorOverrides, MaxHeightFunction } from '../../positioning/mode/Anchoring';
-import { Bounds } from '../../alien/Boxes';
+import * as Callouts from '../view/Callouts';
+import * as LayoutTypes from './LayoutTypes';
+import * as MaxHeight from './MaxHeight';
+import * as Origins from './Origins';
 
 export interface ReparteeOptionsSpec {
   bounds?: Bounds;
   origin?: Origins.OriginAdt;
-  preference?: Layout.AnchorLayout[];
+  preference?: LayoutTypes.AnchorLayout[];
   maxHeightFunction?: MaxHeightFunction;
 }
 
 export interface ReparteeOptions {
   bounds: () => Bounds;
   origin: () => Origins.OriginAdt;
-  preference: () => Layout.AnchorLayout[];
+  preference: () => LayoutTypes.AnchorLayout[];
   maxHeightFunction: () => MaxHeightFunction;
 }
 
@@ -31,7 +29,7 @@ const defaultOr = (options, key, dephault) => {
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen
-const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layout.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
+const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
 
@@ -49,7 +47,7 @@ const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layou
 };
 
 // This is the old public API. If we ever need full customisability again, this is how to expose it
-const go = (anchorBox: Layout.AnchorBox, element: Element, bubble: Bubble, options: ReparteeOptions) => {
+const go = (anchorBox: LayoutTypes.AnchorBox, element: Element, bubble: Bubble, options: ReparteeOptions) => {
   const decision = Callouts.layout(anchorBox, element, bubble, options);
 
   Callouts.position(element, decision, options);

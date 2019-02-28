@@ -2,7 +2,7 @@ import { Adt, Arr, Fun } from '@ephox/katamari';
 
 import * as Direction from '../layout/Direction';
 import * as Reposition from './Reposition';
-import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout/Layout';
+import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout/LayoutTypes';
 import { Bubble } from '../../positioning/layout/Bubble';
 import { Bounds } from '../../alien/Boxes';
 import { SpotInfo } from '../../positioning/view/SpotInfo';

@@ -1,7 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction, Element } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AnchorLayout } from '../../positioning/layout/Layout';
+import { AnchorLayout } from '../../positioning/layout/LayoutTypes';
 import { HasLayoutAnchor } from '../../positioning/mode/Anchoring';
 
 const schema: () => FieldProcessorAdt = () => {

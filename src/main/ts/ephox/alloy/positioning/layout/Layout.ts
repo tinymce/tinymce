@@ -1,6 +1,7 @@
 import { Bubble } from '../../positioning/layout/Bubble';
-import { nu as NuSpotInfo, SpotInfo } from '../view/SpotInfo';
+import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
+import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 /*
   Layout for menus and inline context dialogs;
@@ -8,25 +9,7 @@ import * as Direction from './Direction';
   Aligned to the left or right of the anchor as appropriate.
  */
 
-export interface AnchorBox {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-}
-
-export interface AnchorElement {
-  width: () => number;
-  height: () => number;
-}
-
-export type AnchorLayout = (
-  anchor: AnchorBox,
-  element: AnchorElement,
-  bubbles: Bubble
-) => SpotInfo;
-
-// display element to the right, left edge against the anchor
+ // display element to the right, left edge against the anchor
 const eastX = (anchor: AnchorBox): number => {
   return anchor.x();
 };
