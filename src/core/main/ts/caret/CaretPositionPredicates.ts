@@ -7,10 +7,11 @@
 
 import { Option, Fun } from '@ephox/katamari';
 import NodeType from '../dom/NodeType';
-import { Text } from '@ephox/dom-globals';
+import { Text, Node } from '@ephox/dom-globals';
 import CaretPosition from './CaretPosition';
 import { isWhiteSpace } from '../text/CharType';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
+import { Class, Element } from '@ephox/sugar';
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
   return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
@@ -27,20 +28,22 @@ const isEmptyText = (pos: CaretPosition) => {
   return NodeType.isText(container) && container.data.length === 0;
 };
 
-const isNextToContentEditableFalse = (relativeOffset: number, caretPosition: CaretPosition) => {
-  const node = getChildNodeAtRelativeOffset(relativeOffset, caretPosition);
-  return NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
+const matchesElementPosition = (before: boolean, predicate: (node: Node) => boolean) => {
+  return (pos: CaretPosition) => Option.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
 };
 
-const isBeforeContentEditableFalse = Fun.curry(isNextToContentEditableFalse, 0);
-const isAfterContentEditableFalse = Fun.curry(isNextToContentEditableFalse, -1);
-
-const isNextToTable = (relativeOffset: number, caretPosition: CaretPosition) => {
-  return NodeType.isTable(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
+const isPageBreak = (node: Node) => {
+  return NodeType.isElement(node) && Class.has(Element.fromDom(node), 'mce-pagebreak');
 };
 
-const isBeforeTable = Fun.curry(isNextToTable, 0);
-const isAfterTable = Fun.curry(isNextToTable, -1);
+const isCefNode = (node: Node) => NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
+
+const isBeforePageBreak = matchesElementPosition(true, isPageBreak);
+const isAfterPageBreak = matchesElementPosition(false, isPageBreak);
+const isBeforeTable = matchesElementPosition(true, NodeType.isTable);
+const isAfterTable = matchesElementPosition(false, NodeType.isTable);
+const isBeforeContentEditableFalse = matchesElementPosition(true, isCefNode);
+const isAfterContentEditableFalse = matchesElementPosition(false, isCefNode);
 
 export {
   isBeforeSpace,
@@ -49,5 +52,7 @@ export {
   isBeforeContentEditableFalse,
   isAfterContentEditableFalse,
   isBeforeTable,
-  isAfterTable
+  isAfterTable,
+  isBeforePageBreak,
+  isAfterPageBreak
 };

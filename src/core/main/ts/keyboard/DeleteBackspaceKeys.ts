@@ -18,6 +18,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
 import { Text, KeyboardEvent } from '@ephox/dom-globals';
+import PageBreakDelete from '../delete/PageBreakDelete';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([
@@ -29,6 +30,8 @@ const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt:
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, false) },
+    { keyCode: VK.DELETE, action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, false) },
