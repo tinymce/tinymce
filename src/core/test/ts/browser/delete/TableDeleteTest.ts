@@ -6,19 +6,16 @@ import TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {
   Theme();
 
-  const sAssertRawNormalizedContent = function (editor, expectedContent) {
-    return Step.sync(function () {
+  const sAssertRawNormalizedContent = (editor, expectedContent) => {
+    return Step.sync(() => {
       const element = Replication.deep(Element.fromDom(editor.getBody()));
 
       // Remove internal selection dom items
       Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
-      Arr.each(SelectorFilter.descendants(element, '*'), function (elm) {
+      Arr.each(SelectorFilter.descendants(element, '*'), (elm) => {
         Attr.remove(elm, 'data-mce-selected');
       });
 
@@ -26,39 +23,39 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
     });
   };
 
-  const sDelete = function (editor) {
-    return Step.sync(function () {
+  const sDelete = (editor) => {
+    return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sBackspace = function (editor) {
-    return Step.sync(function () {
+  const sBackspace = (editor) => {
+    return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sDeleteNoop = function (editor) {
-    return Step.sync(function () {
+  const sDeleteNoop = (editor) => {
+    return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  const sBackspaceNoop = function (editor) {
-    return Step.sync(function () {
+  const sBackspaceNoop = (editor) => {
+    return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  const sKeyboardBackspace = function (editor) {
+  const sKeyboardBackspace = (editor) => {
     return Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -251,6 +248,37 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
           tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>')
         ]))
       ])),
+      Logger.t('delete before/after table', GeneralSteps.sequence([
+        Logger.t('Delete with cursor before table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetCursor([0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1),
+          tinyApis.sAssertContent('<p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+        ])),
+        Logger.t('Backspace after table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p>'),
+          tinyApis.sSetCursor([1, 0], 0),
+          sBackspace(editor),
+          tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p>')
+        ])),
+        Logger.t('Delete with cursor before table inside of table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetCursor([0, 0, 0, 0, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertSelection([0, 0, 0, 0, 0, 0], 1, [0, 0, 0, 0, 0, 0], 1),
+          tinyApis.sAssertContent('<table><tbody><tr><td><p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></td><td>b</td></tr></tbody></table>')
+        ])),
+        Logger.t('Backspace after table inside of table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>x</p><table><tbody><tr><td><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p></td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetCursor([0, 0], 0), // This is needed because of fake carets messing up the path in FF
+          tinyApis.sSetCursor([1, 0, 0, 0, 1, 0], 0),
+          sBackspace(editor),
+          tinyApis.sAssertSelection([1, 0, 0, 0, 1, 0], 0, [1, 0, 0, 0, 1, 0], 0),
+          tinyApis.sAssertContent('<p>x</p><table><tbody><tr><td><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p></td><td>b</td></tr></tbody></table>')
+        ])),
+      ]))
     ], onSuccess, onFailure);
   }, {
     indent: false,
