@@ -14,7 +14,7 @@ import {
   Unselecting,
   Tabstopping,
   AlloyComponent,
-  Layout
+  LayoutTypes
 } from '@ephox/alloy';
 import { Future, Id, Option, Merger } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -32,8 +32,8 @@ export interface SwatchPanelButtonFoo {
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
   onItemAction: (value) => void;
   layouts?: Option<{
-    onLtr: (elem: Element) => Layout.AnchorLayout[];
-    onRtl: (elem: Element) => Layout.AnchorLayout[];
+    onLtr: (elem: Element) => LayoutTypes.AnchorLayout[];
+    onRtl: (elem: Element) => LayoutTypes.AnchorLayout[];
   }>;
 }
 

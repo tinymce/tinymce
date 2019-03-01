@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Layout, Bubble, AnchorSpec, FormTypes } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AnchorSpec, FormTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
-import { Element, Selection } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
-
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
+import Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-import { Editor } from 'tinymce/core/api/Editor';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -51,17 +51,6 @@ export interface UiFactoryBackstage {
   colorinput?: UiFactoryBackstageForColorInput;
 }
 
-const bubbleAlignments = {
-  valignCentre: [],
-  alignCentre: [],
-  alignLeft: [],
-  alignRight: [],
-  right: [],
-  left: [],
-  bottom: [],
-  top: []
-};
-
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
   const backstage: UiFactoryBackstage = {
     shared: {
@@ -73,58 +62,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);
       },
-      anchors: {
-        toolbar: () => {
-          return {
-            anchor: 'hotspot',
-            hotspot: lazyAnchorbar(),
-            bubble: Bubble.nu(-12, 12, bubbleAlignments),
-            layouts: {
-              onRtl: () => [ Layout.southeast ],
-              onLtr: () => [ Layout.southwest ]
-            }
-          };
-        },
-        toolbarOverflow: () => {
-          return {
-            anchor: 'hotspot',
-            hotspot: lazyMoreButton(),
-            layouts: {
-              onRtl: () => [ Layout.southeast ],
-              onLtr: () => [ Layout.southwest ]
-            }
-          };
-        },
-        banner: () => {
-          return {
-            anchor: 'hotspot',
-            hotspot: lazyAnchorbar(),
-            layouts: {
-              onRtl: () => [ Layout.south ],
-              onLtr: () => [ Layout.south ]
-            }
-          };
-        },
-        cursor: () => {
-          return {
-            anchor: 'selection',
-            root: Element.fromDom(editor.getBody()),
-            getSelection: () => {
-              const rng = editor.selection.getRng();
-              return Option.some(
-                Selection.range(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset)
-              );
-            }
-          };
-        },
-        node: (element: Option<Element>) => {
-          return {
-            anchor: 'node',
-            root: Element.fromDom(editor.getBody()),
-            node: element
-          };
-        }
-      },
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, lazyMoreButton),
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),
