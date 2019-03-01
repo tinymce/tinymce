@@ -113,10 +113,13 @@ const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCapti
   return Empty.isEmpty(fromCaption) ? emptyElement(editor, fromCaption) : deleteCaretInsideCaption(editor, rootElm, forward, fromCaption, from);
 };
 
+const isNearTable = (forward: boolean, pos: CaretPosition) => forward ? isBeforeTable(pos) : isAfterTable(pos);
+
 const isBeforeOrAfterTable = (editor: Editor, forward: boolean) => {
   const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
-  return CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
-    .map((pos) => isBeforeTable(pos) || isAfterTable(pos))
+
+  return isNearTable(forward, fromPos) || CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
+    .map((pos) => isNearTable(forward, pos))
     .getOr(false);
 };
 
