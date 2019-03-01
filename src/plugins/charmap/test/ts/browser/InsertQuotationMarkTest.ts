@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (s
             tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
             [
               Mouse.cClickOn('.tox-dialog__body-nav-item:contains(All)'),
-              Mouse.cClickOn('.tox-collection span:contains(")') // Could not get span[data-glyph="\"""] or similar to work...
+              Mouse.cClickOn('.tox-collection .tox-collection__item-icon:contains(")') // Could not get span[data-glyph="\"""] or similar to work...
             ]
           )
         ]),
