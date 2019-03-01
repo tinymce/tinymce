@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>icon-insert-time</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g transform="translate(2.000000, 2.000000)" fill="#000000" fill-rule="nonzero">
-            <path d="M17,0 L3,0 C1.346,0 0,1.346 0,3 L0,17 C0,18.654 1.346,20 3,20 L17,20 C18.654,20 20,18.654 20,17 L20,3 C20,1.346 18.654,0 17,0 Z M10,18 C5.589,18 2,14.411 2,10 C2,5.589 5.589,2 10,2 C14.411,2 18,5.589 18,10 C18,14.411 14.411,18 10,18 Z"></path>
-            <path d="M13,10 L10,10 L10,5 C10,4.724 9.776,4.5 9.5,4.5 C9.224,4.5 9,4.724 9,5 L9,11 L13,11 C13.276,11 13.5,10.776 13.5,10.5 C13.5,10.224 13.276,10 13,10 Z"></path>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="insert-time" fill="none" fill-rule="evenodd"><path id="Oval" fill="#000" fill-rule="nonzero" d="M12,19 C15.8659932,19 19,15.8659932 19,12 C19,8.13400675 15.8659932,5 12,5 C8.13400675,5 5,8.13400675 5,12 C5,15.8659932 8.13400675,19 12,19 Z M12,21 C7.02943725,21 3,16.9705627 3,12 C3,7.02943725 7.02943725,3 12,3 C16.9705627,3 21,7.02943725 21,12 C21,16.9705627 16.9705627,21 12,21 Z"/><path id="Shape" fill="#000" fill-rule="nonzero" d="M16,12 L13,12 L13,7 C13,6.44771525 12.5522847,6 12,6 L12,6 C11.4477153,6 11,6.44771525 11,7 L11,14 L16,14 C16.5522847,14 17,13.5522847 17,13 L17,13 C17,12.4477153 16.5522847,12 16,12 Z"/></g></svg>
