@@ -10,6 +10,7 @@ Version 5.0.2 (TBD)
     Fixed an issue where format changed listeners weren't getting unbound #TINY-3191
     Fixed an issue where menus where generating invalid HTML in some cases #TINY-3323
     Fixed an issue that could cause the editor to show a blank white screen in mobile mode in specific circumstances #TINY-3407
+    Fixed the template plugin dialog missing the description field #TINY-3337
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
     Fixed an issue where adding links to images would replace the image with text #TINY-3356
