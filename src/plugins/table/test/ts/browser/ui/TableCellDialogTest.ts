@@ -281,6 +281,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     };
 
     Pipeline.async({}, [
+      tinyApis.sFocus,
       baseGetTest(),
       baseGetSetTest(),
       advGetTest(),

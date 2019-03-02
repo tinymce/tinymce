@@ -308,6 +308,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     Pipeline.async({}, [
+      tinyApis.sFocus,
       standardOkTest(),
       standardFillOkTest(),
       allOffOkTest(),
