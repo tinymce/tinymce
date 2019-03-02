@@ -6,11 +6,13 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { Option, Thunk } from '@ephox/katamari';
+import { Node } from '@ephox/dom-globals';
+import { Option, Thunk, Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { Node as SugarNode } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Selections } from 'tinymce/plugins/table/selection/Selections';
+import { Selections } from '../selection/Selections';
+import * as TableSelection from '../selection/TableSelection';
 import InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import TableTargets from '../queries/TableTargets';
@@ -18,53 +20,31 @@ import TableTargets from '../queries/TableTargets';
 const addMenuItems = (editor: Editor, selections: Selections) => {
   let targets = Option.none;
 
-  // AP-172 AP-65 TODO functionality functions. do we even need half of these now?
-  const noTargetDisable = (ctrl) => {
-    ctrl.setDisabled(true);
-  };
-
-  const ctrlEnable = (ctrl) => {
-    ctrl.setDisabled(false);
-  };
-
-  const setEnabled = (api) => {
+  const setupEnabled = (activeCallback: (api: Menu.MenuItemInstanceApi, targets) => void, api: Menu.MenuItemInstanceApi) => {
     targets().fold(() => {
-      noTargetDisable(api);
+      api.setDisabled(true);
     }, (targets) => {
-      ctrlEnable(api);
+      activeCallback(api, targets);
     });
 
     return () => { };
   };
 
-  const setEnabledMerge = (api) => {
-    targets().fold(() => {
-      noTargetDisable(api);
-    }, (targets) => {
-      api.setDisabled(targets.mergable().isNone());
-    });
-
-    return () => { };
-  };
-
-  const setEnabledUnmerge = (api) => {
-    targets().fold(() => {
-      noTargetDisable(api);
-    }, (targets) => {
-      api.setDisabled(targets.unmergable().isNone());
-    });
-
-    return () => { };
-  };
+  const setupTable = Fun.curry(setupEnabled, (api) => api.setDisabled(false));
+  const setupCell = Fun.curry(setupEnabled, (api, targets) => api.setDisabled(SugarNode.name(targets.element()) === 'caption'));
+  const setupMergeable = Fun.curry(setupEnabled, (api, targets) => api.setDisabled(targets.mergable().isNone()));
+  const setupUnmergeable = Fun.curry(setupEnabled, (api, targets) => api.setDisabled(targets.unmergable().isNone()));
 
   const resetTargets = () => {
     targets = Thunk.cached(() => {
-      const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-      return cellOpt.bind((cellDom) => {
-        const cell = Element.fromDom(cellDom);
-        const table = TableLookup.table(cell);
+      return TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+        const table = TableLookup.table(cellOrCaption);
         return table.map((table) => {
-          return TableTargets.forMenu(selections, table, cell);
+          if (SugarNode.name(cellOrCaption) === 'caption') {
+            return TableTargets.notCell(cellOrCaption);
+          } else {
+            return TableTargets.forMenu(selections, table, cellOrCaption);
+          }
         });
       });
     });
@@ -84,14 +64,14 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
 
   const tableProperties = {
     text: 'Table properties',
-    onSetup: setEnabled,
+    onSetup: setupTable,
     onAction: cmd('mceTableProps')
   };
 
   const deleteTable = {
     text: 'Delete table',
     icon: 'table-delete-table',
-    onSetup: setEnabled,
+    onSetup: setupTable,
     onAction: cmd('mceTableDelete')
   };
 
@@ -99,15 +79,15 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     type: 'nestedmenuitem',
     text: 'Row',
     getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup: setEnabled },
+      { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup: setupCell },
       { type: 'separator' },
-      { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup: setEnabled }
+      { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup: setupCell }
     ]
   };
 
@@ -115,9 +95,9 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     type: 'nestedmenuitem',
     text: 'Column',
     getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup: setEnabled }
+      { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup: setupCell }
     ]
   };
 
@@ -125,9 +105,9 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
     type: 'nestedmenuitem',
     text: 'Cell',
     getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup: setEnabled },
-      { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: setEnabledMerge },
-      { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: setEnabledUnmerge }
+      { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup: setupCell },
+      { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: setupMergeable },
+      { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: setupUnmergeable }
     ]
   };
 
@@ -152,12 +132,17 @@ const addMenuItems = (editor: Editor, selections: Selections) => {
   editor.ui.registry.addNestedMenuItem('cell', cell);
 
   editor.ui.registry.addContextMenu('table', {
-    update: () => {
+    update: (node: Node) => {
       // context menu fires before node change, so check the selection here first
       resetTargets();
       // ignoring element since it's monitored elsewhere
-      return targets().fold(() => '', () => {
-        return 'cell row column | tableprops deletetable';
+      return targets().fold(() => '', (targets) => {
+        // If clicking in a caption, then we shouldn't show the cell/row/column options
+        if (SugarNode.name(targets.element()) === 'caption') {
+          return 'tableprops deletetable';
+        } else {
+          return 'cell row column | tableprops deletetable';
+        }
       });
     }
   });

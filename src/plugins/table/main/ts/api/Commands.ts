@@ -8,15 +8,16 @@
 import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
 import CellDialog from '../ui/CellDialog';
 import RowDialog from '../ui/RowDialog';
 import TableDialog from '../ui/TableDialog';
-import { Editor } from 'tinymce/core/api/Editor';
-import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
-import { Selections } from 'tinymce/plugins/table/selection/Selections';
+import { TableActions } from '../actions/TableActions';
+import { Selections } from '../selection/Selections';
+import * as TableSelection from '../selection/TableSelection';
 import * as Events from '../api/Events';
 
 const each = Tools.each;
@@ -24,8 +25,7 @@ const each = Tools.each;
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => {
-    getSelectionStartCell()
-      .orThunk(getSelectionStartCaption)
+    TableSelection.getSelectionStartCellOrCaption(editor)
       .each((cellOrCaption) => {
         const tableOpt = TableLookup.table(cellOrCaption, isRoot);
         tableOpt.filter(Fun.not(isRoot)).each((table) => {
@@ -46,12 +46,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
         });
       });
   };
-
-  const getSelectionStartFromSelector = (selector: string) => () => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
-
-  const getSelectionStartCaption = getSelectionStartFromSelector('caption');
-
-  const getSelectionStartCell = getSelectionStartFromSelector('th,td');
 
   const getTableFromCell = (cell: Element): Option<Element> => {
     return TableLookup.table(cell, isRoot);
@@ -74,7 +68,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
   };
 
   const actOnSelection = (execute) => {
-    getSelectionStartCell().each((cell) => {
+    TableSelection.getSelectionStartCell(editor).each((cell) => {
       getTableFromCell(cell).each((table) => {
         const targets = TableTargets.forMenu(selections, table, cell);
         const beforeSize = getSize(table);
@@ -90,7 +84,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
   };
 
   const copyRowSelection = (execute?) => {
-    return getSelectionStartCell().map((cell) => {
+    return TableSelection.getSelectionStartCell(editor).map((cell) => {
       return getTableFromCell(cell).bind((table) => {
         const doc = Element.fromDom(editor.getDoc());
         const targets = TableTargets.forMenu(selections, table, cell);
@@ -106,7 +100,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
       const clonedRows = Arr.map(rows, (row) => {
         return Replication.deep(row);
       });
-      getSelectionStartCell().each((cell) => {
+      TableSelection.getSelectionStartCell(editor).each((cell) => {
         getTableFromCell(cell).each((table) => {
           const doc = Element.fromDom(editor.getDoc());
           const generators = TableFill.paste(doc);

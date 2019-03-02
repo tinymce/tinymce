@@ -17,12 +17,12 @@ const noMenu = function (cell) {
   };
 };
 
-const forMenu = function (selections, table, cell) {
+const forMenu = function (selections, table, cellOrCaption) {
   return {
-    element: Fun.constant(cell),
+    element: Fun.constant(cellOrCaption),
     mergable: Fun.constant(CellOperations.mergable(table, selections)),
-    unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-    selection: Fun.constant(CellOperations.selection(cell, selections))
+    unmergable: Fun.constant(CellOperations.unmergable(cellOrCaption, selections)),
+    selection: Fun.constant(CellOperations.selection(cellOrCaption, selections))
   };
 };
 
