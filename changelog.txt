@@ -1,6 +1,3 @@
-Version 4.9.4 (TBD)
-    Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
-    Fixed an issue that could cause the editor to show a blank white screen in mobile mode in specific circumstances #TINY-3407
 Version 4.9.3 (2019-01-31)
     Added a visualchars_default_state setting to the Visualchars Plugin. Patch contributed by mat3e.
     Fixed a bug where scrolling on a page with more than one editor would cause a ResizeWindow event to fire. #TINY-3247
