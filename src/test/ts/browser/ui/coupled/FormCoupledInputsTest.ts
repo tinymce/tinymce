@@ -108,7 +108,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           const inputStruct = s.element('div', {
             children: [
               s.element('label', { html: str.is('Label') }),
-              s.element('input', { attrs: { type: str.is('input') } })
+              s.element('input', { attrs: { type: str.is('text') } })
             ]
           });
           return s.element('div', {

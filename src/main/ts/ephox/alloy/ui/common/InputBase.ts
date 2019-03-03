@@ -68,7 +68,7 @@ const dom = (detail: InputDetail): RawDomSchema => {
   return {
     tag: detail.tag,
     attributes: {
-      type: 'input',
+      type: 'text',
       ...detail.inputAttributes
     },
     styles: detail.inputStyles,
