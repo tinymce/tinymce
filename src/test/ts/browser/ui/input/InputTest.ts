@@ -29,7 +29,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('input', {
             attrs: {
-              'type': str.is('input'),
+              'type': str.is('text'),
               'data-alloy-id': str.none(),
               'placeholder': str.is('placeholder-text')
             },
@@ -90,7 +90,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
           ApproxStructure.build((s, str, arr) => {
             return s.element('input', {
               attrs: {
-                'type': str.is('input'),
+                'type': str.is('text'),
                 'data-alloy-id': str.none(),
                 'placeholder': str.is('placeholder-text')
               },
