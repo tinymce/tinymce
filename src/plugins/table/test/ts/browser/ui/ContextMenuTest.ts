@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard,
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     const tinyUi = TinyUi(editor);
 
     const doc = Element.fromDom(document);
-    const body = Element.fromDom(document.body);
+    const body = Body.body();
     const editorBody = Element.fromDom(editor.getBody());
 
     const sOpenContextMenu = (target: string) => {

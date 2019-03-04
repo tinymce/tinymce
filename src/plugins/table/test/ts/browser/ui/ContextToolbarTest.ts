@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
-import { Element, Replication, SelectorFilter, Html, Remove } from '@ephox/sugar';
+import { Body, Element, Replication, SelectorFilter, Html, Remove } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = Element.fromDom(document);
-    const body = Element.fromDom(document.body);
+    const body = Body.body();
 
     const tableHtml = '<table style = "width: 5%;">' +
     '<tbody>' +
