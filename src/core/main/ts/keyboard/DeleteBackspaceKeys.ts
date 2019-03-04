@@ -18,7 +18,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
 import { Text, KeyboardEvent } from '@ephox/dom-globals';
-import PageBreakDelete from '../delete/PageBreakDelete';
+import PageBreakDelete from '../delete/ImageBlockDelete';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([

@@ -11,7 +11,7 @@ import { Text, Node } from '@ephox/dom-globals';
 import CaretPosition from './CaretPosition';
 import { isWhiteSpace } from '../text/CharType';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
-import { Class, Element } from '@ephox/sugar';
+import { Element, Css } from '@ephox/sugar';
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
   return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
@@ -32,14 +32,14 @@ const matchesElementPosition = (before: boolean, predicate: (node: Node) => bool
   return (pos: CaretPosition) => Option.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
 };
 
-const isPageBreak = (node: Node) => {
-  return NodeType.isElement(node) && Class.has(Element.fromDom(node), 'mce-pagebreak');
+const isImageBlock = (node: Node) => {
+  return node.nodeName === 'IMG' && Css.get(Element.fromDom(node), 'display') === 'block';
 };
 
 const isCefNode = (node: Node) => NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
 
-const isBeforePageBreak = matchesElementPosition(true, isPageBreak);
-const isAfterPageBreak = matchesElementPosition(false, isPageBreak);
+const isBeforeImageBlock = matchesElementPosition(true, isImageBlock);
+const isAfterImageBlock = matchesElementPosition(false, isImageBlock);
 const isBeforeTable = matchesElementPosition(true, NodeType.isTable);
 const isAfterTable = matchesElementPosition(false, NodeType.isTable);
 const isBeforeContentEditableFalse = matchesElementPosition(true, isCefNode);
@@ -53,6 +53,6 @@ export {
   isAfterContentEditableFalse,
   isBeforeTable,
   isAfterTable,
-  isBeforePageBreak,
-  isAfterPageBreak
+  isBeforeImageBlock as isBeforePageBreak,
+  isAfterImageBlock as isAfterPageBreak
 };
