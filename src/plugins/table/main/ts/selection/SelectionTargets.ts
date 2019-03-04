@@ -6,7 +6,7 @@ import TableTargets from '../queries/TableTargets';
 import { Selections } from './Selections';
 import * as TableSelection from './TableSelection';
 
-interface Targets {
+export interface Targets {
   element: () => Element;
   mergable: () => Option<any>;
   unmergable: () => Option<any>;
