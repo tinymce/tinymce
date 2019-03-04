@@ -13,6 +13,7 @@ Version 5.0.2 (TBD)
     Fixed mobile using a transparent background and not taking up the full width on iOS #TINY-3414
     Fixed the template plugin dialog missing the description field #TINY-3337
     Fixed input dialog components using an invalid default type attribute #TINY-3424
+    Fixed an issue where backspace/delete keys after/before pagebreak elements wouldn't move the caret #TINY-3097
     Fixed an issue in the table plugin where menu items and toolbar buttons weren't showing correctly based on the selection #TINY-3423
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
