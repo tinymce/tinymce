@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Option, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -13,16 +13,9 @@ interface Targets {
   selection: () => Element[];
 }
 
-export interface SelectionTargets {
-  onSetupTable: (api) => () => void;
-  onSetupCellOrRow: (api) => () => void;
-  onSetupMergeable: (api) => () => void;
-  onSetupUnmergeable: (api) => () => void;
-  resetTargets: () => void;
-  targets: () => Option<Targets>;
-}
+export type SelectionTargets = ReturnType<typeof SelectionTargets>;
 
-export const SelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
+export const SelectionTargets = (editor: Editor, selections: Selections) => {
   const targets = Cell<Option<Targets>>(Option.none());
   const changeHandlers = Cell([]);
 
@@ -47,11 +40,11 @@ export const SelectionTargets = (editor: Editor, selections: Selections): Select
     Arr.each(changeHandlers.get(), (handler) => handler());
   };
 
-  const onSetup = (activeCallback: (api, targets: Targets) => void, api) => {
+  const onSetup = (api, isDisabled: (targets: Targets) => boolean) => {
     const handler = () => targets.get().fold(() => {
       api.setDisabled(true);
     }, (targets) => {
-      activeCallback(api, targets);
+      api.setDisabled(isDisabled(targets));
     });
 
     // Execute the handler to set the initial state
@@ -65,10 +58,10 @@ export const SelectionTargets = (editor: Editor, selections: Selections): Select
     };
   };
 
-  const onSetupTable = Fun.curry(onSetup, (api) => api.setDisabled(false));
-  const onSetupCellOrRow = Fun.curry(onSetup, (api, targets) => api.setDisabled(Node.name(targets.element()) === 'caption'));
-  const onSetupMergeable = Fun.curry(onSetup, (api, targets) => api.setDisabled(targets.mergable().isNone()));
-  const onSetupUnmergeable = Fun.curry(onSetup, (api, targets) => api.setDisabled(targets.unmergable().isNone()));
+  const onSetupTable = (api) => onSetup(api, (_) => false);
+  const onSetupCellOrRow = (api) => onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
+  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
+  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
 
   editor.on('nodechange', resetTargets);
 
