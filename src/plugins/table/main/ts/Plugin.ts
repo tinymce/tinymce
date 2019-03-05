@@ -5,6 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell, Option } from '@ephox/katamari';
+import { KeyboardEvent } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';
@@ -14,26 +17,25 @@ import TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import Ephemera from './selection/Ephemera';
 import { Selections } from './selection/Selections';
+import { SelectionTargets } from './selection/SelectionTargets';
 import Buttons from './ui/Buttons';
 import MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
-import { Cell, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
-import { KeyboardEvent } from '@ephox/dom-globals';
 
 function Plugin(editor: Editor) {
   const resizeHandler = ResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const selections = Selections(editor);
+  const selectionTargets = SelectionTargets(editor, selections);
   const clipboardRows = Cell(Option.none());
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-  MenuItems.addMenuItems(editor, selections);
-  Buttons.addButtons(editor);
+  MenuItems.addMenuItems(editor, selectionTargets);
+  Buttons.addButtons(editor, selectionTargets);
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {

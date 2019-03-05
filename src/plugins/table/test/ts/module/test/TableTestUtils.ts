@@ -21,7 +21,10 @@ const sOpenToolbarOn = function (editor, selector, path) {
 };
 
 const sOpenTableDialog = Logger.t('Open table dialog', GeneralSteps.sequence([
-  Mouse.sClickOn(TinyDom.fromDom(document.body), '.tox-toolbar button'),
+  Waiter.sTryUntil('Click table properties toolbar button',
+    Mouse.sClickOn(TinyDom.fromDom(document.body), '.tox-toolbar button:not(:disabled)'),
+    50, 1000
+  ),
   UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),
 ]));
 

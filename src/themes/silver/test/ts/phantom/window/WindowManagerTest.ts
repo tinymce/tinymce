@@ -200,7 +200,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
                         s.element('input', {
                           classes: [ arr.has('tox-textfield') ],
                           attrs: {
-                            type: str.is('input')
+                            type: str.is('text')
                           }
                         })
                       ]
