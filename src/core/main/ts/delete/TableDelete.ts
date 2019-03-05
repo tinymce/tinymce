@@ -18,6 +18,7 @@ import Parents from '../dom/Parents';
 import TableCellSelection from '../selection/TableCellSelection';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Range } from '@ephox/dom-globals';
+import { isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
 
 const emptyCells = (editor: Editor, cells) => {
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
@@ -104,7 +105,7 @@ const deleteCaretCells = (editor: Editor, forward: boolean, rootElm, startElm) =
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return getParentCell(rootElm, startElm).bind((fromCell) => {
     return Empty.isEmpty(fromCell) ? emptyElement(editor, fromCell) : deleteBetweenCells(editor, rootElm, forward, fromCell, from);
-  });
+  }).getOr(false);
 };
 
 const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCaption) => {
@@ -112,13 +113,23 @@ const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCapti
   return Empty.isEmpty(fromCaption) ? emptyElement(editor, fromCaption) : deleteCaretInsideCaption(editor, rootElm, forward, fromCaption, from);
 };
 
-const deleteCaret = (editor: Editor, forward: boolean, startElm) => {
+const isNearTable = (forward: boolean, pos: CaretPosition) => forward ? isBeforeTable(pos) : isAfterTable(pos);
+
+const isBeforeOrAfterTable = (editor: Editor, forward: boolean) => {
+  const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
+
+  return isNearTable(forward, fromPos) || CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
+    .map((pos) => isNearTable(forward, pos))
+    .getOr(false);
+};
+
+const deleteCaret = (editor: Editor, forward: boolean, startElm: Element) => {
   const rootElm = Element.fromDom(editor.getBody());
 
   return getParentCaption(rootElm, startElm).fold(
-    () => deleteCaretCells(editor, forward, rootElm, startElm),
-    (fromCaption) => deleteCaretCaption(editor, forward, rootElm, fromCaption)
-  ).getOr(false);
+    () => deleteCaretCells(editor, forward, rootElm, startElm) || isBeforeOrAfterTable(editor, forward),
+    (fromCaption) => deleteCaretCaption(editor, forward, rootElm, fromCaption).getOr(false)
+  );
 };
 
 const backspaceDelete = (editor: Editor, forward?: boolean) => {
