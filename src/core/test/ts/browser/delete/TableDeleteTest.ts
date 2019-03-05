@@ -5,11 +5,12 @@ import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox
 import TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {
   Theme();
 
-  const sAssertRawNormalizedContent = (editor, expectedContent) => {
+  const sAssertRawNormalizedContent = (editor: Editor, expectedContent: string) => {
     return Step.sync(() => {
       const element = Replication.deep(Element.fromDom(editor.getBody()));
 
@@ -23,39 +24,39 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
     });
   };
 
-  const sDelete = (editor) => {
+  const sDelete = (editor: Editor) => {
     return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sBackspace = (editor) => {
+  const sBackspace = (editor: Editor) => {
     return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sDeleteNoop = (editor) => {
+  const sDeleteNoop = (editor: Editor) => {
     return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  const sBackspaceNoop = (editor) => {
+  const sBackspaceNoop = (editor: Editor) => {
     return Step.sync(() => {
       const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  const sKeyboardBackspace = (editor) => {
+  const sKeyboardBackspace = (editor: Editor) => {
     return Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
