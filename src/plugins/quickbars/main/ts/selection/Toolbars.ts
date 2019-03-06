@@ -17,13 +17,16 @@ const addToEditor = (editor: Editor) => {
     position: 'node'
   });
 
-  editor.ui.registry.addContextToolbar('textselection', {
-    predicate: (node) => {
-      return !editor.selection.isCollapsed();
-    },
-    items: Settings.getTextSelectionToolbarItems(editor),
-    position: 'selection'
-  });
+  const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
+  if (textToolbarItems.trim().length > 0) {
+    editor.ui.registry.addContextToolbar('textselection', {
+      predicate: (node) => {
+        return !editor.selection.isCollapsed();
+      },
+      items: textToolbarItems,
+      position: 'selection'
+    });
+  }
 };
 
 export default {
