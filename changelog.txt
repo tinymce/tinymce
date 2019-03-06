@@ -1,10 +1,34 @@
+<<<<<<< HEAD
 Version 5.0.2 (TBD)
     Updated the build process to include package lock files to the dev distribution archive #TINY-2870
     Added aria attributes to silver inline dialogs #TINY-2694
     Added presentation and document presets to htmlpanel #TINY-2694
     Added default icons to registry #TINY-3307
     Added moxiedoc comments for the ui api #TINY-3143
+=======
+Version 5.0.2 (2019-03-05)
+    Added presentation and document presets to `htmlpanel` dialog component #TINY-2694
+    Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712
+    Added a new toolbar setting `toolbar_drawer` that moves toolbar groups which overflow the editor width into either a `sliding` or `floating` toolbar section #TINY-2874
+    Updated the build process to include package lock files in the dev distribution archive #TINY-2870
+    Fixed inline dialogs did not have aria attributes #TINY-2694
+    Fixed default icons are now available in the UI registry, allowing use outside of toolbar buttons #TINY-3307
+    Fixed a memory leak related to select toolbar items #TINY-2874
+    Fixed a memory leak due to format changed listeners that were never unbound #TINY-3191
+    Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
+>>>>>>> origin/master
     Fixed the quicklink toolbar button not rendering in the quickbars plugin #TINY-3125
+    Fixed an issue where menus were generating invalid HTML in some cases #TINY-3323
+    Fixed an issue that could cause the mobile theme to show a blank white screen when the editor was inside an `overflow:hidden` element #TINY-3407
+    Fixed mobile theme using a transparent background and not taking up the full width on iOS #TINY-3414
+    Fixed the template plugin dialog missing the description field #TINY-3337
+    Fixed an issue where delete/backspace before and after tables would create incorrect selections. #TINY-3371
+    Fixed input dialog components using an invalid default type attribute #TINY-3424
+    Fixed an issue where backspace/delete keys after/before pagebreak elements wouldn't move the caret #TINY-3097
+    Fixed an issue in the table plugin where menu items and toolbar buttons weren't showing correctly based on the selection #TINY-3423
+    Fixed inconsistent button focus styles in Firefox #TINY-3377
+    Fixed the resize icon floating left when all status bar elements were disabled #TINY-3340
+    Fixed the resize handle to not show in fullscreen mode #TINY-3404
 Version 5.0.1 (2019-02-21)
     Removed paste as text notification banner and paste_plaintext_inform setting #POW-102
     Fixed an issue where adding links to images would replace the image with text #TINY-3356
@@ -14,21 +38,19 @@ Version 5.0.1 (2019-02-21)
     Fixed an issue in the media plugin that was causing the source url and height/width to be lost in certain circumstances #TINY-2858
     Fixed an issue with the Context Toolbar not being removed when clicking outside of the editor #TINY-2804
     Fixed an issue where clicking 'Remove link' wouldn't remove the link in certain circumstances #TINY-3199
-    Added the ability of the code sample toolbar button to highlight #TINY-3040
+    Added code sample toolbar button will now toggle on when the cursor is in a code section #TINY-3040
     Fixed an issue where the media plugin would fail when parsing dialog data #TINY-3218
     Fixed an issue where retrieving the selected content as text didn't create newlines #TINY-3197
     Fixed incorrect keyboard shortcuts in the Help dialog for Windows #TINY-3292
     Fixed an issue where JSON serialization could produce invalid JSON #TINY-3281
     Fixed production CSS including references to source maps #TINY-3920
-    Fixed development CSS was not included in development zip #TINY-3920
-    Added a new toolbar setting `toolbar_drawer` that, upon the toolbar running over one line of groups, the remaining groups will overflow into a collapsible drawer #TINY-2874
-    Added a new help dialog setting `help_version` that allows providing a custom version panel #TINY-2875
+    Fixed development CSS was not included in the development zip #TINY-3920
     Fixed the autocompleter matches predicate not matching on the start of words by default #TINY-3306
     Added new settings to the emoticons plugin to allow additional emoticons to be added #TINY-3088
-    Fixed an issue where the window could be scrolled with modal dialogs open #TINY-2252
-    Fixed an issue where autocomplete menus would show an icon margin, when no items had icons #TINY-3329
+    Fixed an issue where the page could be scrolled with modal dialogs open #TINY-2252
+    Fixed an issue where autocomplete menus would show an icon margin when no items had icons #TINY-3329
     Fixed an issue in the quickbars plugin where images incorrectly showed the text selection toolbar #TINY-3338
-    Fixed an issue that caused the inline editor to fail to render in specific circumstances #TINY-3353
+    Fixed an issue that caused the inline editor to fail to render when the target element already had focus #TINY-3353
 Version 5.0.0 (2019-02-04)
     Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
 

@@ -6,7 +6,7 @@ import { SelectorFind, Value } from '@ephox/sugar';
 
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
-import { UrlData } from '../../../../../main/ts/backstage/UrlInputBackstage';
+import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
@@ -125,13 +125,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { html: str.is('Header1') })
+                          s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { html: str.is('Header2') })
+                          s.element('div', { html: str.is('Header2') })
                         ]
                       })
                     ]
@@ -141,7 +141,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     children: [
                       s.element('div', {
                         children: [
-                          s.element('span', { html: str.is('&lt;top&gt;') })
+                          s.element('div', { html: str.is('&lt;top&gt;') })
                         ]
                       })
                     ]
@@ -183,13 +183,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { html: str.is('Header1') })
+                          s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item')],
                         children: [
-                          s.element('span', { html: str.is('Header2') })
+                          s.element('div', { html: str.is('Header2') })
                         ]
                       })
                     ]

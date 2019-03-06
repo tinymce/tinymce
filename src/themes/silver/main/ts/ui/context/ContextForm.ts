@@ -14,7 +14,7 @@ import {
   Memento
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Id, Option } from '@ephox/katamari';
+import { Id, Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
@@ -74,7 +74,9 @@ const renderContextForm = (ctx: Toolbar.ContextForm, backstage: UiFactoryBacksta
     ],
     onEscape: Option.none,
     cyclicKeying: true,
-    backstage
+    backstage,
+    floating: false,
+    getSink: () => Result.error('')
   });
 };
 

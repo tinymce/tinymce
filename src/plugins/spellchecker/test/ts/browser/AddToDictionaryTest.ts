@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
       ]),
       Chain.asStep(Body.body(), [
         UiFinder.cWaitFor('wait for context menu', 'div[role="menu"]'),
-        UiFinder.cFindIn('span:contains("Add to dictionary")'),
+        UiFinder.cFindIn('.tox-collection__item-label:contains("Add to dictionary")'),
         Mouse.cClick
       ]),
       Step.sync(() => RawAssertions.assertEq('dict should now have hello', ['hello'], dict))

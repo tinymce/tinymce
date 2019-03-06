@@ -37,12 +37,12 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
         return s.element('div', {
           classes: [ arr.has('tox-collection__item') ],
           children: Options.cat([
-            optIcon.map((icon) => s.element('span', {
+            optIcon.map((icon) => s.element('div', {
               classes: [ arr.has('tox-collection__item-icon') ],
               html: str.is(icon)
             })),
 
-            optText.map((text) => s.element('span', {
+            optText.map((text) => s.element('div', {
               classes: [ arr.has('tox-collection__item-label') ],
               html: str.is(text)
             }))

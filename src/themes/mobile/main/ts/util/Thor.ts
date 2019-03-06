@@ -12,8 +12,8 @@ import { Attr, Css, SelectorFilter } from '@ephox/sugar';
 const attr = 'data-ephox-mobile-fullscreen-style';
 const siblingStyles = 'display:none!important;';
 const ancestorPosition = 'position:absolute!important;';
-const ancestorStyles = 'top:0!important;left:0!important;margin:0' +
-  '!important;padding:0!important;width:100%!important;';
+/// TINY-3407 ancestors need 'height:100%!important;overflow:visible!important;' to prevent collapsed ancestors hiding the editor
+const ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
 const bgFallback = 'background-color:rgb(255,255,255)!important;';
 
 const isAndroid = PlatformDetection.detect().os.isAndroid();

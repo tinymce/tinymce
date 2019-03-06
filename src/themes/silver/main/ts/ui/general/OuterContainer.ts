@@ -14,7 +14,8 @@ import {
   Sketcher,
   Toolbar as AlloyToolbar,
   UiSketcher,
-  Behaviour
+  Behaviour,
+  SplitToolbar
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
@@ -22,6 +23,7 @@ import { Arr, Option } from '@ephox/katamari';
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import { renderMoreToolbar, renderToolbarGroup, renderToolbar } from '../toolbar/CommonToolbar';
+import { ToolbarDrawer } from '../../api/Settings';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -45,6 +47,7 @@ interface OuterContainerApis {
   // Maybe just change to ToolbarAnchor.
   getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
+  getMoreButton: (comp: AlloyComponent) => Option<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
@@ -76,6 +79,12 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     setToolbar(comp, groups) {
       Composite.parts.getPart(comp, detail, 'toolbar').each(function (toolbar) {
         AlloyToolbar.setGroups(toolbar, groups);
+      });
+    },
+    getMoreButton(comp) {
+      const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
+      return toolbar.bind((toolbar) => {
+        return SplitToolbar.getMoreButton(toolbar);
       });
     },
     focusToolbar(comp) {
@@ -115,7 +124,7 @@ const partMenubar = Composite.partType.optional({
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer = spec.split ? renderMoreToolbar : renderToolbar;
+      const renderer = (spec.split === ToolbarDrawer.sliding || spec.split === ToolbarDrawer.floating) ? renderMoreToolbar : renderToolbar;
       return renderer({
         uid: spec.uid,
         onEscape: () => {
@@ -124,14 +133,17 @@ const partToolbar = Composite.partType.optional({
         },
         cyclicKeying: false,
         initGroups: [],
-        backstage: spec.backstage
+        getSink: spec.getSink,
+        backstage: spec.backstage,
+        floating: spec.split === ToolbarDrawer.floating
       });
     }
   },
   name: 'toolbar',
   schema: [
     FieldSchema.strict('dom'),
-    FieldSchema.strict('onEscape')
+    FieldSchema.strict('onEscape'),
+    FieldSchema.strict('getSink')
   ]
 });
 
@@ -190,7 +202,9 @@ export default Sketcher.composite({
 
       apis.setToolbar(comp, groups);
     },
-
+    getMoreButton(apis, comp) {
+      return apis.getMoreButton(comp);
+    },
     // FIX: Dupe
     setMenubar(apis, comp, menus) {
       apis.setMenubar(comp, menus);

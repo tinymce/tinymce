@@ -13,7 +13,7 @@ import ConvertShortcut from '../alien/ConvertShortcut';
 
 const renderIcon = (iconHtml: string): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.iconClass ],
     innerHtml: iconHtml
   }
@@ -21,7 +21,7 @@ const renderIcon = (iconHtml: string): AlloySpec => ({
 
 const renderText = (text: string): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.textClass ]
   },
   components: [ GuiFactory.text(I18n.translate(text)) ]
@@ -34,7 +34,7 @@ interface StyleProps {
 
 const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.textClass ],
   },
   components: [
@@ -50,7 +50,7 @@ const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
 
 const renderShortcut = (shortcut: string): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.accessoryClass ],
     innerHtml: ConvertShortcut.convertText(shortcut)
   }
@@ -58,7 +58,7 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
 
 const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.iconClass, ItemClasses.checkmarkClass ],
     innerHtml: getIcon('checkmark', icons)
   }
@@ -66,7 +66,7 @@ const renderCheckmark = (icons: IconProvider): AlloySpec => ({
 
 const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
   dom: {
-    tag: 'span',
+    tag: 'div',
     classes: [ ItemClasses.caretClass ],
     innerHtml: getIcon('chevron-right', icons)
   }

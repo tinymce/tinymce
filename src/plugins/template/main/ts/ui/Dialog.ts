@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -12,7 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
-import { Types } from '@ephox/bridge';
+import * as Utils from '../core/Utils';
 
 interface TemplateValues {
   url?: string;
@@ -25,6 +26,13 @@ interface TemplateData {
   text: string;
   value: TemplateValues;
 }
+
+type DialogData = {
+  template: string;
+  preview: string;
+};
+
+type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => void;
 
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
@@ -112,16 +120,13 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
     });
   };
 
-  const onChange = (templates) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change) => {
+  const onChange = (templates: TemplateData[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {
         api.block('Loading...');
         getTemplateContent(t).then((previewHtml) => {
-          const previewContent = getPreviewContent(editor, previewHtml);
-          api.setData({
-            preview: previewContent
-          });
+          updateDialog(api, t, previewHtml);
           api.unblock();
         });
       });
@@ -138,15 +143,10 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
     });
   };
 
-  type DialogData = {
-    template: string;
-    preview: string;
-  };
-
   const openDialog = (templates: TemplateData[]) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
-    const dialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
+    const buildDialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
       title: 'Insert Template',
       size: 'large',
       body: {
@@ -168,13 +168,10 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
         }
       ],
       onSubmit: onSubmit(templates),
-      onChange: onChange(templates)
+      onChange: onChange(templates, updateDialog)
     });
 
-    const dialogApi = editor.windowManager.open(dialogSpec([], { template: '', preview: '' }));
-    dialogApi.block('Loading...');
-
-    getTemplateContent(templates[0]).then((previewHtml) => {
+    const updateDialog = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => {
       const content = getPreviewContent(editor, previewHtml);
       const bodyItems: Types.Dialog.BodyComponentApi[] = [
         {
@@ -184,20 +181,32 @@ const open = (editor: Editor, templateList: TemplateData[]) => {
           items: selectBoxItems
         },
         {
+          type: 'htmlpanel',
+          html: `<p aria-live="polite">${Utils.htmlEscape(template.value.description)}</p>`
+        },
+        {
           label: 'Preview',
           type: 'iframe',
           name: 'preview',
           sandboxed: false
         }
       ];
+
       const initialData = {
-          template: templates[0].text,
-          preview: content
+        template: template.text,
+        preview: content
       };
 
       dialogApi.unblock();
-      dialogApi.redial(dialogSpec(bodyItems, initialData));
+      dialogApi.redial(buildDialogSpec(bodyItems, initialData));
       dialogApi.focus('template');
+    };
+
+    const dialogApi = editor.windowManager.open(buildDialogSpec([], { template: '', preview: '' }));
+    dialogApi.block('Loading...');
+
+    getTemplateContent(templates[0]).then((previewHtml) => {
+      updateDialog(dialogApi, templates[0], previewHtml);
     });
   };
 
