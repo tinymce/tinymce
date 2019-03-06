@@ -1,7 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import { OuterPosition } from '@ephox/photon';
-import { InsertAll } from '@ephox/sugar';
+import { InsertAll, Location } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
@@ -10,9 +9,7 @@ import { Height } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
 import { Width } from '@ephox/sugar';
 
-
-
-export default <any> function () {
+export default function () {
   var box = function () {
     var r = Element.fromTag('div');
     Width.set(r, 8);
@@ -48,7 +45,7 @@ export default <any> function () {
   Css.set(southeast.element(), 'cursor', 'se-resize');
 
   var update = function (target) {
-    var loc = OuterPosition.find(target);
+    var loc = Location.viewport(target);
     var w = Width.get(target);
     var h = Height.get(target);
     var minx = loc.left();
