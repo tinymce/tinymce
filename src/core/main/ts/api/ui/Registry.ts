@@ -60,7 +60,7 @@ const registry = () => {
     addContextToolbar: bridge.addContextToolbar,
 
     /**
-     * Registers a new icon, the icon name referece can be configured by any TinyMCE 5 Ui components that can display an icon.  The icon is only available to the editor instance it was configured for.
+     * Registers a new SVG icon, the icon name reference can be configured by any TinyMCE 5 Ui components that can display an icon.  The icon is only available to the editor instance it was configured for.
      *
      * @method addIcon
      * @param {String} name Unique name identifying the new icon.
@@ -90,7 +90,7 @@ const registry = () => {
     addMenuItem: bridge.addMenuItem,
 
     /**
-     * Registers a new menu item that reveals a submenu when clicked or activated by keyboard navigation controls.  The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
+     * Registers a new menu item that reveals a submenu when clicked or activated by keyboard navigation controls.  The submenu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
