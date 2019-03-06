@@ -70,7 +70,7 @@ const registry = () => {
     addIcon:  bridge.addIcon,
 
     /**
-     * Registers a new menu button.  By default TinyMCE has File, Edit, View, Insert ... etc menu buttons, this method allows the addition of new custom menu buttons.
+     * Registers a new menu button.  Adds a toolbar button that opens a menu when clicked.  The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addMenuButton
      * @param {String} name Unique name identifying the new menu button.
@@ -80,7 +80,7 @@ const registry = () => {
     addMenuButton: bridge.addMenuButton,
 
     /**
-     * Registers a new menu item that executes a command when clicked or activated.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (addMenuItem), reveal a nested menu (see addNestedMenuItem below), or act as a toggle with a checkmark to display state (see addToggleMenuItem below)
+     * Registers a new menu item that executes a command when clicked or activated via keyboard navigation controls.
      *
      * @method addMenuItem
      * @param {String} name Unique name identifying the new menu item.
@@ -90,7 +90,7 @@ const registry = () => {
     addMenuItem: bridge.addMenuItem,
 
     /**
-     * Registers a new nested menu item that reveals when a menu item is clicked or activated.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (addNestedMenuItem), or act as a toggle with a checkmark to display state (see addToggleMenuItem below)
+     * Registers a new menu item that reveals a submenu when clicked or activated by keyboard navigation controls.  The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
@@ -130,7 +130,7 @@ const registry = () => {
     addToggleButton: bridge.addToggleButton,
 
     /**
-     * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.  All menu items can be configured to appear on a menu.  A menu item can have 3 kinds of actions when clicked or activated, execute a command (see addMenuItem above), reveal a nested menu (see addNestedMenuItem above), or act as a toggle with a checkmark to display state (addToggleMenuItem)
+     * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.
      *
      * @method addToggleMenuItem
      * @param {String} name Unique name identifying the new menu item.
@@ -139,12 +139,7 @@ const registry = () => {
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
-    /**
-     * This method getAll returns the registry object, which contains all the configurations added via the editor.ui.registry methods.  The registry is used by TinyMCE 5 to generate Ui components.
-     *
-     * @method getAll
-     * @return {Object} obj { buttons, contextMenus, contextToolbars, icons, menuItems, popups, sidebars }
-     */
+    /* note getAll may not be supported in future revisions */
     getAll: bridge.getAll
   };
 };
