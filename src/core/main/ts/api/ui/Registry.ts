@@ -20,7 +20,7 @@ const registry = () => {
     addAutocompleter: bridge.addAutocompleter,
 
     /**
-     * Registers a new toolbar button.
+     * Registers a new toolbar button that executes a command when clicked or activated via keyboard navigation controls.
      *
      * @method addButton
      * @param {String} name Unique name identifying the button, this button name will be used in the toolbar configuration to reference the button.
@@ -100,7 +100,7 @@ const registry = () => {
     addNestedMenuItem: bridge.addNestedMenuItem,
 
     /**
-     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar execommand and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
+     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar command and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.
