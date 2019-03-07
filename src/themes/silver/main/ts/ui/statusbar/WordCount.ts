@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, NativeEvents, Replacing, Representing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -37,7 +37,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
         }
       }),
       AddEventsBehaviour.config('wordcount-events', [
-        AlloyEvents.run(NativeEvents.click(), (comp) => {
+        AlloyEvents.run(SystemEvents.tapOrClick(), (comp) => {
           const currentVal = Representing.getValue(comp);
           const newMode = currentVal.mode === WordCountMode.Words ? WordCountMode.Characters : WordCountMode.Words;
           Representing.setValue(comp, { mode: newMode, count: currentVal.count });
@@ -53,7 +53,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
       ])
     ]),
     eventOrder: {
-      [NativeEvents.click()]: [ 'wordcount-events', 'alloy.base.behaviour' ]
+      [SystemEvents.tapOrClick()]: [ 'wordcount-events', 'alloy.base.behaviour' ]
     }
   });
 };

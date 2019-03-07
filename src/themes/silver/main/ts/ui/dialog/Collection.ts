@@ -20,6 +20,7 @@ import {
   SimulatedEvent,
   SketchSpec,
   SugarEvent,
+  SystemEvents,
   Tabstopping,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
@@ -89,7 +90,7 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
     AlloyEvents.run<SugarEvent>(NativeEvents.mouseover(), runOnItem((comp, tgt) => {
       Focus.focus(tgt);
     })),
-    AlloyEvents.run<SugarEvent>(NativeEvents.click(), runOnItem((comp, tgt, itemValue) => {
+    AlloyEvents.run<SugarEvent>(SystemEvents.tapOrClick(), runOnItem((comp, tgt, itemValue) => {
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name: spec.name,
         value: itemValue
