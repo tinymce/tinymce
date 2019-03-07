@@ -1,6 +1,7 @@
 import * as Arr from './Arr';
 import * as Obj from './Obj';
 import * as Type from './Type';
+import { console } from '@ephox/dom-globals';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;

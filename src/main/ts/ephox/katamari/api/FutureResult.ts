@@ -1,5 +1,6 @@
 import { Future } from './Future';
 import { Result } from './Result';
+import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
   toCached: () => FutureResult<A, E>;
@@ -47,14 +48,14 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
   const withTimeout = function <E2>(timeout: number, errorThunk: () => E2) {
     return wrap(Future.nu(function (callback: (value: Result<A, E | E2>) => void) {
       let timedOut = false;
-      const timer = window.setTimeout(() => {
+      const timer = setTimeout(() => {
         timedOut = true;
         callback(Result.error(errorThunk()));
       }, timeout);
 
       delegate.get((result) => {
         if (!timedOut) {
-          window.clearTimeout(timer);
+          clearTimeout(timer);
           callback(result);
         }
       });

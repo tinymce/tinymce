@@ -1,10 +1,9 @@
 import { Future } from 'ephox/katamari/api/Future';
 import * as Throttler from 'ephox/katamari/api/Throttler';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { setTimeout } from '@ephox/dom-globals';
 
-UnitTest.asynctest('ThrottlerTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ThrottlerTest', (success, failure) => {
 
   const testAdaptable = function () {
     return Future.nu(function (callback) {

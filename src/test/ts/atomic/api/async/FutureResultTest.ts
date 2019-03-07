@@ -8,9 +8,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.asynctest('FutureResultsTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FutureResultsTest', (success, failure) => {
 
   const testPure = function () {
     return new Promise(function (resolve, reject) {
@@ -181,10 +179,10 @@ UnitTest.asynctest('FutureResultsTest', function() {
             return data.fold(function (err) {
               return Result.error('Unexpected error in test: ' + err);
             }, function (value) {
-              return Jsc.eq(json, value) ? Result.value(true) : Result.error('Payload is not the same');  
-            });              
+              return Jsc.eq(json, value) ? Result.value(true) : Result.error('Payload is not the same');
+            });
           });
-        }       
+        }
       },
 
       {

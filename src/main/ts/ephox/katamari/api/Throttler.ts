@@ -1,3 +1,5 @@
+import { clearTimeout, setTimeout } from '@ephox/dom-globals';
+
 // Run a function fn afer rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
