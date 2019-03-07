@@ -60,6 +60,31 @@ let tinymce = EditorManager;
 /**
  * @include ../../../../../tools/docs/tinymce.js
  */
+
+/**
+ * @include ../../../../../tools/docs/tinymce.CommandEvent.js
+ */
+
+/**
+ * @include ../../../../../tools/docs/tinymce.ContentEvent.js
+ */
+
+/**
+ * @include ../../../../../tools/docs/tinymce.Event.js
+ */
+
+/**
+ * @include ../../../../../tools/docs/tinymce.FocusEvent.js
+ */
+
+ /**
+ * @include ../../../../../tools/docs/tinymce.ProgressStateEvent.js
+ */
+
+/**
+ * @include ../../../../../tools/docs/tinymce.ResizeEvent.js
+ */
+
 const publicApi = {
   geom: {
     Rect

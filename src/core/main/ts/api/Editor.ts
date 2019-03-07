@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Registry } from '@ephox/bridge';
 import { Document, HTMLElement, Window } from '@ephox/dom-globals';
 import { Annotator } from 'tinymce/core/api/Annotator';
 import { Selection } from 'tinymce/core/api/dom/Selection';
@@ -31,12 +30,8 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import I18n from 'tinymce/core/api/util/I18n';
 import { WindowManager } from './WindowManager';
-
-/**
- * Include the base event class documentation.
- *
- * @include ../../../../../tools/docs/tinymce.Event.js
- */
+import { registry } from 'tinymce/core/api/ui/Registry';
+import { Registry } from '@ephox/bridge';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -60,6 +55,10 @@ import { WindowManager } from './WindowManager';
 
 export type AnyFunction = (...x: any[]) => any;
 export type EditorSettings = Record<string, any>;
+
+export interface Ui {
+  registry: Registry.Registry;
+}
 export interface Editor {
   $: any;
   annotator: Annotator;
@@ -179,10 +178,6 @@ export interface Editor {
   _scanForImages(): Promise<any>;
 }
 
-export interface Ui {
-  registry: Registry.Registry;
-}
-
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
@@ -194,6 +189,8 @@ const ie = Env.ie;
  *
  * @include ../../../../../tools/docs/tinymce.Editor.js
  */
+
+/**
 
 /**
  * Constructs a editor instance by id.
@@ -315,16 +312,15 @@ export const Editor = function (id, settings, editorManager) {
     Env.overrideViewPort = false;
   }
 
-  const registry = Registry.create();
-
   /**
    * Editor ui components
    *
    * @property ui
-   * @type Object
+   * @type tinymce.Editor.ui
    */
+
   self.ui = {
-    registry
+    registry: registry()
   };
 
   // Call setup
