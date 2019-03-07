@@ -10,7 +10,7 @@ const registry = () => {
   return {
 
     /**
-     * Registers a new auto completer component.  When a configured string pattern is matched in the content while typing, the autocompleter will be triggered.  Emoticons and Charmap use an autocompleter.
+     * Registers a new auto completer component. When a configured string pattern is matched in the content while typing, the autocompleter will be triggered. Emoticons and Charmap use an autocompleter.
      *
      * @method addAutocompleter
      * @param {String} name Unique name identifying this autocomplete configuration.
@@ -30,17 +30,17 @@ const registry = () => {
     addButton: bridge.addButton,
 
     /**
-     * Registers a new contextual form item. Similar to a context menu item, a context form is an item with an input form element appearing when a content predicate is matched.  An example us of a context form is the link plugin when the configuration { link_context_toolbar: true } is used.  When the cursor is on a link, a context input form appears allowing for quick changes to the url field.
+     * Registers a new contextual form item. Similar to a context menu item, a contextual form is an item with an input form element appearing when a content predicate is matched. An example us of a contextual form is the link plugin when the configuration { link_context_toolbar: true } is used. When the cursor is on a link, a contextual input form appears allowing for quick changes to the url field.
      *
      * @method addContextForm
-     * @param {String} name Unique name identifying the new context form item.
+     * @param {String} name Unique name identifying the new contextual form item.
      * @param {Toolbar.ContextFormApi} obj the context form configuration object.
      * @return {void} void
      */
     addContextForm: bridge.addContextForm,
 
     /**
-     * Registers a new contextual menu that only appears when a content predicate is matched for example the cursor is inside a table.
+     * Registers a new context menu section that only appears when a content predicate is matched for example the cursor is inside a table.
      *
      * @method addContextMenu
      * @param {String} name Unique name identifying the new context menu.
@@ -50,7 +50,7 @@ const registry = () => {
     addContextMenu: bridge.addContextMenu,
 
     /**
-     * Registers a new contextual toolbar that only appears when a content predicate is matched for example the cursor is on an image element.
+     * Registers a new context toolbar that only appears when a content predicate is matched for example the cursor is on an image element.
      *
      * @method addContextToolbar
      * @param {String} name Unique name identifying the new context toolbar.
@@ -60,7 +60,7 @@ const registry = () => {
     addContextToolbar: bridge.addContextToolbar,
 
     /**
-     * Registers a new SVG icon, the icon name reference can be configured by any TinyMCE 5 Ui components that can display an icon.  The icon is only available to the editor instance it was configured for.
+     * Registers a new SVG icon, the icon name reference can be configured by any TinyMCE 5 Ui components that can display an icon. The icon is only available to the editor instance it was configured for.
      *
      * @method addIcon
      * @param {String} name Unique name identifying the new icon.
@@ -70,7 +70,7 @@ const registry = () => {
     addIcon:  bridge.addIcon,
 
     /**
-     * Registers a new menu button.  Adds a toolbar button that opens a menu when clicked.  The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
+     * Registers a new menu button. Adds a toolbar button that opens a menu when clicked. The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addMenuButton
      * @param {String} name Unique name identifying the new menu button.
@@ -90,7 +90,7 @@ const registry = () => {
     addMenuItem: bridge.addMenuItem,
 
     /**
-     * Registers a new menu item that reveals a submenu when clicked or activated by keyboard navigation controls.  The submenu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
+     * Registers a new menu item that reveals a submenu when clicked or activated by keyboard navigation controls. The submenu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addNestedMenuItem
      * @param {String} name Unique name identifying the new nested menu item.
@@ -100,7 +100,7 @@ const registry = () => {
     addNestedMenuItem: bridge.addNestedMenuItem,
 
     /**
-     * Registers a new sidebar container.  This sidebar container is attached to the rightside of the editor and can be toggled open or closed.  The tinycomments plugin uses a sidebar for its Ui components.
+     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar execommand and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.
@@ -110,7 +110,7 @@ const registry = () => {
     addSidebar: bridge.addSidebar,
 
     /**
-     * Registers a new split button for the toolbar.  The advanced list plugin uses a split button to simplify its functionality.
+     * Registers a new split button for the toolbar. The advanced list plugin uses a split button to simplify its functionality.
      *
      * @method addSplitButton
      * @param {String} name Unique name identifying the new split button.
