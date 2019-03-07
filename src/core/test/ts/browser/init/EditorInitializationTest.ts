@@ -1,14 +1,14 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Attr, SelectorFilter } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import ViewBlock from '../../module/test/ViewBlock';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { window, document } from '@ephox/dom-globals';
+import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

@@ -6,6 +6,7 @@
  */
 
 import { Focus } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const refreshInput = function (input) {
   // This is magic used to refresh the iOS cursor on an input field when input focus is
@@ -15,7 +16,7 @@ const refreshInput = function (input) {
   const start = input.dom().selectionStart;
   const end = input.dom().selectionEnd;
   const dir = input.dom().selectionDirection;
-  setTimeout(function () {
+  Delay.setTimeout(function () {
     input.dom().setSelectionRange(start, end, dir);
     Focus.focus(input);
   }, 50);

@@ -8,6 +8,7 @@
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Element } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const INTERVAL = 50;
 const INSURANCE = 1000 / INTERVAL;
@@ -37,7 +38,7 @@ const onChange = function (outerWindow, listeners) {
 
   const change = function () {
     // If a developer is spamming orientation events in the simulator, clear our last check
-    clearInterval(poller);
+    Delay.clearInterval(poller);
 
     const orientation = get(outerWindow);
     listeners.onChange(orientation);
@@ -52,16 +53,16 @@ const onChange = function (outerWindow, listeners) {
 
   const onAdjustment = function (f) {
     // If a developer is spamming orientation events in the simulator, clear our last check
-    clearInterval(poller);
+    Delay.clearInterval(poller);
 
     const flag = outerWindow.innerHeight;
     let insurance = 0;
-    poller = setInterval(function () {
+    poller = Delay.setInterval(function () {
       if (flag !== outerWindow.innerHeight) {
-        clearInterval(poller);
+        Delay.clearInterval(poller);
         f(Option.some(outerWindow.innerHeight));
       } else if (insurance > INSURANCE) {
-        clearInterval(poller);
+        Delay.clearInterval(poller);
         f(Option.none());
       }
       insurance++;

@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Range, HTMLElement, ClientRect, Node } from '@ephox/dom-globals';
+import { Cell, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import * as CaretContainer from './CaretContainer';
 import CaretContainerRemove from './CaretContainerRemove';
 import DomQuery from '../api/dom/DomQuery';
 import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import Delay from '../api/util/Delay';
-import { Cell, Option } from '@ephox/katamari';
-import { Element, Range, HTMLElement, ClientRect, Node } from '@ephox/dom-globals';
-import { PlatformDetection } from '@ephox/sand';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;
@@ -162,7 +162,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
       lastVisualCaret.set(Option.none());
     });
 
-    clearInterval(cursorInterval);
+    Delay.clearInterval(cursorInterval);
   };
 
   const startBlink = () => {

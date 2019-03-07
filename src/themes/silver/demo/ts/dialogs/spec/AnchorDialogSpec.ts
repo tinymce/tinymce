@@ -1,3 +1,5 @@
+import { console } from '@ephox/dom-globals';
+
 export default {
   title: 'Anchor',
   body: {

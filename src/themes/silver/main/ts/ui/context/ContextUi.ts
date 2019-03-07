@@ -21,6 +21,7 @@ import {
 } from '@ephox/alloy';
 import { Cell, Id, Option, Result, Arr } from '@ephox/katamari';
 import { Class, Css, Element, Focus, Width } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
@@ -88,7 +89,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: All
               return Focus.active();
             });
           });
-          setTimeout(() => {
+          Delay.setTimeout(() => {
             Css.set(comp.element(), 'width', newWidth + 'px');
           }, 0);
         }),

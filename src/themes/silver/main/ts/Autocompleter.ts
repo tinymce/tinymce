@@ -7,6 +7,7 @@
 
 import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
+import { console } from '@ephox/dom-globals';
 import { Arr, Option, Options, Throttler, Thunk } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 

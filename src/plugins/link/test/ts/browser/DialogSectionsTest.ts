@@ -1,8 +1,8 @@
-import '../../../../../themes/silver/main/ts/Theme';
+import 'tinymce/themes/silver/Theme';
 
 import { GeneralSteps, Pipeline, UiFinder, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

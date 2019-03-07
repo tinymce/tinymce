@@ -1,7 +1,8 @@
+import { console } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
-import { Fun } from '@ephox/katamari';
 
 export default () => {
   const helpers = setupDemo();

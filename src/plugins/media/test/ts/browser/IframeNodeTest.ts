@@ -1,10 +1,11 @@
 import { Pipeline, UiFinder, Chain, Assertions, ApproxStructure, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 
+import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
   Plugin();
@@ -90,7 +91,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
     toolbar: 'media',
     theme: 'silver',
     media_url_resolver (data, resolve) {
-      setTimeout(function () {
+      Delay.setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'
         });

@@ -1,5 +1,6 @@
 import { Chain, Guard, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';

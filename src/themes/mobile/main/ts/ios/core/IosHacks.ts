@@ -6,6 +6,7 @@
  */
 
 import { Focus, WindowSelection } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const setSelectionAtTouch = function (editorApi, touchEvent) {
   // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor
@@ -32,9 +33,9 @@ const onOrientationReady = function (outerWindow, refreshView) {
   // wait for the toolbar to recover before refreshing the view and scrolling cursor into view
   // done here instead of nomad toolbar fixup since that is tied to window scroll, which does not
   // fire on landscape
-  const scrollNotZero = setInterval(function () {
+  const scrollNotZero = Delay.setInterval(function () {
     if (outerWindow.pageYOffset === 0) {
-      clearInterval(scrollNotZero);
+      Delay.clearInterval(scrollNotZero);
       refreshView();
     }
   }, 100);

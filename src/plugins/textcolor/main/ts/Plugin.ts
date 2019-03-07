@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { console } from '@ephox/dom-globals';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
 PluginManager.add('textcolor', function () {

@@ -4,10 +4,11 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
+import Promise from 'tinymce/core/api/util/Promise';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import Promise from 'tinymce/core/api/util/Promise';
 
 UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   const resolveInit = Cell(false);
@@ -19,9 +20,9 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
         renderCustomEditor({
           tag: 'textarea',
           init: (e) => new Promise((resolve) => {
-            const intervalId = setInterval(() => {
+            const intervalId = Delay.setInterval(() => {
               if (resolveInit.get()) {
-                clearInterval(intervalId);
+                Delay.clearInterval(intervalId);
                 Class.add(Element.fromDom(e), 'my-custom-editor');
                 resolve({
                   setValue(s) { customEditorValue.set(s); },

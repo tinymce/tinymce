@@ -17,7 +17,7 @@ import {
   SimpleSpec,
   SimulatedEvent,
 } from '@ephox/alloy';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, console } from '@ephox/dom-globals';
 import { ResultConversions } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
