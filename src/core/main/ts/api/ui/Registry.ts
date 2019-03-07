@@ -70,7 +70,7 @@ const registry = () => {
     addIcon: bridge.addIcon,
 
     /**
-     * Registers a new menu button.  Adds a toolbar button that opens a menu when clicked.  The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
+     * Registers a new menu button. Adds a toolbar button that opens a menu when clicked. The menu can be populated by items created by addMenuItem, addNestedMenuItem or addToggleMenuItem
      *
      * @method addMenuButton
      * @param {String} name Unique name identifying the new menu button.
@@ -100,7 +100,7 @@ const registry = () => {
     addNestedMenuItem: bridge.addNestedMenuItem,
 
     /**
-     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar execommand and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
+     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar command and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.
