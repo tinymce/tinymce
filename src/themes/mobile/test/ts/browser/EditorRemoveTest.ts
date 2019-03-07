@@ -5,7 +5,7 @@ import { Body, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar
 import Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
 
-UnitTest.asynctest('browser.core.ThemeTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, failure) => {
   mobileTheme();
 
   const cleanedThorAttrsStruct = (str) => {
