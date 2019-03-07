@@ -139,7 +139,7 @@ const registry = () => {
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
-    /* note getAll may not be supported in future revisions */
+    /* note getAll is an internal method and may not be supported in future revisions */
     getAll: bridge.getAll
   };
 };
