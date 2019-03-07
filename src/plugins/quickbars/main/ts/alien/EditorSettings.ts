@@ -8,7 +8,7 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import { Type } from '@ephox/katamari';
 
-const validDefaultOrDie = function (value, predicate) {
+const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): boolean => {
   if (predicate(value)) {
     return true;
   }
@@ -16,7 +16,7 @@ const validDefaultOrDie = function (value, predicate) {
   throw new Error('Default value doesn\'t match requested type.');
 };
 
-const items = function (value, defaultValue) {
+const items = (value: boolean | string, defaultValue: string): string => {
 
   if (Type.isArray(value) || Type.isObject(value)) {
     throw new Error('expected a string but found: ' + value);
@@ -32,10 +32,10 @@ const items = function (value, defaultValue) {
   return value;
 };
 
-const getToolbarItemsOr = function (predicate) {
-  return function (editor: Editor, name: string, defaultValue) {
-    const value = name in editor.settings ? editor.settings[name] : defaultValue;
+const getToolbarItemsOr = (predicate: (value: any) => boolean) => {
+  return (editor: Editor, name: string, defaultValue: string): string => {
     validDefaultOrDie(defaultValue, predicate);
+    const value = editor.getParam(name, defaultValue);
     return items(value, defaultValue);
   };
 };
