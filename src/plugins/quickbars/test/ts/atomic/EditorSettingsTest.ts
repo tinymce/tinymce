@@ -1,4 +1,5 @@
 import { Logger, RawAssertions, UnitTest } from '@ephox/agar';
+import { Obj } from '@ephox/katamari';
 import Settings from '../../../main/ts/api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 
@@ -9,12 +10,13 @@ UnitTest.test('DialogChanges', () => {
 
       const test = (label: string, method: (editor: Editor) => string, settings: any, expected: string) => {
         const mockEditor = {
+          getParam: (name, defaultValue) => Obj.get(settings, name).getOr(defaultValue),
           settings
         } as any;
 
         Logger.sync(label, () => {
           const result = method(mockEditor);
-          RawAssertions.assertEq(label, result, expected);
+          RawAssertions.assertEq(label, expected, result);
         });
       };
 
