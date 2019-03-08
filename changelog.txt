@@ -3,6 +3,7 @@ Version 5.0.3 (TBD)
     Fixed quickbar toolbars not being disabled when setting them to false #TINY-3439
     Fixed an issue where delete/backspace before and after tables would create incorrect selections #TINY-3371
     Fixed an issue where dialog collection items (eg: emojis, special chars) couldn't be selected with touch devices #TINY-3444
+    Fixed an issue that prevented default icons from being overridden #TINY-3449
 Version 5.0.2 (2019-03-05)
     Added presentation and document presets to `htmlpanel` dialog component #TINY-2694
     Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712

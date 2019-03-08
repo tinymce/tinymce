@@ -21,6 +21,7 @@ import { window } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 import Settings from 'tinymce/core/api/Settings';
 import I18n from 'tinymce/core/api/util/I18n';
+import { IconManager } from 'tinymce/core/api/IconManager';
 
 const DOM = DOMUtils.DOM;
 
@@ -63,11 +64,12 @@ const loadTheme = function (scriptLoader, editor, suffix, callback) {
   }
 };
 
-const loadIcons = (settings, editor) => {
-  const iconPackName: any = settings.icons;
+const loadIcons = (editor) => {
+  const iconPackName: any = Tools.trim(editor.getParam('icons', '', 'string'));
 
-  if (Type.isString(iconPackName)) {
-    const urlString = `${editor.editorManager.baseURL}/icons/${Tools.trim(iconPackName)}/icons.js`;
+  // Ignore if the icon pack is already loaded
+  if (iconPackName.length > 0 && !IconManager.has(iconPackName)) {
+    const urlString = `${editor.editorManager.baseURL}/icons/${iconPackName}/icons.js`;
     ScriptLoader.ScriptLoader.add(urlString);
   }
 };
@@ -117,7 +119,7 @@ const loadScripts = function (editor, suffix) {
 
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
-    loadIcons(editor.settings, editor);
+    loadIcons(editor);
     loadPlugins(editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {
