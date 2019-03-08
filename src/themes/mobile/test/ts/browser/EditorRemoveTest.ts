@@ -1,11 +1,19 @@
 import { ApproxStructure, Assertions, Chain, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, UiChains } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Body, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar';
 import Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
 
 UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, failure) => {
+  const platform = PlatformDetection.detect();
+
+  if (platform.browser.isIE() || platform.browser.isEdge()) {
+    // No need to run mobile tests on IE/Edge as it's not supported
+    return success();
+  }
+
   mobileTheme();
 
   const cleanedThorAttrsStruct = (str) => {
