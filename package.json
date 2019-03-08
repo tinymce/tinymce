@@ -27,7 +27,6 @@
     "@ephox/porkbun": "latest"
   },
   "devDependencies": {
-    "@ephox/photon": "latest",
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
