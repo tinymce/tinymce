@@ -8,6 +8,7 @@ import { Element } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
+import { setTimeout } from '@ephox/dom-globals';
 
 var isFirefox = PlatformDetection.detect().browser.isFirefox();
 

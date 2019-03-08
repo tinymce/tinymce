@@ -3,6 +3,7 @@ import { UnitTest, assert } from "@ephox/bedrock";
 import { Arr, Fun, Result } from "@ephox/katamari";
 import { Insert, Remove, Body, Element, SelectorFind } from "@ephox/sugar";
 import AriaVoice from "ephox/echo/api/AriaVoice";
+import { console } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Node Change Test', function (success, failure) {
   // @tunic-tag=aria
@@ -28,7 +29,7 @@ UnitTest.asynctest('Node Change Test', function (success, failure) {
               'speech token should be present in the DOM.');
         }),
         GeneralSteps.waitForPredicate(
-          'speech token to be removed from DOM', 400, 2000, 
+          'speech token to be removed from DOM', 400, 2000,
           () => !isPresent(spec.selector))
       ], function() {
         cleanup();
