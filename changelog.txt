@@ -1,5 +1,5 @@
 Version 5.0.3 (TBD)
-    Fixed the mobile editor not cleaning up properly when being removed #TINY-3445
+    Fixed the mobile editor not cleaning up properly when removed #TINY-3445
     Fixed quickbar toolbars not being disabled when setting them to false #TINY-3439
     Fixed an issue where delete/backspace before and after tables would create incorrect selections #TINY-3371
 Version 5.0.2 (2019-03-05)
