@@ -6,10 +6,9 @@ import { Result } from 'ephox/katamari/api/Result';
 import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { setTimeout } from '@ephox/dom-globals';
 
-UnitTest.asynctest('FutureTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testPure = function () {
     return new Promise(function (resolve, reject) {

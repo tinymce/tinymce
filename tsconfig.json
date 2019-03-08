@@ -4,7 +4,7 @@
     "target": "es5",
     "module": "es2015",
     "importHelpers": true,
-    "lib": ["es2015", "dom"],
+    "lib": ["es2015"],
     "declaration": true,
     "sourceMap": true,
     "outDir": "lib",

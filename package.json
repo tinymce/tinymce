@@ -17,6 +17,7 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
