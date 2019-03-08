@@ -18,6 +18,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "tslib": "^1.9.3"
   },

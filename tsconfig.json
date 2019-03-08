@@ -12,11 +12,12 @@
     "moduleResolution": "node",
     "target": "es5",
     "module": "es2015",
-    "lib": ["es2015", "dom"],
+    "lib": ["es2015"],
     "declaration": true,
     "sourceMap": true,
     "outDir": "lib",
     "baseUrl": ".",
+    "types": [],
     "paths": {
       "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
       "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
