@@ -6,14 +6,13 @@
  */
 
 import { Editor } from 'tinymce/core/api/Editor';
-import Direction from '../core/Direction';
-import { Element } from '@ephox/sugar';
+import { Element, Direction } from '@ephox/sugar';
 
 const getNodeChangeHandler = (editor, dir) => {
   return (api) => {
     const nodeChangeHandler = (e) => {
       const element = Element.fromDom(e.element);
-      api.setActive(Direction.getDir(element) === dir);
+      api.setActive(Direction.getDirection(element) === dir);
     };
     editor.on('nodeChange', nodeChangeHandler);
 

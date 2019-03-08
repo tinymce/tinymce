@@ -1,4 +1,5 @@
 Version 5.0.3 (TBD)
+    Fixed directionality buttons not displaying the correct pressed state in selections that have no explicit dir property #TINY-3138
     Fixed quickbar toolbars not being disabled when setting them to false #TINY-3439
     Fixed an issue where delete/backspace before and after tables would create incorrect selections #TINY-3371
     Fixed an issue where dialog collection items (eg: emojis, special chars) couldn't be selected with touch devices #TINY-3444
