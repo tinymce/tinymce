@@ -6,6 +6,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
+import { Direction } from '@ephox/sugar';
 
 const setDir = function (editor, dir) {
   const dom = editor.dom;
@@ -26,6 +27,12 @@ const setDir = function (editor, dir) {
   }
 };
 
+// Get the directionality from the position in the content
+const getDir = function (element) {
+  return Direction.getDirection(element);
+};
+
 export default {
-  setDir
+  setDir,
+  getDir
 };

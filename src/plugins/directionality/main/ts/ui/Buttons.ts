@@ -7,6 +7,8 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import Direction from '../core/Direction';
+import { Element } from '@ephox/sugar';
 
 const generateSelector = function (dir) {
   const selector = [];
@@ -18,19 +20,31 @@ const generateSelector = function (dir) {
   return selector.join(',');
 };
 
+const getNodeChangeHandler = (editor, dir) => {
+  return (api) => {
+    const nodeChangeHandler = (e) => {
+      const element = Element.fromDom(e.element);
+      api.setActive(Direction.getDir(element) === dir);
+    };
+    editor.on('nodeChange', nodeChangeHandler);
+
+    return () => editor.off('nodeChange', nodeChangeHandler);
+  };
+};
+
 const register = function (editor: Editor) {
   editor.ui.registry.addToggleButton('ltr', {
     tooltip: 'Left to right',
     icon: 'ltr',
     onAction: () => editor.execCommand('mceDirectionLTR'),
-    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('ltr'), buttonApi.setActive).unbind
+    onSetup: getNodeChangeHandler(editor, 'ltr')
   });
 
   editor.ui.registry.addToggleButton('rtl', {
     tooltip: 'Right to left',
     icon: 'rtl',
     onAction: () => editor.execCommand('mceDirectionRTL'),
-    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('rtl'), buttonApi.setActive).unbind
+    onSetup: getNodeChangeHandler(editor, 'rtl')
   });
 };
 
