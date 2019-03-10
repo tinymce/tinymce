@@ -19,9 +19,10 @@ import {
   SimpleSpec,
   SimulatedEvent,
   SugarEvent,
+  SystemEvents,
   Tabstopping,
   Toggling,
-  AlloyComponent,
+  AlloyComponent
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
@@ -87,7 +88,7 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
       },
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('input-file-events', [
-          AlloyEvents.cutter(NativeEvents.click())
+          AlloyEvents.cutter(SystemEvents.tapOrClick())
         ])
       ])
     }

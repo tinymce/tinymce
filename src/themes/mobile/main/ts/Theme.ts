@@ -8,7 +8,7 @@
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Focus, Insert, Node } from '@ephox/sugar';
+import { Element, Focus, Insert, Node, Remove } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 
@@ -244,6 +244,16 @@ export const renderMobileTheme = function (editor) {
       });
       // Investigate ways to keep in sync with the ui
       FormatChangers.init(realm, editor);
+    });
+
+    editor.on('remove', () => {
+      realm.exit();
+    });
+
+    editor.on('detach', () => {
+      Attachment.detachSystem(realm.system());
+      realm.system().destroy();
+      Remove.remove(wrapper);
     });
 
     return {
