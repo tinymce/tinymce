@@ -8,7 +8,7 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Direction } from '@ephox/sugar';
 
-const getNodeChangeHandler = (editor, dir) => {
+const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
   return (api) => {
     const nodeChangeHandler = (e) => {
       const element = Element.fromDom(e.element);
