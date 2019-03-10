@@ -18,8 +18,9 @@
     "url": "https://github.com/ephox/echo"
   },
   "dependencies": {
-    "@ephox/sand": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
+    "@ephox/sand": "latest",
     "@ephox/sugar": "latest"
   },
   "devDependencies": {
