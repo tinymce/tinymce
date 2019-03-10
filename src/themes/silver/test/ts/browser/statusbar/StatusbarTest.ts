@@ -30,8 +30,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           s.element('span', {
             classes: [ arr.has('tox-statusbar__branding')],
             children: [
-              s.text(str.is('Powered by ')),
-              s.element('a', { children: [ s.text(str.is('Tiny')) ] })
+              s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
           }),
         ]
@@ -58,8 +57,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           s.element('span', {
             classes: [ arr.has('tox-statusbar__branding')],
             children: [
-              s.text(str.is('Powered by ')),
-              s.element('a', { children: [ s.text(str.is('Tiny')) ] })
+              s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
           }),
         ]
@@ -86,8 +84,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           s.element('span', {
             classes: [ arr.has('tox-statusbar__branding')],
             children: [
-              s.text(str.is('Powered by ')),
-              s.element('a', { children: [ s.text(str.is('Tiny')) ] })
+              s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
           })
         ]
