@@ -1,11 +1,12 @@
 import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Editor } from '@ephox/mcagar';
+import { Insert, Body, Element, Html, Attr, Remove } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
-import { Insert, Body, Element, Html, Attr, Remove } from '@ephox/sugar';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { Editor } from '@ephox/mcagar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', (success, failure) => {
   Plugin();
@@ -35,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           content_css: '/project/js/tinymce/skins/content/default',
           setup (editor) {
             editor.on('SkinLoaded', function () {
-                setTimeout(function () {
+                Delay.setTimeout(function () {
                     next(editor);
                 }, 0);
             });

@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { console } from '@ephox/dom-globals';
 import { Cell, Global, Obj, Option, Result, Merger } from '@ephox/katamari';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import Promise from 'tinymce/core/api/util/Promise';
 import { Editor } from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 import Settings from 'tinymce/plugins/emoticons/api/Settings';
 
 const ALL_CATEGORY = 'All';
@@ -135,15 +137,15 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
     } else {
       return new Promise((resolve, reject) => {
         let numRetries = 3;
-        const interval = setInterval(() => {
+        const interval = Delay.setInterval(() => {
           if (hasLoaded()) {
-            clearInterval(interval);
+            Delay.clearInterval(interval);
             resolve(true);
           } else {
             numRetries--;
             if (numRetries < 0) {
               console.log('Could not load emojis from url: ' + databaseUrl);
-              clearInterval(interval);
+              Delay.clearInterval(interval);
               reject(false);
             }
           }

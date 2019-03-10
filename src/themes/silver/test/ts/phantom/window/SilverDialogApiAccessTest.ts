@@ -1,11 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
-import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure) => {
@@ -47,7 +48,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
         onCancel: store.adder('onCancel'),
         onChange: store.adder('onChange'),
         onAction: (api, _actionData) => {
-          setTimeout(() => {
+          Delay.setTimeout(() => {
             const currentData = api.getData();
             store.adder('currentData: ' + currentData.fieldA)();
             // Currently, this will be ignored once the dialog is closed.

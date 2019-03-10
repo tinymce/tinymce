@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step, Chain, UiFinder, Keyboard, Keys, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { console, document } from '@ephox/dom-globals';
 import { Cell, Arr } from '@ephox/katamari';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import { Element, Body, Css } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
-import { document } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
 import { Editor } from 'tinymce/core/api/Editor';
 

@@ -8,6 +8,7 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
+import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';

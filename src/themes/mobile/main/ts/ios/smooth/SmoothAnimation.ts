@@ -6,6 +6,7 @@
  */
 
 import { Option } from '@ephox/katamari';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const adjust = function (value, destination, amount) {
   if (Math.abs(value - destination) <= amount) {
@@ -28,17 +29,17 @@ const create = function () {
       doFinish(v);
     };
 
-    clearInterval(interval);
+    Delay.clearInterval(interval);
 
     const abort = function (v) {
-      clearInterval(interval);
+      Delay.clearInterval(interval);
       finish(v);
     };
 
-    interval = setInterval(function () {
+    interval = Delay.setInterval(function () {
       const value = getCurrent();
       adjust(value, destination, amount).fold(function () {
-        clearInterval(interval);
+        Delay.clearInterval(interval);
         finish(destination);
       }, function (s) {
         increment(s, abort);
@@ -46,7 +47,7 @@ const create = function () {
           const newValue = getCurrent();
           // Jump to the end if the increment is no longer working.
           if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
-            clearInterval(interval);
+            Delay.clearInterval(interval);
             finish(destination);
           }
         }

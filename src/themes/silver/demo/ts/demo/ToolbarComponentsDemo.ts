@@ -1,4 +1,5 @@
 import { GuiFactory } from '@ephox/alloy';
+import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 
 import { identifyButtons } from '../../../main/ts/ui/toolbar/Integration';

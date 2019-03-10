@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
 
 const isEmpty = (editor: Editor, html?: string) => {
   const forcedRootBlockName = editor.settings.forced_root_block;
@@ -67,7 +68,7 @@ const startStoreDraft = (editor: Editor, started: Cell<boolean>) => {
   const interval = Settings.getAutoSaveInterval(editor);
 
   if (!started.get()) {
-    setInterval(() => {
+    Delay.setInterval(() => {
       if (!editor.removed) {
         storeDraft(editor);
       }

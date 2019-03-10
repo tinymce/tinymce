@@ -1,11 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Element } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { getPositionsUntilPreviousLine, LineInfo, getPositionsUntilNextLine, getPositionsAbove, getPositionsBelow, isAtFirstLine, isAtLastLine, findClosestHorizontalPosition, BreakType } from 'tinymce/core/caret/LineReader';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) => {
   const viewBlock = ViewBlock();

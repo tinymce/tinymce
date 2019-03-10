@@ -6,7 +6,7 @@
  */
 
 import Promise from './Promise';
-import { window, document } from '@ephox/dom-globals';
+import { clearInterval, clearTimeout, document, setInterval, setTimeout, window } from '@ephox/dom-globals';
 
 /**
  * Utility class for working with delayed actions like setTimeout.

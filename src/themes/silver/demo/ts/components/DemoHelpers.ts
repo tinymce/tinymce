@@ -1,5 +1,5 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { document, window } from '@ephox/dom-globals';
+import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';

@@ -1,4 +1,5 @@
 // tslint:disable:no-console
+import { console } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 

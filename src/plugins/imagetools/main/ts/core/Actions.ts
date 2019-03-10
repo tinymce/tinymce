@@ -122,7 +122,7 @@ const startTimedUpload = function (editor: Editor, imageUploadTimerState) {
 };
 
 const cancelTimedUpload = function (imageUploadTimerState) {
-  clearTimeout(imageUploadTimerState.get());
+  Delay.clearTimeout(imageUploadTimerState.get());
 };
 
 const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, selectedImage, size?) {

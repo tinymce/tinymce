@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { console, document } from '@ephox/dom-globals';
 import DOMUtils from './DOMUtils';
 import Tools from '../util/Tools';
-import { document } from '@ephox/dom-globals';
 
 /*globals console*/
 

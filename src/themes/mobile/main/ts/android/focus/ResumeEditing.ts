@@ -7,6 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Element, Focus, Node } from '@ephox/sugar';
+import Delay from 'tinymce/core/api/util/Delay';
 
 // There are numerous problems with Google Keyboard when we need to switch focus back from a toolbar item / dialog to
 // the content for editing. The major problem is to do with autocomplete. Android Google Keyboard (not Swift) seems to
@@ -23,7 +24,7 @@ import { Element, Focus, Node } from '@ephox/sugar';
 // disconnect the stack, it looks like it is fixed. That makes some level of sense.
 const autocompleteHack = function (/* iBody */) {
   return function (f) {
-    setTimeout(function () {
+    Delay.setTimeout(function () {
       f();
     }, 0);
   };
