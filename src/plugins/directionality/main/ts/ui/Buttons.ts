@@ -5,17 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Element, Direction } from '@ephox/sugar';
 
-const generateSelector = function (dir) {
-  const selector = [];
+const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
+  return (api) => {
+    const nodeChangeHandler = (e) => {
+      const element = Element.fromDom(e.element);
+      api.setActive(Direction.getDirection(element) === dir);
+    };
+    editor.on('nodeChange', nodeChangeHandler);
 
-  Tools.each('h1 h2 h3 h4 h5 h6 div p'.split(' '), function (name) {
-    selector.push(name + '[dir=' + dir + ']');
-  });
-
-  return selector.join(',');
+    return () => editor.off('nodeChange', nodeChangeHandler);
+  };
 };
 
 const register = function (editor: Editor) {
@@ -23,14 +25,14 @@ const register = function (editor: Editor) {
     tooltip: 'Left to right',
     icon: 'ltr',
     onAction: () => editor.execCommand('mceDirectionLTR'),
-    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('ltr'), buttonApi.setActive).unbind
+    onSetup: getNodeChangeHandler(editor, 'ltr')
   });
 
   editor.ui.registry.addToggleButton('rtl', {
     tooltip: 'Right to left',
     icon: 'rtl',
     onAction: () => editor.execCommand('mceDirectionRTL'),
-    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind(generateSelector('rtl'), buttonApi.setActive).unbind
+    onSetup: getNodeChangeHandler(editor, 'rtl')
   });
 };
 
