@@ -75,3 +75,14 @@
 //Menu items (kebab menu)
 @collection-item-active-background-color: #ededee;
 @collection-item-label-text-color: #595959;
+
+// TinyMCE 4 reset styles add width and height auto, which causes the svg height/width to be ignored in IE11
+@comment-icon-height: 24px;
+@comment-icon-width: 24px;
+
+.tox {
+  .tox-comment svg {
+    max-height: @comment-icon-height;
+    max-width: @comment-icon-width;
+  }
+}
