@@ -7,7 +7,7 @@
 
 import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
+import { console, Range, Text } from '@ephox/dom-globals';
 import { Arr, Option, Options, Throttler, Thunk } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
@@ -22,7 +22,6 @@ import {
   createPartialMenuWithAlloyItems,
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
-import { Range, Text } from '@ephox/dom-globals';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { Editor } from 'tinymce/core/api/Editor';
 
