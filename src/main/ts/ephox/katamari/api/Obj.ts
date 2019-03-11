@@ -86,8 +86,8 @@ export const size = function (obj: {}) {
 
 
 /** get :: (JsObj(k, v), k) -> Option v */
-export const get = function <T, K extends keyof T> (obj: T, key: K): Option<T[K]> {
-  return has(obj, key) ? Option.some(obj[key]) : Option.none();
+export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonNullable<T[K]>> {
+  return has(obj, key) ? Option.from(obj[key] as NonNullable<T[K]>) : Option.none();
 };
 
 /** has :: (JsObj(k, v), k) -> Bool */
