@@ -34,7 +34,7 @@
     "source-map-loader": "^0.2.3",
     "typescript": "^3.0.1",
     "webpack": "^3.10.0",
-    "webpack-cli": "^1.5.3"
+    "webpack-cli": "^3.2.3"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
