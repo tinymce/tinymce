@@ -10,15 +10,15 @@
 //
 
 @slider-handle-background-color: @color-tint;
-@slider-handle-border-radius: @slider-handle-width / 2;
-@slider-handle-border: 0;
+@slider-handle-border-radius: @control-border-radius;
+@slider-handle-border: 2px solid darken(@slider-handle-background-color, 10%);
 @slider-handle-box-shadow: none;
 @slider-handle-height: 24px;
-@slider-handle-width: 3px;
+@slider-handle-width: 14px;
 @slider-rail-background-color: transparent;
-@slider-rail-border-radius: @slider-rail-height;
+@slider-rail-border-radius: @control-border-radius;
 @slider-rail-border: 1px solid @border-color;
-@slider-rail-height: 6px;
+@slider-rail-height: 10px;
 
 .tox {
   .tox-slider {
@@ -42,6 +42,7 @@
 
   .tox-slider__handle {
     background-color: @slider-handle-background-color;
+    border: @slider-handle-border;
     border-radius: @slider-handle-border-radius;
     box-shadow: @slider-handle-box-shadow;
     height: @slider-handle-height;
