@@ -1,7 +1,7 @@
 {
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
-  "version": "3.0.17",
+  "version": "3.0.18",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/polaris"
