@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
 import Zwsp from '../text/Zwsp';
 
@@ -77,11 +77,12 @@ const register = function (htmlParser, settings, dom) {
 
       if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        if (node.firstChild !== undefined && !Zwsp.isZwsp(node.firstChild.value)) {
-          node.unwrap();
-        } else {
-          node.remove();
-        }
+        Option.from(node.firstChild).bind((firstChild) => {
+          return !Zwsp.isZwsp(node.firstChild.value) ? Option.some(firstChild) : Option.none();
+        }).fold(
+          () => node.remove(),
+          (_) => node.unwrap()
+        );
       }
     }
   });
