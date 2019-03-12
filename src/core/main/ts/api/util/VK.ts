@@ -22,6 +22,8 @@ export default {
   SPACEBAR: 32,
   TAB: 9,
   UP: 38,
+  END: 35,
+  HOME: 36,
 
   modifierPressed (e: KeyboardEvent): boolean {
     return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
