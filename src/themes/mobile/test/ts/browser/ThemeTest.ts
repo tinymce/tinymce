@@ -1,5 +1,6 @@
 import { Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
@@ -10,11 +11,8 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.core.ThemeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.themes.mobile.ThemeTest', (success, failure) => {
 
   mobileTheme();
   ImagePlugin();

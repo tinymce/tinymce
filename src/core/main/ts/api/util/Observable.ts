@@ -44,8 +44,8 @@ export default {
   fire (name, args, bubble) {
     const self = this;
 
-    // Prevent all events except the remove event after the instance has been removed
-    if (self.removed && name !== 'remove') {
+    // Prevent all events except the remove/detach event after the instance has been removed
+    if (self.removed && name !== 'remove' && name !== 'detach') {
       return args;
     }
 

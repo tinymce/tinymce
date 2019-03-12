@@ -56,13 +56,14 @@ const remove =  (editor: Editor): void => {
       DOM.remove(element.nextSibling);
     }
 
+    Events.fireRemove(editor);
+    editor.editorManager.remove(editor);
+
     if (!editor.inline && body) {
       restoreOriginalStyles(editor);
     }
 
-    Events.fireRemove(editor);
-
-    editor.editorManager.remove(editor);
+    Events.fireDetach(editor);
     DOM.remove(editor.getContainer());
 
     safeDestroy(_selectionOverrides);
