@@ -156,10 +156,10 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             meta: { }
           },
           'f4-charmap': [
-            { value: 'a', icon: 'a' },
-            { value: 'b', icon: 'b' },
-            { value: 'c', icon: 'c' },
-            { value: 'd', icon: 'd' }
+            { value: 'a', icon: 'a', text: 'a' },
+            { value: 'b', icon: 'b', text: 'b' },
+            { value: 'c', icon: 'c', text: 'c' },
+            { value: 'd', icon: 'd', text: 'd' }
           ],
           'f5-checkbox': true,
           'nested-input': 'nested-input',
