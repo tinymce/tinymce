@@ -65,6 +65,7 @@ const initPlugins = function (editor: Editor) {
 
 const initIcons = (editor: Editor) => {
   const iconPackName: string = Tools.trim(editor.settings.icons);
+  const currentIcons = editor.ui.registry.getAll().icons;
 
   const defaultIcons = getAllOxide();
   const loadIcons = {
@@ -73,7 +74,10 @@ const initIcons = (editor: Editor) => {
   };
 
   Obj.each(loadIcons, (svgData, icon) => {
-    editor.ui.registry.addIcon(icon, svgData);
+    // Don't override an icon registered manually
+    if (!Obj.has(currentIcons, icon)) {
+      editor.ui.registry.addIcon(icon, svgData);
+    }
   });
 };
 

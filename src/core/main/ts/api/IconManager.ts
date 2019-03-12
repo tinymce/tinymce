@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
+
 export interface IconPack {
   icons: Record<string, string>;
 }
@@ -12,6 +14,7 @@ export interface IconPack {
 export interface IconManager {
   add: (id: string, iconPack: IconPack) => void;
   get: (id: string) => IconPack;
+  has: (id: string) => boolean;
 }
 
 const CreateIconManager = (): IconManager => {
@@ -29,9 +32,14 @@ const CreateIconManager = (): IconManager => {
     return { icons: {} };
   };
 
+  const has = (id: string) => {
+    return Obj.has(lookup, id);
+  };
+
   return {
     add,
-    get
+    get,
+    has
   };
 };
 
