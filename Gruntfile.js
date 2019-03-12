@@ -146,17 +146,6 @@ module.exports = function (grunt) {
       })
     ),
 
-    unicode: {
-      'emoticons-plugin': {
-        files: [
-          {
-            src: 'src/plugins/emoticons/main/js/*.js',
-            dest: 'js/tinymce/plugins/emoticons/js/emojis.js'
-          }
-        ]
-      }
-    },
-
     uglify: Object.assign(
       {
         options: {
@@ -171,11 +160,24 @@ module.exports = function (grunt) {
             { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
             { src: 'src/core/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
           ]
+        },
+        // very similar to the emoticons plugin, except mangle is off
+        'emoticons-raw': {
+          options: {
+            mangle: false,
+            compress: false,
+            beautify: {
+              indent_level: 2
+            }
+          },
+          files: [
+            { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.js' }
+          ]
         }
       },
       gruntUtils.generate(plugins, 'plugin', (name) => {
         var pluginExtras = {
-          emoticons: [ { src: 'js/tinymce/plugins/emoticons/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' } ]
+          emoticons: [ { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' } ]
         };
         return {
           files: [
@@ -828,6 +830,8 @@ module.exports = function (grunt) {
     'less',
     'copy'
   ]);
+
+  grunt.registerTask('unicode', ['uglify:emoticons-raw'])
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
