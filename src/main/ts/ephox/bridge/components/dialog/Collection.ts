@@ -23,8 +23,8 @@ export const collectionSchema = ValueSchema.objOf(collectionFields);
 // TODO: Make type for CollectionItem
 export const collectionDataProcessor = ValueSchema.arrOfObj([
   FieldSchema.strictString('value'),
-  FieldSchema.optionString('text'),
-  FieldSchema.optionString('icon')
+  FieldSchema.strictString('text'),
+  FieldSchema.strictString('icon')
 ]);
 
 export const createCollection = (spec: CollectionApi): Result<Collection, ValueSchema.SchemaError<any>> => {
