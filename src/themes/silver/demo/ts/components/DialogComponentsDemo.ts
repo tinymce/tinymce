@@ -412,19 +412,23 @@ export default () => {
       ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Types.Collection.collectionDataProcessor, [
         {
           value: 'a',
-          text: 'A'
+          text: 'A',
+          icon: 'a'
         },
         {
           value: 'b',
-          text: 'B'
+          text: 'B',
+          icon: 'b'
         },
         {
           value: 'c',
-          text: 'C'
+          text: 'C',
+          icon: 'c'
         },
         {
           value: 'd',
-          text: 'D'
+          text: 'D',
+          icon: 'd'
         }
       ])
     );

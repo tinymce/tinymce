@@ -52,13 +52,9 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
 
   const setContents = (comp, items) => {
     const htmlLines = Arr.map(items, (item) => {
-      const textContent = spec.columns === 1 ? item.text.map((text) => {
-        return `<div class="tox-collection__item-label">${text}</div>`;
-      }).getOr('') : '';
+      const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${item.text}</div>` : '';
 
-      const iconContent = item.icon.map((icon) => {
-        return `<div class="tox-collection__item-icon">${icon}</div>`;
-      }).getOr('');
+      const iconContent = `<div class="tox-collection__item-icon">${item.icon}</div>`;
 
       // Replacing the hyphens and underscores in collection items with spaces
       // to ensure the screen readers pronounce the words correctly.
@@ -72,7 +68,7 @@ export const renderCollection = (spec: Types.Collection.Collection, providersBac
       // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
-      const ariaLabel = (item.text.getOr('')).replace(/\_| \- |\-/g, (match) => {
+      const ariaLabel = item.text.replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
       });
       return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
