@@ -780,6 +780,25 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function () {
     );
   });
 
+  suite.test('nested bookmark nodes', () => {
+    const ser = Serializer({ });
+
+    DOM.setHTML('test', '<p>' +
+      '<span data-mce-type="bookmark" id="mce_5_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px">' +
+        '<span data-mce-type="bookmark" id="mce_6_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>' +
+        '<span data-mce-type="bookmark" id="mce_7_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>' +
+      '</span>' +
+      'a' +
+      '<span data-mce-type="bookmark" id="mce_10_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>' +
+      '<span data-mce-type="bookmark" id="mce_9_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>' +
+      '<span data-mce-type="bookmark" id="mce_8_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>' +
+    '</p>');
+    LegacyUnit.equal(
+      ser.serialize(DOM.get('test'), { getInner: true }),
+      '<p>a</p>'
+    );
+  });
+
   viewBlock.attach();
   viewBlock.get().id = 'test';
 
