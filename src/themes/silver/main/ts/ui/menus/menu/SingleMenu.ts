@@ -8,6 +8,7 @@
 import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes, ItemTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
+import { console } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';

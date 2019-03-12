@@ -1,3 +1,5 @@
+import { console } from '@ephox/dom-globals';
+
 export default {
   title: 'Special character',
   body: {

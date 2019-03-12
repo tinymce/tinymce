@@ -2,6 +2,7 @@ import { GeneralSteps, Pipeline, Logger, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -41,7 +42,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function (success, failure) {
     toolbar: 'media',
     theme: 'silver',
     media_url_resolver (data, resolve) {
-      setTimeout(function () {
+      Delay.setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'
         });

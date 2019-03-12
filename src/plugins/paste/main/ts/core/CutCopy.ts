@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { DataTransfer, ClipboardEvent, Range } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
+import { Editor } from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DataTransfer, ClipboardEvent, Range } from '@ephox/dom-globals';
 
 const noop = function () {
 };
@@ -77,7 +78,7 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
   offscreenRange.selectNodeContents(inner);
   editor.selection.setRng(offscreenRange);
 
-  setTimeout(() => {
+  Delay.setTimeout(() => {
     editor.selection.setRng(range);
     outer.parentNode.removeChild(outer);
     done();
@@ -104,7 +105,7 @@ const cut = (editor: Editor) => (evt: ClipboardEvent) => {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       // Chrome fails to execCommand from another execCommand with this message:
       // "We don't execute document.execCommand() this time, because it is called recursively.""
-      setTimeout(() => { // detach
+      Delay.setTimeout(() => { // detach
         editor.execCommand('Delete');
       }, 0);
     });

@@ -1,5 +1,7 @@
 // tslint:disable:no-console
 
+import { console } from '@ephox/dom-globals';
+import Delay from 'tinymce/core/api/util/Delay';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 declare let tinymce: any;
@@ -46,7 +48,7 @@ tinymce.init({
     console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
     progress(0);
 
-    setTimeout(function () {
+    Delay.setTimeout(function () {
       console.log('blob upload [ended]', data.id());
       success(data.id() + '.png');
       progress(100);

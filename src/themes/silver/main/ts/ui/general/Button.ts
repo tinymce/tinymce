@@ -14,6 +14,7 @@ import {
   SketchSpec,
   Tabstopping,
 } from '@ephox/alloy';
+import { console } from '@ephox/dom-globals';
 import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 

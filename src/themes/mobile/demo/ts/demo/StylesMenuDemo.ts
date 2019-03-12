@@ -1,4 +1,5 @@
 import { Attachment, Gui, GuiFactory } from '@ephox/alloy';
+import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 

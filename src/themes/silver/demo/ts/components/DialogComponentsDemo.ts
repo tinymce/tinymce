@@ -9,29 +9,30 @@ import {
 } from '@ephox/alloy';
 import { Menu, Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
+import { console } from '@ephox/dom-globals';
 import { Arr, Id, Option, Fun } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
-import { renderAutocomplete } from '../../../main/ts/ui/dialog/Autocomplete';
-import { renderBodyPanel } from '../../../main/ts/ui/dialog/BodyPanel';
-import { renderColorInput } from '../../../main/ts/ui/dialog/ColorInput';
-import { renderColorPicker } from '../../../main/ts/ui/dialog/ColorPicker';
-import { renderCustomEditor } from '../../../main/ts/ui/dialog/CustomEditor';
-import { renderDropZone } from '../../../main/ts/ui/dialog/Dropzone';
-import { renderGrid } from '../../../main/ts/ui/dialog/Grid';
-import { renderIFrame } from '../../../main/ts/ui/dialog/IFrame';
-import { renderSelectBox } from '../../../main/ts/ui/dialog/SelectBox';
-import { renderSizeInput } from '../../../main/ts/ui/dialog/SizeInput';
-import { renderInput, renderTextarea } from '../../../main/ts/ui/dialog/TextField';
-import { renderTypeahead } from '../../../main/ts/ui/dialog/TypeAheadInput';
-import { renderUrlInput } from '../../../main/ts/ui/dialog/UrlInput';
-import { renderButton } from '../../../main/ts/ui/general/Button';
-import { renderListbox } from '../../../main/ts/ui/general/Listbox';
-import { UiFactoryBackstageShared } from '../../../main/ts/backstage/Backstage';
-import { renderLabel } from '../../../main/ts/ui/dialog/Label';
+import { renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
+import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
+import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
+import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
+import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
+import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
+import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
+import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
+import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
+import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
+import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
+import { renderTypeahead } from 'tinymce/themes/silver/ui/dialog/TypeAheadInput';
+import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
+import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
+import { renderListbox } from 'tinymce/themes/silver/ui/general/Listbox';
+import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
+import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
+import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
-import { renderCollection } from '../../../main/ts/ui/dialog/Collection';
-import { renderCheckbox } from '../../../main/ts/ui/general/Checkbox';
 
 // tslint:disable:no-console
 

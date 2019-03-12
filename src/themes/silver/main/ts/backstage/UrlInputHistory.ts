@@ -6,7 +6,7 @@
  */
 
 import { Arr, Type, Obj } from '@ephox/katamari';
-import { localStorage } from '@ephox/dom-globals';
+import { console, localStorage } from '@ephox/dom-globals';
 
 const STORAGE_KEY = 'tinymce-url-history';
 const HISTORY_LENGTH = 5;

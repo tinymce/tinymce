@@ -1,6 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Types } from '@ephox/bridge';
+import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Body, Value } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';

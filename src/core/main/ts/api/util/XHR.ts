@@ -6,6 +6,7 @@
  */
 
 import { XMLHttpRequest } from '@ephox/sand';
+import Delay from './Delay';
 import Observable from './Observable';
 import Tools from './Tools';
 
@@ -50,7 +51,7 @@ const XHR: any = {
 
         xhr = null;
       } else {
-        setTimeout(ready, 10);
+        Delay.setTimeout(ready, 10);
       }
     };
 
@@ -97,7 +98,7 @@ const XHR: any = {
       }
 
       // Wait for response, onReadyStateChange can not be used since it leaks memory in IE
-      setTimeout(ready, 10);
+      Delay.setTimeout(ready, 10);
     }
   }
 };

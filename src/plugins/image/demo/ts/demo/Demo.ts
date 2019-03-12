@@ -1,3 +1,6 @@
+import { console } from '@ephox/dom-globals';
+import Delay from 'tinymce/core/api/util/Delay';
+
 declare let tinymce: any;
 
 tinymce.init({
@@ -21,7 +24,7 @@ tinymce.init({
   },
   images_upload_handler: (blobInfo, success, failure, progress) => {
     console.log(blobInfo);
-    setTimeout(function () {
+    Delay.setTimeout(function () {
       success('https://www.google.com/logos/google.jpg');
     }, 5000);
   },

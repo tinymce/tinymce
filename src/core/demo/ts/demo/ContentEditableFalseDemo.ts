@@ -1,4 +1,5 @@
 // tslint:disable:no-console
+import { console } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 
 declare const window: any;

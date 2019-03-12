@@ -1,3 +1,4 @@
+import { console } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 
 import * as MockDemo from './MockDemo';

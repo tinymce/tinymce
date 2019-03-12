@@ -6,6 +6,7 @@
  */
 
 import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
+import { console } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';

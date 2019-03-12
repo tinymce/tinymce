@@ -7,6 +7,7 @@
 
 import Tinymce from './Tinymce';
 
+declare const module: any;
 declare const window: any;
 
 const exportToModuleLoaders = (tinymce) => {

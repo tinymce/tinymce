@@ -1,7 +1,8 @@
 // tslint:disable:no-console
 
 import { Arr } from '@ephox/katamari';
-import { document } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
+import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
 
@@ -12,7 +13,7 @@ export default function () {
       text: 'This is an example ' + (type ? type : 'blank') + ' message.'
     });
 
-    setTimeout(function () {
+    Delay.setTimeout(function () {
       notification.text('Message changed.');
     }, 5000);
     console.log(notification);
@@ -51,7 +52,7 @@ export default function () {
     });
     notification.progressBar.value(percent);
 
-    setTimeout(function () {
+    Delay.setTimeout(function () {
       notification.progressBar.value(90);
     }, 5000);
     console.log(notification);

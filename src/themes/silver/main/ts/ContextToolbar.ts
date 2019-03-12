@@ -197,7 +197,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const clearTimer = () => {
     const current = timer.get();
     if (current !== null) {
-      clearTimeout(current);
+      Delay.clearTimeout(current);
       timer.set(null);
     }
   };

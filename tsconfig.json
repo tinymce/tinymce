@@ -11,6 +11,7 @@
     "sourceMap": true,
     "outDir": "lib",
     "baseUrl": ".",
+    "types": [],
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],

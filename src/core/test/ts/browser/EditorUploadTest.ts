@@ -1,16 +1,15 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import Delay from 'tinymce/core/api/util/Delay';
 
-UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   Theme();
@@ -204,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
     editor.settings.images_upload_handler = function (data, success) {
       uploadCount++;
 
-      setTimeout(function () {
+      Delay.setTimeout(function () {
         success('myimage.png');
       }, 0);
     };
@@ -234,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
     editor.settings.images_upload_handler = function (data, success, failure) {
       uploadCount++;
 
-      setTimeout(function () {
+      Delay.setTimeout(function () {
         failure('Error');
       }, 0);
     };

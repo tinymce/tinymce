@@ -12,6 +12,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Notification } from '../ui/general/Notification';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Editor } from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 
 export default function (editor: Editor, extras, uiMothership) {
   const backstage: UiFactoryBackstage = extras.backstage;
@@ -79,7 +80,7 @@ export default function (editor: Editor, extras, uiMothership) {
     uiMothership.add(notificationWrapper);
 
     if (settings.timeout) {
-      setTimeout(() => {
+      Delay.setTimeout(() => {
         close();
       }, settings.timeout);
     }

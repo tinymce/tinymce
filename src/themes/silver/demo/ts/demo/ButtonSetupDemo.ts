@@ -1,4 +1,4 @@
-// import { Option } from '@ephox/katamari';
+import { console } from '@ephox/dom-globals';
 import { Editor } from 'tinymce/core/api/Editor';
 
 export default {

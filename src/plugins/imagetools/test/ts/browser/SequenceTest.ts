@@ -1,5 +1,6 @@
 import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { console } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/imagetools/Plugin';

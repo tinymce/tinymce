@@ -1,6 +1,6 @@
 import { GeneralSteps, Log, Pipeline, Step, Keys, Keyboard, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';

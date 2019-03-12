@@ -7,6 +7,7 @@
 
 import { AlloySpec, SimpleOrSketchSpec, FormTypes } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
+import { console } from '@ephox/dom-globals';
 import { Fun, Merger } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
