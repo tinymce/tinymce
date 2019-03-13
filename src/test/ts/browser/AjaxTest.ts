@@ -1,36 +1,54 @@
-import { assert, UnitTest } from '@ephox/bedrock';
-import { console } from '@ephox/dom-globals';
-import { Arr, FutureResult, LazyValue, Result } from '@ephox/katamari';
-import * as Ajax from 'ephox/jax/api/Ajax';
-import { ContentType } from 'ephox/jax/api/ContentType';
-import { Credentials } from 'ephox/jax/api/Credentials';
-import { ResponseType } from 'ephox/jax/api/ResponseType';
-import { ResponseError } from 'ephox/jax/response/ResponseError';
+import { Arr, FutureResult, Result } from '@ephox/katamari';
+import { UnitTest, assert } from '@ephox/bedrock';
+import { console, Blob } from '@ephox/dom-globals';
+import { DataType } from 'ephox/jax/core/DataType';
+import * as Http from 'ephox/jax/core/Http';
+import { HttpError } from 'ephox/jax/core/HttpError';
+import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 
-UnitTest.asynctest('AjaxTest', function(success, failure) {
+/* tslint:disable:no-console */
 
-  const expectError = function (label: string, response: LazyValue<Result<any, ResponseError>>) {
-    return FutureResult.nu<{},Error>(function (callback) {
-      response.get(function (res) {
-        res.fold(function (err) {
-          console.log(label, 'successfully failed');
-          callback(Result.value({ }));
-        }, function (val) {
-          callback(Result.error(new Error('Unexpected value in test: ' + label)));
-        });
+const expectError = (label: string, response: FutureResult<any, HttpError>) => {
+  return FutureResult.nu((callback) => {
+    response.get((res) => {
+      res.fold((err) => {
+        console.log(label, 'successfully failed');
+        callback(Result.value({ }));
+      }, (val) => {
+        callback(Result.error('Unexpected value in test: ' + label));
       });
     });
-  };
+  });
+};
 
-  const expectValue = function (label: string, value: any, response: LazyValue<Result<any, ResponseError>>) {
-    return FutureResult.nu<{},Error>(function (callback) {
-      response.get(function (res) {
-        res.fold(function (err) {
-          callback(Result.error(new Error(err.message())));
-        }, function (val) {
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => {
+  return FutureResult.nu((callback) => {
+    response.get((res) => {
+      res.fold((err) => {
+        callback(Result.error(new Error(err.message)));
+      }, (val) => {
+        try {
+          assert.eq(value, val);
+          console.log(label, 'passed with ', val);
+          callback(Result.value({}));
+        } catch (err) {
+          callback(Result.error(new Error(err)));
+        }
+      });
+    });
+  });
+};
+
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => {
+  return FutureResult.nu((callback) => {
+    response.get((res) => {
+      res.fold((err) => {
+        callback(Result.error(new Error(err.message)));
+      }, (blob) => {
+        readBlobAsText(blob).get((text) => {
           try {
-            assert.eq(value, val);
-            console.log(label, 'passed with ', val);
+            assert.eq(JSON.stringify(value, null, '  '), text);
+            console.log(label, 'passed with ', text);
             callback(Result.value({}));
           } catch (err) {
             callback(Result.error(new Error(err)));
@@ -38,30 +56,33 @@ UnitTest.asynctest('AjaxTest', function(success, failure) {
         });
       });
     });
-  };
+  });
+};
 
+UnitTest.asynctest('HttpTest', (success, failure) => {
   const responses = [
-    expectError('GET Query parameters incorrect', Ajax.get(
-      '/custom/sample/get/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    expectError('GET Query parameters incorrect', Http.get(
+      {
+        url: '/custom/sample/get/1?word=beta',
+        responseType: DataType.JSON,
+      }
     )),
     expectValue('GET Query parameters correct', {
       results: { good: [ 'alpha' ] }
-    }, Ajax.get(
-      '/custom/sample/get/1?word=alpha',
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    }, Http.get(
+      {
+        url: '/custom/sample/get/1?word=alpha',
+        responseType: DataType.JSON,
+      }
     )),
 
-    expectError('GET Query parameters incorrect because of custom header value', Ajax.get(
-      '/custom/sample/get/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
+    expectError('GET Query parameters incorrect because of custom header value', Http.get(
       {
-        'X-custom-header': 'X-custom-header-value-wrong'
+        url: '/custom/sample/get/1?word=beta',
+        responseType: DataType.JSON,
+        headers: {
+          'X-custom-header': 'X-custom-header-value-wrong'
+        }
       }
     )),
 
@@ -69,80 +90,95 @@ UnitTest.asynctest('AjaxTest', function(success, failure) {
       results: {
         bad: 'custom-header'
       }
-     }, Ajax.get(
-      '/custom/sample/get/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
-      {
-        'X-custom-header': 'X-custom-header-value'
-      }
+     }, Http.get(
+       {
+         url: '/custom/sample/get/1?word=beta',
+         responseType: DataType.JSON,
+         headers: {
+            'X-custom-header': 'X-custom-header-value'
+          }
+       }
     )),
 
-    expectError('POST with wrong data: ', Ajax.post(
-      '/custom/sample/post/1',
-      ContentType.json({
-        'send-data': 'wrong-number'
-      }),
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    expectError('POST with wrong data: ', Http.post(
+      {
+        url: '/custom/sample/post/1',
+        body: {
+          type: DataType.JSON,
+          data: {
+            'send-data': 'wrong-number'
+          }
+        },
+        responseType: DataType.JSON
+      }
     )),
 
     expectValue('POST with correct data: ', {
       'post-output': [ 'Australia', 'US' ]
-    }, Ajax.post(
-      '/custom/sample/post/1',
-      ContentType.json({
-        'send-data': '10'
-      }),
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    }, Http.post(
+      {
+        url: '/custom/sample/post/1',
+        body: {
+          type: DataType.JSON,
+          data: {
+            'send-data': '10'
+          }
+        },
+        responseType: DataType.JSON
+      }
     )),
 
-    expectError('PUT with wrong data: ', Ajax.put(
-      '/custom/sample/put/1',
-      ContentType.json({
-        'send-data': '10'
-      }),
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    expectError('PUT with wrong data: ', Http.put(
+      {
+        url: '/custom/sample/put/1',
+        body: {
+          type: DataType.JSON,
+          data: {
+            'send-data': '10'
+          }
+        },
+        responseType: DataType.JSON
+      }
     )),
 
     expectValue('PUT with correct data: ', {
       'put-output': [ 'Australia', 'US' ]
-    }, Ajax.put(
-      '/custom/sample/put/1',
-      ContentType.json({
-        'send-data': '15'
-      }),
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    }, Http.put(
+      {
+        url: '/custom/sample/put/1',
+        body: {
+          type: DataType.JSON,
+          data: {
+            'send-data': '15'
+          }
+        },
+        responseType: DataType.JSON
+      }
     )),
 
-    expectError('DELETE Query parameters incorrect', Ajax.del(
-      '/custom/sample/del/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    expectError('DELETE Query parameters incorrect', Http.del(
+      {
+        url: 'custom/sample/del/1?word=beta',
+        responseType: DataType.JSON
+      }
     )),
+
     expectValue('DELETE Query parameters correct', {
       results: { 'del-good': [ 'alpha' ] }
-    }, Ajax.del(
-      '/custom/sample/del/1?word=alpha',
-      ResponseType.json(),
-      Credentials.none(),
-      { }
+    }, Http.del(
+      {
+        url: 'custom/sample/del/1?word=alpha',
+        responseType: DataType.JSON
+      }
     )),
 
-    expectError('DELETE Query parameters incorrect because of custom header value', Ajax.del(
-      '/custom/sample/del/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
+    expectError('DELETE Query parameters incorrect because of custom header value', Http.del(
       {
-        'X-custom-header': 'X-del-custom-header-value-wrong'
+        url: '/custom/sample/del/1?word=beta',
+        responseType: DataType.JSON,
+        headers: {
+          'X-custom-header': 'X-del-custom-header-value-wrong'
+        }
       }
     )),
 
@@ -150,26 +186,35 @@ UnitTest.asynctest('AjaxTest', function(success, failure) {
       results: {
         'del-bad': 'custom-header'
       }
-     }, Ajax.del(
-      '/custom/sample/del/1?word=beta',
-      ResponseType.json(),
-      Credentials.none(),
+     }, Http.del(
       {
-        'X-custom-header': 'X-del-custom-header-value'
+        url: '/custom/sample/del/1?word=beta',
+        responseType: DataType.JSON,
+        headers: {
+          'X-custom-header': 'X-del-custom-header-value'
+        }
+      }
+    )),
+
+    expectBlobJson('Download with correct blob data', { results: { data: '123' } }, Http.download(
+      {
+        url: '/custom/blob',
+        headers: {
+          'x-custom-header': 'custom'
+        }
       }
     ))
   ];
 
-  Arr.foldr(responses, function (res, rest) {
-    return rest.bindFuture(function () {
+  Arr.foldr(responses, (res, rest) => {
+    return rest.bindFuture(() => {
       return res;
     });
-  }, FutureResult.pure({})).get(function (v: Result<{},Error>) {
-    v.fold(function (err) {
+  }, FutureResult.pure({})).get((v) => {
+    v.fold((err) => {
       failure(err);
-    }, function (_) {
+    }, (_) => {
       success();
     });
   });
 });
-

@@ -8,7 +8,8 @@
 /dependency
 /config/bolt/bootstrap*.js
 /node_modules
-
+yarn.lock
+yarn-error.log
 package-lock.json
 
 jenkins-plumbing

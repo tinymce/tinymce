@@ -1,13 +1,15 @@
-import * as Ajax from './Ajax';
-import { ContentType } from './ContentType';
-import { Credentials } from './Credentials';
-import { Methods } from './Methods';
-import { ResponseType } from './ResponseType';
+import * as Http from '../core/Http';
+import * as HttpJwt from '../core/HttpJwt';
+import * as Types from '../core/HttpTypes';
+import * as HttpData from '../core/HttpData';
+import * as HttpError from '../core/HttpError';
+import { DataType } from '../core/DataType';
 
 export {
-  Ajax,
-  ContentType,
-  Credentials,
-  Methods,
-  ResponseType
+  Http,
+  HttpJwt,
+  HttpData,
+  HttpError,
+  Types,
+  DataType
 };
