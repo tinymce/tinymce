@@ -59,27 +59,27 @@ export interface SelectData {
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Menu.NestedMenuItemContents[] => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Option<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
-      return [{
+      return Option.some({
         type: 'separator',
         text: translatedText
-      }] as Menu.SeparatorMenuItemApi[];
+      }) as Option<Menu.SeparatorMenuItemApi>;
     } else if (rawItem.type === 'submenu') {
       const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response));
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
-        return [];
+        return Option.none();
       } else {
-        return [{
+        return Option.some({
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
           getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
-        }] as Menu.NestedMenuItemApi[];
+        }) as Option<Menu.NestedMenuItemApi>;
       }
     } else {
-      return [{
+      return Option.some({
         // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
         // See ToggleMenuItem and ItemStructure for how it's handled.
         // If this type ever changes, we'll need to change that too
@@ -89,7 +89,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         disabled,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
-      }] as Menu.ToggleMenuItemApi[];
+      }) as Option<Menu.ToggleMenuItemApi>;
     }
   };
 
@@ -98,9 +98,9 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
-      return invalid ? [ ] : generateItem(item, response, false);
+      return invalid ? [ ] : generateItem(item, response, false).map(Arr.pure).getOr([]);
     } else {
-      return generateItem(item, response, invalid);
+      return generateItem(item, response, invalid).map(Arr.pure).getOr([]);
     }
   };
 
