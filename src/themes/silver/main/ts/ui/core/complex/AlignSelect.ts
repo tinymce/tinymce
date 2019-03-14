@@ -10,7 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from '../Utils';
+import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';

@@ -10,7 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from '../Utils';
+import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
 
