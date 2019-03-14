@@ -9,6 +9,7 @@ import { AlloyTriggers } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { onActionToggleFormat } from '../Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
@@ -43,17 +44,6 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     });
   };
 
-  const onAction = (rawItem) => () => {
-    editor.undoManager.transact(() => {
-      editor.focus();
-      if (editor.formatter.match(rawItem.format)) {
-        editor.formatter.remove(rawItem.format);
-      } else {
-        editor.formatter.apply(rawItem.format);
-      }
-    });
-  };
-
   const nodeChangeHandler = Option.some((comp) => {
     return (e) => {
       const detectedFormat = getMatchingValue(e);
@@ -71,7 +61,7 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
-    onAction,
+    onAction: onActionToggleFormat(editor),
     nodeChangeHandler,
     dataset,
     shouldHide: false,

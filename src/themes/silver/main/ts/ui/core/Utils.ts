@@ -26,6 +26,14 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
   return () => unbindCell.get().each((unbind) => unbind());
 };
 
+const onActionToggleFormat = (editor: Editor) => (rawItem) => () => {
+  editor.undoManager.transact(() => {
+    editor.focus();
+    editor.execCommand('mceToggleFormat', false, rawItem.format);
+  });
+};
+
 export {
-  onSetupFormatToggle
+  onSetupFormatToggle,
+  onActionToggleFormat
 };

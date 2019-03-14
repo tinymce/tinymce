@@ -10,6 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
+import { onActionToggleFormat } from '../Utils';
 import { createMenuItems, createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
@@ -32,17 +33,6 @@ const getSpec = (editor: Editor) => {
     return Option.none<PreviewSpec>();
   };
 
-  const onAction = (rawItem) => () => {
-    editor.undoManager.transact(() => {
-      editor.focus();
-      if (editor.formatter.match(rawItem.format)) {
-        editor.formatter.remove(rawItem.format);
-      } else {
-        editor.formatter.apply(rawItem.format);
-      }
-    });
-  };
-
   const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
     return () => {
       const match = getMatchingValue();
@@ -60,7 +50,7 @@ const getSpec = (editor: Editor) => {
     icon: Option.some('align-left'),
     isSelectedFor,
     getPreviewFor,
-    onAction,
+    onAction: onActionToggleFormat(editor),
     nodeChangeHandler,
     dataset,
     shouldHide: false,

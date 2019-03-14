@@ -10,6 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { onActionToggleFormat } from '../Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest } from './utils/FormatDetection';
 
@@ -33,17 +34,6 @@ const getSpec = (editor): SelectSpec => {
     return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
   };
 
-  const onAction = (rawItem) => () => {
-    editor.undoManager.transact(() => {
-      editor.focus();
-      if (editor.formatter.match(rawItem.format)) {
-        editor.formatter.remove(rawItem.format);
-      } else {
-        editor.formatter.apply(rawItem.format);
-      }
-    });
-  };
-
   const nodeChangeHandler = Option.some((comp) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
@@ -64,7 +54,7 @@ const getSpec = (editor): SelectSpec => {
     icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
-    onAction,
+    onAction: onActionToggleFormat(editor),
     nodeChangeHandler,
     shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
     isInvalid: (item) => !editor.formatter.canApply(item.format)
