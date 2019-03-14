@@ -1,41 +1,35 @@
-const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader')
 const path = require('path');
+const inFile = './src/demo/ts/Demo.ts';
+const outFile = './scratch/compiles/demo.js';
 
 module.exports = {
-  entry: './src/demo/ts/ephox/jax/demo/Demo.ts',
+  entry: inFile,
+  mode: 'development',
   devtool: 'source-map',
-
-  resolve: {
-    extensions: ['.ts', '.js'],
-    plugins: [
-      new TsConfigPathsPlugin({
-        baseUrl: '.',
-        compiler: 'typescript'
-      }),
-    ]
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
   },
-
+  resolve: {
+    symlinks: false,
+    extensions: ['.ts', '.js']
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: ['source-map-loader'],
-        enforce: 'pre'
-      },
-
-      {
         test: /\.ts$/,
-        use: ['awesome-typescript-loader']
+        use: [
+          {
+            loader: 'ts-loader'
+          }
+        ]
       }
     ]
   },
-
-  plugins: [
-    new CheckerPlugin()
-  ],
-
   output: {
-    filename: 'demo.js',
-    path: path.resolve(__dirname, './scratch/compiled')
+    filename: path.basename(outFile),
+    path: path.resolve(path.dirname(outFile)),
+    pathinfo: false
   }
 };
