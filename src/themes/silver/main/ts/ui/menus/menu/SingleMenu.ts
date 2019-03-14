@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, FocusManagers, Keying, TieredMenu, MenuTypes, ItemTypes } from '@ephox/alloy';
+import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Merger, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -172,9 +172,15 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
 
 export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
+
   const alloyItems = Options.cat(
-    Arr.map(items, (item) => {
-      return createMenuItemFromBridge(item, itemResponse, providersBackstage, hasIcons);
+    Arr.map(items, (item: SingleMenuItemApi) => {
+      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, providersBackstage, hasIcons);
+      if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
+        return createItem(Merger.merge(item, {disabled: true}));
+      } else {
+        return createItem(item);
+      }
     })
   );
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');

@@ -1,4 +1,5 @@
 Version 5.0.3 (TBD)
+    Changed nested menuitems to disable if empty, or hide if part of the style formats menu and style_formats_autohide is true #TINY-3310
     Fixed directionality buttons not displaying the correct pressed state in selections that have no explicit dir property #TINY-3138
     Changed the entire phrase 'Powered by Tiny' in the statusbar into a link, instead of just the word 'Tiny' #TINY-3366
     Fixed the mobile editor not cleaning up properly when removed #TINY-3445
