@@ -67,6 +67,12 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
+  const onSetupLink = (buttonApi) => {
+    const node = editor.selection.getNode();
+    buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
+    return () => { };
+  };
+
   editor.ui.registry.addContextForm('quicklink', {
     launch: {
       type: 'contextformtogglebutton',
@@ -120,10 +126,20 @@ const setupContextToolbars = function (editor: Editor) {
         icon: 'unlink',
         tooltip: 'Remove link',
         active: false,
-        onSetup: () => () => { },
+        onSetup: onSetupLink,
         // TODO: The original inlite action was quite complex. Are we missing something with this?
         onAction: (formApi) => {
           Utils.unlink(editor);
+          formApi.hide();
+        }
+      },
+      {
+        type: 'contextformbutton',
+        icon: 'new-tab',
+        tooltip: 'Open link',
+        onSetup: onSetupLink,
+        onAction: (formApi) => {
+          Actions.gotoSelectedLink(editor)();
           formApi.hide();
         }
       }
