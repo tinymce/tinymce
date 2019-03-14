@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Toolbar } from '@ephox/bridge';
+import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
 import Settings from '../api/Settings';
-import { HTMLAnchorElement } from '@ephox/dom-globals';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
@@ -67,7 +68,7 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
-  const onSetupLink = (buttonApi) => {
+  const onSetupLink = (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
     return () => { };
@@ -122,10 +123,9 @@ const setupContextToolbars = function (editor: Editor) {
         }
       },
       {
-        type: 'contextformtogglebutton',
+        type: 'contextformbutton',
         icon: 'unlink',
         tooltip: 'Remove link',
-        active: false,
         onSetup: onSetupLink,
         // TODO: The original inlite action was quite complex. Are we missing something with this?
         onAction: (formApi) => {
