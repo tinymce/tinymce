@@ -15,7 +15,8 @@
       "ephox/jax/demo/*": ["src/demo/ts/ephox/jax/demo/*"],
       "ephox/jax/*": ["src/main/ts/ephox/jax/*"],
       "@ephox/jax": ["src/main/ts/ephox/jax/api/Main.ts"]
-    }
+    },
+    "types": []
   },
   "include": [
     "src/demo/ts",

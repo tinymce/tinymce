@@ -4,8 +4,6 @@
       "@ephox/tslint-rules/tslint.json"
   ],
   "jsRules": {},
-  "rules": {
-    "max-line-length": [true, 240]
-  },
+  "rules": {},
   "rulesDirectory": []
 }
