@@ -102,6 +102,10 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getMoreButton(container);
   }).getOrDie('Could not find more button element');
 
+  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getToolbar(container);
+  }).getOrDie('Could not find more toolbar element');
+
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
@@ -128,7 +132,9 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: getToolbarDrawer(editor)
+    split: getToolbarDrawer(editor),
+    lazyToolbar,
+    lazyMoreButton
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
@@ -206,7 +212,7 @@ const setup = (editor: Editor): RenderInfo => {
       behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
         Keying.config({
           mode: 'cyclic',
-          selector: '.tox-menubar, .tox-toolbar, .tox-sidebar--sliding-open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
+          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
         })
       ]))
     } as OuterContainerSketchSpec)
