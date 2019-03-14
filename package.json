@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "4.0.2",
+  "version": "4.0.0",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -34,6 +34,9 @@
     "@ephox/dom-globals": "latest",
     "@ephox/katamari": "latest",
     "tslib": "^1.9.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "lib/main",
