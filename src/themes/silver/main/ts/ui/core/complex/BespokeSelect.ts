@@ -62,24 +62,24 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Option<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
-      return Option.some({
+      return Option.some<Menu.SeparatorMenuItemApi>({
         type: 'separator',
         text: translatedText
-      }) as Option<Menu.SeparatorMenuItemApi>;
+      });
     } else if (rawItem.type === 'submenu') {
       const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response));
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
         return Option.none();
       } else {
-        return Option.some({
+        return Option.some<Menu.NestedMenuItemApi>({
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
           getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
-        }) as Option<Menu.NestedMenuItemApi>;
+        });
       }
     } else {
-      return Option.some({
+      return Option.some<Menu.ToggleMenuItemApi>({
         // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
         // See ToggleMenuItem and ItemStructure for how it's handled.
         // If this type ever changes, we'll need to change that too
@@ -89,7 +89,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         disabled,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
-      }) as Option<Menu.ToggleMenuItemApi>;
+      });
     }
   };
 
@@ -98,9 +98,9 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
-      return invalid ? [ ] : generateItem(item, response, false).map(Arr.pure).getOr([]);
+      return invalid ? [ ] : generateItem(item, response, false).toArray();
     } else {
-      return generateItem(item, response, invalid).map(Arr.pure).getOr([]);
+      return generateItem(item, response, invalid).toArray();
     }
   };
 
