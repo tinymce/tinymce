@@ -68,7 +68,7 @@ const setupContextToolbars = function (editor: Editor) {
     editor.selection.collapse(false);
   };
 
-  const onSetupLink = (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+  const onSetupLink = (buttonApi: Toolbar.ContextButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
     return () => { };
