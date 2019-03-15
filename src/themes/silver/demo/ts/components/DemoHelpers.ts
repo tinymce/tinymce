@@ -44,8 +44,8 @@ const setupDemo = () => {
         console.log('This is where the ID would be attached to the header so it can be linked');
       }}
     ],
-    anchorTop: Option.some('#top'),
-    anchorBottom: Option.some('#bottom')
+    anchorTop: '#top',
+    anchorBottom: '#bottom'
   };
 
   const fakeValidator: UrlValidationHandler = (info, callback) => {

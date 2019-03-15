@@ -6,7 +6,7 @@
  */
 
 import { Menu as BridgeMenu } from '@ephox/bridge';
-import { Arr, Fun, Strings } from '@ephox/katamari';
+import { Arr, Strings, Option } from '@ephox/katamari';
 
 import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
 import { LinkInformation } from '../../backstage/UrlInputBackstage';
@@ -33,7 +33,7 @@ const staticMenuItem = (title: string, url: string): BridgeMenu.MenuItemApi => (
   value: url,
   text: title,
   meta: {
-    attach: Fun.noop
+    attach: undefined
   },
   onAction: () => { }
 });
@@ -52,11 +52,11 @@ const headerTargets = (linkInfo: LinkInformation) => filteredTargets('header', l
 const anchorTargets = (linkInfo: LinkInformation) => filteredTargets('anchor', linkInfo.targets);
 
 const anchorTargetTop = (linkInfo: LinkInformation) => {
-  return linkInfo.anchorTop.map((url) => staticMenuItem('<top>', url)).toArray();
+  return Option.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
 };
 
 const anchorTargetBottom = (linkInfo: LinkInformation) => {
-  return linkInfo.anchorBottom.map((url) => staticMenuItem('<bottom>', url)).toArray();
+  return Option.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
 };
 
 const historyTargets = (history: string[]) => {

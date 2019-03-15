@@ -33,6 +33,10 @@ const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && s
 const data: Record<string, Record<string, string>> = {};
 const currentCode = Cell('en');
 
+const getData = (): Record<string, Record<string, string>> => {
+  return Obj.map(data, (value) => ({ ...value }));
+};
+
 /**
  * Sets the current language code.
  *
@@ -169,6 +173,7 @@ const isRtl = () => {
 const hasCode = (code: string) => Obj.has(data, code);
 
 export default {
+  getData,
   setCode,
   getCode,
   add,

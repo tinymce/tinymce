@@ -18,8 +18,8 @@ type Picker = (callback: PickerCallback, value: string, meta: Record<string, any
 
 export interface LinkInformation {
   targets: LinkTarget[];
-  anchorTop: Option<string>;
-  anchorBottom: Option<string>;
+  anchorTop?: string;
+  anchorBottom?: string;
 }
 
 export type ValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
@@ -67,36 +67,32 @@ const getTextSetting = (settings: Record<string, any>, name: string, defaultValu
   return Type.isString(value) ? Option.some(value) : Option.none();
 };
 
-const getPickerSetting = (settings: Record<string, any>, filetype: string): Option<Picker> => {
+const getPicker = (settings: Record<string, any>): Option<Picker> => {
+  return Option.some(settings.file_picker_callback).filter(Type.isFunction);
+};
 
+const getPickerTypes = (settings: Record<string, any>): boolean | Record<string, boolean> => {
   const optFileTypes = Option.some(settings.file_picker_types).filter(isTruthy);
   const optLegacyTypes = Option.some(settings.file_browser_callback_types).filter(isTruthy);
   const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
-
-  const on = optTypes.fold(() => true, (types) => getOpt(types, filetype).getOr(false));
-  const optPicker = Option.some(settings.file_picker_callback).filter(Type.isFunction);
-
-  return !on ? Option.none() : optPicker;
+  return getPicker(settings).fold(
+    () => false,
+    (_picker) => optTypes.fold<boolean | Record<string, boolean>>(
+      () => true,
+      (types) => Obj.keys(types).length > 0 ? types : false)
+  );
 };
 
-const getLinkInformation = (editor: Editor) => (): Option<LinkInformation> => {
-  if (editor.settings.typeahead_urls === false) {
-    return Option.none();
+const getPickerSetting = (settings: Record<string, any>, filetype: string): Option<Picker> => {
+  const pickerTypes = getPickerTypes(settings);
+  if (Type.isBoolean(pickerTypes)) {
+    return pickerTypes ? getPicker(settings) : Option.none();
+  } else {
+    return pickerTypes[filetype] ? getPicker(settings) : Option.none();
   }
-
-  return Option.some({
-    targets: LinkTargets.find(editor.getBody()),
-    anchorTop: getTextSetting(editor.settings, 'anchor_top', '#top'),
-    anchorBottom: getTextSetting(editor.settings, 'anchor_bottom', '#bottom')
-  });
 };
 
-const getValidationHandler = (editor: Editor) => (): Option<UrlValidationHandler> => {
-  const validatorHandler = editor.settings.filepicker_validator_handler;
-  return Type.isFunction(validatorHandler) ? Option.some(validatorHandler) : Option.none();
-};
-
-const getUrlPicker = (editor: Editor) => (filetype: string): Option<UrlPicker> => {
+const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => {
   return getPickerSetting(editor.settings, filetype).map((picker) => {
     return (entry: UrlData): Future<UrlData> => {
       return Future.nu((completer) => {
@@ -118,10 +114,31 @@ const getUrlPicker = (editor: Editor) => (filetype: string): Option<UrlPicker> =
   });
 };
 
+export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
+  if (editor.settings.typeahead_urls === false) {
+    return Option.none();
+  }
+
+  return Option.some({
+    targets: LinkTargets.find(editor.getBody()),
+    anchorTop: getTextSetting(editor.settings, 'anchor_top', '#top').getOrUndefined(),
+    anchorBottom: getTextSetting(editor.settings, 'anchor_bottom', '#bottom').getOrUndefined()
+  });
+};
+
+export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => {
+  const validatorHandler = editor.settings.filepicker_validator_handler;
+  return Type.isFunction(validatorHandler) ? Option.some(validatorHandler) : Option.none();
+};
+
+export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
+  return getPickerTypes(editor.settings);
+};
+
 export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput => ({
   getHistory,
   addToHistory,
-  getLinkInformation: getLinkInformation(editor),
-  getValidationHandler: getValidationHandler(editor),
-  getUrlPicker: getUrlPicker(editor),
+  getLinkInformation: () => getLinkInformation(editor),
+  getValidationHandler: () => getValidationHandler(editor),
+  getUrlPicker: (filetype: string) => getUrlPicker(editor, filetype),
 });
