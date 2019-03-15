@@ -11,6 +11,11 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
+export interface MoreDrawerData {
+  floating: boolean;
+  lazyMoreButton: () => AlloyComponent;
+  lazyToolbar: () => AlloyComponent;
+}
 export interface ToolbarSpec {
   uid: string;
   cyclicKeying: boolean;
@@ -18,9 +23,7 @@ export interface ToolbarSpec {
   initGroups: ToolbarGroup[];
   getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
-  floating: boolean;
-  lazyMoreButton: any;
-  lazyToolbar: any;
+  moreDrawerData?: MoreDrawerData;
 }
 
 export interface ToolbarGroup {
@@ -114,8 +117,8 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
         Keying.config({
           mode: 'cyclic',
           onEscape: () => {
-            AlloyTriggers.emit(toolbarSpec.lazyToolbar(), 'alloy.toolbar.toggle');
-            Keying.focusIn(toolbarSpec.lazyMoreButton());
+            AlloyTriggers.emit(toolbarSpec.moreDrawerData.lazyToolbar(), 'alloy.toolbar.toggle');
+            Keying.focusIn(toolbarSpec.moreDrawerData.lazyMoreButton());
             return Option.some(true);
           }
         })
@@ -148,7 +151,7 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     }
   });
 
-  const splitToolbarComponents = toolbarSpec.floating ? [
+  const splitToolbarComponents = toolbarSpec.moreDrawerData.floating ? [
     primary
   ] : [
     primary,
@@ -166,7 +169,7 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
     },
-    floating: toolbarSpec.floating,
+    floating: toolbarSpec.moreDrawerData.floating,
     overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group

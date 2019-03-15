@@ -41,7 +41,6 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
             }
           ],
           backstage: TestBackstage(),
-          floating: false,
           getSink: () => Result.error('')
         })
       );

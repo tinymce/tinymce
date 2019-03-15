@@ -135,9 +135,11 @@ const partToolbar = Composite.partType.optional({
         initGroups: [],
         getSink: spec.getSink,
         backstage: spec.backstage,
-        floating: spec.split === ToolbarDrawer.floating,
-        lazyToolbar: spec.lazyToolbar,
-        lazyMoreButton: spec.lazyMoreButton
+        moreDrawerData: {
+          floating: spec.split === ToolbarDrawer.floating,
+          lazyToolbar: spec.lazyToolbar,
+          lazyMoreButton: spec.lazyMoreButton
+        }
       };
       return renderer(toolbarSpec);
     }
