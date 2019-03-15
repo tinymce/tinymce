@@ -10,6 +10,7 @@ Version 5.0.3 (TBD)
     Fixed an issue that prevented default icons from being overridden #TINY-3449
     Fixed an issue where home/end keys wouldn't move the caret correctly before/after content editable false inline elements. #TINY-2995
     Fixed styles not being preserved in IE 11 when editing via the fullpage plugin #TINY-3464
+    Changed formatselect, styleselect and align menus to use the mceToggleFormat command internally #TINY-3428
 Version 5.0.2 (2019-03-05)
     Added presentation and document presets to `htmlpanel` dialog component #TINY-2694
     Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712

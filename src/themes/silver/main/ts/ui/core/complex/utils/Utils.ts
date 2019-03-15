@@ -5,25 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from '../../../../../../../../core/main/ts/api/util/Tools';
+import { Toolbar } from '@ephox/bridge';
+import { Cell, Option } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
+import { FormatItem } from '../BespokeSelect';
 
-const processFormatsString = (rawFormats) => {
+type Unbinder = () => void;
 
-  const formats = Tools.map(rawFormats, (item) => {
-    let title = item, format = item;
-    // Allow text=value block formats
-    const values = item.split('=');
-    if (values.length > 1) {
-      title = values[0];
-      format = values[1];
-    }
+const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+  const unbindCell = Cell<Option<Unbinder>>(Option.none());
 
-    return { title, format };
+  const init = () => {
+    api.setActive(editor.formatter.match(name));
+    const unbind = editor.formatter.formatChanged(name, api.setActive).unbind;
+    unbindCell.set(Option.some(unbind));
+  };
+
+  // The editor may or may not have been setup yet, so check for that
+  editor.initialized ? init() : editor.on('init', init);
+
+  return () => unbindCell.get().each((unbind) => unbind());
+};
+
+const onActionToggleFormat = (editor: Editor) => (rawItem: FormatItem) => () => {
+  editor.undoManager.transact(() => {
+    editor.focus();
+    editor.execCommand('mceToggleFormat', false, rawItem.format);
   });
-
-  return formats;
 };
 
 export {
-  processFormatsString
+  onSetupFormatToggle,
+  onActionToggleFormat
 };
