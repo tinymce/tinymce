@@ -76,8 +76,6 @@ const clearHistory = function () {
 };
 
 export {
-  getAllHistory,
-  setAllHistory,
   getHistory,
   addToHistory,
   clearHistory
