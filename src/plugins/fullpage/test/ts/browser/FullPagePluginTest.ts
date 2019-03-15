@@ -126,12 +126,13 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
   const sParseStyles = function (editor) {
     return Logger.t('Parse styles', GeneralSteps.sequence([
       Step.sync(function () {
-        editor.setContent('<html><head><style>p {text-align:right}</style></head><body dir="rtl"><p>Test</p></body></html>');
+        editor.setContent('<html><head><style>p {text-transform: uppercase}</style></head><body dir="rtl"><p>Test</p></body></html>');
       }),
       Waiter.sTryUntil(
-        'Expected styles where not added',
+        'Expected styles were added',
         Step.sync(function () {
-          Assertions.assertEq('Styles added to iframe document', 'right', editor.dom.getStyle(editor.getBody().firstChild, 'text-align', true));
+          Assertions.assertEq('Styles added to iframe document', 'uppercase', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', true));
+          Assertions.assertEq('Styles not added to actual element', '', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', false));
         }
       ), 10, 3000)
     ]));
