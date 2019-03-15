@@ -6,7 +6,6 @@ import { Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock';
-import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
@@ -26,38 +25,30 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     });
   };
 
-  var sTestVersion = (version: string, major, minor) => {
-    return TinyLoader.sSetupVersion(version, [], (editor) => {
-      var apis = TinyApis(editor);
+  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+    var apis = TinyApis(editor);
 
-      return GeneralSteps.sequence([
-        sAssertVersion(major, minor),
-        Logger.t('set and change setting', GeneralSteps.sequence([
-          apis.sSetSetting('a', 'b'),
-          sAssertSetting(editor, 'a', 'b'),
-          apis.sSetSetting('a', 'c'),
-          sAssertSetting(editor, 'a', 'c')
-        ])),
+    Pipeline.async({}, [
+      Logger.t('set and change setting', GeneralSteps.sequence([
+        apis.sSetSetting('a', 'b'),
+        sAssertSetting(editor, 'a', 'b'),
+        apis.sSetSetting('a', 'c'),
+        sAssertSetting(editor, 'a', 'c')
+      ])),
 
-        Logger.t('set setting to function', GeneralSteps.sequence([
-          apis.sSetSetting('a', function (a) {
-            return a;
-          }),
-          sAssertSettingType(editor, 'a', 'function')
-        ])),
+      Logger.t('set setting to function', GeneralSteps.sequence([
+        apis.sSetSetting('a', function (a) {
+          return a;
+        }),
+        sAssertSettingType(editor, 'a', 'function')
+      ])),
 
-        Logger.t('delete setting', GeneralSteps.sequence([
-          apis.sDeleteSetting('a'),
-          sAssertSetting(editor, 'a', undefined)
-        ]))
-      ]);
-    }, { });
-  };
+      Logger.t('delete setting', GeneralSteps.sequence([
+        apis.sDeleteSetting('a'),
+        sAssertSetting(editor, 'a', undefined)
+      ]))
+    ], loadSuccess, loadFailure);
 
-  Pipeline.async({}, [
-    sTestVersion('4.5.x', 4, 5),
-    sTestVersion('4.8.x', 4, 8),
-    sTestVersion('5.0.x', 5, 0)
-  ], () => success(), failure);
+  }, {}, success, failure);
 });
 

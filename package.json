@@ -1,6 +1,6 @@
 {
   "name": "@ephox/mcagar",
-  "version": "3.0.7",
+  "version": "4.0.0",
   "description": "Tinymce agar wrapper",
   "repository": {
     "type": "git",
@@ -26,12 +26,9 @@
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.3",
-    "tinymce": "latest",
+    "tinymce": "^5.0.0",
     "typescript": "^3.1.5",
-    "webpack": "^3.10.0",
-    "tinymce-4.5.x": "npm:tinymce@4.5.x",
-    "tinymce-4.8.x": "npm:tinymce@4.8.x",
-    "tinymce-5.0.x": "npm:tinymce@5.0.x"
+    "webpack": "^3.10.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

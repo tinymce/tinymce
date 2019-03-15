@@ -1,4 +1,12 @@
-import { isModern } from "./TinyVersions";
+import { Global } from "@ephox/katamari";
+
+const isSilver = () => {
+  const tinymce = Global.tinymce;
+  if (!tinymce) throw new Error('Failed to get global tinymce');
+  return tinymce.activeEditor.hasOwnProperty('ui');
+}
+
+const isModern = () => !isSilver();
 
 interface ThemeSelectors {
   toolBarSelector: string;
@@ -26,5 +34,7 @@ const getThemeSelectors = (): ThemeSelectors => {
 };
 
 export {
-  getThemeSelectors
+  getThemeSelectors,
+  isModern,
+  isSilver
 }
