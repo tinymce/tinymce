@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.10.7] - 2019-03-15
+### Added
+- Keyboard navigation for sliding split toolbars
+
 # [4.10.4] - 2019-03-04
 ### Fixed
 - Input components defaulted to using an invalid type attribute

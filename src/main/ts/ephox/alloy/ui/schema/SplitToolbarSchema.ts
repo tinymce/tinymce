@@ -7,6 +7,7 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
+import { getPart } from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
 
@@ -52,8 +53,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           Keying.config({
             mode: 'cyclic',
             onEscape: (comp) => {
-              const btn = comp.getSystem().getByUid(detail.partUids['overflow-button']);
-              btn.each(Keying.focusIn);
+              getPart(comp, detail, 'overflow-button').each(Keying.focusIn);
               return Option.some(true);
             }
           })
