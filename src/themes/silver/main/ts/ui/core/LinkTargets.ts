@@ -24,7 +24,7 @@ export interface LinkTarget {
   title: string;
   url: string;
   level: number;
-  attach: () => void;
+  attach: any; // To allow popups we have to replace the function with a placeholder
 }
 
 const trim = Tools.trim;

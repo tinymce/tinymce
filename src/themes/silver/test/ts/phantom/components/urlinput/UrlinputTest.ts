@@ -67,8 +67,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     attach: store.adder('header2.attach')
                   }
                 ],
-                anchorTop: Option.some('#anchor-top'),
-                anchorBottom: Option.none()
+                anchorTop: '#anchor-top',
+                anchorBottom: undefined
               }),
               getValidationHandler: () => Option.none(),
               getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
