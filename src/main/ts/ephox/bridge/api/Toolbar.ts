@@ -33,8 +33,10 @@ import {
   ContextFormInstanceApi,
   ContextButton,
   ContextButtonApi,
+  ContextButtonInstanceApi,
   ContextToggleButton,
   ContextToggleButtonApi,
+  ContextToggleButtonInstanceApi,
   ContextToolbarPosition,
   ContextScope
 } from '../components/toolbar/ContextToolbar';
@@ -70,8 +72,10 @@ export {
   ContextFormApi,
   ContextButton,
   ContextButtonApi,
+  ContextButtonInstanceApi,
   ContextToggleButton,
   ContextToggleButtonApi,
+  ContextToggleButtonInstanceApi,
   createContextToolbar,
   createContextForm
 };
