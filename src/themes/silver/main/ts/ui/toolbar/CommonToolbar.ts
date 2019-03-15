@@ -84,6 +84,7 @@ const getToolbarbehaviours = (toolbarSpec, modeName, overflowOpt) => {
             Attachment.attach(sink, builtoverFlow);
             Positioning.position(sink, toolbarSpec.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
             SplitAlloyToolbar.refresh(toolbar);
+            SplitAlloyToolbar.getMoreButton(toolbar).each(Focusing.focus);
             Keying.focusIn(builtoverFlow);
             // return builtoverFlow;
           }, (builtOverflow) => {
@@ -115,7 +116,8 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       },
       toolbarBehaviours: Behaviour.derive([
         Keying.config({
-          mode: 'cyclic',
+        // THIS IS USED FOR FLOATING AND NOT SLIDING
+        mode: 'cyclic',
           onEscape: () => {
             AlloyTriggers.emit(toolbarSpec.moreDrawerData.lazyToolbar(), 'alloy.toolbar.toggle');
             Keying.focusIn(toolbarSpec.moreDrawerData.lazyMoreButton());
