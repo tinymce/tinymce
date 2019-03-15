@@ -31,6 +31,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', (success, 
         tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
         Mouse.sTrueClickOn(editorEle, 'a'),
         tinyUi.sWaitForUi('wait for toolbar link button', '.tox-toolbar button[aria-label="Link"]'),
+        tinyUi.sWaitForUi('wait for toolbar unlink button', '.tox-toolbar button[aria-label="Remove link"]'),
+        tinyUi.sWaitForUi('wait for toolbar open link button', '.tox-toolbar button[aria-label="Open link"]'),
         Chain.asStep(docEle, [
           UiFinder.cWaitForState('check link content', '.tox-toolbar input', (ele) => ele.dom().value === 'http://www.google.com')
         ])

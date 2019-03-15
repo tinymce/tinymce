@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
+import { Editor } from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Parser from './Parser';
 import Protect from './Protect';
-import { Editor } from 'tinymce/core/api/Editor';
 
 const each = Tools.each;
 
@@ -22,7 +23,6 @@ const low = function (s) {
 const handleSetContent = function (editor: Editor, headState, footState, evt) {
   let startPos, endPos, content, headerFragment, styles = '';
   const dom = editor.dom;
-  let elm;
 
   if (evt.selection) {
     return;
@@ -72,14 +72,14 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
     }
   });
 
-  elm = headerFragment.getAll('body')[0];
-  if (elm) {
+  const bodyElm = headerFragment.getAll('body')[0];
+  if (bodyElm) {
     dom.setAttribs(editor.getBody(), {
-      style: elm.attr('style') || '',
-      dir: elm.attr('dir') || '',
-      vLink: elm.attr('vlink') || '',
-      link: elm.attr('link') || '',
-      aLink: elm.attr('alink') || ''
+      style: bodyElm.attr('style') || '',
+      dir: bodyElm.attr('dir') || '',
+      vLink: bodyElm.attr('vlink') || '',
+      link: bodyElm.attr('link') || '',
+      aLink: bodyElm.attr('alink') || ''
     });
   }
 
@@ -88,15 +88,8 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   const headElm = editor.getDoc().getElementsByTagName('head')[0];
 
   if (styles) {
-    dom.add(headElm, 'style', {
-      id: 'fullpage_styles'
-    }, styles);
-
-    // Needed for IE 6/7
-    elm = dom.get('fullpage_styles');
-    if (elm.styleSheet) {
-      elm.styleSheet.cssText = styles;
-    }
+    const styleElm = dom.add(headElm, 'style', { id: 'fullpage_styles' });
+    styleElm.appendChild(document.createTextNode(styles));
   }
 
   const currentStyleSheetsMap = {};
