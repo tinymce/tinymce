@@ -51,7 +51,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             growingClass: detail.markers.growingClass,
           }),
           Keying.config({
-            mode: 'cyclic',
+            // THIS IS USED FOR SLIDING AND NOT FLOATING
+            mode: 'acyclic',
             onEscape: (comp) => {
               getPart(comp, detail, 'overflow-button').each(Keying.focusIn);
               return Option.some(true);

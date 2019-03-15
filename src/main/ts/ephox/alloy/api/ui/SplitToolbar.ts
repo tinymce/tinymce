@@ -42,8 +42,9 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals, toolbarToggleEv
     items: [
       Button.sketch({
         ...externals['overflow-button'](),
-        action(button) {
+        action (_button) {
           if (detail.floating === true) {
+            // Note: THIS WILL REMAKE THE BUTTON
             AlloyTriggers.emit(toolbar, toolbarToggleEvent);
           } else {
             // This used to look up the overflow again ... we may need to do that.
