@@ -13,8 +13,9 @@ import SpaceKey from './SpaceKey';
 import CaretContainerInput from 'tinymce/core/caret/CaretContainerInput';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as InputKeys from './InputKeys';
+import HomeEndKeys from './HomeEndKeys';
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor): void => {
   const caret = BoundarySelection.setupSelectedState(editor);
 
   CaretContainerInput.setup(editor);
@@ -23,6 +24,7 @@ const setup = function (editor: Editor) {
   EnterKey.setup(editor);
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
+  HomeEndKeys.setup(editor);
 };
 
 export default {
