@@ -1,20 +1,21 @@
 import { Arr } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Overflows from '../../toolbar/Overflows';
 import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
+import { SplitToolbarDetail, SplitToolbarSketcher, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
 import { Replacing } from '../behaviour/Replacing';
 import { Sliding } from '../behaviour/Sliding';
+import { Toggling } from '../behaviour/Toggling';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { Keying } from '../Main';
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { Toggling } from '../behaviour/Toggling';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
@@ -93,6 +94,7 @@ const refresh = (toolbar, detail: SplitToolbarDetail, externals, toolbarToggleEv
         Toggling.set(moreButton, overf.getSystem().isConnected());
       } else {
         Toggling.set(moreButton, Sliding.hasGrown(overf));
+        Keying.focusIn(overf);
       }
     });
   });
