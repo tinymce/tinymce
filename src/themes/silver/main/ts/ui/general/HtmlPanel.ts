@@ -20,6 +20,7 @@ export const renderHtmlPanel = (spec: HtmlPanelFoo): SketchSpec => {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
+        classes: [ 'tox-form__group' ],
         innerHtml: spec.html
       }
     });
@@ -27,6 +28,7 @@ export const renderHtmlPanel = (spec: HtmlPanelFoo): SketchSpec => {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
+        classes: [ 'tox-form__group' ],
         innerHtml: spec.html,
         attributes: {
           role: 'document'

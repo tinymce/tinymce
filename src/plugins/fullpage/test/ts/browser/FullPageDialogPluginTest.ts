@@ -71,74 +71,79 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                             classes: [ arr.has('tox-dialog__body-content') ],
                             children: [
                               s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
+                                classes: [ arr.has('tox-form') ],
                                 children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Title')
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Title')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
-                                  })
-                                ]
-                              }),
-                              s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
-                                children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Keywords')
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Keywords')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
-                                  })
-                                ]
-                              }),
-                              s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
-                                children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Description')
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Description')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
-                                  })
-                                ]
-                              }),
-                              s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
-                                children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Robots')
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Robots')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
-                                  })
-                                ]
-                              }),
-                              s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
-                                children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Author')
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Author')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
-                                  })
-                                ]
-                              }),
-                              s.element('div', {
-                                classes: [ arr.has('tox-form__group') ],
-                                children: [
-                                  s.element('label', {
-                                    classes: [ arr.has('tox-label') ],
-                                    html: str.is('Encoding')
-                                  }),
-                                  s.element('input', {
-                                    classes: [ arr.has('tox-textfield') ],
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-form__group') ],
+                                    children: [
+                                      s.element('label', {
+                                        classes: [ arr.has('tox-label') ],
+                                        html: str.is('Encoding')
+                                      }),
+                                      s.element('input', {
+                                        classes: [ arr.has('tox-textfield') ],
+                                      })
+                                    ]
                                   })
                                 ]
                               })

@@ -22,11 +22,11 @@ export interface BodyPanelFoo<I> {
 
 const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(
-    AlloyForm.sketch(function (parts) {
+    AlloyForm.sketch((parts) => {
       return {
         dom: {
           tag: 'div',
-          classes: [ 'tox-dialog__body-content' ]
+          classes: [ 'tox-form' ]
         },
         // All of the items passed through the form need to be put through the interpreter
         // with their form part preserved.
@@ -43,7 +43,15 @@ const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage
       classes: [ 'tox-dialog__body' ]
     },
     components: [
-      memForm.asSpec()
+      {
+        dom: {
+          tag: 'div',
+          classes: ['tox-dialog__body-content']
+        },
+        components: [
+          memForm.asSpec()
+        ]
+      }
     ],
     behaviours: Behaviour.derive([
       Keying.config({
