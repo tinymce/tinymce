@@ -65,6 +65,9 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                     ]
                   })
                 ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-throbber') ]
               })
             ]
           }),
