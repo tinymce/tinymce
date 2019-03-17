@@ -5,15 +5,45 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import Env from '../Env';
 import Delay from '../util/Delay';
-import { document, window } from '@ephox/dom-globals';
 
-export type EditorEvent<T> = T & {
-  isDefaultPrevented: () => boolean;
-  isPropagationStopped: () => boolean;
-  isImmediatePropagationStopped: () => boolean;
+export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
+
+export type EventUtilsEvent<T> = T & {
+  type: string;
+  target: any;
+  isDefaultPrevented (): boolean;
+  preventDefault (): void;
+  isPropagationStopped (): boolean;
+  stopPropagation (): void;
+  isImmediatePropagationStopped (): boolean;
+  stopImmediatePropagation (): void;
 };
+
+export interface EventUtilsConstructor {
+  readonly prototype: EventUtils;
+
+  Event: EventUtils;
+
+  new (): EventUtils;
+}
+
+interface EventUtils {
+  domLoaded: boolean;
+  events: Record<string, any>;
+
+  bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
+  bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
+  unbind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
+  unbind <T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
+  unbind (target: any): EventUtils;
+  fire (target: any, name: string, args?: {}): void;
+  clean (target: any): EventUtils;
+  destroy (): void;
+  cancel <T = any>(e: EventUtilsEvent<T>): void;
+}
 
 /**
  * This class wraps the browsers native event logic with more convenient methods.
@@ -84,7 +114,7 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function (originalEvent, data?) {
+const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T> {
   let name;
   const event = data || {};
 
@@ -241,8 +271,8 @@ const bindOnReady = function (win, callback, eventUtils) {
 /**
  * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
  */
-const EventUtils: any = function () {
-  const self = this;
+function EventUtils() {
+  const self: EventUtils = this;
   let events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
   expando = eventExpandoPrefix + (+new Date()).toString(32);
@@ -294,7 +324,7 @@ const EventUtils: any = function () {
    * @param {Object} scope Scope to call the callback function on, defaults to target.
    * @return {function} Callback function that got bound.
    */
-  self.bind = function (target, names, callback, scope) {
+  self.bind = function (target, names, callback, scope?) {
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
 
@@ -321,10 +351,10 @@ const EventUtils: any = function () {
     scope = scope || target;
 
     // Split names and bind each event, enables you to bind multiple events with one call
-    names = names.split(' ');
-    i = names.length;
+    const namesList = names.split(' ');
+    i = namesList.length;
     while (i--) {
-      name = names[i];
+      name = namesList[i];
       nativeHandler = defaultNativeHandler;
       fakeName = capture = false;
 
@@ -403,7 +433,7 @@ const EventUtils: any = function () {
         }
       } else {
         if (name === 'ready' && self.domLoaded) {
-          callback({ type: name });
+          callback(fix({ type: name }) as EventUtilsEvent<any>);
         } else {
           // If it already has an native handler then just push the callback
           callbackList.push({ func: callback, scope });
@@ -425,7 +455,7 @@ const EventUtils: any = function () {
    * @param {function} callback Optional callback function to unbind.
    * @return {EventUtils} Event utils instance.
    */
-  self.unbind = function (target, names, callback) {
+  self.unbind = function (target, names?, callback?) {
     let id, callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
@@ -440,10 +470,10 @@ const EventUtils: any = function () {
 
       // Specific callback
       if (names) {
-        names = names.split(' ');
-        i = names.length;
+        const namesList = names.split(' ');
+        i = namesList.length;
         while (i--) {
-          name = names[i];
+          name = namesList[i];
           callbackList = eventMap[name];
 
           // Unbind the event if it exists in the map
@@ -514,7 +544,7 @@ const EventUtils: any = function () {
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
    */
-  self.fire = function (target, name, args) {
+  self.fire = function (target, name, args?) {
     let id;
 
     // Don't bind to text nodes or comments
@@ -523,20 +553,20 @@ const EventUtils: any = function () {
     }
 
     // Build event object by patching the args
-    args = fix(null, args);
-    args.type = name;
-    args.target = target;
+    const event = fix(null, args);
+    event.type = name;
+    event.target = target;
 
     do {
       // Found an expando that means there is listeners to execute
       id = target[expando];
       if (id) {
-        executeHandlers(args, id);
+        executeHandlers(event, id);
       }
 
       // Walk up the DOM
       target = target.parentNode || target.ownerDocument || target.defaultView || target.parentWindow;
-    } while (target && !args.isPropagationStopped());
+    } while (target && !event.isPropagationStopped());
 
     return self;
   };
@@ -602,9 +632,10 @@ const EventUtils: any = function () {
 
     return false;
   };
-};
+}
 
-EventUtils.Event = new EventUtils();
+const Event: EventUtils = new EventUtils();
+EventUtils.Event = Event;
 EventUtils.Event.bind(window, 'ready', function () { });
 
 export default EventUtils;

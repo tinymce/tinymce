@@ -10,7 +10,7 @@ import Node from 'tinymce/core/api/html/Node';
 import Settings from '../api/Settings';
 import Sanitize from './Sanitize';
 import VideoScript from './VideoScript';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 declare let escape: any;
 

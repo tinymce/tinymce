@@ -5,9 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Writer from './Writer';
+import Writer, { WriterSettings } from './Writer';
 import Schema from './Schema';
 import Node from './Node';
+
+export interface SerializerSettings extends WriterSettings {
+  inner?: boolean;
+  validate?: boolean;
+}
+
+interface Serializer {
+  serialize (node: Node): string;
+}
 
 /**
  * This class is used to serialize down the DOM tree into a string using a Writer instance.
@@ -19,7 +28,7 @@ import Node from './Node';
  * @version 3.4
  */
 
-export default function (settings?, schema = Schema()) {
+const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
   const writer = Writer(settings);
 
   settings = settings || {};
@@ -34,7 +43,7 @@ export default function (settings?, schema = Schema()) {
    * @param {tinymce.html.Node} node Node instance to serialize.
    * @return {String} String with HTML based on DOM tree.
    */
-  const serialize = (node: Node) => {
+  const serialize = (node: Node): string => {
     let handlers, validate;
 
     validate = settings.validate;
@@ -146,4 +155,6 @@ export default function (settings?, schema = Schema()) {
   return {
     serialize
   };
-}
+};
+
+export default Serializer;

@@ -6,7 +6,7 @@
  */
 
 import { Arr, Cell, Throttler } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
 import Scan from '../core/Scan';
 import { UserDefined, CharMap } from '../core/CharMap';

@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import TinyChannels from '../channels/TinyChannels';
 

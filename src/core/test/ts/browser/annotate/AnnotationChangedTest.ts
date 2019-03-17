@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from 
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertMarker, sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';

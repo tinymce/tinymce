@@ -5,22 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, HTMLElement, Window } from '@ephox/dom-globals';
-import { Annotator } from 'tinymce/core/api/Annotator';
-import { Selection } from 'tinymce/core/api/dom/Selection';
-import Schema from 'tinymce/core/api/html/Schema';
-import { Formatter } from 'tinymce/core/api/Formatter';
-import { UndoManager } from 'tinymce/core/api/UndoManager';
-import * as EditorContent from 'tinymce/core/content/EditorContent';
-import SelectionOverrides from 'tinymce/core/SelectionOverrides';
-
+import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
+import { Registry } from '@ephox/bridge';
+import { Option } from '@ephox/katamari';
+import Annotator from './Annotator';
+import Selection from './dom/Selection';
+import Schema from './html/Schema';
+import Formatter from './Formatter';
+import UndoManager from './UndoManager';
+import * as EditorContent from '../content/EditorContent';
+import SelectionOverrides from '../SelectionOverrides';
 import * as EditorRemove from '../EditorRemove';
 import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
+import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
 import * as Mode from '../Mode';
-import { AddOnManager } from './AddOnManager';
-import DomQuery from './dom/DomQuery';
+import AddOnManager from './AddOnManager';
+import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
@@ -28,10 +30,21 @@ import Env from './Env';
 import Shortcuts from './Shortcuts';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import I18n from 'tinymce/core/api/util/I18n';
-import { WindowManager } from './WindowManager';
-import { registry } from 'tinymce/core/api/ui/Registry';
-import { Registry } from '@ephox/bridge';
+import I18n, { TranslatedString, Untranslated } from './util/I18n';
+import WindowManager from './WindowManager';
+import { registry } from './ui/Registry';
+import EditorManager from './EditorManager';
+import NotificationManager from './NotificationManager';
+import { NodeChange } from '../NodeChange';
+import EditorUpload, { UploadCallback } from './EditorUpload';
+import DomSerializer from './dom/Serializer';
+import DomParser from './html/DomParser';
+import Quirks from '../util/Quirks';
+import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
+import { BlobInfoImagePair } from '../file/ImageScanner';
+import Node from './html/Node';
+import { Theme } from './ThemeManager';
+import { Plugin } from './PluginManager';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -53,129 +66,120 @@ import { Registry } from '@ephox/bridge';
  * ed.render();
  */
 
-export type AnyFunction = (...x: any[]) => any;
-export type EditorSettings = Record<string, any>;
-
 export interface Ui {
   registry: Registry.Registry;
 }
-export interface Editor {
-  $: any;
+
+export interface EditorConstructor {
+  readonly prototype: Editor;
+
+  new (id: string, settings: RawEditorSettings, editorManager: EditorManager): Editor;
+}
+
+interface Editor extends EditorCommands, EditorObservable {
+  $: DomQueryConstructor;
   annotator: Annotator;
-  baseURI: any;
+  baseURI: URI;
   bodyElement: HTMLElement;
-  bookmark: any;
-  buttons: any;
+  bookmark: Option<{}>;
   composing: boolean;
   container: HTMLElement;
-  contentAreaContainer: any;
-  contentCSS: any;
+  contentAreaContainer: HTMLElement;
+  contentCSS: string[];
   contentDocument: Document;
-  contentStyles: any;
+  contentStyles: string[];
   contentWindow: Window;
-  contextToolbars: any;
-  delegates: any;
+  delegates: Record<string, (event: any) => void>;
   destroyed: boolean;
-  documentBaseURI: any;
+  documentBaseURI: URI;
   documentBaseUrl: string;
   dom: DOMUtils;
-  editorCommands: any;
-  editorContainer: any;
-  editorManager: any;
-  editorUpload: any;
-  eventRoot?: HTMLElement;
+  editorCommands: EditorCommands;
+  editorContainer: HTMLElement;
+  editorManager: EditorManager;
+  editorUpload: EditorUpload;
+  eventRoot?: Element;
   formatter: Formatter;
   formElement: HTMLElement;
-  formEventDelegate: any;
+  formEventDelegate: (e: Event) => void;
   hasHiddenInput: boolean;
   hasVisual: boolean;
   hidden: boolean;
   id: string;
-  iframeElement: any;
+  iframeElement: HTMLIFrameElement;
   iframeHTML: string;
   initialized: boolean;
   inline: boolean;
   isNotDirty: boolean;
-  loadedCSS: any;
-  menuItems: any;
-  notificationManager: any;
+  loadedCSS: Record<string, any>;
+  notificationManager: NotificationManager;
   orgDisplay: string;
   orgVisibility: string;
-  parser: any;
-  plugins: any;
-  quirks: any;
+  parser: DomParser;
+  plugins: Record<string, Plugin>;
+  quirks: Quirks;
   readonly: boolean;
   removed: boolean;
   schema: Schema;
   selection: Selection;
-  serializer: any;
+  serializer: DomSerializer;
   settings: EditorSettings;
-  shortcuts: any;
+  shortcuts: Shortcuts;
   startContent: string;
   suffix: string;
   targetElm: HTMLElement;
-  theme: any;
+  theme: Theme;
   undoManager: UndoManager;
   ui: Ui;
   validate: boolean;
   windowManager: WindowManager;
-  _beforeUnload: AnyFunction;
-  _eventDispatcher: any;
+  _beforeUnload: () => void;
+  _eventDispatcher: EventDispatcher<NativeEventMap>;
   _mceOldSubmit: any;
-  _nodeChangeDispatcher: any;
-  _pendingNativeEvents: any;
+  _nodeChangeDispatcher: NodeChange;
+  _pendingNativeEvents: string[];
   _selectionOverrides: SelectionOverrides;
   _skinLoaded: boolean;
 
-  addCommand(name: string, callback, scope?: object): void;
-  addQueryStateHandler(name: string, callback, scope?: object): void;
-  addQueryValueHandler(name: string, callback, scope?: object): void;
-  addShortcut(pattern: string, desc: string, cmdFunc, scope?: object): void;
-  addVisual(elm?): void;
-  bindPendingEventDelegates(): void;
-  convertURL(url: string, name: string, elm?): string;
-  destroy(automatic?: boolean): void;
-  execCallback(name: string, ...x: any[]): any;
-  execCommand(cmd: string, ui?: boolean, value?: any, args?): any;
-  fire(name: string, args?, bubble?: boolean): any;
-  focus(skipFocus?: boolean): any;
-  getBody(): HTMLElement;
-  getContainer(): HTMLElement;
-  getContent(args?: EditorContent.GetContentArgs): EditorContent.Content;
-  getContentAreaContainer(): HTMLElement;
-  getDoc(): Document;
-  getElement(): HTMLElement;
-  getParam<K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
-  getParam<T>(name: string, defaultVal: T, type: string): T;
-  getParam(name: string, defaultVal?: any, type?: string): any;
-  getWin(): Window;
-  hasEventListeners(name: string): boolean;
-  hasFocus(): boolean;
-  hide(): void;
-  insertContent(content, args?): void;
-  isDirty(): boolean;
-  isHidden(): boolean;
-  load(args?): string;
-  nodeChanged(args?): void;
-  off(name: string, callback?): any;
-  on(name: string, callback, prepend?): any;
-  once(name: string, callback): any;
-  queryCommandState(cmd: string): boolean;
-  queryCommandSupported(cmd: string): boolean;
-  queryCommandValue(cmd: string): any;
-  remove(): void;
-  render(): void;
-  save(args?): void;
-  setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): void;
-  setDirty(state: boolean): void;
-  setMode(mode: string): void;
-  setProgressState(state: boolean, time?: number): void;
-  show(): void;
-  toggleNativeEvent(name: string, state): void;
-  translate(text: string): string;
-  unbindAllNativeEvents(): void;
-  uploadImages(callback): void;
-  _scanForImages(): Promise<any>;
+  addShortcut (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: object): void;
+  addVisual (elm?): void;
+  convertURL (url: string, name: string, elm?: HTMLElement): string;
+  destroy (automatic?: boolean): void;
+  execCallback (name: string, ...x: any[]): any;
+  focus (skipFocus?: boolean): void;
+  getBody (): HTMLElement;
+  getContainer (): HTMLElement;
+  getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): Node;
+  getContent (args?: EditorContent.GetContentArgs): string;
+  getContent (args?: EditorContent.GetContentArgs): EditorContent.Content;
+  getContentAreaContainer (): HTMLElement;
+  getDoc (): Document;
+  getElement (): HTMLElement;
+  getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
+  getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
+  getParam <T>(name: string, defaultVal: T, type: string): T;
+  getParam (name: string, defaultVal?: any, type?: string): any;
+  getWin (): Window;
+  hasFocus (): boolean;
+  hide (): void;
+  insertContent (content, args?): void;
+  isDirty (): boolean;
+  isHidden (): boolean;
+  load (args?: {}): string;
+  nodeChanged (args?: {}): void;
+  remove (): void;
+  render (): void;
+  save (args?): void;
+  setContent (content: string, args?: EditorContent.SetContentArgs): string;
+  setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
+  setContent (content: EditorContent.Content, args?: EditorContent.SetContentArgs): void;
+  setDirty (state: boolean): void;
+  setMode (mode: string): void;
+  setProgressState (state: boolean, time?: number): void;
+  show (): void;
+  translate (text: Untranslated): TranslatedString;
+  uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]>;
+  _scanForImages (): Promise<BlobInfoImagePair[]>;
 }
 
 // Shorten these names
@@ -201,7 +205,7 @@ const ie = Env.ie;
  * @param {Object} settings Settings for the editor.
  * @param {tinymce.EditorManager} editorManager EditorManager instance.
  */
-export const Editor = function (id, settings, editorManager) {
+function Editor(id: string, settings: RawEditorSettings, editorManager: EditorManager) {
   const self = this;
   const documentBaseUrl = self.documentBaseUrl = editorManager.documentBaseURL;
   const baseUri = editorManager.baseURI;
@@ -342,7 +346,7 @@ export const Editor = function (id, settings, editorManager) {
       element: self.getBody()
     };
   });
-};
+}
 
 Editor.prototype = {
   /**
@@ -446,7 +450,7 @@ Editor.prototype = {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  nodeChanged (args) {
+  nodeChanged (args?) {
     this._nodeChangeDispatcher.nodeChanged(args);
   },
 
@@ -556,10 +560,10 @@ Editor.prototype = {
    * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
    * @param {String} desc Text description for the command.
    * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
-   * @param {Object} sc Optional scope to execute the function in.
+   * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  addShortcut (pattern, desc, cmdFunc, scope) {
+  addShortcut (pattern, desc, cmdFunc, scope?) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   },
 
@@ -618,13 +622,13 @@ Editor.prototype = {
    * @method show
    */
   show () {
-    const self = this;
+    const self: Editor = this;
 
     if (self.hidden) {
       self.hidden = false;
 
       if (self.inline) {
-        self.getBody().contentEditable = true;
+        self.getBody().contentEditable = 'true';
       } else {
         DOM.show(self.getContainer());
         DOM.hide(self.id);
@@ -641,7 +645,7 @@ Editor.prototype = {
    * @method hide
    */
   hide () {
-    const self = this, doc = self.getDoc();
+    const self: Editor = this, doc = self.getDoc();
 
     if (!self.hidden) {
       // Fixed bug where IE has a blinking cursor left from the editor
@@ -653,7 +657,7 @@ Editor.prototype = {
       self.save();
 
       if (self.inline) {
-        self.getBody().contentEditable = false;
+        self.getBody().contentEditable = 'false';
 
         // Make sure the editor gets blurred
         if (self === self.editorManager.focusedEditor) {
@@ -710,7 +714,7 @@ Editor.prototype = {
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
    * @return {String} HTML string that got set into the editor.
    */
-  load (args) {
+  load (args?) {
     const self = this;
     let elm = self.getElement(), html;
 
@@ -1122,7 +1126,7 @@ Editor.prototype = {
    * @param {function} callback Optional callback with images and status for each image.
    * @return {tinymce.util.Promise} Promise instance.
    */
-  uploadImages (callback) {
+  uploadImages (callback?) {
     return this.editorUpload.uploadImages(callback);
   },
 
@@ -1134,3 +1138,5 @@ Editor.prototype = {
 };
 
 extend(Editor.prototype, EditorObservable);
+
+export default Editor;

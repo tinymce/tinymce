@@ -8,7 +8,7 @@
 import { Merger, Fun, Id, Arr, Obj, Option } from '@ephox/katamari';
 import { Objects } from '@ephox/boulder';
 import { FormatItem, PreviewSpec } from '../BespokeSelect';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export type IsSelectedForType = (format: string) => () => boolean;
 export type GetPreviewForType = (format: string) => () => Option<PreviewSpec>;

@@ -7,32 +7,29 @@
 
 import Tools from '../util/Tools';
 
-// tslint:disable:interface-over-type-literal
+export type SchemaType = 'html4' | 'html5' | 'html5-strict';
 
-interface Schema {
-  children: {};
-  elements: { [name: string]: ElementRule; };
-  getValidStyles: () => SchemaMap;
-  getValidClasses: () => SchemaMap;
-  getBlockElements: () => SchemaMap;
-  getInvalidStyles: () => SchemaMap;
-  getShortEndedElements: () => SchemaMap;
-  getTextBlockElements: () => SchemaMap;
-  getTextInlineElements: () => SchemaMap;
-  getBoolAttrs: () => SchemaMap;
-  getElementRule: (name: string) => ElementRule;
-  getSelfClosingElements: () => SchemaMap;
-  getNonEmptyElements: () => SchemaMap;
-  getMoveCaretBeforeOnEnterElements: () => SchemaMap;
-  getWhiteSpaceElements: () => SchemaMap;
-  getSpecialElements: () => SchemaRegExpMap;
-  isValidChild: (name: string, child: string) => boolean;
-  isValid: (name: string, attr?: string) => boolean;
-  getCustomElements: () => SchemaMap;
-  addValidElements: (validElements: string) => void;
-  setValidElements: (validElements: string) => void;
-  addCustomElements: (customElements: string) => void;
-  addValidChildren: (validChildren: any) => void;
+export interface SchemaSettings {
+  block_elements?: string;
+  boolean_attributes?: string;
+  custom_elements?: string;
+  extended_valid_elements?: string;
+  invalid_elements?: string;
+  invalid_styles?: string | Record<string, string>;
+  move_caret_before_on_enter_elements?: string;
+  non_empty_elements?: string;
+  schema?: SchemaType;
+  self_closing_elements?: string;
+  short_ended_elements?: string;
+  special?: string;
+  text_block_elements?: string;
+  text_inline_elements?: string;
+  valid_children?: string;
+  valid_classes?: string | Record<string, string>;
+  valid_elements?: string;
+  valid_styles?: string | Record<string, string>;
+  verify_html?: boolean;
+  whitespace_elements?: string;
 }
 
 export type Attribute = {
@@ -51,8 +48,40 @@ export type ElementRule = {
   removeEmptyAttrs?: boolean;
 };
 
+export interface SchemaElement extends ElementRule {
+  outputName?: string;
+  parentsRequired?: string[];
+  pattern?: RegExp;
+}
+
 export type SchemaMap = { [name: string]: {}; };
 export type SchemaRegExpMap = { [name: string]: RegExp; };
+
+interface Schema {
+  children: Record<string, {}>;
+  elements: Record<string, SchemaElement>;
+  getValidStyles (): SchemaMap;
+  getValidClasses (): SchemaMap;
+  getBlockElements (): SchemaMap;
+  getInvalidStyles (): SchemaMap;
+  getShortEndedElements (): SchemaMap;
+  getTextBlockElements (): SchemaMap;
+  getTextInlineElements (): SchemaMap;
+  getBoolAttrs (): SchemaMap;
+  getElementRule (name: string): SchemaElement;
+  getSelfClosingElements (): SchemaMap;
+  getNonEmptyElements (): SchemaMap;
+  getMoveCaretBeforeOnEnterElements (): SchemaMap;
+  getWhiteSpaceElements (): SchemaMap;
+  getSpecialElements (): SchemaRegExpMap;
+  isValidChild (name: string, child: string): boolean;
+  isValid (name: string, attr?: string): boolean;
+  getCustomElements (): SchemaMap;
+  addValidElements (validElements: string): void;
+  setValidElements (validElements: string): void;
+  addCustomElements (customElements: string): void;
+  addValidChildren (validChildren: any): void;
+}
 
 /**
  * Schema validator class.
@@ -84,12 +113,12 @@ const split = function (items, delim?) {
  * @param {String} type html4, html5 or html5-strict schema type.
  * @return {Object} Schema lookup table.
  */
-const compileSchema = function (type) {
+const compileSchema = function (type: SchemaType) {
   const schema: any = {};
   let globalAttributes, blockContent;
   let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-  const add = function (name, attributes?, children?) {
+  const add = function (name: string, attributes?: string, children?: string | string[]) {
     let ni, attributesOrder, element;
 
     const arrayToMap = function (array, obj?) {
@@ -125,7 +154,7 @@ const compileSchema = function (type) {
     }
   };
 
-  const addAttrs = function (name, attributes?) {
+  const addAttrs = function (name: string, attributes?: string) {
     let ni, schemaItem, i, l;
 
     name = split(name);
@@ -359,7 +388,7 @@ const compileSchema = function (type) {
   return schema;
 };
 
-const compileElementMap = function (value, mode?) {
+const compileElementMap = function (value: string | Record<string, string>, mode?: string ) {
   let styles;
 
   if (value) {
@@ -380,9 +409,9 @@ const compileElementMap = function (value, mode?) {
   return styles;
 };
 
-function Schema(settings?) {
-  let elements = {};
-  const children = {};
+function Schema(settings?: SchemaSettings): Schema {
+  let elements: Record<string, SchemaElement> = {};
+  const children: Record<string, {}> = {};
   let patternElements = [];
   let validStyles;
   let invalidStyles;
@@ -392,7 +421,7 @@ function Schema(settings?) {
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
 
   // Creates an lookup table map object for the specified option or the default value
-  const createLookupTable = function (option, defaultValue?, extendWith?) {
+  const createLookupTable = function (option: string, defaultValue?: string, extendWith?: string) {
     let value = settings[option];
 
     if (!value) {

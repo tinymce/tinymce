@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       content_css: '/project/js/tinymce/skins/content/default',
       init_instance_callback (ed) {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
-        LegacyUnit.equal(Tools.inArray(ed.targetElm, targets), -1);
+        LegacyUnit.equal(Tools.inArray(targets, ed.targetElm), -1);
 
         targets.push(ed.targetElm);
 

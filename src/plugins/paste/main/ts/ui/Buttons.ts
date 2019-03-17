@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
 
 const makeSetupHandler = (editor: Editor, clipboard: Clipboard) => (api) => {

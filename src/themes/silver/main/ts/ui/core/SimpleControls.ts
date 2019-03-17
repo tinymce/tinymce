@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { onSetupFormatToggle } from './complex/utils/Utils';
 
@@ -23,7 +23,7 @@ const registerFormatButtons = (editor: Editor) => {
     {name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through'},
     {name: 'subscript', text: 'Subscript', icon: 'subscript'},
     {name: 'superscript', text: 'Superscript', icon: 'superscript'}
-  ], (btn) => {
+  ], (btn, idx) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,

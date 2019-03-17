@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Uploader from '../file/Uploader';
-import ImageScanner from '../file/ImageScanner';
-import BlobCache from './file/BlobCache';
+import { HTMLImageElement, Blob } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { Uploader } from '../file/Uploader';
+import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
+import { BlobCache } from './file/BlobCache';
 import UploadStatus from '../file/UploadStatus';
 import ErrorReporter from '../ErrorReporter';
-import { Arr } from '@ephox/katamari';
-import { HTMLImageElement, Blob } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/core/api/Settings';
+import Editor from './Editor';
+import Settings from './Settings';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -22,14 +22,25 @@ import Settings from 'tinymce/core/api/Settings';
  * @class tinymce.EditorUpload
  */
 
-export default function (editor: Editor) {
+export type UploadCallback = (results: Array<{ element: HTMLImageElement, status: boolean }>) => void;
+
+interface EditorUpload {
+  blobCache: BlobCache;
+  addFilter (filter: (img: HTMLImageElement) => boolean): void;
+  uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]>;
+  uploadImagesAuto (callback?: UploadCallback): void | Promise<BlobInfoImagePair[]>;
+  scanForImages (): void;
+  destroy (): void;
+}
+
+const EditorUpload = function (editor: Editor): EditorUpload {
   const blobCache = BlobCache();
-  let uploader, imageScanner;
+  let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function (callback) {
-    return function (result) {
+  const aliveGuard = function <T>(callback?: (result: T) => any) {
+    return function (result: T) {
       if (editor.selection) {
         return callback(result);
       }
@@ -96,7 +107,7 @@ export default function (editor: Editor) {
     });
   };
 
-  const uploadImages = function (callback) {
+  const uploadImages = function (callback?) {
     if (!uploader) {
       uploader = Uploader(uploadStatus, {
         url: Settings.getImageUploadUrl(editor),
@@ -161,7 +172,7 @@ export default function (editor: Editor) {
     urlFilters.push(filter);
   };
 
-  const scanForImages = function () {
+  const scanForImages = function (): Promise<BlobInfoImagePair[]> {
     if (!imageScanner) {
       imageScanner = ImageScanner(uploadStatus, blobCache);
     }
@@ -218,7 +229,7 @@ export default function (editor: Editor) {
     });
   };
 
-  editor.on('setContent', function () {
+  editor.on('SetContent', function () {
     if (Settings.isAutomaticUploadsEnabled(editor)) {
       uploadImagesAuto();
     } else {
@@ -230,7 +241,7 @@ export default function (editor: Editor) {
     e.content = replaceBlobUris(e.content);
   });
 
-  editor.on('getContent', function (e) {
+  editor.on('GetContent', function (e) {
     if (e.source_view || e.format === 'raw') {
       return;
     }
@@ -263,4 +274,6 @@ export default function (editor: Editor) {
     scanForImages,
     destroy
   };
-}
+};
+
+export default EditorUpload;

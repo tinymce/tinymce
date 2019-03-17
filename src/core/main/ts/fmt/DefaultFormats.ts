@@ -6,7 +6,7 @@
  */
 
 import Tools from '../api/util/Tools';
-import { Formats } from 'tinymce/core/api/fmt/Format';
+import { Formats } from '../api/fmt/Format';
 
 const get = function (dom) {
   const formats: Formats = {

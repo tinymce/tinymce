@@ -9,7 +9,7 @@ import { Arr, Cell, Option } from '@ephox/katamari';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { FormatItem } from '../ui/core/complex/BespokeSelect';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const flatten = (fmt): string[] => {
   const subs = fmt.items;

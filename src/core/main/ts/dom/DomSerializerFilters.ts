@@ -18,7 +18,7 @@ const register = function (htmlParser, settings, dom) {
 
     while (i--) {
       node = nodes[i];
-      node.attr('tabindex', node.attributes.map['data-mce-tabindex']);
+      node.attr('tabindex', node.attr('data-mce-tabindex'));
       node.attr(name, null);
     }
   });
@@ -33,14 +33,14 @@ const register = function (htmlParser, settings, dom) {
     while (i--) {
       node = nodes[i];
 
-      value = node.attributes.map[internalName];
+      value = node.attr(internalName);
       if (value !== undefined) {
         // Set external name to internal value and remove internal
         node.attr(name, value.length > 0 ? value : null);
         node.attr(internalName, null);
       } else {
         // No internal attribute found then convert the value we have in the DOM
-        value = node.attributes.map[name];
+        value = node.attr(name);
 
         if (name === 'style') {
           value = dom.serializeStyle(dom.parseStyle(value), node.name);
@@ -75,7 +75,7 @@ const register = function (htmlParser, settings, dom) {
     while (i--) {
       node = nodes[i];
 
-      if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup) {
+      if (node.attr('data-mce-type') === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
         const hasChildren = Option.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
         if (hasChildren) {
@@ -163,7 +163,7 @@ const register = function (htmlParser, settings, dom) {
       if (node.type === 7) {
         node.remove();
       } else if (node.type === 1) {
-        if (name === 'input' && !('type' in node.attributes.map)) {
+        if (name === 'input' && !node.attr('type')) {
           node.attr('type', 'text');
         }
       }

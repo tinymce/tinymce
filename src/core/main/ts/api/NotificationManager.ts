@@ -7,8 +7,38 @@
 
 import { Arr, Option } from '@ephox/katamari';
 import EditorView from '../EditorView';
-import NotificationManagerImpl from '../ui/NotificationManagerImpl';
+import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
+import Editor from './Editor';
 import Delay from './util/Delay';
+
+export interface NotificationManagerImpl {
+  open (spec: NotificationSpec, closeCallback?: () => void): Notification;
+  close <T extends Notification>(notification: T): void;
+  reposition <T extends Notification>(notifications: T[]): void;
+  getArgs <T extends Notification>(notification: T): NotificationSpec;
+}
+
+export interface NotificationSpec {
+  type: 'info' | 'warn' | 'error' | 'success';
+  text: string;
+  icon?: string;
+  progressBar?: boolean;
+  timeout?: number;
+}
+
+export interface Notification {
+  close: () => void;
+  progressBar: {
+    value: (percent: number) => void;
+  };
+  text: (text: string) => void;
+}
+
+interface NotificationManager {
+  open: (spec: NotificationSpec) => Notification;
+  close: () => void;
+  getNotifications: () => Notification[];
+}
 
 /**
  * This class handles the creation of TinyMCE's notifications.
@@ -22,19 +52,19 @@ import Delay from './util/Delay';
  * });
  */
 
-export default function (editor) {
-  const notifications = [];
+const NotificationManager = function (editor: Editor): NotificationManager {
+  const notifications: Notification[] = [];
 
-  const getImplementation = function () {
+  const getImplementation = function (): NotificationManagerImpl {
     const theme = editor.theme;
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function () {
+  const getTopNotification = function (): Option<Notification> {
     return Option.from(notifications[0]);
   };
 
-  const isEqual = function (a, b) {
+  const isEqual = function (a: NotificationSpec, b: NotificationSpec) {
     return a.type === b.type && a.text === b.text && !a.progressBar && !a.timeout && !b.progressBar && !b.timeout;
   };
 
@@ -44,11 +74,11 @@ export default function (editor) {
     }
   };
 
-  const addNotification = function (notification) {
+  const addNotification = function (notification: Notification) {
     notifications.push(notification);
   };
 
-  const closeNotification = function (notification) {
+  const closeNotification = function (notification: Notification) {
     Arr.findIndex(notifications, function (otherNotification) {
       return otherNotification === notification;
     }).each(function (index) {
@@ -58,18 +88,18 @@ export default function (editor) {
     });
   };
 
-  const open = function (args) {
+  const open = function (spec: NotificationSpec) {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
       return;
     }
 
     return Arr.find(notifications, function (notification) {
-      return isEqual(getImplementation().getArgs(notification), args);
+      return isEqual(getImplementation().getArgs(notification), spec);
     }).getOrThunk(function () {
       editor.editorManager.setActive(editor);
 
-      const notification = getImplementation().open(args, function () {
+      const notification = getImplementation().open(spec, function () {
         closeNotification(notification);
         reposition();
       });
@@ -88,18 +118,18 @@ export default function (editor) {
     });
   };
 
-  const getNotifications = function () {
+  const getNotifications = function (): Notification[] {
     return notifications;
   };
 
-  const registerEvents = function (editor) {
+  const registerEvents = function (editor: Editor) {
     editor.on('SkinLoaded', function () {
       const serviceMessage = editor.settings.service_message;
 
       if (serviceMessage) {
         open({
           text: serviceMessage,
-          type: 'warning',
+          type: 'warn',
           timeout: 0,
         });
       }
@@ -144,4 +174,6 @@ export default function (editor) {
      */
     getNotifications
   };
-}
+};
+
+export default NotificationManager;

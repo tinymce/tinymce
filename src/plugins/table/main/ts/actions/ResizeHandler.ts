@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
+import { Element as SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
 import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 
 export interface ResizeHandler {
   lazyResize: () => Option<any>;
@@ -34,7 +34,7 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
     return elm.nodeName === 'TABLE';
   };
 
-  const getRawWidth = function (elm: Node) {
+  const getRawWidth = function (elm: Element) {
     return editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
   };
 
@@ -43,7 +43,7 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   const lazyWire = function () {
-    return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
+    return wire.getOr(ResizeWire.only(SugarElement.fromDom(editor.getBody())));
   };
 
   const destroy = function () {

@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Range, Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Node as SugarNode, Traverse, Element as SugarElement } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import { moveEndPoint } from './SelectionUtils';
 import NodeType from '../dom/NodeType';
-import { Element, Range, Node } from '@ephox/dom-globals';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 
 const getEndpointElement = (root: Element, rng: Range, start: boolean, real: boolean, resolve: (elm, offset: number) => number) => {
   const container = start ? rng.startContainer : rng.endContainer;

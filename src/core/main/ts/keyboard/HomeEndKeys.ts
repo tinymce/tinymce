@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { KeyboardEvent } from '@ephox/dom-globals';
 import * as CefNavigation from './CefNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
-import { Editor } from 'tinymce/core/api/Editor';
-import { KeyboardEvent } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([

@@ -7,7 +7,7 @@
 
 import Events from '../api/Events';
 import WordFilter from './WordFilter';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const processResult = function (content, cancelled) {
   return { content, cancelled };

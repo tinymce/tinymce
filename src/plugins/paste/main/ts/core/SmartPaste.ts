@@ -7,11 +7,12 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
+import { HTMLMetaElement } from '@ephox/dom-globals';
 
 const removeMeta = (editor: Editor, html: string) => {
   const body = editor.dom.create('body', {}, html);
-  Tools.each(body.querySelectorAll('meta'), (elm) => elm.parentNode.removeChild(elm));
+  Tools.each(body.querySelectorAll('meta'), (elm: HTMLMetaElement) => elm.parentNode.removeChild(elm));
   return body.innerHTML;
 };
 

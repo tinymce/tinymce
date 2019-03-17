@@ -78,7 +78,7 @@ const wrapInFigure = (image: HTMLElement) => {
   DOM.insertAfter(figureElm, image);
 
   figureElm.appendChild(image);
-  figureElm.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
+  figureElm.appendChild(DOM.create('figcaption', { contentEditable: 'true' }, 'Caption'));
   figureElm.contentEditable = 'false';
 };
 
@@ -204,7 +204,7 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
     const figure = DOM.create('figure', { class: 'image' });
 
     figure.appendChild(image);
-    figure.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
+    figure.appendChild(DOM.create('figcaption', { contentEditable: 'true' }, 'Caption'));
     figure.contentEditable = 'false';
 
     return figure;

@@ -5,8 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomSerializer from '../../dom/DomSerializer';
+import { DomSerializer, DomSerializerSettings } from '../../dom/DomSerializer';
 import Schema from '../html/Schema';
+import Editor from '../Editor';
+
+// tslint:disable-next-line:no-empty-interface
+export interface SerializerSettings extends DomSerializerSettings {
+}
+
+// tslint:disable-next-line:no-empty-interface
+interface Serializer extends DomSerializer {
+}
 
 /**
  * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for
@@ -15,7 +24,7 @@ import Schema from '../html/Schema';
  * @class tinymce.dom.Serializer
  */
 
-export default function (settings, editor?) {
+const Serializer = function (settings: SerializerSettings, editor?: Editor): Serializer {
   const domSerializer = DomSerializer(settings, editor);
 
   // Return public methods
@@ -106,4 +115,6 @@ export default function (settings, editor?) {
      */
     getTempAttrs: domSerializer.getTempAttrs
   };
-}
+};
+
+export default Serializer;

@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { KeyboardEvent } from '@ephox/dom-globals';
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
-import { Editor } from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
-import { KeyboardEvent } from '@ephox/dom-globals';
-import { UndoManager } from '../api/UndoManager';
+import Editor from '../api/Editor';
+import UndoManager from '../api/UndoManager';
+import { EditorEvent } from '../api/util/EventDispatcher';
 
 const endTypingLevel = function (undoManager: UndoManager) {
   if (undoManager.typing) {

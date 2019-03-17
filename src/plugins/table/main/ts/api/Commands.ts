@@ -8,7 +8,7 @@
 import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
@@ -183,8 +183,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     mceTableRowProps: Fun.curry(RowDialog.open, editor),
     mceTableCellProps: Fun.curry(CellDialog.open, editor)
   }, (func, name) => {
-    editor.addCommand(name, (ui, val) => {
-      func(val);
+    editor.addCommand(name, () => {
+      func();
     });
   });
 };

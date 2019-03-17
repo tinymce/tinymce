@@ -7,6 +7,19 @@
 
 import { Node } from '@ephox/dom-globals';
 
+export interface TreeWalkerConstructor {
+  readonly prototype: TreeWalker;
+
+  new (startNode: Node, rootNode: Node): TreeWalker;
+}
+
+interface TreeWalker {
+  current (): Node;
+  next (shallow?: boolean): Node;
+  prev (shallow?: boolean): Node;
+  prev2 (shallow?: boolean): Node;
+}
+
 /**
  * TreeWalker class enables you to walk the DOM in a linear manner.
  *
@@ -19,10 +32,10 @@ import { Node } from '@ephox/dom-globals';
  * } while (walker.next());
  */
 
-export default function (startNode: Node, rootNode: Node) {
+function TreeWalker(startNode: Node, rootNode: Node) {
   let node = startNode;
 
-  const findSibling = function (node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow: boolean) {
+  const findSibling = function (node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
     let sibling: Node, parent: Node;
 
     if (node) {
@@ -49,7 +62,7 @@ export default function (startNode: Node, rootNode: Node) {
     }
   };
 
-  const findPreviousNode = function (node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow: boolean) {
+  const findPreviousNode = function (node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {
@@ -94,7 +107,7 @@ export default function (startNode: Node, rootNode: Node) {
    * @method next
    * @return {Node} Current node where the walker is after moving to the next node.
    */
-  this.next = function (shallow) {
+  this.next = function (shallow?) {
     node = findSibling(node, 'firstChild', 'nextSibling', shallow);
     return node;
   };
@@ -105,13 +118,15 @@ export default function (startNode: Node, rootNode: Node) {
    * @method prev
    * @return {Node} Current node where the walker is after moving to the previous node.
    */
-  this.prev = function (shallow) {
+  this.prev = function (shallow?) {
     node = findSibling(node, 'lastChild', 'previousSibling', shallow);
     return node;
   };
 
-  this.prev2 = function (shallow) {
+  this.prev2 = function (shallow?) {
     node = findPreviousNode(node, 'lastChild', 'previousSibling', shallow);
     return node;
   };
 }
+
+export default TreeWalker;

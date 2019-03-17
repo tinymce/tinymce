@@ -12,7 +12,7 @@ import Mime from './Mime';
 import UpdateHtml from './UpdateHtml';
 import * as UrlPatterns from './UrlPatterns';
 import VideoScript from './VideoScript';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export interface MediaDialogData {
   allowFullscreen: boolean;
@@ -134,7 +134,7 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
     data.height = data.height || 150;
 
     Tools.each(data, function (value, key) {
-      data[key] = editor.dom.encode(value);
+      data[key] = editor.dom.encode('' + value);
     });
 
     if (data.type === 'iframe') {

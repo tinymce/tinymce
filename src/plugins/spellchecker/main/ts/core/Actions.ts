@@ -11,7 +11,7 @@ import XHR from 'tinymce/core/api/util/XHR';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { Element, HTMLElement } from '@ephox/dom-globals';
 
@@ -57,15 +57,15 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
       content_type: 'application/x-www-form-urlencoded',
       data: postData,
       success (result) {
-        result = JSON.parse(result);
+        const parseResult = JSON.parse(result);
 
-        if (!result) {
+        if (!parseResult) {
           const message = editor.translate('Server response wasn\'t proper JSON.');
           errorCallback(message);
-        } else if (result.error) {
-          errorCallback(result.error);
+        } else if (parseResult.error) {
+          errorCallback(parseResult.error);
         } else {
-          doneCallback(result);
+          doneCallback(parseResult);
         }
       },
       error () {

@@ -2,6 +2,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Delay from 'tinymce/core/api/util/Delay';
 import { UnitTest } from '@ephox/bedrock';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
   const success = arguments[arguments.length - 2];
@@ -41,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
   });
 
   suite.asyncTest('setEditorTimeout', function (_, done) {
-    const fakeEditor = {};
+    const fakeEditor = {} as Editor;
 
     Delay.setEditorTimeout(fakeEditor, function () {
       ok(true, 'setEditorTimeout was executed.');
@@ -50,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
   });
 
   suite.test('setEditorTimeout (removed)', function () {
-    const fakeEditor = { removed: true };
+    const fakeEditor = { removed: true } as Editor;
 
     Delay.setEditorTimeout(fakeEditor, function () {
       throw new Error('Still executing setEditorTimeout.');
@@ -61,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
 
   suite.asyncTest('setEditorInterval', function (_, done) {
     let count = 0, id;
-    const fakeEditor = {};
+    const fakeEditor = {} as Editor;
 
     id = Delay.setEditorInterval(fakeEditor, function () {
       if (++count === 2) {
@@ -75,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
   });
 
   suite.test('setEditorInterval (removed)', function () {
-    const fakeEditor = { removed: true };
+    const fakeEditor = { removed: true } as Editor;
 
     Delay.setEditorInterval(fakeEditor, function () {
       throw new Error('Still executing setEditorInterval.');

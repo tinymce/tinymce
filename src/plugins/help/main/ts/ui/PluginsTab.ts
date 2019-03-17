@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 import { Types } from '@ephox/bridge';

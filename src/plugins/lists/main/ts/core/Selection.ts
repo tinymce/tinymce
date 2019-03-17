@@ -9,7 +9,7 @@ import { Node } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from './NodeType';
 

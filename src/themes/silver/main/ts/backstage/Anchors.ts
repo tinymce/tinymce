@@ -1,7 +1,7 @@
 import { AlloyComponent, AnchorSpec, Bubble, Layout, LayoutInside } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
-import { Editor } from '../../../../../core/main/ts/api/Editor';
+import Editor from '../../../../../core/main/ts/api/Editor';
 import { useFixedContainer } from '../api/Settings';
 
 const bubbleAlignments = {

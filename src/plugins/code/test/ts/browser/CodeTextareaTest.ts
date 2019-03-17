@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, failure) => {
 

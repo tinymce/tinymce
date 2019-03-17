@@ -7,7 +7,7 @@
 
 import { Element, Node, PredicateFind, SelectorFind } from '@ephox/sugar';
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const addToEditor = (editor: Editor) => {
   const insertToolbarItems = Settings.getInsertToolbarItems(editor);

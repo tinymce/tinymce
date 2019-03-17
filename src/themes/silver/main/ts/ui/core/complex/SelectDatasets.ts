@@ -8,7 +8,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { SelectData } from './BespokeSelect';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const process = (rawFormats): Array<{ title: string, format: string}> => {
   return Arr.map(rawFormats, (item) => {

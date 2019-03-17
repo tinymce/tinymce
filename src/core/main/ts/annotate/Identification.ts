@@ -7,7 +7,7 @@
 
 import { Arr, Option } from '@ephox/katamari';
 import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from '../api/Editor';
 
 import * as Markings from './Markings';
 

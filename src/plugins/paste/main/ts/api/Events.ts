@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement } from '@ephox/dom-globals';
 
 const firePastePreProcess = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {

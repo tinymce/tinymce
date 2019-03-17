@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
+import { Fun, Arr } from '@ephox/katamari';
 import Promise from '../api/util/Promise';
 import Conversions from './Conversions';
 import Env from '../api/Env';
-import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
-import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { Fun, Arr } from '@ephox/katamari';
+import { BlobCache, BlobInfo } from '../api/file/BlobCache';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;
@@ -94,7 +94,7 @@ const getAllImages = function (elm: HTMLElement): HTMLImageElement[] {
   return elm ? Arr.from(elm.getElementsByTagName('img')) : [];
 };
 
-export default function (uploadStatus, blobCache: BlobCache): ImageScanner {
+export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
   const cachedPromises = {};
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {

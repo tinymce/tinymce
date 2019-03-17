@@ -7,6 +7,7 @@
 
 import { Fun, Option } from '@ephox/katamari';
 import { Compare, Element, Css, Traverse } from '@ephox/sugar';
+import Editor from './api/Editor';
 
 const getProp = function (propName, elm) {
   const rawElm = elm.dom();
@@ -44,7 +45,7 @@ const transpose = function (inline, elm, clientX, clientY) {
 };
 
 // Checks if the specified coordinate is within the visual content area excluding the scrollbars
-const isXYInContentArea = function (editor, clientX, clientY) {
+const isXYInContentArea = function (editor: Editor, clientX, clientY) {
   const bodyElm = Element.fromDom(editor.getBody());
   const targetElm = editor.inline ? bodyElm : Traverse.documentElement(bodyElm);
   const transposedPoint = transpose(editor.inline, targetElm, clientX, clientY);
@@ -56,7 +57,7 @@ const fromDomSafe = function (node) {
   return Option.from(node).map(Element.fromDom);
 };
 
-const isEditorAttachedToDom = function (editor) {
+const isEditorAttachedToDom = function (editor: Editor) {
   const rawContainer = editor.inline ? editor.getBody() : editor.getContentAreaContainer();
 
   return fromDomSafe(rawContainer).map(function (container) {

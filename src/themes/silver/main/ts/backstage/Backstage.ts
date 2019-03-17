@@ -9,7 +9,7 @@ import { AlloyComponent, AlloySpec, AnchorSpec, FormTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 import { SelectData } from '../ui/core/complex/BespokeSelect';

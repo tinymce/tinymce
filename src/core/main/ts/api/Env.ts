@@ -48,7 +48,31 @@ if (ie12) {
 // says it has contentEditable support but there is no visible caret.
 const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1], 10) >= 534;
 
-export default {
+interface Env {
+  opera: boolean;
+  webkit: boolean;
+  ie: number;
+  gecko: boolean;
+  mac: boolean;
+  iOS: boolean;
+  android: boolean;
+  contentEditable: boolean;
+  transparentSrc: string;
+  caretAfter: boolean;
+  range: boolean;
+  documentMode: number;
+  fileApi: boolean;
+  ceFalse: boolean;
+  cacheSuffix: any;
+  container: any;
+  overrideViewPort: any;
+  experimentalShadowDom: boolean;
+  canHaveCSP: boolean;
+  desktop: boolean;
+  windowsPhone: boolean;
+}
+
+const Env: Env = {
   /**
    * Constant that is true if the browser is Opera.
    *
@@ -184,3 +208,5 @@ export default {
   desktop: !phone && !tablet,
   windowsPhone
 };
+
+export default Env;

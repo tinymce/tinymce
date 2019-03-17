@@ -1,6 +1,6 @@
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Pipeline, RawAssertions, Logger, Chain } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';

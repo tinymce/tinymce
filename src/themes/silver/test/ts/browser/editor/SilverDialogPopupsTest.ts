@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { document, ClientRect } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Body, SelectorExists } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';

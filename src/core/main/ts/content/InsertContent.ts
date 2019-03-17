@@ -7,7 +7,7 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, Node } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import InsertList from './InsertList';
 import CaretPosition from '../caret/CaretPosition';
@@ -18,11 +18,11 @@ import PaddingBr from '../dom/PaddingBr';
 import Serializer from '../api/html/Serializer';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import Tools from '../api/util/Tools';
-import { Selection } from '../api/dom/Selection';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from 'tinymce/core/content/NbspTrim';
-import { default as ParserNode } from 'tinymce/core/api/html/Node';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
+import DOMUtils from '../api/dom/DOMUtils';
+import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
+import ParserNode from '../api/html/Node';
 
 const isTableCell = NodeType.matchNodeNames('td th');
 
@@ -91,25 +91,25 @@ const markFragmentElements = (fragment: ParserNode) => {
 };
 
 const umarkFragmentElements = (elm: DomElement) => {
-  Tools.each(elm.getElementsByTagName('*'), (elm) => {
+  Tools.each(elm.getElementsByTagName('*'), (elm: DomElement) => {
     elm.removeAttribute('data-mce-fragment');
   });
 };
 
-const isPartOfFragment = function (node) {
+const isPartOfFragment = function (node: DomElement) {
   return !!node.getAttribute('data-mce-fragment');
 };
 
-const canHaveChildren = function (editor, node) {
+const canHaveChildren = function (editor: Editor, node) {
   return node && !editor.schema.getShortEndedElements()[node.nodeName];
 };
 
-const moveSelectionToMarker = function (editor, marker) {
+const moveSelectionToMarker = function (editor: Editor, marker) {
   let parentEditableFalseElm, parentBlock, nextRng;
   const dom = editor.dom, selection = editor.selection;
   let node, node2;
 
-  const getContentEditableFalseParent = function (node) {
+  const getContentEditableFalseParent = function (node: Node) {
     const root = editor.getBody();
 
     for (; node && node !== root; node = node.parentNode) {
@@ -357,7 +357,7 @@ const processValue = function (value) {
   };
 };
 
-const insertAtCaret = function (editor, value) {
+const insertAtCaret = function (editor: Editor, value) {
   const result = processValue(value);
   insertHtmlAtCaret(editor, result.content, result.details);
 };

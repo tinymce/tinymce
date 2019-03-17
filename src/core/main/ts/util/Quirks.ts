@@ -5,18 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Range, document, Attr, Selection as DomSelection } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
-import { Selection } from '../api/dom/Selection';
-import { Range, document } from '@ephox/dom-globals';
+import Selection from '../api/dom/Selection';
 import Settings from '../api/Settings';
-
-declare const escape: any;
-declare const unescape: any;
+import Editor from '../api/Editor';
 
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
@@ -25,7 +23,12 @@ declare const unescape: any;
  * @class tinymce.util.Quirks
  */
 
-export default function (editor) {
+interface Quirks {
+  refreshContentEditable (): void;
+  isHidden (): boolean;
+}
+
+const Quirks = function (editor: Editor): Quirks {
   const each = Tools.each;
   const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection,
     settings = editor.settings, parser = editor.parser;
@@ -348,8 +351,8 @@ export default function (editor) {
         if (target !== editor.getBody()) {
           dom.setAttrib(target, 'style', null);
 
-          each(template, function (attr) {
-            target.setAttributeNode(attr.cloneNode(true));
+          each(template, function (attr: Attr) {
+            target.setAttributeNode(attr.cloneNode(true) as Attr);
           });
         }
       };
@@ -465,7 +468,7 @@ export default function (editor) {
     };
 
     if (!settings.readonly) {
-      editor.on('BeforeExecCommand MouseDown', setOpts);
+      editor.on('BeforeExecCommand mousedown', setOpts);
     }
   };
 
@@ -607,7 +610,9 @@ export default function (editor) {
       editor.on('keydown', function (e) {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
-          editor.selection.getSel().modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
+          // The modify component isn't part of the standard spec, so we need to add the type here
+          const selection = editor.selection.getSel() as DomSelection & { modify: Function };
+          selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });
     }
@@ -757,11 +762,11 @@ export default function (editor) {
     // No-op since Mozilla seems to have fixed the caret repaint issues
   };
 
-  const isHidden = function () {
+  const isHidden = function (): boolean {
     let sel;
 
     if (!isGecko || editor.removed) {
-      return 0;
+      return false;
     }
 
     // Weird, wheres that cursor selection?
@@ -827,4 +832,6 @@ export default function (editor) {
     refreshContentEditable,
     isHidden
   };
-}
+};
+
+export default Quirks;

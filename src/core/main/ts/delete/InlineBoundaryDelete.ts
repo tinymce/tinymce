@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
 import { Fun, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
@@ -15,9 +16,9 @@ import BoundaryCaret from '../keyboard/BoundaryCaret';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import BoundarySelection from '../keyboard/BoundarySelection';
 import InlineUtils from '../keyboard/InlineUtils';
-import { document } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
-const isFeatureEnabled = function (editor) {
+const isFeatureEnabled = function (editor: Editor) {
   return editor.settings.inline_boundaries !== false;
 };
 
@@ -45,7 +46,7 @@ const hasOnlyTwoOrLessPositionsLeft = function (elm) {
   }).getOr(true);
 };
 
-const setCaretLocation = function (editor, caret) {
+const setCaretLocation = function (editor: Editor, caret) {
   return function (location) {
     return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
       BoundarySelection.setCaretPosition(editor, pos);
@@ -54,7 +55,7 @@ const setCaretLocation = function (editor, caret) {
   };
 };
 
-const deleteFromTo = function (editor, caret, from, to) {
+const deleteFromTo = function (editor: Editor, caret, from, to) {
   const rootNode = editor.getBody();
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
@@ -75,7 +76,7 @@ const rescope = function (rootNode, node) {
   return parentBlock ? parentBlock : rootNode;
 };
 
-const backspaceDeleteCollapsed = function (editor, caret, forward, from) {
+const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boolean, from) {
   const rootNode = rescope(editor.getBody(), from.container());
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
@@ -129,7 +130,7 @@ const backspaceDeleteCollapsed = function (editor, caret, forward, from) {
   });
 };
 
-const backspaceDelete = function (editor, caret, forward?) {
+const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {
   if (editor.selection.isCollapsed() && isFeatureEnabled(editor)) {
     const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);

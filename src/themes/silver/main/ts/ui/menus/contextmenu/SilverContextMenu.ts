@@ -9,7 +9,7 @@ import { AlloyComponent, GuiFactory, InlineView, Behaviour, AddEventsBehaviour, 
 import { Menu } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
 import { getPointAnchor, getNodeAnchor } from './Coords';
@@ -143,7 +143,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       const menuConfig = Settings.getContextMenu(editor);
 
       // Use the event target element for mouse clicks, otherwise fallback to the current selection
-      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target;
+      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as Element;
 
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 

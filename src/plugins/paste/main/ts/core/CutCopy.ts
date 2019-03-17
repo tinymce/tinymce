@@ -7,7 +7,7 @@
 
 import { DataTransfer, ClipboardEvent, Range } from '@ephox/dom-globals';
 import Env from 'tinymce/core/api/Env';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';

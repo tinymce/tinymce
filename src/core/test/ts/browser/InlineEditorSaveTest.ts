@@ -3,7 +3,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) =>  {
   Theme();

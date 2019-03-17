@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BlockFormat, InlineFormat, SelectorFormat } from 'tinymce/core/api/fmt/Format';
+import { BlockFormat, InlineFormat, SelectorFormat } from './Format';
 
 // somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
 export type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;

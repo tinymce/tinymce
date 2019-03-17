@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from './NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
-import { getOverflow } from 'tinymce/core/geom/ClientRect';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { Arr } from '@ephox/katamari';
 import { HTMLElement, Element, Range } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import NodeType from './NodeType';
+import Editor from '../api/Editor';
+import { getOverflow } from '../geom/ClientRect';
+import { CaretPosition } from '../caret/CaretPosition';
 
 const getPos = function (elm: HTMLElement) {
   let x = 0, y = 0;
@@ -27,7 +27,7 @@ const getPos = function (elm: HTMLElement) {
 
 const fireScrollIntoViewEvent = function (editor: Editor, elm: Element, alignToTop: boolean) {
   const scrollEvent: any = { elm, alignToTop };
-  editor.fire('scrollIntoView', scrollEvent);
+  editor.fire('ScrollIntoView', scrollEvent);
   return scrollEvent.isDefaultPrevented();
 };
 

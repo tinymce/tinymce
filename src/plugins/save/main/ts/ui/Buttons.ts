@@ -6,7 +6,7 @@
  */
 
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const stateToggle = function (editor: Editor) {
   return function (api) {
@@ -14,8 +14,8 @@ const stateToggle = function (editor: Editor) {
       api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
     };
 
-    editor.on('nodeChange dirty', handler);
-    return () => editor.off('nodeChange dirty', handler);
+    editor.on('NodeChange dirty', handler);
+    return () => editor.off('NodeChange dirty', handler);
   };
 };
 

@@ -6,7 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
 import Commands from './api/Commands';

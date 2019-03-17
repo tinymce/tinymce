@@ -5,57 +5,155 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddOnManager } from './AddOnManager';
+import { Storage, Window } from '@ephox/dom-globals';
+import AddOnManager from './AddOnManager';
+import { Theme } from './ThemeManager';
+import { Plugin } from './PluginManager';
 import Annotator from './Annotator';
-import { Editor } from './Editor';
-import EditorCommands from './EditorCommands';
+import Editor, { EditorConstructor } from './Editor';
+import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
-import Shortcuts from './Shortcuts';
+import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import UndoManager from './UndoManager';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import NotificationManager from './NotificationManager';
 import WindowManager from './WindowManager';
+import IconManager from './IconManager';
 import BookmarkManager from './dom/BookmarkManager';
 import RangeUtils from './dom/RangeUtils';
-import DomSerializer from './dom/Serializer';
+import DomSerializer, { SerializerSettings as DomSerializerSettings } from './dom/Serializer';
 import ControlSelection from './dom/ControlSelection';
 import DOMUtils from './dom/DOMUtils';
-import DomQuery from './dom/DomQuery';
-import EventUtils from './dom/EventUtils';
-import ScriptLoader from './dom/ScriptLoader';
-import { Selection } from './dom/Selection';
+import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
+import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
+import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
+import Selection from './dom/Selection';
 import Sizzle from './dom/Sizzle';
-import TreeWalker from './dom/TreeWalker';
+import TreeWalker, { TreeWalkerConstructor } from './dom/TreeWalker';
 import Rect from './geom/Rect';
-import DomParser from './html/DomParser';
+import DomParser, { DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
 import Node from './html/Node';
-import SaxParser from './html/SaxParser';
-import Schema from './html/Schema';
-import HtmlSerializer from './html/Serializer';
-import { Styles } from './html/Styles';
-import Writer from './html/Writer';
+import SaxParser, { SaxParserSettings } from './html/SaxParser';
+import Schema, { SchemaSettings } from './html/Schema';
+import HtmlSerializer, { SerializerSettings as HtmlSerializerSettings } from './html/Serializer';
+import Styles from './html/Styles';
+import Writer, { WriterSettings } from './html/Writer';
 import Class from './util/Class';
 import Color from './util/Color';
 import Delay from './util/Delay';
-import EventDispatcher from './util/EventDispatcher';
+import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
 import JSON from './util/JSON';
 import JSONP from './util/JSONP';
-import JSONRequest from './util/JSONRequest';
+import JSONRequest, { JSONRequestConstructor } from './util/JSONRequest';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
 import Promise from './util/Promise';
 import Tools from './util/Tools';
-import URI from './util/URI';
+import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
-import { IconManager } from './IconManager';
 
-let tinymce = EditorManager;
+export interface Tinymce extends EditorManager {
+
+  geom: {
+    Rect: Rect;
+  };
+
+  util: {
+    Promise: PromiseConstructor;
+    Delay: Delay;
+    Tools: Tools;
+    VK: VK;
+    URI: URIConstructor;
+    Class: Class;
+    EventDispatcher: EventDispatcherConstructor<any>;
+    Observable: Observable<any>;
+    I18n: I18n;
+    XHR: XHR;
+    JSON: JSON;
+    JSONRequest: JSONRequestConstructor;
+    JSONP: JSONP;
+    LocalStorage: Storage;
+    Color: Color;
+  };
+
+  dom: {
+    EventUtils: EventUtilsConstructor;
+    Sizzle: any;
+    DomQuery: DomQueryConstructor;
+    TreeWalker: TreeWalkerConstructor;
+    DOMUtils: DOMUtils;
+    ScriptLoader: ScriptLoaderConstructor;
+    RangeUtils: (dom: DOMUtils) => RangeUtils;
+    Serializer: (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
+    ControlSelection: (selection: Selection, editor: Editor) => ControlSelection;
+    BookmarkManager: (selection: Selection) => BookmarkManager;
+    Selection: (dom: DOMUtils, win: Window, serializer, editor: Editor) => Selection;
+    Event: EventUtils;
+  };
+
+  html: {
+    Styles: Styles;
+    Entities: Entities;
+    Node: Node;
+    Schema: (settings?: SchemaSettings) => Schema;
+    SaxParser: (settings?: SaxParserSettings, schema?: Schema) => SaxParser;
+    DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
+    Writer: (settings?: WriterSettings) => Writer;
+    Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
+  };
+
+  AddOnManager: <T>() => AddOnManager<T>;
+  Annotator: (editor: Editor) => Annotator;
+  Editor: EditorConstructor;
+  EditorCommands: EditorCommandsConstructor;
+  EditorManager: EditorManager;
+  EditorObservable: EditorObservable;
+  Env: Env;
+  FocusManager: FocusManager;
+  Formatter: (editor: Editor) => Formatter;
+  NotificationManager: (editor: Editor) => NotificationManager;
+  Shortcuts: ShortcutsConstructor;
+  UndoManager: (editor: Editor) => UndoManager;
+  WindowManager: (editor: Editor) => WindowManager;
+
+  // Global instances
+  DOM: DOMUtils;
+  ScriptLoader: ScriptLoaderConstructor;
+  PluginManager: AddOnManager<void | Plugin>;
+  ThemeManager: AddOnManager<Theme>;
+  IconManager: IconManager;
+
+  // Global utility functions
+  trim: Tools['trim'];
+  isArray: Tools['isArray'];
+  is: Tools['is'];
+  toArray: Tools['toArray'];
+  makeMap: Tools['makeMap'];
+  each: Tools['each'];
+  map: Tools['map'];
+  grep: Tools['grep'];
+  inArray: Tools['inArray'];
+  extend: Tools['extend'];
+  create: Tools['create'];
+  walk: Tools['walk'];
+  createNS: Tools['createNS'];
+  resolve: Tools['resolve'];
+  explode: Tools['explode'];
+  _addCacheSuffix: Tools['_addCacheSuffix'];
+
+  // Legacy browser detection
+  isOpera: boolean;
+  isWebKit: boolean;
+  isIE: boolean;
+  isGecko: boolean;
+  isMac: boolean;
+}
 
 /**
  * @include ../../../../../tools/docs/tinymce.js
@@ -77,7 +175,7 @@ let tinymce = EditorManager;
  * @include ../../../../../tools/docs/tinymce.FocusEvent.js
  */
 
- /**
+/**
  * @include ../../../../../tools/docs/tinymce.ProgressStateEvent.js
  */
 
@@ -181,6 +279,6 @@ const publicApi = {
   isMac: Env.mac
 };
 
-tinymce = Tools.extend(tinymce, publicApi);
+const tinymce: Tinymce = Tools.extend(EditorManager, publicApi);
 
 export default tinymce;

@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const isHidden = (elm) => {
   if (elm.nodeType === 1) {
@@ -116,7 +116,7 @@ const renderElementPath = (editor: Editor, settings) => {
           // NOTE: If statusbar ever gets re-rendered, we will need to free this.
           editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () => Keying.focusIn(comp));
 
-          editor.on('nodeChange', (e) => {
+          editor.on('NodeChange', (e) => {
             const newPath = updatePath(e.parents);
             if (newPath.length > 0) {
               Replacing.set(comp, getDataPath(newPath));

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 import Settings from '../api/Settings';
 import { Arr } from '@ephox/katamari';
 

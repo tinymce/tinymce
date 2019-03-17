@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import Styles from '../actions/Styles';
@@ -264,7 +264,7 @@ export interface RowData {
   backgroundcolor?: string;
 }
 
-const extractDataFromRowElement = (editor: Editor, elm: Node, hasAdvancedRowTab: boolean): RowData => {
+const extractDataFromRowElement = (editor: Editor, elm: HTMLElement, hasAdvancedRowTab: boolean): RowData => {
   const dom = editor.dom;
   const data: RowData = {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),

@@ -15,7 +15,7 @@ import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export interface TableActions {
   deleteRow: (table: any, target: any) => any;

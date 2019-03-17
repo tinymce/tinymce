@@ -7,10 +7,10 @@
 
 import { Unicode } from '@ephox/katamari';
 import { Node, Text, Traverse } from '@ephox/sugar';
-import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
+import { isCaretNode } from '../fmt/FormatContainer';
 import FormatUtils from '../fmt/FormatUtils';
 import { isAnnotation } from './Identification';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from '../api/Editor';
 
 export const enum ChildContext {
   // Was previously used for br and zero width cursors. Keep as a state

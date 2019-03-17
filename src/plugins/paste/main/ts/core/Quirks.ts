@@ -10,7 +10,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Utils from './Utils';
 import WordFilter from './WordFilter';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Element } from '@ephox/dom-globals';
 
 /**

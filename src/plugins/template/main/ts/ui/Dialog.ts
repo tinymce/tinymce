@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
@@ -16,6 +16,7 @@ import Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
 
 interface TemplateValues {
+  title: string;
   url?: string;
   content: string;
   description: string;
@@ -66,7 +67,7 @@ const getPreviewContent = (editor: Editor, html: string) => {
   return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = (editor: Editor, templateList: TemplateData[]) => {
+const open = (editor: Editor, templateList: TemplateValues[]) => {
   const createTemplates = () => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');

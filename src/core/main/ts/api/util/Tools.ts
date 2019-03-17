@@ -5,9 +5,34 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { window } from '@ephox/dom-globals';
 import Env from '../Env';
 import ArrUtils from '../../util/ArrUtils';
-import { window } from '@ephox/dom-globals';
+
+type ArrayCallback<T, R> = (x: T, i: number, xs: ReadonlyArray<T>) => R;
+type ObjCallback<T, R> = (value: T[keyof T], key: string, obj: T) => R;
+
+interface Tools {
+  is (obj: any, type: string): boolean;
+  isArray <T>(T: any): T is ArrayLike<T>;
+  inArray <T>(arr: ArrayLike<T>, value: T): number;
+  grep <T>(arr: ArrayLike<T>, pred?: ArrayCallback<T, boolean>);
+  trim (str: string): string;
+  toArray <T>(obj: ArrayLike<T>): T[];
+  hasOwn (obj: any, name: string): boolean;
+  makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
+  each <T>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, any>, scope?: any): void;
+  each <T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
+  map <T, U>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
+  map <T, U>(obj: T, cb: ObjCallback<T, U>, scope?: any): Array<U>;
+  extend (obj: {}, ext: {}, ...objs: {}[]): any;
+  create (name: string, p: {}, root?: {});
+  walk <T = {}>(obj: T, f: Function, n?: keyof T, scope?: any): void;
+  createNS (name: string, o?: {}): any;
+  resolve (path: string, o?: {}): any;
+  explode (s: string, d?: string | RegExp): string[];
+  _addCacheSuffix (url: string): string;
+}
 
 /**
  * This class contains various utlity functions. These are also exposed
@@ -136,7 +161,7 @@ const hasOwnProperty = function (obj, prop) {
  *     }
  * });
  */
-const create = function (s, p, root) {
+const create = function (s, p, root?) {
   const self = this;
   let sp, ns, cn, scn, c, de = 0;
 
@@ -289,7 +314,7 @@ const walk = function (o, f, n?, s?) {
  *     }
  * };
  */
-const createNS = function (n, o) {
+const createNS = function (n, o?) {
   let i, v;
 
   o = o || window;
@@ -364,7 +389,7 @@ const _addCacheSuffix = function (url) {
   return url;
 };
 
-export default {
+const Tools: Tools = {
   trim,
 
   /**
@@ -455,3 +480,5 @@ export default {
   explode,
   _addCacheSuffix
 };
+
+export default Tools;

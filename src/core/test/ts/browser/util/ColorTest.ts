@@ -3,9 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Color from 'tinymce/core/api/util/Color';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Constructor', function () {

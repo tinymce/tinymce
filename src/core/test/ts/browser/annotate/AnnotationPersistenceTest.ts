@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { sAnnotate } from '../../module/test/AnnotationAsserts';

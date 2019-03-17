@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CaretPosition } from '../caret/CaretPosition';
-import { Element, PredicateFind, Node, Css } from '@ephox/sugar';
+import { Text } from '@ephox/dom-globals';
 import { Strings, Option, Arr } from '@ephox/katamari';
-import { Editor } from '../api/Editor';
+import { Element, PredicateFind, Node, Css } from '@ephox/sugar';
+import { CaretPosition } from '../caret/CaretPosition';
+import Editor from '../api/Editor';
 import NodeType from '../dom/NodeType';
 import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
 import { getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
 import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
-import { Text } from '@ephox/dom-globals';
 import { isNbsp, isContent } from '../text/CharType';
-import { isAfterBr, isBeforeBr } from 'tinymce/core/caret/CaretBr';
+import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 
 const nbsp = '\u00a0';

@@ -10,7 +10,7 @@ import SimpleControls from './SimpleControls';
 import UndoRedo from './UndoRedo';
 import VisualAid from './VisualAid';
 import ColorSwatch from './color/ColorSwatch';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import IndentOutdent from './IndentOutdent';
 import ComplexControls from './ComplexControls';
 import { UiFactoryBackstage } from '../../backstage/Backstage';

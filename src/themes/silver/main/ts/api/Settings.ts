@@ -6,9 +6,9 @@
  */
 
 import { Option, Type, Obj, Arr } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { AllowedFormat } from '../ui/core/complex/StyleFormatTypes';
+import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
 import { SelectorFind, Body, Element } from '@ephox/sugar';
 
 const getSkinUrl = function (editor: Editor): string {

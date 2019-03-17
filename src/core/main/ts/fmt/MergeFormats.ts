@@ -13,7 +13,8 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
 import Tools from '../api/util/Tools';
-import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
+import { isCaretNode } from '../fmt/FormatContainer';
+import Editor from '../api/Editor';
 
 const each = Tools.each;
 
@@ -169,7 +170,7 @@ const clearChildStyles = function (dom, format, node) {
   }
 };
 
-const mergeWithChildren = function (editor, formatList, vars, node) {
+const mergeWithChildren = function (editor: Editor, formatList, vars, node) {
   // Remove/merge children
   each(formatList, function (format) {
     // Merge all children of similar type will move styles from child to parent
@@ -187,7 +188,7 @@ const mergeWithChildren = function (editor, formatList, vars, node) {
   });
 };
 
-const mergeWithParents = function (editor, format, name, vars, node) {
+const mergeWithParents = function (editor: Editor, format, name, vars, node) {
   // Remove format if direct parent already has the same format
   if (MatchFormat.matchNode(editor, node.parentNode, name, vars)) {
     if (RemoveFormat.removeFormat(editor, format, vars, node)) {

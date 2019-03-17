@@ -7,7 +7,7 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import NodeType from '../core/NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { isCustomList } from '../core/Util';
 
 const findIndex = function (list, predicate) {

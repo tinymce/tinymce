@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
+import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import { Editor } from '../api/Editor';
-import { IconManager } from '../api/IconManager';
+import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+import Editor from '../api/Editor';
+import IconManager from '../api/IconManager';
 import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -17,7 +18,7 @@ import ErrorReporter from '../ErrorReporter';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
 import { appendContentCssFromSettings } from './ContentCss';
-import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+import { ThemeInitFunc } from '../api/SettingsTypes';
 
 const DOM = DOMUtils.DOM;
 
@@ -106,7 +107,8 @@ const renderFromLoadedTheme = function (editor: Editor) {
 
 const renderFromThemeFunc = function (editor: Editor) {
   const elm = editor.getElement();
-  const info = editor.settings.theme(editor, elm);
+  const theme = editor.settings.theme as ThemeInitFunc;
+  const info = theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
     info.editorContainer.id = info.editorContainer.id || editor.id + '_parent';
@@ -121,7 +123,7 @@ const renderFromThemeFunc = function (editor: Editor) {
   return info;
 };
 
-const createThemeFalseResult = function (element: Element) {
+const createThemeFalseResult = function (element: HTMLElement) {
   return {
     editorContainer: element,
     iframeContainer: element
@@ -142,13 +144,13 @@ const renderThemeFalse = function (editor: Editor) {
 };
 
 const renderThemeUi = function (editor: Editor) {
-  const settings = editor.settings, elm = editor.getElement();
+  const elm = editor.getElement();
 
   editor.orgDisplay = elm.style.display;
 
-  if (Type.isString(settings.theme)) {
+  if (Type.isString(editor.settings.theme)) {
     return renderFromLoadedTheme(editor);
-  } else if (Type.isFunction(settings.theme)) {
+  } else if (Type.isFunction(editor.settings.theme)) {
     return renderFromThemeFunc(editor);
   } else {
     return renderThemeFalse(editor);

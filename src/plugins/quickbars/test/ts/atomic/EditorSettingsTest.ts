@@ -1,7 +1,7 @@
 import { Logger, RawAssertions, UnitTest } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import Settings from '../../../main/ts/api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.test('DialogChanges', () => {
   Logger.sync(

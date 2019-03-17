@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Range } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Element, Range } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;

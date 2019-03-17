@@ -6,9 +6,9 @@
  */
 
 import { Element } from '@ephox/dom-globals';
-import { Fun, Merger } from '@ephox/katamari';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import { Fun, Merger, Type } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import InsertTable from '../actions/InsertTable';
@@ -19,9 +19,13 @@ import Helpers, { TableData } from './Helpers';
 import { Types } from '@ephox/bridge';
 
 // Explore the layers of the table till we find the first layer of tds or ths
-const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) => {
+const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number) => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
-    dom.setStyle(elm, name, value);
+    if (Type.isString(name)) {
+      dom.setStyle(elm, name, value);
+    } else {
+      dom.setStyle(elm, name);
+    }
   } else {
     if (elm.children) {
       for (let i = 0; i < elm.children.length; i++) {

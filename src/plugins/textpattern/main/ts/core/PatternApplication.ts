@@ -6,15 +6,15 @@
  */
 
 import { Node, Text, HTMLElement } from '@ephox/dom-globals';
+import { Strings, Arr, Id, Option, Options, Type, Obj } from '@ephox/katamari';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
 import { resolvePath, isElement, isText } from './PathRange';
-import { Strings, Arr, Id, Option, Options, Type, Obj } from '@ephox/katamari';
-import { Formatter } from 'tinymce/core/api/Formatter';
+import Formatter from 'tinymce/core/api/Formatter';
 
 // assumes start is not equal to end
 const isCollapsed = (start: Node, end: Node, root: HTMLElement) => {

@@ -7,6 +7,7 @@
 
 import Tools from './util/Tools';
 import Env from './Env';
+import Editor from './Editor';
 
 /**
  * Contains logic for handling keyboard shortcuts.
@@ -38,12 +39,34 @@ const keyCodeLookup = {
 
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
-export default function (editor) {
-  const self = this;
-  const shortcuts = {};
+interface Shortcut {
+  ctrl: boolean;
+  shift: boolean;
+  meta: boolean;
+  alt: boolean;
+  keyCode: number;
+  charCode: number;
+  subpatterns?: Shortcut[];
+  desc?: string;
+}
+
+export interface ShortcutsConstructor {
+  readonly prototype: Shortcuts;
+
+  new (editor: Editor): Shortcuts;
+}
+
+interface Shortcuts {
+  add (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: object): boolean;
+  remove (pattern: string): boolean;
+}
+
+function Shortcuts(editor: Editor) {
+  const self: Shortcuts = this;
+  const shortcuts: Record<string, Shortcut> = {};
   let pendingPatterns = [];
 
-  const parseShortcut = function (pattern) {
+  const parseShortcut = function (pattern): Shortcut {
     let id, key;
     const shortcut: any = {};
 
@@ -120,7 +143,7 @@ export default function (editor) {
     return e.type === 'keydown' && e.keyCode >= 112 && e.keyCode <= 123;
   };
 
-  const matchShortcut = function (e, shortcut) {
+  const matchShortcut = function (e, shortcut: Shortcut) {
     if (!shortcut) {
       return false;
     }
@@ -222,3 +245,5 @@ export default function (editor) {
     return false;
   };
 }
+
+export default Shortcuts;

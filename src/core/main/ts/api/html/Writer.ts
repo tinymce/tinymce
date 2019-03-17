@@ -24,7 +24,28 @@ import { Attributes } from './Node';
 
 const makeMap = Tools.makeMap;
 
-export default function (settings?) {
+export interface WriterSettings {
+  element_format?: 'xhtml' | 'html';
+  entities?: string;
+  entity_encoding?: string;
+  indent?: boolean;
+  indent_after?: string;
+  indent_before?: string;
+}
+
+interface Writer {
+  cdata (text: string): void;
+  comment (text: string): void;
+  doctype (text: string): void;
+  end (name: string): void;
+  getContent (): string;
+  pi (name: string, text: string): void;
+  reset (): void;
+  start (name: string, attrs?: Attributes, empty?: boolean): void;
+  text (text: string, raw?: boolean): void;
+}
+
+const Writer = function (settings?: WriterSettings): Writer {
   const html = [];
   let indent, indentBefore, indentAfter, encode, htmlOutput;
 
@@ -187,4 +208,6 @@ export default function (settings?) {
       return html.join('').replace(/\n$/, '');
     }
   };
-}
+};
+
+export default Writer;

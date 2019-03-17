@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Event } from '@ephox/dom-globals';
 import GetBookmark from '../bookmark/GetBookmark';
 import Levels, { UndoLevel } from '../undo/Levels';
 import Tools from './util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Event } from '@ephox/dom-globals';
+import Editor from './Editor';
 
 /**
  * This class handles the undo/redo history levels for the editor. Since the built-in undo/redo has major drawbacks a custom one was needed.
@@ -17,7 +17,7 @@ import { Event } from '@ephox/dom-globals';
  * @class tinymce.UndoManager
  */
 
-export interface UndoManager {
+interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
   add: (level?: UndoLevel, event?: Event) => UndoLevel;
@@ -32,7 +32,7 @@ export interface UndoManager {
   extra: (callback1: () => void, callback2: () => void) => void;
 }
 
-export default function (editor: Editor) {
+const UndoManager = function (editor: Editor) {
   let self: UndoManager = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
   const isUnlocked = function () {
@@ -85,14 +85,14 @@ export default function (editor: Editor) {
     }
   });
 
-  editor.on('ObjectResizeStart Cut', function () {
+  editor.on('ObjectResizeStart cut', function () {
     self.beforeChange();
   });
 
   editor.on('SaveContent ObjectResized blur', addNonTypingUndoLevel);
-  editor.on('DragEnd', addNonTypingUndoLevel);
+  editor.on('dragend', addNonTypingUndoLevel);
 
-  editor.on('KeyUp', function (e) {
+  editor.on('keyup', function (e) {
     const keyCode = e.keyCode;
 
     // If key is prevented then don't add undo level
@@ -123,7 +123,7 @@ export default function (editor: Editor) {
     }
   });
 
-  editor.on('KeyDown', function (e) {
+  editor.on('keydown', function (e) {
     const keyCode = e.keyCode;
 
     // If key is prevented then don't add undo level
@@ -151,7 +151,7 @@ export default function (editor: Editor) {
     }
   });
 
-  editor.on('MouseDown', function (e) {
+  editor.on('mousedown', function (e) {
     if (self.typing) {
       addNonTypingUndoLevel(e);
     }
@@ -294,7 +294,7 @@ export default function (editor: Editor) {
         level = data[--index];
         Levels.applyToEditor(editor, level, true);
         setDirty(true);
-        editor.fire('undo', { level });
+        editor.fire('Undo', { level });
       }
 
       return level;
@@ -313,7 +313,7 @@ export default function (editor: Editor) {
         level = data[++index];
         Levels.applyToEditor(editor, level, false);
         setDirty(true);
-        editor.fire('redo', { level });
+        editor.fire('Redo', { level });
       }
 
       return level;
@@ -412,4 +412,6 @@ export default function (editor: Editor) {
   };
 
   return self;
-}
+};
+
+export default UndoManager;

@@ -1,5 +1,5 @@
 import { console, document, prompt } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 

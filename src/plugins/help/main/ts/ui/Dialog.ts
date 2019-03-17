@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';

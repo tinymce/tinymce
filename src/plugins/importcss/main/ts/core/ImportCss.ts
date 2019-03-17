@@ -10,8 +10,19 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { generate } from './SelectorModel';
+
+interface Group {
+  title: string;
+  original: Group;
+  selectors: {};
+  filter: (value: string) => boolean;
+  item: {
+    text: string,
+    menu: []
+  };
+}
 
 const removeCacheSuffix = function (url: string) {
   const cacheSuffix = Env.cacheSuffix;
@@ -152,13 +163,13 @@ const defaultConvertSelectorToFormat = function (editor: Editor, selectorText: s
   return format;
 };
 
-const getGroupsBySelector = function (groups, selector: string) {
+const getGroupsBySelector = function (groups: Group[], selector: string): Group[] {
   return Tools.grep(groups, function (group) {
     return !group.filter || group.filter(selector);
   });
 };
 
-const compileUserDefinedGroups = function (groups) {
+const compileUserDefinedGroups = function (groups): Group[] {
   return Tools.map(groups, function (group) {
     return Tools.extend({}, group, {
       original: group,
@@ -229,7 +240,7 @@ const setup = function (editor: Editor) {
           editor.formatter.register(formatName, format);
 
           // NOTE: itemDefaults has been removed as it was not supported by bridge and its concept
-          // is handled elsehwere.
+          // is handled elsewhere.
           return Tools.extend({}, {
             title: format.title,
             format: formatName
@@ -240,7 +251,7 @@ const setup = function (editor: Editor) {
       return null;
     };
 
-    Tools.each(getSelectors(editor, e.doc || editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector: string) {
+    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector: string) {
       if (selector.indexOf('.mce-') === -1) {
         if (!selectorFilter || selectorFilter(selector)) {
           const selectorGroups = getGroupsBySelector(groups, selector);

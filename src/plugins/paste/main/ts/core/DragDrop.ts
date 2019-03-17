@@ -10,7 +10,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
 import { MouseEvent, DataTransfer, Range } from '@ephox/dom-globals';
 

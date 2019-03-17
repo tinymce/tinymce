@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import CaretFinder from '../caret/CaretFinder';
 import { isBeforePageBreak, isAfterPageBreak } from '../caret/CaretPositionPredicates';

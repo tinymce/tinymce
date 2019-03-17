@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Obj, Arr } from '@ephox/katamari';
 
 const patchPipeConfig = (config) => typeof config === 'string' ? config.split(/[ ,]/) : config;

@@ -9,8 +9,6 @@ import { console, document } from '@ephox/dom-globals';
 import DOMUtils from './DOMUtils';
 import Tools from '../util/Tools';
 
-/*globals console*/
-
 /**
  * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks
  * when various items gets loaded. This class is useful to load external JavaScript files.
@@ -40,11 +38,29 @@ import Tools from '../util/Tools';
 const DOM = DOMUtils.DOM;
 const each = Tools.each, grep = Tools.grep;
 
+export interface ScriptLoaderConstructor {
+  readonly prototype: ScriptLoader;
+  ScriptLoader: ScriptLoader;
+
+  new (): ScriptLoader;
+}
+
+interface ScriptLoader {
+  loadScript (url: string, success?: () => void, failure?: () => void): void;
+  loadScripts (url: string[], success?: () => void, failure?: (urls: string[]) => void): void;
+  isDone (url: string): boolean;
+  markDone (url: string): void;
+  add (url: string, success?: () => void, scope?: {}, failure?: () => void): void;
+  load (url: string, success?: () => void, scope?: {}, failure?: () => void): void;
+  remove (url: string);
+  loadQueue (success?: () => void, scope?: {}, failure?: (urls: string[]) => void): void;
+}
+
 const isFunction = function (f) {
   return typeof f === 'function';
 };
 
-const ScriptLoader: any = function () {
+function ScriptLoader() {
   const QUEUED = 0;
   const LOADING = 1;
   const LOADED = 2;
@@ -60,10 +76,10 @@ const ScriptLoader: any = function () {
    *
    * @method load
    * @param {String} url Absolute URL to script to add.
-   * @param {function} callback Optional success callback function when the script loaded successfully.
-   * @param {function} callback Optional failure callback function when the script failed to load.
+   * @param {function} success Optional success callback function when the script loaded successfully.
+   * @param {function} failure Optional failure callback function when the script failed to load.
    */
-  const loadScript = function (url, success, failure) {
+  const loadScript = function (url, success?, failure?) {
     const dom = DOM;
     let elm, id;
 
@@ -89,7 +105,7 @@ const ScriptLoader: any = function () {
         failure();
       } else {
         // Report the error so it's easier for people to spot loading errors
-        if (typeof console !== 'undefined' && console.log) { // tslint:disable-line:no-console
+        if (typeof console !== 'undefined' && console.log) {
           // tslint:disable-next-line:no-console
           console.log('Failed to load script: ' + url);
         }
@@ -113,9 +129,9 @@ const ScriptLoader: any = function () {
     (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
   };
 
-  this.loadScript = function (url, success, failure) {
+  this.loadScript = function (url, success?, failure?) {
     loadScript(url, success, failure);
-  },
+  };
 
   /**
    * Returns true/false if a script has been loaded or not.
@@ -148,7 +164,7 @@ const ScriptLoader: any = function () {
    * @param {Object} scope Optional scope to execute callback in.
    * @param {function} failure Optional failure callback function to execute when the script failed to load.
    */
-  this.add = this.load = function (url, success, scope, failure) {
+  this.add = this.load = function (url, success?, scope?, failure?) {
     const state = states[url];
 
     // Add url to load queue
@@ -184,7 +200,7 @@ const ScriptLoader: any = function () {
    * @param {function} failure Optional callback to execute when queued items failed to load.
    * @param {Object} scope Optional scope to execute the callback in.
    */
-  this.loadQueue = function (success, scope, failure) {
+  this.loadQueue = function (success?, scope?, failure?) {
     this.loadScripts(queue, success, scope, failure);
   };
 
@@ -194,11 +210,11 @@ const ScriptLoader: any = function () {
    *
    * @method loadScripts
    * @param {Array} scripts Array of queue items to load.
-   * @param {function} callback Optional callback to execute when scripts is loaded successfully.
+   * @param {function} success Optional callback to execute when scripts is loaded successfully.
    * @param {Object} scope Optional scope to execute callback in.
-   * @param {function} callback Optional callback to execute if scripts failed to load.
+   * @param {function} failure Optional callback to execute if scripts failed to load.
    */
-  this.loadScripts = function (scripts, success, scope, failure) {
+  this.loadScripts = function (scripts, success?, scope?, failure?) {
     let loadScripts;
     const failures = [];
 
@@ -286,7 +302,7 @@ const ScriptLoader: any = function () {
 
     loadScripts();
   };
-};
+}
 
 ScriptLoader.ScriptLoader = new ScriptLoader();
 

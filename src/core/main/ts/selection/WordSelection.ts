@@ -8,8 +8,8 @@
 import { Type } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import { Selection } from '../api/dom/Selection';
-import { Editor } from 'tinymce/core/api/Editor';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 
 const hasSelectionModifyApi = function (editor: Editor) {
   return Type.isFunction((<any> editor.selection.getSel()).modify);

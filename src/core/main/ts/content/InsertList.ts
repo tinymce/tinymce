@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Range } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
-import { Range } from '@ephox/dom-globals';
 
 /**
  * Handles inserts of lists into the editor instance.
@@ -85,7 +85,7 @@ const toDomFragment = function (dom, serializer, fragment) {
   return cleanupDomFragment(domFragment);
 };
 
-const listItems = function (elm) {
+const listItems = function (elm: Element) {
   return Tools.grep(elm.childNodes, function (child) {
     return child.nodeName === 'LI';
   });

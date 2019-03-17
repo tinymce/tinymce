@@ -8,7 +8,8 @@
 import Env from './api/Env';
 import RangeCompare from './selection/RangeCompare';
 import Delay from './api/util/Delay';
-import { hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
+import { hasAnyRanges } from './selection/SelectionUtils';
+import Editor from './api/Editor';
 
 /**
  * This class handles the nodechange event dispatching both manual and through selection change events.
@@ -17,7 +18,11 @@ import { hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
  * @private
  */
 
-export default function (editor) {
+interface NodeChange {
+  nodeChanged <T = {}>(args?: T): void;
+}
+
+const NodeChange = function (editor: Editor) {
   let lastRng, lastPath = [];
 
   /**
@@ -50,7 +55,7 @@ export default function (editor) {
 
   // Gecko doesn't support the "selectionchange" event
   if (!('onselectionchange' in editor.getDoc())) {
-    editor.on('NodeChange Click MouseUp KeyUp Focus', function (e) {
+    editor.on('NodeChange click mouseup keyup focus', function (e) {
       let nativeRng, fakeRng;
 
       // Since DOM Ranges mutate on modification
@@ -96,7 +101,7 @@ export default function (editor) {
   });
 
   // Fire an extra nodeChange on mouseup for compatibility reasons
-  editor.on('MouseUp', function (e) {
+  editor.on('mouseup', function (e) {
     if (!e.isDefaultPrevented() && hasAnyRanges(editor)) {
       // Delay nodeChanged call for WebKit edge case issue where the range
       // isn't updated until after you click outside a selected image
@@ -117,7 +122,7 @@ export default function (editor) {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  this.nodeChanged = function (args) {
+  this.nodeChanged = function (args?) {
     const selection = editor.selection;
     let node, parents, root;
 
@@ -149,4 +154,8 @@ export default function (editor) {
       editor.fire('NodeChange', args);
     }
   };
-}
+};
+
+export {
+  NodeChange
+};

@@ -11,7 +11,7 @@ export interface IconPack {
   icons: Record<string, string>;
 }
 
-export interface IconManager {
+interface IconManager {
   add: (id: string, iconPack: IconPack) => void;
   get: (id: string) => IconPack;
   has: (id: string) => boolean;
@@ -43,4 +43,6 @@ const CreateIconManager = (): IconManager => {
   };
 };
 
-export const IconManager = CreateIconManager();
+const IconManager: IconManager = CreateIconManager();
+
+export default IconManager;

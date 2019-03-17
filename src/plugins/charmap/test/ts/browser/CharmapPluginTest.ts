@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
   suite.test('TestCase-TBA: Charmap: Insert character', function (editor) {
     let lastEvt;
 
-    editor.on('insertCustomChar', function (e) {
+    editor.on('InsertCustomChar', function (e) {
       lastEvt = e;
     });
 

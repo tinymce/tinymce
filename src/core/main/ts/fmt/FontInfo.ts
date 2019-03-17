@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Element as SugarElement, Node as SugarNode, PredicateFind, Css, Compare } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Element, HTMLElement, Node } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
 
 const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
   const getProperty = (elm) => Css.getRaw(elm, propName);

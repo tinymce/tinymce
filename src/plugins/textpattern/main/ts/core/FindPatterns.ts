@@ -7,7 +7,7 @@
 
 import { Node, Range, Text } from '@ephox/dom-globals';
 import { Option, Strings } from '@ephox/katamari';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Tools from 'tinymce/core/api/util/Tools';
 import { BlockPattern, InlinePattern, Pattern } from '../api/Pattern';

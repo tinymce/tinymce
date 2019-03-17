@@ -8,7 +8,7 @@
 import { InlineContent, Types } from '@ephox/bridge';
 import { Range } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';

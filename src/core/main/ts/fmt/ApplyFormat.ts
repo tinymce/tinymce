@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import * as CaretFormat from './CaretFormat';
@@ -16,11 +17,10 @@ import MergeFormats from './MergeFormats';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
-import { Selection } from '../api/dom/Selection';
-import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
-import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Node } from '@ephox/dom-globals';
+import Selection from '../api/dom/Selection';
+import { isCaretNode } from './FormatContainer';
+import GetBookmark from '../bookmark/GetBookmark';
+import Editor from '../api/Editor';
 
 const each = Tools.each;
 

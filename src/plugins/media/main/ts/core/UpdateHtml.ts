@@ -65,7 +65,6 @@ const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?
   SaxParser({
     validate: false,
     allow_conditional_comments: true,
-    special: 'script,noscript',
 
     comment (text) {
       writer.comment(text);

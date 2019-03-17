@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from './Tools';
 import { document } from '@ephox/dom-globals';
+import Tools from './Tools';
 
 /**
  * This class handles parsing, modification and serialization of URI/URL strings.
@@ -22,6 +22,48 @@ const DEFAULT_PORTS = {
   mailto: 25
 };
 
+interface ParsedURI {
+  source?: string;
+  protocol?: string;
+  authority?: string;
+  userInfo?: string;
+  user?: string;
+  password?: string;
+  host?: string;
+  port?: string;
+  relative?: string;
+  path?: string;
+  directory?: string;
+  file?: string;
+  query?: string;
+  anchor?: string;
+}
+
+export interface URISettings {
+  base_uri?: URI;
+}
+
+export interface URIConstructor {
+  readonly prototype: URI;
+
+  new (url: string, settings?: URISettings): URI;
+
+  getDocumentBaseUrl (loc): string;
+  parseDataUri (uri: string): { type: string; data: string };
+}
+
+interface URI extends ParsedURI {
+  settings: URISettings;
+
+  isSameOrigin (uri: URI): boolean;
+  toAbsPath (base: string, path: string): string;
+  toRelPath (base: string, path: string): string;
+  getURI (noProtoHost?: boolean): string;
+  toAbsolute (uri: string, noHost?: boolean): string;
+  toRelative (uri: string): string;
+  setPath (path: string);
+}
+
 /**
  * Constructs a new URI instance.
  *
@@ -30,7 +72,7 @@ const DEFAULT_PORTS = {
  * @param {String} url URI string to parse.
  * @param {Object} settings Optional settings object.
  */
-const URI: any = function (url, settings?) {
+function URI(url, settings?: URISettings) {
   const self = this;
   let baseUri, baseUrl;
 
@@ -107,7 +149,7 @@ const URI: any = function (url, settings?) {
   }
 
   // t.path = t.path || '/';
-};
+}
 
 URI.prototype = {
   /**

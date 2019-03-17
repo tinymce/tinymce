@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
 import Settings from 'tinymce/themes/silver/ui/menus/contextmenu/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { RawAssertions } from '@ephox/agar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { Fun } from '@ephox/katamari';

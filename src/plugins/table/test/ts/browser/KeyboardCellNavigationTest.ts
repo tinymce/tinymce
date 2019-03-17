@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
           tinyActions.sContentKeydown(Keys.down(), {}),
           tinyApis.sSetCursor([0, 0, 1, 0, 0, 0, 0], 0),
           Step.sync(function () {
-            editor.on('selectionchange', function () {
+            editor.on('SelectionChange', function () {
               selectionChangeState.set(true);
             });
           }),

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range, HTMLElement, ClientRect, Node } from '@ephox/dom-globals';
+import { Element, Range, HTMLElement, Node } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as CaretContainer from './CaretContainer';
@@ -34,7 +34,7 @@ const browser = PlatformDetection.detect().browser;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
 
-const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): ClientRect => {
+const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
   const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
   let docElm, scrollX, scrollY, margin, rootRect;
 
@@ -178,7 +178,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
   const reposition = () => {
     lastVisualCaret.get().each((caretState) => {
       const clientRect = getAbsoluteClientRect(root, caretState.element, caretState.before);
-      DomQuery(caretState.caret).css(clientRect);
+      DomQuery(caretState.caret).css({ ...clientRect });
     });
   };
 

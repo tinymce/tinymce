@@ -39,7 +39,22 @@ import Tools from './Tools';
 
 const extend = Tools.extend;
 
-const JSONRequest: any = function (settings) {
+export interface JSONRequestConstructor {
+  readonly prototype: JSONRequest;
+
+  new (settings?: any): JSONRequest;
+
+  sendRPC (o: {}): void;
+}
+
+interface JSONRequest {
+  count: number;
+  settings: any;
+
+  send (args: any): void;
+}
+
+const JSONRequest = function (settings?) {
   this.settings = extend({}, settings);
   this.count = 0;
 };

@@ -15,10 +15,10 @@ import TreeWalker from '../api/dom/TreeWalker';
 import ExpandRange from './ExpandRange';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
-import SplitRange from '../selection/SplitRange';
+import * as SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
-import { Selection } from '../api/dom/Selection';
-import { Editor } from '../api/Editor';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 import { isCaretNode, getParentCaretContainer } from './FormatContainer';
 import DeleteElement from '../delete/DeleteElement';
 
@@ -52,10 +52,8 @@ const isCaretContainerEmpty = function (node) {
 };
 
 const findFirstTextNode = function (node) {
-  let walker;
-
   if (node) {
-    walker = new TreeWalker(node, node);
+    const walker = new TreeWalker(node, node);
 
     for (node = walker.current(); node; node = walker.next()) {
       if (node.nodeType === 3) {
@@ -137,7 +135,7 @@ const removeCaretContainer = function (editor: Editor, node: Node, moveCaret: bo
   }
 };
 
-const insertCaretContainerNode = function (editor, caretContainer, formatNode) {
+const insertCaretContainerNode = function (editor: Editor, caretContainer, formatNode) {
   const dom = editor.dom, block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
 
   if (block && dom.isEmpty(block)) {
@@ -166,11 +164,11 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes, caretContaine
   return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
-const applyCaretFormat = function (editor, name, vars) {
+const applyCaretFormat = function (editor: Editor, name, vars) {
   let rng, caretContainer, textNode, offset, bookmark, container, text;
   const selection = editor.selection;
 
-  rng = selection.getRng(true);
+  rng = selection.getRng();
   offset = rng.startOffset;
   container = rng.startContainer;
   text = container.nodeValue;

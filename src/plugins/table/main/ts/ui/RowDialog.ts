@@ -8,7 +8,7 @@
 import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import Styles from '../actions/Styles';

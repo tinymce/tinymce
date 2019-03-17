@@ -10,7 +10,7 @@ import CaretFinder from '../caret/CaretFinder';
 import * as CaretUtils from '../caret/CaretUtils';
 import InlineUtils from './InlineUtils';
 import LazyEvaluator from '../util/LazyEvaluator';
-import { getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
+import { getParentCaretContainer } from '../fmt/FormatContainer';
 
 const Location = Adt.generate([
   { before: [ 'element' ] },

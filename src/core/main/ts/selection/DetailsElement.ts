@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
 import { Arr, Type } from '@ephox/katamari';
+import Editor from '../api/Editor';
 
 const preventSummaryToggle = (editor: Editor) => {
   editor.on('click', (e) => {

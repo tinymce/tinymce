@@ -5,10 +5,35 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { XMLHttpRequest as XMLHttpRequestType } from '@ephox/dom-globals';
 import { XMLHttpRequest } from '@ephox/sand';
 import Delay from './Delay';
 import Observable from './Observable';
 import Tools from './Tools';
+import { NativeEventMap } from './EventDispatcher';
+
+export interface XHRSettings {
+  async?: boolean;
+  content_type?: string;
+  crossDomain?: boolean;
+  data?: string;
+  requestheaders?: Record<string, { key: string, value: string}>;
+  scope?: {};
+  type?: string;
+  url: string;
+  error_scope?: {};
+  success_scope?: {};
+  error? (message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequestType, settings: XHRSettings): void;
+  success? (text: string, xhr: XMLHttpRequestType, settings: XHRSettings): void;
+}
+
+export interface XHREventMap extends NativeEventMap {
+  'beforeInitialize': { settings: XHRSettings };
+}
+
+interface XHR extends Observable<XHREventMap> {
+  send (settings: XHRSettings): void;
+}
 
 /**
  * This class enables you to send XMLHTTPRequests cross browser.
@@ -30,7 +55,9 @@ import Tools from './Tools';
  * });
  */
 
-const XHR: any = {
+const XHR: XHR = {
+  ...Observable,
+
   /**
    * Sends a XMLHTTPRequest.
    * Consult the Wiki for details on what settings this method takes.
@@ -38,7 +65,7 @@ const XHR: any = {
    * @method send
    * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.
    */
-  send (settings) {
+  send (settings: XHRSettings) {
     let xhr, count = 0;
 
     const ready = function () {
@@ -59,7 +86,7 @@ const XHR: any = {
     settings.scope = settings.scope || this;
     settings.success_scope = settings.success_scope || settings.scope;
     settings.error_scope = settings.error_scope || settings.scope;
-    settings.async = settings.async === false ? false : true;
+    settings.async = settings.async !== false;
     settings.data = settings.data || '';
 
     XHR.fire('beforeInitialize', { settings });
@@ -102,7 +129,5 @@ const XHR: any = {
     }
   }
 };
-
-Tools.extend(XHR, Observable);
 
 export default XHR;

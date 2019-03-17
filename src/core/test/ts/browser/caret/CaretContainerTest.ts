@@ -9,9 +9,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
 import { document, Text, HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 

@@ -1,5 +1,6 @@
 import { Assertions, Pipeline, Step, Log, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { HTMLTableCellElement } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader, TinyApis } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -21,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         editor.fire('mouseup', { target: endTd, button: 0 });
       };
 
-      const getCells = (table) => {
+      const getCells = (table): HTMLTableCellElement[] => {
         return editor.$(table).find('td').toArray();
       };
 

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLFormElement, window } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import NotificationManager from '../api/NotificationManager';
 import WindowManager from '../api/WindowManager';
@@ -17,11 +18,10 @@ import Init from './Init';
 import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
-import { window } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/core/api/Settings';
-import I18n from 'tinymce/core/api/util/I18n';
-import { IconManager } from 'tinymce/core/api/IconManager';
+import Editor from '../api/Editor';
+import Settings from '../api/Settings';
+import I18n from '../api/util/I18n';
+import IconManager from '../api/IconManager';
 
 const DOM = DOMUtils.DOM;
 
@@ -42,7 +42,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = function (scriptLoader, editor, suffix, callback) {
+const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) {
   const settings = editor.settings, theme = settings.theme;
 
   if (Type.isString(theme)) {
@@ -64,7 +64,7 @@ const loadTheme = function (scriptLoader, editor, suffix, callback) {
   }
 };
 
-const loadIcons = (editor) => {
+const loadIcons = (editor: Editor) => {
   const iconPackName: any = Tools.trim(editor.getParam('icons', '', 'string'));
 
   // Ignore if the icon pack is already loaded
@@ -114,7 +114,7 @@ const loadPlugins = function (settings, suffix) {
   });
 };
 
-const loadScripts = function (editor, suffix) {
+const loadScripts = function (editor: Editor, suffix) {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   loadTheme(scriptLoader, editor, suffix, function () {
@@ -136,7 +136,7 @@ const loadScripts = function (editor, suffix) {
   });
 };
 
-const render = function (editor) {
+const render = function (editor: Editor) {
   const settings = editor.settings, id = editor.id;
 
   // The user might have bundled multiple language packs so we need to switch the active code to the user specified language
@@ -171,7 +171,7 @@ const render = function (editor) {
     editor.inline = true;
   }
 
-  const form = editor.getElement().form || DOM.getParent(id, 'form');
+  const form = (editor.getElement() as HTMLFormElement).form || DOM.getParent(id, 'form');
   if (form) {
     editor.formElement = form;
 

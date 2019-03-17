@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UrlObject, AddOnManager } from './AddOnManager';
-import { Editor } from 'tinymce/core/api/Editor';
+import AddOnManager from './AddOnManager';
 
-// TODO: Remove this when TypeScript 2.8 is out!
-// Needed because of this: https://github.com/Microsoft/TypeScript/issues/9944
-export interface PluginManager extends AddOnManager {
-  add: (id: string, addOn: (editor: Editor, url: string) => any, dependencies?: any) => (editor: Editor, url: string) => any;
-  createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
+export interface Plugin {
+  getMetadata? (): { name: string, url: string };
+
+  // Allow custom apis
+  [key: string]: any;
 }
 
-export default AddOnManager.PluginManager as PluginManager;
+export default AddOnManager.PluginManager as AddOnManager<void | Plugin>;

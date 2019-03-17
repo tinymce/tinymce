@@ -2,7 +2,7 @@ import { Assertions, Chain, Guard, Mouse, NamedChain, UiControls, UiFinder } fro
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
 import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {

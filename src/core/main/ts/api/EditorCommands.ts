@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
 import Env from './Env';
 import InsertContent from '../content/InsertContent';
 import DeleteCommands from '../delete/DeleteCommands';
@@ -13,12 +14,12 @@ import NodeType from '../dom/NodeType';
 import InsertBr from '../newline/InsertBr';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
-import { Selection } from './dom/Selection';
-import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { HTMLElement } from '@ephox/dom-globals';
+import Selection from './dom/Selection';
+import * as IndentOutdent from '../commands/IndentOutdent';
+import Editor from './Editor';
+import DOMUtils from './dom/DOMUtils';
 import InsertNewLine from '../newline/InsertNewLine';
+import Formatter from './Formatter';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -31,8 +32,26 @@ import InsertNewLine from '../newline/InsertNewLine';
 const each = Tools.each, extend = Tools.extend;
 const map = Tools.map, inArray = Tools.inArray;
 
-export default function (editor: Editor) {
-  let dom: DOMUtils, selection: Selection, formatter;
+export interface EditorCommandsConstructor {
+  readonly prototype: EditorCommands;
+
+  new (editor: Editor): EditorCommands;
+}
+
+interface EditorCommands {
+  execCommand (command: string, ui?: boolean, value?: any, args?: any): boolean;
+  queryCommandState (command: string): boolean;
+  queryCommandValue (command: string): string;
+  queryCommandSupported (command: string): boolean;
+  addCommands (commandList: Record<string, Function>, type?: 'exec' | 'state' | 'value'): void;
+  addCommand (command: string, callback: Function, scope?: object): void;
+  addQueryStateHandler (command: string, callback: Function, scope?: object): void;
+  addQueryValueHandler (command: string, callback: Function, scope?: object): void;
+  hasCustomCommand (command: string): boolean;
+}
+
+function EditorCommands(editor: Editor) {
+  let dom: DOMUtils, selection: Selection, formatter: Formatter;
   const commands = { state: {}, exec: {}, value: {} };
   let bookmark;
 
@@ -52,7 +71,7 @@ export default function (editor: Editor) {
    * @param {Object} args Optional extra arguments to the execCommand.
    * @return {Boolean} true/false if the command was found or not.
    */
-  const execCommand = function (command, ui, value, args) {
+  const execCommand = function (command, ui?, value?, args?) {
     let func, customCommand, state = false;
 
     if (editor.removed) {
@@ -184,7 +203,7 @@ export default function (editor: Editor) {
     });
   };
 
-  const addCommand = function (command, callback, scope) {
+  const addCommand = function (command, callback, scope?) {
     command = command.toLowerCase();
     commands.exec[command] = function (command, ui, value, args) {
       return callback.call(scope || editor, ui, value, args);
@@ -215,14 +234,14 @@ export default function (editor: Editor) {
     return false;
   };
 
-  const addQueryStateHandler = function (command, callback, scope) {
+  const addQueryStateHandler = function (command, callback, scope?) {
     command = command.toLowerCase();
     commands.state[command] = function () {
       return callback.call(scope || editor);
     };
   };
 
-  const addQueryValueHandler = function (command, callback, scope) {
+  const addQueryValueHandler = function (command, callback, scope?) {
     command = command.toLowerCase();
     commands.value[command] = function () {
       return callback.call(scope || editor);
@@ -584,3 +603,5 @@ export default function (editor: Editor) {
   addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
   addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
 }
+
+export default EditorCommands;

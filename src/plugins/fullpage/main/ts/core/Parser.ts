@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import { HTMLLinkElement } from '@ephox/dom-globals';
 
 const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
@@ -59,7 +60,7 @@ const htmlToData = function (editor: Editor, head: string) {
   }
 
   // Parse meta elements
-  Tools.each(headerFragment.getAll('meta'), function (meta) {
+  Tools.each<Node>(headerFragment.getAll('meta'), function (meta) {
     const name = meta.attr('name');
     const httpEquiv = meta.attr('http-equiv');
     let matches;
@@ -234,7 +235,7 @@ const dataToHtml = function (editor, data, head) {
     }
   });
 
-  const currentStyleSheetsMap = {};
+  const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
@@ -297,7 +298,6 @@ const dataToHtml = function (editor, data, head) {
   html = Serializer({
     validate: false,
     indent: true,
-    apply_source_formatting: true,
     indent_before: 'head,html,body,meta,title,script,link,style',
     indent_after: 'head,html,body,meta,title,script,link,style'
   }).serialize(headerFragment);

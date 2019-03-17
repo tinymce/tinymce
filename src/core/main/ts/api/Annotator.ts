@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Arr, Obj, Option } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
-import * as AnnotationChanges from 'tinymce/core/annotate/AnnotationChanges';
-import * as AnnotationFilter from 'tinymce/core/annotate/AnnotationFilter';
-import { create } from 'tinymce/core/annotate/AnnotationsRegistry';
-import { findAll, identify } from 'tinymce/core/annotate/Identification';
-import { annotateWithBookmark, Decorator, DecoratorData } from 'tinymce/core/annotate/Wrapping';
+import * as AnnotationChanges from '../annotate/AnnotationChanges';
+import * as AnnotationFilter from '../annotate/AnnotationFilter';
+import { create } from '../annotate/AnnotationsRegistry';
+import { findAll, identify } from '../annotate/Identification';
+import { annotateWithBookmark, Decorator, DecoratorData } from '../annotate/Wrapping';
+import Editor from './Editor';
 
 export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
 
@@ -21,21 +23,20 @@ export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
  * @class tinymce.Annotator
  */
 
-export interface Annotator {
-  register: (name: string, settings: AnnotatorSettings) => void;
-  annotate: (name: string, data: DecoratorData) => void;
-  annotationChanged: (name: string, f: AnnotationListenerApi) => void;
-  remove: (name: string) => void;
-  // TODO: Use stronger types for Nodes when available.
-  getAll: (name: string) => Record<string, any>;
-}
-
 export interface AnnotatorSettings {
   decorate: Decorator;
   persistent?: boolean;
 }
 
-export default function (editor): Annotator {
+interface Annotator {
+  register: (name: string, settings: AnnotatorSettings) => void;
+  annotate: (name: string, data: DecoratorData) => void;
+  annotationChanged: (name: string, f: AnnotationListenerApi) => void;
+  remove: (name: string) => void;
+  getAll: (name: string) => Record<string, Element[]>;
+}
+
+const Annotator = function (editor: Editor): Annotator {
   const registry = create();
   AnnotationFilter.setup(editor, registry);
   const changes = AnnotationChanges.setup(editor, registry);
@@ -98,9 +99,11 @@ export default function (editor): Annotator {
      * @param {String} name the name of the annotations to retrieve
      * @return {Object} an index of annotations from uid => DOM nodes
      */
-    getAll: (name: string): Record<string, any> => {
+    getAll: (name: string): Record<string, Element[]> => {
       const directory = findAll(editor, name);
       return Obj.map(directory, (elems) => Arr.map(elems, (elem) => elem.dom()));
     }
-  } as Annotator;
-}
+  };
+};
+
+export default Annotator;

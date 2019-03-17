@@ -6,11 +6,11 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
-import { HTMLElement } from '@ephox/dom-globals';
+import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isMenubarEnabled, isToolbarEnabled, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
@@ -34,8 +34,8 @@ export interface RenderInfo {
 }
 
 export interface ModeRenderInfo {
-  iframeContainer?;
-  editorContainer?;
+  iframeContainer?: HTMLIFrameElement;
+  editorContainer: HTMLElement;
 }
 
 export interface UiChannels {

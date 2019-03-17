@@ -21,18 +21,17 @@ import { Element, Compare } from '@ephox/sugar';
 const findNextCaretContainer = function (editor, rng, isForward, root) {
   let node = rng.startContainer;
   const offset = rng.startOffset;
-  let nonEmptyBlocks, walker;
 
   if (node.nodeType === 3 && (isForward ? offset < node.data.length : offset > 0)) {
     return node;
   }
 
-  nonEmptyBlocks = editor.schema.getNonEmptyElements();
+  const nonEmptyBlocks = editor.schema.getNonEmptyElements();
   if (node.nodeType === 1) {
     node = RangeUtils.getNode(node, offset);
   }
 
-  walker = new TreeWalker(node, root);
+  const walker = new TreeWalker(node, root);
 
   // Delete at <li>|<br></li> then jump over the bogus br
   if (isForward) {

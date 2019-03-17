@@ -16,7 +16,7 @@ import DragDrop from './core/DragDrop';
 import PrePostProcess from './core/PrePostProcess';
 import Quirks from './core/Quirks';
 import Buttons from './ui/Buttons';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Settings from 'tinymce/plugins/paste/api/Settings';
 
 PluginManager.add('paste', function (editor: Editor) {

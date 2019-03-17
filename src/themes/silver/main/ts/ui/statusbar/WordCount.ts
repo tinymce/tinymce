@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const enum WordCountMode {
   Words = 'words',

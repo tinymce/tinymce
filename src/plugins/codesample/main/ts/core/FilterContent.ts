@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
 import Prism from './Prism';
 import Utils from '../util/Utils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const setup = function (editor: Editor) {
   const $ = editor.$;
@@ -35,12 +36,12 @@ const setup = function (editor: Editor) {
 
     if (unprocessedCodeSamples.length) {
       editor.undoManager.transact(function () {
-        unprocessedCodeSamples.each(function (idx, elm) {
+        unprocessedCodeSamples.each(function (idx, elm: HTMLElement) {
           $(elm).find('br').each(function (idx, elm) {
             elm.parentNode.replaceChild(editor.getDoc().createTextNode('\n'), elm);
           });
 
-          elm.contentEditable = false;
+          elm.contentEditable = 'false';
           elm.innerHTML = editor.dom.encode(elm.textContent);
           Prism.highlightElement(elm);
           elm.className = $.trim(elm.className);

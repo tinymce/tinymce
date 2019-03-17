@@ -5,6 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { PredicateFilter, Element, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
@@ -13,13 +16,10 @@ import InsertLi from './InsertLi';
 import NewLineUtils from './NewLineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
 import Zwsp from '../text/Zwsp';
-import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
+import { isCaretNode } from '../fmt/FormatContainer';
 import DOMUtils from '../api/dom/DOMUtils';
-import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { PredicateFilter, Element, Node } from '@ephox/sugar';
-import { Arr } from '@ephox/katamari';
-import { Editor } from '../api/Editor';
-import { EditorEvent } from '../api/dom/EventUtils';
+import Editor from '../api/Editor';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import Bookmarks from '../bookmark/Bookmarks';
 
 const trimZwsp = (fragment: DocumentFragment) => {
@@ -133,7 +133,7 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const setForcedBlockAttrs = function (editor, node) {
+const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
@@ -142,7 +142,7 @@ const setForcedBlockAttrs = function (editor, node) {
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-const wrapSelfAndSiblingsInDefaultBlock = function (editor, newBlockName, rng, container, offset) {
+const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName, rng, container, offset) {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
   const blockName = newBlockName || 'P';
   const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
@@ -271,9 +271,9 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
   // Returns true/false if the caret is at the start/end of the parent block element
   const isCaretAtStartOrEndOfBlock = function (start?) {
-    let walker, node, name, normalizedOffset;
+    let node, name;
 
-    normalizedOffset = normalizeZwspOffset(start, container, offset);
+    const normalizedOffset = normalizeZwspOffset(start, container, offset);
 
     // Caret is in the middle of a text node like "a|b"
     if (NodeType.isText(container) && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
@@ -296,7 +296,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     }
 
     // Walk the DOM and look for text nodes or non empty elements
-    walker = new TreeWalker(container, parentBlock);
+    const walker = new TreeWalker(container, parentBlock);
 
     // If caret is in beginning or end of a text block then jump to the next/previous node
     if (NodeType.isText(container)) {

@@ -6,7 +6,7 @@
  */
 
 import { Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { emojisFrom } from '../core/Lookup';
 import { EmojiDatabase } from '../core/EmojiDatabase';

@@ -10,6 +10,15 @@ import Tools from '../util/Tools';
 
 export interface EntitiesMap { [name: string]: string; }
 
+interface Entities {
+  encodeRaw (text: string, attr?: boolean): string;
+  encodeAllRaw (text: string): string;
+  encodeNumeric (text: string, attr?: boolean): string;
+  encodeNamed (text: string, attr?: boolean, entities?: EntitiesMap): string;
+  getEncodeFunc (name: string, entities?: EntitiesMap | string): (text: string, attr?: boolean) => string;
+  decode (text: string): string;
+}
+
 /**
  * Entity encoder class.
  *
@@ -123,7 +132,7 @@ namedEntities = buildEntitiesLookup(
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeRaw = (text: string, attr?: boolean) => {
+const encodeRaw = (text: string, attr?: boolean): string => {
   return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
     return baseEntities[chr] || chr;
   });
@@ -153,7 +162,7 @@ const encodeAllRaw = (text: string): string => {
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeNumeric = (text: string, attr?: boolean) => {
+const encodeNumeric = (text: string, attr?: boolean): string => {
   return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
     // Multi byte sequence convert it to a single entity
     if (chr.length > 1) {
@@ -174,7 +183,7 @@ const encodeNumeric = (text: string, attr?: boolean) => {
  * @param {Object} entities Optional parameter with entities to use.
  * @return {String} Entity encoded text.
  */
-const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap) => {
+const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): string => {
   entities = entities || namedEntities;
 
   return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
@@ -273,7 +282,7 @@ const decode = (text: string): string => {
   });
 };
 
-export default {
+const Entities: Entities = {
   encodeRaw,
   encodeAllRaw,
   encodeNumeric,
@@ -281,3 +290,5 @@ export default {
   getEncodeFunc,
   decode
 };
+
+export default Entities;

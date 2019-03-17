@@ -11,9 +11,7 @@ import { document } from '@ephox/dom-globals';
 
 declare const escape: any;
 
-UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock();
@@ -138,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function () {
   });
 
   suite.test('Entity encoding', function () {
-    let ser;
+    let ser: Serializer;
 
     ser = Serializer({ entity_encoding : 'numeric' });
     DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');

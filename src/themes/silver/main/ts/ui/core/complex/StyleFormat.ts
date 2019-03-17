@@ -6,9 +6,9 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { getUserStyleFormats, isMergeStyleFormats } from '../../../api/Settings';
-import { AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat } from './StyleFormatTypes';
+import { AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
 export const defaultStyleFormats: AllowedFormat[] = [
   {

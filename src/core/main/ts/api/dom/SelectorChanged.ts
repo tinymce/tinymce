@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import { Node, Element } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import Editor from '../Editor';
+import DOMUtils from './DOMUtils';
 import Tools from '../util/Tools';
 
 const deleteFromCallbackMap = (callbackMap, selector, callback) => {

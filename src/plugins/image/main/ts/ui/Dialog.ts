@@ -9,8 +9,8 @@ import { File } from '@ephox/dom-globals';
 import { Arr, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
-import { Editor } from '../../../../../core/main/ts/api/Editor';
-import { BlobCache } from '../../../../../core/main/ts/api/file/BlobCache';
+import Editor from 'tinymce/core/api/Editor';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { MainTab } from './MainTab';
 import { ImageData, getStyleValue } from '../core/ImageData';
 import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
@@ -21,7 +21,7 @@ import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
 import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
 import { UploadTab } from './UploadTab';
-import { StyleMap } from '../../../../../core/main/ts/api/html/Styles';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Types } from '@ephox/bridge';
 
 interface ChangeEvent {
@@ -36,7 +36,7 @@ interface Size {
 interface Helpers {
   onSubmit: (info: ImageDialogInfo) => (api: API) => void;
   imageSize: (url: string) => FutureResult<Size, void>;
-  createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobCache;
+  createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   alertErr: (api: API, message: string) => void;
   normalizeCss: (cssText: string) => string;
   parseStyle: (cssText: string) => StyleMap;
@@ -385,7 +385,7 @@ const imageSize = (editor: Editor) => (url: string): FutureResult<Size, void> =>
   });
 };
 
-const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobCache => {
+const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo => {
   return editor.editorUpload.blobCache.create({
     blob: file,
     blobUri,

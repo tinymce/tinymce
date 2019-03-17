@@ -4,7 +4,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import { identifyButtons } from '../../../main/ts/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export default function () {
 

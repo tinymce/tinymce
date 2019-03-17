@@ -7,7 +7,7 @@
 
 import * as Settings from '../api/Settings';
 import Actions from '../core/Actions';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   editor.ui.registry.addContextToolbar('imagetools', {

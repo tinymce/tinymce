@@ -8,10 +8,10 @@
 import { Range, Document } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option } from '@ephox/katamari';
 import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse, Html } from '@ephox/sugar';
-import { AnnotatorSettings } from 'tinymce/core/annotate/AnnotationsRegistry';
-import { Editor } from 'tinymce/core/api/Editor';
-import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
-import ExpandRange from 'tinymce/core/fmt/ExpandRange';
+import { AnnotatorSettings } from './AnnotationsRegistry';
+import Editor from '../api/Editor';
+import GetBookmark from '../bookmark/GetBookmark';
+import ExpandRange from '../fmt/ExpandRange';
 
 import RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';
