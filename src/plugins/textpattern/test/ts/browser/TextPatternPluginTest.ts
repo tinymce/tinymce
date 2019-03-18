@@ -193,7 +193,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
-    plugins: 'textpattern',
+    plugins: 'textpattern lists',
     base_url: '/project/js/tinymce'
   }, success, failure);
 });
