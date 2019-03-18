@@ -5,36 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  Behaviour,
-  Keying,
-  Tabstopping,
-  SplitToolbar as SplitAlloyToolbar,
-  Toolbar as AlloyToolbar,
-  ToolbarGroup as AlloyToolbarGroup,
-  Focusing,
-  Memento,
-  GuiFactory,
-  Attachment,
-  Positioning
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Attachment, Behaviour, Focusing, GuiFactory, Keying, Memento, Positioning, SplitToolbar as SplitAlloyToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
-import { renderIconButtonSpec } from '../general/Button';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
-export interface Toolbar {
+export interface MoreDrawerData {
+  floating: boolean;
+  lazyMoreButton: () => AlloyComponent;
+  lazyToolbar: () => AlloyComponent;
+}
+export interface ToolbarSpec {
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
   getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
-  floating: boolean;
+  moreDrawerData?: MoreDrawerData;
 }
 
 export interface ToolbarGroup {
@@ -42,8 +31,8 @@ export interface ToolbarGroup {
   items: AlloySpec[];
 }
 
-const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
-  const attributes = foo.title.fold(() => {
+const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
+  const attributes = toolbarGroup.title.fold(() => {
     return {};
   },
     (title) => {
@@ -60,7 +49,7 @@ const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
       AlloyToolbarGroup.parts().items({})
     ],
 
-    items: foo.items,
+    items: toolbarGroup.items,
     markers: {
       // nav within a group breaks if disabled buttons are first in their group so skip them
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
@@ -72,13 +61,13 @@ const renderToolbarGroupCommon = (foo: ToolbarGroup) => {
   };
 };
 
-const renderToolbarGroup = (foo: ToolbarGroup) => {
-  return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(foo));
+const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => {
+  return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 };
 
-const getToolbarbehaviours = (foo, modeName, overflowOpt) => {
+const getToolbarbehaviours = (toolbarSpec, modeName, overflowOpt) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
-    const groups = Arr.map(foo.initGroups, renderToolbarGroup);
+    const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
   });
 
@@ -88,13 +77,15 @@ const getToolbarbehaviours = (foo, modeName, overflowOpt) => {
     (memOverflow) => [
       onAttached,
       AlloyEvents.run('alloy.toolbar.toggle', (toolbar, se) => {
-        foo.getSink().toOption().each((sink) => {
+        toolbarSpec.getSink().toOption().each((sink) => {
           memOverflow.getOpt(sink).fold(() => {
             // overflow isn't there yet ... so add it, and return the built thing
             const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
             Attachment.attach(sink, builtoverFlow);
-            Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
+            Positioning.position(sink, toolbarSpec.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
             SplitAlloyToolbar.refresh(toolbar);
+            SplitAlloyToolbar.getMoreButton(toolbar).each(Focusing.focus);
+            Keying.focusIn(builtoverFlow);
             // return builtoverFlow;
           }, (builtOverflow) => {
             Attachment.detach(builtOverflow);
@@ -107,33 +98,44 @@ const getToolbarbehaviours = (foo, modeName, overflowOpt) => {
     Keying.config({
       // Tabs between groups
       mode: modeName,
-      onEscape: foo.onEscape,
+      onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
     AddEventsBehaviour.config('toolbar-events', eventBehaviours)
   ]);
 };
 
-const renderMoreToolbar = (foo: Toolbar) => {
-  const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
+const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   const memOverflow = Memento.record(
     AlloyToolbar.sketch({
       dom: {
         tag: 'div',
         classes: ['tox-toolbar__overflow']
-      }
+      },
+      toolbarBehaviours: Behaviour.derive([
+        Keying.config({
+        // THIS IS USED FOR FLOATING AND NOT SLIDING
+        mode: 'cyclic',
+          onEscape: () => {
+            AlloyTriggers.emit(toolbarSpec.moreDrawerData.lazyToolbar(), 'alloy.toolbar.toggle');
+            Keying.focusIn(toolbarSpec.moreDrawerData.lazyMoreButton());
+            return Option.some(true);
+          }
+        })
+      ])
     })
   );
 
   const getOverflow = (toolbar) => {
-    return foo.getSink().toOption().bind((sink) => {
+    return toolbarSpec.getSink().toOption().bind((sink) => {
       return memOverflow.getOpt(sink).bind(
         (overflow) => {
           return SplitAlloyToolbar.getMoreButton(toolbar).bind((_moreButton) => {
             if (overflow.getSystem().isConnected()) {
               // you have the build thing, so just return it
-              Positioning.position(sink, foo.backstage.shared.anchors.toolbarOverflow(), overflow);
+              Positioning.position(sink, toolbarSpec.backstage.shared.anchors.toolbarOverflow(), overflow);
               return Option.some(overflow);
             } else {
               return Option.none();
@@ -151,7 +153,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
     }
   });
 
-  const splitToolbarComponents = foo.floating ? [
+  const splitToolbarComponents = toolbarSpec.moreDrawerData.floating ? [
     primary
   ] : [
     primary,
@@ -164,12 +166,12 @@ const renderMoreToolbar = (foo: Toolbar) => {
   ];
 
   return SplitAlloyToolbar.sketch({
-    uid: foo.uid,
+    uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
     },
-    floating: foo.floating,
+    floating: toolbarSpec.moreDrawerData.floating,
     overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group
@@ -182,7 +184,7 @@ const renderMoreToolbar = (foo: Toolbar) => {
         icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...')
-      }, Option.none(), foo.backstage.shared.providers)
+      }, Option.none(), toolbarSpec.backstage.shared.providers)
     },
     components: splitToolbarComponents,
     markers: {
@@ -192,15 +194,15 @@ const renderMoreToolbar = (foo: Toolbar) => {
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
-    splitToolbarBehaviours: getToolbarbehaviours(foo, modeName, Option.some(memOverflow))
+    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Option.some(memOverflow))
   });
 };
 
-const renderToolbar = (foo: Toolbar) => {
-  const modeName: any = foo.cyclicKeying ? 'cyclic' : 'acyclic';
+const renderToolbar = (toolbarSpec: ToolbarSpec) => {
+  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return AlloyToolbar.sketch({
-    uid: foo.uid,
+    uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
       classes: ['tox-toolbar']
@@ -209,12 +211,8 @@ const renderToolbar = (foo: Toolbar) => {
       AlloyToolbar.parts().groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(foo, modeName, Option.none())
+    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Option.none())
   });
 };
 
-export {
-  renderToolbarGroup,
-  renderToolbar,
-  renderMoreToolbar
-};
+export { renderToolbarGroup, renderToolbar, renderMoreToolbar };

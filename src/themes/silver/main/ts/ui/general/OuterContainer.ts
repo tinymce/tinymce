@@ -22,7 +22,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
-import { renderMoreToolbar, renderToolbarGroup, renderToolbar } from '../toolbar/CommonToolbar';
+import { renderMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
 import { ToolbarDrawer } from '../../api/Settings';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
@@ -125,7 +125,7 @@ const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
       const renderer = (spec.split === ToolbarDrawer.sliding || spec.split === ToolbarDrawer.floating) ? renderMoreToolbar : renderToolbar;
-      return renderer({
+      const toolbarSpec: ToolbarSpec = {
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
@@ -135,8 +135,13 @@ const partToolbar = Composite.partType.optional({
         initGroups: [],
         getSink: spec.getSink,
         backstage: spec.backstage,
-        floating: spec.split === ToolbarDrawer.floating
-      });
+        moreDrawerData: {
+          floating: spec.split === ToolbarDrawer.floating,
+          lazyToolbar: spec.lazyToolbar,
+          lazyMoreButton: spec.lazyMoreButton
+        }
+      };
+      return renderer(toolbarSpec);
     }
   },
   name: 'toolbar',

@@ -75,7 +75,6 @@ const renderContextForm = (ctx: Toolbar.ContextForm, backstage: UiFactoryBacksta
     onEscape: Option.none,
     cyclicKeying: true,
     backstage,
-    floating: false,
     getSink: () => Result.error('')
   });
 };
