@@ -11,11 +11,11 @@ import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { Keying } from '../Main';
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
+import { Keying } from '../behaviour/Keying';
 
 const setStoredGroups = (bar, storedGroups) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
