@@ -133,17 +133,15 @@ const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   const cursor = editor.selection.getBookmark();
   if (pattern.type === 'block-format') {
     const format = editor.formatter.get(pattern.format);
-    if (format && format[0].block) {
-      editor.undoManager.transact(function () {
+    if (format.length && format[0].block) {
+      editor.undoManager.transact(() => {
         firstTextNode.deleteData(0, pattern.start.length);
-        editor.selection.select(block);
         editor.formatter.apply(pattern.format);
       });
     }
   } else if (pattern.type === 'block-command') {
-    editor.undoManager.transact(function () {
+    editor.undoManager.transact(() => {
       firstTextNode.deleteData(0, pattern.start.length);
-      editor.selection.select(block);
       editor.execCommand(pattern.cmd, false, pattern.value);
     });
   }
