@@ -1,14 +1,15 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
-
 import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Keying } from '../../api/behaviour/Keying';
 import { Sliding } from '../../api/behaviour/Sliding';
+import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
+import { getPart } from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
-import { Toggling } from '../../api/behaviour/Toggling';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
@@ -47,9 +48,17 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             closedClass: detail.markers.closedClass,
             openClass: detail.markers.openClass,
             shrinkingClass: detail.markers.shrinkingClass,
-            growingClass: detail.markers.growingClass
+            growingClass: detail.markers.growingClass,
+          }),
+          Keying.config({
+            // THIS IS USED FOR SLIDING AND NOT FLOATING
+            mode: 'acyclic',
+            onEscape: (comp) => {
+              getPart(comp, detail, 'overflow-button').each(Keying.focusIn);
+              return Option.some(true);
+            }
           })
-        ])
+        ]),
       };
     }
   }),
