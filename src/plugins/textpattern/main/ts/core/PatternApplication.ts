@@ -13,7 +13,8 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
 import { resolvePath, isElement, isText } from './PathRange';
-import { Strings, Arr, Id, Option, Options } from '@ephox/katamari';
+import { Strings, Arr, Id, Option, Options, Type, Obj } from '@ephox/katamari';
+import { Formatter } from 'tinymce/core/api/Formatter';
 
 // assumes start is not equal to end
 const isCollapsed = (start: Node, end: Node, root: HTMLElement) => {
@@ -101,6 +102,11 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
   editor.selection.moveToBookmark(cursor);
 };
 
+const isBlockFormatName = (name: string, formatter: Formatter) => {
+  const formatSet = formatter.get(name);
+  return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
+};
+
 // Handles block formats like ##abc or 1. abc
 const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   const dom = editor.dom;
@@ -132,8 +138,7 @@ const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
   // add a marker to store the cursor position
   const cursor = editor.selection.getBookmark();
   if (pattern.type === 'block-format') {
-    const format = editor.formatter.get(pattern.format);
-    if (format.length && format[0].block) {
+    if (isBlockFormatName(pattern.format, editor.formatter)) {
       editor.undoManager.transact(() => {
         firstTextNode.deleteData(0, pattern.start.length);
         editor.formatter.apply(pattern.format);
