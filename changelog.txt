@@ -13,6 +13,7 @@ Version 5.0.3 (TBD)
     Fixed styles not being preserved in IE 11 when editing via the fullpage plugin #TINY-3464
     Changed formatselect, styleselect and align menus to use the mceToggleFormat command internally #TINY-3428
     Fixed the link plugin context toolbar missing the open link button #TINY-3461
+    Fixed inconsistent dialog component spacing due to a missing wrapper #TINY-3436
 Version 5.0.2 (2019-03-05)
     Added presentation and document presets to `htmlpanel` dialog component #TINY-2694
     Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712

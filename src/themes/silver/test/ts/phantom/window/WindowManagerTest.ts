@@ -188,20 +188,25 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
                   classes: [ arr.has('tox-dialog__body-content') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-form__group') ],
+                      classes: [ arr.has('tox-form') ],
                       children: [
-                        s.element('label', {
-                          classes: [ arr.has('tox-label') ],
-                          attrs: {
-                            for: str.startsWith( 'form-field_' )
-                          },
-                          html: str.is('Foo Label')
-                        }),
-                        s.element('input', {
-                          classes: [ arr.has('tox-textfield') ],
-                          attrs: {
-                            type: str.is('text')
-                          }
+                        s.element('div', {
+                          classes: [ arr.has('tox-form__group') ],
+                          children: [
+                            s.element('label', {
+                              classes: [ arr.has('tox-label') ],
+                              attrs: {
+                                for: str.startsWith( 'form-field_' )
+                              },
+                              html: str.is('Foo Label')
+                            }),
+                            s.element('input', {
+                              classes: [ arr.has('tox-textfield') ],
+                              attrs: {
+                                type: str.is('text')
+                              }
+                            })
+                          ]
                         })
                       ]
                     })
