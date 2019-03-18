@@ -1,19 +1,19 @@
 Version 5.0.3 (2019-03-19)
-    Changed nested menuitems to disable if empty, or hide if part of the style formats menu and style_formats_autohide is true #TINY-3310
-    Changed the entire phrase 'Powered by Tiny' in the statusbar into a link, instead of just the word 'Tiny' #TINY-3366
-    Changed formatselect, styleselect and align menus to use the mceToggleFormat command internally #TINY-3428
+    Changed empty nested menu items within the style formats menu are now disabled, or hidden if style_formats_autohide is true #TINY-3310
+    Changed the entire phrase 'Powered by Tiny' in the statusbar is now a link, instead of just the word 'Tiny' #TINY-3366
+    Changed formatselect, styleselect and align menus now use the mceToggleFormat command internally #TINY-3428
     Fixed toolbar keyboard navigation when `toolbar_drawer` is configured #TINY-3432
-    Fixed directionality buttons not displaying the correct pressed state in selections that have no explicit dir property #TINY-3138
+    Fixed text direction buttons not displaying the correct pressed state in selections that have no explicit `dir` property #TINY-3138
     Fixed the mobile editor not cleaning up properly when removed #TINY-3445
-    Fixed quickbar toolbars not being disabled when setting them to false #TINY-3439
-    Fixed an issue where delete/backspace before and after tables would create incorrect selections #TINY-3371
-    Fixed an issue where dialog collection items (eg: emojis, special chars) couldn't be selected with touch devices #TINY-3444
+    Fixed quickbar toolbars added an empty box to the screen when set to false #TINY-3439
+    Fixed an issue where delete/backspace at the edge of tables would create incorrect selections #TINY-3371
+    Fixed an issue where dialog collection items (emoticon and special character dialogs) couldn't be selected with touch devices #TINY-3444
     Fixed a type error introduced in 5.0.2 when calling editor.getContent() with nested bookmarks #TINY-3400
     Fixed an issue that prevented default icons from being overridden #TINY-3449
-    Fixed an issue where home/end keys wouldn't move the caret correctly before/after content editable false inline elements #TINY-2995
+    Fixed an issue where home/end keys wouldn't move the caret correctly before/after `contenteditable=false` inline elements #TINY-2995
     Fixed styles not being preserved in IE 11 when editing via the fullpage plugin #TINY-3464
     Fixed the link plugin context toolbar missing the open link button #TINY-3461
-    Fixed inconsistent dialog component spacing due to a missing wrapper #TINY-3436
+    Fixed inconsistent dialog component spacing #TINY-3436
 Version 5.0.2 (2019-03-05)
     Added presentation and document presets to `htmlpanel` dialog component #TINY-2694
     Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712
