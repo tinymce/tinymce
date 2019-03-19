@@ -53,6 +53,8 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.defaultedStringEnum('key', 'b', ['a', 'b']));
   assertFieldValue('Should be default value', { key: 'b' }, { }, FieldSchema.defaultedStringEnum('key', 'b', ['a', 'b']));
   assertFieldError('Should fail on undefined value variant', { key: 'c' }, FieldSchema.defaultedStringEnum('key', 'b', ['a', 'b']));
+  assertFieldValue('Should be specified array', { key: ['a'] }, { key: ['a'] }, FieldSchema.defaultedArrayOf('key', ['b'], ValueSchema.string));
+  assertFieldValue('Should be default array', { key: ['b'] }, { }, FieldSchema.defaultedArrayOf('key', ['b'], ValueSchema.string));
 
   assertFieldValue('Should be specified value a', { key: 'a' }, { key: 'a' }, FieldSchema.strictStringEnum('key', ['a', 'b']));
   assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.strictStringEnum('key', ['a', 'b']));
