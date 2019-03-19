@@ -2,9 +2,8 @@ import { Assertions, Chain, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import ActionChains from 'ephox/mcagar/api/ActionChains';
 import Editor from 'ephox/mcagar/api/Editor';
-import { TinyVersions } from 'ephox/mcagar/api/Main';
 
-UnitTest.asynctest('ActionChainsTest', (success, failure) =>  {
+UnitTest.asynctest('ActionTest', (success, failure) =>  {
   let count;
 
   const sResetCount = Step.sync(() => count = 0);
@@ -65,13 +64,8 @@ UnitTest.asynctest('ActionChainsTest', (success, failure) =>  {
 
   Pipeline.async({}, [
     sResetCount,
-    TinyVersions.sWithVersion('4.5.x', sTestStep(4, 5)),
-    sResetCount,
-    TinyVersions.sWithVersion('4.8.x', sTestStep(4, 8)),
-    sResetCount,
-    TinyVersions.sWithVersion('5.0.x', sTestStep(5, 0))
+    sTestStep(5, 0)
   ], function () {
     success();
   }, failure);
 });
-

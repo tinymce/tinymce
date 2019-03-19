@@ -1,17 +1,14 @@
-import { Pipeline, GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
+import { Pipeline } from '@ephox/agar';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock';
-import { sAssertVersion } from '../../module/AssertVersion';
+import TinyApis from 'ephox/mcagar/api/TinyApis';
 
-var sTestVersion = (version: string, major, minor) => {
-  return TinyLoader.sSetupVersion(version, [], (editor) => {
+UnitTest.asynctest('TinySelectionTest', (success, failure) => {
+  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
     var apis = TinyApis(editor);
 
-    return GeneralSteps.sequence([
+    Pipeline.async({}, [
       apis.sFocus,
-      sAssertVersion(major, minor),
       apis.sSetContent('<p>this is one paragraph</p><p>This is another</p>'),
       apis.sSetSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),
       apis.sAssertSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),
@@ -38,17 +35,8 @@ var sTestVersion = (version: string, major, minor) => {
       apis.sSelect('p', [ 1 ]),
       // This may not be normalised across all browsers
       apis.sAssertSelection([ 0 ], 1, [ 0 ], 2)
-    ]);
-  }, { });
-};
+    ], loadSuccess, loadFailure);
 
-
-UnitTest.asynctest('TinySelectionTest', (success, failure) => {
-
-  Pipeline.async({}, [
-    sTestVersion('4.5.x', 4, 5),
-    sTestVersion('4.8.x', 4, 8),
-    sTestVersion('5.0.x', 5, 0)
-  ], () => success(), failure);
+  }, {}, success, failure);
 });
 

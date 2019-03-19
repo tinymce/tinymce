@@ -1,4 +1,4 @@
-import { Id, Type } from '@ephox/katamari';
+import { Id, Type, Global } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
@@ -8,10 +8,7 @@ import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
-import { updateTinymceUrls, setTinymceBaseUrl } from '../loader/Urls';
-import { getTinymce } from '../loader/Globals';
-
-updateTinymceUrls('tinymce');
+import { setTinymceBaseUrl } from '../loader/Urls';
 
 var cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
@@ -20,25 +17,25 @@ var cFromElement = function (element, settings: Record<string, any>) {
     Attr.set(element, 'id', randomId);
     Insert.append(Element.fromDom(document.body), element);
 
-    getTinymce().each((tinymce) => {
-      if (settings.base_url) {
-        setTinymceBaseUrl(tinymce, settings.base_url);
-      }
+    const tinymce = Global.tinymce;
 
-      tinymce.init(Merger.merge(settings, {
-        selector: '#' + randomId,
-        setup: function (editor) {
-          if (Type.isFunction(settings.setup)) {
-            settings.setup(editor);
-          }
-          editor.on('SkinLoaded', function () {
-            setTimeout(function () {
-              next(editor);
-            }, 0);
-          });
+    if (settings.base_url) {
+      setTinymceBaseUrl(tinymce, settings.base_url);
+    }
+
+    tinymce.init(Merger.merge(settings, {
+      selector: '#' + randomId,
+      setup: function (editor) {
+        if (Type.isFunction(settings.setup)) {
+          settings.setup(editor);
         }
-      }));
-    });
+        editor.on('SkinLoaded', function () {
+          setTimeout(function () {
+            next(editor);
+          }, 0);
+        });
+      }
+    }));
   });
 };
 

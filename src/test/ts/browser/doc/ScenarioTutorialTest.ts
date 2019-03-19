@@ -8,7 +8,6 @@ import TinyDom from 'ephox/mcagar/api/TinyDom';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
 import { UnitTest } from '@ephox/bedrock';
-import { sAssertVersion } from '../../module/AssertVersion';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
@@ -22,36 +21,29 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
     Assertions.assertEq('The content should be the same', editorContent1, editorContent2);
   });
 
-  var sTestVersion = (version: string, major, minor) => {
-    return TinyLoader.sSetupVersion(version, [], (editor) => {
-      var apis = TinyApis(editor);
-      var scenarios = TinyScenarios(editor);
-      var body = TinyDom.fromDom(editor.getBody());
 
-      return GeneralSteps.sequence([
-        apis.sFocus,
-        sAssertVersion(major, minor),
-        scenarios.sAsyncProperty('tutorial spec', Arbitraries.content('inline', {
-          inline: {
-            tags: {
-              strong: { weight: 0 },
-              b: { weight: 0 }
-            }
+  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+    var apis = TinyApis(editor);
+    var scenarios = TinyScenarios(editor);
+    var body = TinyDom.fromDom(editor.getBody());
+
+    Pipeline.async({}, [
+      apis.sFocus,
+      scenarios.sAsyncProperty('tutorial spec', Arbitraries.content('inline', {
+        inline: {
+          tags: {
+            strong: { weight: 0 },
+            b: { weight: 0 }
           }
-        }).generator, sAssertion(editor, body), {
-          scenario: { },
+        }
+      }).generator, sAssertion(editor, body), {
+          scenario: {},
           property: {
             tests: 100
           }
         })
-      ]);
-    }, { });
-  };
+    ], loadSuccess, loadFailure);
 
-  Pipeline.async({}, [
-    sTestVersion('4.5.x', 4, 5),
-    sTestVersion('4.8.x', 4, 8),
-    sTestVersion('5.0.x', 5, 0)
-  ], () => success(), failure);
+  }, {}, success, failure);
 });
 
