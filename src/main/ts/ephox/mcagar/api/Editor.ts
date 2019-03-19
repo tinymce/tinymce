@@ -8,6 +8,7 @@ import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
+import { setTinymceBaseUrl } from '../loader/Urls';
 
 var cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
@@ -16,7 +17,13 @@ var cFromElement = function (element, settings: Record<string, any>) {
     Attr.set(element, 'id', randomId);
     Insert.append(Element.fromDom(document.body), element);
 
-    Global.tinymce.init(Merger.merge(settings, {
+    const tinymce = Global.tinymce;
+
+    if (settings.base_url) {
+      setTinymceBaseUrl(tinymce, settings.base_url);
+    }
+
+    tinymce.init(Merger.merge(settings, {
       selector: '#' + randomId,
       setup: function (editor) {
         if (Type.isFunction(settings.setup)) {

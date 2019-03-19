@@ -1,23 +1,16 @@
-import { Step } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Fun, Global, Id, Merger } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove } from '@ephox/sugar';
 import 'tinymce';
+import { setTinymceBaseUrl } from '../loader/Urls';
 
 type SuccessCallback = (v: any, logs?) => void;
 type FailureCallback = (err: Error | string, logs?) => void;
 type SetupCallback = (editor, SuccessCallback, FailureCallback) => void;
-type SetupCallbackStep = <T, U>(editor) => Step<T, U>;
 
 const createTarget = function (inline: boolean) {
   const target = Element.fromTag(inline ? 'div' : 'textarea');
   return target;
-};
-
-const setTinymceBaseUrl = (tinymce, baseUrl: string) => {
-  const prefix = document.location.protocol + '//' + document.location.host;
-  tinymce.baseURL = baseUrl.indexOf('://') === -1 ? prefix + baseUrl : baseUrl;
-  tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 };
 
 const setup = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
