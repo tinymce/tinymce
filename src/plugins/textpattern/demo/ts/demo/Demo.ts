@@ -2,7 +2,7 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'textpattern code',
+  plugins: 'textpattern code lists',
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   toolbar: 'code',
   height: 600,
