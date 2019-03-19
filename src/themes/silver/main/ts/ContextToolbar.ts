@@ -109,7 +109,6 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         onEscape: Option.none,
         cyclicKeying: true,
         backstage: extras.backstage,
-        floating: false,
         getSink: () => Result.error('')
       });
     })() : (() => {
