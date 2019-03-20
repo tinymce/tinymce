@@ -21,6 +21,7 @@ import Inline from './modes/Inline';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 
@@ -106,6 +107,10 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getToolbar(container);
   }).getOrDie('Could not find more toolbar element');
 
+  const lazyThrobber = () => lazyOuterContainer.bind((container) => {
+    return OuterContainer.getThrobber(container);
+  }).getOrDie('Could not find throbber element');
+
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
@@ -151,6 +156,14 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
+  const partThrobber: AlloySpec = OuterContainer.parts().throbber({
+    dom: {
+      tag: 'div',
+      classes: ['tox-throbber']
+    },
+    backstage
+  });
+
   const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none();
 
   const socketSidebarContainer: SimpleSpec = {
@@ -189,7 +202,8 @@ const setup = (editor: Editor): RenderInfo => {
   const containerComponents = Arr.flatten<SimpleSpec>([
     [editorContainer],
     // Inline mode does not have a status bar
-    isInline ? [ ] : statusbar.toArray()
+    isInline ? [ ] : statusbar.toArray(),
+    [ partThrobber ]
   ]);
 
   const attributes = {
@@ -282,6 +296,7 @@ const setup = (editor: Editor): RenderInfo => {
   const renderUI = function (): ModeRenderInfo {
     SilverContextMenu.setup(editor, lazySink, backstage.shared);
     Sidebar.setup(editor);
+    Throbber.setup(editor, lazyThrobber, backstage.shared);
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();

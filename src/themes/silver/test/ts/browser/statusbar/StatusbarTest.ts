@@ -132,7 +132,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-statusbar')],
               children: fullStatusbarSpec(s, str, arr)
-            })
+            }),
+            s.theRest()
           ]
         });
       })
@@ -152,7 +153,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-statusbar')],
               children: statusbarWithoutWordcountSpec(s, str, arr)
-            })
+            }),
+            s.theRest()
           ]
         });
       })
@@ -173,7 +175,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-statusbar')],
               children: statusbarWithoutResizeSpec(s, str, arr)
-            })
+            }),
+            s.theRest()
           ]
         });
       })
@@ -191,6 +194,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           classes: [ arr.has('tox-tinymce') ],
           children: [
             s.anything(),
+            s.element('div', {
+              classes: [ arr.has('tox-throbber') ]
+            })
           ]
         });
       })
@@ -233,7 +239,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                       ]
                     })
                   ]
-                })
+                }),
+                s.theRest()
               ]
             });
           })
@@ -263,7 +270,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                       ]
                     })
                   ]
-                })
+                }),
+                s.theRest()
               ]
             });
           })

@@ -22,6 +22,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
+import * as Throbber from '../throbber/Throbber';
 import { renderMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
 import { ToolbarDrawer } from '../../api/Settings';
 
@@ -48,6 +49,7 @@ interface OuterContainerApis {
   getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
   getMoreButton: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getThrobber: (comp: AlloyComponent) => Option<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
@@ -86,6 +88,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       return toolbar.bind((toolbar) => {
         return SplitToolbar.getMoreButton(toolbar);
       });
+    },
+    getThrobber(comp) {
+      return Composite.parts.getPart(comp, detail, 'throbber');
     },
     focusToolbar(comp) {
       Composite.parts.getPart(comp, detail, 'toolbar').each(function (toolbar) {
@@ -170,6 +175,16 @@ const partSidebar = Composite.partType.optional({
   ]
 });
 
+const partThrobber = Composite.partType.optional({
+  factory: {
+    sketch: Throbber.renderThrobber
+  },
+  name: 'throbber',
+  schema: [
+    FieldSchema.strict('dom')
+  ]
+});
+
 export default Sketcher.composite({
   name: 'OuterContainer',
   factory,
@@ -181,7 +196,8 @@ export default Sketcher.composite({
     partMenubar,
     partToolbar,
     partSocket,
-    partSidebar
+    partSidebar,
+    partThrobber
   ],
 
   apis: {
@@ -209,6 +225,9 @@ export default Sketcher.composite({
     },
     getMoreButton(apis, comp) {
       return apis.getMoreButton(comp);
+    },
+    getThrobber(apis, comp) {
+      return apis.getThrobber(comp);
     },
     // FIX: Dupe
     setMenubar(apis, comp, menus) {

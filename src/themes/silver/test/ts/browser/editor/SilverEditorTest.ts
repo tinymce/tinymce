@@ -194,6 +194,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     }),
                     s.element('div', {
                       classes: [ arr.has('tox-statusbar') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-throbber') ]
                     })
                   ]
                 });
