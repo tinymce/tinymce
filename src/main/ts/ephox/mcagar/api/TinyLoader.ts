@@ -47,10 +47,8 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   else {
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
-    } else {
-      if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
-        setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
-      }
+    } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
+      setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
     tinymce.init(Merger.merge(settings, {

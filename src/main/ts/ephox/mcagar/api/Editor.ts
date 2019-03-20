@@ -1,4 +1,4 @@
-import { Id, Type, Global } from '@ephox/katamari';
+import { Id, Type, Global, Strings } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
@@ -21,7 +21,7 @@ var cFromElement = function (element, settings: Record<string, any>) {
 
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
-    } else {
+    } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
       setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
