@@ -1,5 +1,5 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Fun, Global, Id, Merger } from '@ephox/katamari';
+import { Fun, Global, Id, Merger, Type, Strings } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove } from '@ephox/sugar';
 import 'tinymce';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -47,6 +47,10 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   else {
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
+    } else {
+      if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
+        setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
+      }
     }
 
     tinymce.init(Merger.merge(settings, {

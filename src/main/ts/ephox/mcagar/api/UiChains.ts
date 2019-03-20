@@ -1,10 +1,7 @@
 import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Element, Visibility } from '@ephox/sugar';
+import { Element, Visibility, Body } from '@ephox/sugar';
 import { getThemeSelectors } from './ThemeSelectors';
-
-var dialogRoot = Element.fromDom(document.body);
 
 var cToolstripRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getContainer());
@@ -14,7 +11,7 @@ var cEditorRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getBody());
 });
 
-var cDialogRoot = Chain.inject(dialogRoot);
+var cDialogRoot = Chain.injectThunked(Body.body);
 
 var cGetToolbarRoot = Chain.fromChains([
   cToolstripRoot,

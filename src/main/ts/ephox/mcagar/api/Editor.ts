@@ -10,8 +10,6 @@ import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
-setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
-
 var cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
     var randomId = Id.generate('tiny-loader');
@@ -23,6 +21,8 @@ var cFromElement = function (element, settings: Record<string, any>) {
 
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
+    } else {
+      setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
     tinymce.init(Merger.merge(settings, {
