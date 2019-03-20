@@ -136,6 +136,15 @@ const defaultedFunction = function (key: string, fallback: (...x: any[]) => any)
   return defaultedOf(key, fallback, ValueSchema.func);
 };
 
+const defaultedArrayOf = function (key: string, fallback: any[], schema: Processor): FieldProcessorAdt {
+  return field(
+    key,
+    key,
+    FieldPresence.defaulted(fallback),
+    arrOf(schema)
+  );
+};
+
 const defaultedObjOf = function (key: string, fallback: object, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
   return field(key, key, FieldPresence.defaulted(fallback), objOf(objSchema));
 };
@@ -176,6 +185,7 @@ export {
   defaultedBoolean,
   defaultedFunction,
   defaultedObjOf,
+  defaultedArrayOf,
 
   field,
   state
