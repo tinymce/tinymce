@@ -13,7 +13,6 @@
   > li:not(.tox-checklist--hidden) {
     list-style: none;
     margin: .25em 0;
-    position: relative;
 
     &::before {
       background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked.svg');
@@ -21,9 +20,9 @@
       content: '';
       cursor: pointer;
       height: 1em;
-      left: -1.5em;
+      margin-left: -1.5em;
       position: absolute;
-      top: .125em;
+      margin-top: .125em;
       width: 1em;
     }
   }
