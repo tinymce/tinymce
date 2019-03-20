@@ -1,3 +1,9 @@
+Version 4.9.4 (2019-03-20)
+    Fixed an issue where **Home/End** keys wouldn't move the caret correctly before or after `contenteditable=false` inline elements #TINY-2995
+    Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
+    Fixed the mobile editor to clean up properly when removed #TINY-3445
+    Fixed an issue where retrieving the selected content as text didn't create newlines #TINY-3197
+    Fixed an issue where typing space between images would cause issues with nbsp not being inserted. #TINY-3346
 Version 4.9.3 (2019-01-31)
     Added a visualchars_default_state setting to the Visualchars Plugin. Patch contributed by mat3e.
     Fixed a bug where scrolling on a page with more than one editor would cause a ResizeWindow event to fire. #TINY-3247
