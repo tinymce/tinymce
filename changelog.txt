@@ -1,5 +1,5 @@
 Version 5.0.4 (TBD)
-    Added a wrapper class to the div containing the editor in mobile #TINY-3480
+    Removed redundant mobile wrapper #TINY-3480
     Added missing throbber functionality when calling editor.setProgressState(true) #TINY-3453
 Version 5.0.3 (2019-03-19)
     Changed empty nested-menu items within the style formats menu to be disabled or hidden if the value of `style_formats_autohide` is `true` #TINY-3310

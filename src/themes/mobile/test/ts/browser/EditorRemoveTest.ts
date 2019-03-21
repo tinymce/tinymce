@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, NamedChain, Pipeline, UiFinder } fr
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor, UiChains } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar';
+import { Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
         Selectors.one('#' + editor.id).each((textareaElm) => {
           Insert.wrap(textareaElm, wrapperElm);
         });
-        Selectors.one('.tinymce-mobile-outer-container').bind(Traverse.parent).each((editorElm) => {
+        Selectors.one('.tinymce-mobile-outer-container').each((editorElm) => {
           Insert.wrap(editorElm, wrapperElm);
         });
       }),

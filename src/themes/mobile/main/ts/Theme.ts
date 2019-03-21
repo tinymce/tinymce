@@ -8,7 +8,7 @@
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Focus, Insert, Node, Remove, Class } from '@ephox/sugar';
+import { Element, Focus, Node } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 
@@ -46,12 +46,9 @@ export const renderMobileTheme = function (editor) {
       editor.fire('scrollIntoView');
     };
 
-    const wrapper = Element.fromTag('div');
-    Class.add(wrapper, 'tinymce-mobile-wrapper');
     const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
     const original = Element.fromDom(targetNode);
-    Insert.after(original, wrapper);
-    Attachment.attachSystem(wrapper, realm.system());
+    Attachment.attachSystemAfter(original, realm.system());
 
     const findFocusIn = function (elem) {
       return Focus.search(elem).bind(function (focused) {
@@ -254,7 +251,6 @@ export const renderMobileTheme = function (editor) {
     editor.on('detach', () => {
       Attachment.detachSystem(realm.system());
       realm.system().destroy();
-      Remove.remove(wrapper);
     });
 
     return {
