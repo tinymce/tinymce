@@ -1,4 +1,4 @@
-import { Id, Type, Global } from '@ephox/katamari';
+import { Id, Type, Global, Strings } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
@@ -9,8 +9,6 @@ import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
 import { setTinymceBaseUrl } from '../loader/Urls';
-
-setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
 
 var cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
@@ -23,6 +21,8 @@ var cFromElement = function (element, settings: Record<string, any>) {
 
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
+    } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
+      setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
     tinymce.init(Merger.merge(settings, {
