@@ -19,7 +19,8 @@
     "awesome-typescript-loader": "^4.0.0",
     "source-map-loader": "^0.2.3",
     "tslint": "^5.14.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.1",
+    "webpack-cli": "^3.3.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
