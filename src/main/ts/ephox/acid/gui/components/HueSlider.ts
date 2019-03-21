@@ -1,9 +1,9 @@
-import { Option, Fun } from '@ephox/katamari';
-import { Slider, Behaviour, Composing, Focusing, Tabstopping, AlloyTriggers } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, Slider } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
 import { sliderUpdate } from '../ColourEvents';
 
-const sliderFactory = (translate, getClass) => {
-  var spectrum = Slider.parts().spectrum({
+const sliderFactory = (translate: (key: string) => string, getClass: (key: string) => string) => {
+  const spectrum = Slider.parts().spectrum({
     dom: {
       tag: 'div',
       classes: [ getClass('hue-slider-spectrum') ],
@@ -13,7 +13,7 @@ const sliderFactory = (translate, getClass) => {
     }
   });
 
-  var thumb = Slider.parts().thumb({
+  const thumb = Slider.parts().thumb({
     dom: {
       tag: 'div',
       classes: [ getClass('hue-slider-thumb') ],
@@ -22,7 +22,6 @@ const sliderFactory = (translate, getClass) => {
       }
     }
   });
-
 
   return Slider.sketch({
     dom: {
@@ -45,12 +44,12 @@ const sliderFactory = (translate, getClass) => {
       Focusing.config({ })
     ]),
 
-    onChange: function (slider, thumb, value) {
+    onChange: (slider, _thumb, value) => {
       AlloyTriggers.emitWith(slider, sliderUpdate(), {
         value
       });
     }
-  })
+  });
 };
 
 export default {

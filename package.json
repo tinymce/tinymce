@@ -18,6 +18,7 @@
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^4.0.0",
     "source-map-loader": "^0.2.3",
+    "tslint": "^5.14.0",
     "typescript": "^3.0.1"
   },
   "publishConfig": {
@@ -41,6 +42,7 @@
   "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc",
+    "lint": "tslint --project tsconfig.json --config tslint.json",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
   }

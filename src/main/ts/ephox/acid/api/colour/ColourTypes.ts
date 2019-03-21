@@ -13,4 +13,4 @@ export type Rgba = {
   green: () => number;
   blue: () => number;
   alpha: () => number;
-}
+};

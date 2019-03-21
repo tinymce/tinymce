@@ -1,4 +1,4 @@
-var strings = {
+const strings: Record<string, string> = {
   // 'colorcustom.palette.thumb': 'Palette Picker',
   // 'colorcustom.palette.spectrum': 'Saturation and Brightness Palette',
   // 'colorcustom.hue.thumb':'Hue Slider',

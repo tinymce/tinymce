@@ -1,44 +1,50 @@
+import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
+import { HTMLCanvasElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { Behaviour, Composing, Focusing, Slider, Tabstopping, SketchSpec, UiSketcher, Sketcher, AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-
 import { Rgba } from '../../api/colour/ColourTypes';
 import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
 
+// tslint:disable:no-empty-interface
 export interface SaturationBrightnessPaletteDetail extends Sketcher.SingleSketchDetail {
 }
 
 export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSpec {
 }
+// tslint:enable:no-empty-interface
+
 export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec, SaturationBrightnessPaletteDetail> {
   setRgba: (slider: AlloyComponent, colour: Rgba) => void;
-};
+}
 
-var paletteFactory = (translate, getClass) => {
-  var spectrum = Slider.parts().spectrum({
+const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string) => {
+  const spectrum = Slider.parts().spectrum({
     dom: {
       tag: 'canvas',
       attributes: {
         role: 'presentation'
       },
-      classes: [ getClass('sv-palette-spectrum') ]
+      classes: [getClass('sv-palette-spectrum')]
     }
   });
 
-  var thumb = Slider.parts().thumb({
+  const thumb = Slider.parts().thumb({
     dom: {
       tag: 'div',
       attributes: {
         role: 'presentation'
       },
-      classes: [ getClass('sv-palette-thumb') ],
-      innerHtml: `<div class=${getClass("sv-palette-inner-thumb")} role="presentation"></div>`
+      classes: [getClass('sv-palette-thumb')],
+      innerHtml: `<div class=${getClass('sv-palette-inner-thumb')} role="presentation"></div>`
     }
   });
 
-  const setColour = (canvas, rgba: string): void => {
+  const setColour = (canvas: HTMLCanvasElement, rgba: string): void => {
     const { width, height } = canvas;
     const ctx = canvas.getContext('2d');
+    if (ctx === null) {
+      return;
+    }
 
     ctx.fillStyle = rgba;
     ctx.fillRect(0, 0, width, height);
@@ -56,25 +62,25 @@ var paletteFactory = (translate, getClass) => {
     ctx.fillRect(0, 0, width, height);
   };
 
-  const setSliderColour = (slider, rgba: Rgba): void => {
+  const setSliderColour = (slider: AlloyComponent, rgba: Rgba): void => {
     // Very open to a better way of doing this.
     const canvas = slider.components()[0].element().dom();
     setColour(canvas, RgbaColour.toString(rgba));
   };
 
-  const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (detail): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
     const getInitialValue = Fun.constant({
       x: Fun.constant(0),
       y: Fun.constant(0)
     });
 
-    const onChange = (slider, _thumb, value) => {
+    const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
       AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate(), {
         value
-      })
+      });
     };
 
-    const onInit = (_slider, _thumb, spectrum, _value) => {
+    const onInit = (_slider: AlloyComponent, _thumb: AlloyComponent, spectrum: AlloyComponent, _value: number | SliderTypes.SliderValue) => {
       // Maybe make this initial value configurable?
       setColour(spectrum.element().dom(), RgbaColour.toString(RgbaColour.red()));
     };
@@ -83,7 +89,7 @@ var paletteFactory = (translate, getClass) => {
       Composing.config({
         find: Option.some
       }),
-      Focusing.config({ })
+      Focusing.config({})
     ]);
 
     return Slider.sketch({
@@ -92,7 +98,7 @@ var paletteFactory = (translate, getClass) => {
         attributes: {
           role: 'presentation'
         },
-        classes: [ getClass('sv-palette') ]
+        classes: [getClass('sv-palette')]
       },
       model: {
         mode: 'xy',
@@ -110,15 +116,15 @@ var paletteFactory = (translate, getClass) => {
   };
 
   const SaturationBrightnessPalette = Sketcher.single({
-    factory: factory,
+    factory,
     name: 'SaturationBrightnessPalette',
-    configFields: [ ],
+    configFields: [],
     apis: {
-      setRgba: (apis, slider, rgba) => {
+      setRgba: (_apis: {}, slider: AlloyComponent, rgba: Rgba) => {
         setSliderColour(slider, rgba);
       }
     },
-    extraApis: { }
+    extraApis: {}
   }) as SaturationBrightnessPaletteSketcher;
 
   return SaturationBrightnessPalette;

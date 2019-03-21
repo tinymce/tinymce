@@ -1,10 +1,8 @@
-import * as RgbaColour from '../../../main/ts/ephox/acid/api/colour/RgbaColour';
+import { assert, UnitTest } from '@ephox/bedrock';
 import * as HexColour from '../../../main/ts/ephox/acid/api/colour/HexColour';
-import * as HsvColour from '../../../main/ts/ephox/acid/api/colour/HsvColour';
-import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import * as RgbaColour from '../../../main/ts/ephox/acid/api/colour/RgbaColour';
 
-UnitTest.test('SplitMenuTest', function() {
+UnitTest.test('ConversionsTest', function () {
   const rgbaBlack = RgbaColour.rgbaColour(0, 0, 0, 1);
   const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
 
@@ -14,4 +12,3 @@ UnitTest.test('SplitMenuTest', function() {
   const hexWhite = HexColour.fromRgba(rgbaWhite);
   assert.eq('ffffff', hexWhite.value());
 });
-
