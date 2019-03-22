@@ -320,7 +320,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     }
 
     try {
-      if ((selection = getSel())) {
+      if ((selection = getSel()) && !Tools.isRestricted(selection.anchorNode)) {
         if (selection.rangeCount > 0) {
           rng = selection.getRangeAt(0);
         } else {
