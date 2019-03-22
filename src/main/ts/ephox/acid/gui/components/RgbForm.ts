@@ -1,4 +1,8 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, Input, Invalidating, Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
+  EventFormat, Focusing, Form, FormField, Input, Invalidating, Memento,
+  Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
+} from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
@@ -137,7 +141,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
   };
 
   const copyRgbToForm = (form: AlloyComponent, rgb: Rgba): void => {
-    const red = rgb.red(), green = rgb.green(), blue = rgb.blue();
+    const red = rgb.red(); const green = rgb.green(); const blue = rgb.blue();
     Representing.setValue(form, { red, green, blue });
   };
 
@@ -162,7 +166,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
     });
   };
 
-  const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (_detail): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
     const state = {
       red: Fun.constant(Cell(Option.some(255))),
       green: Fun.constant(Cell(Option.some(255))),
@@ -198,7 +202,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
 
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
-      const red = rgb.red(), green = rgb.green(), blue = rgb.blue();
+      const red = rgb.red(); const green = rgb.green(); const blue = rgb.blue();
       set('red', Option.some(red));
       set('green', Option.some(green));
       set('blue', Option.some(blue));
@@ -307,11 +311,11 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
     );
   };
 
-  type Apis = {
+  interface Apis {
     updateHex(form: AlloyComponent, hex: Hex): void;
-  };
+  }
 
-  const RgbForm = Sketcher.single({
+  const rgbFormSketcher = Sketcher.single({
     factory,
     name: 'RgbForm',
     configFields: [],
@@ -323,7 +327,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
     extraApis: {}
   }) as RgbFormSketcher;
 
-  return RgbForm;
+  return rgbFormSketcher;
 };
 
 export default {

@@ -19,16 +19,16 @@ const fromString = (hex: string): Option<Hex> => {
 };
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-const getLongForm = (hexColour: Hex): Hex => {
-  const hexString = hexColour.value().replace(shorthandRegex, function (m, r, g, b) {
+const getLongForm = (hex: Hex): Hex => {
+  const hexString = hex.value().replace(shorthandRegex, function (m, r, g, b) {
     return r + r + g + g + b + b;
   });
 
   return { value: Fun.constant(hexString) };
 };
 
-const extractValues = (hexColour: Hex): RegExpExecArray | [string, string, string, string] => {
-  const longForm = getLongForm(hexColour);
+const extractValues = (hex: Hex): RegExpExecArray | [string, string, string, string] => {
+  const longForm = getLongForm(hex);
   const splitForm = longformRegex.exec(longForm.value());
   return splitForm === null ? ['FFFFFF', 'FF', 'FF', 'FF'] : splitForm;
 };

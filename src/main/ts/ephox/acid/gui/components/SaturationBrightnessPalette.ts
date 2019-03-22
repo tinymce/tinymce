@@ -18,7 +18,7 @@ export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSket
 }
 
 const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string) => {
-  const spectrum = Slider.parts().spectrum({
+  const spectrumPart = Slider.parts().spectrum({
     dom: {
       tag: 'canvas',
       attributes: {
@@ -28,7 +28,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     }
   });
 
-  const thumb = Slider.parts().thumb({
+  const thumbPart = Slider.parts().thumb({
     dom: {
       tag: 'div',
       attributes: {
@@ -106,8 +106,8 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
       },
       rounded: false,
       components: [
-        spectrum,
-        thumb
+        spectrumPart,
+        thumbPart
       ],
       onChange,
       onInit,
@@ -115,7 +115,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     });
   };
 
-  const SaturationBrightnessPalette = Sketcher.single({
+  const saturationBrightnessPaletteSketcher = Sketcher.single({
     factory,
     name: 'SaturationBrightnessPalette',
     configFields: [],
@@ -127,7 +127,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     extraApis: {}
   }) as SaturationBrightnessPaletteSketcher;
 
-  return SaturationBrightnessPalette;
+  return saturationBrightnessPaletteSketcher;
 };
 
 export default {

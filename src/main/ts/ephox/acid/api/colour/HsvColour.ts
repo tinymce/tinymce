@@ -10,17 +10,13 @@ const hsvColour = (hue: number, saturation: number, value: number): Hsv => {
 };
 
 const fromRgb = (rgbaColour: Rgba): Hsv => {
-  let r, g, b, h, s, v, d, minRGB, maxRGB;
+  let h = 0; let s = 0; let v = 0;
+  const r = rgbaColour.red() / 255;
+  const g = rgbaColour.green() / 255;
+  const b = rgbaColour.blue() / 255;
 
-  h = 0;
-  s = 0;
-  v = 0;
-  r = rgbaColour.red() / 255;
-  g = rgbaColour.green() / 255;
-  b = rgbaColour.blue() / 255;
-
-  minRGB = Math.min(r, Math.min(g, b));
-  maxRGB = Math.max(r, Math.max(g, b));
+  const minRGB = Math.min(r, Math.min(g, b));
+  const maxRGB = Math.max(r, Math.max(g, b));
 
   if (minRGB === maxRGB) {
     v = minRGB;
@@ -33,7 +29,7 @@ const fromRgb = (rgbaColour: Rgba): Hsv => {
   }
 
   /*eslint no-nested-ternary:0 */
-  d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
+  const d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
   h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
   h = 60 * (h - d / (maxRGB - minRGB));
   s = (maxRGB - minRGB) / maxRGB;

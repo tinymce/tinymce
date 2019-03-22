@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",
+    "@ephox/tslint-rules": "latest",
     "awesome-typescript-loader": "^4.0.0",
     "source-map-loader": "^0.2.3",
     "tslint": "^5.14.0",

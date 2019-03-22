@@ -111,7 +111,7 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
     };
   };
 
-  const ColourPicker = Sketcher.single({
+  const colourPickerSketcher = Sketcher.single({
     name: 'ColourPicker',
     configFields: [
       FieldSchema.strict('dom'),
@@ -121,7 +121,7 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
     factory
   }) as ColourPickerSketcher;
 
-  return ColourPicker;
+  return colourPickerSketcher;
 };
 
 export default {

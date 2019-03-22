@@ -19,6 +19,7 @@ DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
 });
 
 const fakeTranslate = (key: string) => Option.from(strings[key]).getOrThunk(() => {
+  // tslint:disable-next-line:no-console
   console.error('Missing translation for ' + key);
   return key;
 });
