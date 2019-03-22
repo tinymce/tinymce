@@ -8,7 +8,7 @@ export interface Hsv {
   value: () => number;
 }
 
-export type Rgba = {
+export interface Rgba {
   red: () => number;
   green: () => number;
   blue: () => number;

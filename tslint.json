@@ -1,0 +1,12 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+      "@ephox/tslint-rules/tslint.json"
+  ],
+  "jsRules": {},
+  "rules": {
+    "max-line-length": [true, 240],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
+  },
+  "rulesDirectory": []
+}
