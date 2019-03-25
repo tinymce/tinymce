@@ -43,6 +43,7 @@
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest",
     "@ephox/swag": "latest",
+    "@ephox/tslint-rules": "latest",
     "@ephox/wrap-jsverify": "latest",
     "@tinymce/oxide": "latest",
     "@tinymce/oxide-icons-default": "latest",
