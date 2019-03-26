@@ -17,10 +17,10 @@ import {
   Replacing,
   Representing,
   Slider,
+  SliderTypes,
   Disabling,
   AddEventsBehaviour
 } from '@ephox/alloy';
-import { SliderValueX } from '@ephox/alloy/lib/main/ts/ephox/alloy/ui/types/SliderTypes';
 import { ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 
@@ -253,7 +253,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ])
   });
 
-  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
+  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
     const labelPart = Slider.parts().label({
       dom: {
         tag: 'label',
@@ -309,7 +309,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   };
 
   const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): Memento.MementoRecord => {
-    const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
+    const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
       const valTransform = makeValueTransform(transform, value.x() / 100);
       // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
@@ -362,7 +362,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const makeColorTransform = (red: number, green: number, blue: number): ((ir: any) => any) => (ir: any): any => ImageTransformations.colorize(ir, red, green, blue);
 
   const makeColorSlider = (label: string) => {
-    const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderValueX): void => {
+    const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
       const redOpt = memRed.getOpt(slider);
       const blueOpt = memBlue.getOpt(slider);
       const greenOpt = memGreen.getOpt(slider);
