@@ -24,7 +24,7 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {
     return;
   }
 
-  const iframe = Element.fromHtml('<iframe style="position: fixed; top: 0; left: 0; height:700px; width:700px;" src="project/src/test/data/points.html"></iframe>');
+  const iframe = Element.fromHtml('<iframe style="position: fixed; top: 0; left: 0; height:700px; width:700px;" src="/project/@ephox/sugar/src/test/data/points.html"></iframe>');
   Insert.append(Body.body(), iframe);
   const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();

@@ -71,7 +71,7 @@ UnitTest.asynctest('LocationTest', function () {
     Insert.append(Body.body(), iframe);
   };
 
-  const ifr = '<iframe src="project/src/test/data/locationTest.html"></iframe>';
+  const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/locationTest.html"></iframe>';
 
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
