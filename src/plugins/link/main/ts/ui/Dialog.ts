@@ -61,30 +61,28 @@ const collectData = (editor): Future<LinkDialogInfo> => {
   return DialogInfo.collect(editor, settings, anchorNode);
 };
 
-const getInitialData = (info: LinkDialogInfo, defaultTarget): LinkDialogData => {
-  return {
-    url: {
-      value: info.anchor.url.getOr(''),
-      meta: {
-        attach: () => { },
-        text: info.anchor.url.fold(
-          () => '',
-          () => info.anchor.text.getOr('')
-        ),
-        original: {
-          value: info.anchor.url.getOr(''),
-        }
+const getInitialData = (info: LinkDialogInfo, defaultTarget): LinkDialogData => ({
+  url: {
+    value: info.anchor.url.getOr(''),
+    meta: {
+      attach: () => { },
+      text: info.anchor.url.fold(
+        () => '',
+        () => info.anchor.text.getOr('')
+      ),
+      original: {
+        value: info.anchor.url.getOr(''),
       }
-    },
-    text: info.anchor.text.getOr(''),
-    title: info.anchor.title.getOr(''),
-    anchor: info.anchor.url.getOr(''),
-    link: info.anchor.url.getOr(''),
-    rel: info.anchor.rel.getOr(''),
-    target: info.anchor.target.getOr(defaultTarget.getOr('')),
-    linkClass: info.anchor.linkClass.getOr('')
-  };
-};
+    }
+  },
+  text: info.anchor.text.getOr(''),
+  title: info.anchor.title.getOr(''),
+  anchor: info.anchor.url.getOr(''),
+  link: info.anchor.url.getOr(''),
+  rel: info.anchor.rel.getOr(''),
+  target: info.anchor.target.getOr(defaultTarget.getOr('')),
+  linkClass: info.anchor.linkClass.getOr('')
+});
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit, editorSettings): Types.Dialog.DialogApi<LinkDialogData> => {
 
