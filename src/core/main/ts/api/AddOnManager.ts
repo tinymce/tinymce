@@ -181,7 +181,7 @@ function AddOnManager<T>(): AddOnManager<T> {
     });
   };
 
-  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: Function, scope: any) {
+  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) {
     const deps = dependencies(name);
 
     each(deps, function (dep) {

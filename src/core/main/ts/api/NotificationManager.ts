@@ -52,7 +52,7 @@ interface NotificationManager {
  * });
  */
 
-const NotificationManager = function (editor: Editor): NotificationManager {
+function NotificationManager(editor: Editor): NotificationManager {
   const notifications: Notification[] = [];
 
   const getImplementation = function (): NotificationManagerImpl {
@@ -174,6 +174,6 @@ const NotificationManager = function (editor: Editor): NotificationManager {
      */
     getNotifications
   };
-};
+}
 
 export default NotificationManager;

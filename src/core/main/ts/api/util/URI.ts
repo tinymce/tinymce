@@ -22,23 +22,6 @@ const DEFAULT_PORTS = {
   mailto: 25
 };
 
-interface ParsedURI {
-  source?: string;
-  protocol?: string;
-  authority?: string;
-  userInfo?: string;
-  user?: string;
-  password?: string;
-  host?: string;
-  port?: string;
-  relative?: string;
-  path?: string;
-  directory?: string;
-  file?: string;
-  query?: string;
-  anchor?: string;
-}
-
 export interface URISettings {
   base_uri?: URI;
 }
@@ -48,130 +31,164 @@ export interface URIConstructor {
 
   new (url: string, settings?: URISettings): URI;
 
-  getDocumentBaseUrl (loc): string;
+  getDocumentBaseUrl (loc: { protocol: string; host?: string; href?: string; pathname?: string }): string;
   parseDataUri (uri: string): { type: string; data: string };
 }
 
-interface URI extends ParsedURI {
-  settings: URISettings;
+class URI {
 
-  isSameOrigin (uri: URI): boolean;
-  toAbsPath (base: string, path: string): string;
-  toRelPath (base: string, path: string): string;
-  getURI (noProtoHost?: boolean): string;
-  toAbsolute (uri: string, noHost?: boolean): string;
-  toRelative (uri: string): string;
-  setPath (path: string);
-}
+  public static parseDataUri (uri: string): { type: string; data: string} {
+    let type;
 
-/**
- * Constructs a new URI instance.
- *
- * @constructor
- * @method URI
- * @param {String} url URI string to parse.
- * @param {Object} settings Optional settings object.
- */
-function URI(url, settings?: URISettings) {
-  const self = this;
-  let baseUri, baseUrl;
+    const uriComponents = decodeURIComponent(uri).split(',');
 
-  url = trim(url);
-  settings = self.settings = settings || {};
-  baseUri = settings.base_uri;
+    const matches = /data:([^;]+)/.exec(uriComponents[0]);
+    if (matches) {
+      type = matches[1];
+    }
 
-  // Strange app protocol that isn't http/https or local anchor
-  // For example: mailto,skype,tel etc.
-  if (/^([\w\-]+):([^\/]{2})/i.test(url) || /^\s*#/.test(url)) {
-    self.source = url;
-    return;
+    return {
+      type,
+      data: uriComponents[1]
+    };
   }
 
-  const isProtocolRelative = url.indexOf('//') === 0;
+  public static getDocumentBaseUrl (loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
+    let baseUrl;
 
-  // Absolute path with no host, fake host and protocol
-  if (url.indexOf('/') === 0 && !isProtocolRelative) {
-    url = (baseUri ? baseUri.protocol || 'http' : 'http') + '://mce_host' + url;
-  }
-
-  // Relative path http:// or protocol relative //path
-  if (!/^[\w\-]*:?\/\//.test(url)) {
-    baseUrl = settings.base_uri ? settings.base_uri.path : new URI(document.location.href).directory;
-    // tslint:disable-next-line:triple-equals
-    if (settings.base_uri.protocol == '') {
-      url = '//mce_host' + self.toAbsPath(baseUrl, url);
+    // Pass applewebdata:// and other non web protocols though
+    if (loc.protocol.indexOf('http') !== 0 && loc.protocol !== 'file:') {
+      baseUrl = loc.href;
     } else {
-      url = /([^#?]*)([#?]?.*)/.exec(url);
-      url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, url[1]) + url[2];
+      baseUrl = loc.protocol + '//' + loc.host + loc.pathname;
+    }
+
+    if (/^[^:]+:\/\/\/?[^\/]+\//.test(baseUrl)) {
+      baseUrl = baseUrl.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+
+      if (!/[\/\\]$/.test(baseUrl)) {
+        baseUrl += '/';
+      }
+    }
+
+    return baseUrl;
+  }
+
+  public source: string;
+  public protocol: string;
+  public authority: string;
+  public userInfo: string;
+  public user: string;
+  public password: string;
+  public host: string;
+  public port: string;
+  public relative: string;
+  public path: string;
+  public directory: string;
+  public file: string;
+  public query: string;
+  public anchor: string;
+  public settings: URISettings;
+
+  /**
+   * Constructs a new URI instance.
+   *
+   * @constructor
+   * @method URI
+   * @param {String} url URI string to parse.
+   * @param {Object} settings Optional settings object.
+   */
+  constructor(url: string, settings?: URISettings) {
+    url = trim(url);
+    this.settings = settings || {};
+    const baseUri: URI = this.settings.base_uri;
+    const self = this;
+
+    // Strange app protocol that isn't http/https or local anchor
+    // For example: mailto,skype,tel etc.
+    if (/^([\w\-]+):([^\/]{2})/i.test(url) || /^\s*#/.test(url)) {
+      self.source = url;
+      return;
+    }
+
+    const isProtocolRelative = url.indexOf('//') === 0;
+
+    // Absolute path with no host, fake host and protocol
+    if (url.indexOf('/') === 0 && !isProtocolRelative) {
+      url = (baseUri ? baseUri.protocol || 'http' : 'http') + '://mce_host' + url;
+    }
+
+    // Relative path http:// or protocol relative //path
+    if (!/^[\w\-]*:?\/\//.test(url)) {
+      const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
+      // tslint:disable-next-line:triple-equals
+      if (this.settings.base_uri.protocol == '') {
+        url = '//mce_host' + self.toAbsPath(baseUrl, url);
+      } else {
+        const match = /([^#?]*)([#?]?.*)/.exec(url);
+        url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, match[1]) + match[2];
+      }
+    }
+
+    // Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
+    url = url.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
+
+    const urlMatch = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
+
+    each(queryParts, (v, i) => {
+      let part = urlMatch[i];
+
+      // Zope 3 workaround, they use @@something
+      if (part) {
+        part = part.replace(/\(mce_at\)/g, '@@');
+      }
+
+      self[v] = part;
+    });
+
+    if (baseUri) {
+      if (!self.protocol) {
+        self.protocol = baseUri.protocol;
+      }
+
+      if (!self.userInfo) {
+        self.userInfo = baseUri.userInfo;
+      }
+
+      if (!self.port && self.host === 'mce_host') {
+        self.port = baseUri.port;
+      }
+
+      if (!self.host || self.host === 'mce_host') {
+        self.host = baseUri.host;
+      }
+
+      self.source = '';
+    }
+
+    if (isProtocolRelative) {
+      self.protocol = '';
     }
   }
 
-  // Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
-  url = url.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
-
-  /*jshint maxlen: 255 */
-  /*eslint max-len: 0 */
-  url = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
-
-  each(queryParts, function (v, i) {
-    let part = url[i];
-
-    // Zope 3 workaround, they use @@something
-    if (part) {
-      part = part.replace(/\(mce_at\)/g, '@@');
-    }
-
-    self[v] = part;
-  });
-
-  if (baseUri) {
-    if (!self.protocol) {
-      self.protocol = baseUri.protocol;
-    }
-
-    if (!self.userInfo) {
-      self.userInfo = baseUri.userInfo;
-    }
-
-    if (!self.port && self.host === 'mce_host') {
-      self.port = baseUri.port;
-    }
-
-    if (!self.host || self.host === 'mce_host') {
-      self.host = baseUri.host;
-    }
-
-    self.source = '';
-  }
-
-  if (isProtocolRelative) {
-    self.protocol = '';
-  }
-
-  // t.path = t.path || '/';
-}
-
-URI.prototype = {
   /**
    * Sets the internal path part of the URI.
    *
    * @method setPath
    * @param {string} path Path string to set.
    */
-  setPath (path) {
-    const self = this;
-
-    path = /^(.*?)\/?(\w+)?$/.exec(path);
+  public setPath (path: string) {
+    const pathMatch = /^(.*?)\/?(\w+)?$/.exec(path);
 
     // Update path parts
-    self.path = path[0];
-    self.directory = path[1];
-    self.file = path[2];
+    this.path = pathMatch[0];
+    this.directory = pathMatch[1];
+    this.file = pathMatch[2];
 
     // Rebuild source
-    self.source = '';
-    self.getURI();
-  },
+    this.source = '';
+    this.getURI();
+  }
 
   /**
    * Converts the specified URI into a relative URI based on the current URI instance location.
@@ -183,43 +200,42 @@ URI.prototype = {
    * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
-  toRelative (uri) {
-    const self = this;
+  public toRelative (uri: string): string {
     let output;
 
     if (uri === './') {
       return uri;
     }
 
-    uri = new URI(uri, { base_uri: self });
+    const relativeUri = new URI(uri, { base_uri: this });
 
     // Not on same domain/port or protocol
-    if ((uri.host !== 'mce_host' && self.host !== uri.host && uri.host) || self.port !== uri.port ||
-      (self.protocol !== uri.protocol && uri.protocol !== '')) {
-      return uri.getURI();
+    if ((relativeUri.host !== 'mce_host' && this.host !== relativeUri.host && relativeUri.host) || this.port !== relativeUri.port ||
+      (this.protocol !== relativeUri.protocol && relativeUri.protocol !== '')) {
+      return relativeUri.getURI();
     }
 
-    const tu = self.getURI(), uu = uri.getURI();
+    const tu = this.getURI(), uu = relativeUri.getURI();
 
     // Allow usage of the base_uri when relative_urls = true
     if (tu === uu || (tu.charAt(tu.length - 1) === '/' && tu.substr(0, tu.length - 1) === uu)) {
       return tu;
     }
 
-    output = self.toRelPath(self.path, uri.path);
+    output = this.toRelPath(this.path, relativeUri.path);
 
     // Add query
-    if (uri.query) {
-      output += '?' + uri.query;
+    if (relativeUri.query) {
+      output += '?' + relativeUri.query;
     }
 
     // Add anchor
-    if (uri.anchor) {
-      output += '#' + uri.anchor;
+    if (relativeUri.anchor) {
+      output += '#' + relativeUri.anchor;
     }
 
     return output;
-  },
+  }
 
   /**
    * Converts the specified URI into a absolute URI based on the current URI instance location.
@@ -232,11 +248,11 @@ URI.prototype = {
    * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
    */
-  toAbsolute (uri, noHost) {
-    uri = new URI(uri, { base_uri: this });
+  public toAbsolute (uri: string, noHost?: boolean): string {
+    const absoluteUri = new URI(uri, { base_uri: this });
 
-    return uri.getURI(noHost && this.isSameOrigin(uri));
-  },
+    return absoluteUri.getURI(noHost && this.isSameOrigin(absoluteUri));
+  }
 
   /**
    * Determine whether the given URI has the same origin as this URI.  Based on RFC-6454.
@@ -247,7 +263,7 @@ URI.prototype = {
    * @param {tinymce.util.URI} uri Uri instance to compare.
    * @returns {Boolean} True if the origins are the same.
    */
-  isSameOrigin (uri) {
+  public isSameOrigin (uri: URI): boolean {
     // tslint:disable-next-line:triple-equals
     if (this.host == uri.host && this.protocol == uri.protocol) {
       // tslint:disable-next-line:triple-equals
@@ -263,7 +279,7 @@ URI.prototype = {
     }
 
     return false;
-  },
+  }
 
   /**
    * Converts a absolute path into a relative path.
@@ -272,26 +288,25 @@ URI.prototype = {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Absolute path to convert into a relative path.
    */
-  toRelPath (base, path) {
+  public toRelPath (base: string, path: string): string {
     let items, breakPoint = 0, out = '', i, l;
 
     // Split the paths
-    base = base.substring(0, base.lastIndexOf('/'));
-    base = base.split('/');
+    const normalizedBase = base.substring(0, base.lastIndexOf('/')).split('/');
     items = path.split('/');
 
-    if (base.length >= items.length) {
-      for (i = 0, l = base.length; i < l; i++) {
-        if (i >= items.length || base[i] !== items[i]) {
+    if (normalizedBase.length >= items.length) {
+      for (i = 0, l = normalizedBase.length; i < l; i++) {
+        if (i >= items.length || normalizedBase[i] !== items[i]) {
           breakPoint = i + 1;
           break;
         }
       }
     }
 
-    if (base.length < items.length) {
+    if (normalizedBase.length < items.length) {
       for (i = 0, l = items.length; i < l; i++) {
-        if (i >= base.length || base[i] !== items[i]) {
+        if (i >= normalizedBase.length || normalizedBase[i] !== items[i]) {
           breakPoint = i + 1;
           break;
         }
@@ -302,7 +317,7 @@ URI.prototype = {
       return path;
     }
 
-    for (i = 0, l = base.length - (breakPoint - 1); i < l; i++) {
+    for (i = 0, l = normalizedBase.length - (breakPoint - 1); i < l; i++) {
       out += '../';
     }
 
@@ -315,7 +330,7 @@ URI.prototype = {
     }
 
     return out;
-  },
+  }
 
   /**
    * Converts a relative path into a absolute path.
@@ -324,32 +339,32 @@ URI.prototype = {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Relative path to convert into an absolute path.
    */
-  toAbsPath (base, path) {
+  public toAbsPath (base: string, path: string): string {
     let i, nb = 0, o = [], tr, outPath;
 
     // Split paths
     tr = /\/$/.test(path) ? '/' : '';
-    base = base.split('/');
-    path = path.split('/');
+    let normalizedBase = base.split('/');
+    const normalizedPath = path.split('/');
 
     // Remove empty chunks
-    each(base, function (k) {
+    each(normalizedBase, function (k) {
       if (k) {
         o.push(k);
       }
     });
 
-    base = o;
+    normalizedBase = o;
 
     // Merge relURLParts chunks
-    for (i = path.length - 1, o = []; i >= 0; i--) {
+    for (i = normalizedPath.length - 1, o = []; i >= 0; i--) {
       // Ignore empty or .
-      if (path[i].length === 0 || path[i] === '.') {
+      if (normalizedPath[i].length === 0 || normalizedPath[i] === '.') {
         continue;
       }
 
       // Is parent
-      if (path[i] === '..') {
+      if (normalizedPath[i] === '..') {
         nb++;
         continue;
       }
@@ -360,16 +375,16 @@ URI.prototype = {
         continue;
       }
 
-      o.push(path[i]);
+      o.push(normalizedPath[i]);
     }
 
-    i = base.length - nb;
+    i = normalizedBase.length - nb;
 
     // If /a/b/c or /
     if (i <= 0) {
       outPath = o.reverse().join('/');
     } else {
-      outPath = base.slice(0, i).join('/') + '/' + o.reverse().join('/');
+      outPath = normalizedBase.slice(0, i).join('/') + '/' + o.reverse().join('/');
     }
 
     // Add front / if it's needed
@@ -377,13 +392,13 @@ URI.prototype = {
       outPath = '/' + outPath;
     }
 
-    // Add traling / if it's needed
+    // Add trailing / if it's needed
     if (tr && outPath.lastIndexOf('/') !== outPath.length - 1) {
       outPath += tr;
     }
 
     return outPath;
-  },
+  }
 
   /**
    * Returns the full URI of the internal structure.
@@ -391,88 +406,50 @@ URI.prototype = {
    * @method getURI
    * @param {Boolean} noProtoHost Optional no host and protocol part. Defaults to false.
    */
-  getURI (noProtoHost) {
+  public getURI (noProtoHost: boolean = false): string {
     let s;
-    const self = this;
 
     // Rebuild source
-    if (!self.source || noProtoHost) {
+    if (!this.source || noProtoHost) {
       s = '';
 
       if (!noProtoHost) {
-        if (self.protocol) {
-          s += self.protocol + '://';
+        if (this.protocol) {
+          s += this.protocol + '://';
         } else {
           s += '//';
         }
 
-        if (self.userInfo) {
-          s += self.userInfo + '@';
+        if (this.userInfo) {
+          s += this.userInfo + '@';
         }
 
-        if (self.host) {
-          s += self.host;
+        if (this.host) {
+          s += this.host;
         }
 
-        if (self.port) {
-          s += ':' + self.port;
+        if (this.port) {
+          s += ':' + this.port;
         }
       }
 
-      if (self.path) {
-        s += self.path;
+      if (this.path) {
+        s += this.path;
       }
 
-      if (self.query) {
-        s += '?' + self.query;
+      if (this.query) {
+        s += '?' + this.query;
       }
 
-      if (self.anchor) {
-        s += '#' + self.anchor;
+      if (this.anchor) {
+        s += '#' + this.anchor;
       }
 
-      self.source = s;
+      this.source = s;
     }
 
-    return self.source;
+    return this.source;
   }
-};
-
-URI.parseDataUri = function (uri) {
-  let type, matches;
-
-  uri = decodeURIComponent(uri).split(',');
-
-  matches = /data:([^;]+)/.exec(uri[0]);
-  if (matches) {
-    type = matches[1];
-  }
-
-  return {
-    type,
-    data: uri[1]
-  };
-};
-
-URI.getDocumentBaseUrl = function (loc) {
-  let baseUrl;
-
-  // Pass applewebdata:// and other non web protocols though
-  if (loc.protocol.indexOf('http') !== 0 && loc.protocol !== 'file:') {
-    baseUrl = loc.href;
-  } else {
-    baseUrl = loc.protocol + '//' + loc.host + loc.pathname;
-  }
-
-  if (/^[^:]+:\/\/\/?[^\/]+\//.test(baseUrl)) {
-    baseUrl = baseUrl.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-
-    if (!/[\/\\]$/.test(baseUrl)) {
-      baseUrl += '/';
-    }
-  }
-
-  return baseUrl;
-};
+}
 
 export default URI;

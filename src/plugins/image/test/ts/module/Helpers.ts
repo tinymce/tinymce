@@ -177,7 +177,7 @@ const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, 
 const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent() as string)), 'content'),
+    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent())), 'content'),
     NamedChain.direct('content', Assertions.cAssertHtml(label, expected), 'result'),
     NamedChain.outputInput
   ]),

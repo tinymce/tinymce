@@ -45,7 +45,7 @@ export interface RawEditorSettings {
   body_id?: string;
   body_class?: string;
   boolean_attributes?: string;
-  br_in_pre?: string;
+  br_in_pre?: boolean;
   br_newline_selector?: string;
   browser_spellcheck?: boolean;
   branding?: boolean;

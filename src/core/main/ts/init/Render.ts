@@ -114,7 +114,7 @@ const loadPlugins = function (settings, suffix) {
   });
 };
 
-const loadScripts = function (editor: Editor, suffix) {
+const loadScripts = function (editor: Editor, suffix: string) {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   loadTheme(scriptLoader, editor, suffix, function () {

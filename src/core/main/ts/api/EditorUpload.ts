@@ -29,7 +29,7 @@ interface EditorUpload {
   addFilter (filter: (img: HTMLImageElement) => boolean): void;
   uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]>;
   uploadImagesAuto (callback?: UploadCallback): void | Promise<BlobInfoImagePair[]>;
-  scanForImages (): void;
+  scanForImages (): Promise<BlobInfoImagePair[]>;
   destroy (): void;
 }
 

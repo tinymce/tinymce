@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
     LegacyUnit.equal(new URI('http://www.site.com/').toRelative('./'), './');
     LegacyUnit.equal(new URI('http://www.site.com/test/').toRelative('../'), '../');
     LegacyUnit.equal(new URI('http://www.site.com/test/test/').toRelative('../'), '../');
-    LegacyUnit.equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/').toRelative('/dir1', true), '../');
+    LegacyUnit.equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/').toRelative('/dir1'), '../');
     LegacyUnit.equal(new URI('http://www.site.com/').toRelative('http://www.site.com/'), 'http://www.site.com/');
     LegacyUnit.equal(new URI('http://www.site.com/').toRelative('http://www.site.com'), 'http://www.site.com/');
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?q=http://site.com/'), '../../file.htm?q=http://site.com/');
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
   suite.test('absoluteURLs', function () {
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute(''), 'http://www.site.com/dir1/dir2/');
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
-    LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
+    LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', true), '/dir1/dir3');
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../abc/def/../../abc/../dir3/file.htm'), 'http://www.site.com/dir1/dir3/file.htm');
     LegacyUnit.equal(new URI('http://www.site.com/dir1/dir2/').toAbsolute('http://www.site.com/dir2/dir3'), 'http://www.site.com/dir2/dir3');

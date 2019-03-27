@@ -6,7 +6,7 @@
  */
 
 import JSON from './JSON';
-import XHR from './XHR';
+import XHR, { XHRSettings } from './XHR';
 import Tools from './Tools';
 
 /**
@@ -39,51 +39,65 @@ import Tools from './Tools';
 
 const extend = Tools.extend;
 
+export interface JSONRequestSettings {
+  crossDomain?: boolean;
+  requestheaders?: Record<string, { key: string, value: string}>;
+  type?: string;
+  url?: string;
+  error_scope?: {};
+  success_scope?: {};
+  success? (data: any): void;
+  error? (error: any): void;
+}
+
+export interface JSONRequestArgs extends JSONRequestSettings {
+  id?: string;
+  method?: string;
+  params?: string;
+  url: string;
+}
+
 export interface JSONRequestConstructor {
   readonly prototype: JSONRequest;
 
-  new (settings?: any): JSONRequest;
+  new (settings?: JSONRequestSettings): JSONRequest;
 
-  sendRPC (o: {}): void;
+  sendRPC (o: JSONRequestArgs): void;
 }
 
-interface JSONRequest {
-  count: number;
-  settings: any;
+class JSONRequest {
+  /**
+   * Simple helper function to send a JSON-RPC request without the need to initialize an object.
+   * Consult the Wiki API documentation for more details on what you can pass to this function.
+   *
+   * @method sendRPC
+   * @static
+   * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
+   */
+  public static sendRPC (o: JSONRequestArgs) {
+    return new JSONRequest().send(o);
+  }
 
-  send (args: any): void;
-}
+  public settings: JSONRequestSettings;
+  public count: number;
 
-const JSONRequest = function (settings?) {
-  this.settings = extend({}, settings);
-  this.count = 0;
-};
+  constructor (settings?: JSONRequestSettings) {
+    this.settings = extend({}, settings);
+    this.count = 0;
+  }
 
-/**
- * Simple helper function to send a JSON-RPC request without the need to initialize an object.
- * Consult the Wiki API documentation for more details on what you can pass to this function.
- *
- * @method sendRPC
- * @static
- * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
- */
-JSONRequest.sendRPC = function (o) {
-  return new JSONRequest().send(o);
-};
-
-JSONRequest.prototype = {
   /**
    * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.
    *
    * @method send
    * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.
    */
-  send (args) {
+  public send (args: JSONRequestArgs) {
     const ecb = args.error, scb = args.success;
 
-    args = extend(this.settings, args);
+    const xhrArgs: XHRSettings = extend(this.settings, args);
 
-    args.success = function (c, x) {
+    xhrArgs.success = function (c: any, x) {
       c = JSON.parse(c);
 
       if (typeof c === 'undefined') {
@@ -93,29 +107,29 @@ JSONRequest.prototype = {
       }
 
       if (c.error) {
-        ecb.call(args.error_scope || args.scope, c.error, x);
+        ecb.call(xhrArgs.error_scope || xhrArgs.scope, c.error, x);
       } else {
-        scb.call(args.success_scope || args.scope, c.result);
+        scb.call(xhrArgs.success_scope || xhrArgs.scope, c.result);
       }
     };
 
-    args.error = function (ty, x) {
+    xhrArgs.error = function (ty, x) {
       if (ecb) {
-        ecb.call(args.error_scope || args.scope, ty, x);
+        ecb.call(xhrArgs.error_scope || xhrArgs.scope, ty, x);
       }
     };
 
-    args.data = JSON.serialize({
+    xhrArgs.data = JSON.serialize({
       id: args.id || 'c' + (this.count++),
       method: args.method,
       params: args.params
     });
 
     // JSON content type for Ruby on rails. Bug: #1883287
-    args.content_type = 'application/json';
+    xhrArgs.content_type = 'application/json';
 
-    XHR.send(args);
+    XHR.send(xhrArgs);
   }
-};
+}
 
 export default JSONRequest;

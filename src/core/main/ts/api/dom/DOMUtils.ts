@@ -233,10 +233,10 @@ interface DOMUtils {
   createRng (): Range;
   nodeIndex (node: Node, normalized?: boolean): number;
   split (parentElm: Node, splitElm: Node, replacementElm?: Node): Node;
-  bind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
-  bind <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  unbind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): EventUtils;
-  unbind <T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): EventUtils;
+  bind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): any;
+  bind <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}): any;
+  unbind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): any;
+  unbind <T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): any;
   fire (target: Target, name: string, evt?: {}): EventUtils;
   getContentEditable (node: Node): string;
   getContentEditableParent (node: Node): any;
@@ -1105,15 +1105,16 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = (target: Target, name: string, func: Function, scope?: any) => {
+  const bind = (target: Target, name: string, func: EventUtilsCallback<any>, scope?: any) => {
     if (Tools.isArray(target)) {
       let i = target.length;
+      const rv = [];
 
       while (i--) {
-        target[i] = bind(target[i], name, func, scope);
+        rv[i] = bind(target[i], name, func, scope);
       }
 
-      return target;
+      return rv;
     }
 
     // Collect all window/document events bound by editor instance
@@ -1124,17 +1125,18 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return events.bind(target, name, func, scope || self);
   };
 
-  const unbind = (target: Target, name?: string, func?: Function) => {
+  const unbind = (target: Target, name?: string, func?: EventUtilsCallback<any>) => {
     let i;
 
     if (Tools.isArray(target)) {
       i = target.length;
+      const rv = [];
 
       while (i--) {
-        target[i] = unbind(target[i], name, func);
+        rv[i] = unbind(target[i], name, func);
       }
 
-      return target;
+      return rv;
     }
 
     // Remove any bound events matching the input
