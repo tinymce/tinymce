@@ -95,7 +95,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
   },
   {
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     resize: 'both',
     min_height: 300,
     min_width: 300,

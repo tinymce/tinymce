@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     spellchecker_callback(method, text, success, failure) {
       if (method === 'spellcheck') {
         success({dictionary: dict, words: {hello: ['word1'], world: ['word2']}});

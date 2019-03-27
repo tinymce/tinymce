@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (s
     charmap_append: [[34, 'quotation mark']],
     toolbar: 'charmap',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

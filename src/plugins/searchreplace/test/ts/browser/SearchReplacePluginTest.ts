@@ -142,7 +142,7 @@ UnitTest.asynctest(
       plugins: 'searchreplace',
       valid_elements: 'b,i,br',
       indent: false,
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       theme: 'silver'
     }, success, failure);
   }

@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     readonly: true
   }, success, failure);
 });

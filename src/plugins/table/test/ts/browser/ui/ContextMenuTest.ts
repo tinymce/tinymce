@@ -210,6 +210,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     plugins: 'table',
     toolbar: 'table',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

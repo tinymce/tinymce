@@ -49,6 +49,6 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
     plugins: ['media'],
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

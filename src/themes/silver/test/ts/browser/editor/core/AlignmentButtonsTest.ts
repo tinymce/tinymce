@@ -17,7 +17,7 @@ UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) =
         NamedChain.write('editor', McEditor.cFromSettings({
           toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
           theme: 'silver',
-          base_url: '/project/js/tinymce'
+          base_url: '/project/tinymce/js/tinymce'
         })),
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),

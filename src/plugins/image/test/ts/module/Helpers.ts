@@ -204,7 +204,7 @@ const silverSettings = {
   theme: 'silver',
   plugins: 'image',
   indent: false,
-  base_url: '/project/js/tinymce'
+  base_url: '/project/tinymce/js/tinymce'
 };
 
 export {

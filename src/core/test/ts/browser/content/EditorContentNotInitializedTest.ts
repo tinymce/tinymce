@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
   Theme();
 
   const settings = {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const cCreateEditor = Chain.mapper((_) => new Editor('editor', {}, EditorManager));

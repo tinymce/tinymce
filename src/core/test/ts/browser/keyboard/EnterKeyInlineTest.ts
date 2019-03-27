@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function 
   Theme();
 
   const settings = {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     inline: true
   };
 

@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function() {
 
   var loadJquery = function (done) {
     var script = document.createElement('script');
-    script.src = '/project/js/tinymce/skins/ui/oxide/node_modules/jquery/dist/jquery.min.js';
+    script.src = '/project/tinymce/js/tinymce/skins/ui/oxide/node_modules/jquery/dist/jquery.min.js';
     script.onload = function () {
       script.parentNode.removeChild(script);
       $ = window.jQuery.noConflict(true);
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function() {
   suite.asyncTest('Setup editors', function (_, done) {
     $(function () {
       $('#elm1,#elm2').tinymce({
-        base_url: '/project/js/tinymce',
+        base_url: '/project/tinymce/js/tinymce',
         init_instance_callback: function () {
           var ed1 = EditorManager.get('elm1'), ed2 = EditorManager.get('elm2');
 

@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
       plugins: 'table',
       width: 400,
       theme: 'silver',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     })),
 
     NamedChain.read('editor', cAssertWidth('which is empty', emptyTable)),

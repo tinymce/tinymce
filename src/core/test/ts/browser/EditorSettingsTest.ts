@@ -291,6 +291,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
       }))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       plugins: 'table',
       toolbar: 'tableprops',
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       table_advtab: true
     }, success, failure);
 });

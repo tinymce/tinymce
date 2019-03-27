@@ -88,6 +88,6 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

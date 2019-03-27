@@ -100,6 +100,6 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
   }, {
     selector: 'textarea',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -97,6 +97,6 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         });
       }, 500);
     },
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', (success, fa
           '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse'
         },
         theme: 'silver',
-        base_url: '/project/js/tinymce',
+        base_url: '/project/tinymce/js/tinymce',
       };
 
       Chain.pipeline([

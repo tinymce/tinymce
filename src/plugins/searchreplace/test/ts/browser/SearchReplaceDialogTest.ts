@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
   }, {
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'
   }, success, failure);
 });

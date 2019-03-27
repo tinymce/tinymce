@@ -26,6 +26,6 @@ UnitTest.asynctest('tinymce.lists.browser.ToggleListWithEmptyLiTest', (success, 
     plugins: 'lists',
     toolbar: 'bullist',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

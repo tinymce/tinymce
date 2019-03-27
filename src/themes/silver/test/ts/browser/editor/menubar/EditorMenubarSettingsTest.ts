@@ -13,7 +13,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   const cCreateEditorWithMenubar = (menubar) => McagarEditor.cFromSettings({
     menubar,
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   });
 
   const cAssertIsDefaultMenubar = Assertions.cAssertStructure(

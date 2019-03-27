@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, fail
   }, {
     plugins: 'save',
     toolbar: 'save',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'
   }, success, failure);
 });

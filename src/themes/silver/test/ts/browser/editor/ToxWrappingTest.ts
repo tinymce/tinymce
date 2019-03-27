@@ -26,7 +26,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     {
       theme: 'silver',
       menubar: true,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     },
     () => {
       success();

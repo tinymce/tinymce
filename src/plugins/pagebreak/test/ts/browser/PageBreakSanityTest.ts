@@ -35,6 +35,6 @@ UnitTest.asynctest('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', (suc
   }, {
     plugins: 'pagebreak',
     toolbar: 'pagebreak',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

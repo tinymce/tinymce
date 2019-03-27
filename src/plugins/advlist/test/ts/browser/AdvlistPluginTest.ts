@@ -191,6 +191,6 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function
       '*': 'list-style-type'
     },
     disable_nodechange: true,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

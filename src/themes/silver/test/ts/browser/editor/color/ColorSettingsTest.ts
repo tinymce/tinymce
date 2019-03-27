@@ -89,7 +89,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   }, {
       plugins: '',
       toolbar: 'forecolor backcolor',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       color_map: colorSettings
     }, success, failure);
 }

@@ -41,6 +41,6 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
     plugins: 'help fake nometafake',
     toolbar: 'help',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

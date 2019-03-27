@@ -29,6 +29,6 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
     ]), onSuccess, onFailure);
   }, {
     plugins: 'autolink',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

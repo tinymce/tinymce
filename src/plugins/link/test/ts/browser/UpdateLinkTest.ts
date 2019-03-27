@@ -73,6 +73,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UpdateLinkTest', (success, fail
     plugins: 'link',
     toolbar: '',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

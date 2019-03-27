@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (su
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     target_list: [
       { title: 'New page', value: '_blank' }
     ]

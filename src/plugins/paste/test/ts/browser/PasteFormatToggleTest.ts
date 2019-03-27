@@ -33,6 +33,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (succe
     plugins: 'paste',
     toolbar: '',
     valid_styles: 'font-family,color',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

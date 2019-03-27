@@ -39,8 +39,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback (ed) {
         LegacyUnit.equalDom(ed.targetElm, elm1);
         teardown(done);
@@ -54,8 +54,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       target: elm,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback (ed) {
         LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
         LegacyUnit.equalDom(ed.targetElm, elm);
@@ -71,8 +71,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '#elm-2',
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback (ed) {
         LegacyUnit.equalDom(ed.targetElm, elm2);
         teardown(done);
@@ -83,8 +83,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   suite.asyncTest('selector on non existing targets', function (_, done) {
     EditorManager.init({
       selector: '#non-existing-id',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
     }).then(function (result) {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       teardown(done);
@@ -98,8 +98,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     EditorManager.init({
       selector: '#elm-2',
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
     }).then(function (result) {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       Env.ie = oldIeValue;
@@ -116,8 +116,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '.elm-even',
       target: elm1,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback (ed) {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
         LegacyUnit.equal(Tools.inArray(ed.targetElm, targets), -1);
@@ -146,8 +146,8 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
-      skin_url: '/project/js/tinymce/skins/ui/oxide',
-      content_css: '/project/js/tinymce/skins/content/default',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
     }).then(next, die);
   }));
 

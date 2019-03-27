@@ -59,6 +59,6 @@ UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

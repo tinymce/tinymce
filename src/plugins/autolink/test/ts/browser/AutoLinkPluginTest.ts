@@ -123,6 +123,6 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
   }, {
     plugins: 'autolink',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     plugins: 'media',
     toolbar: 'media',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     media_url_resolver (data, resolve, reject) {
       if (data.url === 'test') {
         resolve({

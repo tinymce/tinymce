@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
   }, {
     selector: 'textarea',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
   }, success, failure);
 });

@@ -227,6 +227,6 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
         lastPostProcessEvent = evt;
       });
     },
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

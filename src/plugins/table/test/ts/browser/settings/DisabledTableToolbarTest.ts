@@ -35,6 +35,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', (suc
   }, {
     plugins: 'table',
     table_toolbar: '',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

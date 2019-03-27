@@ -82,6 +82,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TableNavigationTest', (success
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

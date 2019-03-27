@@ -82,7 +82,7 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'table-button',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed) => {
         ed.ui.registry.addMenuButton('table-button', {
           type: 'menubutton',

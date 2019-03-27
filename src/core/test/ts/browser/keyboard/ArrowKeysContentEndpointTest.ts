@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest',
       ], onSuccess, onFailure);
     }, {
       add_unload_trigger: false,
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       indent: false
     }, success, failure);
   }

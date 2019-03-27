@@ -235,6 +235,6 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
     advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
     advlist_number_styles: 'default,circle,square',
     toolbar: 'numlist bullist',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
