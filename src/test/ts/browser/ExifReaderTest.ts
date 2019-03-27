@@ -87,7 +87,7 @@ var urlToBlob = function (url) {
 	return new Promise(function (resolve, reject) {
 		var xhr = new XMLHttpRequest();
 		xhr.responseType = 'blob';
-		xhr.open('get', '/project/src/test/resources/' + url);
+		xhr.open('get', '/project/@ephox/imagetools/src/test/resources/' + url);
 		xhr.onload = function() {
 			if (this.status === 200) {
 				resolve(this.response);
