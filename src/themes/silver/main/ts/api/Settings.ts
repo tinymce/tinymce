@@ -62,7 +62,7 @@ const getMultipleToolbarsSetting = (editor: Editor) => {
   return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
 };
 
-enum ToolbarDrawer {
+export enum ToolbarDrawer {
   default = '',
   floating = 'floating',
   sliding = 'sliding'
@@ -103,6 +103,5 @@ export {
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,
-  getToolbarDrawer,
-  ToolbarDrawer
+  getToolbarDrawer
 };
