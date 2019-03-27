@@ -3,11 +3,11 @@ import { ValueSchema, Processor } from '@ephox/boulder';
 import { createDataValidator } from '../core/DialogData';
 
 interface DialogManager {
-  open: <T extends DialogData>(factory: DialogFactory, structure: DialogApi<T>) => DialogInstanceApi<T>;
+  open: <T extends DialogData>(factory: DialogFactory<T>, structure: DialogApi<T>) => DialogInstanceApi<T>;
   redial: <T extends DialogData>(structure: DialogApi<T>) => DialogInit<T>;
 }
 
-export type DialogFactory = <T extends DialogData>(internalDialog: Dialog<T>, initialData: T, dataValidator: Processor) => DialogInstanceApi<T>;
+export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: T, dataValidator: Processor) => DialogInstanceApi<T>;
 
 export interface DialogInit<T extends DialogData> {
   internalDialog: Dialog<T>;
@@ -28,12 +28,12 @@ const extract = <T>(structure: DialogApi<T>): DialogInit<T> => {
 };
 
 const DialogManager: DialogManager = {
-  open: <T>(factory: DialogFactory, structure: DialogApi<T>): DialogInstanceApi<T> => {
+  open: <T extends DialogData>(factory: DialogFactory<T>, structure: DialogApi<T>): DialogInstanceApi<T> => {
     const extraction = extract(structure);
     return factory(extraction.internalDialog, extraction.initialData, extraction.dataValidator);
   },
 
-  redial: <T>(structure: DialogApi<T>): DialogInit<T> => {
+  redial: <T extends DialogData>(structure: DialogApi<T>): DialogInit<T> => {
     return extract(structure);
   }
 };
