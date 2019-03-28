@@ -45,6 +45,7 @@
     "build/skins/ui/**/*.css",
     "build/skins/ui/**/*.css.map",
     "src/less/**/*",
+    "src/svg/**/*",
     "README.md",
     "LICENSE.txt"
   ]
