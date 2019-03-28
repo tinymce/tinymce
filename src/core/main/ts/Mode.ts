@@ -9,7 +9,7 @@ import { Element, Class } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Events from './api/Events';
 
-type EditorMode = 'readonly' | 'design';
+export type EditorMode = 'readonly' | 'design';
 
 const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
   try {
