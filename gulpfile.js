@@ -175,8 +175,8 @@ gulp.task('cleanBuild', function () {
 const testDeps = ['backstopjs'];
 const demoDeps = ['browser-sync'];
 const iconPacks = [
-  '@ephox/oxide-icons-material',
-  '@ephox/oxide-icons-jam'
+  '@tinymce/oxide-icons-material',
+  '@tinymce/oxide-icons-jam'
 ];
 
 const installTools = (modules, prefix = '--prefix ./scratch/tools') => shell.task(`npm install -g --no-package-lock --no-save ${prefix} ${modules.join(' ')}`);
