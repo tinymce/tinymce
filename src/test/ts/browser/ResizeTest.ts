@@ -230,4 +230,5 @@ UnitTest.test('ResizeTest', function () {
   percentTablePixelCellsTest();
   pixelTablePixelCellsTest();
   pixelTablePercentCellsTest();
+  Remove.remove(box);
 });
