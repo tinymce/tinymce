@@ -12,7 +12,7 @@ UnitTest.asynctest('CssReflowTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  const iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="project/src/test/data/cssReflowTest.html"></iframe>');
+  const iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
   Insert.append(Body.body(), iframe);
   const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();

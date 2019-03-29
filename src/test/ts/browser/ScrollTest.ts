@@ -62,7 +62,7 @@ UnitTest.asynctest('ScrollTest', function () {
     Insert.append(Body.body(), iframe);
   };
 
-  const ifr = '<iframe src="project/src/test/data/scrollTest.html"></iframe>';
+  const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/scrollTest.html"></iframe>';
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 7px dotted chartreuse;' },
     html: Option.none(),
