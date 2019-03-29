@@ -320,7 +320,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       plugins: 'table',
       toolbar: 'tableprops',
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       indent: false,
       valid_styles: {
         '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'

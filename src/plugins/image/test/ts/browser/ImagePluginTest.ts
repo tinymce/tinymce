@@ -199,6 +199,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       theme: 'silver',
       plugins: 'image',
       indent: false,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, success, failure);
 });

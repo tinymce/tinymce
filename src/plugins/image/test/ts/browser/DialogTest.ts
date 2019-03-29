@@ -140,6 +140,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
     plugins: 'image',
     toolbar: 'image',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

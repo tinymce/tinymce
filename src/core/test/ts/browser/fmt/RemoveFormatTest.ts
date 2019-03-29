@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     plugins: '',
     toolbar: '',
   }, success, failure);

@@ -7,7 +7,7 @@ import TestEditor from './TestEditor';
 
 export default function () {
   const frame = Element.fromTag('iframe');
-  Attr.set(frame, 'src', '/project/src/themes/mobile/test/html/editor.html');
+  Attr.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
 
   const sWaitForEditorLoaded = Waiter.sTryUntil(
     'Waiting for iframe to load',

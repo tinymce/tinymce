@@ -14,7 +14,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', (success, 
     return Chain.control(
       McEditor.cFromSettings(Merger.merge(settings, {
         inline: true,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       })),
       Guard.addLogging('Create inline editor')
     );

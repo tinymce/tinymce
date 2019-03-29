@@ -51,7 +51,7 @@ UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
   Pipeline.async({}, [
     sAddInput,
     Logger.t('iframe editor focusout should remove context menu', Chain.asStep({}, [
-      McEditor.cFromHtml(html, { setup, base_url: '/project/js/tinymce' }),
+      McEditor.cFromHtml(html, { setup, base_url: '/project/tinymce/js/tinymce' }),
       ApiChains.cFocus,
       ApiChains.cSetCursor([ 0, 1, 0 ], 1),
       cWaitForContextmenuState(true),
@@ -60,7 +60,7 @@ UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
       McEditor.cRemove
     ])),
     Logger.t('inline editor focusout should remove context menu', Chain.asStep({}, [
-      McEditor.cFromHtml(html, { setup, inline: true, base_url: '/project/js/tinymce' }),
+      McEditor.cFromHtml(html, { setup, inline: true, base_url: '/project/tinymce/js/tinymce' }),
       ApiChains.cFocus,
       ApiChains.cSetCursor([ 1, 0 ], 1),
       cWaitForContextmenuState(true),

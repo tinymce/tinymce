@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, fai
     ], onSuccess, onFailure);
   }, {
     icons: 'custom',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     setup: (editor) => {
       editor.ui.registry.addIcon('custom-icon', 'override-icon');
     }

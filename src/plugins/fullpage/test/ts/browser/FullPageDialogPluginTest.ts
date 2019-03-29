@@ -240,7 +240,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
 
   }, {
     plugins: 'fullpage',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     indent: false,
     theme: 'silver',
     fullpage_default_title: 'Fullpage Dialog Test Title',

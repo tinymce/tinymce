@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
       importcss_groups: pluginSettings.importcss_groups,
       importcss_selector_converter: pluginSettings.importcss_selector_converter,
       importcss_exclusive: pluginSettings.importcss_exclusive,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, () => onStepSuccess(), onStepFailure);
   });
 
@@ -83,9 +83,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_groups: [
@@ -120,9 +120,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_groups: [
@@ -170,10 +170,10 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css',
-            '/project/src/plugins/importcss/test/css/clashing.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
+            '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
           ],
           importcss_append: false,
           importcss_exclusive: false,
@@ -201,10 +201,10 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css',
-            '/project/src/plugins/importcss/test/css/clashing.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
+            '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
           ],
           importcss_append: false,
           importcss_exclusive: true,

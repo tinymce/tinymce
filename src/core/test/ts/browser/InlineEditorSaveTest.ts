@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
 
   const settings = {
     inline: true,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const cAssertBogusExist = Chain.async((val, next, die) => {

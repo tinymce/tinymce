@@ -40,6 +40,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
   }, {
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

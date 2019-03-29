@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     forced_root_block: false,
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

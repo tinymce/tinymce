@@ -294,7 +294,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     toolbar: 'tablecellprops',
     indent: false,
     valid_styles: {

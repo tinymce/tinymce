@@ -32,8 +32,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           statusbar: false,
           menubar: false,
           plugins: 'table',
-          skin_url: '/project/js/tinymce/skins/ui/oxide',
-          content_css: '/project/js/tinymce/skins/content/default',
+          skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+          content_css: '/project/tinymce/js/tinymce/skins/content/default',
           setup (editor) {
             editor.on('SkinLoaded', function () {
                 Delay.setTimeout(function () {

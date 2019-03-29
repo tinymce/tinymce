@@ -196,7 +196,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     plugins: 'image imagetools link table',
     toolbar: 'image editimage link table',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     image_caption: true,
   }, success, failure);
 });

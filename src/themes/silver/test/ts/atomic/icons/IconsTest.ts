@@ -39,6 +39,6 @@ UnitTest.asynctest('IconsTest', (success, failure) => {
       getTest,
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -76,6 +76,6 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', (success
     plugins: 'lists',
     toolbar: 'numlist bullist',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

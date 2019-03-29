@@ -203,6 +203,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
       sTestEnterAtEndOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

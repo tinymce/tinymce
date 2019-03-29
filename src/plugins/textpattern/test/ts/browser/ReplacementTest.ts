@@ -101,6 +101,6 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
     ],
     indent: false,
     plugins: 'textpattern',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

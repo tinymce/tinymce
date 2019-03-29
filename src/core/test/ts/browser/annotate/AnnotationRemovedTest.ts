@@ -154,7 +154,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
       sTestGetAndRemove
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {

@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
   const cCreateInlineEditor = function (html) {
     return McEditor.cFromHtml(html, {
       inline: true,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     });
   };
 

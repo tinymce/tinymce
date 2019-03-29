@@ -49,6 +49,6 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
     plugins: 'codesample',
     theme: 'silver',
     toolbar: 'codesample',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

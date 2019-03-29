@@ -36,7 +36,7 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure)
       Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'), 100, 1000)
     ]), onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'
   }, success, failure);
 });

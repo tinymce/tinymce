@@ -37,6 +37,6 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
   theme: 'silver',
   plugins: 'image',
   toolbar: 'image',
-  base_url: '/project/js/tinymce'
+  base_url: '/project/tinymce/js/tinymce'
 }, success, failure);
 });

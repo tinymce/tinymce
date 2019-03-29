@@ -30,6 +30,6 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
   }, {
     plugins: 'visualchars',
     toolbar: 'visualchars',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -31,6 +31,6 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
   }, {
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

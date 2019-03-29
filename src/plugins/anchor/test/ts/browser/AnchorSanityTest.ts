@@ -39,6 +39,6 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
     theme: 'silver',
     plugins: 'anchor',
     toolbar: 'anchor',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

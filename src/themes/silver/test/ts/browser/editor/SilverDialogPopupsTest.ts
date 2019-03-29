@@ -78,7 +78,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
     {
       theme: 'silver',
       toolbar: 'show-color show-urlinput',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('show-color', {
           text: 'Show Color Dialog',

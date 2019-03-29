@@ -326,6 +326,6 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
     add_unload_trigger: false,
     indent: false,
     disable_nodechange: true,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

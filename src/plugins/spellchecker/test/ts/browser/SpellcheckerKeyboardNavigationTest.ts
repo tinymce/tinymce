@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     theme: 'silver',
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     spellchecker_callback (method, text, success, failure) {
       if (method === 'spellcheck') {
         success({words: {

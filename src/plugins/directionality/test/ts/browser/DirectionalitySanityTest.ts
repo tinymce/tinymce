@@ -47,7 +47,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'directionality',
       toolbar: 'ltr rtl',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       theme: 'silver'
     }, success, failure);
   }

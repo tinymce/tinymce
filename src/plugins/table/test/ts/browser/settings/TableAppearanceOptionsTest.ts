@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
     toolbar: 'table',
     table_appearance_options: false,
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

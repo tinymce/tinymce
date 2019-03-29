@@ -19,6 +19,6 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, fa
   }, {
     plugins: 'print',
     toolbar: 'print',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

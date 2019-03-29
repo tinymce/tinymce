@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
     plugins: 'charmap',
     toolbar: 'charmap',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

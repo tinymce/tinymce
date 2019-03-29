@@ -36,7 +36,7 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     }, {
       plugins: '',
       toolbar: 'forecolor backcolor',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, success, failure);
   }
 );

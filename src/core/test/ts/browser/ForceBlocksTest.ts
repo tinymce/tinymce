@@ -110,6 +110,6 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function () {
   }, {
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

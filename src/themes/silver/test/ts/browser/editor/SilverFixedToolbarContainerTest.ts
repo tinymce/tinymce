@@ -94,7 +94,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
       fixed_toolbar_container: '#toolbar',
       menubar: 'file',
       toolbar: 'undo bold',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
     }, () => {
       Remove.remove(toolbarContainer);
       success();

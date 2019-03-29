@@ -2143,6 +2143,6 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
           'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -143,6 +143,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });

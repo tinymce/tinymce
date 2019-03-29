@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentWsTest', (success,
     Logger.t('Editor initialized on pre element should retain whitespace on get/set content', Chain.asStep({}, [
       Editor.cFromHtml('<pre>  a  </pre>', {
         inline: true,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       }),
       ApiChains.cAssertContent('  a  '),
       ApiChains.cSetContent('  b  '),

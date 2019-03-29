@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
   }, {
     plugins: 'autoresize fullscreen',
     toolbar: 'autoresize',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     autoresize_bottom_margin: 50
   }, success, failure);
 });

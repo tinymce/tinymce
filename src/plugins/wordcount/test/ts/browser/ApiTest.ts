@@ -31,6 +31,6 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
   }, {
     plugins: 'wordcount',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

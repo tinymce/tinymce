@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
       importcss_groups: pluginSettings.importcss_groups,
       importcss_selector_converter: pluginSettings.importcss_selector_converter,
       importcss_exclusive: pluginSettings.importcss_exclusive,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, () => onStepSuccess(), onStepFailure);
   });
 
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.some('h1.red')
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: undefined
         }
       )
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.none()
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: true
         }
       )
@@ -176,9 +176,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: true
         }
@@ -199,7 +199,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.none()
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_merge_classes: false
         }
       )
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.some('h1.red')
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: false,
           importcss_selector_filter: '.red'
         }
@@ -237,7 +237,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.some('p.other')
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: false,
           importcss_selector_filter: (sel) => {
             return sel.indexOf('p') > -1 || sel.indexOf('inline') > -1;
@@ -258,7 +258,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
           choice: Option.some('span.inline')
         },
         {
-          content_css: [ '/project/src/plugins/importcss/test/css/basic.css' ],
+          content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: false,
           importcss_selector_filter: /inline/
         }
@@ -279,9 +279,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_file_filter: 'advanced.css'
@@ -304,9 +304,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_file_filter: (href) => {
@@ -331,9 +331,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_file_filter: /adv/
@@ -355,9 +355,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         },
         {
           content_css: [
-            '/project/src/plugins/importcss/test/css/basic.css',
-            '/project/src/plugins/importcss/test/css/advanced.css',
-            '/project/src/plugins/importcss/test/css/other-adv.css'
+            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
           importcss_groups: [

@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });

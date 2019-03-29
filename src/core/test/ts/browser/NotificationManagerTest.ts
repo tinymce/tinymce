@@ -112,6 +112,6 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     theme: 'silver',
     indent: false,
     entities: 'raw',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

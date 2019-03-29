@@ -33,7 +33,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('alpha', {
           text: 'Alpha',

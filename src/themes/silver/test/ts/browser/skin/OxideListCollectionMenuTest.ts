@@ -133,7 +133,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'list-button',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addMenuButton('list-button', {
           type: 'menubutton',
