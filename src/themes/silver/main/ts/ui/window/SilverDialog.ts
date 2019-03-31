@@ -31,7 +31,7 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
-import { renderModalBody } from './SilverDialogBody';
+import { renderModalBody, renderUrlBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { renderModalHeader } from './SilverDialogHeader';
@@ -42,15 +42,81 @@ interface WindowExtra<T> {
   closeWindow: () => void;
 }
 
+const getHeader = (title: string, backstage: UiFactoryBackstage) => {
+  return renderModalHeader({
+    title: backstage.shared.providers.translate(title),
+    draggable: true
+  }, backstage.shared.providers);
+};
+
+const renderUrlDialog = (title: string, url: string, backstage: UiFactoryBackstage) => {
+  const header = getHeader(title, backstage);
+  const body = renderUrlBody(url, backstage);
+
+  const dialog = GuiFactory.build(
+    ModalDialog.sketch({
+      lazySink: backstage.shared.getSink,
+      // TODO: Disable while validating
+      onEscape(c) {
+        AlloyTriggers.emit(c, formCancelEvent);
+        return Option.some(true);
+      },
+
+      useTabstopAt: (elem) => {
+        return !NavigableObject.isPseudoStop(elem) && (
+          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
+        );
+      },
+
+      modalBehaviours: Behaviour.derive([
+        Focusing.config({})
+      ]),
+
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-dialog', 'tox-dialog--width-lg' ],
+        styles: {
+          position: 'relative'
+        }
+      },
+      components: [
+        header,
+        body
+      ],
+      dragBlockClass: 'tox-dialog-wrap',
+      parts: {
+        blocker: {
+          dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
+          components: [
+            {
+              dom: {
+                tag: 'div',
+                classes: [ 'tox-dialog-wrap__backdrop' ]
+              }
+            }
+          ]
+        }
+      }
+    })
+  );
+
+  // TODO implement instance API
+  const instanceApi = {
+    close: () => {}
+  };
+
+  return {
+    dialog,
+    instanceApi
+  };
+};
+
 const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
   const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => {
     return Option.some(incoming);
   };
 
-  const header = renderModalHeader({
-    title: backstage.shared.providers.translate(dialogInit.internalDialog.title),
-    draggable: true
-  }, backstage.shared.providers);
+  const header = getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body
@@ -199,5 +265,6 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
 };
 
 export {
-  renderDialog
+  renderDialog,
+  renderUrlDialog
 };

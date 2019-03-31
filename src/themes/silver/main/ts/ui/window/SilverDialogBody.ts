@@ -11,6 +11,7 @@ import { Option } from '@ephox/katamari';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
+import { renderIFrame } from '../dialog/IFrame';
 import { bodyChannel } from './DialogChannels';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { Types } from '@ephox/bridge';
@@ -80,12 +81,32 @@ const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFa
 };
 
 const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
+  const pieceofShit = renderBody(foo, Option.none(), backstage, false);
   return ModalDialog.parts().body(
-    renderBody(foo, Option.none(), backstage, false)
+    pieceofShit
+  );
+};
+
+type iframe = 'iframe';
+
+const renderUrlBody = (url: string, backstage: UiFactoryBackstage) => {
+  const type = 'iframe' as iframe;
+
+  const iframe = {
+    type,
+    name: 'iframe',
+    label: Option.none(),
+    sandboxed: true,
+    url: Option.some(url)
+  };
+  const stuff = renderIFrame(iframe, backstage.shared.providers);
+  return ModalDialog.parts().body(
+    stuff
   );
 };
 
 export {
   renderInlineBody,
-  renderModalBody
+  renderModalBody,
+  renderUrlBody
 };
